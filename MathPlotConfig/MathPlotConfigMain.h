@@ -107,6 +107,8 @@ class MathPlotConfigDialog: public wxDialog
         static const long ID_STATICTEXT17;
         static const long ID_CHOICE6;
         static const long ID_CHECKBOX7;
+        static const long ID_STATICTEXT26;
+        static const long ID_TEXTCTRL8;
         static const long ID_PANEL9;
         static const long ID_PANEL1;
         static const long ID_STATICTEXT1;
@@ -230,6 +232,7 @@ class MathPlotConfigDialog: public wxDialog
         wxStaticText* StaticText23;
         wxStaticText* StaticText24;
         wxStaticText* StaticText25;
+        wxStaticText* StaticText26;
         wxStaticText* StaticText2;
         wxStaticText* StaticText3;
         wxStaticText* StaticText4;
@@ -239,6 +242,7 @@ class MathPlotConfigDialog: public wxDialog
         wxStaticText* StaticText8;
         wxStaticText* StaticText9;
         wxTextCtrl* edAxisName;
+        wxTextCtrl* edFormat;
         wxTextCtrl* edMarginBottom;
         wxTextCtrl* edMarginLeft;
         wxTextCtrl* edMarginRight;
