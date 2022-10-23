@@ -4,6 +4,7 @@
 		<title>MathPlot Configuration</title>
 		<size>390,356</size>
 		<id_arg>0</id_arg>
+		<style>wxSTAY_ON_TOP|wxDEFAULT_DIALOG_STYLE</style>
 		<object class="wxBoxSizer" variable="BoxSizer1" member="yes">
 			<orient>wxVERTICAL</orient>
 			<object class="sizeritem">
@@ -249,7 +250,7 @@
 						<object class="wxPanel" name="ID_PANEL1" variable="Panel1" member="yes">
 							<object class="wxPanel" name="ID_PANEL9" variable="pAxis" member="yes">
 								<pos>0,0</pos>
-								<size>368,208</size>
+								<size>368,248</size>
 								<object class="wxChoice" name="ID_CHOICE7" variable="ChoiceAxis" member="yes">
 									<content>
 										<item>X axis</item>
@@ -342,6 +343,15 @@
 								<object class="wxCheckBox" name="ID_CHECKBOX7" variable="cbAxisOutside" member="yes">
 									<label>Draw Outside Margins</label>
 									<pos>192,176</pos>
+								</object>
+								<object class="wxStaticText" name="ID_STATICTEXT26" variable="StaticText26" member="yes">
+									<label>Label Format :</label>
+									<pos>8,216</pos>
+								</object>
+								<object class="wxTextCtrl" name="ID_TEXTCTRL8" variable="edFormat" member="yes">
+									<pos>96,212</pos>
+									<size>80,23</size>
+									<tooltip>Format of the label for the axis. Should be like c++ format.</tooltip>
 								</object>
 							</object>
 						</object>
