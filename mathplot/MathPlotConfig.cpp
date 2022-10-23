@@ -75,6 +75,8 @@ const long MathPlotConfigDialog::ID_BUTTON8 = wxNewId();
 const long MathPlotConfigDialog::ID_STATICTEXT17 = wxNewId();
 const long MathPlotConfigDialog::ID_CHOICE6 = wxNewId();
 const long MathPlotConfigDialog::ID_CHECKBOX7 = wxNewId();
+const long MathPlotConfigDialog::ID_STATICTEXT26 = wxNewId();
+const long MathPlotConfigDialog::ID_TEXTCTRL8 = wxNewId();
 const long MathPlotConfigDialog::ID_PANEL9 = wxNewId();
 const long MathPlotConfigDialog::ID_PANEL1 = wxNewId();
 const long MathPlotConfigDialog::ID_STATICTEXT1 = wxNewId();
@@ -124,7 +126,7 @@ END_EVENT_TABLE()
 MathPlotConfigDialog::MathPlotConfigDialog(wxWindow* parent,wxWindowID WXUNUSED(id))
 {
     //(*Initialize(MathPlotConfigDialog)
-    Create(parent, wxID_ANY, _("MathPlot Configuration"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE, _T("wxID_ANY"));
+    Create(parent, wxID_ANY, _("MathPlot Configuration"), wxDefaultPosition, wxDefaultSize, wxSTAY_ON_TOP|wxDEFAULT_DIALOG_STYLE, _T("wxID_ANY"));
     SetClientSize(wxSize(390,356));
     BoxSizer1 = new wxBoxSizer(wxVERTICAL);
     nbConfig = new wxNotebook(this, ID_NOTEBOOK1, wxDefaultPosition, wxSize(383,400), 0, _T("ID_NOTEBOOK1"));
@@ -208,7 +210,7 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow* parent,wxWindowID WXUNUSED(
     cbLegendDirection->Append(_("Vertical"));
     cbLegendDirection->Append(_("Horizontal"));
     Panel1 = new wxPanel(nbConfig, ID_PANEL1, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL, _T("ID_PANEL1"));
-    pAxis = new wxPanel(Panel1, ID_PANEL9, wxPoint(0,0), wxSize(368,208), wxTAB_TRAVERSAL, _T("ID_PANEL9"));
+    pAxis = new wxPanel(Panel1, ID_PANEL9, wxPoint(0,0), wxSize(368,248), wxTAB_TRAVERSAL, _T("ID_PANEL9"));
     ChoiceAxis = new wxChoice(pAxis, ID_CHOICE7, wxPoint(8,16), wxSize(160,23), 0, 0, 0, wxDefaultValidator, _T("ID_CHOICE7"));
     ChoiceAxis->Append(_("X axis"));
     ChoiceAxis->Append(_("Y axis"));
@@ -245,6 +247,9 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow* parent,wxWindowID WXUNUSED(
     cbAxisPosition = new wxChoice(pAxis, ID_CHOICE6, wxPoint(192,112), wxSize(136,23), 0, 0, 0, wxDefaultValidator, _T("ID_CHOICE6"));
     cbAxisOutside = new wxCheckBox(pAxis, ID_CHECKBOX7, _("Draw Outside Margins"), wxPoint(192,176), wxDefaultSize, 0, wxDefaultValidator, _T("ID_CHECKBOX7"));
     cbAxisOutside->SetValue(false);
+    StaticText26 = new wxStaticText(pAxis, ID_STATICTEXT26, _("Label Format :"), wxPoint(8,216), wxDefaultSize, 0, _T("ID_STATICTEXT26"));
+		edFormat = new wxTextCtrl(pAxis, ID_TEXTCTRL8, _(""), wxPoint(96,212), wxSize(80,23), 0, wxDefaultValidator, _T("ID_TEXTCTRL8"));
+		edFormat->SetToolTip(_("Format of the label for the axis. Should be like c++ format."));
     Panel4 = new wxPanel(nbConfig, ID_PANEL4, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL, _T("ID_PANEL4"));
     StaticText1 = new wxStaticText(Panel4, ID_STATICTEXT1, _("Series number :"), wxPoint(8,16), wxDefaultSize, 0, _T("ID_STATICTEXT1"));
     ChoiceSeries = new wxChoice(Panel4, ID_CHOICE1, wxPoint(112,12), wxSize(56,23), 0, 0, 0, wxDefaultValidator, _T("ID_CHOICE1"));
@@ -352,13 +357,15 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow* parent,wxWindowID WXUNUSED(
     CurrentTitle = NULL;
     CurrentChoice = NULL;
     CurrentSerie = NULL;
+    CurrentLegend = NULL;
+    CurrentCoords = NULL;
     // The plot window
 //    m_plot = (mpWindow *)parent;
     m_plot = wxDynamicCast(parent, mpWindow);
     CurrentScale = NULL;
     fontTitleChanged = false;
     fontAxisChanged = false;
-    Initialize();
+//    Initialize();
 }
 
 MathPlotConfigDialog::~MathPlotConfigDialog()
@@ -519,6 +526,7 @@ void MathPlotConfigDialog::OnAxisSelect(wxCommandEvent& WXUNUSED(event))
 		cbAxisPenStyle->SetSelection(CurrentScale->GetPen().GetStyle() - wxPENSTYLE_SOLID);
 		cbAxisVisible->SetValue(CurrentScale->IsVisible());
 		cbAxisPosition->SetSelection(CurrentScale->GetAlign());
+		edFormat->SetValue(CurrentScale->GetLabelFormat());
 
 		cbAxisOutside->SetValue(CurrentScale->GetDrawOutsideMargins());
 
@@ -650,6 +658,7 @@ void MathPlotConfigDialog::OnbApplyClick(wxCommandEvent& WXUNUSED(event))
 				CurrentScale->SetVisible(cbAxisVisible->GetValue());
 				CurrentScale->SetAlign(cbAxisPosition->GetSelection());
 				CurrentScale->SetDrawOutsideMargins(cbAxisOutside->GetValue());
+				CurrentScale->SetLabelFormat(edFormat->GetValue());
 
 			  if (fontAxisChanged)
 			  {

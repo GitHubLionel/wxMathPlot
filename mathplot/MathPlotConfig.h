@@ -26,11 +26,19 @@
 #include <wx/textctrl.h>
 //*)
 
+
 #include "mathplot.h"
 
 // MathPlot namespace
 namespace MathPlot
 {
+
+class WXDLLIMPEXP_MATHPLOT mpWindow;
+class WXDLLIMPEXP_MATHPLOT mpLayer;
+class WXDLLIMPEXP_MATHPLOT mpInfoCoords;
+class WXDLLIMPEXP_MATHPLOT mpInfoLegend;
+class WXDLLIMPEXP_MATHPLOT mpScale;
+class WXDLLIMPEXP_MATHPLOT mpText;
 
 
 class MathPlotConfigDialog: public wxDialog
@@ -39,6 +47,8 @@ class MathPlotConfigDialog: public wxDialog
 
         MathPlotConfigDialog(wxWindow* parent,wxWindowID id = -1);
         virtual ~MathPlotConfigDialog();
+
+        void Initialize();
 
     private:
 
@@ -122,6 +132,8 @@ class MathPlotConfigDialog: public wxDialog
         static const long ID_STATICTEXT17;
         static const long ID_CHOICE6;
         static const long ID_CHECKBOX7;
+        static const long ID_STATICTEXT26;
+        static const long ID_TEXTCTRL8;
         static const long ID_PANEL9;
         static const long ID_PANEL1;
         static const long ID_STATICTEXT1;
@@ -245,6 +257,7 @@ class MathPlotConfigDialog: public wxDialog
         wxStaticText* StaticText23;
         wxStaticText* StaticText24;
         wxStaticText* StaticText25;
+        wxStaticText* StaticText26;
         wxStaticText* StaticText2;
         wxStaticText* StaticText3;
         wxStaticText* StaticText4;
@@ -254,6 +267,7 @@ class MathPlotConfigDialog: public wxDialog
         wxStaticText* StaticText8;
         wxStaticText* StaticText9;
         wxTextCtrl* edAxisName;
+        wxTextCtrl* edFormat;
         wxTextCtrl* edMarginBottom;
         wxTextCtrl* edMarginLeft;
         wxTextCtrl* edMarginRight;
@@ -265,7 +279,6 @@ class MathPlotConfigDialog: public wxDialog
         void DoApplyColour(const wxColour& colour);
         void OnColourChanged(wxColourDialogEvent& event);
         void SetFontChildren(wxButton* p, const wxFontData& fontdata);
-        void Initialize();
 
         wxBrushStyle IdToBrushStyle(int id);
         int BrushStyleToId(wxBrushStyle style);

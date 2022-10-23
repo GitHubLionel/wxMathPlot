@@ -53,8 +53,6 @@
 #include <cstdio> // used only for debug
 #include <ctime> // used for representation of x axes involving date
 
-#include "MathPlotConfig.h"
-
 // #include "pixel.xpm"
 
 // Memory leak debugging
@@ -1853,6 +1851,11 @@ mpWindow::~mpWindow()
 		delete m_Screenshot_bmp;
 		m_Screenshot_bmp = NULL;
 	}
+	if (m_configWindow)
+	{
+		delete m_configWindow;
+		m_configWindow = NULL;
+	}
 }
 
 void mpWindow::InitParameters()
@@ -2403,9 +2406,11 @@ void mpWindow::OnScreenShot(wxCommandEvent&WXUNUSED(event))
 
 void mpWindow::OnConfiguration(wxCommandEvent&WXUNUSED(event))
 {
-	MathPlotConfigDialog config(this);
+	if (m_configWindow == NULL)
+		m_configWindow = new MathPlotConfigDialog(this);
 
-	config.ShowModal();
+	m_configWindow->Initialize();
+	m_configWindow->Show();
 }
 
 void mpWindow::OnCenter(wxCommandEvent&WXUNUSED(event))
