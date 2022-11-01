@@ -117,6 +117,7 @@
 											<item>Bottom center</item>
 											<item>Bottom right</item>
 											<item>Default position</item>
+											<item>Cursor position</item>
 										</content>
 										<pos>64,20</pos>
 										<size>112,23</size>
@@ -360,7 +361,7 @@
 					<object class="notebookpage">
 						<object class="wxPanel" name="ID_PANEL4" variable="Panel4" member="yes">
 							<object class="wxStaticText" name="ID_STATICTEXT1" variable="StaticText1" member="yes">
-								<label>Series number :</label>
+								<label>Series name :</label>
 								<pos>8,16</pos>
 							</object>
 							<object class="wxChoice" name="ID_CHOICE1" variable="ChoiceSeries" member="yes">
@@ -369,7 +370,7 @@
 									<item>1</item>
 								</content>
 								<pos>112,12</pos>
-								<size>56,23</size>
+								<size>136,23</size>
 								<handler function="OnChoiceSeries" entry="EVT_CHOICE" />
 							</object>
 							<object class="wxCheckBox" name="ID_CHECKBOX1" variable="cbSeriesVisible" member="yes">
@@ -530,6 +531,12 @@
 								<min>1</min>
 								<pos>296,260</pos>
 								<size>46,23</size>
+							</object>
+							<object class="wxButton" name="ID_BUTTON11" variable="bDelSeries" member="yes">
+								<label>Delete</label>
+								<pos>280,12</pos>
+								<enabled>0</enabled>
+								<handler function="OnbDelSeriesClick" entry="EVT_BUTTON" />
 							</object>
 						</object>
 						<label>Series</label>
