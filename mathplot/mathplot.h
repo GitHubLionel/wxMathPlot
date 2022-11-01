@@ -573,6 +573,20 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject {
 			return m_step;
 		}
 
+		/** Set CanDelete for plot.
+				 @param CanDelete */
+		void SetCanDelete(bool canDelete)
+		{
+			m_CanDelete = canDelete;
+		}
+
+		/** Get CanDelete for plot.
+				 @return CanDelete*/
+		bool GetCanDelete(void)
+		{
+			return m_CanDelete;
+		}
+
 	protected:
 		mpWindow *m_win;            //!< The wxWindow handle
 		mpLayerType m_type;         //!< Define layer type, which is assigned by constructor
@@ -581,7 +595,7 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject {
 		wxPen m_pen;                //!< Layer's pen. Default Colour = Black, width = 1, style = wxPENSTYLE_SOLID
 		wxBrush m_brush;            //!< Layer's brush. Default wxTRANSPARENT_BRUSH
 		wxString m_name;            //!< Layer's name
-		bool m_continuous;   //!< Specify if the layer will be plotted as a continuous line or a set of points. Default false
+		bool m_continuous;          //!< Specify if the layer will be plotted as a continuous line or a set of points. Default false
 		bool m_showName;            //!< States whether the name of the layer must be shown. Default : false
 		bool m_drawOutsideMargins;  //!< Select if the layer should draw only inside margins or over all DC. Default : false
 		unsigned int m_step;        //!< Step to get point to be draw. Default : 1
@@ -591,6 +605,7 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject {
 		mpSymbol m_symbol;          //!< A symbol for the plot in place of point. Default mpNone
 		int m_symbolSize;           //!< Size of the symbol. Default 6
 		int m_symbolSize2;          //!< Size of the symbol div 2.
+		bool m_CanDelete;    				//!< Is the layer can be deleted
 
 	DECLARE_DYNAMIC_CLASS(mpLayer)
 };
@@ -943,11 +958,15 @@ class WXDLLIMPEXP_MATHPLOT mpFXY: public mpLayer {
 		// Data to calculate label positioning
 		wxCoord maxDrawX, minDrawX, maxDrawY, minDrawY;
 
+		// Is the serie can be deleted
+		bool m_CanDelete = true;
+
 		/** Update label positioning data
 		 @param xnew New x coordinate
 		 @param ynew New y coordinate
 		 */
 		void UpdateViewBoundary(wxCoord xnew, wxCoord ynew);
+
 
 	DECLARE_DYNAMIC_CLASS(mpFXY)
 };
@@ -2413,6 +2432,37 @@ class WXDLLIMPEXP_MATHPLOT mpBitmapLayer: public mpLayer {
 		double m_min_x, m_max_x, m_min_y, m_max_y;
 
 	DECLARE_DYNAMIC_CLASS(mpBitmapLayer)
+};
+
+// utilitary class
+
+// Direction for the Legend layer
+typedef enum __mp_Colour {
+	mpBlue, mpRed, mpGreen, mpPurple, mpYellow, mpFuchsia, mpLime, mpAqua, mpOlive
+} mpColour;
+
+/**
+ * Create a wxColour
+ * id is the number of the colour : blue, red, green, ...
+ */
+class WXDLLIMPEXP_MATHPLOT wxIndexColour: public wxColour {
+	public:
+		wxIndexColour(unsigned int id)
+		{
+			switch (id)
+			{
+				case 0: this->Set(0, 0, 255); break;  // Blue
+				case 1: this->Set(255, 0, 0); break;  // Red
+				case 2: this->Set(0, 128, 0); break;  // Green
+				case 3: this->Set(128, 0, 128); break;  // Purple
+				case 4: this->Set(255, 255, 0); break;  // Yellow
+				case 5: this->Set(255, 0, 255); break;  // Fuchsia
+				case 6: this->Set(0, 255, 0); break;  // Lime
+				case 7: this->Set(0, 255, 255); break;  // Aqua/Cyan
+				case 8: this->Set(128, 128, 0); break;  // Olive
+				default: this->Set((rand() * 255) / RAND_MAX, (rand() * 255) / RAND_MAX, (rand() * 255) / RAND_MAX);
+			}
+		}
 };
 
 /*@}*/

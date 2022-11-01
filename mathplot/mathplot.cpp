@@ -104,6 +104,7 @@ mpLayer::mpLayer() : m_type(mpLAYER_UNDEF)
 	m_symbolSize = 6;
 	m_symbolSize2 = 3;
 	m_step = 1;
+	m_CanDelete = true;
 }
 
 wxBitmap mpLayer::GetColourSquare(int side)
@@ -1270,142 +1271,162 @@ IMPLEMENT_DYNAMIC_CLASS(mpScaleX, mpScale)
 
 void mpScaleX::Plot(wxDC &dc, mpWindow &w)
 {
-	if (m_visible)
+	if (!m_visible)
+		return;
+
+	DoBeforePlot();
+	dc.SetPen(m_pen);
+	dc.SetFont(m_font);
+	dc.SetTextForeground(m_fontcolour);
+	int orgy = 0;
+
+	// Get bondaries
+	m_plotBondaries = w.GetPlotBondaries(!m_drawOutsideMargins);
+
+	switch (m_flags)
 	{
-		DoBeforePlot();
-		dc.SetPen(m_pen);
-		dc.SetFont(m_font);
-		dc.SetTextForeground(m_fontcolour);
-		int orgy = 0;
-
-		// Get bondaries
-		m_plotBondaries = w.GetPlotBondaries(!m_drawOutsideMargins);
-
-		switch (m_flags)
+		case mpALIGN_BORDER_TOP:
+			orgy = 1;
+			break;
+		case mpALIGN_TOP:
 		{
-			case mpALIGN_BORDER_TOP:
-				orgy = 1;
-				break;
-			case mpALIGN_TOP:
-			{
-				if (m_drawOutsideMargins)
-					orgy = X_BORDER_SEPARATION;
-				else
-					orgy = w.GetMarginTop();
-				break;
-			}
-			case mpALIGN_CENTERX:
-				orgy = w.y2p(0);
-				break;
-			case mpALIGN_BOTTOM:
-			{
-				if (m_drawOutsideMargins)
-					orgy = w.GetScreenY() - X_BORDER_SEPARATION;
-				else
-					orgy = w.GetScreenY() - w.GetMarginBottom();
-				break;
-			}
-			case mpALIGN_BORDER_BOTTOM:
-				orgy = w.GetScreenY() - 1;
-				break;
-			default:
-				;  // Nothing
-		}
-
-		// Draw nothing if we are outside margins
-		if (!m_drawOutsideMargins && ((orgy > (w.GetScreenY() - w.GetMarginBottom())) || (orgy < w.GetMarginTop()))) return;
-
-		dc.DrawLine(m_plotBondaries.startPx, orgy, m_plotBondaries.endPx, orgy);
-
-		const double scaleX = w.GetScaleX();
-		const double dig = floor(log(128.0 / scaleX) / mpLN10);
-		const double step = exp(mpLN10 * dig);
-		const double end = w.GetPosX() + (double)w.GetScreenX() / scaleX;
-
-		wxCoord tx, ty;
-		wxString s;
-		wxString fmt;
-		int tmp = (int)dig;
-		if (m_labelType == mpX_NORMAL)
-		{
-			if (!m_labelFormat.IsEmpty())
-			{
-				fmt = m_labelFormat;
-			}
+			if (m_drawOutsideMargins)
+				orgy = X_BORDER_SEPARATION;
 			else
-			{
-				if (tmp >= 1)
-				{
-					fmt = wxT("%.g");
-				}
-				else
-				{
-					tmp = 8 - tmp;
-					fmt.Printf(wxT("%%.%dg"), tmp >= -1 ? 2 : -tmp);
-				}
-			}
+				orgy = w.GetMarginTop();
+			break;
+		}
+		case mpALIGN_CENTERX:
+			orgy = w.y2p(0);
+			break;
+		case mpALIGN_BOTTOM:
+		{
+			if (m_drawOutsideMargins)
+				orgy = w.GetScreenY() - X_BORDER_SEPARATION;
+			else
+				orgy = w.GetScreenY() - w.GetMarginBottom();
+			break;
+		}
+		case mpALIGN_BORDER_BOTTOM:
+			orgy = w.GetScreenY() - 1;
+			break;
+		default:
+			;  // Nothing
+	}
+
+	// Draw nothing if we are outside margins
+	if (!m_drawOutsideMargins && ((orgy > (w.GetScreenY() - w.GetMarginBottom())) || (orgy < w.GetMarginTop()))) return;
+
+	dc.DrawLine(m_plotBondaries.startPx, orgy, m_plotBondaries.endPx, orgy);
+
+	const double scaleX = w.GetScaleX();
+	const double dig = floor(log(128.0 / scaleX) / mpLN10);
+	const double step = exp(mpLN10 * dig);
+	const double end = w.GetPosX() + (double)w.GetScreenX() / scaleX;
+
+	wxCoord tx, ty;
+	wxString s;
+	wxString fmt;
+	int tmp = (int)dig;
+	if (m_labelType == mpX_NORMAL)
+	{
+		if (!m_labelFormat.IsEmpty())
+		{
+			fmt = m_labelFormat;
 		}
 		else
 		{
-			// Date and/or time axis representation
-			if (m_labelType == mpX_DATETIME)
+			if (tmp >= 1)
 			{
-				fmt = (wxT("%04.0f-%02.0f-%02.0fT%02.0f:%02.0f:%02.0f"));
+				fmt = wxT("%.g");
 			}
 			else
-				if (m_labelType == mpX_DATE)
+			{
+				tmp = 8 - tmp;
+				fmt.Printf(wxT("%%.%dg"), tmp >= -1 ? 2 : -tmp);
+			}
+		}
+	}
+	else
+	{
+		// Date and/or time axis representation
+		if (m_labelType == mpX_DATETIME)
+		{
+			fmt = (wxT("%04.0f-%02.0f-%02.0fT%02.0f:%02.0f:%02.0f"));
+		}
+		else
+			if (m_labelType == mpX_DATE)
+			{
+				fmt = (wxT("%04.0f-%02.0f-%02.0f"));
+			}
+			else
+				if ((m_labelType == mpX_TIME) && (end / 60 < 2))
 				{
-					fmt = (wxT("%04.0f-%02.0f-%02.0f"));
+					fmt = (wxT("%02.0f:%02.3f"));
 				}
 				else
-					if ((m_labelType == mpX_TIME) && (end / 60 < 2))
-					{
-						fmt = (wxT("%02.0f:%02.3f"));
-					}
-					else
-					{
-						fmt = (wxT("%02.0f:%02.0f:%02.0f"));
-					}
-		}
+				{
+					fmt = (wxT("%02.0f:%02.0f:%02.0f"));
+				}
+	}
 
 //		double n0 = floor( (w.GetPosX() - (double)w.GetScreenX() / scaleX) / step ) * step;
-		double n0 = floor(w.GetPosX() / step) * step;
-		double n = 0;
+	double n0 = floor(w.GetPosX() / step) * step;
+	double n = 0;
 #ifdef MATHPLOT_DO_LOGGING
-		wxLogMessage(wxT("mpScaleX::Plot: dig: %f , step: %f, end: %f, n: %f"), dig, step, end, n0);
+	wxLogMessage(wxT("mpScaleX::Plot: dig: %f , step: %f, end: %f, n: %f"), dig, step, end, n0);
 #endif
 
-		tmp = -65535;
-		int labelH = 0; // Control labels heigth to decide where to put axis name (below labels or on top of axis)
-		int maxExtent = 0;
-		time_t when = 0;
-		struct tm timestruct;
-		for (n = n0; n < end; n += step)
-		{
-			const int p = (int)((n - w.GetPosX()) * scaleX);
+	tmp = -65535;
+	int labelH = 0; // Control labels heigth to decide where to put axis name (below labels or on top of axis)
+	int maxExtent = 0;
+	time_t when = 0;
+	struct tm timestruct;
+	for (n = n0; n < end; n += step)
+	{
+		const int p = (int)((n - w.GetPosX()) * scaleX);
 #ifdef MATHPLOT_DO_LOGGING
-			wxLogMessage(wxT("mpScaleX::Plot: n: %f -> p = %d"), n, p);
+		wxLogMessage(wxT("mpScaleX::Plot: n: %f -> p = %d"), n, p);
 #endif
-			if ((p >= m_plotBondaries.startPx) && (p <= m_plotBondaries.endPx))
-			{
-				if (m_ticks)
-				{ // draw axis ticks
-					dc.SetPen(m_pen);
-					if (m_flags == mpALIGN_BORDER_BOTTOM)
-						dc.DrawLine(p, orgy, p, orgy - 4);
-					else
-						dc.DrawLine(p, orgy, p, orgy + 4);
-				}
-				if (m_grids)
-				{ // draw grid
-					dc.SetPen(m_gridpen);
-					dc.DrawLine(p, m_plotBondaries.startPy, p, m_plotBondaries.endPy);
-				}
-				// Write ticks labels in s string
-				if (m_labelType == mpX_NORMAL)
-					s.Printf(fmt, n);
+		if ((p >= m_plotBondaries.startPx) && (p <= m_plotBondaries.endPx))
+		{
+			if (m_ticks)
+			{ // draw axis ticks
+				dc.SetPen(m_pen);
+				if (m_flags == mpALIGN_BORDER_BOTTOM)
+					dc.DrawLine(p, orgy, p, orgy - 4);
 				else
-					if (m_labelType == mpX_DATETIME)
+					dc.DrawLine(p, orgy, p, orgy + 4);
+			}
+			if (m_grids)
+			{ // draw grid
+				dc.SetPen(m_gridpen);
+				dc.DrawLine(p, m_plotBondaries.startPy, p, m_plotBondaries.endPy);
+			}
+			// Write ticks labels in s string
+			if (m_labelType == mpX_NORMAL)
+				s.Printf(fmt, n);
+			else
+				if (m_labelType == mpX_DATETIME)
+				{
+					when = (time_t)n;
+					if (when > 0)
+					{
+						if (m_timeConv == mpX_LOCALTIME)
+						{
+							timestruct = *localtime(&when);
+						}
+						else
+						{
+							timestruct = *gmtime(&when);
+						}
+						s.Printf(fmt, (double)timestruct.tm_year + 1900, (double)timestruct.tm_mon + 1,
+								(double)timestruct.tm_mday, (double)timestruct.tm_hour, (double)timestruct.tm_min,
+								(double)timestruct.tm_sec);
+					}
+				}
+				else
+					if (m_labelType == mpX_DATE)
 					{
 						when = (time_t)n;
 						if (when > 0)
@@ -1419,75 +1440,78 @@ void mpScaleX::Plot(wxDC &dc, mpWindow &w)
 								timestruct = *gmtime(&when);
 							}
 							s.Printf(fmt, (double)timestruct.tm_year + 1900, (double)timestruct.tm_mon + 1,
-									(double)timestruct.tm_mday, (double)timestruct.tm_hour, (double)timestruct.tm_min,
-									(double)timestruct.tm_sec);
+									(double)timestruct.tm_mday);
 						}
 					}
 					else
-						if (m_labelType == mpX_DATE)
+						if ((m_labelType == mpX_TIME) || (m_labelType == mpX_HOURS))
 						{
-							when = (time_t)n;
-							if (when > 0)
-							{
-								if (m_timeConv == mpX_LOCALTIME)
-								{
-									timestruct = *localtime(&when);
-								}
-								else
-								{
-									timestruct = *gmtime(&when);
-								}
-								s.Printf(fmt, (double)timestruct.tm_year + 1900, (double)timestruct.tm_mon + 1,
-										(double)timestruct.tm_mday);
-							}
+							double modulus = fabs(n);
+							double sign = n / modulus;
+							double hh = floor(modulus / 3600);
+							double mm = floor((modulus - hh * 3600) / 60);
+							double ss = modulus - hh * 3600 - mm * 60;
+#ifdef MATHPLOT_DO_LOGGING
+							wxLogMessage(wxT("%02.0f Hours, %02.0f minutes, %02.0f seconds"), sign * hh, mm, ss);
+#endif // MATHPLOT_DO_LOGGING
+							if (fmt.Len() == 20) // Format with hours has 11 chars
+								s.Printf(fmt, sign * hh, mm, floor(ss));
+							else
+								s.Printf(fmt, sign * mm, ss);
+						}
+			dc.GetTextExtent(s, &tx, &ty);
+			labelH = (labelH <= ty) ? ty : labelH;
+			/*				if ((p-tx/2-tmp) > 64) { // Problem about non-regular axis labels
+			 if ((m_flags == mpALIGN_BORDER_BOTTOM) || (m_flags == mpALIGN_TOP)) {
+			 dc.DrawText( s, p-tx/2, orgy-4-ty);
+			 } else {
+			 dc.DrawText( s, p-tx/2, orgy+4);
+			 }
+			 tmp=p+tx/2;
+			 }
+			 */
+			maxExtent = (tx > maxExtent) ? tx : maxExtent; // Keep in mind max label width
+		}
+	}
+
+	// Actually draw labels, taking care of not overlapping them, and distributing them regularly
+	double labelStep = ceil((maxExtent + mpMIN_X_AXIS_LABEL_SEPARATION) / (scaleX * step)) * step;
+
+	for (n = n0; n < end; n += labelStep)
+	{
+		// To have a real zero
+		if (fabs(n) < 1e-10)
+			n = 0;
+		const int p = (int)((n - w.GetPosX()) * scaleX);
+#ifdef MATHPLOT_DO_LOGGING
+		wxLogMessage(wxT("mpScaleX::Plot: n_label = %f -> p_label = %d"), n, p);
+#endif
+		if ((p >= m_plotBondaries.startPx) && (p <= m_plotBondaries.endPx))
+		{
+			// Write ticks labels in s string
+			if (m_labelType == mpX_NORMAL)
+				s.Printf(fmt, n);
+			else
+				if (m_labelType == mpX_DATETIME)
+				{
+					when = (time_t)n;
+					if (when > 0)
+					{
+						if (m_timeConv == mpX_LOCALTIME)
+						{
+							timestruct = *localtime(&when);
 						}
 						else
-							if ((m_labelType == mpX_TIME) || (m_labelType == mpX_HOURS))
-							{
-								double modulus = fabs(n);
-								double sign = n / modulus;
-								double hh = floor(modulus / 3600);
-								double mm = floor((modulus - hh * 3600) / 60);
-								double ss = modulus - hh * 3600 - mm * 60;
-#ifdef MATHPLOT_DO_LOGGING
-								wxLogMessage(wxT("%02.0f Hours, %02.0f minutes, %02.0f seconds"), sign * hh, mm, ss);
-#endif // MATHPLOT_DO_LOGGING
-								if (fmt.Len() == 20) // Format with hours has 11 chars
-									s.Printf(fmt, sign * hh, mm, floor(ss));
-								else
-									s.Printf(fmt, sign * mm, ss);
-							}
-				dc.GetTextExtent(s, &tx, &ty);
-				labelH = (labelH <= ty) ? ty : labelH;
-				/*				if ((p-tx/2-tmp) > 64) { // Problem about non-regular axis labels
-				 if ((m_flags == mpALIGN_BORDER_BOTTOM) || (m_flags == mpALIGN_TOP)) {
-				 dc.DrawText( s, p-tx/2, orgy-4-ty);
-				 } else {
-				 dc.DrawText( s, p-tx/2, orgy+4);
-				 }
-				 tmp=p+tx/2;
-				 }
-				 */
-				maxExtent = (tx > maxExtent) ? tx : maxExtent; // Keep in mind max label width
-			}
-		}
-
-		// Actually draw labels, taking care of not overlapping them, and distributing them regularly
-		double labelStep = ceil((maxExtent + mpMIN_X_AXIS_LABEL_SEPARATION) / (scaleX * step)) * step;
-
-		for (n = n0; n < end; n += labelStep)
-		{
-			const int p = (int)((n - w.GetPosX()) * scaleX);
-#ifdef MATHPLOT_DO_LOGGING
-			wxLogMessage(wxT("mpScaleX::Plot: n_label = %f -> p_label = %d"), n, p);
-#endif
-			if ((p >= m_plotBondaries.startPx) && (p <= m_plotBondaries.endPx))
-			{
-				// Write ticks labels in s string
-				if (m_labelType == mpX_NORMAL)
-					s.Printf(fmt, n);
+						{
+							timestruct = *gmtime(&when);
+						}
+						s.Printf(fmt, (double)timestruct.tm_year + 1900, (double)timestruct.tm_mon + 1,
+								(double)timestruct.tm_mday, (double)timestruct.tm_hour, (double)timestruct.tm_min,
+								(double)timestruct.tm_sec);
+					}
+				}
 				else
-					if (m_labelType == mpX_DATETIME)
+					if (m_labelType == mpX_DATE)
 					{
 						when = (time_t)n;
 						if (when > 0)
@@ -1501,96 +1525,76 @@ void mpScaleX::Plot(wxDC &dc, mpWindow &w)
 								timestruct = *gmtime(&when);
 							}
 							s.Printf(fmt, (double)timestruct.tm_year + 1900, (double)timestruct.tm_mon + 1,
-									(double)timestruct.tm_mday, (double)timestruct.tm_hour, (double)timestruct.tm_min,
-									(double)timestruct.tm_sec);
+									(double)timestruct.tm_mday);
 						}
 					}
 					else
-						if (m_labelType == mpX_DATE)
+						if ((m_labelType == mpX_TIME) || (m_labelType == mpX_HOURS))
 						{
-							when = (time_t)n;
-							if (when > 0)
-							{
-								if (m_timeConv == mpX_LOCALTIME)
-								{
-									timestruct = *localtime(&when);
-								}
-								else
-								{
-									timestruct = *gmtime(&when);
-								}
-								s.Printf(fmt, (double)timestruct.tm_year + 1900, (double)timestruct.tm_mon + 1,
-										(double)timestruct.tm_mday);
-							}
-						}
-						else
-							if ((m_labelType == mpX_TIME) || (m_labelType == mpX_HOURS))
-							{
-								double modulus = fabs(n);
-								double sign = n / modulus;
-								double hh = floor(modulus / 3600);
-								double mm = floor((modulus - hh * 3600) / 60);
-								double ss = modulus - hh * 3600 - mm * 60;
+							double modulus = fabs(n);
+							double sign = n / modulus;
+							double hh = floor(modulus / 3600);
+							double mm = floor((modulus - hh * 3600) / 60);
+							double ss = modulus - hh * 3600 - mm * 60;
 #ifdef MATHPLOT_DO_LOGGING
-								wxLogMessage(wxT("%02.0f Hours, %02.0f minutes, %02.0f seconds"), sign * hh, mm, ss);
+							wxLogMessage(wxT("%02.0f Hours, %02.0f minutes, %02.0f seconds"), sign * hh, mm, ss);
 #endif // MATHPLOT_DO_LOGGING
-								if (fmt.Len() == 20) // Format with hours has 11 chars
-									s.Printf(fmt, sign * hh, mm, floor(ss));
-								else
-									s.Printf(fmt, sign * mm, ss);
-							}
-				dc.GetTextExtent(s, &tx, &ty);
-				if ((m_flags == mpALIGN_BORDER_BOTTOM) || (m_flags == mpALIGN_TOP))
-				{
-					dc.DrawText(s, p - tx / 2, orgy - ty - 4);
-				}
-				else
-				{
-					dc.DrawText(s, p - tx / 2, orgy + 4);
-				}
+							if (fmt.Len() == 20) // Format with hours has 11 chars
+								s.Printf(fmt, sign * hh, mm, floor(ss));
+							else
+								s.Printf(fmt, sign * mm, ss);
+						}
+			dc.GetTextExtent(s, &tx, &ty);
+			if ((m_flags == mpALIGN_BORDER_BOTTOM) || (m_flags == mpALIGN_TOP))
+			{
+				dc.DrawText(s, p - tx / 2, orgy - ty - 4);
+			}
+			else
+			{
+				dc.DrawText(s, p - tx / 2, orgy + 4);
 			}
 		}
+	}
 
-		// Draw axis name
-		dc.GetTextExtent(m_name, &tx, &ty);
-		switch (m_flags)
+	// Draw axis name
+	dc.GetTextExtent(m_name, &tx, &ty);
+	switch (m_flags)
+	{
+		case mpALIGN_BORDER_BOTTOM:
+			dc.DrawText(m_name, m_plotBondaries.endPx - tx - 4, orgy - ty - labelH - 8);
+			break;
+		case mpALIGN_BOTTOM:
 		{
-			case mpALIGN_BORDER_BOTTOM:
-				dc.DrawText(m_name, m_plotBondaries.endPx - tx - 4, orgy - ty - labelH - 8);
-				break;
-			case mpALIGN_BOTTOM:
+			if ((!m_drawOutsideMargins) && (w.GetMarginBottom() > (ty + labelH + 8)))
 			{
-				if ((!m_drawOutsideMargins) && (w.GetMarginBottom() > (ty + labelH + 8)))
-				{
-					dc.DrawText(m_name, (m_plotBondaries.endPx + m_plotBondaries.startPx - tx) >> 1, orgy + labelH + 6);
-				}
-				else
-				{
-					dc.DrawText(m_name, m_plotBondaries.endPx - tx - 4, orgy - ty - 4);
-				}
-				break;
+				dc.DrawText(m_name, (m_plotBondaries.endPx + m_plotBondaries.startPx - tx) >> 1, orgy + labelH + 6);
 			}
-			case mpALIGN_CENTERX:
+			else
+			{
 				dc.DrawText(m_name, m_plotBondaries.endPx - tx - 4, orgy - ty - 4);
-				break;
-			case mpALIGN_TOP:
-			{
-				if ((!m_drawOutsideMargins) && (w.GetMarginTop() > (ty + labelH + 8)))
-				{
-					dc.DrawText(m_name, (m_plotBondaries.endPx + m_plotBondaries.startPx - tx) >> 1, orgy - ty - labelH - 6);
-				}
-				else
-				{
-					dc.DrawText(m_name, m_plotBondaries.endPx - tx - 4, orgy + 4);
-				}
-				break;
 			}
-			case mpALIGN_BORDER_TOP:
-				dc.DrawText(m_name, m_plotBondaries.endPx - tx - 4, orgy + labelH + 6);
-				break;
-			default:
-				break;
+			break;
 		}
+		case mpALIGN_CENTERX:
+			dc.DrawText(m_name, m_plotBondaries.endPx - tx - 4, orgy - ty - 4);
+			break;
+		case mpALIGN_TOP:
+		{
+			if ((!m_drawOutsideMargins) && (w.GetMarginTop() > (ty + labelH + 8)))
+			{
+				dc.DrawText(m_name, (m_plotBondaries.endPx + m_plotBondaries.startPx - tx) >> 1, orgy - ty - labelH - 6);
+			}
+			else
+			{
+				dc.DrawText(m_name, m_plotBondaries.endPx - tx - 4, orgy + 4);
+			}
+			break;
+		}
+		case mpALIGN_BORDER_TOP:
+			dc.DrawText(m_name, m_plotBondaries.endPx - tx - 4, orgy + labelH + 6);
+			break;
+		default:
+			break;
 	}
 }
 
@@ -1598,172 +1602,175 @@ IMPLEMENT_DYNAMIC_CLASS(mpScaleY, mpScale)
 
 void mpScaleY::Plot(wxDC &dc, mpWindow &w)
 {
-	if (m_visible)
+	if (! m_visible)
+		return;
+
+	DoBeforePlot();
+	dc.SetPen(m_pen);
+	dc.SetFont(m_font);
+	dc.SetTextForeground(m_fontcolour);
+
+	int orgx = 0;
+
+	// Get bondaries
+	m_plotBondaries = w.GetPlotBondaries(!m_drawOutsideMargins);
+
+	switch (m_flags)
 	{
-		DoBeforePlot();
-		dc.SetPen(m_pen);
-		dc.SetFont(m_font);
-		dc.SetTextForeground(m_fontcolour);
-
-		int orgx = 0;
-
-		// Get bondaries
-		m_plotBondaries = w.GetPlotBondaries(!m_drawOutsideMargins);
-
-		switch (m_flags)
+		case mpALIGN_BORDER_LEFT:
+			orgx = 1;
+			break;
+		case mpALIGN_LEFT:
 		{
-			case mpALIGN_BORDER_LEFT:
-				orgx = 1;
-				break;
-			case mpALIGN_LEFT:
-			{
-				if (m_drawOutsideMargins)
-					orgx = Y_BORDER_SEPARATION;
-				else
-					orgx = w.GetMarginLeft();
-				break;
-			}
-			case mpALIGN_CENTERY:
-				orgx = w.x2p(0);
-				break;
-			case mpALIGN_RIGHT:
-			{
-				if (m_drawOutsideMargins)
-					orgx = w.GetScreenX() - Y_BORDER_SEPARATION;
-				else
-					orgx = w.GetScreenX() - w.GetMarginRight();
-				break;
-			}
-			case mpALIGN_BORDER_RIGHT:
-				orgx = w.GetScreenX() - 1;
-				break;
-			default:
-				;  // Nothing
-		}
-
-		// Draw nothing if we are outside margins
-		if (!m_drawOutsideMargins && ((orgx > (w.GetScreenX() - w.GetMarginRight())) || (orgx < w.GetMarginLeft()))) return;
-
-		// Draw line
-		dc.DrawLine(orgx, m_plotBondaries.startPy, orgx, m_plotBondaries.endPy);
-
-		const double scaleY = w.GetScaleY();
-		const double dig = floor(log(128.0 / scaleY) / mpLN10);
-		const double step = exp(mpLN10 * dig);
-		const double end = w.GetPosY() + (double)w.GetScreenY() / scaleY;
-
-		wxCoord tx = 0, ty = 0;
-		wxString s;
-		wxString fmt;
-		int tmp = (int)dig;
-		double maxScaleAbs = fabs(w.GetDesiredYmax());
-		double minScaleAbs = fabs(w.GetDesiredYmin());
-		double endscale = (maxScaleAbs > minScaleAbs) ? maxScaleAbs : minScaleAbs;
-		if (m_labelFormat.IsEmpty())
-		{
-			if ((endscale < 1e4) && (endscale > 1e-3))
-				fmt = wxT("%.2f");
+			if (m_drawOutsideMargins)
+				orgx = Y_BORDER_SEPARATION;
 			else
-				fmt = wxT("%.2e");
+				orgx = w.GetMarginLeft();
+			break;
 		}
+		case mpALIGN_CENTERY:
+			orgx = w.x2p(0);
+			break;
+		case mpALIGN_RIGHT:
+		{
+			if (m_drawOutsideMargins)
+				orgx = w.GetScreenX() - Y_BORDER_SEPARATION;
+			else
+				orgx = w.GetScreenX() - w.GetMarginRight();
+			break;
+		}
+		case mpALIGN_BORDER_RIGHT:
+			orgx = w.GetScreenX() - 1;
+			break;
+		default:
+			;  // Nothing
+	}
+
+	// Draw nothing if we are outside margins
+	if (!m_drawOutsideMargins && ((orgx > (w.GetScreenX() - w.GetMarginRight())) || (orgx < w.GetMarginLeft()))) return;
+
+	// Draw line
+	dc.DrawLine(orgx, m_plotBondaries.startPy, orgx, m_plotBondaries.endPy);
+
+	const double scaleY = w.GetScaleY();
+	const double dig = floor(log(128.0 / scaleY) / mpLN10);
+	const double step = exp(mpLN10 * dig);
+	const double end = w.GetPosY() + (double)w.GetScreenY() / scaleY;
+
+	wxCoord tx = 0, ty = 0;
+	wxString s;
+	wxString fmt;
+	int tmp = (int)dig;
+	double maxScaleAbs = fabs(w.GetDesiredYmax());
+	double minScaleAbs = fabs(w.GetDesiredYmin());
+	double endscale = (maxScaleAbs > minScaleAbs) ? maxScaleAbs : minScaleAbs;
+	if (m_labelFormat.IsEmpty())
+	{
+		if ((endscale < 1e4) && (endscale > 1e-3))
+			fmt = wxT("%.2f");
 		else
+			fmt = wxT("%.2e");
+	}
+	else
+	{
+		fmt = m_labelFormat;
+	}
+
+	double n = floor((w.GetPosY() - (double)(w.GetScreenY()) / scaleY) / step) * step;
+
+	tmp = 65536;
+	int labelW = 0;
+	// Before staring cycle, calculate label height
+	int labelHeigth = 0;
+	s.Printf(fmt, n);
+	dc.GetTextExtent(s, &tx, &labelHeigth);
+	labelHeigth /= 2;
+	for (; n < end; n += step)
+	{
+		// To have a real zero
+		if (fabs(n) < 1e-10)
+			n = 0;
+		const int p = (int)((w.GetPosY() - n) * scaleY);
+		if ((p > m_plotBondaries.startPy + labelHeigth) && (p < m_plotBondaries.endPy - labelHeigth))
 		{
-			fmt = m_labelFormat;
-		}
-
-		double n = floor((w.GetPosY() - (double)(w.GetScreenY()) / scaleY) / step) * step;
-
-		tmp = 65536;
-		int labelW = 0;
-		// Before staring cycle, calculate label height
-		int labelHeigth = 0;
-		s.Printf(fmt, n);
-		dc.GetTextExtent(s, &tx, &labelHeigth);
-		labelHeigth /= 2;
-		for (; n < end; n += step)
-		{
-			const int p = (int)((w.GetPosY() - n) * scaleY);
-			if ((p > m_plotBondaries.startPy + labelHeigth) && (p < m_plotBondaries.endPy - labelHeigth))
-			{
-				if (m_ticks)
-				{ // Draw axis ticks
-					dc.SetPen(m_pen);
-					if (m_flags == mpALIGN_BORDER_LEFT)
-					{
-						dc.DrawLine(orgx, p, orgx + 4, p);
-					}
-					else
-					{
-						dc.DrawLine(orgx - 4, p, orgx, p);
-					}
+			if (m_ticks)
+			{ // Draw axis ticks
+				dc.SetPen(m_pen);
+				if (m_flags == mpALIGN_BORDER_LEFT)
+				{
+					dc.DrawLine(orgx, p, orgx + 4, p);
 				}
-				if (m_grids)
-				{ // Draw axis grids
-					dc.SetPen(m_gridpen);
-					dc.DrawLine(m_plotBondaries.startPx, p, m_plotBondaries.endPx, p);
+				else
+				{
+					dc.DrawLine(orgx - 4, p, orgx, p);
 				}
+			}
+			if (m_grids)
+			{ // Draw axis grids
+				dc.SetPen(m_gridpen);
+				dc.DrawLine(m_plotBondaries.startPx, p, m_plotBondaries.endPx, p);
+			}
 
-				// Print ticks labels
-				s.Printf(fmt, n);
-				dc.GetTextExtent(s, &tx, &ty);
+			// Print ticks labels
+			s.Printf(fmt, n);
+			dc.GetTextExtent(s, &tx, &ty);
 #ifdef MATHPLOT_DO_LOGGING
-				if (ty != labelHeigth)
-					wxLogMessage(wxT("mpScaleY::Plot: ty(%d) and labelHeigth(%d) differ!"), ty, labelHeigth);
+			if (ty != labelHeigth)
+				wxLogMessage(wxT("mpScaleY::Plot: ty(%d) and labelHeigth(%d) differ!"), ty, labelHeigth);
 #endif
-				labelW = (labelW <= tx) ? tx : labelW;
-				if ((tmp - p + labelHeigth) > mpMIN_Y_AXIS_LABEL_SEPARATION)
-				{
-					if ((m_flags == mpALIGN_BORDER_LEFT) || (m_flags == mpALIGN_RIGHT))
-						dc.DrawText(s, orgx + 4, p - ty / 2);
-					else
-						dc.DrawText(s, orgx - tx - 4, p - ty / 2);
-					tmp = p - labelHeigth;
-				}
+			labelW = (labelW <= tx) ? tx : labelW;
+			if ((tmp - p + labelHeigth) > mpMIN_Y_AXIS_LABEL_SEPARATION)
+			{
+				if ((m_flags == mpALIGN_BORDER_LEFT) || (m_flags == mpALIGN_RIGHT))
+					dc.DrawText(s, orgx + 4, p - ty / 2);
+				else
+					dc.DrawText(s, orgx - tx - 4, p - ty / 2);
+				tmp = p - labelHeigth;
 			}
 		}
+	}
 
-		// Draw axis name
-		dc.GetTextExtent(m_name, &tx, &ty);
-		switch (m_flags)
+	// Draw axis name
+	dc.GetTextExtent(m_name, &tx, &ty);
+	switch (m_flags)
+	{
+		case mpALIGN_BORDER_LEFT:
+			dc.DrawText(m_name, labelW + 8, m_plotBondaries.startPy + 4);
+			break;
+		case mpALIGN_LEFT:
 		{
-			case mpALIGN_BORDER_LEFT:
-				dc.DrawText(m_name, labelW + 8, m_plotBondaries.startPy + 4);
-				break;
-			case mpALIGN_LEFT:
+			if ((!m_drawOutsideMargins) && (w.GetMarginLeft() > (ty + labelW + 8)))
 			{
-				if ((!m_drawOutsideMargins) && (w.GetMarginLeft() > (ty + labelW + 8)))
-				{
-					dc.DrawRotatedText(m_name, orgx - labelW - ty - 6,
-							(m_plotBondaries.endPy + m_plotBondaries.startPy + tx) >> 1, 90);
-				}
-				else
-				{
-					dc.DrawText(m_name, orgx + 4, m_plotBondaries.startPy + 4);
-				}
-				break;
+				dc.DrawRotatedText(m_name, orgx - labelW - ty - 6,
+						(m_plotBondaries.endPy + m_plotBondaries.startPy + tx) >> 1, 90);
 			}
-			case mpALIGN_CENTERY:
+			else
+			{
 				dc.DrawText(m_name, orgx + 4, m_plotBondaries.startPy + 4);
-				break;
-			case mpALIGN_RIGHT:
-			{
-				if ((!m_drawOutsideMargins) && (w.GetMarginRight() > (ty + labelW + 8)))
-				{
-					dc.DrawRotatedText(m_name, orgx + labelW + 6, (m_plotBondaries.endPy + m_plotBondaries.startPy + tx) >> 1,
-							90);
-				}
-				else
-				{
-					dc.DrawText(m_name, orgx - tx - 4, m_plotBondaries.startPy + 4);
-				}
-				break;
 			}
-			case mpALIGN_BORDER_RIGHT:
-				dc.DrawText(m_name, orgx - tx - labelW - 6, m_plotBondaries.startPy + 4);
-				break;
-			default:
-				break;
+			break;
 		}
+		case mpALIGN_CENTERY:
+			dc.DrawText(m_name, orgx + 4, m_plotBondaries.startPy + 4);
+			break;
+		case mpALIGN_RIGHT:
+		{
+			if ((!m_drawOutsideMargins) && (w.GetMarginRight() > (ty + labelW + 8)))
+			{
+				dc.DrawRotatedText(m_name, orgx + labelW + 6, (m_plotBondaries.endPy + m_plotBondaries.startPy + tx) >> 1,
+						90);
+			}
+			else
+			{
+				dc.DrawText(m_name, orgx - tx - 4, m_plotBondaries.startPy + 4);
+			}
+			break;
+		}
+		case mpALIGN_BORDER_RIGHT:
+			dc.DrawText(m_name, orgx - tx - labelW - 6, m_plotBondaries.startPy + 4);
+			break;
+		default:
+			break;
 	}
 }
 

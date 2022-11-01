@@ -70,6 +70,7 @@ class MathPlotConfigDialog: public wxDialog
         void OnAxisSelect(wxCommandEvent& event);
         void OnbApplyClick(wxCommandEvent& event);
         void OnbFontClick(wxCommandEvent& event);
+        void OnbDelSeriesClick(wxCommandEvent& event);
         //*)
 
         //(*Identifiers(MathPlotConfigDialog)
@@ -166,6 +167,7 @@ class MathPlotConfigDialog: public wxDialog
         static const long ID_CHECKBOX6;
         static const long ID_STATICTEXT19;
         static const long ID_SPINCTRL1;
+        static const long ID_BUTTON11;
         static const long ID_PANEL4;
         static const long ID_NOTEBOOK1;
         static const long ID_BUTTON3;
@@ -180,6 +182,7 @@ class MathPlotConfigDialog: public wxDialog
         wxButton* bBGColor;
         wxButton* bClose;
         wxButton* bCoordBrushColor;
+        wxButton* bDelSeries;
         wxButton* bFontAxis;
         wxButton* bFontTitle;
         wxButton* bLegendBrushColor;
@@ -275,6 +278,8 @@ class MathPlotConfigDialog: public wxDialog
         wxTextCtrl* edSeriesName;
         wxTextCtrl* edTitle;
         //*)
+
+        void UpdateSelectedSerie(void);
 
         void DoApplyColour(const wxColour& colour);
         void OnColourChanged(wxColourDialogEvent& event);

@@ -109,6 +109,7 @@ const long MathPlotConfigDialog::ID_CHECKBOX3 = wxNewId();
 const long MathPlotConfigDialog::ID_CHECKBOX6 = wxNewId();
 const long MathPlotConfigDialog::ID_STATICTEXT19 = wxNewId();
 const long MathPlotConfigDialog::ID_SPINCTRL1 = wxNewId();
+const long MathPlotConfigDialog::ID_BUTTON11 = wxNewId();
 const long MathPlotConfigDialog::ID_PANEL4 = wxNewId();
 const long MathPlotConfigDialog::ID_NOTEBOOK1 = wxNewId();
 const long MathPlotConfigDialog::ID_BUTTON3 = wxNewId();
@@ -248,11 +249,11 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow* parent,wxWindowID WXUNUSED(
     cbAxisOutside = new wxCheckBox(pAxis, ID_CHECKBOX7, _("Draw Outside Margins"), wxPoint(192,176), wxDefaultSize, 0, wxDefaultValidator, _T("ID_CHECKBOX7"));
     cbAxisOutside->SetValue(false);
     StaticText26 = new wxStaticText(pAxis, ID_STATICTEXT26, _("Label Format :"), wxPoint(8,216), wxDefaultSize, 0, _T("ID_STATICTEXT26"));
-		edFormat = new wxTextCtrl(pAxis, ID_TEXTCTRL8, _(""), wxPoint(96,212), wxSize(80,23), 0, wxDefaultValidator, _T("ID_TEXTCTRL8"));
+    edFormat = new wxTextCtrl(pAxis, ID_TEXTCTRL8, wxEmptyString, wxPoint(96,212), wxSize(80,23), 0, wxDefaultValidator, _T("ID_TEXTCTRL8"));
 		edFormat->SetToolTip(_("Format of the label for the axis. Should be like c++ format."));
     Panel4 = new wxPanel(nbConfig, ID_PANEL4, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL, _T("ID_PANEL4"));
-    StaticText1 = new wxStaticText(Panel4, ID_STATICTEXT1, _("Series number :"), wxPoint(8,16), wxDefaultSize, 0, _T("ID_STATICTEXT1"));
-    ChoiceSeries = new wxChoice(Panel4, ID_CHOICE1, wxPoint(112,12), wxSize(56,23), 0, 0, 0, wxDefaultValidator, _T("ID_CHOICE1"));
+    StaticText1 = new wxStaticText(Panel4, ID_STATICTEXT1, _("Series name :"), wxPoint(8,16), wxDefaultSize, 0, _T("ID_STATICTEXT1"));
+    ChoiceSeries = new wxChoice(Panel4, ID_CHOICE1, wxPoint(112,12), wxSize(136,23), 0, 0, 0, wxDefaultValidator, _T("ID_CHOICE1"));
     ChoiceSeries->Append(_("0"));
     ChoiceSeries->Append(_("1"));
     cbSeriesVisible = new wxCheckBox(Panel4, ID_CHECKBOX1, _("Visible"), wxPoint(8,192), wxDefaultSize, 0, wxDefaultValidator, _T("ID_CHECKBOX1"));
@@ -319,6 +320,8 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow* parent,wxWindowID WXUNUSED(
     StaticText19 = new wxStaticText(Panel4, ID_STATICTEXT19, _("Step :"), wxPoint(208,264), wxDefaultSize, 0, _T("ID_STATICTEXT19"));
     cbSeriesStep = new wxSpinCtrl(Panel4, ID_SPINCTRL1, _T("1"), wxPoint(296,260), wxSize(46,23), 0, 1, 100, 1, _T("ID_SPINCTRL1"));
     cbSeriesStep->SetValue(_T("1"));
+    bDelSeries = new wxButton(Panel4, ID_BUTTON11, _("Delete"), wxPoint(280,12), wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON11"));
+    bDelSeries->Disable();
     nbConfig->AddPage(Panel3, _("General"), false);
     nbConfig->AddPage(Panel2, _("Legend"), false);
     nbConfig->AddPage(Panel1, _("Axis"), false);
@@ -349,6 +352,7 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow* parent,wxWindowID WXUNUSED(
     Connect(ID_CHOICE1,wxEVT_COMMAND_CHOICE_SELECTED,wxCommandEventHandler(MathPlotConfigDialog::OnChoiceSeries));
     Connect(ID_BUTTON1,wxEVT_COMMAND_BUTTON_CLICKED,wxCommandEventHandler(MathPlotConfigDialog::OnbColorClick));
     Connect(ID_BUTTON2,wxEVT_COMMAND_BUTTON_CLICKED,wxCommandEventHandler(MathPlotConfigDialog::OnbColorClick));
+    Connect(ID_BUTTON11,wxEVT_COMMAND_BUTTON_CLICKED,wxCommandEventHandler(MathPlotConfigDialog::OnbDelSeriesClick));
     Connect(ID_BUTTON3,wxEVT_COMMAND_BUTTON_CLICKED,wxCommandEventHandler(MathPlotConfigDialog::OnbApplyClick));
     Connect(ID_BUTTON4,wxEVT_COMMAND_BUTTON_CLICKED,wxCommandEventHandler(MathPlotConfigDialog::OnQuit));
     //*)
@@ -420,13 +424,21 @@ void MathPlotConfigDialog::Initialize()
 	ChoiceSeries->Clear();
 	for (unsigned int i=0; i<m_plot->CountLayersPlot(); i++)
 	{
-	  ChoiceSeries->Append(wxString::Format(wxT("%i"), i));
+	  ChoiceSeries->Append(((mpLayer*)m_plot->GetLayerPlot(i))->GetName());
+	}
+	bDelSeries->Enable(ChoiceSeries->GetCount() > 0);
+
+	// Select the first serie
+	if (ChoiceSeries->GetCount() > 0)
+	{
+		ChoiceSeries->SetSelection(0);
+		UpdateSelectedSerie();
 	}
 }
 
 void MathPlotConfigDialog::OnQuit(wxCommandEvent& WXUNUSED(event))
 {
-    Close();
+	Close();
 }
 
 void MathPlotConfigDialog::OnbColorClick(wxCommandEvent& event)
@@ -562,14 +574,14 @@ int MathPlotConfigDialog::BrushStyleToId(wxBrushStyle style)
 		}
 }
 
-void MathPlotConfigDialog::OnChoiceSeries(wxCommandEvent& WXUNUSED(event))
+void MathPlotConfigDialog::UpdateSelectedSerie(void)
 {
 	CurrentSerie = (mpLayer*)m_plot->GetLayerPlot(ChoiceSeries->GetSelection());
 
-	CurrentChoice = ChoiceSeries;
-
 	if (CurrentSerie)
 	{
+		CurrentChoice = ChoiceSeries;
+
 		edSeriesName->SetValue(CurrentSerie->GetName());
 		// Pen config
 		bSeriesPenColor->SetBackgroundColour(CurrentSerie->GetPen().GetColour());
@@ -589,15 +601,37 @@ void MathPlotConfigDialog::OnChoiceSeries(wxCommandEvent& WXUNUSED(event))
 
 		cbSeriesStep->SetValue(CurrentSerie->GetStep());
 	}
+	else
+		CurrentChoice = NULL;
+}
+
+void MathPlotConfigDialog::OnChoiceSeries(wxCommandEvent& WXUNUSED(event))
+{
+	UpdateSelectedSerie();
+}
+
+void MathPlotConfigDialog::OnbDelSeriesClick(wxCommandEvent& WXUNUSED(event))
+{
+	if (CurrentSerie && CurrentSerie->GetCanDelete())
+	{
+	  if (wxMessageDialog(this, _("Delete the serie ?"), _("Confirmation"), wxYES_NO|wxCENTRE).ShowModal() == wxID_YES)
+	  {
+	  	m_plot->DelLayer(CurrentSerie, true, true);
+			if (CurrentLegend)
+				CurrentLegend->SetNeedUpdate();
+			m_plot->Fit();
+	  	CurrentSerie = NULL;
+	  	Initialize();
+	  }
+	}
 }
 
 void MathPlotConfigDialog::OnbApplyClick(wxCommandEvent& WXUNUSED(event))
 {
 	switch (nbConfig->GetSelection())
 	{
-		case 0 :
+		case 0 : // General
 		{
-			// General
 			if (CurrentTitle)
 			{
 			  CurrentTitle->SetName(edTitle->GetValue());
