@@ -109,11 +109,15 @@ const long MathPlotConfigDialog::ID_CHECKBOX3 = wxNewId();
 const long MathPlotConfigDialog::ID_CHECKBOX6 = wxNewId();
 const long MathPlotConfigDialog::ID_STATICTEXT19 = wxNewId();
 const long MathPlotConfigDialog::ID_SPINCTRL1 = wxNewId();
+const long MathPlotConfigDialog::ID_BUTTON11 = wxNewId();
 const long MathPlotConfigDialog::ID_PANEL4 = wxNewId();
 const long MathPlotConfigDialog::ID_NOTEBOOK1 = wxNewId();
 const long MathPlotConfigDialog::ID_BUTTON3 = wxNewId();
 const long MathPlotConfigDialog::ID_BUTTON4 = wxNewId();
 //*)
+
+const wxString XAxis_Align[] = {"Bottom border", "Bottom", "Center", "Top", "Top border"};
+const wxString YAxis_Align[] = {"Left border", "Left", "Center", "Right", "Right border"};
 
 BEGIN_EVENT_TABLE(MathPlotConfigDialog,wxDialog)
     //(*EventTable(MathPlotConfigDialog)
@@ -164,6 +168,7 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow* parent,wxWindowID id)
     cbCoord->Append(_("Bottom center"));
     cbCoord->Append(_("Bottom right"));
     cbCoord->Append(_("Default position"));
+    cbCoord->Append(_("Cursor position"));
     cbCoordVisible = new wxCheckBox(pCoord, ID_CHECKBOX10, _("Visible"), wxPoint(8,56), wxDefaultSize, 0, wxDefaultValidator, _T("ID_CHECKBOX10"));
     cbCoordVisible->SetValue(false);
     pCoordBrush = new wxPanel(pCoord, ID_PANEL14, wxPoint(192,12), wxSize(160,84), wxTAB_TRAVERSAL, _T("ID_PANEL14"));
@@ -247,8 +252,8 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow* parent,wxWindowID id)
     edFormat = new wxTextCtrl(pAxis, ID_TEXTCTRL8, wxEmptyString, wxPoint(96,212), wxSize(80,23), 0, wxDefaultValidator, _T("ID_TEXTCTRL8"));
     edFormat->SetToolTip(_("Format of the label for the axis. Should be like c++ format."));
     Panel4 = new wxPanel(nbConfig, ID_PANEL4, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL, _T("ID_PANEL4"));
-    StaticText1 = new wxStaticText(Panel4, ID_STATICTEXT1, _("Series number :"), wxPoint(8,16), wxDefaultSize, 0, _T("ID_STATICTEXT1"));
-    ChoiceSeries = new wxChoice(Panel4, ID_CHOICE1, wxPoint(112,12), wxSize(56,23), 0, 0, 0, wxDefaultValidator, _T("ID_CHOICE1"));
+    StaticText1 = new wxStaticText(Panel4, ID_STATICTEXT1, _("Series name :"), wxPoint(8,16), wxDefaultSize, 0, _T("ID_STATICTEXT1"));
+    ChoiceSeries = new wxChoice(Panel4, ID_CHOICE1, wxPoint(112,12), wxSize(136,23), 0, 0, 0, wxDefaultValidator, _T("ID_CHOICE1"));
     ChoiceSeries->Append(_("0"));
     ChoiceSeries->Append(_("1"));
     cbSeriesVisible = new wxCheckBox(Panel4, ID_CHECKBOX1, _("Visible"), wxPoint(8,192), wxDefaultSize, 0, wxDefaultValidator, _T("ID_CHECKBOX1"));
@@ -315,6 +320,8 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow* parent,wxWindowID id)
     StaticText19 = new wxStaticText(Panel4, ID_STATICTEXT19, _("Step :"), wxPoint(208,264), wxDefaultSize, 0, _T("ID_STATICTEXT19"));
     cbSeriesStep = new wxSpinCtrl(Panel4, ID_SPINCTRL1, _T("1"), wxPoint(296,260), wxSize(46,23), 0, 1, 100, 1, _T("ID_SPINCTRL1"));
     cbSeriesStep->SetValue(_T("1"));
+    bDelSeries = new wxButton(Panel4, ID_BUTTON11, _("Delete"), wxPoint(280,12), wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON11"));
+    bDelSeries->Disable();
     nbConfig->AddPage(Panel3, _("General"), false);
     nbConfig->AddPage(Panel2, _("Legend"), false);
     nbConfig->AddPage(Panel1, _("Axis"), false);
@@ -345,14 +352,24 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow* parent,wxWindowID id)
     Connect(ID_CHOICE1,wxEVT_COMMAND_CHOICE_SELECTED,(wxObjectEventFunction)&MathPlotConfigDialog::OnChoiceSeries);
     Connect(ID_BUTTON1,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&MathPlotConfigDialog::OnbColorClick);
     Connect(ID_BUTTON2,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&MathPlotConfigDialog::OnbColorClick);
+    Connect(ID_BUTTON11,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&MathPlotConfigDialog::OnbDelSeriesClick);
     Connect(ID_BUTTON3,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&MathPlotConfigDialog::OnbApplyClick);
     Connect(ID_BUTTON4,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&MathPlotConfigDialog::OnQuit);
     //*)
 
     colourButton = NULL;
+    CurrentTitle = NULL;
     CurrentChoice = NULL;
-
-    Initialize();
+    CurrentSerie = NULL;
+    CurrentLegend = NULL;
+    CurrentCoords = NULL;
+    // The plot window
+//    m_plot = (mpWindow *)parent;
+    m_plot = wxDynamicCast(parent, mpWindow);
+    CurrentScale = NULL;
+    fontTitleChanged = false;
+    fontAxisChanged = false;
+//    Initialize();
 }
 
 MathPlotConfigDialog::~MathPlotConfigDialog()
@@ -363,7 +380,60 @@ MathPlotConfigDialog::~MathPlotConfigDialog()
 
 void MathPlotConfigDialog::Initialize()
 {
+	CurrentTitle = (mpText*)m_plot->GetLayerByClassName(_T("mpTitle"));
+	if (CurrentTitle)
+	{
+		edTitle->SetValue(CurrentTitle->GetName());
+		cbTitleVisible->SetValue(CurrentTitle->IsVisible());
+		bFontTitle->SetFont(CurrentTitle->GetFont());
+		bFontTitle->SetForegroundColour(CurrentTitle->GetFontColour());
+		bFontTitle->Enable();
+	}
 
+	edMarginTop->SetValue(wxString::Format("%d", m_plot->GetMarginTop()));
+	edMarginBottom->SetValue(wxString::Format("%d", m_plot->GetMarginBottom()));
+	edMarginLeft->SetValue(wxString::Format("%d", m_plot->GetMarginLeft()));
+	edMarginRight->SetValue(wxString::Format("%d", m_plot->GetMarginRight()));
+
+	cbDrawBox->SetValue(m_plot->GetDrawBox());
+	bBGColor->SetBackgroundColour(m_plot->GetbgColour());
+
+	CurrentLegend = (mpInfoLegend*)m_plot->GetLayerByClassName(_T("mpInfoLegend"));
+	if (CurrentLegend)
+	{
+		cbLegendPosition->SetSelection(CurrentLegend->GetLocation());
+		cbLegendStyle->SetSelection(CurrentLegend->GetItemMode());
+		cbLegendDirection->SetSelection(CurrentLegend->GetItemDirection());
+		cbLegendVisible->SetValue(CurrentLegend->IsVisible());
+		// Brush config
+		bLegendBrushColor->SetBackgroundColour(CurrentLegend->GetBrush().GetColour());
+		cbLegendBrushStyle->SetSelection(BrushStyleToId(CurrentLegend->GetBrush().GetStyle()));
+	}
+
+	CurrentCoords = (mpInfoCoords*)m_plot->GetLayerByClassName(_T("mpInfoCoords"));
+	if (CurrentCoords)
+	{
+		cbCoord->SetSelection(CurrentCoords->GetLocation());
+		cbCoordVisible->SetValue(CurrentCoords->IsVisible());
+		// Brush config
+		bCoordBrushColor->SetBackgroundColour(CurrentCoords->GetBrush().GetColour());
+		cbCoordBrushStyle->SetSelection(BrushStyleToId(CurrentCoords->GetBrush().GetStyle()));
+	}
+
+	// Fill series counter
+	ChoiceSeries->Clear();
+	for (unsigned int i=0; i<m_plot->CountLayersPlot(); i++)
+	{
+	  ChoiceSeries->Append(((mpLayer*)m_plot->GetLayerPlot(i))->GetName());
+	}
+	bDelSeries->Enable(ChoiceSeries->GetCount() > 0);
+
+	// Select the first serie
+	if (ChoiceSeries->GetCount() > 0)
+	{
+		ChoiceSeries->SetSelection(0);
+		UpdateSelectedSerie();
+	}
 }
 
 void MathPlotConfigDialog::OnQuit(wxCommandEvent& WXUNUSED(event))
@@ -375,8 +445,6 @@ void MathPlotConfigDialog::OnbColorClick(wxCommandEvent& event)
 {
 	// Get the sender
 	colourButton = wxDynamicCast(event.GetEventObject(), wxButton);
-	wxString id = colourButton->GetName();
-	long n;
 
 	wxColourData m_clrData;
 	m_clrData.SetColour(colourButton->GetBackgroundColour());
@@ -388,10 +456,6 @@ void MathPlotConfigDialog::OnbColorClick(wxCommandEvent& event)
 	if (ColourDialog.ShowModal() == wxID_OK)
 	{
 		m_clrData = ColourDialog.GetColourData();
-
-		// Keep the choice
-		(id.substr(9,1)).ToLong(&n);
-//		IHMColour[n] = m_clrData.GetColour();
 
 		Refresh();
 	}
@@ -414,46 +478,264 @@ void MathPlotConfigDialog::DoApplyColour(const wxColour& colour)
 	colourButton->Refresh();
 }
 
-void MathPlotConfigDialog::OnbFontClick(wxCommandEvent& WXUNUSED(event))
+void MathPlotConfigDialog::OnbFontClick(wxCommandEvent& event)
 {
-    FontDialog->ShowModal();
+	wxButton *fontButton = wxDynamicCast(event.GetEventObject(), wxButton);
+
+	wxFontData retData;
+  retData.SetInitialFont(fontButton->GetFont());
+  retData.SetColour(fontButton->GetForegroundColour());
+
+	wxFontDialog FontDialog(this, retData);
+
+  if (FontDialog.ShowModal() == wxID_OK)
+  {
+  	retData = FontDialog.GetFontData();
+
+  	SetFontChildren(fontButton, retData);
+  	if (fontButton == bFontTitle)
+  		fontTitleChanged = true;
+  	if (fontButton == bFontAxis)
+  		fontAxisChanged = true;
+  }
+}
+
+void MathPlotConfigDialog::SetFontChildren(wxButton* p, const wxFontData& fontdata)
+{
+	wxFont font(fontdata.GetChosenFont());
+
+	p->SetFont(font);
+	p->SetForegroundColour(fontdata.GetColour());
 }
 
 void MathPlotConfigDialog::OnAxisSelect(wxCommandEvent& WXUNUSED(event))
 {
+	int i = 0;
+
+	if (ChoiceAxis->GetSelection() == 0)
+	{
+		CurrentScale = (mpScale*)m_plot->GetLayerByClassName(_T("mpScaleX"));
+		cbAxisPosition->Clear();
+		for (i = 0; i <= mpALIGN_BORDER_TOP; i++)
+			cbAxisPosition->Append(XAxis_Align[i]);
+	}
+	else
+	{
+		CurrentScale = (mpScale*)m_plot->GetLayerByClassName(_T("mpScaleY"));
+		cbAxisPosition->Clear();
+		for (i = 0; i <= mpALIGN_BORDER_RIGHT; i++)
+			cbAxisPosition->Append(YAxis_Align[i]);
+	}
+
+	CurrentChoice = ChoiceAxis;
+
+	if (CurrentScale)
+	{
+		edAxisName->SetValue(CurrentScale->GetName());
+		// Pen config
+		bAxisPenColor->SetBackgroundColour(CurrentScale->GetPen().GetColour());
+		cbAxisPenWidth->SetSelection(CurrentScale->GetPen().GetWidth() - 1);
+		cbAxisPenStyle->SetSelection(CurrentScale->GetPen().GetStyle() - wxPENSTYLE_SOLID);
+		cbAxisVisible->SetValue(CurrentScale->IsVisible());
+		cbAxisPosition->SetSelection(CurrentScale->GetAlign());
+		edFormat->SetValue(CurrentScale->GetLabelFormat());
+
+		cbAxisOutside->SetValue(CurrentScale->GetDrawOutsideMargins());
+
+		bFontAxis->SetFont(CurrentScale->GetFont());
+		bFontAxis->SetForegroundColour(CurrentScale->GetFontColour());
+		bFontAxis->Enable();
+	}
 }
 
-//wxBrushStyle MathPlotConfigDialog::IdToBrushStyle(int id)
-//{
-//	if (id == 0)
-//		return wxBRUSHSTYLE_SOLID;
-//	else
-//		if (id == 1)
-//			return wxBRUSHSTYLE_TRANSPARENT;
-//		else
-//		{
-//			return (wxBrushStyle)(wxBRUSHSTYLE_BDIAGONAL_HATCH + (id - 2));
-//		}
-//}
+wxBrushStyle MathPlotConfigDialog::IdToBrushStyle(int id)
+{
+	if (id == 0)
+		return wxBRUSHSTYLE_SOLID;
+	else
+		if (id == 1)
+			return wxBRUSHSTYLE_TRANSPARENT;
+		else
+		{
+			return (wxBrushStyle)(wxBRUSHSTYLE_BDIAGONAL_HATCH + (id - 2));
+		}
+}
 
-//int MathPlotConfigDialog::BrushStyleToId(wxBrushStyle style)
-//{
-//	if (style == wxBRUSHSTYLE_SOLID)
-//		return 0;
-//	else
-//		if (style == wxBRUSHSTYLE_TRANSPARENT)
-//			return 1;
-//		else
-//		{
-//			return style - wxBRUSHSTYLE_BDIAGONAL_HATCH + 2;
-//		}
-//}
+int MathPlotConfigDialog::BrushStyleToId(wxBrushStyle style)
+{
+	if (style == wxBRUSHSTYLE_SOLID)
+		return 0;
+	else
+		if (style == wxBRUSHSTYLE_TRANSPARENT)
+			return 1;
+		else
+		{
+			return style - wxBRUSHSTYLE_BDIAGONAL_HATCH + 2;
+		}
+}
+
+void MathPlotConfigDialog::UpdateSelectedSerie(void)
+{
+	CurrentSerie = (mpLayer*)m_plot->GetLayerPlot(ChoiceSeries->GetSelection());
+
+	if (CurrentSerie)
+	{
+		CurrentChoice = ChoiceSeries;
+
+		edSeriesName->SetValue(CurrentSerie->GetName());
+		// Pen config
+		bSeriesPenColor->SetBackgroundColour(CurrentSerie->GetPen().GetColour());
+		cbSeriesPenWidth->SetSelection(CurrentSerie->GetPen().GetWidth() - 1);
+		cbSeriesPenStyle->SetSelection(CurrentSerie->GetPen().GetStyle() - wxPENSTYLE_SOLID);
+		// Brush config
+		bSeriesBrushColor->SetBackgroundColour(CurrentSerie->GetBrush().GetColour());
+		cbSeriesBrushStyle->SetSelection(BrushStyleToId(CurrentSerie->GetBrush().GetStyle()));
+		// Symbol config
+		cbSeriesSymbolType->SetSelection(CurrentSerie->GetSymbol());
+		cbSeriesSymbolSize->SetValue(CurrentSerie->GetSymbolSize());
+
+		cbSeriesVisible->SetValue(CurrentSerie->IsVisible());
+		cbSeriesContinuity->SetValue(CurrentSerie->GetContinuity());
+		cbSeriesOutside->SetValue(CurrentSerie->GetDrawOutsideMargins());
+		cbSeriesShowName->SetValue(CurrentSerie->GetShowName());
+
+		cbSeriesStep->SetValue(CurrentSerie->GetStep());
+	}
+	else
+		CurrentChoice = NULL;
+}
 
 void MathPlotConfigDialog::OnChoiceSeries(wxCommandEvent& WXUNUSED(event))
 {
+	UpdateSelectedSerie();
+}
+
+void MathPlotConfigDialog::OnbDelSeriesClick(wxCommandEvent& WXUNUSED(event))
+{
+	if (CurrentSerie && CurrentSerie->GetCanDelete())
+	{
+	  if (wxMessageDialog(this, _("Delete the serie ?"), _("Confirmation"), wxYES_NO|wxCENTRE).ShowModal() == wxID_YES)
+	  {
+	  	m_plot->DelLayer(CurrentSerie, true, true);
+			if (CurrentLegend)
+				CurrentLegend->SetNeedUpdate();
+			m_plot->Fit();
+	  	CurrentSerie = NULL;
+	  	Initialize();
+	  }
+	}
 }
 
 void MathPlotConfigDialog::OnbApplyClick(wxCommandEvent& WXUNUSED(event))
 {
+	switch (nbConfig->GetSelection())
+	{
+		case 0 : // General
+		{
+			if (CurrentTitle)
+			{
+			  CurrentTitle->SetName(edTitle->GetValue());
+			  CurrentTitle->SetVisible(cbTitleVisible->GetValue());
+			  if (fontTitleChanged)
+			  {
+			  	CurrentTitle->SetFont(bFontTitle->GetFont());
+			  	CurrentTitle->SetFontColour(bFontTitle->GetForegroundColour());
+			  	fontTitleChanged = false;
+			  }
+			}
+
+			long top, bottom, left, right;
+			edMarginTop->GetValue().ToLong(&top);
+			edMarginRight->GetValue().ToLong(&right);
+			edMarginBottom->GetValue().ToLong(&bottom);
+			edMarginLeft->GetValue().ToLong(&left);
+			m_plot->SetMargins(top, right, bottom, left);
+
+			m_plot->SetDrawBox(cbDrawBox->GetValue());
+			m_plot->SetbgColour(bBGColor->GetBackgroundColour());
+
+			if (CurrentCoords)
+			{
+				CurrentCoords->SetLocation((mpLocation)cbCoord->GetSelection());
+				CurrentCoords->SetVisible(cbCoordVisible->GetValue());
+				// Brush config
+				wxBrush brush(bCoordBrushColor->GetBackgroundColour(), IdToBrushStyle(cbCoordBrushStyle->GetSelection()));
+				CurrentCoords->SetBrush(brush);
+			}
+
+			m_plot->UpdateAll();
+			break;
+		}
+		case 1 : // Legend page
+			if (CurrentLegend)
+			{
+				CurrentLegend->SetLocation((mpLocation)cbLegendPosition->GetSelection());
+				CurrentLegend->SetVisible(cbLegendVisible->GetValue());
+				CurrentLegend->SetItemMode((mpLegendStyle)cbLegendStyle->GetSelection());
+				CurrentLegend->SetItemDirection((mpLegendDirection)cbLegendDirection->GetSelection());
+				// Brush config
+				wxBrush brush(bLegendBrushColor->GetBackgroundColour(), IdToBrushStyle(cbLegendBrushStyle->GetSelection()));
+				CurrentLegend->SetBrush(brush);
+
+				m_plot->UpdateAll();
+			}
+			break;
+
+		case 2 : // Axis page
+			if (CurrentChoice == ChoiceAxis)
+			{
+				CurrentScale->SetName(edAxisName->GetValue());
+				// Pen config
+				wxPen pen(bAxisPenColor->GetBackgroundColour(), cbAxisPenWidth->GetSelection() + 1,
+						(wxPenStyle)(cbAxisPenStyle->GetSelection() + wxPENSTYLE_SOLID));
+				CurrentScale->SetPen(pen);
+				CurrentScale->SetVisible(cbAxisVisible->GetValue());
+				CurrentScale->SetAlign(cbAxisPosition->GetSelection());
+				CurrentScale->SetDrawOutsideMargins(cbAxisOutside->GetValue());
+				CurrentScale->SetLabelFormat(edFormat->GetValue());
+
+			  if (fontAxisChanged)
+			  {
+			  	CurrentScale->SetFont(bFontAxis->GetFont());
+			  	CurrentScale->SetFontColour(bFontAxis->GetForegroundColour());
+			  	fontAxisChanged = false;
+}
+
+				m_plot->UpdateAll();
+			}
+			break;
+
+		case 3: // Series page
+			if (CurrentChoice == ChoiceSeries)
+{
+				CurrentSerie->SetName(edSeriesName->GetValue());
+				// Pen config
+				wxPen pen(bSeriesPenColor->GetBackgroundColour(), cbSeriesPenWidth->GetSelection() + 1,
+						(wxPenStyle)(cbSeriesPenStyle->GetSelection() + wxPENSTYLE_SOLID));
+				CurrentSerie->SetPen(pen);
+
+				// Brush config
+				wxBrush brush(bSeriesBrushColor->GetBackgroundColour(), IdToBrushStyle(cbSeriesBrushStyle->GetSelection()));
+				CurrentSerie->SetBrush(brush);
+
+				// Symbol config
+				CurrentSerie->SetSymbol((mpSymbol)cbSeriesSymbolType->GetSelection());
+				CurrentSerie->SetSymbolSize(cbSeriesSymbolSize->GetValue());
+
+				CurrentSerie->SetVisible(cbSeriesVisible->GetValue());
+				CurrentSerie->SetContinuity(cbSeriesContinuity->GetValue());
+				CurrentSerie->SetDrawOutsideMargins(cbSeriesOutside->GetValue());
+				CurrentSerie->SetShowName(cbSeriesShowName->GetValue());
+
+				CurrentSerie->SetStep(cbSeriesStep->GetValue());
+
+				if (CurrentLegend)
+					CurrentLegend->SetNeedUpdate();
+
+				m_plot->Fit();
+}
+			break;
+		default : ;
+	}
 }
 

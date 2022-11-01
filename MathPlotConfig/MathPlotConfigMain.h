@@ -26,6 +26,17 @@
 #include <wx/textctrl.h>
 //*)
 
+
+#include "mathplot.h"
+
+class WXDLLIMPEXP_MATHPLOT mpWindow;
+class WXDLLIMPEXP_MATHPLOT mpLayer;
+class WXDLLIMPEXP_MATHPLOT mpInfoCoords;
+class WXDLLIMPEXP_MATHPLOT mpInfoLegend;
+class WXDLLIMPEXP_MATHPLOT mpScale;
+class WXDLLIMPEXP_MATHPLOT mpText;
+
+
 class MathPlotConfigDialog: public wxDialog
 {
     public:
@@ -33,10 +44,20 @@ class MathPlotConfigDialog: public wxDialog
         MathPlotConfigDialog(wxWindow* parent,wxWindowID id = -1);
         virtual ~MathPlotConfigDialog();
 
+        void Initialize();
+
     private:
 
+        mpWindow *m_plot;
+        mpText *CurrentTitle;
+        mpInfoLegend * CurrentLegend;
+        mpInfoCoords * CurrentCoords;
+        mpScale *CurrentScale;
+        mpLayer *CurrentSerie;
         wxButton* colourButton;
         wxChoice* CurrentChoice;
+        bool fontTitleChanged;
+        bool fontAxisChanged;
 
         //(*Handlers(MathPlotConfigDialog)
         void OnQuit(wxCommandEvent& event);
@@ -45,6 +66,7 @@ class MathPlotConfigDialog: public wxDialog
         void OnAxisSelect(wxCommandEvent& event);
         void OnbApplyClick(wxCommandEvent& event);
         void OnbFontClick(wxCommandEvent& event);
+        void OnbDelSeriesClick(wxCommandEvent& event);
         //*)
 
         //(*Identifiers(MathPlotConfigDialog)
@@ -141,6 +163,7 @@ class MathPlotConfigDialog: public wxDialog
         static const long ID_CHECKBOX6;
         static const long ID_STATICTEXT19;
         static const long ID_SPINCTRL1;
+        static const long ID_BUTTON11;
         static const long ID_PANEL4;
         static const long ID_NOTEBOOK1;
         static const long ID_BUTTON3;
@@ -155,6 +178,7 @@ class MathPlotConfigDialog: public wxDialog
         wxButton* bBGColor;
         wxButton* bClose;
         wxButton* bCoordBrushColor;
+        wxButton* bDelSeries;
         wxButton* bFontAxis;
         wxButton* bFontTitle;
         wxButton* bLegendBrushColor;
@@ -251,12 +275,14 @@ class MathPlotConfigDialog: public wxDialog
         wxTextCtrl* edTitle;
         //*)
 
+        void UpdateSelectedSerie(void);
+
         void DoApplyColour(const wxColour& colour);
         void OnColourChanged(wxColourDialogEvent& event);
-        void Initialize();
+        void SetFontChildren(wxButton* p, const wxFontData& fontdata);
 
-//        wxBrushStyle IdToBrushStyle(int id);
-//        int BrushStyleToId(wxBrushStyle style);
+        wxBrushStyle IdToBrushStyle(int id);
+        int BrushStyleToId(wxBrushStyle style);
 
         DECLARE_EVENT_TABLE()
 };
