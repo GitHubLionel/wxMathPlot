@@ -657,26 +657,30 @@ void mpInfoLegend::UpdateBitmap(mpWindow &w)
 		}
 	}
 
-	buff_dc.SetPen(*wxBLACK_PEN);
-	buff_dc.SetBrush(*wxTRANSPARENT_BRUSH);
+	if ((width != 0) && (height != 0))
+	{
+		buff_dc.SetPen(*wxBLACK_PEN);
+		buff_dc.SetBrush(*wxTRANSPARENT_BRUSH);
 
-	// Adjust size inside the window and trunc legend if necessary
-	int scrx = w.GetScreenX();
-	int scry = w.GetScreenY();
-	if (width > scrx) width = scrx;
-	if (height > scry) height = scry;
+		// Adjust size inside the window and trunc legend if necessary
+		int scrx = w.GetScreenX();
+		int scry = w.GetScreenY();
+		if (width > scrx) width = scrx;
+		if (height > scry) height = scry;
 
-	buff_dc.DrawRectangle(0, 0, width, height);
+		buff_dc.DrawRectangle(0, 0, width, height);
 
-	SetInfoRectangle(w, width, height);
+		SetInfoRectangle(w, width, height);
 
-	// Transfert to the legend bitmap
-	if (m_legend_bmp) delete m_legend_bmp;
-	m_legend_bmp = new wxBitmap(width, height);
-	m_legend_dc.SelectObject(*m_legend_bmp);
-	m_legend_dc.Blit(0, 0, width, height, &buff_dc, 0, 0);
+		// Transfert to the legend bitmap
+		if (m_legend_bmp) delete m_legend_bmp;
+		m_legend_bmp = new wxBitmap(width, height);
+		m_legend_dc.SelectObject(*m_legend_bmp);
+		m_legend_dc.Blit(0, 0, width, height, &buff_dc, 0, 0);
+		m_need_update = false;
+	}
+
 	delete buff_bmp;
-	m_need_update = false;
 }
 
 void mpInfoLegend::Plot(wxDC &dc, mpWindow &w)
