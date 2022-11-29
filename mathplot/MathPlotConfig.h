@@ -10,24 +10,28 @@
 #ifndef MATHPLOTCONFIGMAIN_H
 #define MATHPLOTCONFIGMAIN_H
 
+#include "mathplot.h"
+
 //(*Headers(MathPlotConfigDialog)
-#include <wx/button.h>
-#include <wx/checkbox.h>
-#include <wx/choice.h>
-#include <wx/colordlg.h>
 #include <wx/dialog.h>
-#include <wx/fontdlg.h>
-#include <wx/notebook.h>
-#include <wx/panel.h>
-#include <wx/sizer.h>
-#include <wx/spinctrl.h>
-#include <wx/statbox.h>
-#include <wx/stattext.h>
-#include <wx/textctrl.h>
+class wxBoxSizer;
+class wxButton;
+class wxCheckBox;
+class wxChoice;
+class wxColourDialog;
+class wxFontDialog;
+class wxNotebook;
+class wxNotebookEvent;
+class wxPanel;
+class wxSpinCtrl;
+class wxSpinEvent;
+class wxStaticBox;
+class wxStaticText;
+class wxTextCtrl;
 //*)
 
-
-#include "mathplot.h"
+class wxColourDialogEvent;
+class wxFontData;
 
 // MathPlot namespace
 namespace MathPlot
@@ -291,6 +295,6 @@ class MathPlotConfigDialog: public wxDialog
         DECLARE_EVENT_TABLE()
 };
 
-}  // namespace MathPlot
+} // MathPlot namespace
 
 #endif // MATHPLOTCONFIGMAIN_H
