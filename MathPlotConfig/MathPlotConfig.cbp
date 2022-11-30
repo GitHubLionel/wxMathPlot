@@ -65,6 +65,8 @@
 			<Add option="-D__WXMSW__" />
 			<Add option="-DwxUSE_UNICODE" />
 			<Add directory="$(#wx)/include" />
+			<Add directory="../MathPlot" />
+			<Add directory="." />
 		</Compiler>
 		<ResourceCompiler>
 			<Add directory="$(#wx)/include" />
@@ -89,11 +91,11 @@
 			<Add library="liboleacc.a" />
 			<Add library="libuxtheme.a" />
 		</Linker>
+		<Unit filename="../MathPlot/mathplot.cpp" />
+		<Unit filename="../MathPlot/mathplot.h" />
 		<Unit filename="MathPlotConfig.cpp" />
 		<Unit filename="MathPlotConfig.h" />
 		<Unit filename="MathPlotConfigDemo.cpp" />
-		<Unit filename="mathplot.cpp" />
-		<Unit filename="mathplot.h" />
 		<Unit filename="resource.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
