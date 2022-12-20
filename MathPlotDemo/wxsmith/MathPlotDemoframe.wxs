@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<wxsmith>
+	<object class="wxFrame" name="MathPlotDemoFrame">
+		<title>MathPlot Demo</title>
+		<size>617,285</size>
+		<id_arg>0</id_arg>
+		<object class="wxAuiManager" variable="AuiManager1" member="yes">
+			<style>wxAUI_MGR_ALLOW_ACTIVE_PANE|wxAUI_MGR_DEFAULT</style>
+			<object class="AuiManagerItem">
+				<object class="wxPanel" name="ID_PANEL1" variable="pLog" member="yes">
+					<minsize>180,-1</minsize>
+					<object class="wxButton" name="ID_BUTTON1" variable="bDraw" member="yes">
+						<label>Draw sinus</label>
+						<pos>16,24</pos>
+						<handler function="OnbDrawClick" entry="EVT_BUTTON" />
+					</object>
+				</object>
+				<name>PaneName0</name>
+				<caption>Log</caption>
+				<minimizebutton>0</minimizebutton>
+				<maximizebutton>0</maximizebutton>
+				<pinbutton>0</pinbutton>
+				<closebutton>0</closebutton>
+				<dockdirection>Left</dockdirection>
+				<dockfixed>0</dockfixed>
+				<dockabledirection></dockabledirection>
+				<floatable>0</floatable>
+				<movable>0</movable>
+				<destroyonclose>0</destroyonclose>
+				<firstadd>0</firstadd>
+			</object>
+			<object class="AuiManagerItem">
+				<object class="wxPanel" name="ID_PANEL2" variable="pPlot" member="yes">
+					<pos>227,228</pos>
+					<object class="wxBoxSizer" variable="BoxSizer1" member="no">
+						<orient>wxVERTICAL</orient>
+						<object class="sizeritem">
+							<object class="mpWindow" name="ID_MATHPLOT1" variable="mPlot" member="yes" />
+							<flag>wxALL|wxEXPAND</flag>
+							<border>5</border>
+							<option>1</option>
+						</object>
+					</object>
+				</object>
+				<name>PaneName1</name>
+				<caption>Plot</caption>
+				<minimizebutton>0</minimizebutton>
+				<pinbutton>0</pinbutton>
+				<closebutton>0</closebutton>
+				<dockdirection>Center</dockdirection>
+				<dockfixed>0</dockfixed>
+				<dockabledirection></dockabledirection>
+				<destroyonclose>0</destroyonclose>
+				<firstadd>0</firstadd>
+			</object>
+		</object>
+	</object>
+</wxsmith>
