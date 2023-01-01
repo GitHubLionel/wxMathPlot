@@ -10,152 +10,171 @@
 			<object class="sizeritem">
 				<object class="wxNotebook" name="ID_NOTEBOOK1" variable="nbConfig" member="yes">
 					<size>383,400</size>
+					<handler function="OnnbConfigPageChanged" entry="EVT_NOTEBOOK_PAGE_CHANGED" />
 					<object class="notebookpage">
-						<object class="wxPanel" name="ID_PANEL3" variable="Panel3" member="yes">
-							<object class="wxPanel" name="ID_PANEL8" variable="pGeneral" member="yes">
-								<pos>0,0</pos>
-								<size>376,304</size>
-								<object class="wxPanel" name="ID_PANEL2" variable="pTitle" member="yes">
-									<pos>0,0</pos>
-									<size>376,80</size>
-									<object class="wxStaticBox" name="ID_STATICBOX3" variable="StaticBox1" member="yes">
+						<object class="wxPanel" name="ID_PANEL17" variable="Panel1" member="yes">
+							<pos>239,4</pos>
+							<object class="wxBoxSizer" variable="BoxSizer3" member="no">
+								<orient>wxVERTICAL</orient>
+								<object class="sizeritem">
+									<object class="wxStaticBoxSizer" variable="StaticBoxSizer1" member="no">
 										<label>Title </label>
-										<pos>0,0</pos>
-										<size>364,80</size>
+										<object class="sizeritem">
+											<object class="wxPanel" name="ID_PANEL2" variable="pTitle" member="yes">
+												<size>376,64</size>
+												<object class="wxStaticText" name="ID_STATICTEXT11" variable="StaticText11" member="yes">
+													<label>Title :</label>
+													<pos>8,10</pos>
+												</object>
+												<object class="wxTextCtrl" name="ID_TEXTCTRL3" variable="edTitle" member="yes">
+													<pos>64,6</pos>
+													<size>216,23</size>
+												</object>
+												<object class="wxButton" name="ID_BUTTON5" variable="bFontTitle" member="yes">
+													<label>Font</label>
+													<pos>288,6</pos>
+													<size>64,23</size>
+													<enabled>0</enabled>
+													<handler function="OnbFontClick" entry="EVT_BUTTON" />
+												</object>
+												<object class="wxCheckBox" name="ID_CHECKBOX8" variable="cbTitleVisible" member="yes">
+													<label>Visible</label>
+													<pos>8,42</pos>
+												</object>
+											</object>
+											<flag>wxALL|wxEXPAND</flag>
+											<option>1</option>
+										</object>
 									</object>
-									<object class="wxStaticText" name="ID_STATICTEXT11" variable="StaticText11" member="yes">
-										<label>Title :</label>
-										<pos>8,24</pos>
-									</object>
-									<object class="wxTextCtrl" name="ID_TEXTCTRL3" variable="edTitle" member="yes">
-										<pos>64,20</pos>
-										<size>220,23</size>
-									</object>
-									<object class="wxButton" name="ID_BUTTON5" variable="bFontTitle" member="yes">
-										<label>Font</label>
-										<pos>292,20</pos>
-										<size>64,23</size>
-										<enabled>0</enabled>
-										<handler function="OnbFontClick" entry="EVT_BUTTON" />
-									</object>
-									<object class="wxCheckBox" name="ID_CHECKBOX8" variable="cbTitleVisible" member="yes">
-										<label>Visible</label>
-										<pos>8,56</pos>
-									</object>
+									<flag>wxALL|wxEXPAND</flag>
+									<border>2</border>
 								</object>
-								<object class="wxPanel" name="ID_PANEL11" variable="pMargins" member="yes">
-									<pos>0,88</pos>
-									<size>376,80</size>
-									<object class="wxStaticBox" name="ID_STATICBOX5" variable="StaticBox2" member="yes">
+								<object class="sizeritem">
+									<object class="wxStaticBoxSizer" variable="StaticBoxSizer2" member="no">
 										<label>Margins </label>
-										<pos>0,0</pos>
-										<size>364,80</size>
+										<object class="sizeritem">
+											<object class="wxPanel" name="ID_PANEL11" variable="pMargins" member="yes">
+												<size>376,64</size>
+												<object class="wxStaticText" name="ID_STATICTEXT15" variable="StaticText15" member="yes">
+													<label>Margins :</label>
+													<pos>8,10</pos>
+												</object>
+												<object class="wxTextCtrl" name="ID_TEXTCTRL4" variable="edMarginTop" member="yes">
+													<value>50</value>
+													<pos>64,6</pos>
+													<size>40,23</size>
+													<validator>wxIntegerValidator&lt;unsigned int&gt; (&amp;int__top)</validator>
+													<tooltip>Top</tooltip>
+													<style>wxTE_RIGHT</style>
+												</object>
+												<object class="wxTextCtrl" name="ID_TEXTCTRL5" variable="edMarginBottom" member="yes">
+													<value>50</value>
+													<pos>112,6</pos>
+													<size>40,23</size>
+													<validator>wxIntegerValidator&lt;unsigned int&gt; (&amp;int__bottom)</validator>
+													<tooltip>Bottom</tooltip>
+													<style>wxTE_RIGHT</style>
+												</object>
+												<object class="wxTextCtrl" name="ID_TEXTCTRL6" variable="edMarginLeft" member="yes">
+													<value>50</value>
+													<pos>160,6</pos>
+													<size>40,23</size>
+													<validator>wxIntegerValidator&lt;unsigned int&gt; (&amp;int__left)</validator>
+													<tooltip>Left</tooltip>
+													<style>wxTE_RIGHT</style>
+												</object>
+												<object class="wxTextCtrl" name="ID_TEXTCTRL7" variable="edMarginRight" member="yes">
+													<value>50</value>
+													<pos>208,6</pos>
+													<size>40,23</size>
+													<validator>wxIntegerValidator&lt;unsigned int&gt; (&amp;int__right)</validator>
+													<tooltip>Right</tooltip>
+													<style>wxTE_RIGHT</style>
+												</object>
+												<object class="wxButton" name="ID_BUTTON7" variable="bBGColor" member="yes">
+													<label>bg color</label>
+													<pos>272,6</pos>
+													<size>72,23</size>
+													<handler function="OnbColorClick" entry="EVT_BUTTON" />
+												</object>
+												<object class="wxCheckBox" name="ID_CHECKBOX5" variable="cbDrawBox" member="yes">
+													<label>Draw box</label>
+													<pos>8,42</pos>
+												</object>
+											</object>
+											<flag>wxALL|wxEXPAND</flag>
+											<option>1</option>
+										</object>
 									</object>
-									<object class="wxStaticText" name="ID_STATICTEXT15" variable="StaticText15" member="yes">
-										<label>Margins :</label>
-										<pos>8,24</pos>
-									</object>
-									<object class="wxTextCtrl" name="ID_TEXTCTRL4" variable="edMarginTop" member="yes">
-										<value>50</value>
-										<pos>64,20</pos>
-										<size>40,23</size>
-										<tooltip>Top</tooltip>
-										<style>wxTE_RIGHT</style>
-									</object>
-									<object class="wxTextCtrl" name="ID_TEXTCTRL5" variable="edMarginBottom" member="yes">
-										<value>50</value>
-										<pos>112,20</pos>
-										<size>40,23</size>
-										<tooltip>Bottom</tooltip>
-										<style>wxTE_RIGHT</style>
-									</object>
-									<object class="wxTextCtrl" name="ID_TEXTCTRL6" variable="edMarginLeft" member="yes">
-										<value>50</value>
-										<pos>160,20</pos>
-										<size>40,23</size>
-										<tooltip>Left</tooltip>
-										<style>wxTE_RIGHT</style>
-									</object>
-									<object class="wxTextCtrl" name="ID_TEXTCTRL7" variable="edMarginRight" member="yes">
-										<value>50</value>
-										<pos>208,20</pos>
-										<size>40,23</size>
-										<tooltip>Right</tooltip>
-										<style>wxTE_RIGHT</style>
-									</object>
-									<object class="wxButton" name="ID_BUTTON7" variable="bBGColor" member="yes">
-										<label>bg color</label>
-										<pos>272,20</pos>
-										<size>72,23</size>
-										<handler function="OnbColorClick" entry="EVT_BUTTON" />
-									</object>
-									<object class="wxCheckBox" name="ID_CHECKBOX5" variable="cbDrawBox" member="yes">
-										<label>Draw box</label>
-										<pos>8,56</pos>
-									</object>
+									<flag>wxALL|wxEXPAND</flag>
+									<border>2</border>
 								</object>
-								<object class="wxPanel" name="ID_PANEL12" variable="pCoord" member="yes">
-									<pos>0,176</pos>
-									<size>376,120</size>
-									<object class="wxStaticBox" name="ID_STATICBOX8" variable="StaticBox4" member="yes">
-										<label>Coord </label>
-										<pos>0,0</pos>
-										<size>360,104</size>
-									</object>
-									<object class="wxStaticText" name="ID_STATICTEXT18" variable="StaticText18" member="yes">
-										<label>Position :</label>
-										<pos>8,24</pos>
-									</object>
-									<object class="wxChoice" name="ID_CHOICE11" variable="cbCoord" member="yes">
-										<content>
-											<item>Left center</item>
-											<item>Top left</item>
-											<item>Top center</item>
-											<item>Top right</item>
-											<item>Right center</item>
-											<item>Bottom left</item>
-											<item>Bottom center</item>
-											<item>Bottom right</item>
-											<item>Default position</item>
-											<item>Cursor position</item>
-										</content>
-										<pos>64,20</pos>
-										<size>112,23</size>
-									</object>
-									<object class="wxCheckBox" name="ID_CHECKBOX10" variable="cbCoordVisible" member="yes">
-										<label>Visible</label>
-										<pos>8,56</pos>
-									</object>
-									<object class="wxPanel" name="ID_PANEL14" variable="pCoordBrush" member="yes">
-										<pos>192,12</pos>
-										<size>160,84</size>
-										<object class="wxStaticBox" name="ID_STATICBOX10" variable="sbCoordBrush" member="yes">
-											<label>Brush </label>
-											<pos>0,0</pos>
-											<size>160,80</size>
+								<object class="sizeritem">
+									<object class="wxStaticBoxSizer" variable="StaticBoxSizer3" member="no">
+										<label>Mouse coordinates </label>
+										<object class="sizeritem">
+											<object class="wxPanel" name="ID_PANEL12" variable="pCoord" member="yes">
+												<size>376,100</size>
+												<object class="wxStaticText" name="ID_STATICTEXT18" variable="StaticText18" member="yes">
+													<label>Position :</label>
+													<pos>8,10</pos>
+												</object>
+												<object class="wxChoice" name="ID_CHOICE11" variable="cbCoord" member="yes">
+													<content>
+														<item>Left center</item>
+														<item>Top left</item>
+														<item>Top center</item>
+														<item>Top right</item>
+														<item>Right center</item>
+														<item>Bottom left</item>
+														<item>Bottom center</item>
+														<item>Bottom right</item>
+														<item>Default position</item>
+														<item>Cursor position</item>
+													</content>
+													<pos>64,6</pos>
+													<size>112,23</size>
+												</object>
+												<object class="wxCheckBox" name="ID_CHECKBOX10" variable="cbCoordVisible" member="yes">
+													<label>Visible</label>
+													<pos>8,42</pos>
+												</object>
+												<object class="wxPanel" name="ID_PANEL14" variable="pCoordBrush" member="yes">
+													<pos>192,0</pos>
+													<size>160,84</size>
+													<object class="wxStaticBox" name="ID_STATICBOX10" variable="sbCoordBrush" member="yes">
+														<label>Brush </label>
+														<pos>0,0</pos>
+														<size>160,78</size>
+													</object>
+													<object class="wxStaticText" name="ID_STATICTEXT22" variable="StaticText22" member="yes">
+														<label>Color :</label>
+														<pos>16,24</pos>
+													</object>
+													<object class="wxStaticText" name="ID_STATICTEXT23" variable="StaticText23" member="yes">
+														<label>Style :</label>
+														<pos>16,48</pos>
+													</object>
+													<object class="wxButton" name="ID_BUTTON10" variable="bCoordBrushColor" member="yes">
+														<pos>62,20</pos>
+														<size>80,23</size>
+														<handler function="OnbColorClick" entry="EVT_BUTTON" />
+													</object>
+													<object class="wxChoice" name="ID_CHOICE13" variable="cbCoordBrushStyle" member="yes">
+														<content>
+															<item>Solid</item>
+															<item>Transparent</item>
+														</content>
+														<pos>62,44</pos>
+														<size>80,23</size>
+													</object>
+												</object>
+											</object>
+											<flag>wxALL|wxEXPAND</flag>
 										</object>
-										<object class="wxStaticText" name="ID_STATICTEXT22" variable="StaticText22" member="yes">
-											<label>Color :</label>
-											<pos>16,24</pos>
-										</object>
-										<object class="wxStaticText" name="ID_STATICTEXT23" variable="StaticText23" member="yes">
-											<label>Style :</label>
-											<pos>16,48</pos>
-										</object>
-										<object class="wxButton" name="ID_BUTTON10" variable="bCoordBrushColor" member="yes">
-											<pos>62,20</pos>
-											<size>80,23</size>
-											<handler function="OnbColorClick" entry="EVT_BUTTON" />
-										</object>
-										<object class="wxChoice" name="ID_CHOICE13" variable="cbCoordBrushStyle" member="yes">
-											<content>
-												<item>Solid</item>
-												<item>Transparent</item>
-											</content>
-											<pos>62,44</pos>
-											<size>80,23</size>
-										</object>
 									</object>
+									<flag>wxALL|wxEXPAND</flag>
+									<border>2</border>
 								</object>
 							</object>
 						</object>
@@ -248,7 +267,7 @@
 						<label>Legend</label>
 					</object>
 					<object class="notebookpage">
-						<object class="wxPanel" name="ID_PANEL1" variable="Panel1" member="yes">
+						<object class="wxPanel" name="ID_PANEL1" variable="Panel3" member="yes">
 							<object class="wxPanel" name="ID_PANEL9" variable="pAxis" member="yes">
 								<pos>0,0</pos>
 								<size>368,248</size>
@@ -523,8 +542,8 @@
 								<pos>8,264</pos>
 							</object>
 							<object class="wxStaticText" name="ID_STATICTEXT19" variable="StaticText19" member="yes">
-								<label>Step :</label>
-								<pos>208,264</pos>
+								<label>Skip point over :</label>
+								<pos>204,262</pos>
 							</object>
 							<object class="wxSpinCtrl" name="ID_SPINCTRL1" variable="cbSeriesStep" member="yes">
 								<value>1</value>
@@ -571,7 +590,5 @@
 				<border>4</border>
 			</object>
 		</object>
-		<object class="wxColourDialog" variable="ColourDialog" member="yes" />
-		<object class="wxFontDialog" variable="FontDialog" member="yes" />
 	</object>
 </wxsmith>

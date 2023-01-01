@@ -13,25 +13,22 @@
 #include "mathplot.h"
 
 //(*Headers(MathPlotConfigDialog)
+#include <wx/button.h>
+#include <wx/checkbox.h>
+#include <wx/choice.h>
 #include <wx/dialog.h>
-class wxBoxSizer;
-class wxButton;
-class wxCheckBox;
-class wxChoice;
-class wxColourDialog;
-class wxFontDialog;
-class wxNotebook;
-class wxNotebookEvent;
-class wxPanel;
-class wxSpinCtrl;
-class wxSpinEvent;
-class wxStaticBox;
-class wxStaticText;
-class wxTextCtrl;
+#include <wx/notebook.h>
+#include <wx/panel.h>
+#include <wx/sizer.h>
+#include <wx/spinctrl.h>
+#include <wx/statbox.h>
+#include <wx/stattext.h>
+#include <wx/textctrl.h>
 //*)
 
-class wxColourDialogEvent;
-class wxFontData;
+#include <wx/colordlg.h>
+#include <wx/fontdlg.h>
+#include <wx/valnum.h>
 
 // MathPlot namespace
 namespace MathPlot
@@ -66,9 +63,11 @@ class MathPlotConfigDialog: public wxDialog
         wxChoice* CurrentChoice;
         bool fontTitleChanged;
         bool fontAxisChanged;
+        unsigned int int_top, int_bottom, int_left, int_right;
 
         //(*Handlers(MathPlotConfigDialog)
         void OnQuit(wxCommandEvent& event);
+        void OnnbConfigPageChanged(wxNotebookEvent& event);
         void OnbColorClick(wxCommandEvent& event);
         void OnChoiceSeries(wxCommandEvent& event);
         void OnAxisSelect(wxCommandEvent& event);
@@ -78,13 +77,11 @@ class MathPlotConfigDialog: public wxDialog
         //*)
 
         //(*Identifiers(MathPlotConfigDialog)
-        static const long ID_STATICBOX3;
         static const long ID_STATICTEXT11;
         static const long ID_TEXTCTRL3;
         static const long ID_BUTTON5;
         static const long ID_CHECKBOX8;
         static const long ID_PANEL2;
-        static const long ID_STATICBOX5;
         static const long ID_STATICTEXT15;
         static const long ID_TEXTCTRL4;
         static const long ID_TEXTCTRL5;
@@ -93,7 +90,6 @@ class MathPlotConfigDialog: public wxDialog
         static const long ID_BUTTON7;
         static const long ID_CHECKBOX5;
         static const long ID_PANEL11;
-        static const long ID_STATICBOX8;
         static const long ID_STATICTEXT18;
         static const long ID_CHOICE11;
         static const long ID_CHECKBOX10;
@@ -104,8 +100,7 @@ class MathPlotConfigDialog: public wxDialog
         static const long ID_CHOICE13;
         static const long ID_PANEL14;
         static const long ID_PANEL12;
-        static const long ID_PANEL8;
-        static const long ID_PANEL3;
+        static const long ID_PANEL17;
         static const long ID_STATICTEXT16;
         static const long ID_CHOICE10;
         static const long ID_CHECKBOX9;
@@ -217,8 +212,6 @@ class MathPlotConfigDialog: public wxDialog
         wxChoice* cbSeriesPenStyle;
         wxChoice* cbSeriesPenWidth;
         wxChoice* cbSeriesSymbolType;
-        wxColourDialog* ColourDialog;
-        wxFontDialog* FontDialog;
         wxNotebook* nbConfig;
         wxPanel* Panel1;
         wxPanel* Panel2;
@@ -228,7 +221,6 @@ class MathPlotConfigDialog: public wxDialog
         wxPanel* pAxisPen;
         wxPanel* pCoord;
         wxPanel* pCoordBrush;
-        wxPanel* pGeneral;
         wxPanel* pLegend;
         wxPanel* pLegendBrush;
         wxPanel* pMargins;
@@ -238,9 +230,6 @@ class MathPlotConfigDialog: public wxDialog
         wxPanel* pTitle;
         wxSpinCtrl* cbSeriesStep;
         wxSpinCtrl* cbSeriesSymbolSize;
-        wxStaticBox* StaticBox1;
-        wxStaticBox* StaticBox2;
-        wxStaticBox* StaticBox4;
         wxStaticBox* sbAxisPen;
         wxStaticBox* sbCoordBrush;
         wxStaticBox* sbLegendBrush;
@@ -284,6 +273,7 @@ class MathPlotConfigDialog: public wxDialog
         //*)
 
         void UpdateSelectedSerie(void);
+        void UpdateAxis(void);
 
         void DoApplyColour(const wxColour& colour);
         void OnColourChanged(wxColourDialogEvent& event);
