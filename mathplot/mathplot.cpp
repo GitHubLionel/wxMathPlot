@@ -976,203 +976,144 @@ void mpFXY::UpdateViewBoundary(wxCoord xnew, wxCoord ynew)
 
 void mpFXY::Plot(wxDC &dc, mpWindow &w)
 {
-	if (m_visible)
+	if (!m_visible)
+		return ;
+
+	DoBeforePlot();
+	dc.SetPen(m_pen);
+	dc.SetBrush(m_brush);
+
+	double x, y;
+	// Do this to reset the counters to evaluate bounding box for label positioning
+	Rewind();
+	GetNextXY(x, y);
+	maxDrawX = minDrawX = x;
+	maxDrawY = minDrawY = y;
+	Rewind();
+
+	wxCoord ix = 0, iy = 0;
+	wxCoord ixlast = 0, iylast = 0;
+
+	// Get bondaries
+	m_plotBondaries = w.GetPlotBondaries(!m_drawOutsideMargins);
+
+	if (!m_drawOutsideMargins)
 	{
-		DoBeforePlot();
-		dc.SetPen(m_pen);
-		dc.SetBrush(m_brush);
+		wxRect rect(m_plotBondaries.startPx, m_plotBondaries.startPy,
+				m_plotBondaries.endPx - m_plotBondaries.startPx, m_plotBondaries.endPy - m_plotBondaries.startPy);
+		dc.SetClippingRegion(rect);
+	}
 
-		double x, y;
-		// Do this to reset the counters to evaluate bounding box for label positioning
-		Rewind();
-		GetNextXY(x, y);
-		maxDrawX = x;
-		minDrawX = x;
-		maxDrawY = y;
-		minDrawY = y;
-		Rewind();
-
-		wxCoord ix = 0, iy = 0;
-		wxCoord ixlast = 0, iylast = 0;
-		bool inBound, inBoundlast;
-
-		// Get bondaries
-		m_plotBondaries = w.GetPlotBondaries(!m_drawOutsideMargins);
-
-		if (m_continuous || (m_pen.GetWidth() > 1))
+	if (m_continuous || (m_pen.GetWidth() > 1))
+	{
+		if (m_continuous)
 		{
-			if (m_continuous)
-			{
-				// Get first point in bound
-				inBoundlast = false;
-				while (!inBoundlast && GetNextXY(x, y))
-				{
-					ixlast = w.x2p(x);
-					iylast = w.y2p(y);
-					inBoundlast = true;
-					if (!m_drawOutsideMargins)
-					{
-						if (ixlast < m_plotBondaries.startPx)
-						{
-							ixlast = m_plotBondaries.startPx;
-							inBoundlast = false;
-						}
-						else
-							if (ixlast > m_plotBondaries.endPx)
-							{
-								ixlast = m_plotBondaries.endPx;
-								inBoundlast = false;
-							}
+			// Get first point in bound
+			ixlast = w.x2p(x);
+			iylast = w.y2p(y);
 
-						if (iylast < m_plotBondaries.startPy)
-						{
-							iylast = m_plotBondaries.startPy;
-							inBoundlast = false;
-						}
-						else
-							if (iylast > m_plotBondaries.endPy)
-							{
-								iylast = m_plotBondaries.endPy;
-								inBoundlast = false;
-							}
-					}
-				}
-
-				while (GetNextXY(x, y))
-				{
-					ix = w.x2p(x);
-					iy = w.y2p(y);
-
-					inBound = true;
-					if (!m_drawOutsideMargins)
-					{
-						if (ix < m_plotBondaries.startPx)
-						{
-							ix = m_plotBondaries.startPx;
-							inBound = false;
-						}
-						else
-							if (ix > m_plotBondaries.endPx)
-							{
-								ix = m_plotBondaries.endPx;
-								inBound = false;
-							}
-
-						if (iy < m_plotBondaries.startPy)
-						{
-							iy = m_plotBondaries.startPy;
-							inBound = false;
-						}
-						else
-							if (iy > m_plotBondaries.endPy)
-							{
-								iy = m_plotBondaries.endPy;
-								inBound = false;
-							}
-					}
-
-					if (inBound)
-					{
-						dc.DrawLine(ixlast, iylast, ix, iy);
-						UpdateViewBoundary(ix, iy);
-					}
-					else
-					{
-						// Avoid horizontal line and vertical line
-						if ((iylast != iy) && (ixlast != ix)) dc.DrawLine(ixlast, iylast, ix, iy);
-					}
-
-					if ((m_symbol != mpsNone) && inBoundlast) DrawSymbol(dc, ixlast, iylast);
-
-					ixlast = ix;
-					iylast = iy;
-					inBoundlast = inBound;
-				}
-				// Last point
-				if ((m_symbol != mpsNone) && inBoundlast) DrawSymbol(dc, ixlast, iylast);
-			}
-			else
-			{
-				while (GetNextXY(x, y))
-				{
-					ix = w.x2p(x);
-					iy = w.y2p(y);
-					if (m_drawOutsideMargins
-							|| ((ix >= m_plotBondaries.startPx) && (ix <= m_plotBondaries.endPx) && (iy >= m_plotBondaries.startPy)
-									&& (iy <= m_plotBondaries.endPy)))
-					{
-						if (m_symbol == mpsNone)
-							dc.DrawLine(ix, iy, ix, iy);
-						else
-							DrawSymbol(dc, ix, iy);
-						UpdateViewBoundary(ix, iy);
-					}
-				}
-			}
-		}
-		else
-		{
-			// Not continuous and pen width = 1
 			while (GetNextXY(x, y))
 			{
 				ix = w.x2p(x);
 				iy = w.y2p(y);
+
+				dc.DrawLine(ixlast, iylast, ix, iy);
+				UpdateViewBoundary(ix, iy);
+
+				if (m_symbol != mpsNone) DrawSymbol(dc, ixlast, iylast);
+
+				ixlast = ix;
+				iylast = iy;
+			}
+			// Last point
+			if (m_symbol != mpsNone) DrawSymbol(dc, ixlast, iylast);
+		}
+		else
+		{
+			ix = w.x2p(x);
+			iy = w.y2p(y);
+			while (GetNextXY(x, y))
+			{
 				if (m_drawOutsideMargins
 						|| ((ix >= m_plotBondaries.startPx) && (ix <= m_plotBondaries.endPx) && (iy >= m_plotBondaries.startPy)
 								&& (iy <= m_plotBondaries.endPy)))
 				{
 					if (m_symbol == mpsNone)
-						dc.DrawPoint(ix, iy);
+						dc.DrawLine(ix, iy, ix, iy);
 					else
 						DrawSymbol(dc, ix, iy);
 					UpdateViewBoundary(ix, iy);
 				}
+				ix = w.x2p(x);
+				iy = w.y2p(y);
 			}
 		}
-
-		if (m_showName && !m_name.IsEmpty())
+	}
+	else
+	{
+		// Not continuous and pen width = 1
+		ix = w.x2p(x);
+		iy = w.y2p(y);
+		while (GetNextXY(x, y))
 		{
-			dc.SetFont(m_font);
-			dc.SetTextForeground(m_fontcolour);
 
-			wxCoord tx, ty;
-			dc.GetTextExtent(m_name, &tx, &ty);
-
-			// xxx implement else ... if (!HasBBox())
+			if (m_drawOutsideMargins
+					|| ((ix >= m_plotBondaries.startPx) && (ix <= m_plotBondaries.endPx) && (iy >= m_plotBondaries.startPy)
+							&& (iy <= m_plotBondaries.endPy)))
 			{
-				// const int sx = w.GetScreenX();
-				// const int sy = w.GetScreenY();
-
-				switch (m_flags)
-				{
-					case mpALIGN_NW:
-					{
-						tx = minDrawX + 8;
-						ty = maxDrawY + 8;
-						break;
-					}
-					case mpALIGN_NE:
-					{
-						tx = maxDrawX - tx - 8;
-						ty = maxDrawY + 8;
-						break;
-					}
-					case mpALIGN_SE:
-					{
-						tx = maxDrawX - tx - 8;
-						ty = minDrawY - ty - 8;
-						break;
-					}
-					default:
-					{ // mpALIGN_SW
-						tx = minDrawX + 8;
-						ty = minDrawY - ty - 8;
-					}
-				}
+				if (m_symbol == mpsNone)
+					dc.DrawPoint(ix, iy);
+				else
+					DrawSymbol(dc, ix, iy);
+				UpdateViewBoundary(ix, iy);
 			}
-
-			dc.DrawText(m_name, tx, ty);
+			ix = w.x2p(x);
+			iy = w.y2p(y);
 		}
+	}
+
+	// Destroy clipping
+	if (!m_drawOutsideMargins)
+	{
+		dc.DestroyClippingRegion();
+	}
+
+	if (m_showName && !m_name.IsEmpty())
+	{
+		dc.SetFont(m_font);
+		dc.SetTextForeground(m_fontcolour);
+
+		wxCoord tx, ty;
+		dc.GetTextExtent(m_name, &tx, &ty);
+
+		switch (m_flags)
+		{
+			case mpALIGN_NW:
+			{
+				tx = minDrawX + 8;
+				ty = maxDrawY + 8;
+				break;
+			}
+			case mpALIGN_NE:
+			{
+				tx = maxDrawX - tx - 8;
+				ty = maxDrawY + 8;
+				break;
+			}
+			case mpALIGN_SE:
+			{
+				tx = maxDrawX - tx - 8;
+				ty = minDrawY - ty - 8;
+				break;
+			}
+			default:
+			{ // mpALIGN_SW
+				tx = minDrawX + 8;
+				ty = minDrawY - ty - 8;
+			}
+		}
+
+		dc.DrawText(m_name, tx, ty);
 	}
 }
 
