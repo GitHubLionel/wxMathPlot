@@ -57,6 +57,7 @@ const long MathPlotConfigDialog::ID_PANEL15 = wxNewId();
 const long MathPlotConfigDialog::ID_CHOICE7 = wxNewId();
 const long MathPlotConfigDialog::ID_STATICTEXT8 = wxNewId();
 const long MathPlotConfigDialog::ID_TEXTCTRL2 = wxNewId();
+const long MathPlotConfigDialog::ID_BUTTON8 = wxNewId();
 const long MathPlotConfigDialog::ID_STATICBOX6 = wxNewId();
 const long MathPlotConfigDialog::ID_STATICTEXT12 = wxNewId();
 const long MathPlotConfigDialog::ID_STATICTEXT13 = wxNewId();
@@ -65,14 +66,19 @@ const long MathPlotConfigDialog::ID_BUTTON6 = wxNewId();
 const long MathPlotConfigDialog::ID_CHOICE8 = wxNewId();
 const long MathPlotConfigDialog::ID_CHOICE9 = wxNewId();
 const long MathPlotConfigDialog::ID_PANEL10 = wxNewId();
-const long MathPlotConfigDialog::ID_CHECKBOX4 = wxNewId();
-const long MathPlotConfigDialog::ID_BUTTON8 = wxNewId();
 const long MathPlotConfigDialog::ID_STATICTEXT17 = wxNewId();
 const long MathPlotConfigDialog::ID_CHOICE6 = wxNewId();
+const long MathPlotConfigDialog::ID_CHECKBOX4 = wxNewId();
 const long MathPlotConfigDialog::ID_CHECKBOX7 = wxNewId();
 const long MathPlotConfigDialog::ID_STATICTEXT26 = wxNewId();
 const long MathPlotConfigDialog::ID_TEXTCTRL8 = wxNewId();
-const long MathPlotConfigDialog::ID_PANEL9 = wxNewId();
+const long MathPlotConfigDialog::ID_STATICBOX3 = wxNewId();
+const long MathPlotConfigDialog::ID_CHECKBOX11 = wxNewId();
+const long MathPlotConfigDialog::ID_STATICTEXT27 = wxNewId();
+const long MathPlotConfigDialog::ID_TEXTCTRL9 = wxNewId();
+const long MathPlotConfigDialog::ID_STATICTEXT28 = wxNewId();
+const long MathPlotConfigDialog::ID_TEXTCTRL10 = wxNewId();
+const long MathPlotConfigDialog::ID_PANEL3 = wxNewId();
 const long MathPlotConfigDialog::ID_PANEL1 = wxNewId();
 const long MathPlotConfigDialog::ID_STATICTEXT1 = wxNewId();
 const long MathPlotConfigDialog::ID_CHOICE1 = wxNewId();
@@ -111,8 +117,8 @@ const long MathPlotConfigDialog::ID_BUTTON3 = wxNewId();
 const long MathPlotConfigDialog::ID_BUTTON4 = wxNewId();
 //*)
 
-const wxString XAxis_Align[] = {"Bottom border", "Bottom", "Center", "Top", "Top border"};
-const wxString YAxis_Align[] = {"Left border", "Left", "Center", "Right", "Right border"};
+const wxString XAxis_Align[] = {_T("Bottom border"), _T("Bottom"), _T("Center"), _T("Top"), _T("Top border")};
+const wxString YAxis_Align[] = {_T("Left border"), _T("Left"), _T("Center"), _T("Right"), _T("Right border")};
 
 BEGIN_EVENT_TABLE(MathPlotConfigDialog,wxDialog)
 //(*EventTable(MathPlotConfigDialog)
@@ -220,13 +226,14 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
 	cbLegendDirection->Append(_T("Vertical"));
 	cbLegendDirection->Append(_T("Horizontal"));
 	Panel3 = new wxPanel(nbConfig, ID_PANEL1, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL, _T("ID_PANEL1"));
-	pAxis = new wxPanel(Panel3, ID_PANEL9, wxPoint(0,0), wxSize(368,248), wxTAB_TRAVERSAL, _T("ID_PANEL9"));
-	ChoiceAxis = new wxChoice(pAxis, ID_CHOICE7, wxPoint(8,16), wxSize(160,23), 0, 0, 0, wxDefaultValidator, _T("ID_CHOICE7"));
+	ChoiceAxis = new wxChoice(Panel3, ID_CHOICE7, wxPoint(8,12), wxSize(160,23), 0, 0, 0, wxDefaultValidator, _T("ID_CHOICE7"));
 	ChoiceAxis->Append(_T("X axis"));
 	ChoiceAxis->Append(_T("Y axis"));
-	StaticText8 = new wxStaticText(pAxis, ID_STATICTEXT8, _T("Name :"), wxPoint(8,56), wxDefaultSize, 0, _T("ID_STATICTEXT8"));
-	edAxisName = new wxTextCtrl(pAxis, ID_TEXTCTRL2, wxEmptyString, wxPoint(56,52), wxSize(232,23), 0, wxDefaultValidator, _T("ID_TEXTCTRL2"));
-	pAxisPen = new wxPanel(pAxis, ID_PANEL10, wxPoint(8,88), wxSize(168,112), wxTAB_TRAVERSAL, _T("ID_PANEL10"));
+	StaticText8 = new wxStaticText(Panel3, ID_STATICTEXT8, _T("Name :"), wxPoint(8,50), wxDefaultSize, 0, _T("ID_STATICTEXT8"));
+	edAxisName = new wxTextCtrl(Panel3, ID_TEXTCTRL2, wxEmptyString, wxPoint(56,48), wxSize(232,23), 0, wxDefaultValidator, _T("ID_TEXTCTRL2"));
+	bFontAxis = new wxButton(Panel3, ID_BUTTON8, _T("Font"), wxPoint(296,48), wxSize(64,23), 0, wxDefaultValidator, _T("ID_BUTTON8"));
+	bFontAxis->Disable();
+	pAxisPen = new wxPanel(Panel3, ID_PANEL10, wxPoint(8,80), wxSize(168,104), wxTAB_TRAVERSAL, _T("ID_PANEL10"));
 	sbAxisPen = new wxStaticBox(pAxisPen, ID_STATICBOX6, _T("Pen "), wxPoint(0,0), wxSize(160,104), 0, _T("ID_STATICBOX6"));
 	StaticText12 = new wxStaticText(pAxisPen, ID_STATICTEXT12, _T("Color :"), wxPoint(16,24), wxDefaultSize, 0, _T("ID_STATICTEXT12"));
 	StaticText13 = new wxStaticText(pAxisPen, ID_STATICTEXT13, _T("Width :"), wxPoint(16,48), wxDefaultSize, 0, _T("ID_STATICTEXT13"));
@@ -249,20 +256,28 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
 	cbAxisPenStyle->Append(_T("Long Dash"));
 	cbAxisPenStyle->Append(_T("Short Dash"));
 	cbAxisPenStyle->Append(_T("Dot Dash"));
-	cbAxisVisible = new wxCheckBox(pAxis, ID_CHECKBOX4, _T("Visible"), wxPoint(192,152), wxDefaultSize, 0, wxDefaultValidator, _T("ID_CHECKBOX4"));
+	StaticText17 = new wxStaticText(Panel3, ID_STATICTEXT17, _T("Position :"), wxPoint(192,80), wxDefaultSize, 0, _T("ID_STATICTEXT17"));
+	cbAxisPosition = new wxChoice(Panel3, ID_CHOICE6, wxPoint(192,104), wxSize(136,23), 0, 0, 0, wxDefaultValidator, _T("ID_CHOICE6"));
+	cbAxisVisible = new wxCheckBox(Panel3, ID_CHECKBOX4, _T("Visible"), wxPoint(192,144), wxDefaultSize, 0, wxDefaultValidator, _T("ID_CHECKBOX4"));
 	cbAxisVisible->SetValue(false);
-	bFontAxis = new wxButton(pAxis, ID_BUTTON8, _T("Font"), wxPoint(296,52), wxSize(64,23), 0, wxDefaultValidator, _T("ID_BUTTON8"));
-	bFontAxis->Disable();
-	StaticText17 = new wxStaticText(pAxis, ID_STATICTEXT17, _T("Position :"), wxPoint(192,88), wxDefaultSize, 0, _T("ID_STATICTEXT17"));
-	cbAxisPosition = new wxChoice(pAxis, ID_CHOICE6, wxPoint(192,112), wxSize(136,23), 0, 0, 0, wxDefaultValidator, _T("ID_CHOICE6"));
-	cbAxisOutside = new wxCheckBox(pAxis, ID_CHECKBOX7, _T("Draw Outside Margins"), wxPoint(192,176), wxDefaultSize, 0, wxDefaultValidator, _T("ID_CHECKBOX7"));
+	cbAxisOutside = new wxCheckBox(Panel3, ID_CHECKBOX7, _T("Draw Outside Margins"), wxPoint(192,168), wxDefaultSize, 0, wxDefaultValidator, _T("ID_CHECKBOX7"));
 	cbAxisOutside->SetValue(false);
-	StaticText26 = new wxStaticText(pAxis, ID_STATICTEXT26, _T("Label Format :"), wxPoint(8,216), wxDefaultSize, 0, _T("ID_STATICTEXT26"));
-	edFormat = new wxTextCtrl(pAxis, ID_TEXTCTRL8, wxEmptyString, wxPoint(96,212), wxSize(80,23), 0, wxDefaultValidator, _T("ID_TEXTCTRL8"));
+	StaticText26 = new wxStaticText(Panel3, ID_STATICTEXT26, _T("Label Format :"), wxPoint(192,200), wxDefaultSize, 0, _T("ID_STATICTEXT26"));
+	edFormat = new wxTextCtrl(Panel3, ID_TEXTCTRL8, wxEmptyString, wxPoint(280,196), wxSize(56,23), 0, wxDefaultValidator, _T("ID_TEXTCTRL8"));
 	edFormat->SetToolTip(_T("Format of the label for the axis. Should be like c++ format."));
+	Panel5 = new wxPanel(Panel3, ID_PANEL3, wxPoint(8,190), wxSize(168,96), wxTAB_TRAVERSAL, _T("ID_PANEL3"));
+	StaticBox1 = new wxStaticBox(Panel5, ID_STATICBOX3, _T("Scale "), wxPoint(0,0), wxSize(160,96), 0, _T("ID_STATICBOX3"));
+	cbAutoScale = new wxCheckBox(Panel5, ID_CHECKBOX11, _T("Auto"), wxPoint(16,16), wxDefaultSize, 0, wxDefaultValidator, _T("ID_CHECKBOX11"));
+	cbAutoScale->SetValue(true);
+	StaticText27 = new wxStaticText(Panel5, ID_STATICTEXT27, _T("Min :"), wxPoint(16,40), wxDefaultSize, 0, _T("ID_STATICTEXT27"));
+	edScaleMin = new wxTextCtrl(Panel5, ID_TEXTCTRL9, _T("-1"), wxPoint(50,36), wxSize(64,23), wxTE_RIGHT, wxFloatingPointValidator<double> (2, &scale_min), _T("ID_TEXTCTRL9"));
+	edScaleMin->Disable();
+	StaticText28 = new wxStaticText(Panel5, ID_STATICTEXT28, _T("Max :"), wxPoint(16,64), wxDefaultSize, 0, _T("ID_STATICTEXT28"));
+	edScaleMax = new wxTextCtrl(Panel5, ID_TEXTCTRL10, _T("1"), wxPoint(50,64), wxSize(62,23), wxTE_RIGHT, wxFloatingPointValidator<double> (2, &scale_max), _T("ID_TEXTCTRL10"));
+	edScaleMax->Disable();
 	Panel4 = new wxPanel(nbConfig, ID_PANEL4, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL, _T("ID_PANEL4"));
 	StaticText1 = new wxStaticText(Panel4, ID_STATICTEXT1, _T("Series name :"), wxPoint(8,16), wxDefaultSize, 0, _T("ID_STATICTEXT1"));
-	ChoiceSeries = new wxChoice(Panel4, ID_CHOICE1, wxPoint(112,12), wxSize(136,23), 0, 0, 0, wxDefaultValidator, _T("ID_CHOICE1"));
+	ChoiceSeries = new wxChoice(Panel4, ID_CHOICE1, wxPoint(90,12), wxSize(165,23), 0, 0, 0, wxDefaultValidator, _T("ID_CHOICE1"));
 	ChoiceSeries->Append(_T("0"));
 	ChoiceSeries->Append(_T("1"));
 	cbSeriesVisible = new wxCheckBox(Panel4, ID_CHECKBOX1, _T("Visible"), wxPoint(8,192), wxDefaultSize, 0, wxDefaultValidator, _T("ID_CHECKBOX1"));
@@ -351,8 +366,9 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
 	Connect(ID_BUTTON10,wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(MathPlotConfigDialog::OnbColorClick));
 	Connect(ID_BUTTON9,wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(MathPlotConfigDialog::OnbColorClick));
 	Connect(ID_CHOICE7,wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler(MathPlotConfigDialog::OnAxisSelect));
-	Connect(ID_BUTTON6,wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(MathPlotConfigDialog::OnbColorClick));
 	Connect(ID_BUTTON8,wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(MathPlotConfigDialog::OnbFontClick));
+	Connect(ID_BUTTON6,wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(MathPlotConfigDialog::OnbColorClick));
+	Connect(ID_CHECKBOX11,wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler(MathPlotConfigDialog::OncbAutoScaleClick));
 	Connect(ID_CHOICE1,wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler(MathPlotConfigDialog::OnChoiceSeries));
 	Connect(ID_BUTTON1,wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(MathPlotConfigDialog::OnbColorClick));
 	Connect(ID_BUTTON2,wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(MathPlotConfigDialog::OnbColorClick));
@@ -373,6 +389,9 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
 	CurrentScale = NULL;
 	fontTitleChanged = false;
 	fontAxisChanged = false;
+
+	scale_min = -1;
+	scale_max = 1;
 //    Initialize();
 }
 
@@ -398,6 +417,10 @@ void MathPlotConfigDialog::Initialize()
 	int_bottom = m_plot->GetMarginBottom();
 	int_left = m_plot->GetMarginLeft();
 	int_right = m_plot->GetMarginRight();
+	edMarginTop->GetValidator()->TransferToWindow();
+	edMarginBottom->GetValidator()->TransferToWindow();
+	edMarginLeft->GetValidator()->TransferToWindow();
+	edMarginRight->GetValidator()->TransferToWindow();
 
 	cbDrawBox->SetValue(m_plot->GetDrawBox());
 	bBGColor->SetBackgroundColour(m_plot->GetbgColour());
@@ -446,7 +469,7 @@ void MathPlotConfigDialog::Initialize()
 	CurrentChoice = NULL;
 }
 
-void MathPlotConfigDialog::OnQuit(wxCommandEvent&WXUNUSED(event))
+void MathPlotConfigDialog::OnQuit(wxCommandEvent& WXUNUSED(event))
 {
 	Close();
 }
@@ -539,6 +562,8 @@ void MathPlotConfigDialog::OnnbConfigPageChanged(wxNotebookEvent &event)
 
 void MathPlotConfigDialog::UpdateAxis(void)
 {
+	mpFloatRect BoundScale = m_plot->Get_Bound();
+
 	if (ChoiceAxis->GetSelection() == 0)
 	{
 		CurrentScale = (mpScale*) m_plot->GetLayerByClassName(_T("mpScaleX"));
@@ -570,13 +595,43 @@ void MathPlotConfigDialog::UpdateAxis(void)
 		bFontAxis->SetFont(CurrentScale->GetFont());
 		bFontAxis->SetForegroundColour(CurrentScale->GetFontColour());
 		bFontAxis->Enable();
+
+		cbAutoScale->SetValue(CurrentScale->GetAuto());
+		edScaleMin->Enable(!CurrentScale->GetAuto());
+		edScaleMax->Enable(!CurrentScale->GetAuto());
+		if (CurrentScale->GetAuto())
+		{
+			if (ChoiceAxis->GetSelection() == 0)
+			{
+				scale_min = BoundScale.Xmin;
+				scale_max = BoundScale.Xmax;
+			}
+			else
+			{
+				scale_min = BoundScale.Ymin;
+				scale_max = BoundScale.Ymax;
+			}
+		}
+		else
+		{
+			scale_min = CurrentScale->GetMinScale();
+			scale_max = CurrentScale->GetMaxScale();
+		}
+		edScaleMin->GetValidator()->TransferToWindow();
+		edScaleMax->GetValidator()->TransferToWindow();
 	}
 }
 
-void MathPlotConfigDialog::OnAxisSelect(wxCommandEvent&WXUNUSED(event))
+void MathPlotConfigDialog::OnAxisSelect(wxCommandEvent& WXUNUSED(event))
 {
 	UpdateAxis();
 	CurrentChoice = ChoiceAxis;
+}
+
+void MathPlotConfigDialog::OncbAutoScaleClick(wxCommandEvent& WXUNUSED(event))
+{
+	edScaleMin->Enable(!cbAutoScale->GetValue());
+	edScaleMax->Enable(!cbAutoScale->GetValue());
 }
 
 wxBrushStyle MathPlotConfigDialog::IdToBrushStyle(int id)
@@ -636,12 +691,12 @@ void MathPlotConfigDialog::UpdateSelectedSerie(void)
 		CurrentChoice = NULL;
 }
 
-void MathPlotConfigDialog::OnChoiceSeries(wxCommandEvent&WXUNUSED(event))
+void MathPlotConfigDialog::OnChoiceSeries(wxCommandEvent& WXUNUSED(event))
 {
 	UpdateSelectedSerie();
 }
 
-void MathPlotConfigDialog::OnbDelSeriesClick(wxCommandEvent&WXUNUSED(event))
+void MathPlotConfigDialog::OnbDelSeriesClick(wxCommandEvent& WXUNUSED(event))
 {
 	if (CurrentSerie && CurrentSerie->GetCanDelete())
 	{
@@ -657,7 +712,7 @@ void MathPlotConfigDialog::OnbDelSeriesClick(wxCommandEvent&WXUNUSED(event))
 	}
 }
 
-void MathPlotConfigDialog::OnbApplyClick(wxCommandEvent&WXUNUSED(event))
+void MathPlotConfigDialog::OnbApplyClick(wxCommandEvent& WXUNUSED(event))
 {
 	switch (nbConfig->GetSelection())
 	{
@@ -675,12 +730,11 @@ void MathPlotConfigDialog::OnbApplyClick(wxCommandEvent&WXUNUSED(event))
 				}
 			}
 
-			long top, bottom, left, right;
-			edMarginTop->GetValue().ToLong(&top);
-			edMarginRight->GetValue().ToLong(&right);
-			edMarginBottom->GetValue().ToLong(&bottom);
-			edMarginLeft->GetValue().ToLong(&left);
-			m_plot->SetMargins(top, right, bottom, left);
+			edMarginTop->GetValidator()->TransferFromWindow();
+			edMarginBottom->GetValidator()->TransferFromWindow();
+			edMarginLeft->GetValidator()->TransferFromWindow();
+			edMarginRight->GetValidator()->TransferFromWindow();
+			m_plot->SetMargins(int_top, int_right, int_bottom, int_left);
 
 			m_plot->SetDrawBox(cbDrawBox->GetValue());
 			m_plot->SetbgColour(bBGColor->GetBackgroundColour());
@@ -725,6 +779,12 @@ void MathPlotConfigDialog::OnbApplyClick(wxCommandEvent&WXUNUSED(event))
 				CurrentScale->SetDrawOutsideMargins(cbAxisOutside->GetValue());
 				CurrentScale->SetLabelFormat(edFormat->GetValue());
 
+				CurrentScale->SetAuto(cbAutoScale->GetValue());
+				edScaleMin->GetValidator()->TransferFromWindow();
+				edScaleMax->GetValidator()->TransferFromWindow();
+				CurrentScale->SetMinScale(scale_min);
+				CurrentScale->SetMaxScale(scale_max);
+
 				if (fontAxisChanged)
 				{
 					CurrentScale->SetFont(bFontAxis->GetFont());
@@ -732,7 +792,42 @@ void MathPlotConfigDialog::OnbApplyClick(wxCommandEvent&WXUNUSED(event))
 					fontAxisChanged = false;
 				}
 
-				m_plot->UpdateAll();
+				if (!CurrentScale->GetAuto())
+				{
+					mpFloatRect BoundScale = m_plot->Get_Bound();
+					if (ChoiceAxis->GetSelection() == 0)
+					{
+						BoundScale.Xmin = scale_min;
+						BoundScale.Xmax = scale_max;
+
+						// Get bound of the other axis
+						mpScale *axis = (mpScale*) m_plot->GetLayerByClassName(_T("mpScaleY"));
+						if (!axis->GetAuto())
+						{
+							BoundScale.Ymin = axis->GetMinScale();
+							BoundScale.Ymax = axis->GetMaxScale();
+						}
+					}
+					else
+					{
+						BoundScale.Ymin = scale_min;
+						BoundScale.Ymax = scale_max;
+
+						// Get bound of the other axis
+						mpScale *axis = (mpScale*) m_plot->GetLayerByClassName(_T("mpScaleX"));
+						if (!axis->GetAuto())
+						{
+							BoundScale.Xmin = axis->GetMinScale();
+							BoundScale.Xmax = axis->GetMaxScale();
+						}
+					}
+					m_plot->Fit(BoundScale);
+				}
+				else
+			  	m_plot->Fit();
+
+				// Refresh page
+				UpdateAxis();
 			}
 			break;
 

@@ -41,7 +41,6 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLegend;
 class WXDLLIMPEXP_MATHPLOT mpScale;
 class WXDLLIMPEXP_MATHPLOT mpText;
 
-
 class MathPlotConfigDialog: public wxDialog
 {
     public:
@@ -64,6 +63,7 @@ class MathPlotConfigDialog: public wxDialog
         bool fontTitleChanged;
         bool fontAxisChanged;
         unsigned int int_top, int_bottom, int_left, int_right;
+        double scale_min, scale_max;
 
         //(*Handlers(MathPlotConfigDialog)
         void OnQuit(wxCommandEvent& event);
@@ -71,6 +71,7 @@ class MathPlotConfigDialog: public wxDialog
         void OnbColorClick(wxCommandEvent& event);
         void OnChoiceSeries(wxCommandEvent& event);
         void OnAxisSelect(wxCommandEvent& event);
+        void OncbAutoScaleClick(wxCommandEvent& event);
         void OnbApplyClick(wxCommandEvent& event);
         void OnbFontClick(wxCommandEvent& event);
         void OnbDelSeriesClick(wxCommandEvent& event);
@@ -119,6 +120,7 @@ class MathPlotConfigDialog: public wxDialog
         static const long ID_CHOICE7;
         static const long ID_STATICTEXT8;
         static const long ID_TEXTCTRL2;
+        static const long ID_BUTTON8;
         static const long ID_STATICBOX6;
         static const long ID_STATICTEXT12;
         static const long ID_STATICTEXT13;
@@ -127,14 +129,19 @@ class MathPlotConfigDialog: public wxDialog
         static const long ID_CHOICE8;
         static const long ID_CHOICE9;
         static const long ID_PANEL10;
-        static const long ID_CHECKBOX4;
-        static const long ID_BUTTON8;
         static const long ID_STATICTEXT17;
         static const long ID_CHOICE6;
+        static const long ID_CHECKBOX4;
         static const long ID_CHECKBOX7;
         static const long ID_STATICTEXT26;
         static const long ID_TEXTCTRL8;
-        static const long ID_PANEL9;
+        static const long ID_STATICBOX3;
+        static const long ID_CHECKBOX11;
+        static const long ID_STATICTEXT27;
+        static const long ID_TEXTCTRL9;
+        static const long ID_STATICTEXT28;
+        static const long ID_TEXTCTRL10;
+        static const long ID_PANEL3;
         static const long ID_PANEL1;
         static const long ID_STATICTEXT1;
         static const long ID_CHOICE1;
@@ -187,6 +194,7 @@ class MathPlotConfigDialog: public wxDialog
         wxButton* bLegendBrushColor;
         wxButton* bSeriesBrushColor;
         wxButton* bSeriesPenColor;
+        wxCheckBox* cbAutoScale;
         wxCheckBox* cbAxisOutside;
         wxCheckBox* cbAxisVisible;
         wxCheckBox* cbCoordVisible;
@@ -217,7 +225,7 @@ class MathPlotConfigDialog: public wxDialog
         wxPanel* Panel2;
         wxPanel* Panel3;
         wxPanel* Panel4;
-        wxPanel* pAxis;
+        wxPanel* Panel5;
         wxPanel* pAxisPen;
         wxPanel* pCoord;
         wxPanel* pCoordBrush;
@@ -230,6 +238,7 @@ class MathPlotConfigDialog: public wxDialog
         wxPanel* pTitle;
         wxSpinCtrl* cbSeriesStep;
         wxSpinCtrl* cbSeriesSymbolSize;
+        wxStaticBox* StaticBox1;
         wxStaticBox* sbAxisPen;
         wxStaticBox* sbCoordBrush;
         wxStaticBox* sbLegendBrush;
@@ -254,6 +263,8 @@ class MathPlotConfigDialog: public wxDialog
         wxStaticText* StaticText24;
         wxStaticText* StaticText25;
         wxStaticText* StaticText26;
+        wxStaticText* StaticText27;
+        wxStaticText* StaticText28;
         wxStaticText* StaticText2;
         wxStaticText* StaticText3;
         wxStaticText* StaticText4;
@@ -268,6 +279,8 @@ class MathPlotConfigDialog: public wxDialog
         wxTextCtrl* edMarginLeft;
         wxTextCtrl* edMarginRight;
         wxTextCtrl* edMarginTop;
+        wxTextCtrl* edScaleMax;
+        wxTextCtrl* edScaleMin;
         wxTextCtrl* edSeriesName;
         wxTextCtrl* edTitle;
         //*)
