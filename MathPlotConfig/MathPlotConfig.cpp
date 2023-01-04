@@ -466,7 +466,16 @@ void MathPlotConfigDialog::Initialize()
 		UpdateSelectedSerie();
 	}
 
-	CurrentChoice = NULL;
+	switch (nbConfig->GetSelection())
+	{
+		case 2:
+			CurrentChoice = ChoiceAxis;
+			break;
+		case 3:
+			CurrentChoice = ChoiceSeries;
+			break;
+		default : CurrentChoice = NULL;
+	}
 }
 
 void MathPlotConfigDialog::OnQuit(wxCommandEvent& WXUNUSED(event))
