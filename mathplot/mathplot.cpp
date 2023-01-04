@@ -201,7 +201,7 @@ mpInfoLayer::~mpInfoLayer()
 
 }
 
-void mpInfoLayer::UpdateInfo(mpWindow&WXUNUSED(w), wxEvent&WXUNUSED(event))
+void mpInfoLayer::UpdateInfo(mpWindow&WXUNUSED(w), wxEvent& WXUNUSED(event))
 {
 // Nothing to do here
 }
@@ -2007,7 +2007,7 @@ void mpWindow::OnMouseMove(wxMouseEvent &event)
 	event.Skip();
 }
 
-void mpWindow::OnMouseLeave(wxMouseEvent&WXUNUSED(event))
+void mpWindow::OnMouseLeave(wxMouseEvent& WXUNUSED(event))
 {
 	if (m_InfoCoords && m_InfoCoords->IsVisible())
 	{
@@ -2345,12 +2345,12 @@ void mpWindow::OnShowPopupMenu(wxMouseEvent &event)
 	}
 }
 
-void mpWindow::OnLockAspect(wxCommandEvent&WXUNUSED(event))
+void mpWindow::OnLockAspect(wxCommandEvent& WXUNUSED(event))
 {
 	LockAspect(!m_lockaspect);
 }
 
-void mpWindow::OnMouseHelp(wxCommandEvent&WXUNUSED(event))
+void mpWindow::OnMouseHelp(wxCommandEvent& WXUNUSED(event))
 {
 	wxMessageBox(
 			_T(
@@ -2363,12 +2363,12 @@ void mpWindow::OnMouseHelp(wxCommandEvent&WXUNUSED(event))
 			_T("wxMathPlot help"), wxOK, this);
 }
 
-void mpWindow::OnFit(wxCommandEvent&WXUNUSED(event))
+void mpWindow::OnFit(wxCommandEvent& WXUNUSED(event))
 {
 	Fit();
 }
 
-void mpWindow::OnToggleGrids(wxCommandEvent&WXUNUSED(event))
+void mpWindow::OnToggleGrids(wxCommandEvent& WXUNUSED(event))
 {
 	mpScaleX *scaleX = (mpScaleX*) GetLayerByClassName(_("mpScaleX"));
 	if (scaleX)
@@ -2385,7 +2385,7 @@ void mpWindow::OnToggleGrids(wxCommandEvent&WXUNUSED(event))
 	UpdateAll();
 }
 
-void mpWindow::OnToggleCoords(wxCommandEvent&WXUNUSED(event))
+void mpWindow::OnToggleCoords(wxCommandEvent& WXUNUSED(event))
 {
 	mpInfoCoords *coords = (mpInfoCoords*) GetLayerByClassName(_("mpInfoCoords"));
 	if (coords != NULL)
@@ -2395,12 +2395,12 @@ void mpWindow::OnToggleCoords(wxCommandEvent&WXUNUSED(event))
 	}
 }
 
-void mpWindow::OnScreenShot(wxCommandEvent&WXUNUSED(event))
+void mpWindow::OnScreenShot(wxCommandEvent& WXUNUSED(event))
 {
 	ClipboardScreenshot();
 }
 
-void mpWindow::OnConfiguration(wxCommandEvent&WXUNUSED(event))
+void mpWindow::OnConfiguration(wxCommandEvent& WXUNUSED(event))
 {
 	if (m_configWindow == NULL)
 		m_configWindow = new MathPlotConfigDialog(this);
@@ -2409,27 +2409,27 @@ void mpWindow::OnConfiguration(wxCommandEvent&WXUNUSED(event))
 	m_configWindow->Show();
 }
 
-void mpWindow::OnCenter(wxCommandEvent&WXUNUSED(event))
+void mpWindow::OnCenter(wxCommandEvent& WXUNUSED(event))
 {
 	int h, w;
 	GetClientSize(&w, &h);
 	SetScreen(w, h);
 	int centerX = m_plotWidth / 2;
 	int centerY = m_plotHeight / 2;
-	SetPos(p2x(m_clickedX - centerX), p2y(m_clickedY - centerY));
+	SetPos(p2x(m_clickedX - centerX - m_margin.left), p2y(m_clickedY - centerY - m_margin.top));
 }
 
-void mpWindow::OnZoomIn(wxCommandEvent&WXUNUSED(event))
+void mpWindow::OnZoomIn(wxCommandEvent& WXUNUSED(event))
 {
 	ZoomIn(wxPoint(m_mouseRClick_X, m_mouseRClick_Y));
 }
 
-void mpWindow::OnZoomOut(wxCommandEvent&WXUNUSED(event))
+void mpWindow::OnZoomOut(wxCommandEvent& WXUNUSED(event))
 {
 	ZoomOut();
 }
 
-void mpWindow::OnSize(wxSizeEvent&WXUNUSED(event))
+void mpWindow::OnSize(wxSizeEvent& WXUNUSED(event))
 {
 	// Try to fit again with the new window size:
 	Fit(m_desired);
@@ -2480,17 +2480,24 @@ bool mpWindow::DelLayer(mpLayer *layer, bool alsoDeleteObject, bool refreshDispl
 	{
 		if (*layIt == layer)
 		{
-			if (layer == m_InfoCoords)
-				m_InfoCoords = NULL;
-			if (layer == m_movingInfoLayer)
-				m_movingInfoLayer = NULL;
-			// Also delete the object?
-			if (alsoDeleteObject)
-				delete *layIt;
-			m_layers.erase(layIt); // this deleted the reference only
-			if (refreshDisplay)
-				UpdateAll();
-			return true;
+			bool cancel = false;
+			if (m_OnDeleteLayer != NULL)
+				m_OnDeleteLayer(this, (*layIt)->GetClassInfo()->GetClassName(), cancel);
+			if (!cancel)
+			{
+				if (layer == m_InfoCoords)
+					m_InfoCoords = NULL;
+				if (layer == m_movingInfoLayer)
+					m_movingInfoLayer = NULL;
+				// Also delete the object?
+				if (alsoDeleteObject)
+					delete *layIt;
+				m_layers.erase(layIt); // this deleted the reference only
+				if (refreshDisplay)
+					UpdateAll();
+				return true;
+			}
+			else return false;
 		}
 	}
 	return false;
@@ -2511,7 +2518,7 @@ void mpWindow::DelAllLayers(bool alsoDeleteObject, bool refreshDisplay)
 		UpdateAll();
 }
 
-void mpWindow::OnPaint(wxPaintEvent&WXUNUSED(event))
+void mpWindow::OnPaint(wxPaintEvent& WXUNUSED(event))
 {
 	wxPaintDC dc(this);
 	int h, w;

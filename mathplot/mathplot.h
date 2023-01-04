@@ -1284,6 +1284,14 @@ class WXDLLIMPEXP_MATHPLOT mpScaleY: public mpScale
 //WX_DECLARE_HASH_MAP( int, mpLayer*, wxIntegerHash, wxIntegerEqual, wxLayerList );
 typedef std::deque<mpLayer*> wxLayerList;
 
+/**
+ * Define an event for when we delete a layer
+ * Use like this :
+ * 	your_plot->SetOnDeleteLayer([this](void *Sender, const wxString &classname, bool &cancel)
+			{	your_event_function(Sender, classname, cancel);});
+ */
+typedef std::function<void(void *Sender, const wxString &classname, bool &cancel)> wxOnDeleteLayer;
+
 /** Canvas for plotting mpLayer implementations.
 
  This class defines a zoomable and moveable 2D plot canvas. Any number
@@ -1860,6 +1868,13 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 			m_bgColour = colour;
 		}
 
+		/** On delete layer event
+		 @return reference to event */
+		void SetOnDeleteLayer(wxOnDeleteLayer event)
+		{
+			m_OnDeleteLayer = event;
+		}
+
 	protected:
 		void OnPaint (wxPaintEvent &event);  									//!< Paint handler, will plot all attached layers
 		void OnSize (wxSizeEvent &event);											//!< Size handler, will update scroll bar sizes
@@ -1953,7 +1968,9 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 		wxMemoryDC m_Screenshot_dc;			//!< For clipboard, save and print
 		wxBitmap *m_Screenshot_bmp;			//!< For clipboard, save and print
 
-		MathPlotConfigDialog *m_configWindow = NULL;//!< For the config dialog
+		MathPlotConfigDialog *m_configWindow = NULL; //!< For the config dialog
+
+		wxOnDeleteLayer m_OnDeleteLayer = NULL; //!< Event when we delete a layer
 
 		DECLARE_DYNAMIC_CLASS(mpWindow)
 		DECLARE_EVENT_TABLE()
