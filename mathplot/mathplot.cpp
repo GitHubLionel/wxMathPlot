@@ -48,6 +48,7 @@
 #include <wx/image.h>
 #include <wx/tipwin.h>
 #include <wx/clipbrd.h>
+#include <wx/dcbuffer.h>
 
 #include <cmath>
 #include <cstdio> // used only for debug
@@ -106,6 +107,14 @@ mpLayer::mpLayer() :
 	m_symbolSize2 = 3;
 	m_step = 1;
 	m_CanDelete = true;
+}
+
+void mpLayer::UpdateContext(wxDC &dc)
+{
+	dc.SetPen(m_pen);
+	dc.SetBrush(m_brush);
+	dc.SetFont(m_font);
+	dc.SetTextForeground(m_fontcolour);
 }
 
 wxBitmap mpLayer::GetColourSquare(int side)
@@ -225,14 +234,6 @@ void mpInfoLayer::UpdateReference()
 {
 	m_reference.x = m_dim.x;
 	m_reference.y = m_dim.y;
-}
-
-void mpInfoLayer::UpdateContext(wxDC &dc)
-{
-	dc.SetPen(m_pen);
-	dc.SetBrush(m_brush);
-	dc.SetFont(m_font);
-	dc.SetTextForeground(m_fontcolour);
 }
 
 void mpInfoLayer::SetInfoRectangle(mpWindow &w, int width, int height)
@@ -501,6 +502,7 @@ void mpInfoCoords::Plot(wxDC &dc, mpWindow &w)
 	{
 		DoBeforePlot();
 		UpdateContext(dc);
+
 		int textX = 0, textY = 0;
 		int width = 0, height = 0;
 
@@ -547,27 +549,36 @@ void mpInfoCoords::Plot(wxDC &dc, mpWindow &w)
 		// First : restaure stored bitmap
 		if (m_coord_bmp)
 		{
+			wxMemoryDC m_coord_dc(&dc);
 			m_coord_dc.SelectObject(*m_coord_bmp);
 			dc.Blit(m_oldDim.x, m_oldDim.y, m_oldDim.width, m_oldDim.height, &m_coord_dc, 0, 0);
+			m_coord_dc.SelectObject(wxNullBitmap);
 			delete m_coord_bmp;
+			m_coord_bmp = NULL;
 		}
+
 		// Second : store new bitmap
-		m_coord_bmp = new wxBitmap(m_dim.width, m_dim.height);
+		m_coord_bmp = new wxBitmap(m_dim.width, m_dim.height, dc);
+		wxMemoryDC m_coord_dc(&dc);
 		m_coord_dc.SelectObject(*m_coord_bmp);
 		m_coord_dc.Blit(0, 0, m_dim.width, m_dim.height, &dc, m_dim.x, m_dim.y);
+		m_coord_dc.SelectObject(wxNullBitmap);
 		m_oldDim = m_dim;
+
 		// Third : draw the coordinate
 		dc.DrawRectangle(m_dim.x, m_dim.y, m_dim.width, m_dim.height);
 		dc.DrawText(m_content, m_dim.x + 5, m_dim.y + 5);
 	}
 }
 
-void mpInfoCoords::ErasePlot(wxDC &dc, mpWindow&WXUNUSED(w))
+void mpInfoCoords::ErasePlot(wxDC &dc, mpWindow &WXUNUSED(w))
 {
 	if (m_coord_bmp)
 	{
+		wxMemoryDC m_coord_dc(&dc);
 		m_coord_dc.SelectObject(*m_coord_bmp);
 		dc.Blit(m_oldDim.x, m_oldDim.y, m_oldDim.width, m_oldDim.height, &m_coord_dc, 0, 0);
+		m_coord_dc.SelectObject(wxNullBitmap);
 		delete m_coord_bmp;
 		m_coord_bmp = NULL;
 	}
@@ -606,11 +617,11 @@ mpInfoLegend::~mpInfoLegend()
 	}
 }
 
-void mpInfoLegend::UpdateBitmap(mpWindow &w)
+void mpInfoLegend::UpdateBitmap(wxDC &dc, mpWindow &w)
 {
 	// Create a temporary bitmap to draw the legend
-	wxBitmap *buff_bmp = new wxBitmap(w.GetScreenX(), w.GetScreenY());
-	wxMemoryDC buff_dc;
+	wxBitmap *buff_bmp = new wxBitmap(w.GetScreenX(), w.GetScreenY(), dc);
+	wxMemoryDC buff_dc(&dc);
 	buff_dc.SelectObject(*buff_bmp);
 	buff_dc.SetPen(*wxTRANSPARENT_PEN);
 	if (m_brush.GetStyle() == wxBRUSHSTYLE_TRANSPARENT)
@@ -619,23 +630,28 @@ void mpInfoLegend::UpdateBitmap(mpWindow &w)
 		buff_dc.SetBrush(m_brush);
 	buff_dc.DrawRectangle(0, 0, w.GetScreenX(), w.GetScreenY());
 
-	unsigned int p = 0;
 	int posX = 0, posY = 0;
 	int tmpX = 0, tmpY = 0;
 	int width = 0, height = 0;
 	bool first = true;
 	mpLayer *ly = NULL;
-	wxString label;
-	wxPen lpen;
 	wxBrush sqrBrush(*wxWHITE, wxBRUSHSTYLE_SOLID);
 
-	for (p = 0; p < w.CountAllLayers(); p++)
+	// Delete old bitmap
+	if (m_legend_bmp)
+	{
+		delete m_legend_bmp;
+		m_legend_bmp = NULL;
+	}
+
+	// Get series name
+	for (unsigned int p = 0; p < w.CountAllLayers(); p++)
 	{
 		ly = w.GetLayer(p);
 		if ((ly->GetLayerType() == mpLAYER_PLOT) && (ly->IsVisible()))
 		{
-			label = ly->GetName();
-			lpen = ly->GetPen();
+			wxString label = ly->GetName();
+			wxPen lpen = ly->GetPen();
 
 			buff_dc.SetPen(lpen);
 			buff_dc.GetTextExtent(label, &tmpX, &tmpY);
@@ -696,18 +712,18 @@ void mpInfoLegend::UpdateBitmap(mpWindow &w)
 			height = scry;
 
 		buff_dc.DrawRectangle(0, 0, width, height);
-
 		SetInfoRectangle(w, width, height);
 
 		// Transfert to the legend bitmap
-		if (m_legend_bmp)
-			delete m_legend_bmp;
-		m_legend_bmp = new wxBitmap(width, height);
-		m_legend_dc.SelectObject(*m_legend_bmp);
-		m_legend_dc.Blit(0, 0, width, height, &buff_dc, 0, 0);
+		m_legend_bmp = new wxBitmap(width, height, dc);
+		wxMemoryDC buff_dc2(&dc);
+		buff_dc2.SelectObject(*m_legend_bmp);
+		buff_dc2.Blit(0, 0, width, height, &buff_dc, 0, 0);
+		buff_dc2.SelectObject(wxNullBitmap);
 		m_need_update = false;
 	}
 
+	buff_dc.SelectObject(wxNullBitmap);
 	delete buff_bmp;
 }
 
@@ -718,18 +734,28 @@ void mpInfoLegend::Plot(wxDC &dc, mpWindow &w)
 		DoBeforePlot();
 
 		if (m_need_update)
-			UpdateBitmap(w);
+			UpdateBitmap(dc, w);
 		else
 			// In case we have resize
 			SetInfoRectangle(w, m_dim.width, m_dim.height);
 
-		if ((m_dim.width != 0) && (m_dim.height != 0))
+		if (m_legend_bmp && (m_dim.width != 0) && (m_dim.height != 0))
 		{
+			wxMemoryDC buff_dc(&dc);
+			buff_dc.SelectObject(*m_legend_bmp);
+
 			// Draw the info bitmap to the current dc
+			// wxAND not work on Linux
+#ifdef _WIN32
+			// Windows code
 			if (m_brush.GetStyle() == wxBRUSHSTYLE_TRANSPARENT)
-				dc.Blit(m_dim.x, m_dim.y, m_dim.width, m_dim.height, &m_legend_dc, 0, 0, wxAND);
+				dc.Blit(m_dim.x, m_dim.y, m_dim.width, m_dim.height, &buff_dc, 0, 0, wxAND);
 			else
-				dc.Blit(m_dim.x, m_dim.y, m_dim.width, m_dim.height, &m_legend_dc, 0, 0);
+				dc.Blit(m_dim.x, m_dim.y, m_dim.width, m_dim.height, &buff_dc, 0, 0);
+#else
+			dc.Blit(m_dim.x, m_dim.y, m_dim.width, m_dim.height, &buff_dc, 0, 0);
+#endif
+			buff_dc.SelectObject(wxNullBitmap);
 		}
 	}
 }
@@ -752,8 +778,7 @@ void mpFX::Plot(wxDC &dc, mpWindow &w)
 	if (m_visible)
 	{
 		DoBeforePlot();
-		dc.SetPen(m_pen);
-		dc.SetBrush(m_brush);
+		UpdateContext(dc);
 
 		wxCoord i, iy, iylast;
 
@@ -829,9 +854,6 @@ void mpFX::Plot(wxDC &dc, mpWindow &w)
 
 		if (m_showName && !m_name.IsEmpty())
 		{
-			dc.SetFont(m_font);
-			dc.SetTextForeground(m_fontcolour);
-
 			wxCoord tx, ty;
 			dc.GetTextExtent(m_name, &tx, &ty);
 
@@ -871,8 +893,7 @@ void mpFY::Plot(wxDC &dc, mpWindow &w)
 	if (m_visible)
 	{
 		DoBeforePlot();
-		dc.SetPen(m_pen);
-		dc.SetBrush(m_brush);
+		UpdateContext(dc);
 
 		wxCoord i, ix, ixlast;
 
@@ -962,9 +983,6 @@ void mpFY::Plot(wxDC &dc, mpWindow &w)
 
 		if (m_showName && !m_name.IsEmpty())
 		{
-			dc.SetFont(m_font);
-			dc.SetTextForeground(m_fontcolour);
-
 			wxCoord tx, ty;
 			dc.GetTextExtent(m_name, &tx, &ty);
 
@@ -1015,8 +1033,7 @@ void mpFXY::Plot(wxDC &dc, mpWindow &w)
 		return;
 
 	DoBeforePlot();
-	dc.SetPen(m_pen);
-	dc.SetBrush(m_brush);
+	UpdateContext(dc);
 
 	double x, y;
 	// Do this to reset the counters to evaluate bounding box for label positioning
@@ -1117,9 +1134,6 @@ void mpFXY::Plot(wxDC &dc, mpWindow &w)
 
 	if (m_showName && !m_name.IsEmpty())
 	{
-		dc.SetFont(m_font);
-		dc.SetTextForeground(m_fontcolour);
-
 		wxCoord tx, ty;
 		dc.GetTextExtent(m_name, &tx, &ty);
 
@@ -1258,9 +1272,8 @@ void mpScaleX::Plot(wxDC &dc, mpWindow &w)
 		return;
 
 	DoBeforePlot();
-	dc.SetPen(m_pen);
-	dc.SetFont(m_font);
-	dc.SetTextForeground(m_fontcolour);
+	UpdateContext(dc);
+
 	int orgy = 0;
 
 	// Get bondaries
@@ -1547,7 +1560,8 @@ void mpScaleX::Plot(wxDC &dc, mpWindow &w)
 		{
 			if ((!m_drawOutsideMargins) && (w.GetMarginBottom() > (ty + labelH + 8)))
 			{
-				dc.DrawText(m_name, (m_plotBondaries.endPx + m_plotBondaries.startPx - tx) >> 1, orgy + labelH + 6);
+//				dc.DrawText(m_name, (m_plotBondaries.endPx + m_plotBondaries.startPx - tx) >> 1, orgy + labelH + 6);
+				dc.DrawText(m_name, m_plotBondaries.endPx - tx - 4, orgy + labelH + 6);
 			}
 			else
 			{
@@ -1562,7 +1576,8 @@ void mpScaleX::Plot(wxDC &dc, mpWindow &w)
 		{
 			if ((!m_drawOutsideMargins) && (w.GetMarginTop() > (ty + labelH + 8)))
 			{
-				dc.DrawText(m_name, (m_plotBondaries.endPx + m_plotBondaries.startPx - tx) >> 1, orgy - ty - labelH - 6);
+//				dc.DrawText(m_name, (m_plotBondaries.endPx + m_plotBondaries.startPx - tx) >> 1, orgy - ty - labelH - 6);
+				dc.DrawText(m_name, m_plotBondaries.endPx - tx - 4, orgy - ty - labelH - 8);
 			}
 			else
 			{
@@ -1586,9 +1601,7 @@ void mpScaleY::Plot(wxDC &dc, mpWindow &w)
 		return;
 
 	DoBeforePlot();
-	dc.SetPen(m_pen);
-	dc.SetFont(m_font);
-	dc.SetTextForeground(m_fontcolour);
+	UpdateContext(dc);
 
 	int orgx = 0;
 
@@ -1759,7 +1772,8 @@ void mpScaleY::Plot(wxDC &dc, mpWindow &w)
 
 IMPLEMENT_DYNAMIC_CLASS(mpWindow, wxWindow)
 
-BEGIN_EVENT_TABLE(mpWindow, wxWindow) EVT_PAINT(mpWindow::OnPaint)
+BEGIN_EVENT_TABLE(mpWindow, wxWindow)
+EVT_PAINT(mpWindow::OnPaint)
 EVT_SIZE(mpWindow::OnSize)
 EVT_SCROLLWIN_THUMBTRACK(mpWindow::OnScrollThumbTrack)
 EVT_SCROLLWIN_PAGEUP(mpWindow::OnScrollPageUp)
@@ -1793,7 +1807,15 @@ END_EVENT_TABLE()
 mpWindow::mpWindow(wxWindow *parent, wxWindowID id, const wxPoint &pos, const wxSize &size, long flag) :
 		wxWindow(parent, id, pos, size, flag, wxT("mathplot"))
 {
+	SetBackgroundStyle(wxBG_STYLE_PAINT);
+
 	InitParameters();
+
+	// For unix screenshoot
+#ifdef _WIN32
+#else
+	wxImage::AddHandler(new wxPNGHandler);
+#endif
 
 	m_popmenu.Append(mpID_CENTER, _T("Center to this position"), _T("Center plot view to this position"));
 	m_popmenu.Append(mpID_FIT, _T("Fit"), _T("Set plot view to show all items"));
@@ -1814,9 +1836,6 @@ mpWindow::mpWindow(wxWindow *parent, wxWindowID id, const wxPoint &pos, const wx
 
 	m_enableScrollBars = false;
 	SetSizeHints(128, 128);
-
-	// J.L.Blanco: Eliminates the "flick" with the double buffer.
-	SetBackgroundStyle(wxBG_STYLE_CUSTOM);
 
 	UpdateAll();
 }
@@ -2520,10 +2539,15 @@ void mpWindow::DelAllLayers(bool alsoDeleteObject, bool refreshDisplay)
 
 void mpWindow::OnPaint(wxPaintEvent& WXUNUSED(event))
 {
+#ifdef _WIN32
 	wxPaintDC dc(this);
+#else
+	wxAutoBufferedPaintDC dc(this);
+#endif
 	int h, w;
 	dc.GetSize(&w, &h);   // This is the size of the visible area only!
 	SetScreen(w, h);
+	wxMemoryDC *m_buff_dc = NULL;
 
 #ifdef MATHPLOT_DO_LOGGING
 	{
@@ -2539,25 +2563,27 @@ void mpWindow::OnPaint(wxPaintEvent& WXUNUSED(event))
 	// J.L.Blanco @ Aug 2007: Added double buffer support
 	if (m_enableDoubleBuffer)
 	{
+		// Recreate Bitmap if sizes have changed
 		if (m_last_lx != m_scrX || m_last_ly != m_scrY)
 		{
 			if (m_buff_bmp)
 				delete m_buff_bmp;
-			m_buff_bmp = new wxBitmap(m_scrX, m_scrY);
-			m_buff_dc.SelectObject(*m_buff_bmp);
+			m_buff_bmp = new wxBitmap(m_scrX, m_scrY, dc);
 			m_last_lx = m_scrX;
 			m_last_ly = m_scrY;
 		}
-		trgDc = &m_buff_dc;
+		m_buff_dc = new wxMemoryDC(&dc);
+		m_buff_dc->SelectObject(*m_buff_bmp);
+		trgDc = m_buff_dc;
 	}
 	else
 	{
 		trgDc = &dc;
 	}
 
-	// Draw background:
-	//trgDc->SetDeviceOrigin(0,0);
+	// Draw background
 	// Clean the screen
+	trgDc->Clear();
 	trgDc->SetPen(*wxTRANSPARENT_PEN);
 	trgDc->SetBrush(*wxWHITE_BRUSH);
 	trgDc->DrawRectangle(0, 0, m_scrX, m_scrY);
@@ -2583,7 +2609,9 @@ void mpWindow::OnPaint(wxPaintEvent& WXUNUSED(event))
 	// If doublebuffer, draw now to the window:
 	if (m_enableDoubleBuffer)
 	{
-		dc.Blit(0, 0, m_scrX, m_scrY, trgDc, 0, 0);
+		dc.Blit(0, 0, m_scrX, m_scrY, trgDc, 0, 0, wxCOPY);
+		m_buff_dc->SelectObject(wxNullBitmap);
+		delete m_buff_dc;
 	}
 	m_repainting = false;
 }
@@ -2944,6 +2972,7 @@ void mpWindow::BitmapScreenshot(wxSize imageSize, bool fit)
 	int bk_scrX = m_scrX;
 	int bk_scrY = m_scrY;
 	mpFloatRect bk_m_desired = m_desired;
+	wxMemoryDC m_Screenshot_dc;
 
 	if (imageSize == wxDefaultSize)
 	{
@@ -2993,6 +3022,7 @@ void mpWindow::BitmapScreenshot(wxSize imageSize, bool fit)
 	{
 		(*li)->Plot(m_Screenshot_dc, *this);
 	}
+	m_Screenshot_dc.SelectObject(wxNullBitmap);
 
 	// Restore dimensions
 	if (fit || (imageSize != wxDefaultSize))
@@ -3143,8 +3173,7 @@ void mpFXYVector::SetData(const std::vector<double> &xs, const std::vector<doubl
 	// Check if the data vectora are of the same size
 	if (xs.size() != ys.size())
 	{
-		wxLogError
-		(_T("wxMathPlot error: X and Y vector are not of the same length!"));
+		wxLogError(_T("wxMathPlot error: X and Y vector are not of the same length!"));
 		return;
 	}
 	// Copy the data:
@@ -3318,9 +3347,7 @@ void mpText::Plot(wxDC &dc, mpWindow &w)
 	if (m_visible)
 	{
 		DoBeforePlot();
-		dc.SetPen(m_pen);
-		dc.SetFont(m_font);
-		dc.SetTextForeground(m_fontcolour);
+		UpdateContext(dc);
 
 		wxCoord tw = 0, th = 0;
 		dc.GetTextExtent(GetName(), &tw, &th);
@@ -3460,12 +3487,15 @@ bool mpPrintout::OnPrintPage(int page)
 #endif
 
 		plotWindow->BitmapScreenshot(wxSize(m_prnXw / stretch_factor, m_prnYw / stretch_factor));
+		wxMemoryDC bitmap_dc(trgDc);
+		bitmap_dc.SelectObject(*(plotWindow->m_Screenshot_bmp));
 
 		if (stretch_factor == 1)
-			trgDc->Blit(marginX, marginY, m_prnXw, m_prnYw, (wxDC*) &plotWindow->m_Screenshot_dc, 0, 0);
+			trgDc->Blit(marginX, marginY, m_prnXw, m_prnYw, &bitmap_dc, 0, 0);
 		else
-			trgDc->StretchBlit(marginX, marginY, m_prnXw, m_prnYw, (wxDC*) &plotWindow->m_Screenshot_dc, 0, 0, m_prnXw / stretch_factor,
+			trgDc->StretchBlit(marginX, marginY, m_prnXw, m_prnYw, &bitmap_dc, 0, 0, m_prnXw / stretch_factor,
 					m_prnYw / stretch_factor);
+		bitmap_dc.SelectObject(wxNullBitmap);
 	}
 	return true;
 }
@@ -3510,8 +3540,7 @@ void mpMovableObject::ShapeUpdated()
 	// Just in case...
 	if (m_shape_xs.size() != m_shape_ys.size())
 	{
-		wxLogError
-		(wxT("[mpMovableObject::ShapeUpdated] Error, m_shape_xs and m_shape_ys have different lengths!"));
+		wxLogError(wxT("[mpMovableObject::ShapeUpdated] Error, m_shape_xs and m_shape_ys have different lengths!"));
 	}
 	else
 	{
@@ -3671,20 +3700,17 @@ void mpCovarianceEllipse::RecalculateShape()
 	// Preliminar checks:
 	if (m_quantiles < 0)
 	{
-		wxLogError
-		(wxT("[mpCovarianceEllipse] Error: quantiles must be non-negative"));
+		wxLogError(wxT("[mpCovarianceEllipse] Error: quantiles must be non-negative"));
 		return;
 	}
 	if (m_cov_00 < 0)
 	{
-		wxLogError
-		(wxT("[mpCovarianceEllipse] Error: cov(0,0) must be non-negative"));
+		wxLogError(wxT("[mpCovarianceEllipse] Error: cov(0,0) must be non-negative"));
 		return;
 	}
 	if (m_cov_11 < 0)
 	{
-		wxLogError
-		(wxT("[mpCovarianceEllipse] Error: cov(1,1) must be non-negative"));
+		wxLogError(wxT("[mpCovarianceEllipse] Error: cov(1,1) must be non-negative"));
 		return;
 	}
 
@@ -3700,8 +3726,7 @@ void mpCovarianceEllipse::RecalculateShape()
 
 	if (D < 0)
 	{
-		wxLogError
-		(wxT("[mpCovarianceEllipse] Error: cov is not positive definite"));
+		wxLogError(wxT("[mpCovarianceEllipse] Error: cov is not positive definite"));
 		return;
 	}
 
@@ -3765,9 +3790,6 @@ void mpCovarianceEllipse::RecalculateShape()
 	int i;
 	for (i = 0, ang = 0; i < m_segments; i++, ang += Aang)
 	{
-		//        double ccos = cos(ang);
-		//        double csin = sin(ang);
-
 		double ccos, csin;
 		SinCos(ang, &csin, &ccos);
 
@@ -3788,8 +3810,7 @@ void mpPolygon::setPoints(const std::vector<double> &points_xs, const std::vecto
 {
 	if (points_xs.size() != points_ys.size())
 	{
-		wxLogError
-		(wxT("[mpPolygon] Error: points_xs and points_ys must have the same number of elements"));
+		wxLogError(wxT("[mpPolygon] Error: points_xs and points_ys must have the same number of elements"));
 	}
 	else
 	{
@@ -3822,8 +3843,7 @@ void mpBitmapLayer::SetBitmap(const wxImage &inBmp, double x, double y, double l
 {
 	if (!inBmp.Ok())
 	{
-		wxLogError
-		(wxT("[mpBitmapLayer] Assigned bitmap is not Ok()!"));
+		wxLogError(wxT("[mpBitmapLayer] Assigned bitmap is not Ok()!"));
 	}
 	else
 	{

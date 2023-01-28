@@ -658,6 +658,10 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
 		int m_symbolSize2;          //!< Size of the symbol div 2.
 		bool m_CanDelete;    				//!< Is the layer can be deleted
 
+		/** Initialize the context
+		 */
+		void UpdateContext(wxDC &dc);
+
 	DECLARE_DYNAMIC_CLASS(mpLayer)
 };
 
@@ -758,10 +762,6 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLayer: public mpLayer
 		int m_winX, m_winY;     //!< Holds the mpWindow size. Used to rescale position when window is resized.
 		mpLocation m_location;  //!< Location of the box in the margin. Default mpMarginNone = use coordinates
 
-		/** Initialize the context
-		 */
-		void UpdateContext(wxDC &dc);
-
 		/** Compute the dimensions and position of the rectangle info
 		 */
 		void SetInfoRectangle(mpWindow &w, int width = 0, int height = 0);
@@ -821,7 +821,6 @@ class WXDLLIMPEXP_MATHPLOT mpInfoCoords: public mpInfoLayer
 		wxCoord m_mouseX;
 		wxCoord m_mouseY;
 		wxBitmap *m_coord_bmp;
-		wxMemoryDC m_coord_dc;
 		wxRect m_oldDim;
 
 	DECLARE_DYNAMIC_CLASS(mpInfoCoords)
@@ -884,13 +883,12 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLegend: public mpInfoLayer
 
 	protected:
 		wxBitmap *m_legend_bmp;
-		wxMemoryDC m_legend_dc;
 		mpLegendStyle m_item_mode;
 		mpLegendDirection m_item_direction;
 
 	private:
 		bool m_need_update;
-		void UpdateBitmap(mpWindow &w);
+		void UpdateBitmap(wxDC &dc, mpWindow &w);
 
 	DECLARE_DYNAMIC_CLASS(mpInfoLegend)
 };
@@ -1953,7 +1951,6 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 
 		bool m_repainting;
 		int m_last_lx, m_last_ly;				//!< For double buffering
-		wxMemoryDC m_buff_dc;						//!< For double buffering
 		wxBitmap *m_buff_bmp;						//!< For double buffering
 		bool m_enableDoubleBuffer;			//!< For double buffering. Default enabled
 		bool m_enableMouseNavigation;		//!< For pan/zoom with the mouse.
@@ -1965,7 +1962,6 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 		mpInfoLayer* m_movingInfoLayer;	//!< For moving info layers over the window area
 		mpInfoCoords* m_InfoCoords;			//!< Shortcut to info coords layer
 
-		wxMemoryDC m_Screenshot_dc;			//!< For clipboard, save and print
 		wxBitmap *m_Screenshot_bmp;			//!< For clipboard, save and print
 
 		MathPlotConfigDialog *m_configWindow = NULL; //!< For the config dialog
