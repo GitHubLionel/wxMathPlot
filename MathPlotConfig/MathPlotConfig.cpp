@@ -566,7 +566,7 @@ MathPlotConfigDialog::~MathPlotConfigDialog()
 
 void MathPlotConfigDialog::Initialize()
 {
-	CurrentTitle = (mpText*) m_plot->GetLayerByClassName(_T("mpTitle"));
+	CurrentTitle = (mpText*) m_plot->GetLayerByClassName(_("mpTitle"));
 	if (CurrentTitle)
 	{
 		edTitle->SetValue(CurrentTitle->GetName());
@@ -588,7 +588,7 @@ void MathPlotConfigDialog::Initialize()
 	cbDrawBox->SetValue(m_plot->GetDrawBox());
 	bBGColor->SetBackgroundColour(m_plot->GetbgColour());
 
-	CurrentLegend = (mpInfoLegend*) m_plot->GetLayerByClassName(_T("mpInfoLegend"));
+	CurrentLegend = (mpInfoLegend*) m_plot->GetLayerByClassName(_("mpInfoLegend"));
 	if (CurrentLegend)
 	{
 		cbLegendPosition->SetSelection(CurrentLegend->GetLocation());
@@ -600,7 +600,7 @@ void MathPlotConfigDialog::Initialize()
 		cbLegendBrushStyle->SetSelection(BrushStyleToId(CurrentLegend->GetBrush().GetStyle()));
 	}
 
-	CurrentCoords = (mpInfoCoords*) m_plot->GetLayerByClassName(_T("mpInfoCoords"));
+	CurrentCoords = (mpInfoCoords*) m_plot->GetLayerByClassName(_("mpInfoCoords"));
 	if (CurrentCoords)
 	{
 		cbCoord->SetSelection(CurrentCoords->GetLocation());
@@ -656,7 +656,7 @@ void MathPlotConfigDialog::OnbColorClick(wxCommandEvent &event)
 
 	wxColourDialog ColourDialog(this, &m_clrData);
 
-	ColourDialog.SetTitle("Please choose the background colour");
+	ColourDialog.SetTitle(_T("Please choose the background colour"));
 	if (ColourDialog.ShowModal() == wxID_OK)
 	{
 		m_clrData = ColourDialog.GetColourData();
@@ -728,14 +728,14 @@ void MathPlotConfigDialog::UpdateAxis(void)
 
 	if (ChoiceAxis->GetSelection() == 0)
 	{
-		CurrentScale = (mpScale*) m_plot->GetLayerByClassName(_T("mpScaleX"));
+		CurrentScale = (mpScale*) m_plot->GetLayerByClassName(_("mpScaleX"));
 		cbAxisPosition->Clear();
 		for (int i = 0; i <= mpALIGN_BORDER_TOP; i++)
 			cbAxisPosition->Append(XAxis_Align[i]);
 	}
 	else
 	{
-		CurrentScale = (mpScale*) m_plot->GetLayerByClassName(_T("mpScaleY"));
+		CurrentScale = (mpScale*) m_plot->GetLayerByClassName(_("mpScaleY"));
 		cbAxisPosition->Clear();
 		for (int i = 0; i <= mpALIGN_BORDER_RIGHT; i++)
 			cbAxisPosition->Append(YAxis_Align[i]);
@@ -862,7 +862,7 @@ void MathPlotConfigDialog::OnbDelSeriesClick(wxCommandEvent& WXUNUSED(event))
 {
 	if (CurrentSerie && CurrentSerie->GetCanDelete())
 	{
-		if (wxMessageDialog(this, _("Delete the serie ?"), _("Confirmation"), wxYES_NO | wxCENTRE).ShowModal() == wxID_YES)
+		if (wxMessageDialog(this, _T("Delete the serie ?"), _T("Confirmation"), wxYES_NO | wxCENTRE).ShowModal() == wxID_YES)
 		{
 			m_plot->DelLayer(CurrentSerie, true, true);
 			if (CurrentLegend)
@@ -963,7 +963,7 @@ void MathPlotConfigDialog::OnbApplyClick(wxCommandEvent& WXUNUSED(event))
 						BoundScale.Xmax = scale_max;
 
 						// Get bound of the other axis
-						mpScale *axis = (mpScale*) m_plot->GetLayerByClassName(_T("mpScaleY"));
+						mpScale *axis = (mpScale*) m_plot->GetLayerByClassName(_("mpScaleY"));
 						if (!axis->GetAuto())
 						{
 							BoundScale.Ymin = axis->GetMinScale();
@@ -976,7 +976,7 @@ void MathPlotConfigDialog::OnbApplyClick(wxCommandEvent& WXUNUSED(event))
 						BoundScale.Ymax = scale_max;
 
 						// Get bound of the other axis
-						mpScale *axis = (mpScale*) m_plot->GetLayerByClassName(_T("mpScaleX"));
+						mpScale *axis = (mpScale*) m_plot->GetLayerByClassName(_("mpScaleX"));
 						if (!axis->GetAuto())
 						{
 							BoundScale.Xmin = axis->GetMinScale();
