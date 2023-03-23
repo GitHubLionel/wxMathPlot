@@ -91,12 +91,12 @@ mpLayer::mpLayer() :
 		m_type(mpLAYER_UNDEF)
 {
 	// Default pen
-	SetPen((wxPen&) *wxBLACK_PEN);
+	SetPen((wxPen const &) *wxBLACK_PEN);
 	// Default font
-	SetFont((wxFont&) *wxNORMAL_FONT);
-	m_fontcolour = (wxColour&) *wxBLACK;
+	SetFont((wxFont const &) *wxNORMAL_FONT);
+	m_fontcolour = (wxColour const &) *wxBLACK;
 	// Default brush
-	SetBrush((wxBrush&) *wxTRANSPARENT_BRUSH);
+	SetBrush((wxBrush const &) *wxTRANSPARENT_BRUSH);
 	m_continuous = false; // Default
 	m_showName = false;  // Default
 	m_drawOutsideMargins = false;
@@ -1251,8 +1251,8 @@ IMPLEMENT_ABSTRACT_CLASS(mpScale, mpLayer)
 mpScale::mpScale(wxString name, int flags, bool grids)
 {
 	SetName(name);
-	SetFont((wxFont&) *wxSMALL_FONT);
-	SetPen((wxPen&) *wxGREY_PEN);
+	SetFont((wxFont const &) *wxSMALL_FONT);
+	SetPen((wxPen const &) *wxGREY_PEN);
 	m_gridpen = wxPen(*wxLIGHT_GREY, 1, wxPENSTYLE_DOT);
 	m_flags = flags;
 	m_ticks = true;
@@ -2966,7 +2966,7 @@ void mpWindow::SetMargins(int top, int right, int bottom, int left)
 	m_plotBondariesMargin.endPy = m_scrY - m_margin.bottom;
 }
 
-void mpWindow::BitmapScreenshot(wxSize imageSize, bool fit)
+wxBitmap *mpWindow::BitmapScreenshot(wxSize imageSize, bool fit)
 {
 	int sizeX, sizeY;
 	int bk_scrX = m_scrX;
@@ -3031,6 +3031,7 @@ void mpWindow::BitmapScreenshot(wxSize imageSize, bool fit)
 		Fit(bk_m_desired, &bk_scrX, &bk_scrY);
 		UpdateAll();
 	}
+	return m_Screenshot_bmp;
 }
 
 void mpWindow::ClipboardScreenshot(wxSize imageSize, bool fit)
