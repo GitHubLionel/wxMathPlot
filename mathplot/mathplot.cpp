@@ -1834,6 +1834,49 @@ mpWindow::mpWindow(wxWindow *parent, wxWindowID id, const wxPoint &pos, const wx
 	wxImage::AddHandler(new wxPNGHandler);
 #endif
 
+#ifdef USE_ICON
+	wxImage::AddHandler(new wxPNGHandler);
+
+	wxBitmap icon[] = {wxBITMAP_PNG_FROM_DATA(Center_24x24), wxBITMAP_PNG_FROM_DATA(Fit_24x24),
+			wxBITMAP_PNG_FROM_DATA(Zoom_in_24x24), wxBITMAP_PNG_FROM_DATA(Zoom_out_24x24),
+			wxBITMAP_PNG_FROM_DATA(Screenshot_24x24), wxBITMAP_PNG_FROM_DATA(Grid_24x24),
+			wxBITMAP_PNG_FROM_DATA(Coordinates_24x24), wxBITMAP_PNG_FROM_DATA(Config_24x24),
+			wxBITMAP_PNG_FROM_DATA(Load_24x24), wxBITMAP_PNG_FROM_DATA(Mouse_24x24)
+	};
+
+	// Because of GTK problem, we must set bitmap BEFORE append the menu item
+	wxMenuItem *mymenu = new wxMenuItem(&m_popmenu, mpID_CENTER, _T("Center to this position"), _T("Center plot view to this position"));
+	mymenu->SetBitmap(icon[0]);
+	m_popmenu.Append(mymenu);
+	mymenu = new wxMenuItem(&m_popmenu, mpID_FIT, _T("Fit"), _T("Set plot view to show all items"));
+	mymenu->SetBitmap(icon[1]);
+	m_popmenu.Append(mymenu);
+	mymenu = new wxMenuItem(&m_popmenu, mpID_ZOOM_IN, _T("Zoom in"), _T("Zoom in plot view."));
+	mymenu->SetBitmap(icon[2]);
+	m_popmenu.Append(mymenu);
+	mymenu = new wxMenuItem(&m_popmenu, mpID_ZOOM_OUT, _T("Zoom out"), _T("Zoom out plot view."));
+	mymenu->SetBitmap(icon[3]);
+	m_popmenu.Append(mymenu);
+	m_popmenu.AppendCheckItem(mpID_LOCKASPECT, _T("Lock aspect"), _T("Lock horizontal and vertical zoom aspect."));
+	mymenu = new wxMenuItem(&m_popmenu, mpID_SCREENSHOT, _T("Screen shot"), _T("Copy a screen shot to the clipboard"));
+	mymenu->SetBitmap(icon[4]);
+	m_popmenu.Append(mymenu);
+	mymenu = new wxMenuItem(&m_popmenu, mpID_TOGGLE_GRID, _T("Toggle grids"), _T("Show/Hide grids"));
+	mymenu->SetBitmap(icon[5]);
+	m_popmenu.Append(mymenu);
+	mymenu = new wxMenuItem(&m_popmenu, mpID_TOGGLE_COORD, _T("Toggle info coords"), _T("Show/Hide info coordinates"));
+	mymenu->SetBitmap(icon[6]);
+	m_popmenu.Append(mymenu);
+	mymenu = new wxMenuItem(&m_popmenu, mpID_CONFIG, _T("Configuration"), _T("Plot configuration"));
+	mymenu->SetBitmap(icon[7]);
+	m_popmenu.Append(mymenu);
+	mymenu = new wxMenuItem(&m_popmenu, mpID_LOAD_FILE, _T("Load file"), _T("Load data file"));
+	mymenu->SetBitmap(icon[8]);
+	m_popmenu.Append(mymenu);
+	mymenu = new wxMenuItem(&m_popmenu, mpID_HELP_MOUSE, _T("Show mouse commands..."), _T("Show help about the mouse commands."));
+	mymenu->SetBitmap(icon[9]);
+	m_popmenu.Append(mymenu);
+#else
 	m_popmenu.Append(mpID_CENTER, _T("Center to this position"), _T("Center plot view to this position"));
 	m_popmenu.Append(mpID_FIT, _T("Fit"), _T("Set plot view to show all items"));
 	m_popmenu.Append(mpID_ZOOM_IN, _T("Zoom in"), _T("Zoom in plot view."));
@@ -1845,26 +1888,6 @@ mpWindow::mpWindow(wxWindow *parent, wxWindowID id, const wxPoint &pos, const wx
 	m_popmenu.Append(mpID_CONFIG, _T("Configuration"), _T("Plot configuration"));
 	m_popmenu.Append(mpID_LOAD_FILE, _T("Load file"), _T("Load data file"));
 	m_popmenu.Append(mpID_HELP_MOUSE, _T("Show mouse commands..."), _T("Show help about the mouse commands."));
-
-#ifdef USE_ICON
-	wxImage::AddHandler(new wxPNGHandler);
-
-	wxBitmap icon[] = {wxBITMAP_PNG_FROM_DATA(Center_24x24), wxBITMAP_PNG_FROM_DATA(Fit_24x24),
-			wxBITMAP_PNG_FROM_DATA(Zoom_in_24x24), wxBITMAP_PNG_FROM_DATA(Zoom_out_24x24),
-			wxBITMAP_PNG_FROM_DATA(Screenshot_24x24), wxBITMAP_PNG_FROM_DATA(Grid_24x24),
-			wxBITMAP_PNG_FROM_DATA(Coordinates_24x24), wxBITMAP_PNG_FROM_DATA(Config_24x24),
-			wxBITMAP_PNG_FROM_DATA(Load_24x24), wxBITMAP_PNG_FROM_DATA(Mouse_24x24)
-	};
-	m_popmenu.FindChildItem(mpID_CENTER)->SetBitmap(icon[0]);
-	m_popmenu.FindChildItem(mpID_FIT)->SetBitmap(icon[1]);
-	m_popmenu.FindChildItem(mpID_ZOOM_IN)->SetBitmap(icon[2]);
-	m_popmenu.FindChildItem(mpID_ZOOM_OUT)->SetBitmap(icon[3]);
-	m_popmenu.FindChildItem(mpID_SCREENSHOT)->SetBitmap(icon[4]);
-	m_popmenu.FindChildItem(mpID_TOGGLE_GRID)->SetBitmap(icon[5]);
-	m_popmenu.FindChildItem(mpID_TOGGLE_COORD)->SetBitmap(icon[6]);
-	m_popmenu.FindChildItem(mpID_CONFIG)->SetBitmap(icon[7]);
-	m_popmenu.FindChildItem(mpID_LOAD_FILE)->SetBitmap(icon[8]);
-	m_popmenu.FindChildItem(mpID_HELP_MOUSE)->SetBitmap(icon[9]);
 #endif
 
 	m_layers.clear();
