@@ -195,6 +195,7 @@ enum
 	mpID_TOGGLE_COORD,	  	 //!< Show/Hide info coord
 	mpID_SCREENSHOT,         //!< Copy a screen shot to the clipboard
 	mpID_CONFIG,             //!< Configuration
+	mpID_LOAD_FILE,          //!< Load a file
 	mpID_HELP_MOUSE          //!< Shows information about the mouse commands
 };
 
@@ -1371,6 +1372,12 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 		 */
 		mpLayer* GetLayerPlot(int position);
 
+		/*!
+		 * Return the serie n
+		 * If the serie not exist then create it
+		 */
+		mpFXYVector* GetSeries(unsigned int n, const wxString &name = _T("Serie :"), bool create = true);
+
 		/*! Get the layer by its name (case sensitive).
 		 @param name The name of the layer to retrieve
 		 @return A pointer to the mpLayer object, or NULL if not found.
@@ -1703,8 +1710,14 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 		 @param fit Decide whether to fit the plot into the size*/
 		bool SaveScreenshot(const wxString& filename, int type = wxBITMAP_TYPE_BMP, wxSize imageSize = wxDefaultSize, bool fit = false);
 
-		void BitmapScreenshot(wxSize imageSize = wxDefaultSize, bool fit = false);
+		/**
+		 * Get a screen shot of the window plot
+		 */
+		wxBitmap *BitmapScreenshot(wxSize imageSize = wxDefaultSize, bool fit = false);
 
+		/**
+		 * Send the screen shot to the Clipboard
+		 */
 		void ClipboardScreenshot(wxSize imageSize = wxDefaultSize, bool fit = false);
 
 		/** This value sets the zoom steps whenever the user clicks "Zoom in/out" or performs zoom with the mouse wheel.
@@ -1884,6 +1897,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 		void OnToggleCoords (wxCommandEvent &event);					//!< Context menu handler
 		void OnScreenShot (wxCommandEvent &event);						//!< Context menu handler
 		void OnConfiguration (wxCommandEvent &event);					//!< Context menu handler
+		void OnLoadFile (wxCommandEvent &event);				    	//!< Context menu handler
 		void OnZoomIn (wxCommandEvent &event);								//!< Context menu handler
 		void OnZoomOut (wxCommandEvent &event);								//!< Context menu handler
 		void OnLockAspect (wxCommandEvent &event);						//!< Context menu handler

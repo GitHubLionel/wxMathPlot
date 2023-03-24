@@ -59,7 +59,6 @@ class MyFrame: public wxFrame
 		MyFrame(const wxString &title);
 
 		void CreatePlot(void);
-		mpFXYVector* GetSeries(int Series);
 
 		// event handlers (these functions should _not_ be virtual)
 		void OnQuit(wxCommandEvent &event);
@@ -220,25 +219,11 @@ void MyFrame::CreatePlot(void)
 	m_plot->Fit();
 
 	// add a simple sinus serie
-	mpFXYVector *serie = GetSeries(0);
+	mpFXYVector *serie = m_plot->GetSeries(0);
 	for (int i = 0; i < 100; i++)
 		serie->AddData(i / 10.0, sin(i / 10.0), true);
 	m_plot->Fit();  //  UpdateAll
 	legend->SetNeedUpdate();
-}
-
-mpFXYVector* MyFrame::GetSeries(int Series)
-{
-	mpFXYVector *serie = (mpFXYVector*) m_plot->GetLayerPlot(Series);
-	if (serie == NULL)
-	{
-		serie = new mpFXYVector("Serie : " + wxString::Format(wxT("%d"), Series));
-		serie->SetContinuity(true);
-		wxPen pen(wxIndexColour(Series), 2, wxPENSTYLE_SOLID);
-		serie->SetPen(pen);
-		m_plot->AddLayer(serie);
-	}
-	return serie;
 }
 
 // event handlers

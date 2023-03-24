@@ -49,10 +49,26 @@
 #include <wx/tipwin.h>
 #include <wx/clipbrd.h>
 #include <wx/dcbuffer.h>
+#include <wx/filename.h>
 
 #include <cmath>
 #include <cstdio> // used only for debug
-#include <ctime> // used for representation of x axes involving date
+#include <ctime>  // used for representation of x axes involving date
+
+// If we want icon on the popup menu
+#define USE_ICON
+#ifdef USE_ICON
+#include "Images/Center.h"
+#include "Images/Config.h"
+#include "Images/Coordinates.h"
+#include "Images/Fit.h"
+#include "Images/Grid.h"
+#include "Images/Load.h"
+#include "Images/Mouse.h"
+#include "Images/Screenshot.h"
+#include "Images/Zoom_in.h"
+#include "Images/Zoom_out.h"
+#endif
 
 // #include "pixel.xpm"
 
@@ -1798,6 +1814,7 @@ EVT_MENU(mpID_TOGGLE_GRID, mpWindow::OnToggleGrids)
 EVT_MENU(mpID_TOGGLE_COORD, mpWindow::OnToggleCoords)
 EVT_MENU(mpID_SCREENSHOT, mpWindow::OnScreenShot)
 EVT_MENU(mpID_CONFIG, mpWindow::OnConfiguration)
+EVT_MENU(mpID_LOAD_FILE, mpWindow::OnLoadFile)
 EVT_MENU(mpID_ZOOM_IN, mpWindow::OnZoomIn)
 EVT_MENU(mpID_ZOOM_OUT, mpWindow::OnZoomOut)
 EVT_MENU(mpID_LOCKASPECT,mpWindow::OnLockAspect)
@@ -1826,7 +1843,29 @@ mpWindow::mpWindow(wxWindow *parent, wxWindowID id, const wxPoint &pos, const wx
 	m_popmenu.Append(mpID_TOGGLE_GRID, _T("Toggle grids"), _T("Show/Hide grids"));
 	m_popmenu.Append(mpID_TOGGLE_COORD, _T("Toggle info coords"), _T("Show/Hide info coordinates"));
 	m_popmenu.Append(mpID_CONFIG, _T("Configuration"), _T("Plot configuration"));
+	m_popmenu.Append(mpID_LOAD_FILE, _T("Load file"), _T("Load data file"));
 	m_popmenu.Append(mpID_HELP_MOUSE, _T("Show mouse commands..."), _T("Show help about the mouse commands."));
+
+#ifdef USE_ICON
+	wxImage::AddHandler(new wxPNGHandler);
+
+	wxBitmap icon[] = {wxBITMAP_PNG_FROM_DATA(Center_24x24), wxBITMAP_PNG_FROM_DATA(Fit_24x24),
+			wxBITMAP_PNG_FROM_DATA(Zoom_in_24x24), wxBITMAP_PNG_FROM_DATA(Zoom_out_24x24),
+			wxBITMAP_PNG_FROM_DATA(Screenshot_24x24), wxBITMAP_PNG_FROM_DATA(Grid_24x24),
+			wxBITMAP_PNG_FROM_DATA(Coordinates_24x24), wxBITMAP_PNG_FROM_DATA(Config_24x24),
+			wxBITMAP_PNG_FROM_DATA(Load_24x24), wxBITMAP_PNG_FROM_DATA(Mouse_24x24)
+	};
+	m_popmenu.FindChildItem(mpID_CENTER)->SetBitmap(icon[0]);
+	m_popmenu.FindChildItem(mpID_FIT)->SetBitmap(icon[1]);
+	m_popmenu.FindChildItem(mpID_ZOOM_IN)->SetBitmap(icon[2]);
+	m_popmenu.FindChildItem(mpID_ZOOM_OUT)->SetBitmap(icon[3]);
+	m_popmenu.FindChildItem(mpID_SCREENSHOT)->SetBitmap(icon[4]);
+	m_popmenu.FindChildItem(mpID_TOGGLE_GRID)->SetBitmap(icon[5]);
+	m_popmenu.FindChildItem(mpID_TOGGLE_COORD)->SetBitmap(icon[6]);
+	m_popmenu.FindChildItem(mpID_CONFIG)->SetBitmap(icon[7]);
+	m_popmenu.FindChildItem(mpID_LOAD_FILE)->SetBitmap(icon[8]);
+	m_popmenu.FindChildItem(mpID_HELP_MOUSE)->SetBitmap(icon[9]);
+#endif
 
 	m_layers.clear();
 	SetBackgroundColour(*wxWHITE);
@@ -2419,6 +2458,60 @@ void mpWindow::OnScreenShot(wxCommandEvent& WXUNUSED(event))
 	ClipboardScreenshot();
 }
 
+/**
+ * Create series from a data file.
+ * The file is not formated. For example a simple txt file or csv file
+ * First data is x abscissa and next is up to 9 ordinates
+ * Separator is : space or ; or tab
+ */
+void mpWindow::OnLoadFile(wxCommandEvent& WXUNUSED(event))
+{
+	wxFileDialog OpenFile(this, _T("Select file"), wxEmptyString, wxEmptyString,
+			_T("Data files (*.dat)|*.dat|Csv files (csv.*)|csv.*|All files (*.*)|*.*"), wxFD_OPEN|wxFD_FILE_MUST_EXIST);
+
+	if (OpenFile.ShowModal() == wxID_OK)
+	{
+		FILE* file = fopen(OpenFile.GetPath().c_str(), "r");
+		if (file == NULL)
+			return;
+
+		unsigned int nb_series = this->CountLayersPlot();
+		wxFileName filename(OpenFile.GetPath());
+		wxString name = filename.GetName();
+
+		// Max line length
+		char line[1024];
+		// Data separator : space or ; or tab
+		char seps[] = " ;\t\n";
+		char *token;
+		// Maximum, 10 data by line. First data is x coordinate.
+		double data[10];
+		int i = 0, j = 0;
+		do
+		{
+			if (fgets(line, 1024, file) == NULL) continue; // EOF
+
+			token = strtok(line, seps);
+			i = 0;
+			while (token != NULL)
+			{
+				data[i++] = atof(token);
+				token = strtok(NULL, seps);
+			}
+
+			for (j = 1; j < i; j++)
+				GetSeries(nb_series + j - 1, name)->AddData(data[0], data[j], true);
+
+		} while (!feof(file));
+
+		mpInfoLegend *legend = (mpInfoLegend*) GetLayerByClassName(_("mpInfoLegend"));
+		if (legend != NULL)
+		{
+			legend->SetNeedUpdate();
+		}
+	}
+}
+
 void mpWindow::OnConfiguration(wxCommandEvent& WXUNUSED(event))
 {
 	if (m_configWindow == NULL)
@@ -2862,6 +2955,20 @@ mpLayer* mpWindow::GetLayerPlot(int position)
 			return *it;
 	}
 	return NULL;
+}
+
+mpFXYVector* mpWindow::GetSeries(unsigned int n, const wxString &name, bool create)
+{
+	mpFXYVector *serie = (mpFXYVector*) this->GetLayerPlot(n);
+	if ((serie == NULL) && create)
+	{
+		serie = new mpFXYVector(wxString::Format(wxT("%s %d"), name, n));
+		serie->SetContinuity(true);
+		wxPen pen(wxIndexColour(n), 2, wxPENSTYLE_SOLID);
+		serie->SetPen(pen);
+		this->AddLayer(serie);
+	}
+	return serie;
 }
 
 mpLayer* mpWindow::GetLayerByName(const wxString &name)
@@ -3509,15 +3616,20 @@ bool mpPrintout::HasPage(int page)
 //-----------------------------------------------------------------------------
 // mpMovableObject - provided by Jose Luis Blanco
 //-----------------------------------------------------------------------------
-#define ASSEMBLER
-inline void SinCos(double Theta, double *sinT, double *cosT)
+//#define ASSEMBLER
+inline void SinCos(double Angle, double *sinA, double *cosA)
 {
 #ifdef ASSEMBLER
 	// https://gcc.gnu.org/onlinedocs/gcc-4.9.2/gcc/Extended-Asm.html#Extended-Asm
-	__asm__ ("fsincos" : "=t" (*cosT), "=u" (*sinT) : "0" (Theta));
+	__asm__ ("fsincos" : "=t" (*cosA), "=u" (*sinA) : "0" (Angle));
 #else
-  *sinT = sin(Theta);
-  *cosT = cos(Theta);
+	#if __GNUC__
+		// Use GNU extension
+		sincos(Angle, sinA, cosA);
+	#else
+		*sinA = sin(Angle);
+		*cosA = cos(Angle);
+	#endif
 #endif
 }
 

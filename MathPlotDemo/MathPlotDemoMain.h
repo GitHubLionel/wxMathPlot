@@ -47,8 +47,6 @@ class MathPlotDemoFrame: public wxFrame
         wxPanel* pPlot;
         //*)
 
-        mpFXYVector* GetSeries(int Series);
-
         DECLARE_EVENT_TABLE()
 };
 

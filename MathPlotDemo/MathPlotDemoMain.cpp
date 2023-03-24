@@ -122,25 +122,11 @@ void MathPlotDemoFrame::OnbDrawClick(wxCommandEvent& event)
 	mPlot->Fit();
 
 	// add a simple sinus serie
-	mpFXYVector *serie = GetSeries(0);
+	mpFXYVector *serie = mPlot->GetSeries(0);
 	for (int i = 0; i < 100; i++)
 		serie->AddData(i / 10.0, sin(i / 10.0), true);
 	mPlot->Fit();  //  UpdateAll
 	legend->SetNeedUpdate();
 
-    bDraw->Disable();
-}
-
-mpFXYVector* MathPlotDemoFrame::GetSeries(int Series)
-{
-	mpFXYVector *serie = (mpFXYVector*) mPlot->GetLayerPlot(Series);
-	if (serie == NULL)
-	{
-		serie = new mpFXYVector("Serie : " + wxString::Format(wxT("%d"), Series));
-		serie->SetContinuity(true);
-		wxPen pen(wxIndexColour(Series), 2, wxPENSTYLE_SOLID);
-		serie->SetPen(pen);
-		mPlot->AddLayer(serie);
-	}
-	return serie;
+  bDraw->Disable();
 }
