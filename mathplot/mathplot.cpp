@@ -2527,6 +2527,8 @@ void mpWindow::OnLoadFile(wxCommandEvent& WXUNUSED(event))
 
 		} while (!feof(file));
 
+		fclose(file);
+
 		mpInfoLegend *legend = (mpInfoLegend*) GetLayerByClassName(_("mpInfoLegend"));
 		if (legend != NULL)
 		{
