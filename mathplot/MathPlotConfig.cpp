@@ -997,6 +997,8 @@ void MathPlotConfigDialog::OnbApplyClick(wxCommandEvent& WXUNUSED(event))
 			if ((CurrentChoice == ChoiceSeries) && (CurrentSerie != NULL))
 			{
 				CurrentSerie->SetName(edSeriesName->GetValue());
+				ChoiceSeries->SetString(ChoiceSeries->GetSelection(), edSeriesName->GetValue());
+
 				// Pen config
 				wxPen pen(bSeriesPenColor->GetBackgroundColour(), cbSeriesPenWidth->GetSelection() + 1,
 						(wxPenStyle) (cbSeriesPenStyle->GetSelection() + wxPENSTYLE_SOLID));
