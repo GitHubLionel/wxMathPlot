@@ -196,6 +196,7 @@ IMPLEMENT_ABSTRACT_CLASS(mpInfoLayer, mpLayer)
 
 mpInfoLayer::mpInfoLayer()
 {
+	m_type = mpLAYER_INFO;
 	m_dim = wxRect(0, 0, 1, 1);
 	m_brush = *wxTRANSPARENT_BRUSH;
 	m_brush.SetColour(*wxWHITE);
@@ -204,12 +205,11 @@ mpInfoLayer::mpInfoLayer()
 	m_winX = 1;
 	m_winY = 1;
 	m_location = mpMarginNone;
-	m_type = mpLAYER_INFO;
 }
 
-mpInfoLayer::mpInfoLayer(wxRect rect, const wxBrush *brush, mpLocation location) :
-		m_dim(rect)
+mpInfoLayer::mpInfoLayer(wxRect rect, const wxBrush *brush, mpLocation location)
 {
+	m_type = mpLAYER_INFO;
 	m_brush = *brush;
 	if (m_brush.GetStyle() == wxBRUSHSTYLE_TRANSPARENT)
 		m_brush.SetColour(*wxWHITE);
@@ -218,7 +218,6 @@ mpInfoLayer::mpInfoLayer(wxRect rect, const wxBrush *brush, mpLocation location)
 	m_winX = 1;
 	m_winY = 1;
 	m_location = location;
-	m_type = mpLAYER_INFO;
 }
 
 mpInfoLayer::~mpInfoLayer()
@@ -784,9 +783,9 @@ IMPLEMENT_ABSTRACT_CLASS(mpFX, mpLayer)
 
 mpFX::mpFX(wxString name, int flags)
 {
+	m_type = mpLAYER_PLOT;
 	SetName(name);
 	m_flags = flags;
-	m_type = mpLAYER_PLOT;
 }
 
 void mpFX::Plot(wxDC &dc, mpWindow &w)
@@ -899,9 +898,9 @@ IMPLEMENT_ABSTRACT_CLASS(mpFY, mpLayer)
 
 mpFY::mpFY(wxString name, int flags)
 {
+	m_type = mpLAYER_PLOT;
 	SetName(name);
 	m_flags = flags;
-	m_type = mpLAYER_PLOT;
 }
 
 void mpFY::Plot(wxDC &dc, mpWindow &w)
@@ -1026,12 +1025,24 @@ void mpFY::Plot(wxDC &dc, mpWindow &w)
 
 IMPLEMENT_ABSTRACT_CLASS(mpFXY, mpLayer)
 
-mpFXY::mpFXY(wxString name, int flags)
+mpFXY::mpFXY(wxString name, int flags, bool viewAsBar)
 {
+	m_type = mpLAYER_PLOT;
 	SetName(name);
 	m_flags = flags;
-	m_type = mpLAYER_PLOT;
 	maxDrawX = minDrawX = maxDrawY = minDrawY = 0;
+	m_deltaX = 1;
+	SetViewMode(viewAsBar);
+}
+
+void mpFXY::SetViewMode(bool asBar)
+{
+	m_ViewAsBar = asBar;
+	if (m_ViewAsBar)
+	{
+		// In bar mode, we are not continuous
+		m_continuous = false;
+	}
 }
 
 void mpFXY::UpdateViewBoundary(wxCoord xnew, wxCoord ynew)
@@ -1072,44 +1083,69 @@ void mpFXY::Plot(wxDC &dc, mpWindow &w)
 		dc.SetClippingRegion(rect);
 	}
 
-	if (m_continuous || (m_pen.GetWidth() > 1))
+	if (!m_ViewAsBar)
 	{
-		if (m_continuous)
+		if (m_continuous || (m_pen.GetWidth() > 1))
 		{
-			// Get first point in bound
-			ixlast = w.x2p(x);
-			iylast = w.y2p(y);
+			if (m_continuous)
+			{
+				// Get first point in bound
+				ixlast = w.x2p(x);
+				iylast = w.y2p(y);
 
-			while (GetNextXY(x, y))
+				while (GetNextXY(x, y))
+				{
+					ix = w.x2p(x);
+					iy = w.y2p(y);
+
+					dc.DrawLine(ixlast, iylast, ix, iy);
+					UpdateViewBoundary(ix, iy);
+
+					if (m_symbol != mpsNone)
+						DrawSymbol(dc, ixlast, iylast);
+
+					ixlast = ix;
+					iylast = iy;
+				}
+				// Last point
+				if (m_symbol != mpsNone)
+					DrawSymbol(dc, ixlast, iylast);
+			}
+			else
 			{
 				ix = w.x2p(x);
 				iy = w.y2p(y);
-
-				dc.DrawLine(ixlast, iylast, ix, iy);
-				UpdateViewBoundary(ix, iy);
-
-				if (m_symbol != mpsNone)
-					DrawSymbol(dc, ixlast, iylast);
-
-				ixlast = ix;
-				iylast = iy;
+				while (GetNextXY(x, y))
+				{
+					if (m_drawOutsideMargins
+							|| ((ix >= m_plotBondaries.startPx) && (ix <= m_plotBondaries.endPx) && (iy >= m_plotBondaries.startPy)
+									&& (iy <= m_plotBondaries.endPy)))
+					{
+						if (m_symbol == mpsNone)
+							dc.DrawLine(ix, iy, ix, iy);
+						else
+							DrawSymbol(dc, ix, iy);
+						UpdateViewBoundary(ix, iy);
+					}
+					ix = w.x2p(x);
+					iy = w.y2p(y);
+				}
 			}
-			// Last point
-			if (m_symbol != mpsNone)
-				DrawSymbol(dc, ixlast, iylast);
 		}
 		else
 		{
+			// Not continuous and pen width = 1
 			ix = w.x2p(x);
 			iy = w.y2p(y);
 			while (GetNextXY(x, y))
 			{
+
 				if (m_drawOutsideMargins
 						|| ((ix >= m_plotBondaries.startPx) && (ix <= m_plotBondaries.endPx) && (iy >= m_plotBondaries.startPy)
 								&& (iy <= m_plotBondaries.endPy)))
 				{
 					if (m_symbol == mpsNone)
-						dc.DrawLine(ix, iy, ix, iy);
+						dc.DrawPoint(ix, iy);
 					else
 						DrawSymbol(dc, ix, iy);
 					UpdateViewBoundary(ix, iy);
@@ -1119,22 +1155,22 @@ void mpFXY::Plot(wxDC &dc, mpWindow &w)
 			}
 		}
 	}
-	else
+	else // View as bar
 	{
-		// Not continuous and pen width = 1
+		double delta = w.GetScreenX() / w.GetScaleX();
+		if (m_deltaX < delta)
+			delta = m_deltaX;
+		int d = (int) ((delta * w.GetScaleX()) / 3.5);
+		wxCoord iybase = w.y2p(0);
 		ix = w.x2p(x);
 		iy = w.y2p(y);
 		while (GetNextXY(x, y))
 		{
-
 			if (m_drawOutsideMargins
 					|| ((ix >= m_plotBondaries.startPx) && (ix <= m_plotBondaries.endPx) && (iy >= m_plotBondaries.startPy)
 							&& (iy <= m_plotBondaries.endPy)))
 			{
-				if (m_symbol == mpsNone)
-					dc.DrawPoint(ix, iy);
-				else
-					DrawSymbol(dc, ix, iy);
+				dc.DrawRectangle(ix - d, iy, 2 * d, iybase - iy);
 				UpdateViewBoundary(ix, iy);
 			}
 			ix = w.x2p(x);
@@ -1192,9 +1228,9 @@ IMPLEMENT_ABSTRACT_CLASS(mpProfile, mpLayer)
 
 mpProfile::mpProfile(wxString name, int flags)
 {
+	m_type = mpLAYER_PLOT;
 	SetName(name);
 	m_flags = flags;
-	m_type = mpLAYER_PLOT;
 }
 
 void mpProfile::Plot(wxDC &dc, mpWindow &w)
@@ -1266,6 +1302,7 @@ IMPLEMENT_ABSTRACT_CLASS(mpScale, mpLayer)
 
 mpScale::mpScale(wxString name, int flags, bool grids)
 {
+	m_type = mpLAYER_AXIS;
 	SetName(name);
 	SetFont((wxFont const &) *wxSMALL_FONT);
 	SetPen((wxPen const &) *wxGREY_PEN);
@@ -1276,7 +1313,6 @@ mpScale::mpScale(wxString name, int flags, bool grids)
 	m_auto = true;
 	m_min = -1;
 	m_max = 1;
-	m_type = mpLAYER_AXIS;
 	m_labelFormat = wxT("");
 }
 
@@ -1817,13 +1853,22 @@ EVT_MENU(mpID_CONFIG, mpWindow::OnConfiguration)
 EVT_MENU(mpID_LOAD_FILE, mpWindow::OnLoadFile)
 EVT_MENU(mpID_ZOOM_IN, mpWindow::OnZoomIn)
 EVT_MENU(mpID_ZOOM_OUT, mpWindow::OnZoomOut)
-EVT_MENU(mpID_LOCKASPECT,mpWindow::OnLockAspect)
-EVT_MENU(mpID_HELP_MOUSE,mpWindow::OnMouseHelp)
+EVT_MENU(mpID_LOCKASPECT, mpWindow::OnLockAspect)
+EVT_MENU(mpID_HELP_MOUSE, mpWindow::OnMouseHelp)
+EVT_MENU(mpID_FULLSCREEN, mpWindow::OnFullScreen)
 END_EVENT_TABLE()
 
 mpWindow::mpWindow(wxWindow *parent, wxWindowID id, const wxPoint &pos, const wxSize &size, long flag) :
-		wxWindow(parent, id, pos, size, flag, wxT("mathplot"))
+		wxWindow(parent, id, pos, size, flag, wxT("Mathplot"))
 {
+	// Fullscreen only if parent is a frame
+	wxString classname = parent->GetClassInfo()->GetClassName();
+	if (classname.IsSameAs(_("wxFrame")))
+		m_parent = (wxFrame*) parent;
+	else
+		m_parent = NULL;
+	m_fullscreen = false;
+
 	SetBackgroundStyle(wxBG_STYLE_PAINT);
 
 	InitParameters();
@@ -1873,9 +1918,15 @@ mpWindow::mpWindow(wxWindow *parent, wxWindowID id, const wxPoint &pos, const wx
 	mymenu = new wxMenuItem(&m_popmenu, mpID_LOAD_FILE, _T("Load file"), _T("Load data file"));
 	mymenu->SetBitmap(icon[8]);
 	m_popmenu.Append(mymenu);
-	mymenu = new wxMenuItem(&m_popmenu, mpID_HELP_MOUSE, _T("Show mouse commands..."), _T("Show help about the mouse commands."));
+	mymenu = new wxMenuItem(&m_popmenu, mpID_HELP_MOUSE, _T("Show mouse commands ..."), _T("Show help about the mouse commands."));
 	mymenu->SetBitmap(icon[9]);
 	m_popmenu.Append(mymenu);
+	if (m_parent)
+	{
+		mymenu = new wxMenuItem(&m_popmenu, mpID_FULLSCREEN, _T("Toggle fullscreen"), _T("Toggle fullscreen."));
+//		mymenu->SetBitmap(icon[10]);
+		m_popmenu.Append(mymenu);
+	}
 #else
 	m_popmenu.Append(mpID_CENTER, _T("Center to this position"), _T("Center plot view to this position"));
 	m_popmenu.Append(mpID_FIT, _T("Fit"), _T("Set plot view to show all items"));
@@ -1888,6 +1939,8 @@ mpWindow::mpWindow(wxWindow *parent, wxWindowID id, const wxPoint &pos, const wx
 	m_popmenu.Append(mpID_CONFIG, _T("Configuration"), _T("Plot configuration"));
 	m_popmenu.Append(mpID_LOAD_FILE, _T("Load file"), _T("Load data file"));
 	m_popmenu.Append(mpID_HELP_MOUSE, _T("Show mouse commands..."), _T("Show help about the mouse commands."));
+	if (m_parent)
+		m_popmenu.Append(mpID_FULLSCREEN, _T("Toggle fullscreen"), _T("Toggle fullscreen."));
 #endif
 
 	m_layers.clear();
@@ -2481,6 +2534,12 @@ void mpWindow::OnScreenShot(wxCommandEvent& WXUNUSED(event))
 	ClipboardScreenshot();
 }
 
+void mpWindow::OnFullScreen(wxCommandEvent& WXUNUSED(event))
+{
+	m_fullscreen = !m_fullscreen;
+	m_parent->ShowFullScreen(m_fullscreen);
+}
+
 /**
  * Create series from a data file.
  * The file is not formated. For example a simple txt file or csv file
@@ -2523,7 +2582,7 @@ void mpWindow::OnLoadFile(wxCommandEvent& WXUNUSED(event))
 			}
 
 			for (j = 1; j < i; j++)
-				GetSeries(nb_series + j - 1, name)->AddData(data[0], data[j], true);
+				GetXYSeries(nb_series + j - 1, name)->AddData(data[0], data[j], true);
 
 		} while (!feof(file));
 
@@ -2579,8 +2638,11 @@ bool mpWindow::AddLayer(mpLayer *layer, bool refreshDisplay)
 {
 	if (layer != NULL)
 	{
-		wxString classname = layer->GetClassInfo()->GetClassName();
-		if (classname.IsSameAs(_("mpInfoCoords")))
+		mpInfoType info;
+		mpScaleType scale;
+		mpFunctionType function;
+
+		if (layer->IsInfo(&info) && (info == mpiCoords))
 		{
 			// Only one info coords is allowed
 			if (m_InfoCoords)
@@ -2588,16 +2650,27 @@ bool mpWindow::AddLayer(mpLayer *layer, bool refreshDisplay)
 			m_InfoCoords = (mpInfoCoords*) layer;
 		}
 
-		if (classname.IsSameAs(_("mpScaleX")) && (m_XAxis == NULL))
+		if (layer->IsScale(&scale))
 		{
-			// Only the first X axis
-			m_XAxis = (mpScaleX*) layer;
+			if ((scale == mpsScaleX) && (m_XAxis == NULL))
+			{
+				// Only the first X axis
+				m_XAxis = (mpScaleX*) layer;
+			}
+
+			if ((scale == mpsScaleY) && (m_YAxis == NULL))
+			{
+				// Only the first Y axis
+				m_YAxis = (mpScaleY*) layer;
+			}
 		}
 
-		if (classname.IsSameAs(_("mpScaleY")) && (m_YAxis == NULL))
+		// We just add a function, so we need to update the legend
+		if (layer->IsFunction(&function))
 		{
-			// Only the first Y axis
-			m_YAxis = (mpScaleY*) layer;
+			mpInfoLegend *legend = (mpInfoLegend*) this->GetLayerByClassName(_("mpInfoLegend"));
+			if (legend)
+				legend->SetNeedUpdate();
 		}
 
 		layer->SetWindow(*this);
@@ -2967,24 +3040,26 @@ mpLayer* mpWindow::GetLayer(int position)
 	return m_layers[position];
 }
 
-mpLayer* mpWindow::GetLayerPlot(int position)
+mpLayer* mpWindow::GetLayerPlot(int position, mpFunctionType func)
 {
 	int layerNo = -1;
+	mpFunctionType function;
 	if (position < 0)
 		return NULL;
 	for (wxLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
 	{
-		if ((*it)->GetLayerType() == mpLAYER_PLOT)
-			layerNo++;
-		if (layerNo == position)
-			return *it;
+		if ((*it)->IsFunction(&function) && ((func == mpfAllType) || (function == func)))
+		{
+			if (++layerNo == position)
+				return *it;
+		}
 	}
 	return NULL;
 }
 
-mpFXYVector* mpWindow::GetSeries(unsigned int n, const wxString &name, bool create)
+mpFXYVector* mpWindow::GetXYSeries(unsigned int n, const wxString &name, bool create)
 {
-	mpFXYVector *serie = (mpFXYVector*) this->GetLayerPlot(n);
+	mpFXYVector *serie = (mpFXYVector*) this->GetLayerPlot(n, mpfFXYVector);
 	if ((serie == NULL) && create)
 	{
 		serie = new mpFXYVector(wxString::Format(wxT("%s %d"), name, n));
@@ -3017,13 +3092,14 @@ mpLayer* mpWindow::GetLayerByClassName(const wxString &name)
 
 mpInfoLayer* mpWindow::IsInsideInfoLayer(wxPoint &point)
 {
+	mpInfoType info;
 	wxLayerList::iterator li;
 	for (li = m_layers.begin(); li != m_layers.end(); li++)
 	{
 #ifdef MATHPLOT_DO_LOGGING
 		wxLogMessage(wxT("mpWindow::IsInsideInfoLayer() examinining layer = %p"), (*li));
 #endif // MATHPLOT_DO_LOGGING
-		if ((*li)->IsInfo())
+		if ((*li)->IsInfo(&info))
 		{
 			mpInfoLayer *tmpLyr = (mpInfoLayer*) (*li);
 #ifdef MATHPLOT_DO_LOGGING
@@ -3222,15 +3298,16 @@ void mpWindow::SetColourTheme(const wxColour &bgColour, const wxColour &drawColo
 IMPLEMENT_DYNAMIC_CLASS(mpFXYVector, mpFXY)
 
 // Constructor
-mpFXYVector::mpFXYVector(wxString name, int flags) :
-		mpFXY(name, flags)
+mpFXYVector::mpFXYVector(wxString name, int flags, bool viewAsBar) :
+		mpFXY(name, flags, viewAsBar)
 {
+	m_type = mpLAYER_PLOT;
 	m_index = 0;
 	m_minX = -1;
 	m_maxX = 1;
 	m_minY = -1;
 	m_maxY = 1;
-	m_type = mpLAYER_PLOT;
+	m_deltaX = 1e+308;
 	m_xs.clear();
 	m_ys.clear();
 	SetReserve(1000);
@@ -3252,16 +3329,19 @@ bool mpFXYVector::GetNextXY(double &x, double &y)
 void mpFXYVector::DrawAddedPoint(const double x, const double y)
 {
 	// If we are here, new point is always in bound
-	if (m_visible)
+	if (!m_visible)
+		return;
+
+	// Direct access to the dc
+	wxClientDC dc(m_win);
+	dc.SetPen(m_pen);
+	dc.SetBrush(m_brush);
+
+	wxCoord ix = m_win->x2p(x);
+	wxCoord iy = m_win->y2p(y);
+
+	if (!m_ViewAsBar)
 	{
-		// Direct access to the dc
-		wxClientDC dc(m_win);
-		dc.SetPen(m_pen);
-		dc.SetBrush(m_brush);
-
-		wxCoord ix = m_win->x2p(x);
-		wxCoord iy = m_win->y2p(y);
-
 		if (m_continuous)
 		{
 			// Last coordinates (we assume that m_step = 1 in this context)
@@ -3285,6 +3365,15 @@ void mpFXYVector::DrawAddedPoint(const double x, const double y)
 				DrawSymbol(dc, ix, iy);
 		}
 	}
+	else
+	{
+		double delta = m_win->GetScreenX() / m_win->GetScaleX();
+		if (m_deltaX < delta)
+			delta = m_deltaX;
+		int d = (int) ((delta * m_win->GetScaleX()) / 3.5);
+		wxCoord iybase = m_win->y2p(0);
+		dc.DrawRectangle(ix - d, iy, 2 * d, iybase - iy);
+	}
 }
 
 void mpFXYVector::Clear()
@@ -3296,6 +3385,7 @@ void mpFXYVector::Clear()
 	m_maxX = 1;
 	m_minY = -1;
 	m_maxY = 1;
+	m_deltaX = 1e+308;
 	Rewind();
 }
 
@@ -3316,6 +3406,7 @@ void mpFXYVector::SetData(const std::vector<double> &xs, const std::vector<doubl
 	// Update internal variables for the bounding box.
 	if (xs.size() > 0)
 	{
+		bool first = true;
 		m_minX = xs[0] - (fabs(xs[0]) * LIMIT);
 		m_maxX = xs[0] + (fabs(xs[0]) * LIMIT);
 		m_minY = ys[0] - (fabs(ys[0]) * LIMIT);
@@ -3330,7 +3421,21 @@ void mpFXYVector::SetData(const std::vector<double> &xs, const std::vector<doubl
 			else
 				if (*it > m_maxX)
 					m_maxX = (*it) + (fabs((*it)) * LIMIT);
+
+			if (first)
+			{
+				m_lastX = (*it);
+				first = false;
+			}
+			else
+			{
+				if (abs((*it) - m_lastX) < m_deltaX)
+					m_deltaX = abs((*it) - m_lastX);
+
+				m_lastX = *it;
+			}
 		}
+
 		for (it = ys.begin(); it != ys.end(); it++)
 		{
 			if (*it < m_minY)
@@ -3378,6 +3483,9 @@ bool mpFXYVector::AddData(const double x, const double y, bool updatePlot)
 			m_minX = m_xs[0] - (fabs(m_xs[0]) * LIMIT);
 			m_maxX = m_xs[1] + (fabs(m_xs[1]) * LIMIT);
 		}
+		m_deltaX = abs(m_xs[1] - m_lastX);
+		m_lastX = m_xs[1];
+
 		// Y scale
 		if (m_ys[0] > m_ys[1])
 		{
@@ -3407,6 +3515,16 @@ bool mpFXYVector::AddData(const double x, const double y, bool updatePlot)
 				if (m_maxX > bbox[1])
 					new_limit = true;
 			}
+
+		if (m_xs.size() == 1)
+			m_lastX = m_xs[0];
+		else
+		{
+			if (abs(x - m_lastX) < m_deltaX)
+				m_deltaX = abs(x - m_lastX);
+			m_lastX = x;
+		}
+
 		// Y scale
 		if (y < m_minY)
 		{
@@ -3444,6 +3562,7 @@ IMPLEMENT_DYNAMIC_CLASS(mpText, mpLayer)
  */
 mpText::mpText(wxString name, int offsetx, int offsety)
 {
+	m_type = mpLAYER_INFO;
 	SetName(name);
 	m_location = mpMarginNone;
 
@@ -3456,7 +3575,6 @@ mpText::mpText(wxString name, int offsetx, int offsety)
 		m_offsety = offsety;
 	else
 		m_offsety = 50;
-	m_type = mpLAYER_INFO;
 }
 
 /** @param name text to be displayed
@@ -3464,11 +3582,11 @@ mpText::mpText(wxString name, int offsetx, int offsety)
  */
 mpText::mpText(wxString name, mpLocation marginLocation)
 {
+	m_type = mpLAYER_INFO;
 	SetName(name);
 	m_location = marginLocation;
 	m_offsetx = 5;
 	m_offsety = 50;
-	m_type = mpLAYER_INFO;
 }
 
 /** mpText Layer plot handler.
