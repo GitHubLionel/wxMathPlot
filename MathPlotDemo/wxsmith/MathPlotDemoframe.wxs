@@ -2,17 +2,29 @@
 <wxsmith>
 	<object class="wxFrame" name="MathPlotDemoFrame">
 		<title>MathPlot Demo</title>
-		<size>617,285</size>
+		<size>800,400</size>
 		<id_arg>0</id_arg>
 		<object class="wxAuiManager" variable="AuiManager1" member="yes">
 			<style>wxAUI_MGR_ALLOW_ACTIVE_PANE|wxAUI_MGR_DEFAULT</style>
 			<object class="AuiManagerItem">
 				<object class="wxPanel" name="ID_PANEL1" variable="pLog" member="yes">
-					<minsize>180,-1</minsize>
+					<minsize>120,-1</minsize>
 					<object class="wxButton" name="ID_BUTTON1" variable="bDraw" member="yes">
 						<label>Draw sinus</label>
 						<pos>16,24</pos>
 						<handler function="OnbDrawClick" entry="EVT_BUTTON" />
+					</object>
+					<object class="wxButton" name="ID_BUTTON2" variable="bSample" member="yes">
+						<label>Draw Sample</label>
+						<pos>16,56</pos>
+						<enabled>0</enabled>
+						<handler function="OnbSampleClick" entry="EVT_BUTTON" />
+					</object>
+					<object class="wxButton" name="ID_BUTTON3" variable="bBar" member="yes">
+						<label>Draw Bar</label>
+						<pos>16,88</pos>
+						<enabled>0</enabled>
+						<handler function="OnbBarClick" entry="EVT_BUTTON" />
 					</object>
 				</object>
 				<name>PaneName0</name>

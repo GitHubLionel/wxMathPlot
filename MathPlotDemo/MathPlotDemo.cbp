@@ -110,6 +110,7 @@
 		<Unit filename="MathPlotDemoApp.h" />
 		<Unit filename="MathPlotDemoMain.cpp" />
 		<Unit filename="MathPlotDemoMain.h" />
+		<Unit filename="Sample.h" />
 		<Unit filename="resource.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>

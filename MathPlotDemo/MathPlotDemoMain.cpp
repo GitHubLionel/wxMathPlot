@@ -14,6 +14,8 @@
 #include <wx/string.h>
 //*)
 
+#include "Sample.h"
+
 //helper functions
 enum wxbuildinfoformat {
     short_f, long_f };
@@ -42,6 +44,8 @@ wxString wxbuildinfo(wxbuildinfoformat format)
 
 //(*IdInit(MathPlotDemoFrame)
 const long MathPlotDemoFrame::ID_BUTTON1 = wxNewId();
+const long MathPlotDemoFrame::ID_BUTTON2 = wxNewId();
+const long MathPlotDemoFrame::ID_BUTTON3 = wxNewId();
 const long MathPlotDemoFrame::ID_PANEL1 = wxNewId();
 const long MathPlotDemoFrame::ID_MATHPLOT1 = wxNewId();
 const long MathPlotDemoFrame::ID_PANEL2 = wxNewId();
@@ -58,12 +62,16 @@ MathPlotDemoFrame::MathPlotDemoFrame(wxWindow* parent,wxWindowID id)
     wxBoxSizer* BoxSizer1;
 
     Create(parent, wxID_ANY, _T("MathPlot Demo"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_FRAME_STYLE, _T("wxID_ANY"));
-    SetClientSize(wxSize(617,285));
+    SetClientSize(wxSize(800,400));
     AuiManager1 = new wxAuiManager(this, wxAUI_MGR_ALLOW_ACTIVE_PANE|wxAUI_MGR_DEFAULT);
     pLog = new wxPanel(this, ID_PANEL1, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL, _T("ID_PANEL1"));
-    pLog->SetMinSize(wxSize(180,-1));
+    pLog->SetMinSize(wxSize(120,-1));
     bDraw = new wxButton(pLog, ID_BUTTON1, _T("Draw sinus"), wxPoint(16,24), wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON1"));
-    AuiManager1->AddPane(pLog, wxAuiPaneInfo().Name(_T("PaneName0")).DefaultPane().Caption(_("Log")).CaptionVisible().CloseButton(false).Left().Floatable(false).MinSize(wxSize(180,-1)).Movable(false));
+    bSample = new wxButton(pLog, ID_BUTTON2, _T("Draw Sample"), wxPoint(16,56), wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON2"));
+    bSample->Disable();
+    bBar = new wxButton(pLog, ID_BUTTON3, _T("Draw Bar"), wxPoint(16,88), wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON3"));
+    bBar->Disable();
+    AuiManager1->AddPane(pLog, wxAuiPaneInfo().Name(_T("PaneName0")).DefaultPane().Caption(_("Log")).CaptionVisible().CloseButton(false).Left().Floatable(false).MinSize(wxSize(120,-1)).Movable(false));
     pPlot = new wxPanel(this, ID_PANEL2, wxPoint(227,228), wxDefaultSize, wxTAB_TRAVERSAL, _T("ID_PANEL2"));
     BoxSizer1 = new wxBoxSizer(wxVERTICAL);
     mPlot = new mpWindow(pPlot, ID_MATHPLOT1, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL);
@@ -77,6 +85,8 @@ MathPlotDemoFrame::MathPlotDemoFrame(wxWindow* parent,wxWindowID id)
     AuiManager1->Update();
 
     Connect(ID_BUTTON1,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&MathPlotDemoFrame::OnbDrawClick);
+    Connect(ID_BUTTON2,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&MathPlotDemoFrame::OnbSampleClick);
+    Connect(ID_BUTTON3,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&MathPlotDemoFrame::OnbBarClick);
     //*)
 }
 
@@ -122,11 +132,43 @@ void MathPlotDemoFrame::OnbDrawClick(wxCommandEvent& event)
 	mPlot->Fit();
 
 	// add a simple sinus serie
-	mpFXYVector *serie = mPlot->GetSeries(0);
+	mpFXYVector *serie = mPlot->GetXYSeries(0);
 	for (int i = 0; i < 100; i++)
 		serie->AddData(i / 10.0, sin(i / 10.0), true);
 	mPlot->Fit();  //  UpdateAll
-	legend->SetNeedUpdate();
 
   bDraw->Disable();
+  bSample->Enable();
+  bBar->Enable();
+}
+
+void MathPlotDemoFrame::OnbSampleClick(wxCommandEvent& event)
+{
+	mPlot->AddLayer(new MyFunction());
+	mPlot->AddLayer(new MySIN(10.0, 220.0));
+	mPlot->AddLayer(new MyCOSinverse(10.0, 100.0));
+  mPlot->AddLayer(new MyLissajoux(125.0));
+	mPlot->Fit();  //  UpdateAll
+
+  bSample->Disable();
+}
+
+void MathPlotDemoFrame::OnbBarClick(wxCommandEvent& event)
+{
+	mpFXYVector *vectorLayer = new mpFXYVector(_T("Bar X²"), mpALIGN_NE, true);
+	vectorLayer->SetBrush(*wxGREEN);
+	// Create two vectors for x,y and fill them with data
+	std::vector<double> vectorx, vectory;
+	double xcoord;
+	for (unsigned int p = 0; p <= 20; p++)
+	{
+		xcoord = ((double)p - 10.0) * 5.0;
+		vectorx.push_back(xcoord);
+		vectory.push_back(0.001 * pow(xcoord, 2));
+	}
+	vectorLayer->SetData(vectorx, vectory);
+	mPlot->AddLayer(vectorLayer);
+	mPlot->Fit();
+
+  bBar->Disable();
 }
