@@ -93,6 +93,7 @@ const long MathPlotConfigDialog::ID_STATICTEXT10 = wxNewId();
 const long MathPlotConfigDialog::ID_SPINCTRL2 = wxNewId();
 const long MathPlotConfigDialog::ID_STATICTEXT19 = wxNewId();
 const long MathPlotConfigDialog::ID_SPINCTRL1 = wxNewId();
+const long MathPlotConfigDialog::ID_CHECKBOX12 = wxNewId();
 const long MathPlotConfigDialog::ID_PANEL4 = wxNewId();
 const long MathPlotConfigDialog::ID_NOTEBOOK1 = wxNewId();
 const long MathPlotConfigDialog::ID_BUTTON3 = wxNewId();
@@ -499,6 +500,10 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
 	cbSeriesStep->SetValue(_T("1"));
 	FlexGridSizer19->Add(cbSeriesStep, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	BoxSizer10->Add(FlexGridSizer19, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+	cbBar = new wxCheckBox(Panel4, ID_CHECKBOX12, _T("View as bar"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CHECKBOX12"));
+	cbBar->SetValue(false);
+	cbBar->Disable();
+	BoxSizer10->Add(cbBar, 1, wxALL|wxEXPAND, 5);
 	FlexGridSizer15->Add(BoxSizer10, 1, wxALL|wxALIGN_TOP|wxALIGN_CENTER_HORIZONTAL, 5);
 	BoxSizer8->Add(FlexGridSizer15, 0, wxALL|wxEXPAND, 2);
 	Panel4->SetSizer(BoxSizer8);
@@ -555,6 +560,7 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
 
 	scale_min = -1;
 	scale_max = 1;
+	CheckBar = false;
 //    Initialize();
 }
 
@@ -848,6 +854,21 @@ void MathPlotConfigDialog::UpdateSelectedSerie(void)
 		cbSeriesShowName->SetValue(CurrentSerie->GetShowName());
 
 		cbSeriesStep->SetValue(CurrentSerie->GetStep());
+
+		mpFunctionType func;
+		CheckBar = (CurrentSerie->IsFunction(&func) && ((func == mpfFXYVector) || (func == mpfBar)));
+
+		if (CheckBar)
+		{
+			cbBar->Enable();
+			cbBar->SetValue(func == mpfBar);
+		}
+		else
+		{
+			cbBar->Disable();
+			cbBar->SetValue(false);
+		}
+
 	}
 	else
 		CurrentChoice = NULL;
@@ -1018,6 +1039,13 @@ void MathPlotConfigDialog::OnbApplyClick(wxCommandEvent& WXUNUSED(event))
 				CurrentSerie->SetShowName(cbSeriesShowName->GetValue());
 
 				CurrentSerie->SetStep(cbSeriesStep->GetValue());
+
+				if (CheckBar)
+				{
+					((mpFXYVector *)CurrentSerie)->SetViewMode(cbBar->GetValue());
+					if (cbBar->GetValue())
+						cbSeriesContinuity->SetValue(false);
+				}
 
 				if (CurrentLegend)
 					CurrentLegend->SetNeedUpdate();

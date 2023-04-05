@@ -63,6 +63,7 @@ class MathPlotConfigDialog: public wxDialog
         bool fontAxisChanged;
         unsigned int int_top, int_bottom, int_left, int_right;
         double scale_min, scale_max;
+        bool CheckBar;
 
         //(*Handlers(MathPlotConfigDialog)
         void OnQuit(wxCommandEvent& event);
@@ -155,6 +156,7 @@ class MathPlotConfigDialog: public wxDialog
         static const long ID_SPINCTRL2;
         static const long ID_STATICTEXT19;
         static const long ID_SPINCTRL1;
+        static const long ID_CHECKBOX12;
         static const long ID_PANEL4;
         static const long ID_NOTEBOOK1;
         static const long ID_BUTTON3;
@@ -178,6 +180,7 @@ class MathPlotConfigDialog: public wxDialog
         wxCheckBox* cbAutoScale;
         wxCheckBox* cbAxisOutside;
         wxCheckBox* cbAxisVisible;
+        wxCheckBox* cbBar;
         wxCheckBox* cbCoordVisible;
         wxCheckBox* cbDrawBox;
         wxCheckBox* cbLegendVisible;
