@@ -1117,16 +1117,11 @@ void mpFXY::Plot(wxDC &dc, mpWindow &w)
 				iy = w.y2p(y);
 				while (GetNextXY(x, y))
 				{
-					if (m_drawOutsideMargins
-							|| ((ix >= m_plotBondaries.startPx) && (ix <= m_plotBondaries.endPx) && (iy >= m_plotBondaries.startPy)
-									&& (iy <= m_plotBondaries.endPy)))
-					{
-						if (m_symbol == mpsNone)
-							dc.DrawLine(ix, iy, ix, iy);
-						else
-							DrawSymbol(dc, ix, iy);
-						UpdateViewBoundary(ix, iy);
-					}
+					if (m_symbol == mpsNone)
+						dc.DrawLine(ix, iy, ix, iy);
+					else
+						DrawSymbol(dc, ix, iy);
+					UpdateViewBoundary(ix, iy);
 					ix = w.x2p(x);
 					iy = w.y2p(y);
 				}
@@ -1139,17 +1134,11 @@ void mpFXY::Plot(wxDC &dc, mpWindow &w)
 			iy = w.y2p(y);
 			while (GetNextXY(x, y))
 			{
-
-				if (m_drawOutsideMargins
-						|| ((ix >= m_plotBondaries.startPx) && (ix <= m_plotBondaries.endPx) && (iy >= m_plotBondaries.startPy)
-								&& (iy <= m_plotBondaries.endPy)))
-				{
-					if (m_symbol == mpsNone)
-						dc.DrawPoint(ix, iy);
-					else
-						DrawSymbol(dc, ix, iy);
-					UpdateViewBoundary(ix, iy);
-				}
+				if (m_symbol == mpsNone)
+					dc.DrawPoint(ix, iy);
+				else
+					DrawSymbol(dc, ix, iy);
+				UpdateViewBoundary(ix, iy);
 				ix = w.x2p(x);
 				iy = w.y2p(y);
 			}
@@ -1166,13 +1155,8 @@ void mpFXY::Plot(wxDC &dc, mpWindow &w)
 		iy = w.y2p(y);
 		while (GetNextXY(x, y))
 		{
-			if (m_drawOutsideMargins
-					|| ((ix >= m_plotBondaries.startPx) && (ix <= m_plotBondaries.endPx) && (iy >= m_plotBondaries.startPy)
-							&& (iy <= m_plotBondaries.endPy)))
-			{
-				dc.DrawRectangle(ix - d, iy, 2 * d, iybase - iy);
-				UpdateViewBoundary(ix, iy);
-			}
+			dc.DrawRectangle(ix - d, iy, 2 * d, iybase - iy);
+			UpdateViewBoundary(ix, iy);
 			ix = w.x2p(x);
 			iy = w.y2p(y);
 		}
