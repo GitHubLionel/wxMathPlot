@@ -1150,6 +1150,8 @@ void mpFXY::Plot(wxDC &dc, mpWindow &w)
 		if (m_deltaX < delta)
 			delta = m_deltaX;
 		int d = (int) ((delta * w.GetScaleX()) / 3.5);
+		if (d == 0)
+			d = 1;
 		wxCoord iybase = w.y2p(0);
 		ix = w.x2p(x);
 		iy = w.y2p(y);
