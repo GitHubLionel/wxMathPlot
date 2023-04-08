@@ -62,6 +62,7 @@
 #include "Images/Config.h"
 #include "Images/Coordinates.h"
 #include "Images/Fit.h"
+#include "Images/Fullscreen.h"
 #include "Images/Grid.h"
 #include "Images/Load.h"
 #include "Images/Mouse.h"
@@ -1031,7 +1032,7 @@ mpFXY::mpFXY(wxString name, int flags, bool viewAsBar)
 	SetName(name);
 	m_flags = flags;
 	maxDrawX = minDrawX = maxDrawY = minDrawY = 0;
-	m_deltaX = 1;
+	m_deltaX = 1e+308; // Big number
 	SetViewMode(viewAsBar);
 }
 
@@ -1847,13 +1848,17 @@ END_EVENT_TABLE()
 mpWindow::mpWindow(wxWindow *parent, wxWindowID id, const wxPoint &pos, const wxSize &size, long flag) :
 		wxWindow(parent, id, pos, size, flag, wxT("Mathplot"))
 {
-	// Fullscreen only if parent is a frame
-	wxString classname = parent->GetClassInfo()->GetClassName();
-	if (classname.IsSameAs(_("wxFrame")))
-		m_parent = (wxFrame*) parent;
-	else
-		m_parent = NULL;
-	m_fullscreen = false;
+	// Search the top parent
+  wxWindow *pWin = parent;
+  while (true)
+  {
+		if (pWin->GetParent())
+			pWin = pWin->GetParent();
+		else
+			break;
+  }
+  m_parent = (wxTopLevelWindow*) pWin;
+  m_fullscreen = false;
 
 	SetBackgroundStyle(wxBG_STYLE_PAINT);
 
@@ -1872,7 +1877,8 @@ mpWindow::mpWindow(wxWindow *parent, wxWindowID id, const wxPoint &pos, const wx
 			wxBITMAP_PNG_FROM_DATA(Zoom_in_24x24), wxBITMAP_PNG_FROM_DATA(Zoom_out_24x24),
 			wxBITMAP_PNG_FROM_DATA(Screenshot_24x24), wxBITMAP_PNG_FROM_DATA(Grid_24x24),
 			wxBITMAP_PNG_FROM_DATA(Coordinates_24x24), wxBITMAP_PNG_FROM_DATA(Config_24x24),
-			wxBITMAP_PNG_FROM_DATA(Load_24x24), wxBITMAP_PNG_FROM_DATA(Mouse_24x24)
+			wxBITMAP_PNG_FROM_DATA(Load_24x24), wxBITMAP_PNG_FROM_DATA(Mouse_24x24),
+			wxBITMAP_PNG_FROM_DATA(Fullscreen_24x24)
 	};
 
 	// Because of GTK problem, we must set bitmap BEFORE append the menu item
@@ -1910,7 +1916,7 @@ mpWindow::mpWindow(wxWindow *parent, wxWindowID id, const wxPoint &pos, const wx
 	if (m_parent)
 	{
 		mymenu = new wxMenuItem(&m_popmenu, mpID_FULLSCREEN, _T("Toggle fullscreen"), _T("Toggle fullscreen."));
-//		mymenu->SetBitmap(icon[10]);
+		mymenu->SetBitmap(icon[10]);
 		m_popmenu.Append(mymenu);
 	}
 #else
@@ -3293,7 +3299,7 @@ mpFXYVector::mpFXYVector(wxString name, int flags, bool viewAsBar) :
 	m_maxX = 1;
 	m_minY = -1;
 	m_maxY = 1;
-	m_deltaX = 1e+308;
+	m_deltaX = 1e+308; // Big number
 	m_xs.clear();
 	m_ys.clear();
 	SetReserve(1000);
@@ -3371,7 +3377,7 @@ void mpFXYVector::Clear()
 	m_maxX = 1;
 	m_minY = -1;
 	m_maxY = 1;
-	m_deltaX = 1e+308;
+	m_deltaX = 1e+308; // Big number
 	Rewind();
 }
 
@@ -3766,9 +3772,6 @@ IMPLEMENT_DYNAMIC_CLASS(mpMovableObject, mpLayer)
 
 void mpMovableObject::TranslatePoint(double x, double y, double &out_x, double &out_y)
 {
-	//    double ccos = cos( m_reference_phi );  // Avoid computing cos/sin twice.
-	//    double csin = sin( m_reference_phi );
-
 	double ccos, csin;
 	SinCos(m_reference_phi, &csin, &ccos);
 
@@ -3786,9 +3789,6 @@ void mpMovableObject::ShapeUpdated()
 	}
 	else
 	{
-		//        double ccos = cos( m_reference_phi );  // Avoid computing cos/sin twice.
-		//        double csin = sin( m_reference_phi );
-
 		double ccos, csin;
 		SinCos(m_reference_phi, &csin, &ccos);
 

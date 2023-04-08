@@ -286,6 +286,7 @@ typedef enum __Function_Type
 	mpfFXY,
 	mpfFXYVector,
 	mpfBar,
+	mpfMovable,
 	mpfAllType
 } mpFunctionType;
 
@@ -2047,7 +2048,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 
 		void InitParameters();
 
-		wxFrame* m_parent;
+		wxTopLevelWindow* m_parent;
 		bool m_fullscreen;
 
 		wxLayerList m_layers; 		//!< List of attached plot layers
@@ -2486,6 +2487,15 @@ class WXDLLIMPEXP_MATHPLOT mpMovableObject: public mpLayer
 
 		virtual void Plot(wxDC &dc, mpWindow &w);
 
+		/** Specifies that this is a FX layer.
+		 @return always \a TRUE
+		 @sa mpLayer::IsFonction*/
+		bool IsFunction(mpFunctionType *function)
+		{
+			*function = mpfMovable;
+			return true;
+		}
+
 	protected:
 
 		/** The coordinates of the object (orientation "phi" is in radians).
@@ -2542,10 +2552,10 @@ class WXDLLIMPEXP_MATHPLOT mpCovarianceEllipse: public mpMovableObject
 				const wxString &layerName = wxT("")) :
 				m_cov_00(cov_00), m_cov_11(cov_11), m_cov_01(cov_01), m_quantiles(quantiles), m_segments(segments)
 		{
+			m_type = mpLAYER_PLOT;
 			m_continuous = true;
 			m_name = layerName;
 			RecalculateShape();
-			m_type = mpLAYER_PLOT;
 		}
 
 		virtual ~mpCovarianceEllipse()
@@ -2661,10 +2671,10 @@ class WXDLLIMPEXP_MATHPLOT mpBitmapLayer: public mpLayer
 		 */
 		mpBitmapLayer()
 		{
+			m_type = mpLAYER_BITMAP;
 			m_min_x = m_max_x = 0;
 			m_min_y = m_max_y = 0;
 			m_validImg = false;
-			m_type = mpLAYER_BITMAP;
 			m_scaledBitmap_offset_x = m_scaledBitmap_offset_y = 0;
 		}
 
