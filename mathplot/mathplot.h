@@ -200,6 +200,25 @@ enum
 	mpID_FULLSCREEN          //!< Toggle fullscren only if parent is a frame windows
 };
 
+/** ID for popup text */
+enum {
+	pop_CENTER,
+	pop_FIT,
+	pop_ZOOM_IN,
+	pop_ZOOM_OUT,
+	pop_LOCKASPECT,
+	pop_SCREENSHOT,
+	pop_TOGGLE_GRID,
+	pop_TOGGLE_COORD,
+	pop_CONFIG,
+	pop_LOAD_FILE,
+	pop_HELP_MOUSE,
+	pop_FULLSCREEN
+};
+
+// The popup string
+extern const wxString Popup_string[][2];
+
 // Location for the Info layer
 typedef enum __mp_Location_Type
 {
@@ -555,7 +574,7 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
 
 		/** Get Name visibility.
 		 @return \a true if visible */
-		bool GetShowName()
+		inline bool GetShowName()
 		{
 			return m_showName;
 		}
@@ -588,7 +607,7 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
 
 		/** Checks whether the layer is visible or not.
 		 @return \a true if visible */
-		bool IsVisible()
+		inline bool IsVisible()
 		{
 			return m_visible;
 		}
@@ -1945,10 +1964,6 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 			return m_drawBox;
 		}
 
-		/** Sets whether to show coordinate tooltip when mouse passes over the plot. \param value true for enable, false for disable */
-		// void EnableCoordTooltip(bool value = true);
-		/** Gets coordinate tooltip status. \return true for enable, false for disable */
-		// bool GetCoordTooltip() { return m_coordTooltip; };
 		/** Check if a given point is inside the area of a mpInfoLayer and eventually returns its pointer.
 		 @param point The position to be checked
 		 @return If an info layer is found, returns its pointer, NULL otherwise */
@@ -2057,7 +2072,6 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 
 		wxMenu m_popmenu;					//!< Canvas' context menu
 		bool m_lockaspect;				//!< Scale aspect is locked or not
-		// bool   m_coordTooltip;  //!< Selects whether to show coordinate tooltip
 		wxColour m_bgColour;			//!< Background Colour
 		wxColour m_fgColour;			//!< Foreground Colour
 		wxColour m_axColour;			//!< Axes Colour
