@@ -64,7 +64,6 @@
 			<Add option="-D__GNUWIN64__" />
 			<Add option="-D__WXMSW__" />
 			<Add option="-DwxUSE_UNICODE" />
-			<Add option="-DWXSMITH_CHOICE" />
 			<Add directory="$(#wx)/include" />
 			<Add directory="../MathPlot" />
 			<Add directory="." />

@@ -160,7 +160,9 @@
 													<option>1</option>
 												</object>
 												<object class="sizeritem">
-													<object class="wxChoice" name="ID_CHOICE11" variable="cbCoord" member="yes" />
+													<object class="wxChoice" name="ID_CHOICE11" variable="cbCoord" member="yes">
+														<extra_code>cbCoord-&gt;Set(WXSIZEOF(cbCoord__choices), cbCoord__choices);&#x0A;cbCoord-&gt;SetSelection(0);</extra_code>
+													</object>
 													<flag>wxALL|wxEXPAND</flag>
 													<border>5</border>
 													<option>1</option>
@@ -209,7 +211,9 @@
 															<option>1</option>
 														</object>
 														<object class="sizeritem">
-															<object class="wxChoice" name="ID_CHOICE13" variable="cbCoordBrushStyle" member="yes" />
+															<object class="wxChoice" name="ID_CHOICE13" variable="cbCoordBrushStyle" member="yes">
+																<extra_code>cbCoordBrushStyle-&gt;Set(WXSIZEOF(cbBrushStyle__choices), cbBrushStyle__choices);&#x0A;cbCoordBrushStyle-&gt;SetSelection(0);</extra_code>
+															</object>
 															<flag>wxALL|wxEXPAND</flag>
 															<border>2</border>
 															<option>1</option>
@@ -247,7 +251,9 @@
 											<option>1</option>
 										</object>
 										<object class="sizeritem">
-											<object class="wxChoice" name="ID_CHOICE10" variable="cbLegendPosition" member="yes" />
+											<object class="wxChoice" name="ID_CHOICE10" variable="cbLegendPosition" member="yes">
+												<extra_code>cbLegendPosition-&gt;Set(WXSIZEOF(cbLegendPosition__choices), cbLegendPosition__choices);&#x0A;cbLegendPosition-&gt;SetSelection(0);</extra_code>
+											</object>
 											<flag>wxALL|wxEXPAND</flag>
 											<border>2</border>
 											<option>1</option>
@@ -261,7 +267,9 @@
 											<option>1</option>
 										</object>
 										<object class="sizeritem">
-											<object class="wxChoice" name="ID_CHOICE14" variable="cbLegendStyle" member="yes" />
+											<object class="wxChoice" name="ID_CHOICE14" variable="cbLegendStyle" member="yes">
+												<extra_code>cbLegendStyle-&gt;Set(WXSIZEOF(cbLegendStyle__choices), cbLegendStyle__choices);&#x0A;cbLegendStyle-&gt;SetSelection(0);</extra_code>
+											</object>
 											<flag>wxALL|wxEXPAND</flag>
 											<border>2</border>
 											<option>1</option>
@@ -275,7 +283,9 @@
 											<option>1</option>
 										</object>
 										<object class="sizeritem">
-											<object class="wxChoice" name="ID_CHOICE15" variable="cbLegendDirection" member="yes" />
+											<object class="wxChoice" name="ID_CHOICE15" variable="cbLegendDirection" member="yes">
+												<extra_code>cbLegendDirection-&gt;Set(WXSIZEOF(cbLegendDirection__choices), cbLegendDirection__choices);&#x0A;cbLegendDirection-&gt;SetSelection(0);</extra_code>
+											</object>
 											<flag>wxALL|wxEXPAND</flag>
 											<border>2</border>
 											<option>1</option>
@@ -324,7 +334,9 @@
 													<option>1</option>
 												</object>
 												<object class="sizeritem">
-													<object class="wxChoice" name="ID_CHOICE12" variable="cbLegendBrushStyle" member="yes" />
+													<object class="wxChoice" name="ID_CHOICE12" variable="cbLegendBrushStyle" member="yes">
+														<extra_code>cbLegendBrushStyle-&gt;Set(WXSIZEOF(cbBrushStyle__choices), cbBrushStyle__choices); // reused&#x0A;cbLegendBrushStyle-&gt;SetSelection(0);</extra_code>
+													</object>
 													<flag>wxALL|wxEXPAND</flag>
 													<border>2</border>
 													<option>1</option>
@@ -347,6 +359,7 @@
 								<orient>wxVERTICAL</orient>
 								<object class="sizeritem">
 									<object class="wxChoice" name="ID_CHOICE7" variable="ChoiceAxis" member="yes">
+										<extra_code>ChoiceAxis-&gt;Set(WXSIZEOF(ChoiceAxis__choices), ChoiceAxis__choices);&#x0A;ChoiceAxis-&gt;SetSelection(0);</extra_code>
 										<handler function="OnAxisSelect" entry="EVT_CHOICE" />
 									</object>
 									<flag>wxALL</flag>
@@ -422,7 +435,9 @@
 																	<option>1</option>
 																</object>
 																<object class="sizeritem">
-																	<object class="wxChoice" name="ID_CHOICE8" variable="cbAxisPenWidth" member="yes" />
+																	<object class="wxChoice" name="ID_CHOICE8" variable="cbAxisPenWidth" member="yes">
+																		<extra_code>cbAxisPenWidth-&gt;Set(WXSIZEOF(cbPenWidth__choices), cbPenWidth__choices);&#x0A;cbAxisPenWidth-&gt;SetSelection(0);</extra_code>
+																	</object>
 																	<flag>wxALL|wxEXPAND</flag>
 																	<border>2</border>
 																	<option>1</option>
@@ -436,7 +451,9 @@
 																	<option>1</option>
 																</object>
 																<object class="sizeritem">
-																	<object class="wxChoice" name="ID_CHOICE9" variable="cbAxisPenStyle" member="yes" />
+																	<object class="wxChoice" name="ID_CHOICE9" variable="cbAxisPenStyle" member="yes">
+																		<extra_code>cbAxisPenStyle-&gt;Set(WXSIZEOF(cbPenStyle__choices), cbPenStyle__choices);&#x0A;cbAxisPenStyle-&gt;SetSelection(0);</extra_code>
+																	</object>
 																	<flag>wxALL|wxEXPAND</flag>
 																	<border>2</border>
 																	<option>1</option>
@@ -690,7 +707,9 @@
 																	<option>1</option>
 																</object>
 																<object class="sizeritem">
-																	<object class="wxChoice" name="ID_CHOICE2" variable="cbSeriesPenWidth" member="yes" />
+																	<object class="wxChoice" name="ID_CHOICE2" variable="cbSeriesPenWidth" member="yes">
+																		<extra_code>cbSeriesPenWidth-&gt;Set(WXSIZEOF(cbPenWidth__choices), cbPenWidth__choices); // reused&#x0A;cbSeriesPenWidth-&gt;SetSelection(0);</extra_code>
+																	</object>
 																	<flag>wxALL|wxEXPAND</flag>
 																	<border>2</border>
 																	<option>1</option>
@@ -704,7 +723,9 @@
 																	<option>1</option>
 																</object>
 																<object class="sizeritem">
-																	<object class="wxChoice" name="ID_CHOICE3" variable="cbSeriesPenStyle" member="yes" />
+																	<object class="wxChoice" name="ID_CHOICE3" variable="cbSeriesPenStyle" member="yes">
+																		<extra_code>cbSeriesPenStyle-&gt;Set(WXSIZEOF(cbPenStyle__choices), cbPenStyle__choices); // reused&#x0A;cbSeriesPenStyle-&gt;SetSelection(0);</extra_code>
+																	</object>
 																	<flag>wxALL|wxEXPAND</flag>
 																	<border>2</border>
 																	<option>1</option>
@@ -794,7 +815,9 @@
 																	<option>1</option>
 																</object>
 																<object class="sizeritem">
-																	<object class="wxChoice" name="ID_CHOICE4" variable="cbSeriesBrushStyle" member="yes" />
+																	<object class="wxChoice" name="ID_CHOICE4" variable="cbSeriesBrushStyle" member="yes">
+																		<extra_code>cbSeriesBrushStyle-&gt;Set(WXSIZEOF(cbSeriesBrushStyle__choices), cbSeriesBrushStyle__choices);&#x0A;cbSeriesBrushStyle-&gt;SetSelection(0);</extra_code>
+																	</object>
 																	<flag>wxALL|wxEXPAND</flag>
 																	<border>2</border>
 																	<option>1</option>
@@ -822,7 +845,9 @@
 																	<option>1</option>
 																</object>
 																<object class="sizeritem">
-																	<object class="wxChoice" name="ID_CHOICE5" variable="cbSeriesSymbolType" member="yes" />
+																	<object class="wxChoice" name="ID_CHOICE5" variable="cbSeriesSymbolType" member="yes">
+																		<extra_code>cbSeriesSymbolType-&gt;Set(WXSIZEOF(cbSeriesSymbolType__choices), cbSeriesSymbolType__choices);&#x0A;cbSeriesSymbolType-&gt;SetSelection(0);</extra_code>
+																	</object>
 																	<flag>wxALL|wxEXPAND</flag>
 																	<border>2</border>
 																	<option>1</option>
