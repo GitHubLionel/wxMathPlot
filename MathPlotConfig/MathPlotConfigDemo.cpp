@@ -142,7 +142,7 @@ bool MyApp::OnInit()
 
 // frame constructor
 MyFrame::MyFrame(const wxString &title) :
-		wxFrame(NULL, wxID_ANY, title)
+		wxFrame(NULL, wxID_ANY, title, wxDefaultPosition, wxSize(600,400))
 {
 	// set the frame icon
 	SetIcon(wxICON(sample));
@@ -181,7 +181,7 @@ MyFrame::MyFrame(const wxString &title) :
 
 void MyFrame::CreatePlot(void)
 {
-	m_plot = new mpWindow(this, -1, wxPoint(0, 0), wxDefaultSize, wxSUNKEN_BORDER);
+	m_plot = new mpWindow(this);
 	m_plot->EnableDoubleBuffer(true);
 	m_plot->SetMargins(50, 20, 50, 50);
 
@@ -210,16 +210,14 @@ void MyFrame::CreatePlot(void)
 	info->SetVisible(true);
 
 	mpInfoLegend *legend;
-	m_plot->AddLayer(
-			legend = new mpInfoLegend(wxRect(200, 20, 40, 40), wxTRANSPARENT_BRUSH,
-					mpMarginBottomCenter));
+	m_plot->AddLayer(legend = new mpInfoLegend());
 	legend->SetItemDirection(mpHorizontal);
 	legend->SetVisible(true);
 
 	m_plot->Fit();
 
 	// add a simple sinus serie
-	mpFXYVector *serie = m_plot->GetSeries(0);
+	mpFXYVector *serie = m_plot->GetXYSeries(0);
 	for (int i = 0; i < 100; i++)
 		serie->AddData(i / 10.0, sin(i / 10.0), true);
 	m_plot->Fit();  //  UpdateAll

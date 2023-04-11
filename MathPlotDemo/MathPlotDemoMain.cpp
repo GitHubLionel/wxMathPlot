@@ -123,9 +123,7 @@ void MathPlotDemoFrame::OnbDrawClick(wxCommandEvent& event)
 	info->SetVisible(true);
 
 	mpInfoLegend *legend;
-	mPlot->AddLayer(
-			legend = new mpInfoLegend(wxRect(200, 20, 40, 40), wxTRANSPARENT_BRUSH,
-					mpMarginBottomCenter));
+	mPlot->AddLayer(legend = new mpInfoLegend());
 	legend->SetItemDirection(mpHorizontal);
 	legend->SetVisible(true);
 
