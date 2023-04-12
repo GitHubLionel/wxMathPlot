@@ -71,6 +71,7 @@ class MathPlotConfigDialog: public wxDialog
         void OnbColorClick(wxCommandEvent& event);
         void OnChoiceSeries(wxCommandEvent& event);
         void OnAxisSelect(wxCommandEvent& event);
+        void OncbFormatSelect(wxCommandEvent& event);
         void OncbAutoScaleClick(wxCommandEvent& event);
         void OnbApplyClick(wxCommandEvent& event);
         void OnbFontClick(wxCommandEvent& event);
@@ -92,6 +93,7 @@ class MathPlotConfigDialog: public wxDialog
         static const long ID_STATICTEXT18;
         static const long ID_CHOICE11;
         static const long ID_CHECKBOX10;
+        static const long ID_CHECKBOX13;
         static const long ID_STATICTEXT22;
         static const long ID_BUTTON10;
         static const long ID_STATICTEXT23;
@@ -128,6 +130,8 @@ class MathPlotConfigDialog: public wxDialog
         static const long ID_CHOICE6;
         static const long ID_CHECKBOX4;
         static const long ID_CHECKBOX7;
+        static const long ID_STATICTEXT29;
+        static const long ID_CHOICE16;
         static const long ID_STATICTEXT26;
         static const long ID_TEXTCTRL8;
         static const long ID_PANEL1;
@@ -146,6 +150,7 @@ class MathPlotConfigDialog: public wxDialog
         static const long ID_CHECKBOX2;
         static const long ID_CHECKBOX3;
         static const long ID_CHECKBOX6;
+        static const long ID_CHECKBOX14;
         static const long ID_STATICTEXT6;
         static const long ID_BUTTON2;
         static const long ID_STATICTEXT7;
@@ -182,6 +187,7 @@ class MathPlotConfigDialog: public wxDialog
         wxCheckBox* cbAxisVisible;
         wxCheckBox* cbBar;
         wxCheckBox* cbCoordVisible;
+        wxCheckBox* cbCoordinates;
         wxCheckBox* cbDrawBox;
         wxCheckBox* cbLegendVisible;
         wxCheckBox* cbSeriesContinuity;
@@ -189,6 +195,7 @@ class MathPlotConfigDialog: public wxDialog
         wxCheckBox* cbSeriesShowName;
         wxCheckBox* cbSeriesVisible;
         wxCheckBox* cbTitleVisible;
+        wxCheckBox* cbTractable;
         wxChoice* ChoiceAxis;
         wxChoice* ChoiceSeries;
         wxChoice* cbAxisPenStyle;
@@ -196,6 +203,7 @@ class MathPlotConfigDialog: public wxDialog
         wxChoice* cbAxisPosition;
         wxChoice* cbCoord;
         wxChoice* cbCoordBrushStyle;
+        wxChoice* cbFormat;
         wxChoice* cbLegendBrushStyle;
         wxChoice* cbLegendDirection;
         wxChoice* cbLegendPosition;
@@ -231,6 +239,7 @@ class MathPlotConfigDialog: public wxDialog
         wxStaticText* StaticText26;
         wxStaticText* StaticText27;
         wxStaticText* StaticText28;
+        wxStaticText* StaticText29;
         wxStaticText* StaticText2;
         wxStaticText* StaticText3;
         wxStaticText* StaticText4;

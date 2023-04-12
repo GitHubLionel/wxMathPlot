@@ -3,10 +3,10 @@
 // Purpose:         Framework for plotting in wxWindows
 // Original Author: David Schalig
 // Maintainer:      Davide Rondini
-// Contributors:    Jose Luis Blanco, Val Greene
+// Contributors:    Jose Luis Blanco, Val Greene, Lionel Reynaud
 // Created:         21/07/2003
 // Last edit:       09/09/2007
-// Last edit:       01/02/2021
+// Last edit:       12/04/2023
 // Copyright:       (c) David Schalig, Davide Rondini
 // Licence:         wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -131,12 +131,26 @@ mpLayer::mpLayer() :
 	m_showName = false;  // Default
 	m_drawOutsideMargins = false;
 	m_visible = true;
+	m_tractable = false;
 	m_flags = mpALIGN_NE;
 	m_symbol = mpsNone;
 	m_symbolSize = 6;
 	m_symbolSize2 = 3;
 	m_step = 1;
 	m_CanDelete = true;
+	m_busy = false;
+}
+
+void mpLayer::Plot(wxDC &dc, mpWindow &w)
+{
+	if ((!m_visible) || m_busy)
+		return;
+
+	m_busy = true;
+	DoBeforePlot();
+	UpdateContext(dc);
+	DoPlot(dc, w);
+	m_busy = false;
 }
 
 void mpLayer::UpdateContext(wxDC &dc)
@@ -371,14 +385,9 @@ void mpInfoLayer::SetInfoRectangle(mpWindow &w, int width, int height)
 	}
 }
 
-void mpInfoLayer::Plot(wxDC &dc, mpWindow &w)
+void mpInfoLayer::DoPlot(wxDC &dc, mpWindow &w)
 {
-	if (!m_visible)
-		return;
-
-	DoBeforePlot();
 	SetInfoRectangle(w);
-	UpdateContext(dc);
 	dc.DrawRectangle(m_dim.x, m_dim.y, m_dim.width, m_dim.height);
 }
 
@@ -408,6 +417,7 @@ mpInfoCoords::mpInfoCoords() :
 	m_location = mpMarginBottomRight;
 	wxBrush coord(wxColour(232, 232, 232), wxBRUSHSTYLE_SOLID);
 	SetBrush(coord);
+	m_series_coord = false;
 }
 
 mpInfoCoords::mpInfoCoords(mpLocation location) :
@@ -418,6 +428,7 @@ mpInfoCoords::mpInfoCoords(mpLocation location) :
 	m_mouseX = m_mouseY = 0;
 	m_coord_bmp = NULL;
 	m_location = location;
+	m_series_coord = false;
 	wxBrush coord(wxColour(232, 232, 232), wxBRUSHSTYLE_SOLID);
 	SetBrush(coord);
 }
@@ -429,6 +440,7 @@ mpInfoCoords::mpInfoCoords(wxRect rect, const wxBrush *brush, mpLocation locatio
 	m_timeConv = 0;
 	m_mouseX = m_mouseY = 0;
 	m_coord_bmp = NULL;
+	m_series_coord = false;
 }
 
 mpInfoCoords::~mpInfoCoords()
@@ -454,12 +466,12 @@ void mpInfoCoords::UpdateInfo(mpWindow &w, wxEvent &event)
 	time_t when = 0;
 	double xVal = 0.0, yVal = 0.0;
 	struct tm timestruct;
+
 	if (event.GetEventType() == wxEVT_MOTION)
 	{
 		m_mouseX = ((wxMouseEvent&) event).GetX();
 		m_mouseY = ((wxMouseEvent&) event).GetY();
-		xVal = w.p2x(m_mouseX);
-		yVal = w.p2y(m_mouseY);
+
 		/* It seems that Windows port of wxWidgets don't support multi-line text to be drawn in a wxDC.
 		 *   wxGTK instead works perfectly with it.
 		 *   Info on wxForum: http://wxforum.shadonet.com/viewtopic.php?t=3451&highlight=drawtext+eol */
@@ -469,12 +481,24 @@ void mpInfoCoords::UpdateInfo(mpWindow &w, wxEvent &event)
 		// #else
 		m_content.Clear();
 
-		if (m_labelType == mpX_NORMAL)
+		if (m_series_coord)
 		{
-			m_content.Printf(wxT("x = %g\ny = %g"), xVal, yVal);
+			if (!w.GetClosestLayer(m_mouseX, m_mouseY, &xVal, &yVal))
+				return;
 		}
 		else
-			if (m_labelType == mpX_DATETIME)
+		{
+			xVal = w.p2x(m_mouseX);
+			yVal = w.p2y(m_mouseY);
+		}
+
+		switch (m_labelType)
+		{
+			case mpX_NORMAL:
+			case mpX_USER:
+				m_content.Printf(wxT("x = %g\ny = %g"), xVal, yVal);
+				break;
+			case mpX_DATETIME:
 			{
 				when = (time_t) xVal;
 				if (when > 0)
@@ -491,47 +515,50 @@ void mpInfoCoords::UpdateInfo(mpWindow &w, wxEvent &event)
 							(double) timestruct.tm_mon + 1, (double) timestruct.tm_mday, (double) timestruct.tm_hour, (double) timestruct.tm_min,
 							(double) timestruct.tm_sec, yVal);
 				}
+				break;
 			}
-			else
-				if (m_labelType == mpX_DATE)
+			case mpX_DATE:
+			{
+				when = (time_t) xVal;
+				if (when > 0)
 				{
-					when = (time_t) xVal;
-					if (when > 0)
+					if (m_timeConv == mpX_LOCALTIME)
 					{
-						if (m_timeConv == mpX_LOCALTIME)
-						{
-							timestruct = *localtime(&when);
-						}
-						else
-						{
-							timestruct = *gmtime(&when);
-						}
-						m_content.Printf(wxT("x = %04.0f-%02.0f-%02.0f\ny = %f"), (double) timestruct.tm_year + 1900, (double) timestruct.tm_mon + 1,
-								(double) timestruct.tm_mday, yVal);
+						timestruct = *localtime(&when);
 					}
+					else
+					{
+						timestruct = *gmtime(&when);
+					}
+					m_content.Printf(wxT("x = %04.0f-%02.0f-%02.0f\ny = %f"), (double) timestruct.tm_year + 1900, (double) timestruct.tm_mon + 1,
+							(double) timestruct.tm_mday, yVal);
 				}
-				else
-					if ((m_labelType == mpX_TIME) || (m_labelType == mpX_HOURS))
-					{
-						double sign = 1.0;
-						if (xVal < 0)
-							sign = -1.0;
-						double modulus = fabs(xVal);
-						double hh = floor(modulus / 3600);
-						double mm = floor((modulus - hh * 3600) / 60);
-						double ss = modulus - hh * 3600 - mm * 60;
-						m_content.Printf(wxT("x = %02.0f:%02.0f:%02.0f\ny = %f"), sign * hh, mm, floor(ss), yVal);
-					}
+				break;
+			}
+			case mpX_TIME:
+			case mpX_HOURS:
+			{
+				double sign = (xVal < 0) ? -1.0 : 1.0;
+				double modulus = fabs(xVal);
+				double hh = floor(modulus / 3600);
+				double mm = floor((modulus - hh * 3600) / 60);
+				double ss = modulus - hh * 3600 - mm * 60;
+				m_content.Printf(wxT("x = %02.0f:%02.0f:%02.0f\ny = %f"), sign * hh, mm, floor(ss), yVal);
+				break;
+			}
+			default:
+				;
+		}
 	}
 }
 
-void mpInfoCoords::Plot(wxDC &dc, mpWindow &w)
+void mpInfoCoords::DoPlot(wxDC &dc, mpWindow &w)
 {
-	if (!m_visible)
+	if (m_content.IsEmpty())
+	{
+		ErasePlot(dc, w);
 		return;
-
-	DoBeforePlot();
-	UpdateContext(dc);
+	}
 
 	int textX = 0, textY = 0;
 	int width = 0, height = 0;
@@ -757,7 +784,7 @@ void mpInfoLegend::UpdateBitmap(wxDC &dc, mpWindow &w)
 	delete buff_bmp;
 }
 
-void mpInfoLegend::Plot(wxDC &dc, mpWindow &w)
+void mpInfoLegend::DoPlot(wxDC &dc, mpWindow &w)
 {
 	if (!m_visible)
 		return;
@@ -803,14 +830,8 @@ mpFX::mpFX(wxString name, int flags)
 	m_flags = flags;
 }
 
-void mpFX::Plot(wxDC &dc, mpWindow &w)
+void mpFX::DoPlot(wxDC &dc, mpWindow &w)
 {
-	if (!m_visible)
-		return;
-
-	DoBeforePlot();
-	UpdateContext(dc);
-
 	wxCoord i, iy, iylast;
 
 	// Get bondaries
@@ -918,14 +939,8 @@ mpFY::mpFY(wxString name, int flags)
 	m_flags = flags;
 }
 
-void mpFY::Plot(wxDC &dc, mpWindow &w)
+void mpFY::DoPlot(wxDC &dc, mpWindow &w)
 {
-	if (!m_visible)
-		return;
-
-	DoBeforePlot();
-	UpdateContext(dc);
-
 	wxCoord i, ix, ixlast;
 
 	// Get bondaries
@@ -1069,14 +1084,8 @@ void mpFXY::UpdateViewBoundary(wxCoord xnew, wxCoord ynew)
 	minDrawY = (minDrawY < ynew) ? minDrawY : ynew;
 }
 
-void mpFXY::Plot(wxDC &dc, mpWindow &w)
+void mpFXY::DoPlot(wxDC &dc, mpWindow &w)
 {
-	if (!m_visible)
-		return;
-
-	DoBeforePlot();
-	UpdateContext(dc);
-
 	double x, y;
 	// Do this to reset the counters to evaluate bounding box for label positioning
 	Rewind();
@@ -1234,13 +1243,8 @@ mpProfile::mpProfile(wxString name, int flags)
 	m_flags = flags;
 }
 
-void mpProfile::Plot(wxDC &dc, mpWindow &w)
+void mpProfile::DoPlot(wxDC &dc, mpWindow &w)
 {
-	if (!m_visible)
-		return;
-
-	DoBeforePlot();
-	dc.SetPen(m_pen);
 	wxCoord i;
 
 	// Get bondaries
@@ -1319,19 +1323,82 @@ mpScale::mpScale(wxString name, int flags, bool grids)
 
 IMPLEMENT_DYNAMIC_CLASS(mpScaleX, mpScale)
 
-void mpScaleX::Plot(wxDC &dc, mpWindow &w)
+wxString mpScaleX::FormatValue(wxString &fmt, double n)
 {
-	if (!m_visible)
-		return;
+	wxString s = _("");
+	time_t when = 0;
+	struct tm timestruct;
 
-	DoBeforePlot();
-	UpdateContext(dc);
+	switch (m_labelType)
+	{
+		case mpX_NORMAL:
+		case mpX_USER:
+			s.Printf(fmt, n);
+			break;
+		case mpX_DATETIME:
+		{
+			when = (time_t) n;
+			if (when > 0)
+			{
+				if (m_timeConv == mpX_LOCALTIME)
+				{
+					timestruct = *localtime(&when);
+				}
+				else
+				{
+					timestruct = *gmtime(&when);
+				}
+				s.Printf(fmt, (double) timestruct.tm_year + 1900, (double) timestruct.tm_mon + 1, (double) timestruct.tm_mday,
+						(double) timestruct.tm_hour, (double) timestruct.tm_min, (double) timestruct.tm_sec);
+			}
+			break;
+		}
+		case mpX_DATE:
+		{
+			when = (time_t) n;
+			if (when > 0)
+			{
+				if (m_timeConv == mpX_LOCALTIME)
+				{
+					timestruct = *localtime(&when);
+				}
+				else
+				{
+					timestruct = *gmtime(&when);
+				}
+				s.Printf(fmt, (double) timestruct.tm_year + 1900, (double) timestruct.tm_mon + 1, (double) timestruct.tm_mday);
+			}
+			break;
+		}
+		case mpX_TIME:
+		case mpX_HOURS:
+		{
+			double sign = (n < 0) ? -1.0 : 1.0;
+			double modulus = fabs(n);
+			double hh = floor(modulus / 3600);
+			double mm = floor((modulus - hh * 3600) / 60);
+			double ss = modulus - hh * 3600 - mm * 60;
+#ifdef MATHPLOT_DO_LOGGING
+			wxLogMessage(wxT("%02.0f Hours, %02.0f minutes, %02.0f seconds"), sign * hh, mm, ss);
+#endif // MATHPLOT_DO_LOGGING
+			if (fmt.Len() == 20) // Format with hours has 11 chars
+				s.Printf(fmt, sign * hh, mm, floor(ss));
+			else
+				s.Printf(fmt, sign * mm, ss);
+			break;
+		}
+		default:
+			;
+	}
+	return s;
+}
 
-	int orgy = 0;
-
+void mpScaleX::DoPlot(wxDC &dc, mpWindow &w)
+{
 	// Get bondaries
 	m_plotBondaries = w.GetPlotBondaries(!m_drawOutsideMargins);
 
+	int orgy = 0;
 	switch (m_flags)
 	{
 		case mpALIGN_BORDER_TOP:
@@ -1367,6 +1434,7 @@ void mpScaleX::Plot(wxDC &dc, mpWindow &w)
 	if (!m_drawOutsideMargins && ((orgy > (w.GetScreenY() - w.GetMarginBottom())) || (orgy < w.GetMarginTop())))
 		return;
 
+	// Draw X axis
 	dc.DrawLine(m_plotBondaries.startPx, orgy, m_plotBondaries.endPx, orgy);
 
 	const double scaleX = w.GetScaleX();
@@ -1381,6 +1449,7 @@ void mpScaleX::Plot(wxDC &dc, mpWindow &w)
 	switch (m_labelType)
 	{
 		case mpX_NORMAL:
+		case mpX_USER:
 		{
 			if (!m_labelFormat.IsEmpty())
 			{
@@ -1414,6 +1483,9 @@ void mpScaleX::Plot(wxDC &dc, mpWindow &w)
 				fmt = (wxT("%02.0f:%02.0f:%02.0f"));
 			break;
 		}
+		case mpX_HOURS:
+			fmt = (wxT("%02.0f:%02.0f:%02.0f"));
+			break;
 		default:
 			;
 	}
@@ -1428,8 +1500,7 @@ void mpScaleX::Plot(wxDC &dc, mpWindow &w)
 	tmp = -65535;
 	int labelH = 0; // Control labels heigth to decide where to put axis name (below labels or on top of axis)
 	int maxExtent = 0;
-	time_t when = 0;
-	struct tm timestruct;
+
 	for (n = n0; n < end; n += step)
 	{
 		const int p = (int) ((n - w.GetPosX()) * scaleX);
@@ -1455,67 +1526,9 @@ void mpScaleX::Plot(wxDC &dc, mpWindow &w)
 				dc.DrawLine(p, m_plotBondaries.startPy, p, m_plotBondaries.endPy);
 			}
 
-			// Write ticks labels in s string
-			switch (m_labelType)
-			{
-				case mpX_NORMAL:
-					s.Printf(fmt, n);
-					break;
-				case mpX_DATETIME:
-				{
-					when = (time_t) n;
-					if (when > 0)
-					{
-						if (m_timeConv == mpX_LOCALTIME)
-						{
-							timestruct = *localtime(&when);
-						}
-						else
-						{
-							timestruct = *gmtime(&when);
-						}
-						s.Printf(fmt, (double) timestruct.tm_year + 1900, (double) timestruct.tm_mon + 1, (double) timestruct.tm_mday,
-								(double) timestruct.tm_hour, (double) timestruct.tm_min, (double) timestruct.tm_sec);
-					}
-					break;
-				}
-				case mpX_DATE:
-				{
-					when = (time_t) n;
-					if (when > 0)
-					{
-						if (m_timeConv == mpX_LOCALTIME)
-						{
-							timestruct = *localtime(&when);
-						}
-						else
-						{
-							timestruct = *gmtime(&when);
-						}
-						s.Printf(fmt, (double) timestruct.tm_year + 1900, (double) timestruct.tm_mon + 1, (double) timestruct.tm_mday);
-					}
-					break;
-				}
-				case mpX_TIME:
-				case mpX_HOURS:
-				{
-					double modulus = fabs(n);
-					double sign = n / modulus;
-					double hh = floor(modulus / 3600);
-					double mm = floor((modulus - hh * 3600) / 60);
-					double ss = modulus - hh * 3600 - mm * 60;
-#ifdef MATHPLOT_DO_LOGGING
-					wxLogMessage(wxT("%02.0f Hours, %02.0f minutes, %02.0f seconds"), sign * hh, mm, ss);
-#endif // MATHPLOT_DO_LOGGING
-					if (fmt.Len() == 20) // Format with hours has 11 chars
-						s.Printf(fmt, sign * hh, mm, floor(ss));
-					else
-						s.Printf(fmt, sign * mm, ss);
-					break;
-				}
-				default:
-					;
-			}
+			// Write ticks labels in s string : compute size
+			s = FormatValue(fmt, n);
+
 			dc.GetTextExtent(s, &tx, &ty);
 			labelH = (labelH <= ty) ? ty : labelH;
 			/*				if ((p-tx/2-tmp) > 64) { // Problem about non-regular axis labels
@@ -1546,66 +1559,7 @@ void mpScaleX::Plot(wxDC &dc, mpWindow &w)
 		if ((p >= m_plotBondaries.startPx) && (p <= m_plotBondaries.endPx))
 		{
 			// Write ticks labels in s string
-			switch (m_labelType)
-			{
-				case mpX_NORMAL:
-					s.Printf(fmt, n);
-					break;
-				case mpX_DATETIME:
-				{
-					when = (time_t) n;
-					if (when > 0)
-					{
-						if (m_timeConv == mpX_LOCALTIME)
-						{
-							timestruct = *localtime(&when);
-						}
-						else
-						{
-							timestruct = *gmtime(&when);
-						}
-						s.Printf(fmt, (double) timestruct.tm_year + 1900, (double) timestruct.tm_mon + 1, (double) timestruct.tm_mday,
-								(double) timestruct.tm_hour, (double) timestruct.tm_min, (double) timestruct.tm_sec);
-					}
-					break;
-				}
-				case mpX_DATE:
-				{
-					when = (time_t) n;
-					if (when > 0)
-					{
-						if (m_timeConv == mpX_LOCALTIME)
-						{
-							timestruct = *localtime(&when);
-						}
-						else
-						{
-							timestruct = *gmtime(&when);
-						}
-						s.Printf(fmt, (double) timestruct.tm_year + 1900, (double) timestruct.tm_mon + 1, (double) timestruct.tm_mday);
-					}
-					break;
-				}
-				case mpX_TIME:
-				case mpX_HOURS:
-				{
-					double modulus = fabs(n);
-					double sign = n / modulus;
-					double hh = floor(modulus / 3600);
-					double mm = floor((modulus - hh * 3600) / 60);
-					double ss = modulus - hh * 3600 - mm * 60;
-#ifdef MATHPLOT_DO_LOGGING
-					wxLogMessage(wxT("%02.0f Hours, %02.0f minutes, %02.0f seconds"), sign * hh, mm, ss);
-#endif // MATHPLOT_DO_LOGGING
-					if (fmt.Len() == 20) // Format with hours has 11 chars
-						s.Printf(fmt, sign * hh, mm, floor(ss));
-					else
-						s.Printf(fmt, sign * mm, ss);
-					break;
-				}
-				default:
-					;
-			}
+			s = FormatValue(fmt, n);
 
 			dc.GetTextExtent(s, &tx, &ty);
 			if ((m_flags == mpALIGN_BORDER_BOTTOM) || (m_flags == mpALIGN_TOP))
@@ -1665,19 +1619,12 @@ void mpScaleX::Plot(wxDC &dc, mpWindow &w)
 
 IMPLEMENT_DYNAMIC_CLASS(mpScaleY, mpScale)
 
-void mpScaleY::Plot(wxDC &dc, mpWindow &w)
+void mpScaleY::DoPlot(wxDC &dc, mpWindow &w)
 {
-	if (!m_visible)
-		return;
-
-	DoBeforePlot();
-	UpdateContext(dc);
-
-	int orgx = 0;
-
 	// Get bondaries
 	m_plotBondaries = w.GetPlotBondaries(!m_drawOutsideMargins);
 
+	int orgx = 0;
 	switch (m_flags)
 	{
 		case mpALIGN_BORDER_LEFT:
@@ -1713,7 +1660,7 @@ void mpScaleY::Plot(wxDC &dc, mpWindow &w)
 	if (!m_drawOutsideMargins && ((orgx > (w.GetScreenX() - w.GetMarginRight())) || (orgx + 1 < w.GetMarginLeft())))
 		return;
 
-	// Draw line
+	// Draw Y axis
 	dc.DrawLine(orgx + 1, m_plotBondaries.startPy, orgx + 1, m_plotBondaries.endPy);
 
 	const double scaleY = w.GetScaleY();
@@ -3078,6 +3025,97 @@ mpFXYVector* mpWindow::GetXYSeries(unsigned int n, const wxString &name, bool cr
 	return serie;
 }
 
+mpLayer *mpWindow::GetClosestLayer(wxCoord ix, wxCoord iy, double *xnear, double *ynear)
+{
+#define NEAR_AREA	8
+	mpFunctionType function;
+	mpLayer *result = NULL;
+
+	for (wxLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
+	{
+		if ((*it)->IsTractable() && (*it)->IsVisible() && (*it)->IsFunction(&function))
+		{
+			switch (function)
+			{
+				case mpfFX:
+				{
+					mpFX *fx = (mpFX*) (*it);
+					double fy = fx->GetY(this->p2x(ix));
+					if (abs(this->y2p(fy) - iy) < NEAR_AREA)
+					{
+						*xnear = this->p2x(ix);
+						*ynear = fy;
+						result = (*it);
+					}
+					break;
+				}
+				case mpfFY:
+				{
+					mpFY *fy = (mpFY*) (*it);
+					double fx = fy->GetX(this->p2y(iy));
+					if (abs(this->x2p(fx) - ix) < NEAR_AREA)
+					{
+						*xnear = fx;
+						*ynear = this->p2y(iy);
+						result = (*it);
+					}
+					break;
+				}
+				case mpfFXY:
+				case mpfFXYVector:
+				{
+					mpFXY *fxy = (mpFXY*) (*it);
+					double xx, yy;
+					fxy->Rewind();
+					while (fxy->GetNextXY(xx, yy))
+					{
+						if ((abs(this->x2p(xx) - ix) < NEAR_AREA) && (abs(this->y2p(yy) - iy) < NEAR_AREA))
+						{
+							*xnear = xx;
+							*ynear = yy;
+							result = (*it);
+							break;
+						}
+					}
+
+					break;
+				}
+				case mpfBar:
+				{
+					mpFXY *fxy = (mpFXY*) (*it);
+					double xx, yy;
+					double zero = this->y2p(0.0);
+					fxy->Rewind();
+					while (fxy->GetNextXY(xx, yy))
+					{
+						// We are in the x bar range
+						if (abs(this->x2p(xx) - ix) < NEAR_AREA)
+						{
+							wxCoord yyp = this->y2p(yy);
+							// Check if we are over the bar
+							if (((yy < 0) && ((iy >= zero) && (iy < yyp + NEAR_AREA))) ||
+								  ((yy > 0) && ((iy <= zero) && (iy > yyp - NEAR_AREA))))
+							{
+								*xnear = xx;
+								*ynear = yy;
+								result = (*it);
+								break;
+							}
+						}
+					}
+
+					break;
+				}
+				default: // nothing to do in others cases
+					;
+			}
+		}
+		if (result)
+			break;
+	}
+	return result;
+}
+
 mpLayer* mpWindow::GetLayerByName(const wxString &name)
 {
 	for (wxLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
@@ -3605,14 +3643,8 @@ mpText::mpText(wxString name, mpLocation marginLocation)
 /** mpText Layer plot handler.
  This implementation will plot the text adjusted to the visible area.
  */
-void mpText::Plot(wxDC &dc, mpWindow &w)
+void mpText::DoPlot(wxDC &dc, mpWindow &w)
 {
-	if (!m_visible)
-		return;
-
-	DoBeforePlot();
-	UpdateContext(dc);
-
 	wxCoord tw = 0, th = 0;
 	dc.GetTextExtent(GetName(), &tw, &th);
 
@@ -3831,14 +3863,8 @@ void mpMovableObject::ShapeUpdated()
 	}
 }
 
-void mpMovableObject::Plot(wxDC &dc, mpWindow &w)
+void mpMovableObject::DoPlot(wxDC &dc, mpWindow &w)
 {
-	if (!m_visible)
-		return;
-
-	DoBeforePlot();
-	UpdateContext(dc);
-
 	std::vector<double>::iterator itX = m_trans_shape_xs.begin();
 	std::vector<double>::iterator itY = m_trans_shape_ys.begin();
 
@@ -4104,13 +4130,10 @@ void mpBitmapLayer::SetBitmap(const wxImage &inBmp, double x, double y, double l
 	}
 }
 
-void mpBitmapLayer::Plot(wxDC &dc, mpWindow &w)
+void mpBitmapLayer::DoPlot(wxDC &dc, mpWindow &w)
 {
-	if (!(m_visible && m_validImg))
+	if (!m_validImg)
 		return;
-
-	DoBeforePlot();
-	UpdateContext(dc);
 
 	/*	1st: We compute (x0,y0)-(x1,y1), the pixel coordinates of the real outer limits
 	 of the image rectangle within the (screen) mpWindow. Note that these coordinates

@@ -142,7 +142,7 @@ bool MyApp::OnInit()
 
 // frame constructor
 MyFrame::MyFrame(const wxString &title) :
-		wxFrame(NULL, wxID_ANY, title, wxDefaultPosition, wxSize(600,400))
+		wxFrame(NULL, wxID_ANY, title, wxDefaultPosition, wxSize(800,600))
 {
 	// set the frame icon
 	SetIcon(wxICON(sample));
@@ -222,6 +222,10 @@ void MyFrame::CreatePlot(void)
 		serie->AddData(i / 10.0, sin(i / 10.0), true);
 	m_plot->Fit();  //  UpdateAll
 	legend->SetNeedUpdate();
+
+	// Some decoration
+	serie->SetBrush(*wxYELLOW);
+	serie->SetSymbol(mpsCircle);
 }
 
 // event handlers

@@ -6,7 +6,7 @@
 // Contributors:    Jose Luis Blanco, Val Greene, Lionel Reynaud
 // Created:         21/07/2003
 // Last edit:       22/02/2009
-// Last edit:       01/02/2021
+// Last edit:       12/04/2023
 // Copyright:       (c) David Schalig, Davide Rondini
 // Licence:         wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -470,7 +470,9 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
 		 @param w  View to plot. The visible area can be retrieved from this object.
 		 @sa mpWindow::p2x,mpWindow::p2y,mpWindow::x2p,mpWindow::y2p
 		 */
-		virtual void Plot(wxDC &dc, mpWindow &w) = 0;
+		void Plot(wxDC &dc, mpWindow &w);
+
+		virtual void DoPlot(wxDC &dc, mpWindow &w) = 0;
 
 		/**
 		 * If we need to do something before plot like reinitialize some parameters ...
@@ -619,6 +621,20 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
 			m_visible = show;
 		}
 
+		/** Checks whether the layer is tractable or not.
+		 @return \a true if visible */
+		inline bool IsTractable()
+		{
+			return m_tractable;
+		}
+
+		/** Sets layer tractability.
+		 @param track tractability bool. */
+		virtual void SetTractable(bool track)
+		{
+			m_tractable = track;
+		}
+
 		/** Set layer brush
 		 @param brush brush, will be copied to internal class member	*/
 		void SetBrush(wxBrush brush)
@@ -717,6 +733,7 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
 		bool m_drawOutsideMargins;  //!< Select if the layer should draw only inside margins or over all DC. Default : false
 		unsigned int m_step;        //!< Step to get point to be draw. Default : 1
 		bool m_visible;	            //!< Toggles layer visibility. Default : true
+		bool m_tractable;           //!< Is the layer tractable
 		int m_flags;                //!< Holds label alignment. Default : mpALIGN_NE
 		mpRect m_plotBondaries;     //!< The bondaries for plotting curve calculated by mpWindow
 		mpSymbol m_symbol;          //!< A symbol for the plot in place of point. Default mpNone
@@ -727,6 +744,9 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
 		/** Initialize the context
 		 */
 		void UpdateContext(wxDC &dc);
+
+	private:
+		bool m_busy;                //!< Test if we are busy (plot operation)
 
 	DECLARE_DYNAMIC_CLASS(mpLayer)
 };
@@ -772,7 +792,7 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLayer: public mpLayer
 		 @param dc the device content where to plot
 		 @param w the window to plot
 		 @sa mpLayer::Plot */
-		virtual void Plot(wxDC &dc, mpWindow &w);
+		virtual void DoPlot(wxDC &dc, mpWindow &w);
 
 		/** Specifies that this is an Info box layer.
 		 @return always \a TRUE
@@ -823,6 +843,7 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLayer: public mpLayer
 		{
 			return m_location;
 		}
+
 	protected:
 		wxRect m_dim;           //!< The bounding rectangle of the box. It may be resized dynamically by the Plot method.
 		wxPoint m_reference;    //!< Holds the reference point for movements
@@ -869,7 +890,7 @@ class WXDLLIMPEXP_MATHPLOT mpInfoCoords: public mpInfoLayer
 		 @param dc the device content where to plot
 		 @param w the window to plot
 		 @sa mpLayer::Plot */
-		virtual void Plot(wxDC &dc, mpWindow &w);
+		virtual void DoPlot(wxDC &dc, mpWindow &w);
 
 		void ErasePlot(wxDC &dc, mpWindow &w);
 
@@ -890,6 +911,20 @@ class WXDLLIMPEXP_MATHPLOT mpInfoCoords: public mpInfoLayer
 			return true;
 		}
 
+		/** Set the series coordinates of the mouse position (if tractable set)
+		 */
+		void SetSeriesCoord(bool show)
+		{
+			m_series_coord = show;
+		}
+
+		/** Return if we show the series coordinates
+		 @return bool */
+		bool IsSeriesCoord()
+		{
+			return m_series_coord;
+		}
+
 	protected:
 		wxString m_content;  //!< string holding the coordinates to be drawn.
 		unsigned int m_labelType;
@@ -898,6 +933,7 @@ class WXDLLIMPEXP_MATHPLOT mpInfoCoords: public mpInfoLayer
 		wxCoord m_mouseY;
 		wxBitmap *m_coord_bmp;
 		wxRect m_oldDim;
+		bool m_series_coord;
 
 	DECLARE_DYNAMIC_CLASS(mpInfoCoords)
 };
@@ -926,7 +962,7 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLegend: public mpInfoLayer
 		 @param dc the device content where to plot
 		 @param w the window to plot
 		 @sa mpLayer::Plot */
-		virtual void Plot(wxDC &dc, mpWindow &w);
+		virtual void DoPlot(wxDC &dc, mpWindow &w);
 
 		/** Swith item mode, which is the element on the left of text representing the plot line.
 		 * @param mode The item draw mode: mpLEGEND_LINE or mpLEGEND_SQUARE. */
@@ -982,18 +1018,6 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLegend: public mpInfoLayer
 // mpLayer implementations - functions
 //-----------------------------------------------------------------------------
 
-/** Set label for X axis in normal mode */
-#define mpX_NORMAL  0x00
-/** Set label for X axis in time mode: the value is represented as minutes:seconds.milliseconds if time
- * is less than 2 minutes, hours:minutes:seconds otherwise. */
-#define mpX_TIME  0x01
-/** Set label for X axis in hours mode: the value is always represented as hours:minutes:seconds. */
-#define mpX_HOURS 0x02
-/** Set label for X axis in date mode: the value is always represented as yyyy-mm-dd. */
-#define mpX_DATE 0x03
-/** Set label for X axis in datetime mode: the value is always represented as yyyy-mm-ddThh:mm:ss. */
-#define mpX_DATETIME 0x04
-
 /*@}*/
 
 /** @name mpLayer implementations - functions
@@ -1023,7 +1047,7 @@ class WXDLLIMPEXP_MATHPLOT mpFX: public mpLayer
 		 This implementation will plot the function in the visible area and
 		 put a label according to the aligment specified.
 		 */
-		virtual void Plot(wxDC &dc, mpWindow &w);
+		virtual void DoPlot(wxDC &dc, mpWindow &w);
 
 		/** Specifies that this is a FX layer.
 		 @return always \a TRUE
@@ -1063,7 +1087,7 @@ class WXDLLIMPEXP_MATHPLOT mpFY: public mpLayer
 		 This implementation will plot the function in the visible area and
 		 put a label according to the aligment specified.
 		 */
-		virtual void Plot(wxDC &dc, mpWindow &w);
+		virtual void DoPlot(wxDC &dc, mpWindow &w);
 
 		/** Specifies that this is a FY layer.
 		 @return always \a TRUE
@@ -1109,7 +1133,7 @@ class WXDLLIMPEXP_MATHPLOT mpFXY: public mpLayer
 		 This implementation will plot the locus in the visible area and
 		 put a label according to the alignment specified.
 		 */
-		virtual void Plot(wxDC &dc, mpWindow &w);
+		virtual void DoPlot(wxDC &dc, mpWindow &w);
 
 		/** Specifies that this is a FXY layer.
 		 @return always \a TRUE
@@ -1172,7 +1196,7 @@ class WXDLLIMPEXP_MATHPLOT mpProfile: public mpLayer
 		 This implementation will plot the function in the visible area and
 		 put a label according to the aligment specified.
 		 */
-		virtual void Plot(wxDC &dc, mpWindow &w);
+		virtual void DoPlot(wxDC &dc, mpWindow &w);
 
 	protected:
 
@@ -1312,6 +1336,20 @@ class WXDLLIMPEXP_MATHPLOT mpScale: public mpLayer
 	DECLARE_DYNAMIC_CLASS(mpScale)
 };
 
+/** Set label for X axis in normal mode */
+#define mpX_NORMAL  0x00
+/** Set label for X axis in time mode: the value is represented as minutes:seconds.milliseconds if time
+ * is less than 2 minutes, hours:minutes:seconds otherwise. */
+#define mpX_TIME  0x01
+/** Set label for X axis in hours mode: the value is always represented as hours:minutes:seconds. */
+#define mpX_HOURS 0x02
+/** Set label for X axis in date mode: the value is always represented as yyyy-mm-dd. */
+#define mpX_DATE 0x03
+/** Set label for X axis in datetime mode: the value is always represented as yyyy-mm-ddThh:mm:ss. */
+#define mpX_DATETIME 0x04
+/** Set label user defined */
+#define mpX_USER 0x05
+
 /** Plot layer implementing a x-scale ruler.
  The ruler is fixed at Y=0 in the coordinate system. A label is plotted at
  the bottom-right hand of the ruler. The scale numbering automatically
@@ -1334,7 +1372,7 @@ class WXDLLIMPEXP_MATHPLOT mpScaleX: public mpScale
 
 		/** Layer plot handler.
 		 This implementation will plot the ruler adjusted to the visible area. */
-		virtual void Plot(wxDC &dc, mpWindow &w);
+		virtual void DoPlot(wxDC &dc, mpWindow &w);
 
 		/** Get X axis label view mode.
 		 @return mpX_NORMAL for normal labels, mpX_TIME for time axis in hours, minutes, seconds. */
@@ -1364,6 +1402,8 @@ class WXDLLIMPEXP_MATHPLOT mpScaleX: public mpScale
 		unsigned int m_labelType;  //!< Select labels mode: mpX_NORMAL for normal labels, mpX_TIME for time axis in hours, minutes, seconds
 		unsigned int m_timeConv;   //!< Selects if time has to be converted to local time or not.
 
+		wxString FormatValue(wxString &fmt, double n);
+
 	DECLARE_DYNAMIC_CLASS(mpScaleX)
 };
 
@@ -1387,7 +1427,7 @@ class WXDLLIMPEXP_MATHPLOT mpScaleY: public mpScale
 
 		/** Layer plot handler.
 		 This implementation will plot the ruler adjusted to the visible area. */
-		virtual void Plot(wxDC &dc, mpWindow &w);
+		virtual void DoPlot(wxDC &dc, mpWindow &w);
 
 		/** Specifies that this is a ScaleX layer.
 		 @return always \a TRUE
@@ -1514,6 +1554,11 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 		 * If the serie not exist then create it
 		 */
 		mpFXYVector* GetXYSeries(unsigned int n, const wxString &name = _T("Serie :"), bool create = true);
+
+		/*!
+		 * Search the point of the layer nearest a point
+		 */
+		mpLayer *GetClosestLayer(wxCoord ix, wxCoord iy, double *xnear, double *ynear);
 
 		/*! Get the layer by its name (case sensitive).
 		 @param name The name of the layer to retrieve
@@ -2316,7 +2361,7 @@ class WXDLLIMPEXP_MATHPLOT mpText: public mpLayer
 
 		/** Text Layer plot handler.
 		 This implementation will plot text adjusted to the visible area. */
-		virtual void Plot(wxDC &dc, mpWindow &w);
+		virtual void DoPlot(wxDC &dc, mpWindow &w);
 
 		/** Text Layer has not bounding box. @sa mpLayer::HasBBox
 		 @return always \a FALSE */
@@ -2499,7 +2544,7 @@ class WXDLLIMPEXP_MATHPLOT mpMovableObject: public mpLayer
 			return m_bbox_max_y;
 		}
 
-		virtual void Plot(wxDC &dc, mpWindow &w);
+		virtual void DoPlot(wxDC &dc, mpWindow &w);
 
 		/** Specifies that this is a FX layer.
 		 @return always \a TRUE
@@ -2743,7 +2788,7 @@ class WXDLLIMPEXP_MATHPLOT mpBitmapLayer: public mpLayer
 			return m_max_y;
 		}
 
-		virtual void Plot(wxDC &dc, mpWindow &w);
+		virtual void DoPlot(wxDC &dc, mpWindow &w);
 
 	protected:
 

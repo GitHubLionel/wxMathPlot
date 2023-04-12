@@ -148,36 +148,47 @@
 									<object class="wxStaticBoxSizer" variable="StaticBoxSizer3" member="no">
 										<label>Mouse coordinates </label>
 										<object class="sizeritem">
-											<object class="wxFlexGridSizer" variable="FlexGridSizer3" member="no">
-												<cols>2</cols>
-												<rows>2</rows>
+											<object class="wxBoxSizer" variable="BoxSizer1" member="no">
+												<orient>wxVERTICAL</orient>
 												<object class="sizeritem">
-													<object class="wxStaticText" name="ID_STATICTEXT18" variable="StaticText18" member="yes">
-														<label>Position :</label>
+													<object class="wxBoxSizer" variable="BoxSizer12" member="no">
+														<object class="sizeritem">
+															<object class="wxStaticText" name="ID_STATICTEXT18" variable="StaticText18" member="yes">
+																<label>Position :</label>
+															</object>
+															<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+															<border>5</border>
+														</object>
+														<object class="sizeritem">
+															<object class="wxChoice" name="ID_CHOICE11" variable="cbCoord" member="yes">
+																<extra_code>cbCoord-&gt;Set(WXSIZEOF(cbCoord__choices), cbCoord__choices);&#x0A;cbCoord-&gt;SetSelection(0);</extra_code>
+															</object>
+															<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+															<border>5</border>
+															<option>1</option>
+														</object>
 													</object>
-													<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
-													<border>5</border>
-													<option>1</option>
-												</object>
-												<object class="sizeritem">
-													<object class="wxChoice" name="ID_CHOICE11" variable="cbCoord" member="yes">
-														<extra_code>cbCoord-&gt;Set(WXSIZEOF(cbCoord__choices), cbCoord__choices);&#x0A;cbCoord-&gt;SetSelection(0);</extra_code>
-													</object>
-													<flag>wxALL|wxEXPAND</flag>
-													<border>5</border>
-													<option>1</option>
+													<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
 												</object>
 												<object class="sizeritem">
 													<object class="wxCheckBox" name="ID_CHECKBOX10" variable="cbCoordVisible" member="yes">
 														<label>Visible</label>
 													</object>
-													<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+													<flag>wxALL|wxEXPAND</flag>
 													<border>5</border>
-													<option>1</option>
+												</object>
+												<object class="sizeritem">
+													<object class="wxCheckBox" name="ID_CHECKBOX13" variable="cbCoordinates" member="yes">
+														<label>Series coordinates</label>
+														<tooltip>Shows the coordinates of the series closest to the mouse position</tooltip>
+													</object>
+													<flag>wxALL|wxEXPAND</flag>
+													<border>5</border>
 												</object>
 											</object>
-											<flag>wxALL|wxALIGN_CENTER_VERTICAL</flag>
+											<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
 											<border>5</border>
+											<option>1</option>
 										</object>
 										<object class="sizeritem">
 											<object class="wxStaticBoxSizer" variable="StaticBoxSizer4" member="no">
@@ -518,7 +529,7 @@
 																<object class="sizeritem">
 																	<object class="wxTextCtrl" name="ID_TEXTCTRL10" variable="edScaleMax" member="yes">
 																		<value>1</value>
-																		<size>62,-1</size>
+																		<size>64,-1</size>
 																		<validator>wxFloatingPointValidator&lt;double&gt; (2, &amp;scale__max)</validator>
 																		<enabled>0</enabled>
 																		<style>wxTE_RIGHT</style>
@@ -531,7 +542,7 @@
 															<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
 														</object>
 													</object>
-													<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+													<flag>wxALL|wxEXPAND</flag>
 													<border>2</border>
 												</object>
 											</object>
@@ -542,16 +553,22 @@
 											<object class="wxBoxSizer" variable="BoxSizer5" member="no">
 												<orient>wxVERTICAL</orient>
 												<object class="sizeritem">
-													<object class="wxStaticText" name="ID_STATICTEXT17" variable="StaticText17" member="yes">
-														<label>Position :</label>
+													<object class="wxBoxSizer" variable="BoxSizer13" member="no">
+														<object class="sizeritem">
+															<object class="wxStaticText" name="ID_STATICTEXT17" variable="StaticText17" member="yes">
+																<label>Position :</label>
+															</object>
+															<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+															<border>5</border>
+														</object>
+														<object class="sizeritem">
+															<object class="wxChoice" name="ID_CHOICE6" variable="cbAxisPosition" member="yes" />
+															<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+															<border>5</border>
+															<option>1</option>
+														</object>
 													</object>
 													<flag>wxALL|wxALIGN_LEFT</flag>
-													<border>5</border>
-												</object>
-												<object class="sizeritem">
-													<object class="wxChoice" name="ID_CHOICE6" variable="cbAxisPosition" member="yes" />
-													<flag>wxALL|wxALIGN_LEFT</flag>
-													<border>5</border>
 												</object>
 												<object class="sizeritem">
 													<object class="wxCheckBox" name="ID_CHECKBOX4" variable="cbAxisVisible" member="yes">
@@ -568,12 +585,33 @@
 													<border>5</border>
 												</object>
 												<object class="sizeritem">
+													<object class="wxBoxSizer" variable="BoxSizer14" member="no">
+														<object class="sizeritem">
+															<object class="wxStaticText" name="ID_STATICTEXT29" variable="StaticText29" member="yes">
+																<label>Format :</label>
+															</object>
+															<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+															<border>5</border>
+														</object>
+														<object class="sizeritem">
+															<object class="wxChoice" name="ID_CHOICE16" variable="cbFormat" member="yes">
+																<extra_code>cbFormat-&gt;Set(WXSIZEOF(cbFormat__choices), cbFormat__choices);&#x0A;cbFormat-&gt;SetSelection(0);</extra_code>
+																<handler function="OncbFormatSelect" entry="EVT_CHOICE" />
+															</object>
+															<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+															<border>5</border>
+															<option>1</option>
+														</object>
+													</object>
+													<flag>wxALL|wxALIGN_LEFT</flag>
+												</object>
+												<object class="sizeritem">
 													<object class="wxFlexGridSizer" variable="FlexGridSizer11" member="no">
 														<cols>2</cols>
 														<rows>1</rows>
 														<object class="sizeritem">
 															<object class="wxStaticText" name="ID_STATICTEXT26" variable="StaticText26" member="yes">
-																<label>Label Format :</label>
+																<label>User Label Format :</label>
 																<pos>192,200</pos>
 															</object>
 															<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
@@ -582,8 +620,8 @@
 														</object>
 														<object class="sizeritem">
 															<object class="wxTextCtrl" name="ID_TEXTCTRL8" variable="edFormat" member="yes">
-																<pos>280,196</pos>
-																<size>56,23</size>
+																<size>60,-1</size>
+																<enabled>0</enabled>
 																<tooltip>Format of the label for the axis. Should be like c++ format.</tooltip>
 															</object>
 															<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
@@ -592,7 +630,6 @@
 														</object>
 													</object>
 													<flag>wxALL|wxALIGN_LEFT</flag>
-													<border>5</border>
 													<option>1</option>
 												</object>
 											</object>
@@ -745,7 +782,7 @@
 																<label>Visible</label>
 															</object>
 															<flag>wxALL|wxALIGN_LEFT</flag>
-															<border>5</border>
+															<border>3</border>
 															<option>1</option>
 														</object>
 														<object class="sizeritem">
@@ -753,7 +790,7 @@
 																<label>Continuity</label>
 															</object>
 															<flag>wxALL|wxALIGN_LEFT</flag>
-															<border>5</border>
+															<border>3</border>
 															<option>1</option>
 														</object>
 														<object class="sizeritem">
@@ -761,7 +798,7 @@
 																<label>Draw Outside Margins</label>
 															</object>
 															<flag>wxALL|wxALIGN_LEFT</flag>
-															<border>5</border>
+															<border>3</border>
 															<option>1</option>
 														</object>
 														<object class="sizeritem">
@@ -769,11 +806,20 @@
 																<label>Show name</label>
 															</object>
 															<flag>wxALL|wxALIGN_LEFT</flag>
-															<border>5</border>
+															<border>3</border>
+															<option>1</option>
+														</object>
+														<object class="sizeritem">
+															<object class="wxCheckBox" name="ID_CHECKBOX14" variable="cbTractable" member="yes">
+																<label>Tractable</label>
+																<tooltip>Allow mouse coordinates</tooltip>
+															</object>
+															<flag>wxALL</flag>
+															<border>3</border>
 															<option>1</option>
 														</object>
 													</object>
-													<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+													<flag>wxALL|wxALIGN_LEFT</flag>
 													<border>5</border>
 												</object>
 											</object>
