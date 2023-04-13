@@ -1151,7 +1151,18 @@ class WXDLLIMPEXP_MATHPLOT mpFXY: public mpLayer
 			return true;
 		}
 
+		/**
+		 * If true, XY series is plotted as bar
+		 */
 		void SetViewMode(bool asBar);
+
+		/**
+		 * return the width of the bar
+		 */
+		int GetBarWidth(void)
+		{
+			return m_BarWidth;
+		}
 
 	protected:
 
@@ -1160,6 +1171,9 @@ class WXDLLIMPEXP_MATHPLOT mpFXY: public mpLayer
 
 		// Min delta between 2 x coordinate (used for view as bar)
 		double m_deltaX;
+
+		// The width of a bar
+		int m_BarWidth;
 
 		// Plot data as bar graph
 		bool m_ViewAsBar = false;
@@ -1582,7 +1596,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 		/** Set current view's X scale and refresh display.
 		 @param scaleX New scale, must not be 0.
 		 */
-		void SetScaleX(double scaleX)
+		void SetScaleX(const double scaleX)
 		{
 			if ISNOTNULL(scaleX) m_scaleX = scaleX;
 			UpdateAll();
@@ -1600,7 +1614,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 		/** Set current view's Y scale and refresh display.
 		 @param scaleY New scale, must not be 0.
 		 */
-		void SetScaleY(double scaleY)
+		void SetScaleY(const double scaleY)
 		{
 			if ISNOTNULL(scaleY) m_scaleY = scaleY;
 			UpdateAll();
@@ -1626,7 +1640,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 		/** Set current view's X position and refresh display.
 		 @param posX New position that corresponds to the center point of the view.
 		 */
-		void SetPosX(double posX)
+		void SetPosX(const double posX)
 		{
 			m_posX = posX;
 			UpdateAll();
@@ -1644,7 +1658,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 		/** Set current view's Y position and refresh display.
 		 @param posY New position that corresponds to the center point of the view.
 		 */
-		void SetPosY(double posY)
+		void SetPosY(const double posY)
 		{
 			m_posY = posY;
 			UpdateAll();
@@ -1664,7 +1678,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 		 @param scrX New position that corresponds to the center point of the view.
 		 @param scrY New position that corresponds to the center point of the view.
 		 */
-		void SetScreen(int scrX, int scrY)
+		void SetScreen(const int scrX, const int scrY)
 		{
 			m_scrX = scrX;
 			m_scrY = scrY;
@@ -1703,7 +1717,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 		 @param posX New position that corresponds to the center point of the view.
 		 @param posY New position that corresponds to the center point of the view.
 		 */
-		void SetPos(double posX, double posY)
+		void SetPos(const double posX, const double posY)
 		{
 			m_posX = posX;
 			m_posY = posY;
@@ -1712,42 +1726,42 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 
 		/** Converts mpWindow (screen) pixel coordinates into graph (floating point) coordinates, using current mpWindow position and scale.
 		 * @sa p2y,x2p,y2p */
-		inline double p2x(wxCoord pixelCoordX )
+		inline double p2x(const wxCoord pixelCoordX)
 		{
 			return m_posX + pixelCoordX/m_scaleX;
 		}
 
 		/** Converts mpWindow (screen) pixel coordinates into graph (floating point) coordinates, using current mpWindow position and scale.
 		 * @sa p2x,x2p,y2p */
-		inline double p2y(wxCoord pixelCoordY )
+		inline double p2y(const wxCoord pixelCoordY)
 		{
 			return m_posY - pixelCoordY/m_scaleY;
 		}
 
 		/** Converts graph (floating point) coordinates into mpWindow (screen) pixel coordinates, using current mpWindow position and scale.
 		 * @sa p2x,p2y,y2p */
-		inline wxCoord x2p(double x)
+		inline wxCoord x2p(const double x)
 		{
 			return (wxCoord) ( (x-m_posX) * m_scaleX);
 		}
 
 		/** Converts graph (floating point) coordinates into mpWindow (screen) pixel coordinates, using current mpWindow position and scale.
 		 * @sa p2x,p2y,x2p */
-		inline wxCoord y2p(double y)
+		inline wxCoord y2p(const double y)
 		{
 			return (wxCoord) ( (m_posY-y) * m_scaleY);
 		}
 
 		/** Enable/disable the double-buffering of the window, eliminating the flicker (default=enabled).
 		 */
-		void EnableDoubleBuffer( bool enabled )
+		void EnableDoubleBuffer(const bool enabled)
 		{
 			m_enableDoubleBuffer = enabled;
 		}
 
 		/** Enable/disable the feature of pan/zoom with the mouse (default=enabled)
 		 */
-		void EnableMousePanZoom( bool enabled )
+		void EnableMousePanZoom(const bool enabled)
 		{
 			m_enableMouseNavigation = enabled;
 		}
@@ -1795,13 +1809,13 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 		 * @param centerPoint The point (pixel coordinates) that will stay in the same position on the screen after
 		 * the zoom (by default, the center of the mpWindow).
 		 */
-		void ZoomIn(const wxPoint& centerPoint = wxDefaultPosition);
+		void ZoomIn(const wxPoint &centerPoint = wxDefaultPosition);
 
 		/** Zoom out current view and refresh display
 		 * @param centerPoint The point (pixel coordinates) that will stay in the same position on the screen after
 		 * the zoom (by default, the center of the mpWindow).
 		 */
-		void ZoomOut(const wxPoint& centerPoint = wxDefaultPosition);
+		void ZoomOut(const wxPoint &centerPoint = wxDefaultPosition);
 
 		/** Zoom in current view along X and refresh display */
 		void ZoomInX();
@@ -1832,7 +1846,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 		 \return The number of layers in the mpWindow. */
 		unsigned int CountAllLayers()
 		{
-			return m_layers.size();
+			return (unsigned int)m_layers.size();
 		}
 
 		/** Counts the number of plot layers: this is to count only the layers which have a plot.
@@ -1879,7 +1893,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 
 		/** Returns the bounding box coordinates
 		 @param bbox Pointer to a 6-element double array where to store bounding box coordinates. */
-		void GetBoundingBox(double* bbox);
+		void GetBoundingBox(double *bbox);
 
 		/** Enable/disable scrollbars
 		 @param status Set to true to show scrollbars */
@@ -2868,7 +2882,8 @@ class WXDLLIMPEXP_MATHPLOT wxIndexColour: public wxColour
 					this->Set(128, 128, 0);
 					break;  // Olive
 				default:
-					this->Set((rand() * 255) / RAND_MAX, (rand() * 255) / RAND_MAX, (rand() * 255) / RAND_MAX);
+					this->Set((ChannelType)((rand() * 255) / RAND_MAX),
+							(ChannelType)((rand() * 255) / RAND_MAX), (ChannelType)((rand() * 255) / RAND_MAX));
 			}
 		}
 };

@@ -116,6 +116,29 @@ const wxString MathPlot::Popup_string[][2] = {
 double mpWindow::zoomIncrementalFactor = 1.5;
 
 //-----------------------------------------------------------------------------
+// Date time conversion
+//-----------------------------------------------------------------------------
+
+bool DoubleToTimeStruct(double val, unsigned int timeConv, struct tm *timestruct)
+{
+	time_t when = (time_t) val;
+
+	if (when > 0)
+	{
+		if (timeConv == mpX_LOCALTIME)
+		{
+			*timestruct = *localtime(&when);
+		}
+		else
+		{
+			*timestruct = *gmtime(&when);
+		}
+		return true;
+	}
+	return false;
+}
+
+//-----------------------------------------------------------------------------
 // mpLayer
 //-----------------------------------------------------------------------------
 
@@ -467,7 +490,6 @@ void mpInfoCoords::SetVisible(bool show)
 
 void mpInfoCoords::UpdateInfo(mpWindow &w, wxEvent &event)
 {
-	time_t when = 0;
 	double xVal = 0.0, yVal = 0.0;
 	struct tm timestruct;
 
@@ -508,39 +530,17 @@ void mpInfoCoords::UpdateInfo(mpWindow &w, wxEvent &event)
 				break;
 			case mpX_DATETIME:
 			{
-				when = (time_t) xVal;
-				if (when > 0)
-				{
-					if (m_timeConv == mpX_LOCALTIME)
-					{
-						timestruct = *localtime(&when);
-					}
-					else
-					{
-						timestruct = *gmtime(&when);
-					}
-					m_content.Printf(wxT("x = %04.0f-%02.0f-%02.0fT%02.0f:%02.0f:%02.0f\ny = %f"), (double) timestruct.tm_year + 1900,
-							(double) timestruct.tm_mon + 1, (double) timestruct.tm_mday, (double) timestruct.tm_hour, (double) timestruct.tm_min,
-							(double) timestruct.tm_sec, yVal);
-				}
+				if (DoubleToTimeStruct(xVal, m_timeConv, &timestruct))
+					m_content.Printf(wxT("x = %04d-%02d-%02dT%02d:%02d:%02d\ny = %f"), timestruct.tm_year + 1900,
+							timestruct.tm_mon + 1, timestruct.tm_mday, timestruct.tm_hour, timestruct.tm_min,
+							timestruct.tm_sec, yVal);
 				break;
 			}
 			case mpX_DATE:
 			{
-				when = (time_t) xVal;
-				if (when > 0)
-				{
-					if (m_timeConv == mpX_LOCALTIME)
-					{
-						timestruct = *localtime(&when);
-					}
-					else
-					{
-						timestruct = *gmtime(&when);
-					}
-					m_content.Printf(wxT("x = %04.0f-%02.0f-%02.0f\ny = %f"), (double) timestruct.tm_year + 1900, (double) timestruct.tm_mon + 1,
-							(double) timestruct.tm_mday, yVal);
-				}
+				if (DoubleToTimeStruct(xVal, m_timeConv, &timestruct))
+					m_content.Printf(wxT("x = %04d-%02d-%02d\ny = %f"), timestruct.tm_year + 1900, timestruct.tm_mon + 1,
+												timestruct.tm_mday, yVal);
 				break;
 			}
 			case mpX_TIME:
@@ -1105,8 +1105,8 @@ void mpFXY::DoPlot(wxDC &dc, mpWindow &w)
 	Rewind();
 	// Get first point
 	GetNextXY(x, y);
-	maxDrawX = minDrawX = x;
-	maxDrawY = minDrawY = y;
+	maxDrawX = minDrawX = (int) x;
+	maxDrawY = minDrawY = (int) y;
 
 	wxCoord ix = 0, iy = 0;
 	wxCoord ixlast = 0, iylast = 0;
@@ -1151,34 +1151,32 @@ void mpFXY::DoPlot(wxDC &dc, mpWindow &w)
 			}
 			else
 			{
-				ix = w.x2p(x);
-				iy = w.y2p(y);
+				Rewind();
 				while (GetNextXY(x, y))
 				{
+					ix = w.x2p(x);
+					iy = w.y2p(y);
 					if (m_symbol == mpsNone)
 						dc.DrawLine(ix, iy, ix, iy);
 					else
 						DrawSymbol(dc, ix, iy);
 					UpdateViewBoundary(ix, iy);
-					ix = w.x2p(x);
-					iy = w.y2p(y);
 				}
 			}
 		}
 		else
 		{
 			// Not continuous and pen width = 1
-			ix = w.x2p(x);
-			iy = w.y2p(y);
+			Rewind();
 			while (GetNextXY(x, y))
 			{
+				ix = w.x2p(x);
+				iy = w.y2p(y);
 				if (m_symbol == mpsNone)
 					dc.DrawPoint(ix, iy);
 				else
 					DrawSymbol(dc, ix, iy);
 				UpdateViewBoundary(ix, iy);
-				ix = w.x2p(x);
-				iy = w.y2p(y);
 			}
 		}
 	}
@@ -1187,18 +1185,17 @@ void mpFXY::DoPlot(wxDC &dc, mpWindow &w)
 		double delta = w.GetScreenX() / w.GetScaleX();
 		if (m_deltaX < delta)
 			delta = m_deltaX;
-		int d = (int) ((delta * w.GetScaleX()) / 3.5);
-		if (d == 0)
-			d = 1;
+		m_BarWidth = (int) ((delta * w.GetScaleX()) / 3.5);
+		if (m_BarWidth == 0)
+			m_BarWidth = 1;
 		wxCoord iybase = w.y2p(0);
-		ix = w.x2p(x);
-		iy = w.y2p(y);
+		Rewind();
 		while (GetNextXY(x, y))
 		{
-			dc.DrawRectangle(ix - d, iy, 2 * d, iybase - iy);
-			UpdateViewBoundary(ix, iy);
 			ix = w.x2p(x);
 			iy = w.y2p(y);
+			dc.DrawRectangle(ix - m_BarWidth, iy, 2 * m_BarWidth, iybase - iy);
+			UpdateViewBoundary(ix, iy);
 		}
 	}
 
@@ -1340,7 +1337,6 @@ IMPLEMENT_DYNAMIC_CLASS(mpScaleX, mpScale)
 wxString mpScaleX::FormatValue(wxString &fmt, double n)
 {
 	wxString s = _("");
-	time_t when = 0;
 	struct tm timestruct;
 
 	switch (m_labelType)
@@ -1351,37 +1347,16 @@ wxString mpScaleX::FormatValue(wxString &fmt, double n)
 			break;
 		case mpX_DATETIME:
 		{
-			when = (time_t) n;
-			if (when > 0)
-			{
-				if (m_timeConv == mpX_LOCALTIME)
-				{
-					timestruct = *localtime(&when);
-				}
-				else
-				{
-					timestruct = *gmtime(&when);
-				}
-				s.Printf(fmt, (double) timestruct.tm_year + 1900, (double) timestruct.tm_mon + 1, (double) timestruct.tm_mday,
-						(double) timestruct.tm_hour, (double) timestruct.tm_min, (double) timestruct.tm_sec);
-			}
+			if (DoubleToTimeStruct(n, m_timeConv, &timestruct))
+				s.Printf(fmt, timestruct.tm_year + 1900, timestruct.tm_mon + 1, timestruct.tm_mday,
+						timestruct.tm_hour, timestruct.tm_min, timestruct.tm_sec);
+
 			break;
 		}
 		case mpX_DATE:
 		{
-			when = (time_t) n;
-			if (when > 0)
-			{
-				if (m_timeConv == mpX_LOCALTIME)
-				{
-					timestruct = *localtime(&when);
-				}
-				else
-				{
-					timestruct = *gmtime(&when);
-				}
-				s.Printf(fmt, (double) timestruct.tm_year + 1900, (double) timestruct.tm_mon + 1, (double) timestruct.tm_mday);
-			}
+			if (DoubleToTimeStruct(n, m_timeConv, &timestruct))
+				s.Printf(fmt, timestruct.tm_year + 1900, timestruct.tm_mon + 1, timestruct.tm_mday);
 			break;
 		}
 		case mpX_TIME:
@@ -1484,10 +1459,10 @@ void mpScaleX::DoPlot(wxDC &dc, mpWindow &w)
 			break;
 		}
 		case mpX_DATETIME:
-			fmt = (wxT("%04.0f-%02.0f-%02.0fT%02.0f:%02.0f:%02.0f"));
+			fmt = (wxT("%04d-%02d-%02dT%02d:%02d:%02d"));
 			break;
 		case mpX_DATE:
-			fmt = (wxT("%04.0f-%02.0f-%02.0f"));
+			fmt = (wxT("%04d-%02d-%02d"));
 			break;
 		case mpX_TIME:
 		{
@@ -3103,7 +3078,7 @@ mpLayer *mpWindow::GetClosestLayer(wxCoord ix, wxCoord iy, double *xnear, double
 					while (fxy->GetNextXY(xx, yy))
 					{
 						// We are in the x bar range
-						if (abs(this->x2p(xx) - ix) < NEAR_AREA)
+						if (abs(this->x2p(xx) - ix) < fxy->GetBarWidth())
 						{
 							wxCoord yyp = this->y2p(yy);
 							// Check if we are over the bar
