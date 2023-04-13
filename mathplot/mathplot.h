@@ -924,6 +924,12 @@ class WXDLLIMPEXP_MATHPLOT mpInfoCoords: public mpInfoLayer
 		{
 			return m_series_coord;
 		}
+		/** Pen series for tractable
+		 */
+		void SetPenSeries(wxPen &pen)
+		{
+			m_penSeries = pen;
+		}
 
 	protected:
 		wxString m_content;  //!< string holding the coordinates to be drawn.
@@ -934,6 +940,7 @@ class WXDLLIMPEXP_MATHPLOT mpInfoCoords: public mpInfoLayer
 		wxBitmap *m_coord_bmp;
 		wxRect m_oldDim;
 		bool m_series_coord;
+		wxPen m_penSeries;
 
 	DECLARE_DYNAMIC_CLASS(mpInfoCoords)
 };

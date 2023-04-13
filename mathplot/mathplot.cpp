@@ -92,21 +92,25 @@ const wxString MathPlot::Popup_string[][2] = {
 #endif
 
 // Legend margins
-#define mpLEGEND_MARGIN 5
-#define mpLEGEND_LINEWIDTH 10
+#define MARGIN_LEGEND 5
+#define LEGEND_LINEWIDTH 10
 
 // Minimum axis label separation
-#define mpMIN_X_AXIS_LABEL_SEPARATION 64
-#define mpMIN_Y_AXIS_LABEL_SEPARATION 32
+#define MIN_X_AXIS_LABEL_SEPARATION 64
+#define MIN_Y_AXIS_LABEL_SEPARATION 32
 
 // Number of pixels to scroll when scrolling by a line
-#define mpSCROLL_NUM_PIXELS_PER_LINE  10
+#define SCROLL_NUM_PIXELS_PER_LINE  10
 
 // Offset for the text in margin
 #define MARGIN_TOP_OFFSET 5
 #define MARGIN_BOTTOM_OFFSET 5
 #define MARGIN_LEFT_OFFSET 5
 #define MARGIN_RIGHT_OFFSET 5
+
+// Margin for the coordinates
+#define MARGIN_COORD	5
+#define MARGIN_COORD_X2	2*MARGIN_COORD
 
 // See doxygen comments.
 double mpWindow::zoomIncrementalFactor = 1.5;
@@ -483,7 +487,11 @@ void mpInfoCoords::UpdateInfo(mpWindow &w, wxEvent &event)
 
 		if (m_series_coord)
 		{
-			if (!w.GetClosestLayer(m_mouseX, m_mouseY, &xVal, &yVal))
+			mpLayer *layer = w.GetClosestLayer(m_mouseX, m_mouseY, &xVal, &yVal);
+			if (layer)
+				// Just change the colour
+				m_penSeries.SetColour(layer->GetPen().GetColour());
+			else
 				return;
 		}
 		else
@@ -562,6 +570,7 @@ void mpInfoCoords::DoPlot(wxDC &dc, mpWindow &w)
 
 	int textX = 0, textY = 0;
 	int width = 0, height = 0;
+	int offset = (m_series_coord) ? LEGEND_LINEWIDTH : 0;
 
 	// It looks like that on Windows, GetTetxExtent function
 	// ignores the newline in the calculus of size
@@ -574,15 +583,16 @@ void mpInfoCoords::DoPlot(wxDC &dc, mpWindow &w)
 	dc.GetTextExtent(m_contentX, &textX, &textY);
 	dc.GetTextExtent(m_contentY, &textY_H, &textY);
 	textX = (textX > textY_H) ? textX : textY_H;
-	if (width < textX + 10)
-		width = textX + 10;
-	if (height < 2 * textY + 10)
-		height = 2 * textY + 10;
+	if (width < textX + MARGIN_COORD_X2 + offset)
+		width = textX + MARGIN_COORD_X2 + offset;
+	if (height < 2 * textY + MARGIN_COORD_X2)
+		height = 2 * textY + MARGIN_COORD_X2;
 #else
 		// *NIX code
 		dc.GetTextExtent(m_content, &textX, &textY);
-		if (width < textX + 10) width = textX + 10;
-		if (height < textY + 10) height = textY + 10;
+		if (width < textX + MARGIN_COORD_X2 + offset) width = textX + MARGIN_COORD_X2 + offset;
+		if (height < textY + MARGIN_COORD_X2) height = textY + MARGIN_COORD_X2;
+		textY /= 2;
 #endif
 
 	SetInfoRectangle(w, width, height);
@@ -624,7 +634,16 @@ void mpInfoCoords::DoPlot(wxDC &dc, mpWindow &w)
 
 	// Third : draw the coordinate
 	dc.DrawRectangle(m_dim.x, m_dim.y, m_dim.width, m_dim.height);
-	dc.DrawText(m_content, m_dim.x + 5, m_dim.y + 5);
+	dc.DrawText(m_content, m_dim.x + MARGIN_COORD + offset, m_dim.y + MARGIN_COORD);
+	if (m_series_coord)
+	{
+		textY = m_dim.y + MARGIN_COORD + textY + (textY >> 1) + 2;
+		dc.SetPen(m_penSeries);
+		wxBrush sqrBrush(m_penSeries.GetColour(), wxBRUSHSTYLE_SOLID);
+		dc.SetBrush(sqrBrush);
+	  dc.DrawRectangle(m_dim.x + 2, textY - (LEGEND_LINEWIDTH >> 1),
+				LEGEND_LINEWIDTH, LEGEND_LINEWIDTH);
+	}
 }
 
 void mpInfoCoords::ErasePlot(wxDC &dc, mpWindow &WXUNUSED(w))
@@ -715,36 +734,36 @@ void mpInfoLegend::UpdateBitmap(wxDC &dc, mpWindow &w)
 
 			if (first)
 			{
-				posX = mpLEGEND_MARGIN;
-				posY = mpLEGEND_MARGIN + (tmpY >> 1);
+				posX = MARGIN_LEGEND;
+				posY = MARGIN_LEGEND + (tmpY >> 1);
 				first = false;
 			}
 
 			if (m_item_mode == mpLegendLine)
 			{
-				buff_dc.DrawLine(posX, posY, posX + mpLEGEND_LINEWIDTH, posY);
+				buff_dc.DrawLine(posX, posY, posX + LEGEND_LINEWIDTH, posY);
 			}
 			else  // m_item_mode == mpLEGEND_SQUARE
 			{
 				sqrBrush.SetColour(lpen.GetColour());
 				buff_dc.SetBrush(sqrBrush);
-				buff_dc.DrawRectangle(posX, posY - (mpLEGEND_LINEWIDTH >> 1),
-						mpLEGEND_LINEWIDTH, mpLEGEND_LINEWIDTH);
+				buff_dc.DrawRectangle(posX, posY - (LEGEND_LINEWIDTH >> 1),
+						LEGEND_LINEWIDTH, LEGEND_LINEWIDTH);
 			}
 
-			posX += mpLEGEND_LINEWIDTH + mpLEGEND_MARGIN;
+			posX += LEGEND_LINEWIDTH + MARGIN_LEGEND;
 			buff_dc.DrawText(label, posX, posY - (tmpY >> 1));
 
-			posX += tmpX + mpLEGEND_MARGIN;
+			posX += tmpX + MARGIN_LEGEND;
 
 			if (m_item_direction == mpVertical)
 			{
 				if (posX > width)
 					width = posX;
-				posX = mpLEGEND_MARGIN;
+				posX = MARGIN_LEGEND;
 				posY += tmpY;
 				height = posY;
-				posY += mpLEGEND_MARGIN;
+				posY += MARGIN_LEGEND;
 			}
 			else
 			{
@@ -786,11 +805,6 @@ void mpInfoLegend::UpdateBitmap(wxDC &dc, mpWindow &w)
 
 void mpInfoLegend::DoPlot(wxDC &dc, mpWindow &w)
 {
-	if (!m_visible)
-		return;
-
-	DoBeforePlot();
-
 	if (m_need_update)
 		UpdateBitmap(dc, w);
 	else
@@ -1545,7 +1559,7 @@ void mpScaleX::DoPlot(wxDC &dc, mpWindow &w)
 	}
 
 	// Actually draw labels, taking care of not overlapping them, and distributing them regularly
-	double labelStep = ceil((maxExtent + mpMIN_X_AXIS_LABEL_SEPARATION) / (scaleX * step)) * step;
+	double labelStep = ceil((maxExtent + MIN_X_AXIS_LABEL_SEPARATION) / (scaleX * step)) * step;
 
 	for (n = n0; n < end; n += labelStep)
 	{
@@ -1730,7 +1744,7 @@ void mpScaleY::DoPlot(wxDC &dc, mpWindow &w)
 				wxLogMessage(wxT("mpScaleY::Plot: ty(%d) and labelHeigth(%d) differ!"), ty, labelHeigth);
 #endif
 			labelW = (labelW <= tx) ? tx : labelW;
-			if ((tmp - p + labelHeigth) > mpMIN_Y_AXIS_LABEL_SEPARATION)
+			if ((tmp - p + labelHeigth) > MIN_Y_AXIS_LABEL_SEPARATION)
 			{
 				if ((m_flags == mpALIGN_BORDER_LEFT) || (m_flags == mpALIGN_RIGHT))
 					dc.DrawText(s, orgx + 4, p - ty / 2);
@@ -2922,7 +2936,7 @@ void mpWindow::OnScrollLineUp(wxScrollWinEvent &event)
 	// Get position before page up
 	int position = GetScrollPos(scrollOrientation);
 	// Need to adjust position by a line
-	position -= mpSCROLL_NUM_PIXELS_PER_LINE;
+	position -= SCROLL_NUM_PIXELS_PER_LINE;
 	if (position < 0)
 		position = 0;
 
@@ -2939,7 +2953,7 @@ void mpWindow::OnScrollLineDown(wxScrollWinEvent &event)
 	// Get scroll range
 	int scrollRange = GetScrollRange(scrollOrientation);
 	// Need to adjust position by a page
-	position += mpSCROLL_NUM_PIXELS_PER_LINE;
+	position += SCROLL_NUM_PIXELS_PER_LINE;
 	if (position > (scrollRange - thumbSize))
 		position = scrollRange - thumbSize;
 
