@@ -262,10 +262,10 @@ mpInfoLayer::mpInfoLayer()
 	m_location = mpMarginNone;
 }
 
-mpInfoLayer::mpInfoLayer(wxRect rect, const wxBrush *brush, mpLocation location)
+mpInfoLayer::mpInfoLayer(wxRect rect, const wxBrush &brush, mpLocation location)
 {
 	m_type = mpLAYER_INFO;
-	m_brush = *brush;
+	m_brush = brush;
 	if (m_brush.GetStyle() == wxBRUSHSTYLE_TRANSPARENT)
 		m_brush.SetColour(*wxWHITE);
 	m_reference.x = rect.x;
@@ -445,6 +445,8 @@ mpInfoCoords::mpInfoCoords() :
 	wxBrush coord(wxColour(232, 232, 232), wxBRUSHSTYLE_SOLID);
 	SetBrush(coord);
 	m_series_coord = false;
+	// Default pen
+	SetPenSeries((wxPen const&) *wxBLACK_PEN);
 }
 
 mpInfoCoords::mpInfoCoords(mpLocation location) :
@@ -460,7 +462,7 @@ mpInfoCoords::mpInfoCoords(mpLocation location) :
 	SetBrush(coord);
 }
 
-mpInfoCoords::mpInfoCoords(wxRect rect, const wxBrush *brush, mpLocation location) :
+mpInfoCoords::mpInfoCoords(wxRect rect, const wxBrush &brush, mpLocation location) :
 		mpInfoLayer(rect, brush, location)
 {
 	m_labelType = mpX_NORMAL;
@@ -675,7 +677,7 @@ mpInfoLegend::mpInfoLegend() :
 	m_need_update = true;
 }
 
-mpInfoLegend::mpInfoLegend(wxRect rect, const wxBrush *brush, mpLocation location) :
+mpInfoLegend::mpInfoLegend(wxRect rect, const wxBrush &brush, mpLocation location) :
 		mpInfoLayer(rect, brush, location)
 {
 	m_item_mode = mpLegendLine;
@@ -837,7 +839,7 @@ void mpInfoLegend::DoPlot(wxDC &dc, mpWindow &w)
 
 IMPLEMENT_ABSTRACT_CLASS(mpFX, mpLayer)
 
-mpFX::mpFX(wxString name, int flags)
+mpFX::mpFX(const wxString &name, int flags)
 {
 	m_type = mpLAYER_PLOT;
 	SetName(name);
@@ -946,7 +948,7 @@ void mpFX::DoPlot(wxDC &dc, mpWindow &w)
 
 IMPLEMENT_ABSTRACT_CLASS(mpFY, mpLayer)
 
-mpFY::mpFY(wxString name, int flags)
+mpFY::mpFY(const wxString &name, int flags)
 {
 	m_type = mpLAYER_PLOT;
 	SetName(name);
@@ -1069,7 +1071,7 @@ void mpFY::DoPlot(wxDC &dc, mpWindow &w)
 
 IMPLEMENT_ABSTRACT_CLASS(mpFXY, mpLayer)
 
-mpFXY::mpFXY(wxString name, int flags, bool viewAsBar)
+mpFXY::mpFXY(const wxString &name, int flags, bool viewAsBar)
 {
 	m_type = mpLAYER_PLOT;
 	SetName(name);
@@ -1247,7 +1249,7 @@ void mpFXY::DoPlot(wxDC &dc, mpWindow &w)
 
 IMPLEMENT_ABSTRACT_CLASS(mpProfile, mpLayer)
 
-mpProfile::mpProfile(wxString name, int flags)
+mpProfile::mpProfile(const wxString &name, int flags)
 {
 	m_type = mpLAYER_PLOT;
 	SetName(name);
@@ -1316,7 +1318,7 @@ void mpProfile::DoPlot(wxDC &dc, mpWindow &w)
 
 IMPLEMENT_ABSTRACT_CLASS(mpScale, mpLayer)
 
-mpScale::mpScale(wxString name, int flags, bool grids)
+mpScale::mpScale(const wxString &name, int flags, bool grids)
 {
 	m_type = mpLAYER_AXIS;
 	SetName(name);
@@ -1334,7 +1336,7 @@ mpScale::mpScale(wxString name, int flags, bool grids)
 
 IMPLEMENT_DYNAMIC_CLASS(mpScaleX, mpScale)
 
-wxString mpScaleX::FormatValue(wxString &fmt, double n)
+wxString mpScaleX::FormatValue(const wxString &fmt, double n)
 {
 	wxString s = _("");
 	struct tm timestruct;
@@ -3338,7 +3340,7 @@ void mpWindow::SetColourTheme(const wxColour &bgColour, const wxColour &drawColo
 IMPLEMENT_DYNAMIC_CLASS(mpFXYVector, mpFXY)
 
 // Constructor
-mpFXYVector::mpFXYVector(wxString name, int flags, bool viewAsBar) :
+mpFXYVector::mpFXYVector(const wxString &name, int flags, bool viewAsBar) :
 		mpFXY(name, flags, viewAsBar)
 {
 	m_type = mpLAYER_PLOT;
@@ -3600,7 +3602,7 @@ IMPLEMENT_DYNAMIC_CLASS(mpText, mpLayer)
  @param offsetx x position in percentage (0-100)
  @param offsetx y position in percentage (0-100)
  */
-mpText::mpText(wxString name, int offsetx, int offsety)
+mpText::mpText(const wxString &name, int offsetx, int offsety)
 {
 	m_type = mpLAYER_INFO;
 	SetName(name);
@@ -3620,7 +3622,7 @@ mpText::mpText(wxString name, int offsetx, int offsety)
 /** @param name text to be displayed
  @param location in the margin
  */
-mpText::mpText(wxString name, mpLocation marginLocation)
+mpText::mpText(const wxString &name, mpLocation marginLocation)
 {
 	m_type = mpLAYER_INFO;
 	SetName(name);

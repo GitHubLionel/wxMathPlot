@@ -490,7 +490,7 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
 		/** Set layer name
 		 @param name Name, will be copied to internal class member
 		 */
-		void SetName(wxString name)
+		void SetName(const wxString &name)
 		{
 			m_name = name;
 		}
@@ -498,7 +498,7 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
 		/** Get layer name.
 		 @return Name
 		 */
-		wxString GetName() const
+		const wxString& GetName() const
 		{
 			return m_name;
 		}
@@ -506,7 +506,7 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
 		/** Set layer font
 		 @param font Font, will be copied to internal class member
 		 */
-		void SetFont(wxFont font)
+		void SetFont(const wxFont &font)
 		{
 			m_font = font;
 		}
@@ -522,7 +522,7 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
 		/** Set layer font foreground colour
 		 @param colour
 		 */
-		void SetFontColour(wxColour colour)
+		void SetFontColour(const wxColour &colour)
 		{
 			m_fontcolour = colour;
 		}
@@ -538,7 +538,7 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
 		/** Set layer pen
 		 @param pen Pen, will be copied to internal class member
 		 */
-		void SetPen(wxPen pen)
+		void SetPen(const wxPen &pen)
 		{
 			m_pen = pen;
 		}
@@ -549,6 +549,20 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
 		const wxPen& GetPen() const
 		{
 			return m_pen;
+		}
+
+		/** Set layer brush
+		 @param brush brush, will be copied to internal class member	*/
+		void SetBrush(const wxBrush &brush)
+		{
+			m_brush = brush;
+		}
+
+		/** Get brush set for this layer.
+		 @return brush. */
+		const wxBrush& GetBrush() const
+		{
+			return m_brush;
 		}
 
 		/** Set the 'continuity' property of the layer (true: draws a continuous line, false: draws separate points (default)).
@@ -590,7 +604,7 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
 
 		/** Get Draw mode: inside or outside margins.
 		 @return The draw mode */
-		bool GetDrawOutsideMargins()
+		bool GetDrawOutsideMargins() const
 		{
 			return m_drawOutsideMargins;
 		}
@@ -602,7 +616,7 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
 
 		/** Get layer type: a Layer can be of different types: plot lines, axis, info boxes, etc, this method returns the right value.
 		 @return An integer indicating layer type */
-		mpLayerType GetLayerType()
+		mpLayerType GetLayerType() const
 		{
 			return m_type;
 		}
@@ -635,20 +649,6 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
 			m_tractable = track;
 		}
 
-		/** Set layer brush
-		 @param brush brush, will be copied to internal class member	*/
-		void SetBrush(wxBrush brush)
-		{
-			m_brush = brush;
-		}
-
-		/** Get brush set for this layer.
-		 @return brush. */
-		const wxBrush& GetBrush() const
-		{
-			return m_brush;
-		}
-
 		/** Set X/Y alignment.
 		 @param align alignment */
 		void SetAlign(int align)
@@ -658,7 +658,7 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
 
 		/** Get X/Y alignment.
 		 @return align alignment */
-		int GetAlign()
+		int GetAlign() const
 		{
 			return m_flags;
 		}
@@ -672,7 +672,7 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
 
 		/** Get symbol.
 		 @return symbol */
-		mpSymbol GetSymbol()
+		mpSymbol GetSymbol() const
 		{
 			return m_symbol;
 		}
@@ -687,7 +687,7 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
 
 		/** Get symbol size.
 		 @return size  */
-		int GetSymbolSize()
+		int GetSymbolSize() const
 		{
 			return m_symbolSize;
 		}
@@ -701,7 +701,7 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
 
 		/** Get step for plot.
 		 @return step*/
-		unsigned int GetStep()
+		unsigned int GetStep() const
 		{
 			return m_step;
 		}
@@ -715,7 +715,7 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
 
 		/** Get CanDelete for plot.
 		 @return CanDelete*/
-		bool GetCanDelete(void)
+		bool GetCanDelete(void) const
 		{
 			return m_CanDelete;
 		}
@@ -770,7 +770,7 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLayer: public mpLayer
 		 @param rect Sets the initial size rectangle of the layer.
 		 @param brush pointer to a fill brush. Default is transparent
 		 @param location to place in the margin or free */
-		mpInfoLayer(wxRect rect, const wxBrush *brush = wxTRANSPARENT_BRUSH, mpLocation location = mpMarginNone);
+		mpInfoLayer(wxRect rect, const wxBrush &brush = *wxTRANSPARENT_BRUSH, mpLocation location = mpMarginNone);
 
 		/** Destructor */
 		virtual ~mpInfoLayer();
@@ -825,7 +825,7 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLayer: public mpLayer
 
 		/** Returns the current rectangle coordinates.
 		 @return The info layer rectangle */
-		const wxRect& GetRectangle()
+		const wxRect& GetRectangle() const
 		{
 			return m_dim;
 		}
@@ -839,7 +839,7 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLayer: public mpLayer
 
 		/** Returns the location of the box
 		 @return location */
-		mpLocation GetLocation()
+		mpLocation GetLocation() const
 		{
 			return m_location;
 		}
@@ -874,7 +874,7 @@ class WXDLLIMPEXP_MATHPLOT mpInfoCoords: public mpInfoLayer
 		 @param rect The initial bounding rectangle.
 		 @param brush The wxBrush to be used for box background: default is transparent
 		 @param location to place in the margin or free */
-		mpInfoCoords(wxRect rect, const wxBrush *brush = wxTRANSPARENT_BRUSH, mpLocation location = mpMarginNone);
+		mpInfoCoords(wxRect rect, const wxBrush &brush = *wxTRANSPARENT_BRUSH, mpLocation location = mpMarginNone);
 
 		/** Default destructor */
 		~mpInfoCoords();
@@ -905,7 +905,7 @@ class WXDLLIMPEXP_MATHPLOT mpInfoCoords: public mpInfoLayer
 		/** Specifies that this is an InfoCoords box layer.
 		 @return always \a TRUE
 		 @sa mpLayer::IsInfoCoords */
-		bool IsInfo(mpInfoType *info)
+		virtual bool IsInfo(mpInfoType *info)
 		{
 			*info = mpiCoords;
 			return true;
@@ -920,13 +920,14 @@ class WXDLLIMPEXP_MATHPLOT mpInfoCoords: public mpInfoLayer
 
 		/** Return if we show the series coordinates
 		 @return bool */
-		bool IsSeriesCoord()
+		bool IsSeriesCoord() const
 		{
 			return m_series_coord;
 		}
+
 		/** Pen series for tractable
 		 */
-		void SetPenSeries(wxPen &pen)
+		void SetPenSeries(const wxPen &pen)
 		{
 			m_penSeries = pen;
 		}
@@ -960,7 +961,7 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLegend: public mpInfoLayer
 		 @param brush The wxBrush to be used for box background: default is transparent
 		 @param location to place in the margin or free
 		 @sa mpInfoLayer::mpInfoLayer */
-		mpInfoLegend(wxRect rect, const wxBrush *brush = wxTRANSPARENT_BRUSH, mpLocation location = mpMarginNone);
+		mpInfoLegend(wxRect rect, const wxBrush &brush = *wxTRANSPARENT_BRUSH, mpLocation location = mpMarginNone);
 
 		/**  Default destructor */
 		~mpInfoLegend();
@@ -979,7 +980,7 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLegend: public mpInfoLayer
 			m_need_update = true;
 		}
 
-		mpLegendStyle GetItemMode()
+		mpLegendStyle GetItemMode() const
 		{
 			return m_item_mode;
 		}
@@ -990,7 +991,7 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLegend: public mpInfoLayer
 			m_need_update = true;
 		}
 
-		mpLegendDirection GetItemDirection()
+		mpLegendDirection GetItemDirection() const
 		{
 			return m_item_direction;
 		}
@@ -1003,7 +1004,7 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLegend: public mpInfoLayer
 		/** Specifies that this is an InfoLegend box layer.
 		 @return always \a TRUE
 		 @sa mpLayer::IsInfoLegend */
-		bool IsInfo(mpInfoType *info)
+		virtual bool IsInfo(mpInfoType *info)
 		{
 			*info = mpiLegend;
 			return true;
@@ -1041,7 +1042,7 @@ class WXDLLIMPEXP_MATHPLOT mpFX: public mpLayer
 		/** @param name  Label
 		 @param flags Label alignment, pass one of #mpALIGN_RIGHT, #mpALIGN_CENTER, #mpALIGN_LEFT.
 		 */
-		mpFX(wxString name = wxEmptyString, int flags = mpALIGN_RIGHT);
+		mpFX(const wxString &name = wxEmptyString, int flags = mpALIGN_RIGHT);
 
 		/** Get function value for argument.
 		 Override this function in your implementation.
@@ -1059,7 +1060,7 @@ class WXDLLIMPEXP_MATHPLOT mpFX: public mpLayer
 		/** Specifies that this is a FX layer.
 		 @return always \a TRUE
 		 @sa mpLayer::IsFonction*/
-		bool IsFunction(mpFunctionType *function)
+		virtual bool IsFunction(mpFunctionType *function)
 		{
 			*function = mpfFX;
 			return true;
@@ -1081,7 +1082,7 @@ class WXDLLIMPEXP_MATHPLOT mpFY: public mpLayer
 		/** @param name  Label
 		 @param flags Label alignment, pass one of #mpALIGN_BOTTOM, #mpALIGN_CENTER, #mpALIGN_TOP.
 		 */
-		mpFY(wxString name = wxEmptyString, int flags = mpALIGN_TOP);
+		mpFY(const wxString &name = wxEmptyString, int flags = mpALIGN_TOP);
 
 		/** Get function value for argument.
 		 Override this function in your implementation.
@@ -1099,7 +1100,7 @@ class WXDLLIMPEXP_MATHPLOT mpFY: public mpLayer
 		/** Specifies that this is a FY layer.
 		 @return always \a TRUE
 		 @sa mpLayer::IsFunction */
-		bool IsFunction(mpFunctionType *function)
+		virtual bool IsFunction(mpFunctionType *function)
 		{
 			*function = mpfFY;
 			return true;
@@ -1122,7 +1123,7 @@ class WXDLLIMPEXP_MATHPLOT mpFXY: public mpLayer
 		/** @param name  Label
 		 @param flags Label alignment, pass one of #mpALIGN_NE, #mpALIGN_NW, #mpALIGN_SW, #mpALIGN_SE.
 		 */
-		mpFXY(wxString name = wxEmptyString, int flags = mpALIGN_NE, bool viewAsBar = false);
+		mpFXY(const wxString &name = wxEmptyString, int flags = mpALIGN_NE, bool viewAsBar = false);
 
 		/** Rewind value enumeration with mpFXY::GetNextXY.
 		 Override this function in your implementation.
@@ -1159,7 +1160,7 @@ class WXDLLIMPEXP_MATHPLOT mpFXY: public mpLayer
 		/**
 		 * return the width of the bar
 		 */
-		int GetBarWidth(void)
+		int GetBarWidth(void) const
 		{
 			return m_BarWidth;
 		}
@@ -1204,7 +1205,7 @@ class WXDLLIMPEXP_MATHPLOT mpProfile: public mpLayer
 		/** @param name  Label
 		 @param flags Label alignment, pass one of #mpALIGN_BOTTOM, #mpALIGN_CENTER, #mpALIGN_TOP.
 		 */
-		mpProfile(wxString name = wxEmptyString, int flags = mpALIGN_TOP);
+		mpProfile(const wxString &name = wxEmptyString, int flags = mpALIGN_TOP);
 
 		/** Get function value for argument.
 		 Override this function in your implementation.
@@ -1242,7 +1243,7 @@ class WXDLLIMPEXP_MATHPLOT mpScale: public mpLayer
 		 @param name Label to plot by the ruler
 		 @param flags Set the position of the scale with respect to the window.
 		 @param grids Show grid or not. Give false (default) for not drawing the grid. */
-		mpScale(wxString name, int flags, bool grids);
+		mpScale(const wxString &name, int flags, bool grids);
 
 		/** Check whether this layer has a bounding box.
 		 This implementation returns \a FALSE thus making the ruler invisible
@@ -1261,7 +1262,7 @@ class WXDLLIMPEXP_MATHPLOT mpScale: public mpLayer
 
 		/** Get axis ticks
 		 @return true if ticks are shown */
-		bool GetShowTicks()
+		bool GetShowTicks() const
 		{
 			return m_ticks;
 		}
@@ -1275,21 +1276,21 @@ class WXDLLIMPEXP_MATHPLOT mpScale: public mpLayer
 
 		/** Get axis grids
 		 @return true if grids are shown */
-		bool GetShowGrids()
+		bool GetShowGrids() const
 		{
 			return m_grids;
 		}
 
-		/** Set X axis Label format (used for mpX_NORMAL draw mode).
+		/** Set axis Label format (used for mpX_NORMAL draw mode).
 		 @param format The format string */
 		void SetLabelFormat(const wxString &format)
 		{
 			m_labelFormat = format;
 		}
 
-		/** Get X axis Label format (used for mpX_NORMAL draw mode).
+		/** Get axis Label format (used for mpX_NORMAL draw mode).
 		 @return The format string */
-		const wxString& GetLabelFormat()
+		const wxString& GetLabelFormat() const
 		{
 			return m_labelFormat;
 		}
@@ -1297,7 +1298,7 @@ class WXDLLIMPEXP_MATHPLOT mpScale: public mpLayer
 		/** Set grid pen
 		 @param pen Pen, will be copied to internal class member
 		 */
-		void SetGridPen(wxPen pen)
+		void SetGridPen(const wxPen &pen)
 		{
 			m_gridpen = pen;
 		}
@@ -1321,7 +1322,7 @@ class WXDLLIMPEXP_MATHPLOT mpScale: public mpLayer
 		/** Get auto property for this axis.
 		 @return auto
 		 */
-		bool GetAuto()
+		bool GetAuto() const
 		{
 			return m_auto;
 		}
@@ -1331,7 +1332,7 @@ class WXDLLIMPEXP_MATHPLOT mpScale: public mpLayer
 			m_min = min;
 		}
 
-		double GetMinScale()
+		double GetMinScale() const
 		{
 			return m_min;
 		}
@@ -1341,7 +1342,7 @@ class WXDLLIMPEXP_MATHPLOT mpScale: public mpLayer
 			m_max = max;
 		}
 
-		double GetMaxScale()
+		double GetMaxScale() const
 		{
 			return m_max;
 		}
@@ -1384,7 +1385,7 @@ class WXDLLIMPEXP_MATHPLOT mpScaleX: public mpScale
 		 @param flags Set the position of the scale with respect to the window.
 		 @param grids Show grid or not. Give false (default) for not drawing the grid.
 		 @param type mpX_NORMAL for normal labels, mpX_TIME for time axis in hours, minutes, seconds. */
-		mpScaleX(wxString name = wxT("X"), int flags = mpALIGN_CENTERX, bool grids = false, unsigned int type = mpX_NORMAL) :
+		mpScaleX(const wxString &name = wxT("X"), int flags = mpALIGN_CENTERX, bool grids = false, unsigned int type = mpX_NORMAL) :
 				mpScale(name, flags, grids)
 		{
 			m_labelType = type;
@@ -1397,7 +1398,7 @@ class WXDLLIMPEXP_MATHPLOT mpScaleX: public mpScale
 
 		/** Get X axis label view mode.
 		 @return mpX_NORMAL for normal labels, mpX_TIME for time axis in hours, minutes, seconds. */
-		unsigned int GetLabelMode()
+		unsigned int GetLabelMode() const
 		{
 			return m_labelType;
 		}
@@ -1413,7 +1414,7 @@ class WXDLLIMPEXP_MATHPLOT mpScaleX: public mpScale
 		/** Specifies that this is a ScaleX layer.
 		 @return always \a TRUE
 		 @sa mpLayer::IsScale */
-		bool IsScale(mpScaleType *scale)
+		virtual bool IsScale(mpScaleType *scale)
 		{
 			*scale = mpsScaleX;
 			return true;
@@ -1423,7 +1424,7 @@ class WXDLLIMPEXP_MATHPLOT mpScaleX: public mpScale
 		unsigned int m_labelType;  //!< Select labels mode: mpX_NORMAL for normal labels, mpX_TIME for time axis in hours, minutes, seconds
 		unsigned int m_timeConv;   //!< Selects if time has to be converted to local time or not.
 
-		wxString FormatValue(wxString &fmt, double n);
+		wxString FormatValue(const wxString &fmt, double n);
 
 	DECLARE_DYNAMIC_CLASS(mpScaleX)
 };
@@ -1440,7 +1441,7 @@ class WXDLLIMPEXP_MATHPLOT mpScaleY: public mpScale
 		 @param name Label to plot by the ruler
 		 @param flags Set the position of the scale with respect to the window.
 		 @param grids Show grid or not. Give false (default) for not drawing the grid. */
-		mpScaleY(wxString name = wxT("Y"), int flags = mpALIGN_CENTERY, bool grids = false) :
+		mpScaleY(const wxString &name = wxT("Y"), int flags = mpALIGN_CENTERY, bool grids = false) :
 				mpScale(name, flags, grids)
 		{
 			;
@@ -1453,11 +1454,12 @@ class WXDLLIMPEXP_MATHPLOT mpScaleY: public mpScale
 		/** Specifies that this is a ScaleX layer.
 		 @return always \a TRUE
 		 @sa mpLayer::IsScale */
-		bool IsScale(mpScaleType *scale)
+		virtual bool IsScale(mpScaleType *scale)
 		{
 			*scale = mpsScaleY;
 			return true;
 		}
+
 	protected:
 
 	DECLARE_DYNAMIC_CLASS(mpScaleY)
@@ -1860,7 +1862,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 		/** Returns the left-border layer coordinate that the user wants the mpWindow to show (it may be not exactly the actual shown coordinate in the case of locked aspect ratio).
 		 * @sa Fit
 		 */
-		double GetDesiredXmin()
+		double GetDesiredXmin() const
 		{
 			return m_desired.Xmin;
 		}
@@ -1868,7 +1870,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 		/** Returns the right-border layer coordinate that the user wants the mpWindow to show (it may be not exactly the actual shown coordinate in the case of locked aspect ratio).
 		 * @sa Fit
 		 */
-		double GetDesiredXmax()
+		double GetDesiredXmax() const
 		{
 			return m_desired.Xmax;
 		}
@@ -1877,7 +1879,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 		 * not exactly the actual shown coordinate in the case of locked aspect ratio).
 		 * @sa Fit
 		 */
-		double GetDesiredYmin()
+		double GetDesiredYmin() const
 		{
 			return m_desired.Ymin;
 		}
@@ -1886,7 +1888,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 		 * not exactly the actual shown coordinate in the case of locked aspect ratio).
 		 * @sa Fit
 		 */
-		double GetDesiredYmax()
+		double GetDesiredYmax() const
 		{
 			return m_desired.Ymax;
 		}
@@ -1901,7 +1903,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 
 		/** Get scrollbars status.
 		 @return true if scrollbars are visible */
-		bool GetMPScrollbars()
+		bool GetMPScrollbars() const
 		{
 			return m_enableScrollBars;
 		}
@@ -1946,7 +1948,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 		}
 
 		/** Get the top margin. @param top Top Margin */
-		int GetMarginTop()
+		int GetMarginTop() const
 		{
 			return m_margin.top;
 		}
@@ -1962,7 +1964,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 		}
 
 		/** Get the right margin. @param right Right Margin */
-		int GetMarginRight()
+		int GetMarginRight() const
 		{
 			return m_margin.right;
 		}
@@ -1978,7 +1980,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 		}
 
 		/** Get the bottom margin. @param bottom Bottom Margin */
-		int GetMarginBottom()
+		int GetMarginBottom() const
 		{
 			return m_margin.bottom;
 		}
@@ -1994,19 +1996,19 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 		}
 
 		/** Get the left margin. @param left Left Margin */
-		int GetMarginLeft()
+		int GetMarginLeft() const
 		{
 			return m_margin.left;
 		}
 
 		/** Get the width of the plot. */
-		int GetPlotWidth()
+		int GetPlotWidth() const
 		{
 			return m_plotWidth;
 		}
 
 		/** Get the height of the plot. */
-		int GetPlotHeight()
+		int GetPlotHeight() const
 		{
 			return m_plotHeight;
 		}
@@ -2025,7 +2027,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 		}
 
 		/** Get the draw of the box around the plot. */
-		bool GetDrawBox()
+		bool GetDrawBox() const
 		{
 			return m_drawBox;
 		}
@@ -2063,12 +2065,12 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 
 		/** Get axes draw colour
 		 @return reference to axis colour used in theme */
-		const wxColour& GetAxesColour()
+		const wxColour& GetAxesColour() const
 		{
 			return m_axColour;
 		}
 
-		const wxColour& GetbgColour()
+		const wxColour& GetbgColour() const
 		{
 			return m_bgColour;
 		}
@@ -2220,7 +2222,7 @@ class WXDLLIMPEXP_MATHPLOT mpFXYVector: public mpFXY
 		/** @param name  Label
 		 @param flags Label alignment, pass one of #mpALIGN_NE, #mpALIGN_NW, #mpALIGN_SW, #mpALIGN_SE.
 		 */
-		mpFXYVector(wxString name = wxEmptyString, int flags = mpALIGN_NE, bool viewAsBar = false);
+		mpFXYVector(const wxString &name = wxEmptyString, int flags = mpALIGN_NE, bool viewAsBar = false);
 
 		/** destrutor
 		 */
@@ -2263,7 +2265,7 @@ class WXDLLIMPEXP_MATHPLOT mpFXYVector: public mpFXY
 
 		/** Get memory reserved for m_xs and m_ys
 		 */
-		int GetReserve()
+		int GetReserve() const
 		{
 			return m_reserveXY;
 		}
@@ -2271,7 +2273,7 @@ class WXDLLIMPEXP_MATHPLOT mpFXYVector: public mpFXY
 		/** Specifies that this is a FXYVector layer.
 		 @return always \a TRUE
 		 @sa mpLayer::IsFunction */
-		bool IsFunction(mpFunctionType *function)
+		virtual bool IsFunction(mpFunctionType *function)
 		{
 			if (m_ViewAsBar)
 				*function = mpfBar;
@@ -2318,28 +2320,28 @@ class WXDLLIMPEXP_MATHPLOT mpFXYVector: public mpFXY
 
 		/** Returns the actual minimum X data (loaded in SetData).
 		 */
-		inline double GetMinX()
+		virtual double GetMinX()
 		{
 			return m_minX;
 		}
 
 		/** Returns the actual minimum Y data (loaded in SetData).
 		 */
-		inline double GetMinY()
+		virtual double GetMinY()
 		{
 			return m_minY;
 		}
 
 		/** Returns the actual maximum X data (loaded in SetData).
 		 */
-		inline double GetMaxX()
+		virtual double GetMaxX()
 		{
 			return m_maxX;
 		}
 
 		/** Returns the actual maximum Y data (loaded in SetData).
 		 */
-		inline double GetMaxY()
+		virtual double GetMaxY()
 		{
 			return m_maxY;
 		}
@@ -2373,12 +2375,12 @@ class WXDLLIMPEXP_MATHPLOT mpText: public mpLayer
 		/** @param name text to be drawn in the plot
 		 @param offsetx holds offset for the X location in percentage (0-100)
 		 @param offsety holds offset for the Y location in percentage (0-100) */
-		mpText(wxString name, int offsetx, int offsety);
+		mpText(const wxString &name, int offsetx, int offsety);
 
 		/** @param name text to be displayed
 		 @param location in the margin
 		 */
-		mpText(wxString name, mpLocation marginLocation);
+		mpText(const wxString &name, mpLocation marginLocation);
 
 		/** Text Layer plot handler.
 		 This implementation will plot text adjusted to the visible area. */
@@ -2394,7 +2396,7 @@ class WXDLLIMPEXP_MATHPLOT mpText: public mpLayer
 		/** Specifies that this is a Text layer.
 		 @return always \a TRUE
 		 @sa mpLayer::IsText */
-		bool IsText()
+		virtual bool IsText()
 		{
 			return true;
 		}
@@ -2419,7 +2421,7 @@ class WXDLLIMPEXP_MATHPLOT mpTitle: public mpText
 
 		/** @param name text to be drawn for the title of the plot
 		 */
-		mpTitle(wxString name) :
+		mpTitle(const wxString &name) :
 				mpText(name, mpMarginTopCenter)
 		{
 			;
@@ -2428,7 +2430,7 @@ class WXDLLIMPEXP_MATHPLOT mpTitle: public mpText
 		/** Specifies that this is a Title layer.
 		 @return always \a TRUE
 		 @sa mpLayer::IsTitle */
-		bool IsTitle()
+		virtual bool IsTitle()
 		{
 			return true;
 		}
@@ -2482,7 +2484,9 @@ class WXDLLIMPEXP_MATHPLOT mpPrintout: public wxPrintout
 		mpWindow *plotWindow;
 		int stretch_factor;  // To reduce the size of plot
 
-	protected:DECLARE_DYNAMIC_CLASS(mpPrintout)
+	protected:
+
+		DECLARE_DYNAMIC_CLASS(mpPrintout)
 };
 
 //-----------------------------------------------------------------------------
@@ -2570,7 +2574,7 @@ class WXDLLIMPEXP_MATHPLOT mpMovableObject: public mpLayer
 		/** Specifies that this is a FX layer.
 		 @return always \a TRUE
 		 @sa mpLayer::IsFonction*/
-		bool IsFunction(mpFunctionType *function)
+		virtual bool IsFunction(mpFunctionType *function)
 		{
 			*function = mpfMovable;
 			return true;
