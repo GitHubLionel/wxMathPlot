@@ -701,6 +701,10 @@ void mpInfoLegend::UpdateBitmap(wxDC &dc, mpWindow &w)
 	wxBitmap *buff_bmp = new wxBitmap(w.GetScreenX(), w.GetScreenY(), dc);
 	wxMemoryDC buff_dc(&dc);
 	buff_dc.SelectObject(*buff_bmp);
+
+	buff_dc.SetFont(m_font);
+	buff_dc.SetTextForeground(m_fontcolour);
+
 	buff_dc.SetPen(*wxTRANSPARENT_PEN);
 	if (m_brush.GetStyle() == wxBRUSHSTYLE_TRANSPARENT)
 		buff_dc.SetBrush(*wxWHITE_BRUSH);

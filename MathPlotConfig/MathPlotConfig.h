@@ -60,6 +60,7 @@ class MathPlotConfigDialog: public wxDialog
         wxButton* colourButton;
         wxChoice* CurrentChoice;
         bool fontTitleChanged;
+        bool fontLegendChanged;
         bool fontAxisChanged;
         unsigned int int_top, int_bottom, int_left, int_right;
         double scale_min, scale_max;
@@ -106,6 +107,7 @@ class MathPlotConfigDialog: public wxDialog
         static const long ID_STATICTEXT25;
         static const long ID_CHOICE15;
         static const long ID_CHECKBOX9;
+        static const long ID_BUTTON12;
         static const long ID_STATICTEXT20;
         static const long ID_BUTTON9;
         static const long ID_STATICTEXT21;
@@ -178,6 +180,7 @@ class MathPlotConfigDialog: public wxDialog
         wxButton* bCoordBrushColor;
         wxButton* bDelSeries;
         wxButton* bFontAxis;
+        wxButton* bFontLegend;
         wxButton* bFontTitle;
         wxButton* bLegendBrushColor;
         wxButton* bSeriesBrushColor;
@@ -264,6 +267,7 @@ class MathPlotConfigDialog: public wxDialog
         void UpdateAxis(void);
 
         void DoApplyColour(const wxColour& colour);
+        void UpdateFont(mpLayer *layer, wxButton *button, bool get_set);
         void SetFontChildren(wxButton* p, const wxFontData& fontdata);
 
         wxBrushStyle IdToBrushStyle(int id);

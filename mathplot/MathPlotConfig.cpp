@@ -42,6 +42,7 @@ const long MathPlotConfigDialog::ID_CHOICE14 = wxNewId();
 const long MathPlotConfigDialog::ID_STATICTEXT25 = wxNewId();
 const long MathPlotConfigDialog::ID_CHOICE15 = wxNewId();
 const long MathPlotConfigDialog::ID_CHECKBOX9 = wxNewId();
+const long MathPlotConfigDialog::ID_BUTTON12 = wxNewId();
 const long MathPlotConfigDialog::ID_STATICTEXT20 = wxNewId();
 const long MathPlotConfigDialog::ID_BUTTON9 = wxNewId();
 const long MathPlotConfigDialog::ID_STATICTEXT21 = wxNewId();
@@ -218,6 +219,8 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
 	wxBoxSizer* BoxSizer12;
 	wxBoxSizer* BoxSizer13;
 	wxBoxSizer* BoxSizer14;
+	wxBoxSizer* BoxSizer15;
+	wxBoxSizer* BoxSizer16;
 	wxBoxSizer* BoxSizer1;
 	wxBoxSizer* BoxSizer3;
 	wxBoxSizer* BoxSizer4;
@@ -239,7 +242,6 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
 	wxFlexGridSizer* FlexGridSizer1;
 	wxFlexGridSizer* FlexGridSizer2;
 	wxFlexGridSizer* FlexGridSizer4;
-	wxFlexGridSizer* FlexGridSizer5;
 	wxFlexGridSizer* FlexGridSizer6;
 	wxFlexGridSizer* FlexGridSizer7;
 	wxFlexGridSizer* FlexGridSizer8;
@@ -334,7 +336,7 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
 	BoxSizer3->Fit(Panel1);
 	BoxSizer3->SetSizeHints(Panel1);
 	Panel2 = new wxPanel(nbConfig, ID_PANEL15, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL, _T("ID_PANEL15"));
-	FlexGridSizer5 = new wxFlexGridSizer(1, 2, 0, 0);
+	BoxSizer16 = new wxBoxSizer(wxHORIZONTAL);
 	FlexGridSizer6 = new wxFlexGridSizer(4, 2, 0, 0);
 	StaticText16 = new wxStaticText(Panel2, ID_STATICTEXT16, _T("Position :"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT16"));
 	FlexGridSizer6->Add(StaticText16, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
@@ -357,7 +359,11 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
 	cbLegendVisible = new wxCheckBox(Panel2, ID_CHECKBOX9, _T("Visible"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CHECKBOX9"));
 	cbLegendVisible->SetValue(false);
 	FlexGridSizer6->Add(cbLegendVisible, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
-	FlexGridSizer5->Add(FlexGridSizer6, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+	BoxSizer16->Add(FlexGridSizer6, 1, wxALL|wxALIGN_TOP, 5);
+	BoxSizer15 = new wxBoxSizer(wxVERTICAL);
+	bFontLegend = new wxButton(Panel2, ID_BUTTON12, _T("Font"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON12"));
+	bFontLegend->Disable();
+	BoxSizer15->Add(bFontLegend, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 5);
 	StaticBoxSizer5 = new wxStaticBoxSizer(wxHORIZONTAL, Panel2, _T("Brush "));
 	FlexGridSizer7 = new wxFlexGridSizer(2, 2, 0, 0);
 	StaticText20 = new wxStaticText(Panel2, ID_STATICTEXT20, _T("Color :"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT20"));
@@ -371,10 +377,11 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
 	cbLegendBrushStyle->SetSelection(0);
 	FlexGridSizer7->Add(cbLegendBrushStyle, 1, wxALL|wxEXPAND, 2);
 	StaticBoxSizer5->Add(FlexGridSizer7, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
-	FlexGridSizer5->Add(StaticBoxSizer5, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-	Panel2->SetSizer(FlexGridSizer5);
-	FlexGridSizer5->Fit(Panel2);
-	FlexGridSizer5->SetSizeHints(Panel2);
+	BoxSizer15->Add(StaticBoxSizer5, 0, wxALL|wxEXPAND, 0);
+	BoxSizer16->Add(BoxSizer15, 1, wxALL|wxALIGN_TOP, 5);
+	Panel2->SetSizer(BoxSizer16);
+	BoxSizer16->Fit(Panel2);
+	BoxSizer16->SetSizeHints(Panel2);
 	Panel3 = new wxPanel(nbConfig, ID_PANEL1, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL, _T("ID_PANEL1"));
 	BoxSizer4 = new wxBoxSizer(wxVERTICAL);
 	ChoiceAxis = new wxChoice(Panel3, ID_CHOICE7, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator, _T("ID_CHOICE7"));
@@ -590,6 +597,7 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
 	Connect(ID_BUTTON5,wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(MathPlotConfigDialog::OnbFontClick));
 	Connect(ID_BUTTON7,wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(MathPlotConfigDialog::OnbColorClick));
 	Connect(ID_BUTTON10,wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(MathPlotConfigDialog::OnbColorClick));
+	Connect(ID_BUTTON12,wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(MathPlotConfigDialog::OnbFontClick));
 	Connect(ID_BUTTON9,wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(MathPlotConfigDialog::OnbColorClick));
 	Connect(ID_CHOICE7,wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler(MathPlotConfigDialog::OnAxisSelect));
 	Connect(ID_BUTTON8,wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(MathPlotConfigDialog::OnbFontClick));
@@ -620,6 +628,7 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
 	m_plot = wxDynamicCast(parent, mpWindow);
 	CurrentScale = NULL;
 	fontTitleChanged = false;
+	fontLegendChanged = false;
 	fontAxisChanged = false;
 
 	scale_min = -1;
@@ -641,8 +650,7 @@ void MathPlotConfigDialog::Initialize()
 	{
 		edTitle->SetValue(CurrentTitle->GetName());
 		cbTitleVisible->SetValue(CurrentTitle->IsVisible());
-		bFontTitle->SetFont(CurrentTitle->GetFont());
-		bFontTitle->SetForegroundColour(CurrentTitle->GetFontColour());
+		UpdateFont(CurrentTitle, bFontTitle, true);
 		bFontTitle->Enable();
 	}
 
@@ -668,6 +676,9 @@ void MathPlotConfigDialog::Initialize()
 		// Brush config
 		bLegendBrushColor->SetBackgroundColour(CurrentLegend->GetBrush().GetColour());
 		cbLegendBrushStyle->SetSelection(BrushStyleToId(CurrentLegend->GetBrush().GetStyle()));
+
+		UpdateFont(CurrentLegend, bFontLegend, true);
+		bFontLegend->Enable();
 	}
 
 	CurrentCoords = (mpInfoCoords*) m_plot->GetLayerByClassName(_("mpInfoCoords"));
@@ -762,8 +773,28 @@ void MathPlotConfigDialog::OnbFontClick(wxCommandEvent &event)
 		SetFontChildren(fontButton, retData);
 		if (fontButton == bFontTitle)
 			fontTitleChanged = true;
+		if (fontButton == bFontLegend)
+			fontLegendChanged = true;
 		if (fontButton == bFontAxis)
 			fontAxisChanged = true;
+	}
+}
+
+/**
+ * if get_set then get font from layer and set to button
+ * else get font from button and set to layer
+ */
+void MathPlotConfigDialog::UpdateFont(mpLayer *layer, wxButton *button, bool get_set)
+{
+	if (get_set)
+	{
+		button->SetFont(layer->GetFont());
+		button->SetForegroundColour(layer->GetFontColour());
+	}
+	else
+	{
+		layer->SetFont(button->GetFont());
+		layer->SetFontColour(button->GetForegroundColour());
 	}
 }
 
@@ -831,8 +862,7 @@ void MathPlotConfigDialog::UpdateAxis(void)
 
 		cbAxisOutside->SetValue(CurrentScale->GetDrawOutsideMargins());
 
-		bFontAxis->SetFont(CurrentScale->GetFont());
-		bFontAxis->SetForegroundColour(CurrentScale->GetFontColour());
+		UpdateFont(CurrentScale, bFontAxis, true);
 		bFontAxis->Enable();
 
 		// Scale
@@ -985,8 +1015,7 @@ void MathPlotConfigDialog::OnbApplyClick(wxCommandEvent& WXUNUSED(event))
 				CurrentTitle->SetVisible(cbTitleVisible->GetValue());
 				if (fontTitleChanged)
 				{
-					CurrentTitle->SetFont(bFontTitle->GetFont());
-					CurrentTitle->SetFontColour(bFontTitle->GetForegroundColour());
+					UpdateFont(CurrentTitle, bFontTitle, false);
 					fontTitleChanged = false;
 				}
 			}
@@ -1024,6 +1053,13 @@ void MathPlotConfigDialog::OnbApplyClick(wxCommandEvent& WXUNUSED(event))
 				wxBrush brush(bLegendBrushColor->GetBackgroundColour(), IdToBrushStyle(cbLegendBrushStyle->GetSelection()));
 				CurrentLegend->SetBrush(brush);
 
+				if (fontLegendChanged)
+				{
+					UpdateFont(CurrentLegend, bFontLegend, false);
+					fontLegendChanged = false;
+				}
+
+				CurrentLegend->SetNeedUpdate();
 				m_plot->UpdateAll();
 			}
 			break;
@@ -1058,8 +1094,7 @@ void MathPlotConfigDialog::OnbApplyClick(wxCommandEvent& WXUNUSED(event))
 
 				if (fontAxisChanged)
 				{
-					CurrentScale->SetFont(bFontAxis->GetFont());
-					CurrentScale->SetFontColour(bFontAxis->GetForegroundColour());
+					UpdateFont(CurrentScale, bFontAxis, false);
 					fontAxisChanged = false;
 				}
 
