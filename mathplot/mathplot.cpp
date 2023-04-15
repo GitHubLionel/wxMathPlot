@@ -670,6 +670,7 @@ IMPLEMENT_DYNAMIC_CLASS(mpInfoLegend, mpInfoLayer)
 mpInfoLegend::mpInfoLegend() :
 		mpInfoLayer()
 {
+	SetBrush(*wxWHITE_BRUSH);
 	m_item_mode = mpLegendLine;
 	m_item_direction = mpVertical;
 	m_location = mpMarginBottomCenter;
@@ -1289,9 +1290,6 @@ void mpProfile::DoPlot(wxDC &dc, mpWindow &w)
 
 	if (!m_name.IsEmpty())
 	{
-		dc.SetFont(m_font);
-		dc.SetTextForeground(m_fontcolour);
-
 		wxCoord tx, ty;
 		dc.GetTextExtent(m_name, &tx, &ty);
 
@@ -2740,10 +2738,20 @@ void mpWindow::OnPaint(wxPaintEvent &WXUNUSED(event))
 
 	// Draw all the layers:
 	m_repainting = true;
-	wxLayerList::iterator li;
-	for (li = m_layers.begin(); li != m_layers.end(); li++)
+
+	mpFunctionType function;
+	mpScaleType scale;
+	// First draw scale and series
+	for (wxLayerList::iterator li = m_layers.begin(); li != m_layers.end(); li++)
 	{
-		(*li)->Plot(*trgDc, *this);
+		if ((*li)->IsScale(&scale) || (*li)->IsFunction(&function))
+		  (*li)->Plot(*trgDc, *this);
+	}
+	// Second draw all others elements (so there are always front)
+	for (wxLayerList::iterator li = m_layers.begin(); li != m_layers.end(); li++)
+	{
+		if (!((*li)->IsScale(&scale) || (*li)->IsFunction(&function)))
+		  (*li)->Plot(*trgDc, *this);
 	}
 
 	// If doublebuffer, draw now to the window:
@@ -3133,8 +3141,7 @@ mpLayer* mpWindow::GetLayerByClassName(const wxString &name)
 mpInfoLayer* mpWindow::IsInsideInfoLayer(wxPoint &point)
 {
 	mpInfoType info;
-	wxLayerList::iterator li;
-	for (li = m_layers.begin(); li != m_layers.end(); li++)
+	for (wxLayerList::iterator li = m_layers.begin(); li != m_layers.end(); li++)
 	{
 #ifdef MATHPLOT_DO_LOGGING
 		wxLogMessage(wxT("mpWindow::IsInsideInfoLayer() examinining layer = %p"), (*li));
@@ -3640,72 +3647,72 @@ mpText::mpText(const wxString &name, mpLocation marginLocation)
  */
 void mpText::DoPlot(wxDC &dc, mpWindow &w)
 {
+	wxCoord px = 0, py = 0;
 	wxCoord tw = 0, th = 0;
 	dc.GetTextExtent(GetName(), &tw, &th);
 
-	int px = 0, py = 0;
-	if (m_location == mpMarginNone)
+	switch (m_location)
 	{
-		px = m_offsetx * w.GetPlotWidth() / 100;
-		py = m_offsety * w.GetPlotHeight() / 100;
-	}
-	else
-	{
-		switch (m_location)
+		case mpMarginNone:
 		{
-			case mpMarginLeftCenter:
-			{
-				px = (w.GetMarginLeft() - tw) / 2;
-				py = (w.GetScreenY() - th) / 2;
-				break;
-			}
-			case mpMarginTopLeft:
-			{
-				px = MARGIN_LEFT_OFFSET;
-				py = (w.GetMarginTop() - th) / 2;
-				break;
-			}
-			case mpMarginTopCenter:
-			{
-				px = (w.GetScreenX() - tw) / 2;
-				py = (w.GetMarginTop() - th) / 2;
-				break;
-			}
-			case mpMarginTopRight:
-			{
-				px = w.GetScreenX() - tw - MARGIN_BOTTOM_OFFSET;
-				py = (w.GetMarginTop() - th) / 2;
-				break;
-			}
-			case mpMarginRightCenter:
-			{
-				px = w.GetScreenX() - (w.GetMarginRight() + tw) / 2;
-				py = (w.GetScreenY() - th) / 2;
-				break;
-			}
-			case mpMarginBottomLeft:
-			{
-				px = MARGIN_LEFT_OFFSET;
-				py = w.GetScreenY() - (w.GetMarginBottom() + th) / 2;
-				break;
-			}
-			case mpMarginBottomCenter:
-			{
-				px = (w.GetScreenX() - tw) / 2;
-				py = w.GetScreenY() - (w.GetMarginBottom() + th) / 2;
-				break;
-			}
-			case mpMarginBottomRight:
-			{
-				px = w.GetScreenX() - tw - MARGIN_BOTTOM_OFFSET;
-				py = w.GetScreenY() - (w.GetMarginBottom() + th) / 2;
-				break;
-			}
-			default:
-				;
+			px = m_offsetx * w.GetPlotWidth() / 100;
+			py = m_offsety * w.GetPlotHeight() / 100;
+			break;
 		}
+		case mpMarginLeftCenter:
+		{
+			px = (w.GetMarginLeft() - tw) / 2;
+			py = (w.GetScreenY() - th) / 2;
+			break;
+		}
+		case mpMarginTopLeft:
+		{
+			px = MARGIN_LEFT_OFFSET;
+			py = (w.GetMarginTop() - th) / 2;
+			break;
+		}
+		case mpMarginTopCenter:
+		{
+			px = (w.GetScreenX() - tw) / 2;
+			py = (w.GetMarginTop() - th) / 2;
+			break;
+		}
+		case mpMarginTopRight:
+		{
+			px = w.GetScreenX() - tw - MARGIN_BOTTOM_OFFSET;
+			py = (w.GetMarginTop() - th) / 2;
+			break;
+		}
+		case mpMarginRightCenter:
+		{
+			px = w.GetScreenX() - (w.GetMarginRight() + tw) / 2;
+			py = (w.GetScreenY() - th) / 2;
+			break;
+		}
+		case mpMarginBottomLeft:
+		{
+			px = MARGIN_LEFT_OFFSET;
+			py = w.GetScreenY() - (w.GetMarginBottom() + th) / 2;
+			break;
+		}
+		case mpMarginBottomCenter:
+		{
+			px = (w.GetScreenX() - tw) / 2;
+			py = w.GetScreenY() - (w.GetMarginBottom() + th) / 2;
+			break;
+		}
+		case mpMarginBottomRight:
+		{
+			px = w.GetScreenX() - tw - MARGIN_BOTTOM_OFFSET;
+			py = w.GetScreenY() - (w.GetMarginBottom() + th) / 2;
+			break;
+		}
+		default:
+			;
 	}
 
+	// Erase background of text with current brush and pen
+	dc.DrawRectangle(px - 2, py - 2, tw + 4, th + 4);
 	dc.DrawText(GetName(), px, py);
 }
 
@@ -3718,6 +3725,8 @@ IMPLEMENT_DYNAMIC_CLASS(mpTitle, mpText)
 mpTitle::mpTitle()
 {
 	m_location = mpMarginTopCenter;
+	SetPen(*wxWHITE_PEN);
+	SetBrush(*wxWHITE_BRUSH);
 }
 
 //-----------------------------------------------------------------------------

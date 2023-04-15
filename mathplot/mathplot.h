@@ -231,7 +231,7 @@ typedef enum __mp_Location_Type
 	mpMarginBottomCenter,
 	mpMarginBottomRight,
 	mpMarginNone,
-	mpCursor
+	mpCursor // only for mpInfoCoords
 } mpLocation;
 
 // Alignment for X axis
@@ -961,7 +961,7 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLegend: public mpInfoLayer
 		 @param brush The wxBrush to be used for box background: default is transparent
 		 @param location to place in the margin or free
 		 @sa mpInfoLayer::mpInfoLayer */
-		mpInfoLegend(wxRect rect, const wxBrush &brush = *wxTRANSPARENT_BRUSH, mpLocation location = mpMarginNone);
+		mpInfoLegend(wxRect rect, const wxBrush &brush = *wxWHITE_BRUSH, mpLocation location = mpMarginNone);
 
 		/**  Default destructor */
 		~mpInfoLegend();
@@ -2401,6 +2401,36 @@ class WXDLLIMPEXP_MATHPLOT mpText: public mpLayer
 			return true;
 		}
 
+		/** Set the location of the box
+		 */
+		void SetLocation(mpLocation location)
+		{
+			m_location = location;
+		}
+
+		/** Returns the location of the box
+		 @return location */
+		mpLocation GetLocation() const
+		{
+			return m_location;
+		}
+
+		/** Set offset
+		 */
+		void SetOffset(int offX, int offY)
+		{
+			m_offsetx = offX;
+			m_offsety = offY;
+		}
+
+		/** Get the offset
+		 @return void */
+		void GetOffset(int *offX, int *offY)
+		{
+			*offX = m_offsetx;
+			*offY = m_offsety;
+		}
+
 	protected:
 		int m_offsetx;  //!< Holds offset for X in percentage
 		int m_offsety;  //!< Holds offset for Y in percentage
@@ -2424,7 +2454,8 @@ class WXDLLIMPEXP_MATHPLOT mpTitle: public mpText
 		mpTitle(const wxString &name) :
 				mpText(name, mpMarginTopCenter)
 		{
-			;
+			SetPen(*wxWHITE_PEN);
+			SetBrush(*wxWHITE_BRUSH);
 		}
 
 		/** Specifies that this is a Title layer.
