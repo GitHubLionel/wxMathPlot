@@ -468,7 +468,7 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
 
 		 @param dc Device context to plot to.
 		 @param w  View to plot. The visible area can be retrieved from this object.
-		 @sa mpWindow::p2x,mpWindow::p2y,mpWindow::x2p,mpWindow::y2p
+		 @sa mpWindow::p2x, mpWindow::p2y, mpWindow::x2p, mpWindow::y2p
 		 */
 		void Plot(wxDC &dc, mpWindow &w);
 
@@ -1051,6 +1051,11 @@ class WXDLLIMPEXP_MATHPLOT mpFX: public mpLayer
 		 */
 		virtual double GetY(double x) = 0;
 
+		/**
+		 * Get function value with log test
+		 */
+		double DoGetY(double x);
+
 		/** Layer plot handler.
 		 This implementation will plot the function in the visible area and
 		 put a label according to the aligment specified.
@@ -1090,6 +1095,11 @@ class WXDLLIMPEXP_MATHPLOT mpFY: public mpLayer
 		 @return Function value
 		 */
 		virtual double GetX(double y) = 0;
+
+		/**
+		 * Get function value with log test
+		 */
+		double DoGetX(double y);
 
 		/** Layer plot handler.
 		 This implementation will plot the function in the visible area and
@@ -1135,7 +1145,12 @@ class WXDLLIMPEXP_MATHPLOT mpFXY: public mpLayer
 		 @param x Returns X value
 		 @param y Returns Y value
 		 */
-		virtual bool GetNextXY(double &x, double &y) = 0;
+		virtual bool GetNextXY(double *x, double *y) = 0;
+
+		/**
+		 * Get function value with log test
+		 */
+		bool DoGetNextXY(double *x, double *y);
 
 		/** Layer plot handler.
 		 This implementation will plot the locus in the visible area and
@@ -1347,6 +1362,9 @@ class WXDLLIMPEXP_MATHPLOT mpScale: public mpLayer
 			return m_max;
 		}
 
+		virtual bool IsLogAxis() = 0;
+		virtual void SetLogAxis(bool log) = 0;
+
 	protected:
 		wxPen m_gridpen;         //!< Grid's pen. Default Colour = LIGHT_GREY, width = 1, style = wxPENSTYLE_DOT
 		bool m_ticks;            //!< Flag to show ticks. Default true
@@ -1420,6 +1438,12 @@ class WXDLLIMPEXP_MATHPLOT mpScaleX: public mpScale
 			return true;
 		}
 
+		/**
+		 * Logarithmic X axis
+		 */
+		virtual bool IsLogAxis();
+		virtual void SetLogAxis(bool log);
+
 	protected:
 		unsigned int m_labelType;  //!< Select labels mode: mpX_NORMAL for normal labels, mpX_TIME for time axis in hours, minutes, seconds
 		unsigned int m_timeConv;   //!< Selects if time has to be converted to local time or not.
@@ -1430,9 +1454,10 @@ class WXDLLIMPEXP_MATHPLOT mpScaleX: public mpScale
 };
 
 /** Plot layer implementing a y-scale ruler.
- If align is set to mpALIGN_CENTER, the ruler is fixed at X=0 in the coordinate system. If the align is set to mpALIGN_TOP or mpALIGN_BOTTOM, the axis is always drawn respectively at top or bottom of the window. A label is plotted at
- the top-right hand of the ruler. The scale numbering automatically
- adjusts to view and zoom factor.
+ If align is set to mpALIGN_CENTER, the ruler is fixed at X=0 in the coordinate system.
+ If the align is set to mpALIGN_TOP or mpALIGN_BOTTOM, the axis is always drawn respectively at
+ top or bottom of the window. A label is plotted at the top-right hand of the ruler.
+ The scale numbering automatically adjusts to view and zoom factor.
  */
 class WXDLLIMPEXP_MATHPLOT mpScaleY: public mpScale
 {
@@ -1451,7 +1476,7 @@ class WXDLLIMPEXP_MATHPLOT mpScaleY: public mpScale
 		 This implementation will plot the ruler adjusted to the visible area. */
 		virtual void DoPlot(wxDC &dc, mpWindow &w);
 
-		/** Specifies that this is a ScaleX layer.
+		/** Specifies that this is a ScaleY layer.
 		 @return always \a TRUE
 		 @sa mpLayer::IsScale */
 		virtual bool IsScale(mpScaleType *scale)
@@ -1459,6 +1484,12 @@ class WXDLLIMPEXP_MATHPLOT mpScaleY: public mpScale
 			*scale = mpsScaleY;
 			return true;
 		}
+
+		/**
+		 * Logarithmic Y axis
+		 */
+		virtual bool IsLogAxis();
+		virtual void SetLogAxis(bool log);
 
 	protected:
 
@@ -1558,6 +1589,13 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 		 */
 		void DelAllLayers(bool alsoDeleteObject, bool refreshDisplay = true);
 
+		/** Remove all plot layers.
+		 @param alsoDeleteObject If set to true, the mpLayer objects will be also "deleted", not just removed from the internal list.
+		 @param func Select type of plot
+		 @param refreshDisplay States whether to refresh the display (UpdateAll) after removing the layers.
+		 */
+		void DelAllPlot(bool alsoDeleteObject, mpFunctionType func = mpfAllType, bool refreshDisplay = true);
+
 		/*! Get the layer in list position indicated.
 		 N.B. You <i>must</i> know the index of the layer inside the list!
 		 @param position position of the layer in the layers list
@@ -1579,9 +1617,9 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 		mpFXYVector* GetXYSeries(unsigned int n, const wxString &name = _T("Serie :"), bool create = true);
 
 		/*!
-		 * Search the point of the layer nearest a point
+		 * Search the point of the layer plot nearest a point
 		 */
-		mpLayer *GetClosestLayer(wxCoord ix, wxCoord iy, double *xnear, double *ynear);
+		mpLayer *GetClosestPlot(wxCoord ix, wxCoord iy, double *xnear, double *ynear);
 
 		/*! Get the layer by its name (case sensitive).
 		 @param name The name of the layer to retrieve
@@ -1594,6 +1632,16 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 		 @return A pointer to the mpLayer object, or NULL if not found.
 		 */
 		mpLayer* GetLayerByClassName(const wxString &name);
+
+		/*! Get scale X layer (X axis).
+		 @return A pointer to the mpScaleX object, or NULL if not found.
+		 */
+		mpScaleX* GetLayerXAxis();
+
+		/*! Get scale Y layer (Y axis).
+		 @return A pointer to the mpScaleY object, or NULL if not found.
+		 */
+		mpScaleY* GetLayerYAxis();
 
 		/** Set current view's X scale and refresh display.
 		 @param scaleX New scale, must not be 0.
@@ -1630,6 +1678,11 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 		{
 			return m_scaleY;
 		} // Schaling's method: maybe another method exists with the same name
+
+		/**
+		 * Update bound for mpFX and mpFY when axis is scaled
+		 */
+		void SetBound();
 
 		/** Get plot bound.
 		 @return Bound
@@ -1726,32 +1779,36 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 			UpdateAll();
 		}
 
-		/** Converts mpWindow (screen) pixel coordinates into graph (floating point) coordinates, using current mpWindow position and scale.
+		/** Converts mpWindow (screen) pixel coordinates into graph (floating point) coordinates,
+		 * using current mpWindow position and scale.
 		 * @sa p2y,x2p,y2p */
 		inline double p2x(const wxCoord pixelCoordX)
 		{
 			return m_posX + pixelCoordX/m_scaleX;
 		}
 
-		/** Converts mpWindow (screen) pixel coordinates into graph (floating point) coordinates, using current mpWindow position and scale.
+		/** Converts mpWindow (screen) pixel coordinates into graph (floating point) coordinates,
+		 * using current mpWindow position and scale.
 		 * @sa p2x,x2p,y2p */
 		inline double p2y(const wxCoord pixelCoordY)
 		{
 			return m_posY - pixelCoordY/m_scaleY;
 		}
 
-		/** Converts graph (floating point) coordinates into mpWindow (screen) pixel coordinates, using current mpWindow position and scale.
+		/** Converts graph (floating point) coordinates into mpWindow (screen) pixel coordinates,
+		 * using current mpWindow position and scale.
 		 * @sa p2x,p2y,y2p */
 		inline wxCoord x2p(const double x)
 		{
-			return (wxCoord) ( (x-m_posX) * m_scaleX);
+			return (wxCoord) ((x-m_posX) * m_scaleX);
 		}
 
-		/** Converts graph (floating point) coordinates into mpWindow (screen) pixel coordinates, using current mpWindow position and scale.
+		/** Converts graph (floating point) coordinates into mpWindow (screen) pixel coordinates,
+		 * using current mpWindow position and scale.
 		 * @sa p2x,p2y,x2p */
 		inline wxCoord y2p(const double y)
 		{
-			return (wxCoord) ( (m_posY-y) * m_scaleY);
+			return (wxCoord) ((m_posY-y) * m_scaleY);
 		}
 
 		/** Enable/disable the double-buffering of the window, eliminating the flicker (default=enabled).
@@ -1855,6 +1912,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 		 \return The number of profiles plotted.
 		 */
 		unsigned int CountLayersPlot();
+		unsigned int CountLayersFXYPlot();
 
 		/** Draws the mpWindow on a page for printing
 		 \param print the mpPrintout where to print the graph */
@@ -1913,7 +1971,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 		 @param type image type to be saved: see wxImage output file types for flags
 		 @param imageSize Set a size for the output image. Default is the same as the screen size
 		 @param fit Decide whether to fit the plot into the size*/
-		bool SaveScreenshot(const wxString& filename, int type = wxBITMAP_TYPE_BMP, wxSize imageSize = wxDefaultSize, bool fit = false);
+		bool SaveScreenshot(const wxString &filename, int type = wxBITMAP_TYPE_BMP, wxSize imageSize = wxDefaultSize, bool fit = false);
 
 		/**
 		 * Get a screen shot of the window plot
@@ -1924,6 +1982,11 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 		 * Send the screen shot to the Clipboard
 		 */
 		void ClipboardScreenshot(wxSize imageSize = wxDefaultSize, bool fit = false);
+
+		/**
+		 * Load file
+		 */
+		bool LoadFile(const wxString &filename);
 
 		/** This value sets the zoom steps whenever the user clicks "Zoom in/out" or performs zoom with the mouse wheel.
 		 *  It must be a number above unity. This number is used for zoom in, and its inverse for zoom out. Set to 1.5 by default. */
@@ -2087,6 +2150,33 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 			m_OnDeleteLayer = event;
 		}
 
+		/**
+		 * Log axis control.
+		 * It is an axis property but as we need to control the bound and the scale,
+		 * it is easiest to declare this property here
+		 */
+		bool IsLogXaxis()
+		{
+			return m_LogXaxis;
+		}
+
+		bool IsLogYaxis()
+		{
+			return m_LogYaxis;
+		}
+
+		void SetLogXaxis(bool log)
+		{
+			m_LogXaxis = log;
+		}
+
+		void SetLogYaxis(bool log)
+		{
+			m_LogYaxis = log;
+		}
+
+		void RefreshConfigWindow();
+
 	protected:
 		void OnPaint (wxPaintEvent &event);  									//!< Paint handler, will plot all attached layers
 		void OnSize (wxSizeEvent &event);											//!< Size handler, will update scroll bar sizes
@@ -2179,6 +2269,9 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 		int m_scrollX, m_scrollY;
 		mpInfoLayer* m_movingInfoLayer;	//!< For moving info layers over the window area
 		mpInfoCoords* m_InfoCoords;			//!< Shortcut to info coords layer
+
+		bool m_LogXaxis = false;        //!< For logarithmic X axis
+		bool m_LogYaxis = false;	      //!< For logarithmic X axis
 
 		wxBitmap *m_Screenshot_bmp;			//!< For clipboard, save and print
 
@@ -2312,11 +2405,11 @@ class WXDLLIMPEXP_MATHPLOT mpFXYVector: public mpFXY
 		 @param x Returns X value
 		 @param y Returns Y value
 		 */
-		bool GetNextXY(double &x, double &y);
+		virtual bool GetNextXY(double *x, double *y);
 
 		/** Draw the point added if there is in bound
 		 */
-		void DrawAddedPoint(const double x, const double y);
+		void DrawAddedPoint(double x, double y);
 
 		/** Returns the actual minimum X data (loaded in SetData).
 		 */
