@@ -136,6 +136,7 @@ class MathPlotConfigDialog: public wxDialog
         static const long ID_CHOICE16;
         static const long ID_STATICTEXT26;
         static const long ID_TEXTCTRL8;
+        static const long ID_CHECKBOX15;
         static const long ID_PANEL1;
         static const long ID_STATICTEXT1;
         static const long ID_CHOICE1;
@@ -193,6 +194,7 @@ class MathPlotConfigDialog: public wxDialog
         wxCheckBox* cbCoordinates;
         wxCheckBox* cbDrawBox;
         wxCheckBox* cbLegendVisible;
+        wxCheckBox* cbLogAxis;
         wxCheckBox* cbSeriesContinuity;
         wxCheckBox* cbSeriesOutside;
         wxCheckBox* cbSeriesShowName;

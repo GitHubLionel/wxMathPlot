@@ -71,6 +71,7 @@ const long MathPlotConfigDialog::ID_STATICTEXT29 = wxNewId();
 const long MathPlotConfigDialog::ID_CHOICE16 = wxNewId();
 const long MathPlotConfigDialog::ID_STATICTEXT26 = wxNewId();
 const long MathPlotConfigDialog::ID_TEXTCTRL8 = wxNewId();
+const long MathPlotConfigDialog::ID_CHECKBOX15 = wxNewId();
 const long MathPlotConfigDialog::ID_PANEL1 = wxNewId();
 const long MathPlotConfigDialog::ID_STATICTEXT1 = wxNewId();
 const long MathPlotConfigDialog::ID_CHOICE1 = wxNewId();
@@ -468,6 +469,9 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
 	edFormat->SetToolTip(_T("Format of the label for the axis. Should be like c++ format."));
 	FlexGridSizer11->Add(edFormat, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	BoxSizer5->Add(FlexGridSizer11, 1, wxALL|wxALIGN_LEFT, 0);
+	cbLogAxis = new wxCheckBox(Panel3, ID_CHECKBOX15, _T("Logarithmic axis"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CHECKBOX15"));
+	cbLogAxis->SetValue(false);
+	BoxSizer5->Add(cbLogAxis, 0, wxALL|wxEXPAND, 5);
 	BoxSizer6->Add(BoxSizer5, 0, wxALL|wxALIGN_TOP, 2);
 	BoxSizer4->Add(BoxSizer6, 0, wxALL|wxEXPAND, 0);
 	Panel3->SetSizer(BoxSizer4);
@@ -830,17 +834,18 @@ void MathPlotConfigDialog::UpdateAxis(void)
 
 	if (ChoiceAxis->GetSelection() == 0)
 	{
-		CurrentScale = (mpScale*) m_plot->GetLayerByClassName(_("mpScaleX"));
+		CurrentScale = (mpScale*) m_plot->GetLayerXAxis();
 		cbAxisPosition->Clear();
 		for (int i = 0; i <= mpALIGN_BORDER_TOP; i++)
 			cbAxisPosition->Append(XAxis_Align[i]);
 		cbFormat->Enable();
-		cbFormat->SetSelection(((mpScaleX*) CurrentScale)->GetLabelMode());
+		if (CurrentScale)
+		  cbFormat->SetSelection(((mpScaleX*) CurrentScale)->GetLabelMode());
 		edFormat->Enable(cbFormat->GetSelection() == 5);
 	}
 	else
 	{
-		CurrentScale = (mpScale*) m_plot->GetLayerByClassName(_("mpScaleY"));
+		CurrentScale = (mpScale*) m_plot->GetLayerYAxis();
 		cbAxisPosition->Clear();
 		for (int i = 0; i <= mpALIGN_BORDER_RIGHT; i++)
 			cbAxisPosition->Append(YAxis_Align[i]);
@@ -859,6 +864,7 @@ void MathPlotConfigDialog::UpdateAxis(void)
 		cbAxisVisible->SetValue(CurrentScale->IsVisible());
 		cbAxisPosition->SetSelection(CurrentScale->GetAlign());
 		edFormat->SetValue(CurrentScale->GetLabelFormat());
+		cbLogAxis->SetValue(CurrentScale->IsLogAxis());
 
 		cbAxisOutside->SetValue(CurrentScale->GetDrawOutsideMargins());
 
@@ -1085,6 +1091,7 @@ void MathPlotConfigDialog::OnbApplyClick(wxCommandEvent& WXUNUSED(event))
 						CurrentCoords->SetLabelMode(cbFormat->GetSelection());
 					}
 				}
+				CurrentScale->SetLogAxis(cbLogAxis->GetValue());
 
 				CurrentScale->SetAuto(cbAutoScale->GetValue());
 				edScaleMin->GetValidator()->TransferFromWindow();
@@ -1107,7 +1114,7 @@ void MathPlotConfigDialog::OnbApplyClick(wxCommandEvent& WXUNUSED(event))
 						BoundScale.Xmax = scale_max;
 
 						// Get bound of the other axis
-						mpScale *axis = (mpScale*) m_plot->GetLayerByClassName(_("mpScaleY"));
+						mpScale *axis = (mpScale*) m_plot->GetLayerYAxis();
 						if (!axis->GetAuto())
 						{
 							BoundScale.Ymin = axis->GetMinScale();
@@ -1120,7 +1127,7 @@ void MathPlotConfigDialog::OnbApplyClick(wxCommandEvent& WXUNUSED(event))
 						BoundScale.Ymax = scale_max;
 
 						// Get bound of the other axis
-						mpScale *axis = (mpScale*) m_plot->GetLayerByClassName(_("mpScaleX"));
+						mpScale *axis = (mpScale*) m_plot->GetLayerXAxis();
 						if (!axis->GetAuto())
 						{
 							BoundScale.Xmin = axis->GetMinScale();
