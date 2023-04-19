@@ -647,6 +647,13 @@
 													<flag>wxALL|wxALIGN_LEFT</flag>
 													<option>1</option>
 												</object>
+												<object class="sizeritem">
+													<object class="wxCheckBox" name="ID_CHECKBOX15" variable="cbLogAxis" member="yes">
+														<label>Logarithmic axis</label>
+													</object>
+													<flag>wxALL|wxEXPAND</flag>
+													<border>5</border>
+												</object>
 											</object>
 											<flag>wxALL|wxALIGN_TOP</flag>
 											<border>2</border>
