@@ -17,14 +17,17 @@
 					<object class="wxButton" name="ID_BUTTON2" variable="bSample" member="yes">
 						<label>Draw Sample</label>
 						<pos>16,56</pos>
-						<enabled>0</enabled>
 						<handler function="OnbSampleClick" entry="EVT_BUTTON" />
 					</object>
 					<object class="wxButton" name="ID_BUTTON3" variable="bBar" member="yes">
 						<label>Draw Bar</label>
 						<pos>16,88</pos>
-						<enabled>0</enabled>
 						<handler function="OnbBarClick" entry="EVT_BUTTON" />
+					</object>
+					<object class="wxButton" name="ID_BUTTON4" variable="bLog" member="yes">
+						<label>Draw Log</label>
+						<pos>16,120</pos>
+						<handler function="OnbLogClick" entry="EVT_BUTTON" />
 					</object>
 				</object>
 				<name>PaneName0</name>

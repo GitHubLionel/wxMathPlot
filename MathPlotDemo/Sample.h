@@ -89,8 +89,50 @@ class MyFunction: public mpFX
 		}
 };
 
-// MyCOSinverse
+class MyLOG: public mpFX
+{
+		double minY, maxY;
 
+	public:
+		MyLOG() :
+				mpFX(wxT("f(x) = log(x)"), mpALIGN_LEFT)
+		{
+			minY = 0;
+			maxY = 0;
+
+			wxPen FXpen(*wxBLUE, 1, wxPENSTYLE_SOLID);
+			SetDrawOutsideMargins(false);
+			SetContinuity(false);
+			SetPen(FXpen);
+			SetSymbol(mpsSquare);
+			SetStep(4);
+		}
+		virtual double GetY(double x)
+		{
+			double y = 0;
+			if (x > 0)
+			{
+				y = pow(10, x);
+				maxY = y;
+			}
+			return y;
+		}
+		virtual double GetMinY()
+		{
+			return minY;
+		}
+		virtual double GetMaxY()
+		{
+			return maxY;
+		}
+		virtual void DoBeforePlot()
+		{
+			minY = 0;
+			maxY = 0;
+		}
+};
+
+// MyCOSinverse
 class MyCOSinverse: public mpFY
 {
 		double m_freq, m_amp;
@@ -122,7 +164,6 @@ class MyCOSinverse: public mpFY
 };
 
 // MyLissajoux
-
 class MyLissajoux: public mpFXY
 {
 		double m_rad;
@@ -139,12 +180,12 @@ class MyLissajoux: public mpFXY
 			SetPen(FXYpen);
 			SetSymbol(mpsCross);
 		}
-		virtual bool GetNextXY(double &x, double &y)
+		virtual bool GetNextXY(double *x, double *y)
 		{
 			if (m_idx < 360)
 			{
-				x = m_rad * cos(m_idx / 6.283185 * 360);
-				y = m_rad * sin(m_idx / 6.283185 * 360 * 3);
+				*x = m_rad * cos(m_idx / 6.283185 * 360);
+				*y = m_rad * sin(m_idx / 6.283185 * 360 * 3);
 				m_idx++;
 				return true;
 			}
@@ -175,3 +216,83 @@ class MyLissajoux: public mpFXY
 		}
 };
 
+
+class FixedBitwidth: public mpFX {
+		int m_bitwidth;
+	public:
+		FixedBitwidth(int bitwidth) : mpFX(wxT("Feste Bitbreite"))
+		{
+			m_bitwidth = bitwidth;
+		}
+
+		virtual double GetY(double x)
+		{
+			if (x >= 0)
+				return m_bitwidth;
+			else
+				return 0;
+		}
+};
+
+double ld(const double x)
+{
+	return log(x) / log(2.0f);
+}
+
+class Optimum: public mpFX {
+	public:
+		Optimum() : mpFX(wxT("Optimum ld(N)"))
+		{
+		}
+
+		virtual double GetY(double x)
+		{
+			if (x >= 1)
+				return ld(x);
+			else
+				return 0;
+		}
+};
+
+class Elias: public mpFX {
+	public:
+		Elias() : mpFX(wxT("Elias-Kodes"))
+		{
+		}
+
+		virtual double GetY(double x)
+		{
+			if (x >= 1)
+				return floor(ld(x)) + 2.0 * floor(ld(1.0 + floor(ld(x))));
+			else
+				return 0;
+		}
+};
+
+class Fibonacci: public mpFX {
+	public:
+		Fibonacci() : mpFX(wxT("Fibonacci-Kodes"))
+		{
+		}
+
+		virtual double GetY(double N)
+		{
+			if (N >= 1)
+			{
+				/*
+				 for (DWORD mask = 0; mask<N; mask++)
+				 {
+				 for (int i=0; i<N; i++)
+				 {
+				 if (mask
+
+				 }
+				 }
+				 */
+
+				return N;
+			}
+			else
+				return 0;
+		}
+};

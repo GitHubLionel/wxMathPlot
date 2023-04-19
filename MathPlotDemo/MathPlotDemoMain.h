@@ -32,12 +32,14 @@ class MathPlotDemoFrame: public wxFrame
         void OnbDrawClick(wxCommandEvent& event);
         void OnbSampleClick(wxCommandEvent& event);
         void OnbBarClick(wxCommandEvent& event);
+        void OnbLogClick(wxCommandEvent& event);
         //*)
 
         //(*Identifiers(MathPlotDemoFrame)
         static const long ID_BUTTON1;
         static const long ID_BUTTON2;
         static const long ID_BUTTON3;
+        static const long ID_BUTTON4;
         static const long ID_PANEL1;
         static const long ID_MATHPLOT1;
         static const long ID_PANEL2;
@@ -48,10 +50,15 @@ class MathPlotDemoFrame: public wxFrame
         wxAuiManager* AuiManager1;
         wxButton* bBar;
         wxButton* bDraw;
+        wxButton* bLog;
         wxButton* bSample;
         wxPanel* pLog;
         wxPanel* pPlot;
         //*)
+
+        mpScaleX *bottomAxis = NULL;
+        mpScaleY *leftAxis = NULL;
+        void InitializePlot(void);
 
         DECLARE_EVENT_TABLE()
 };

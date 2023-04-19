@@ -46,6 +46,7 @@ wxString wxbuildinfo(wxbuildinfoformat format)
 const long MathPlotDemoFrame::ID_BUTTON1 = wxNewId();
 const long MathPlotDemoFrame::ID_BUTTON2 = wxNewId();
 const long MathPlotDemoFrame::ID_BUTTON3 = wxNewId();
+const long MathPlotDemoFrame::ID_BUTTON4 = wxNewId();
 const long MathPlotDemoFrame::ID_PANEL1 = wxNewId();
 const long MathPlotDemoFrame::ID_MATHPLOT1 = wxNewId();
 const long MathPlotDemoFrame::ID_PANEL2 = wxNewId();
@@ -68,9 +69,8 @@ MathPlotDemoFrame::MathPlotDemoFrame(wxWindow* parent,wxWindowID id)
     pLog->SetMinSize(wxSize(120,-1));
     bDraw = new wxButton(pLog, ID_BUTTON1, _T("Draw sinus"), wxPoint(16,24), wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON1"));
     bSample = new wxButton(pLog, ID_BUTTON2, _T("Draw Sample"), wxPoint(16,56), wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON2"));
-    bSample->Disable();
     bBar = new wxButton(pLog, ID_BUTTON3, _T("Draw Bar"), wxPoint(16,88), wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON3"));
-    bBar->Disable();
+    bLog = new wxButton(pLog, ID_BUTTON4, _T("Draw Log"), wxPoint(16,120), wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON4"));
     AuiManager1->AddPane(pLog, wxAuiPaneInfo().Name(_T("PaneName0")).DefaultPane().Caption(_("Log")).CaptionVisible().CloseButton(false).Left().Floatable(false).MinSize(wxSize(120,-1)).Movable(false));
     pPlot = new wxPanel(this, ID_PANEL2, wxPoint(227,228), wxDefaultSize, wxTAB_TRAVERSAL, _T("ID_PANEL2"));
     BoxSizer1 = new wxBoxSizer(wxVERTICAL);
@@ -87,7 +87,10 @@ MathPlotDemoFrame::MathPlotDemoFrame(wxWindow* parent,wxWindowID id)
     Connect(ID_BUTTON1,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&MathPlotDemoFrame::OnbDrawClick);
     Connect(ID_BUTTON2,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&MathPlotDemoFrame::OnbSampleClick);
     Connect(ID_BUTTON3,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&MathPlotDemoFrame::OnbBarClick);
+    Connect(ID_BUTTON4,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&MathPlotDemoFrame::OnbLogClick);
     //*)
+
+    InitializePlot();
 }
 
 MathPlotDemoFrame::~MathPlotDemoFrame()
@@ -96,11 +99,11 @@ MathPlotDemoFrame::~MathPlotDemoFrame()
     //*)
 }
 
-void MathPlotDemoFrame::OnbDrawClick(wxCommandEvent& event)
+void MathPlotDemoFrame::InitializePlot(void)
 {
-	mpScaleX *bottomAxis = new mpScaleX(wxT("X"), mpALIGN_CENTERX, true, mpX_NORMAL);
+ 	bottomAxis = new mpScaleX(wxT("X"), mpALIGN_CENTERX, true, mpX_NORMAL);
 	bottomAxis->SetLabelFormat("%g");
-	mpScaleY *leftAxis = new mpScaleY(wxT("Y"), mpALIGN_CENTERY, true);
+	leftAxis = new mpScaleY(wxT("Y"), mpALIGN_CENTERY, true);
 	leftAxis->SetLabelFormat("%g");
 
 	wxFont graphFont(11, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
@@ -128,31 +131,40 @@ void MathPlotDemoFrame::OnbDrawClick(wxCommandEvent& event)
 	legend->SetVisible(true);
 
 	mPlot->Fit();
+}
+
+void MathPlotDemoFrame::OnbDrawClick(wxCommandEvent& event)
+{
+  mPlot->DelAllPlot(true);
+  bottomAxis->SetAuto(true);
+  leftAxis->SetLogAxis(false);
 
 	// add a simple sinus serie
 	mpFXYVector *serie = mPlot->GetXYSeries(0);
 	for (int i = 0; i < 100; i++)
 		serie->AddData(i / 10.0, sin(i / 10.0), true);
-	mPlot->Fit();  //  UpdateAll
-
-  bDraw->Disable();
-  bSample->Enable();
-  bBar->Enable();
+	mPlot->Fit();
 }
 
 void MathPlotDemoFrame::OnbSampleClick(wxCommandEvent& event)
 {
+  mPlot->DelAllPlot(true);
+  bottomAxis->SetAuto(true);
+  leftAxis->SetLogAxis(false);
+
 	mPlot->AddLayer(new MyFunction());
 	mPlot->AddLayer(new MySIN(10.0, 220.0));
 	mPlot->AddLayer(new MyCOSinverse(10.0, 100.0));
   mPlot->AddLayer(new MyLissajoux(125.0));
-	mPlot->Fit();  //  UpdateAll
-
-  bSample->Disable();
+	mPlot->Fit();
 }
 
 void MathPlotDemoFrame::OnbBarClick(wxCommandEvent& event)
 {
+  mPlot->DelAllPlot(true);
+  bottomAxis->SetAuto(true);
+  leftAxis->SetLogAxis(false);
+
 	mpFXYVector *vectorLayer = new mpFXYVector(_T("Bar X²"), mpALIGN_NE, true);
 	vectorLayer->SetBrush(*wxGREEN);
 	// Create two vectors for x,y and fill them with data
@@ -167,6 +179,16 @@ void MathPlotDemoFrame::OnbBarClick(wxCommandEvent& event)
 	vectorLayer->SetData(vectorx, vectory);
 	mPlot->AddLayer(vectorLayer);
 	mPlot->Fit();
+}
 
-  bBar->Disable();
+void MathPlotDemoFrame::OnbLogClick(wxCommandEvent& event)
+{
+  mPlot->DelAllPlot(true);
+  bottomAxis->SetAuto(false);
+  bottomAxis->SetMinScale(0);
+  bottomAxis->SetMaxScale(10);
+  leftAxis->SetLogAxis(true);
+
+  mPlot->AddLayer(new MyLOG());
+  mPlot->Fit();
 }
