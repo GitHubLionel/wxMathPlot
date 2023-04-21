@@ -873,33 +873,23 @@ void mpFX::DoPlot(wxDC &dc, mpWindow &w)
 	// Get bondaries
 	m_plotBondaries = w.GetPlotBondaries(!m_drawOutsideMargins);
 
+	if (!m_drawOutsideMargins)
+	{
+		wxRect rect(m_plotBondaries.startPx, m_plotBondaries.startPy, m_plotBondaries.endPx - m_plotBondaries.startPx,
+				m_plotBondaries.endPy - m_plotBondaries.startPy);
+		dc.SetClippingRegion(rect);
+	}
+
 	if (m_continuous || (m_pen.GetWidth() > 1))
 	{
 		if (m_continuous)
 		{
 			// Get first point
 			iylast = w.y2p(DoGetY(w.p2x(m_plotBondaries.startPx)));
-			if (!m_drawOutsideMargins)
-			{
-				if (iylast < m_plotBondaries.startPy)
-					iylast = m_plotBondaries.startPy;
-				else
-					if (iylast > m_plotBondaries.endPy)
-						iylast = m_plotBondaries.endPy;
-			}
 
 			for (i = m_plotBondaries.startPx + m_step; i < m_plotBondaries.endPx; i += m_step)
 			{
 				iy = w.y2p(DoGetY(w.p2x(i)));
-
-				if (!m_drawOutsideMargins)
-				{
-					if (iy < m_plotBondaries.startPy)
-						iy = m_plotBondaries.startPy;
-					else
-						if (iy > m_plotBondaries.endPy)
-							iy = m_plotBondaries.endPy;
-				}
 				dc.DrawLine(i - m_step, iylast, i, iy);
 				if (m_symbol != mpsNone)
 					DrawSymbol(dc, i - m_step, iylast);
@@ -907,20 +897,17 @@ void mpFX::DoPlot(wxDC &dc, mpWindow &w)
 			}
 			// Last point
 			if (m_symbol != mpsNone)
-				DrawSymbol(dc, m_plotBondaries.startPx, iylast);
+				DrawSymbol(dc, i - m_step, iylast);
 		}
 		else
 		{
 			for (i = m_plotBondaries.startPx; i < m_plotBondaries.endPx; i += m_step)
 			{
 				iy = w.y2p(DoGetY(w.p2x(i)));
-				if (m_drawOutsideMargins || ((iy >= m_plotBondaries.startPy) && (iy <= m_plotBondaries.endPy)))
-				{
-					if (m_symbol == mpsNone)
-						dc.DrawLine(i, iy, i, iy);
-					else
-						DrawSymbol(dc, i, iy);
-				}
+				if (m_symbol == mpsNone)
+					dc.DrawLine(i, iy, i, iy);
+				else
+					DrawSymbol(dc, i, iy);
 			}
 		}
 	}
@@ -929,15 +916,17 @@ void mpFX::DoPlot(wxDC &dc, mpWindow &w)
 		for (i = m_plotBondaries.startPx; i < m_plotBondaries.endPx; i += m_step)
 		{
 			iy = w.y2p(DoGetY(w.p2x(i)));
-			// Draw the point only if you can draw outside margins or if the point is inside margins
-			if (m_drawOutsideMargins || ((iy >= m_plotBondaries.startPy) && (iy <= m_plotBondaries.endPy)))
-			{
-				if (m_symbol == mpsNone)
-					dc.DrawPoint(i, iy);
-				else
-					DrawSymbol(dc, i, iy);
-			}
+			if (m_symbol == mpsNone)
+				dc.DrawPoint(i, iy);
+			else
+				DrawSymbol(dc, i, iy);
 		}
+	}
+
+	// Destroy clipping
+	if (!m_drawOutsideMargins)
+	{
+		dc.DestroyClippingRegion();
 	}
 
 	if (m_showName && !m_name.IsEmpty())
@@ -990,55 +979,30 @@ void mpFY::DoPlot(wxDC &dc, mpWindow &w)
 	// Get bondaries
 	m_plotBondaries = w.GetPlotBondaries(!m_drawOutsideMargins);
 
+	if (!m_drawOutsideMargins)
+	{
+		wxRect rect(m_plotBondaries.startPx, m_plotBondaries.startPy, m_plotBondaries.endPx - m_plotBondaries.startPx,
+				m_plotBondaries.endPy - m_plotBondaries.startPy);
+		dc.SetClippingRegion(rect);
+	}
+
 	if (m_continuous || (m_pen.GetWidth() > 1))
 	{
 		if (m_continuous)
 		{
 			// Get first point
 			ixlast = w.x2p(DoGetX(w.p2y(m_plotBondaries.startPy)));
-			bool inBound = true;
-			if (!m_drawOutsideMargins)
-			{
-				if (ixlast < m_plotBondaries.startPx)
-				{
-					ixlast = m_plotBondaries.startPx;
-					inBound = false;
-				}
-				else
-					if (ixlast > m_plotBondaries.endPx)
-					{
-						ixlast = m_plotBondaries.endPx;
-						inBound = false;
-					}
-			}
 
 			for (i = m_plotBondaries.startPy + m_step; i < m_plotBondaries.endPy; i += m_step)
 			{
 				ix = w.x2p(DoGetX(w.p2y(i)));
-
-				if (!m_drawOutsideMargins)
-				{
-					if (ix < m_plotBondaries.startPx)
-						ix = m_plotBondaries.startPx;
-					else
-						if (ix > m_plotBondaries.endPx)
-							ix = m_plotBondaries.endPx;
-				}
-				// Avoid vertical draw
-				if (ixlast != ix)
-				{
-					dc.DrawLine(ixlast, i - m_step, ix, i);
-					if ((m_symbol != mpsNone) && inBound)
-						DrawSymbol(dc, ixlast, i - m_step);
-					inBound = true;
-				}
-				else
-					inBound = false;
-
+				dc.DrawLine(ixlast, i - m_step, ix, i);
+				if (m_symbol != mpsNone)
+					DrawSymbol(dc, ixlast, i - m_step);
 				ixlast = ix;
 			}
 			// Last point
-			if ((m_symbol != mpsNone) && inBound)
+			if (m_symbol != mpsNone)
 				DrawSymbol(dc, ixlast, i - m_step);
 		}
 		else
@@ -1046,13 +1010,10 @@ void mpFY::DoPlot(wxDC &dc, mpWindow &w)
 			for (i = m_plotBondaries.startPy; i < m_plotBondaries.endPy; i += m_step)
 			{
 				ix = w.x2p(DoGetX(w.p2y(i)));
-				if (m_drawOutsideMargins || ((ix >= m_plotBondaries.startPx) && (ix <= m_plotBondaries.endPx)))
-				{
-					if (m_symbol == mpsNone)
-						dc.DrawLine(ix, i, ix, i);
-					else
-						DrawSymbol(dc, ix, i);
-				}
+				if (m_symbol == mpsNone)
+					dc.DrawLine(ix, i, ix, i);
+				else
+					DrawSymbol(dc, ix, i);
 			}
 		}
 	}
@@ -1061,14 +1022,17 @@ void mpFY::DoPlot(wxDC &dc, mpWindow &w)
 		for (i = m_plotBondaries.startPy; i < m_plotBondaries.endPy; i += m_step)
 		{
 			ix = w.x2p(DoGetX(w.p2y(i)));
-			if (m_drawOutsideMargins || ((ix >= m_plotBondaries.startPx) && (ix <= m_plotBondaries.endPx)))
-			{
-				if (m_symbol == mpsNone)
-					dc.DrawPoint(ix, i);
-				else
-					DrawSymbol(dc, ix, i);
-			}
+			if (m_symbol == mpsNone)
+				dc.DrawPoint(ix, i);
+			else
+				DrawSymbol(dc, ix, i);
 		}
+	}
+
+	// Destroy clipping
+	if (!m_drawOutsideMargins)
+	{
+		dc.DestroyClippingRegion();
 	}
 
 	if (m_showName && !m_name.IsEmpty())
@@ -1369,6 +1333,42 @@ mpScale::mpScale(const wxString &name, int flags, bool grids)
 	m_labelFormat = wxT("");
 }
 
+wxString mpScale::FormatLogValue(double n)
+{
+	// Special format for log axis : mantissa e exponent
+	const wxString fmt = _("%.2fe%02d");
+	const wxString fmt0 = _("%.2f");
+	const wxString fmt_1 = _("%.2fe-%02d");
+	wxString s = _("");
+	if (n >= 0)
+	{
+		if (n == 0)
+			s = _("1");
+		else
+		{
+			int exp = (int) floor(n);
+			double m = pow(10, n - exp);
+			if (round(m) == 10)
+			{
+				m /= 10;
+				exp++;
+			}
+			if (exp == 0)
+				s.Printf(fmt0, m);
+			else
+				s.Printf(fmt, m, exp);
+		}
+	}
+	else
+	{
+		n = -n;
+		int exp = (int) ceil(n);
+		double m = pow(10, n - exp);
+		s.Printf(fmt_1, m, exp);
+	}
+	return s;
+}
+
 IMPLEMENT_DYNAMIC_CLASS(mpScaleX, mpScale)
 
 wxString mpScaleX::FormatValue(const wxString &fmt, double n)
@@ -1380,7 +1380,10 @@ wxString mpScaleX::FormatValue(const wxString &fmt, double n)
 	{
 		case mpX_NORMAL:
 		case mpX_USER:
-			s.Printf(fmt, n);
+			if (IsLogAxis())
+				s = FormatLogValue(n);
+			else
+				s.Printf(fmt, n);
 			break;
 		case mpX_DATETIME:
 		{
@@ -1493,10 +1496,6 @@ void mpScaleX::DoPlot(wxDC &dc, mpWindow &w)
 					fmt.Printf(wxT("%%.%dg"), tmp >= -1 ? 2 : -tmp);
 				}
 			}
-
-			// Add power of 10 for log X axis
-			if (IsLogAxis())
-				fmt = _("10^") + fmt;
 			break;
 		}
 		case mpX_DATETIME:
@@ -1583,26 +1582,23 @@ void mpScaleX::DoPlot(wxDC &dc, mpWindow &w)
 		if (fabs(n) < 1e-10)
 			n = 0;
 
-		if (!(IsLogAxis()) || (n > 0))
-		{
-		  const int p = (int) ((n - w.GetPosX()) * scaleX);
+		const int p = (int) ((n - w.GetPosX()) * scaleX);
 #ifdef MATHPLOT_DO_LOGGING
-		  wxLogMessage(wxT("mpScaleX::Plot: n_label = %f -> p_label = %d"), n, p);
+		wxLogMessage(wxT("mpScaleX::Plot: n_label = %f -> p_label = %d"), n, p);
 #endif
-			if ((p >= m_plotBondaries.startPx) && (p <= m_plotBondaries.endPx))
-			{
-				// Write ticks labels in s string
-				s = FormatValue(fmt, n);
+		if ((p >= m_plotBondaries.startPx) && (p <= m_plotBondaries.endPx))
+		{
+			// Write ticks labels in s string
+			s = FormatValue(fmt, n);
 
-				dc.GetTextExtent(s, &tx, &ty);
-				if ((m_flags == mpALIGN_BORDER_BOTTOM) || (m_flags == mpALIGN_TOP))
-				{
-					dc.DrawText(s, p - tx / 2, orgy - ty - 4);
-				}
-				else
-				{
-					dc.DrawText(s, p - tx / 2, orgy + 4);
-				}
+			dc.GetTextExtent(s, &tx, &ty);
+			if ((m_flags == mpALIGN_BORDER_BOTTOM) || (m_flags == mpALIGN_TOP))
+			{
+				dc.DrawText(s, p - tx / 2, orgy - ty - 4);
+			}
+			else
+			{
+				dc.DrawText(s, p - tx / 2, orgy + 4);
 			}
 		}
 	}
@@ -1647,7 +1643,7 @@ void mpScaleX::DoPlot(wxDC &dc, mpWindow &w)
 			dc.DrawText(m_name, m_plotBondaries.endPx - tx - 4, orgy + labelH + 6);
 			break;
 		default:
-			break;
+			;
 	}
 }
 
@@ -1712,13 +1708,12 @@ void mpScaleY::DoPlot(wxDC &dc, mpWindow &w)
 	const double step = pow(10, dig);
 	const double end = w.GetPosY() + (double) w.GetScreenY() / scaleY;
 
-	wxCoord tx = 0, ty = 0;
 	wxString fmt;
-	double maxScaleAbs = fabs(w.GetDesiredYmax());
-	double minScaleAbs = fabs(w.GetDesiredYmin());
-	double endscale = (maxScaleAbs > minScaleAbs) ? maxScaleAbs : minScaleAbs;
 	if (m_labelFormat.IsEmpty())
 	{
+		double maxScaleAbs = fabs(w.GetDesiredYmax());
+		double minScaleAbs = fabs(w.GetDesiredYmin());
+		double endscale = (maxScaleAbs > minScaleAbs) ? maxScaleAbs : minScaleAbs;
 		if ((endscale < 1e4) && (endscale > 1e-3))
 			fmt = wxT("%.2f");
 		else
@@ -1729,17 +1724,14 @@ void mpScaleY::DoPlot(wxDC &dc, mpWindow &w)
 		fmt = m_labelFormat;
 	}
 
-	// Add power of 10 for log Y axis
-	if (IsLogAxis())
-		fmt = _("10^") + fmt;
-
 	double n = floor((w.GetPosY() - (double) (w.GetScreenY()) / scaleY) / step) * step;
 
-	int tmp = 65536;
-	int labelW = 0;
+	wxCoord tmp = 65536;
+	wxCoord labelW = 0;
 	// Before staring cycle, calculate label height
-	int labelHeigth = 0;
+	wxCoord labelHeigth = 0;
 	wxString s;
+	wxCoord tx = 0, ty = 0;
 	s.Printf(fmt, n);
 	dc.GetTextExtent(s, &tx, &labelHeigth);
 	labelHeigth /= 2;
@@ -1769,24 +1761,25 @@ void mpScaleY::DoPlot(wxDC &dc, mpWindow &w)
 				dc.DrawLine(m_plotBondaries.startPx, p, m_plotBondaries.endPx, p);
 			}
 
-			// Print ticks labels
-			if (!(IsLogAxis()) || (n > 0))
-			{
+			if (IsLogAxis())
+				s = FormatLogValue(n);
+			else
 				s.Printf(fmt, n);
-				dc.GetTextExtent(s, &tx, &ty);
-	#ifdef MATHPLOT_DO_LOGGING
-				if (ty != labelHeigth)
-					wxLogMessage(wxT("mpScaleY::Plot: ty(%d) and labelHeigth(%d) differ!"), ty, labelHeigth);
-	#endif
-				labelW = (labelW <= tx) ? tx : labelW;
-				if ((tmp - p + labelHeigth) > MIN_Y_AXIS_LABEL_SEPARATION)
-				{
-					if ((m_flags == mpALIGN_BORDER_LEFT) || (m_flags == mpALIGN_RIGHT))
-						dc.DrawText(s, orgx + 4, p - ty / 2);
-					else
-						dc.DrawText(s, orgx - tx - 4, p - ty / 2);
-					tmp = p - labelHeigth;
-				}
+
+			// Print ticks labels
+			dc.GetTextExtent(s, &tx, &ty);
+#ifdef MATHPLOT_DO_LOGGING
+			if (ty != labelHeigth)
+				wxLogMessage(wxT("mpScaleY::Plot: ty(%d) and labelHeigth(%d) differ!"), ty, labelHeigth);
+#endif
+			labelW = (labelW <= tx) ? tx : labelW;
+			if ((tmp - p + labelHeigth) > MIN_Y_AXIS_LABEL_SEPARATION)
+			{
+				if ((m_flags == mpALIGN_BORDER_LEFT) || (m_flags == mpALIGN_RIGHT))
+					dc.DrawText(s, orgx + 4, p - ty / 2);
+				else
+					dc.DrawText(s, orgx - tx - 4, p - ty / 2);
+				tmp = p - labelHeigth;
 			}
 		}
 	}
@@ -1829,7 +1822,7 @@ void mpScaleY::DoPlot(wxDC &dc, mpWindow &w)
 			dc.DrawText(m_name, orgx - tx - labelW - 6, m_plotBondaries.startPy + 4);
 			break;
 		default:
-			break;
+			;
 	}
 }
 

@@ -1373,6 +1373,8 @@ class WXDLLIMPEXP_MATHPLOT mpScale: public mpLayer
 		double m_min, m_max;		 //!< Min and max scale when autosize is false
 		wxString m_labelFormat;  //!< Format string used to print labels
 
+		wxString FormatLogValue(double n);
+
 	DECLARE_DYNAMIC_CLASS(mpScale)
 };
 
