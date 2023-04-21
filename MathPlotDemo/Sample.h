@@ -23,7 +23,7 @@ class MySIN: public mpFX
 			SetContinuity(false);
 			SetPen(FXpen);
 			SetSymbol(mpsCircle);
-			SetStep(4);
+			SetStep(8);
 		}
 		virtual double GetY(double x)
 		{
@@ -55,7 +55,7 @@ class MyFunction: public mpFX
 			SetContinuity(false);
 			SetPen(FXpen);
 			SetSymbol(mpsSquare);
-			SetStep(4);
+			SetStep(8);
 		}
 		virtual double GetY(double x)
 		{
@@ -89,13 +89,13 @@ class MyFunction: public mpFX
 		}
 };
 
-class MyLOG: public mpFX
+class MyPower: public mpFX
 {
 		double minY, maxY;
 
 	public:
-		MyLOG() :
-				mpFX(wxT("f(x) = log(x)"), mpALIGN_LEFT)
+		MyPower() :
+				mpFX(wxT("f(x) = 10^x"), mpALIGN_LEFT)
 		{
 			minY = 0;
 			maxY = 0;
@@ -105,16 +105,17 @@ class MyLOG: public mpFX
 			SetContinuity(false);
 			SetPen(FXpen);
 			SetSymbol(mpsSquare);
-			SetStep(4);
+			SetStep(8);
 		}
 		virtual double GetY(double x)
 		{
 			double y = 0;
-			if (x > 0)
-			{
 				y = pow(10, x);
+			if (y < minY)
+				minY = y;
+			else
+				if (y > maxY)
 				maxY = y;
-			}
 			return y;
 		}
 		virtual double GetMinY()
@@ -148,6 +149,7 @@ class MyCOSinverse: public mpFY
 			SetPen(FYpen);
 			SetSymbol(mpsSquare);
 			SetSymbolSize(8);
+			SetStep(8);
 		}
 		virtual double GetX(double y)
 		{

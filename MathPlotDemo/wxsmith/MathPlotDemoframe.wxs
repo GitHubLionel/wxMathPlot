@@ -25,9 +25,14 @@
 						<handler function="OnbBarClick" entry="EVT_BUTTON" />
 					</object>
 					<object class="wxButton" name="ID_BUTTON4" variable="bLog" member="yes">
-						<label>Draw Log</label>
+						<label>Log Y sample</label>
 						<pos>16,120</pos>
 						<handler function="OnbLogClick" entry="EVT_BUTTON" />
+					</object>
+					<object class="wxButton" name="ID_BUTTON5" variable="bLogXY" member="yes">
+						<label>Log XY sample</label>
+						<pos>16,152</pos>
+						<handler function="OnbLogXYClick" entry="EVT_BUTTON" />
 					</object>
 				</object>
 				<name>PaneName0</name>

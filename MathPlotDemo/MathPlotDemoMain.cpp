@@ -47,6 +47,7 @@ const long MathPlotDemoFrame::ID_BUTTON1 = wxNewId();
 const long MathPlotDemoFrame::ID_BUTTON2 = wxNewId();
 const long MathPlotDemoFrame::ID_BUTTON3 = wxNewId();
 const long MathPlotDemoFrame::ID_BUTTON4 = wxNewId();
+const long MathPlotDemoFrame::ID_BUTTON5 = wxNewId();
 const long MathPlotDemoFrame::ID_PANEL1 = wxNewId();
 const long MathPlotDemoFrame::ID_MATHPLOT1 = wxNewId();
 const long MathPlotDemoFrame::ID_PANEL2 = wxNewId();
@@ -70,7 +71,8 @@ MathPlotDemoFrame::MathPlotDemoFrame(wxWindow* parent,wxWindowID id)
     bDraw = new wxButton(pLog, ID_BUTTON1, _T("Draw sinus"), wxPoint(16,24), wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON1"));
     bSample = new wxButton(pLog, ID_BUTTON2, _T("Draw Sample"), wxPoint(16,56), wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON2"));
     bBar = new wxButton(pLog, ID_BUTTON3, _T("Draw Bar"), wxPoint(16,88), wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON3"));
-    bLog = new wxButton(pLog, ID_BUTTON4, _T("Draw Log"), wxPoint(16,120), wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON4"));
+    bLog = new wxButton(pLog, ID_BUTTON4, _T("Log Y sample"), wxPoint(16,120), wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON4"));
+    bLogXY = new wxButton(pLog, ID_BUTTON5, _T("Log XY sample"), wxPoint(16,152), wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON5"));
     AuiManager1->AddPane(pLog, wxAuiPaneInfo().Name(_T("PaneName0")).DefaultPane().Caption(_("Log")).CaptionVisible().CloseButton(false).Left().Floatable(false).MinSize(wxSize(120,-1)).Movable(false));
     pPlot = new wxPanel(this, ID_PANEL2, wxPoint(227,228), wxDefaultSize, wxTAB_TRAVERSAL, _T("ID_PANEL2"));
     BoxSizer1 = new wxBoxSizer(wxVERTICAL);
@@ -88,6 +90,7 @@ MathPlotDemoFrame::MathPlotDemoFrame(wxWindow* parent,wxWindowID id)
     Connect(ID_BUTTON2,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&MathPlotDemoFrame::OnbSampleClick);
     Connect(ID_BUTTON3,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&MathPlotDemoFrame::OnbBarClick);
     Connect(ID_BUTTON4,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&MathPlotDemoFrame::OnbLogClick);
+    Connect(ID_BUTTON5,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&MathPlotDemoFrame::OnbLogXYClick);
     //*)
 
     InitializePlot();
@@ -101,6 +104,9 @@ MathPlotDemoFrame::~MathPlotDemoFrame()
 
 void MathPlotDemoFrame::InitializePlot(void)
 {
+	mPlot->EnableDoubleBuffer(true);
+	mPlot->SetMargins(50, 20, 80, 80);
+
  	bottomAxis = new mpScaleX(wxT("X"), mpALIGN_CENTERX, true, mpX_NORMAL);
 	bottomAxis->SetLabelFormat("%g");
 	leftAxis = new mpScaleY(wxT("Y"), mpALIGN_CENTERY, true);
@@ -133,12 +139,19 @@ void MathPlotDemoFrame::InitializePlot(void)
 	mPlot->Fit();
 }
 
-void MathPlotDemoFrame::OnbDrawClick(wxCommandEvent& event)
+void MathPlotDemoFrame::CleanPlot(void)
 {
   mPlot->DelAllPlot(true);
-  bottomAxis->SetAuto(true);
+  bottomAxis->SetAlign(mpALIGN_CENTERX);
+  bottomAxis->SetLogAxis(false);
+	leftAxis->SetAlign(mpALIGN_CENTERY);
   leftAxis->SetLogAxis(false);
+  bottomAxis->SetAuto(true);
+}
 
+void MathPlotDemoFrame::OnbDrawClick(wxCommandEvent& event)
+{
+  CleanPlot();
 	// add a simple sinus serie
 	mpFXYVector *serie = mPlot->GetXYSeries(0);
 	for (int i = 0; i < 100; i++)
@@ -148,10 +161,9 @@ void MathPlotDemoFrame::OnbDrawClick(wxCommandEvent& event)
 
 void MathPlotDemoFrame::OnbSampleClick(wxCommandEvent& event)
 {
-  mPlot->DelAllPlot(true);
-  bottomAxis->SetAuto(true);
-  leftAxis->SetLogAxis(false);
+  CleanPlot();
 
+  // Sample from the original wxMathPlot widget
 	mPlot->AddLayer(new MyFunction());
 	mPlot->AddLayer(new MySIN(10.0, 220.0));
 	mPlot->AddLayer(new MyCOSinverse(10.0, 100.0));
@@ -161,9 +173,7 @@ void MathPlotDemoFrame::OnbSampleClick(wxCommandEvent& event)
 
 void MathPlotDemoFrame::OnbBarClick(wxCommandEvent& event)
 {
-  mPlot->DelAllPlot(true);
-  bottomAxis->SetAuto(true);
-  leftAxis->SetLogAxis(false);
+  CleanPlot();
 
 	mpFXYVector *vectorLayer = new mpFXYVector(_T("Bar X²"), mpALIGN_NE, true);
 	vectorLayer->SetBrush(*wxGREEN);
@@ -183,12 +193,41 @@ void MathPlotDemoFrame::OnbBarClick(wxCommandEvent& event)
 
 void MathPlotDemoFrame::OnbLogClick(wxCommandEvent& event)
 {
-  mPlot->DelAllPlot(true);
+  CleanPlot();
+
   bottomAxis->SetAuto(false);
   bottomAxis->SetMinScale(0);
   bottomAxis->SetMaxScale(10);
   leftAxis->SetLogAxis(true);
 
-  mPlot->AddLayer(new MyLOG());
+  mPlot->AddLayer(new MyPower());
+  mPlot->Fit();
+}
+
+void MathPlotDemoFrame::OnbLogXYClick(wxCommandEvent& event)
+{
+  CleanPlot();
+
+  bottomAxis->SetAlign(mpALIGN_BOTTOM);
+  bottomAxis->SetLogAxis(true);
+	leftAxis->SetAlign(mpALIGN_LEFT);
+  leftAxis->SetLogAxis(true);
+
+	std::vector<double> vectorX, vectorY;
+	for (int i = 2; i <= 128; i *= 2)
+	{
+		vectorX.push_back(i);
+		vectorY.push_back(i);
+	}
+
+	mpFXYVector* Power2 = new mpFXYVector(_("Power of 2"), mpALIGN_NE);
+	Power2->SetData(vectorX, vectorY);
+	Power2->SetContinuity(true);
+	wxPen s1pen(*wxGREEN, 2, wxPENSTYLE_SOLID);
+	Power2->SetPen(s1pen);
+	Power2->SetBrush(*wxGREEN);
+	Power2->SetSymbol(mpsCircle);
+
+  mPlot->AddLayer(Power2);
   mPlot->Fit();
 }
