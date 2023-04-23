@@ -63,6 +63,7 @@ class MathPlotConfigDialog: public wxDialog
         bool fontLegendChanged;
         bool fontAxisChanged;
         unsigned int int_top, int_bottom, int_left, int_right;
+        int scale_offset;
         double scale_min, scale_max;
         bool CheckBar;
 

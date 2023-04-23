@@ -237,7 +237,7 @@ typedef enum __mp_Location_Type
 // Alignment for X axis
 typedef enum __XAxis_Align_Type
 {
-	mpALIGN_BORDER_BOTTOM,
+	mpALIGN_BORDER_BOTTOM = 10,
 	mpALIGN_BOTTOM,
 	mpALIGN_CENTERX,
 	mpALIGN_TOP,
@@ -247,7 +247,7 @@ typedef enum __XAxis_Align_Type
 // Alignment for Y axis
 typedef enum __YAxis_Align_Type
 {
-	mpALIGN_BORDER_LEFT,
+	mpALIGN_BORDER_LEFT = 20,
 	mpALIGN_LEFT,
 	mpALIGN_CENTERY,
 	mpALIGN_RIGHT,
@@ -1373,6 +1373,10 @@ class WXDLLIMPEXP_MATHPLOT mpScale: public mpLayer
 		double m_min, m_max;		 //!< Min and max scale when autosize is false
 		wxString m_labelFormat;  //!< Format string used to print labels
 
+		int GetOrigin(mpWindow &w);
+		double GetStep(double scale);
+		void DrawScaleName(wxDC &dc, mpWindow &w, int origin, int labelSize);
+
 		wxString FormatLogValue(double n);
 
 	DECLARE_DYNAMIC_CLASS(mpScale)
@@ -2261,7 +2265,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 
 		bool m_repainting;
 		int m_last_lx, m_last_ly;				//!< For double buffering
-		wxBitmap *m_buff_bmp;						//!< For double buffering
+		wxBitmap *m_buff_bmp;	          //!< For double buffering
 		bool m_enableDoubleBuffer;			//!< For double buffering. Default enabled
 		bool m_enableMouseNavigation;		//!< For pan/zoom with the mouse.
 		bool m_mouseMovedAfterRightClick;
@@ -2271,6 +2275,10 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 		int m_scrollX, m_scrollY;
 		mpInfoLayer* m_movingInfoLayer;	//!< For moving info layers over the window area
 		mpInfoCoords* m_InfoCoords;			//!< Shortcut to info coords layer
+
+		wxBitmap *m_zoom_bmp;           //!< For zoom selection
+		wxRect m_zoom_dim;
+		wxRect m_zoom_oldDim;
 
 		bool m_LogXaxis = false;        //!< For logarithmic X axis
 		bool m_LogYaxis = false;	      //!< For logarithmic X axis

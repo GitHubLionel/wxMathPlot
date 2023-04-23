@@ -115,6 +115,12 @@ const wxString MathPlot::Popup_string[][2] = {
 // See doxygen comments.
 double mpWindow::zoomIncrementalFactor = 1.5;
 
+// Delete and null pointer
+#define DeleteAndNull(ptr)	\
+	{ if (ptr) \
+		{ delete(ptr);	\
+			(ptr) = NULL; }}
+
 //-----------------------------------------------------------------------------
 // Date time conversion
 //-----------------------------------------------------------------------------
@@ -247,6 +253,7 @@ void mpLayer::DrawSymbol(wxDC &dc, wxCoord x, wxCoord y)
 //-----------------------------------------------------------------------------
 // mpInfoLayer
 //-----------------------------------------------------------------------------
+
 IMPLEMENT_ABSTRACT_CLASS(mpInfoLayer, mpLayer)
 
 mpInfoLayer::mpInfoLayer()
@@ -474,20 +481,12 @@ mpInfoCoords::mpInfoCoords(wxRect rect, const wxBrush &brush, mpLocation locatio
 
 mpInfoCoords::~mpInfoCoords()
 {
-	if (m_coord_bmp)
-	{
-		delete m_coord_bmp;
-		m_coord_bmp = NULL;
-	}
+	DeleteAndNull(m_coord_bmp);
 }
 void mpInfoCoords::SetVisible(bool show)
 {
 	m_visible = show;
-	if (m_coord_bmp)
-	{
-		delete m_coord_bmp;
-		m_coord_bmp = NULL;
-	}
+	DeleteAndNull(m_coord_bmp);
 }
 
 void mpInfoCoords::UpdateInfo(mpWindow &w, wxEvent &event)
@@ -500,13 +499,6 @@ void mpInfoCoords::UpdateInfo(mpWindow &w, wxEvent &event)
 		m_mouseX = ((wxMouseEvent&) event).GetX();
 		m_mouseY = ((wxMouseEvent&) event).GetY();
 
-		/* It seems that Windows port of wxWidgets don't support multi-line text to be drawn in a wxDC.
-		 *   wxGTK instead works perfectly with it.
-		 *   Info on wxForum: http://wxforum.shadonet.com/viewtopic.php?t=3451&highlight=drawtext+eol */
-		// UPDATE 2018-10-04: this seems not to be still valid on latest wxWidgets.
-		// #ifdef _WINDOWS
-		//     m_content.Printf(wxT("x = %f y = %f"), w.p2x(mouseX), w.p2y(mouseY));
-		// #else
 		m_content.Clear();
 
 		if (m_series_coord)
@@ -581,28 +573,11 @@ void mpInfoCoords::DoPlot(wxDC &dc, mpWindow &w)
 	int width = 0, height = 0;
 	int offset = (m_series_coord) ? LEGEND_LINEWIDTH : 0;
 
-	// It looks like that on Windows, GetTetxExtent function
-	// ignores the newline in the calculus of size
-#ifdef _WIN32
-	// Windows code
-	wxString m_contentX, m_contentY;
-	int textY_H = 0;
-	m_contentX = m_content.BeforeFirst(wxT('\n'));
-	m_contentY = m_content.AfterFirst(wxT('\n'));
-	dc.GetTextExtent(m_contentX, &textX, &textY);
-	dc.GetTextExtent(m_contentY, &textY_H, &textY);
-	textX = (textX > textY_H) ? textX : textY_H;
-	if (width < textX + MARGIN_COORD_X2 + offset)
-		width = textX + MARGIN_COORD_X2 + offset;
-	if (height < 2 * textY + MARGIN_COORD_X2)
-		height = 2 * textY + MARGIN_COORD_X2;
-#else
-		// *NIX code
-		dc.GetTextExtent(m_content, &textX, &textY);
-		if (width < textX + MARGIN_COORD_X2 + offset) width = textX + MARGIN_COORD_X2 + offset;
-		if (height < textY + MARGIN_COORD_X2) height = textY + MARGIN_COORD_X2;
-		textY /= 2;
-#endif
+// Should be work on Windows and Linux. If no, use GetTextExtent for Linux
+	dc.GetMultiLineTextExtent(m_content, &textX, &textY);
+	if (width < textX + MARGIN_COORD_X2 + offset) width = textX + MARGIN_COORD_X2 + offset;
+	if (height < textY + MARGIN_COORD_X2) height = textY + MARGIN_COORD_X2;
+	textY /= 2;
 
 	SetInfoRectangle(w, width, height);
 	if (m_location == mpCursor)
@@ -616,11 +591,8 @@ void mpInfoCoords::DoPlot(wxDC &dc, mpWindow &w)
 	}
 
 	// Don't use stored bitmap when we repaint all
-	if (w.IsRepainting() && m_coord_bmp)
-	{
-		delete m_coord_bmp;
-		m_coord_bmp = NULL;
-	}
+	if (w.IsRepainting())
+		DeleteAndNull(m_coord_bmp);
 
 	// First : restaure stored bitmap
 	if (m_coord_bmp)
@@ -629,8 +601,7 @@ void mpInfoCoords::DoPlot(wxDC &dc, mpWindow &w)
 		m_coord_dc.SelectObject(*m_coord_bmp);
 		dc.Blit(m_oldDim.x, m_oldDim.y, m_oldDim.width, m_oldDim.height, &m_coord_dc, 0, 0);
 		m_coord_dc.SelectObject(wxNullBitmap);
-		delete m_coord_bmp;
-		m_coord_bmp = NULL;
+		DeleteAndNull(m_coord_bmp);
 	}
 
 	// Second : store new bitmap
@@ -663,8 +634,7 @@ void mpInfoCoords::ErasePlot(wxDC &dc, mpWindow &WXUNUSED(w))
 		m_coord_dc.SelectObject(*m_coord_bmp);
 		dc.Blit(m_oldDim.x, m_oldDim.y, m_oldDim.width, m_oldDim.height, &m_coord_dc, 0, 0);
 		m_coord_dc.SelectObject(wxNullBitmap);
-		delete m_coord_bmp;
-		m_coord_bmp = NULL;
+		DeleteAndNull(m_coord_bmp);
 	}
 }
 
@@ -696,11 +666,7 @@ mpInfoLegend::mpInfoLegend(wxRect rect, const wxBrush &brush, mpLocation locatio
 
 mpInfoLegend::~mpInfoLegend()
 {
-	if (m_legend_bmp)
-	{
-		delete m_legend_bmp;
-		m_legend_bmp = NULL;
-	}
+	DeleteAndNull(m_legend_bmp);
 }
 
 void mpInfoLegend::UpdateBitmap(wxDC &dc, mpWindow &w)
@@ -728,11 +694,7 @@ void mpInfoLegend::UpdateBitmap(wxDC &dc, mpWindow &w)
 	wxBrush sqrBrush(*wxWHITE, wxBRUSHSTYLE_SOLID);
 
 	// Delete old bitmap
-	if (m_legend_bmp)
-	{
-		delete m_legend_bmp;
-		m_legend_bmp = NULL;
-	}
+	DeleteAndNull(m_legend_bmp);
 
 	// Get series name
 	for (unsigned int p = 0; p < w.CountAllLayers(); p++)
@@ -846,7 +808,7 @@ void mpInfoLegend::DoPlot(wxDC &dc, mpWindow &w)
 }
 
 //-----------------------------------------------------------------------------
-// mpLayer implementations - functions
+// mpFX implementations - functions
 //-----------------------------------------------------------------------------
 
 IMPLEMENT_ABSTRACT_CLASS(mpFX, mpLayer)
@@ -954,6 +916,8 @@ void mpFX::DoPlot(wxDC &dc, mpWindow &w)
 }
 
 //-----------------------------------------------------------------------------
+// mpFY implementations - functions
+//-----------------------------------------------------------------------------
 
 IMPLEMENT_ABSTRACT_CLASS(mpFY, mpLayer)
 
@@ -1059,6 +1023,8 @@ void mpFY::DoPlot(wxDC &dc, mpWindow &w)
 	}
 }
 
+//-----------------------------------------------------------------------------
+// mpFXY implementations - functions
 //-----------------------------------------------------------------------------
 
 IMPLEMENT_ABSTRACT_CLASS(mpFXY, mpLayer)
@@ -1312,7 +1278,7 @@ void mpProfile::DoPlot(wxDC &dc, mpWindow &w)
 }
 
 //-----------------------------------------------------------------------------
-// mpLayer implementations - furniture (scales, ...)
+// mpScale implementations
 //-----------------------------------------------------------------------------
 
 IMPLEMENT_ABSTRACT_CLASS(mpScale, mpLayer)
@@ -1333,41 +1299,198 @@ mpScale::mpScale(const wxString &name, int flags, bool grids)
 	m_labelFormat = wxT("");
 }
 
-wxString mpScale::FormatLogValue(double n)
+int mpScale::GetOrigin(mpWindow &w)
 {
-	// Special format for log axis : mantissa e exponent
-	const wxString fmt = _("%.2fe%02d");
-	const wxString fmt0 = _("%.2f");
-	const wxString fmt_1 = _("%.2fe-%02d");
-	wxString s = _("");
-	if (n >= 0)
+	int origin = 0;
+	// Get bondaries
+	m_plotBondaries = w.GetPlotBondaries(!m_drawOutsideMargins);
+
+	switch (m_flags)
 	{
-		if (n == 0)
-			s = _("1");
-		else
+		// Scale X : horizontal axis
+		case mpALIGN_BORDER_TOP:
+			origin = 1;
+			break;
+		case mpALIGN_TOP:
 		{
-			int exp = (int) floor(n);
-			double m = pow(10, n - exp);
-			if (round(m) == 10)
-			{
-				m /= 10;
-				exp++;
-			}
-			if (exp == 0)
-				s.Printf(fmt0, m);
+			if (m_drawOutsideMargins)
+				origin = X_BORDER_SEPARATION;
 			else
-				s.Printf(fmt, m, exp);
+				origin = w.GetMarginTop();
+			break;
 		}
+		case mpALIGN_CENTERX:
+			origin = w.y2p(0);
+			break;
+		case mpALIGN_BOTTOM:
+		{
+			if (m_drawOutsideMargins)
+				origin = w.GetScreenY() - X_BORDER_SEPARATION;
+			else
+				origin = w.GetScreenY() - w.GetMarginBottom();
+			break;
+		}
+		case mpALIGN_BORDER_BOTTOM:
+			origin = w.GetScreenY() - 1;
+			break;
+
+		// Scale Y : vertical axis
+		case mpALIGN_BORDER_LEFT:
+			origin = 1;
+			break;
+		case mpALIGN_LEFT:
+		{
+			if (m_drawOutsideMargins)
+				origin = Y_BORDER_SEPARATION;
+			else
+				origin = w.GetMarginLeft();
+			break;
+		}
+		case mpALIGN_CENTERY:
+			origin = w.x2p(0);
+			break;
+		case mpALIGN_RIGHT:
+		{
+			if (m_drawOutsideMargins)
+				origin = w.GetScreenX() - Y_BORDER_SEPARATION;
+			else
+				origin = w.GetScreenX() - w.GetMarginRight();
+			break;
+		}
+		case mpALIGN_BORDER_RIGHT:
+			origin = w.GetScreenX() - 1;
+			break;
+
+		default:
+			;  // Nothing
+	}
+	return origin;
+}
+
+double mpScale::GetStep(double scale)
+{
+#define DIGIT	128.0
+#define DIGIT_LOG	128.0
+
+	double dig;
+	if (IsLogAxis())
+	{
+	  dig = floor(log10(DIGIT_LOG / scale));
+	  if (scale > DIGIT_LOG)
+	  	dig += 1;
 	}
 	else
+		dig = floor(log10(DIGIT / scale));
+	return pow(10, dig);
+}
+
+void mpScale::DrawScaleName(wxDC &dc, mpWindow &w, int origin, int labelSize)
+{
+	wxCoord tx, ty;
+
+	// Draw axis name
+	dc.GetTextExtent(m_name, &tx, &ty);
+	switch (m_flags)
 	{
-		n = -n;
-		int exp = (int) ceil(n);
-		double m = pow(10, n - exp);
-		s.Printf(fmt_1, m, exp);
+		// Scale X : horizontal axis
+		case mpALIGN_BORDER_BOTTOM:
+			dc.DrawText(m_name, m_plotBondaries.endPx - tx - 4, origin - ty - labelSize - 8);
+			break;
+		case mpALIGN_BOTTOM:
+		{
+			if ((!m_drawOutsideMargins) && (w.GetMarginBottom() > (ty + labelSize + 8)))
+			{
+//				dc.DrawText(m_name, (m_plotBondaries.endPx + m_plotBondaries.startPx - tx) >> 1, orgy + labelH + 6);
+				dc.DrawText(m_name, m_plotBondaries.endPx - tx - 4, origin + labelSize + 6);
+			}
+			else
+			{
+				dc.DrawText(m_name, m_plotBondaries.endPx - tx - 4, origin - ty - 4);
+			}
+			break;
+		}
+		case mpALIGN_CENTERX:
+			dc.DrawText(m_name, m_plotBondaries.endPx - tx - 4, origin - ty - 4);
+			break;
+		case mpALIGN_TOP:
+		{
+			if ((!m_drawOutsideMargins) && (w.GetMarginTop() > (ty + labelSize + 8)))
+			{
+//				dc.DrawText(m_name, (m_plotBondaries.endPx + m_plotBondaries.startPx - tx) >> 1, orgy - ty - labelH - 6);
+				dc.DrawText(m_name, m_plotBondaries.endPx - tx - 4, origin - ty - labelSize - 8);
+			}
+			else
+			{
+				dc.DrawText(m_name, m_plotBondaries.endPx - tx - 4, origin + 4);
+			}
+			break;
+		}
+		case mpALIGN_BORDER_TOP:
+			dc.DrawText(m_name, m_plotBondaries.endPx - tx - 4, origin + labelSize + 6);
+			break;
+
+		// Scale Y : vertical axis
+		case mpALIGN_BORDER_LEFT:
+			dc.DrawText(m_name, labelSize + 8, m_plotBondaries.startPy + 4);
+			break;
+		case mpALIGN_LEFT:
+		{
+			if ((!m_drawOutsideMargins) && (w.GetMarginLeft() > (ty + labelSize + 8)))
+			{
+				dc.DrawRotatedText(m_name, origin - labelSize - ty - 6, (m_plotBondaries.endPy + m_plotBondaries.startPy + tx) >> 1, 90);
+			}
+			else
+			{
+				dc.DrawText(m_name, origin + 4, m_plotBondaries.startPy + 4);
+			}
+			break;
+		}
+		case mpALIGN_CENTERY:
+			dc.DrawText(m_name, origin + 4, m_plotBondaries.startPy + 4);
+			break;
+		case mpALIGN_RIGHT:
+		{
+			if ((!m_drawOutsideMargins) && (w.GetMarginRight() > (ty + labelSize + 8)))
+			{
+				dc.DrawRotatedText(m_name, origin + labelSize + 6, (m_plotBondaries.endPy + m_plotBondaries.startPy + tx) >> 1, 90);
+			}
+			else
+			{
+				dc.DrawText(m_name, origin - tx - 4, m_plotBondaries.startPy + 4);
+			}
+			break;
+		}
+		case mpALIGN_BORDER_RIGHT:
+			dc.DrawText(m_name, origin - tx - labelSize - 6, m_plotBondaries.startPy + 4);
+			break;
+
+		default:
+			;
+	}
+}
+
+wxString mpScale::FormatLogValue(double n)
+{
+	// Special format for log axis : 10 ^ exponent
+	wxString s = _("");
+
+	if (n - floor(n) == 0)
+	{
+		int exp = (int) n;
+		if (exp == 0)
+			s = _("1");
+		else
+			if (exp == 1)
+				s = _("10");
+			else
+				s.Printf(_("10^%d"), (int)exp);
 	}
 	return s;
 }
+
+//-----------------------------------------------------------------------------
+// mpScaleX
+//-----------------------------------------------------------------------------
 
 IMPLEMENT_DYNAMIC_CLASS(mpScaleX, mpScale)
 
@@ -1424,40 +1547,7 @@ wxString mpScaleX::FormatValue(const wxString &fmt, double n)
 
 void mpScaleX::DoPlot(wxDC &dc, mpWindow &w)
 {
-	// Get bondaries
-	m_plotBondaries = w.GetPlotBondaries(!m_drawOutsideMargins);
-
-	int orgy = 0;
-	switch (m_flags)
-	{
-		case mpALIGN_BORDER_TOP:
-			orgy = 1;
-			break;
-		case mpALIGN_TOP:
-		{
-			if (m_drawOutsideMargins)
-				orgy = X_BORDER_SEPARATION;
-			else
-				orgy = w.GetMarginTop();
-			break;
-		}
-		case mpALIGN_CENTERX:
-			orgy = w.y2p(0);
-			break;
-		case mpALIGN_BOTTOM:
-		{
-			if (m_drawOutsideMargins)
-				orgy = w.GetScreenY() - X_BORDER_SEPARATION;
-			else
-				orgy = w.GetScreenY() - w.GetMarginBottom();
-			break;
-		}
-		case mpALIGN_BORDER_BOTTOM:
-			orgy = w.GetScreenY() - 1;
-			break;
-		default:
-			;  // Nothing
-	}
+	int orgy = GetOrigin(w);
 
 	// Draw nothing if we are outside margins
 	if (!m_drawOutsideMargins && ((orgy > (w.GetScreenY() - w.GetMarginBottom())) || (orgy < w.GetMarginTop())))
@@ -1467,14 +1557,11 @@ void mpScaleX::DoPlot(wxDC &dc, mpWindow &w)
 	dc.DrawLine(m_plotBondaries.startPx, orgy, m_plotBondaries.endPx, orgy);
 
 	const double scaleX = w.GetScaleX();
-	const double dig = floor(log10(128.0 / scaleX));
-	const double step = pow(10, dig);
+	const double step = GetStep(scaleX);
 	const double end = w.GetPosX() + (double) w.GetScreenX() / scaleX;
 
-	wxCoord tx, ty;
-	wxString s;
+	// Get string format
 	wxString fmt;
-	int tmp = (int) dig;
 	switch (m_labelType)
 	{
 		case mpX_NORMAL:
@@ -1486,6 +1573,7 @@ void mpScaleX::DoPlot(wxDC &dc, mpWindow &w)
 			}
 			else
 			{
+				int tmp = (int) log10(step);
 				if (tmp >= 1)
 				{
 					fmt = wxT("%.g");
@@ -1519,17 +1607,18 @@ void mpScaleX::DoPlot(wxDC &dc, mpWindow &w)
 			;
 	}
 
-//		double n0 = floor( (w.GetPosX() - (double)w.GetScreenX() / scaleX) / step ) * step;
 	double n0 = floor(w.GetPosX() / step) * step;
 	double n = 0;
 #ifdef MATHPLOT_DO_LOGGING
 	wxLogMessage(wxT("mpScaleX::Plot: dig: %f , step: %f, end: %f, n: %f"), dig, step, end, n0);
 #endif
 
-	tmp = -65535;
 	int labelH = 0; // Control labels heigth to decide where to put axis name (below labels or on top of axis)
 	int maxExtent = 0;
+	wxCoord tx, ty;
+	wxString s;
 
+	// Draw grid, ticks and compute max label length
 	for (n = n0; n < end; n += step)
 	{
 		const int p = (int) ((n - w.GetPosX()) * scaleX);
@@ -1560,15 +1649,6 @@ void mpScaleX::DoPlot(wxDC &dc, mpWindow &w)
 
 			dc.GetTextExtent(s, &tx, &ty);
 			labelH = (labelH <= ty) ? ty : labelH;
-			/*				if ((p-tx/2-tmp) > 64) { // Problem about non-regular axis labels
-			 if ((m_flags == mpALIGN_BORDER_BOTTOM) || (m_flags == mpALIGN_TOP)) {
-			 dc.DrawText( s, p-tx/2, orgy-4-ty);
-			 } else {
-			 dc.DrawText( s, p-tx/2, orgy+4);
-			 }
-			 tmp=p+tx/2;
-			 }
-			 */
 			maxExtent = (tx > maxExtent) ? tx : maxExtent; // Keep in mind max label width
 		}
 	}
@@ -1604,47 +1684,7 @@ void mpScaleX::DoPlot(wxDC &dc, mpWindow &w)
 	}
 
 	// Draw axis name
-	dc.GetTextExtent(m_name, &tx, &ty);
-	switch (m_flags)
-	{
-		case mpALIGN_BORDER_BOTTOM:
-			dc.DrawText(m_name, m_plotBondaries.endPx - tx - 4, orgy - ty - labelH - 8);
-			break;
-		case mpALIGN_BOTTOM:
-		{
-			if ((!m_drawOutsideMargins) && (w.GetMarginBottom() > (ty + labelH + 8)))
-			{
-//				dc.DrawText(m_name, (m_plotBondaries.endPx + m_plotBondaries.startPx - tx) >> 1, orgy + labelH + 6);
-				dc.DrawText(m_name, m_plotBondaries.endPx - tx - 4, orgy + labelH + 6);
-			}
-			else
-			{
-				dc.DrawText(m_name, m_plotBondaries.endPx - tx - 4, orgy - ty - 4);
-			}
-			break;
-		}
-		case mpALIGN_CENTERX:
-			dc.DrawText(m_name, m_plotBondaries.endPx - tx - 4, orgy - ty - 4);
-			break;
-		case mpALIGN_TOP:
-		{
-			if ((!m_drawOutsideMargins) && (w.GetMarginTop() > (ty + labelH + 8)))
-			{
-//				dc.DrawText(m_name, (m_plotBondaries.endPx + m_plotBondaries.startPx - tx) >> 1, orgy - ty - labelH - 6);
-				dc.DrawText(m_name, m_plotBondaries.endPx - tx - 4, orgy - ty - labelH - 8);
-			}
-			else
-			{
-				dc.DrawText(m_name, m_plotBondaries.endPx - tx - 4, orgy + 4);
-			}
-			break;
-		}
-		case mpALIGN_BORDER_TOP:
-			dc.DrawText(m_name, m_plotBondaries.endPx - tx - 4, orgy + labelH + 6);
-			break;
-		default:
-			;
-	}
+	DrawScaleName(dc, w, orgy, labelH);
 }
 
 bool mpScaleX::IsLogAxis()
@@ -1657,44 +1697,15 @@ void mpScaleX::SetLogAxis(bool log)
 	m_win->SetLogXaxis(log);
 }
 
+//-----------------------------------------------------------------------------
+// mpScaleY
+//-----------------------------------------------------------------------------
+
 IMPLEMENT_DYNAMIC_CLASS(mpScaleY, mpScale)
 
 void mpScaleY::DoPlot(wxDC &dc, mpWindow &w)
 {
-	// Get bondaries
-	m_plotBondaries = w.GetPlotBondaries(!m_drawOutsideMargins);
-
-	int orgx = 0;
-	switch (m_flags)
-	{
-		case mpALIGN_BORDER_LEFT:
-			orgx = 1;
-			break;
-		case mpALIGN_LEFT:
-		{
-			if (m_drawOutsideMargins)
-				orgx = Y_BORDER_SEPARATION;
-			else
-				orgx = w.GetMarginLeft();
-			break;
-		}
-		case mpALIGN_CENTERY:
-			orgx = w.x2p(0);
-			break;
-		case mpALIGN_RIGHT:
-		{
-			if (m_drawOutsideMargins)
-				orgx = w.GetScreenX() - Y_BORDER_SEPARATION;
-			else
-				orgx = w.GetScreenX() - w.GetMarginRight();
-			break;
-		}
-		case mpALIGN_BORDER_RIGHT:
-			orgx = w.GetScreenX() - 1;
-			break;
-		default:
-			;  // Nothing
-	}
+	int orgx = GetOrigin(w);
 
 	// Draw nothing if we are outside margins
 	if (!m_drawOutsideMargins && ((orgx > (w.GetScreenX() - w.GetMarginRight())) || (orgx + 1 < w.GetMarginLeft())))
@@ -1704,8 +1715,7 @@ void mpScaleY::DoPlot(wxDC &dc, mpWindow &w)
 	dc.DrawLine(orgx + 1, m_plotBondaries.startPy, orgx + 1, m_plotBondaries.endPy);
 
 	const double scaleY = w.GetScaleY();
-	const double dig = floor(log10(128.0 / scaleY));
-	const double step = pow(10, dig);
+	const double step = GetStep(scaleY);
 	const double end = w.GetPosY() + (double) w.GetScreenY() / scaleY;
 
 	wxString fmt;
@@ -1735,6 +1745,8 @@ void mpScaleY::DoPlot(wxDC &dc, mpWindow &w)
 	s.Printf(fmt, n);
 	dc.GetTextExtent(s, &tx, &labelHeigth);
 	labelHeigth /= 2;
+
+	// Draw grid, ticks and label
 	for (; n < end; n += step)
 	{
 		// To have a real zero
@@ -1743,8 +1755,9 @@ void mpScaleY::DoPlot(wxDC &dc, mpWindow &w)
 		const int p = (int) ((w.GetPosY() - n) * scaleY);
 		if ((p > m_plotBondaries.startPy + labelHeigth) && (p < m_plotBondaries.endPy - labelHeigth))
 		{
+			// Draw axis ticks
 			if (m_ticks)
-			{ // Draw axis ticks
+			{
 				dc.SetPen(m_pen);
 				if (m_flags == mpALIGN_BORDER_LEFT)
 				{
@@ -1755,14 +1768,20 @@ void mpScaleY::DoPlot(wxDC &dc, mpWindow &w)
 					dc.DrawLine(orgx - 4, p, orgx, p);
 				}
 			}
+
+			// Draw axis grids
 			if (m_grids)
-			{ // Draw axis grids
+			{
 				dc.SetPen(m_gridpen);
 				dc.DrawLine(m_plotBondaries.startPx, p, m_plotBondaries.endPx, p);
 			}
 
 			if (IsLogAxis())
+			{
 				s = FormatLogValue(n);
+				if (s.IsEmpty())
+					continue;
+			}
 			else
 				s.Printf(fmt, n);
 
@@ -1785,45 +1804,7 @@ void mpScaleY::DoPlot(wxDC &dc, mpWindow &w)
 	}
 
 	// Draw axis name
-	dc.GetTextExtent(m_name, &tx, &ty);
-	switch (m_flags)
-	{
-		case mpALIGN_BORDER_LEFT:
-			dc.DrawText(m_name, labelW + 8, m_plotBondaries.startPy + 4);
-			break;
-		case mpALIGN_LEFT:
-		{
-			if ((!m_drawOutsideMargins) && (w.GetMarginLeft() > (ty + labelW + 8)))
-			{
-				dc.DrawRotatedText(m_name, orgx - labelW - ty - 6, (m_plotBondaries.endPy + m_plotBondaries.startPy + tx) >> 1, 90);
-			}
-			else
-			{
-				dc.DrawText(m_name, orgx + 4, m_plotBondaries.startPy + 4);
-			}
-			break;
-		}
-		case mpALIGN_CENTERY:
-			dc.DrawText(m_name, orgx + 4, m_plotBondaries.startPy + 4);
-			break;
-		case mpALIGN_RIGHT:
-		{
-			if ((!m_drawOutsideMargins) && (w.GetMarginRight() > (ty + labelW + 8)))
-			{
-				dc.DrawRotatedText(m_name, orgx + labelW + 6, (m_plotBondaries.endPy + m_plotBondaries.startPy + tx) >> 1, 90);
-			}
-			else
-			{
-				dc.DrawText(m_name, orgx - tx - 4, m_plotBondaries.startPy + 4);
-			}
-			break;
-		}
-		case mpALIGN_BORDER_RIGHT:
-			dc.DrawText(m_name, orgx - tx - labelW - 6, m_plotBondaries.startPy + 4);
-			break;
-		default:
-			;
-	}
+	DrawScaleName(dc, w, orgx, labelW);
 }
 
 bool mpScaleY::IsLogAxis()
@@ -1980,21 +1961,10 @@ mpWindow::~mpWindow()
 	// Free all the layers:
 	DelAllLayers(true, false);
 
-	if (m_buff_bmp)
-	{
-		delete m_buff_bmp;
-		m_buff_bmp = NULL;
-	}
-	if (m_Screenshot_bmp)
-	{
-		delete m_Screenshot_bmp;
-		m_Screenshot_bmp = NULL;
-	}
-	if (m_configWindow)
-	{
-		delete m_configWindow;
-		m_configWindow = NULL;
-	}
+	DeleteAndNull(m_buff_bmp);
+	DeleteAndNull(m_zoom_bmp);
+	DeleteAndNull(m_Screenshot_bmp);
+	DeleteAndNull(m_configWindow);
 }
 
 void mpWindow::InitParameters()
@@ -2017,6 +1987,8 @@ void mpWindow::InitParameters()
 	m_mouseMovedAfterRightClick = false;
 	m_movingInfoLayer = NULL;
 	m_InfoCoords = NULL;
+	m_zoom_bmp = NULL;
+
 	// Set all margins to 50
 	SetMargins(50, 50, 50, 50);
 
@@ -2126,17 +2098,50 @@ void mpWindow::OnMouseMove(wxMouseEvent &event)
 			if (m_movingInfoLayer == NULL)
 			{
 				wxClientDC dc(this);
-				wxPen pen(*wxBLACK, 1, wxPENSTYLE_DOT);  // wxDOT
-				dc.SetPen(pen);
-				dc.SetBrush(*wxTRANSPARENT_BRUSH);
-				dc.DrawRectangle(m_mouseLClick_X, m_mouseLClick_Y, event.GetX() - m_mouseLClick_X, event.GetY() - m_mouseLClick_Y);
+
+				// First : restaure stored bitmap
+				if (m_zoom_bmp)
+				{
+					wxMemoryDC m_coord_dc(&dc);
+					m_coord_dc.SelectObject(*m_zoom_bmp);
+					dc.Blit(m_zoom_oldDim.x, m_zoom_oldDim.y, m_zoom_oldDim.width, m_zoom_oldDim.height, &m_coord_dc, 0, 0);
+					m_coord_dc.SelectObject(wxNullBitmap);
+					DeleteAndNull(m_zoom_bmp);
+				}
+
+				// Second : store new bitmap
+				m_zoom_dim = wxRect(m_mouseLClick_X, m_mouseLClick_Y, event.GetX() - m_mouseLClick_X, event.GetY() - m_mouseLClick_Y);
+				if (m_zoom_dim.width < 0)
+				{
+					m_zoom_dim.x += m_zoom_dim.width;
+					m_zoom_dim.width = abs(m_zoom_dim.width);
+				}
+				if (m_zoom_dim.height < 0)
+				{
+					m_zoom_dim.y += m_zoom_dim.height;
+					m_zoom_dim.height = abs(m_zoom_dim.height);
+				}
+				if ((m_zoom_dim.width != 0) && (m_zoom_dim.height != 0))
+				{
+					m_zoom_bmp = new wxBitmap(m_zoom_dim.width, m_zoom_dim.height, dc);
+					wxMemoryDC m_coord_dc(&dc);
+					m_coord_dc.SelectObject(*m_zoom_bmp);
+					m_coord_dc.Blit(0, 0, m_zoom_dim.width, m_zoom_dim.height, &dc, m_zoom_dim.x, m_zoom_dim.y);
+					m_coord_dc.SelectObject(wxNullBitmap);
+					m_zoom_oldDim = m_zoom_dim;
+
+					// Draw the rectangle that focus the selected region
+					wxPen pen(*wxBLACK, 1, wxPENSTYLE_DOT);  // wxDOT
+					dc.SetPen(pen);
+					dc.SetBrush(*wxTRANSPARENT_BRUSH);
+					dc.DrawRectangle(m_zoom_dim);
+				}
 			}
 			else
 			{
 				wxPoint moveVector(event.GetX() - m_mouseLClick_X, event.GetY() - m_mouseLClick_Y);
 				m_movingInfoLayer->Move(moveVector);
 			}
-			UpdateAll();
 		}
 		else
 		{
@@ -2158,6 +2163,15 @@ void mpWindow::OnMouseLeave(wxMouseEvent &WXUNUSED(event))
 	{
 		wxClientDC dc(this);
 		m_InfoCoords->ErasePlot(dc, *this);
+	}
+	if (m_zoom_bmp)
+	{
+		wxClientDC dc(this);
+		wxMemoryDC m_coord_dc(&dc);
+		m_coord_dc.SelectObject(*m_zoom_bmp);
+		dc.Blit(m_zoom_oldDim.x, m_zoom_oldDim.y, m_zoom_oldDim.width, m_zoom_oldDim.height, &m_coord_dc, 0, 0);
+		m_coord_dc.SelectObject(wxNullBitmap);
+		DeleteAndNull(m_zoom_bmp);
 	}
 }
 
@@ -2192,6 +2206,7 @@ void mpWindow::OnMouseLeftRelease(wxMouseEvent &event)
 	{
 		if (release != press)
 		{
+			DeleteAndNull(m_zoom_bmp);
 			ZoomRect(press, release);
 		}
 	}
@@ -2689,11 +2704,7 @@ void mpWindow::DelAllLayers(bool alsoDeleteObject, bool refreshDisplay)
 	m_YAxis = NULL;
 	if (refreshDisplay)
 		UpdateAll();
-	if (m_configWindow)
-	{
-		delete m_configWindow;
-		m_configWindow = NULL;
-	}
+	DeleteAndNull(m_configWindow);
 }
 
 void mpWindow::DelAllPlot(bool alsoDeleteObject, mpFunctionType func, bool refreshDisplay)
@@ -2740,8 +2751,7 @@ void mpWindow::OnPaint(wxPaintEvent &WXUNUSED(event))
 		// Recreate Bitmap if sizes have changed
 		if (m_last_lx != m_scrX || m_last_ly != m_scrY)
 		{
-			if (m_buff_bmp)
-				delete m_buff_bmp;
+			DeleteAndNull(m_buff_bmp);
 			m_buff_bmp = new wxBitmap(m_scrX, m_scrY, dc);
 			m_last_lx = m_scrX;
 			m_last_ly = m_scrY;
@@ -3406,8 +3416,7 @@ wxBitmap* mpWindow::BitmapScreenshot(wxSize imageSize, bool fit)
 		SetScreen(sizeX, sizeY);
 	}
 
-	if (m_Screenshot_bmp)
-		delete m_Screenshot_bmp;
+	DeleteAndNull(m_Screenshot_bmp);
 	m_Screenshot_bmp = new wxBitmap(sizeX, sizeY);
 	m_Screenshot_dc.SelectObject(*m_Screenshot_bmp);
 
@@ -4028,6 +4037,10 @@ inline void SinCos(double Angle, double *sinA, double *cosA)
 	#endif
 #endif
 }
+
+//-----------------------------------------------------------------------------
+// mpMovableObject
+//-----------------------------------------------------------------------------
 
 IMPLEMENT_DYNAMIC_CLASS(mpMovableObject, mpLayer)
 

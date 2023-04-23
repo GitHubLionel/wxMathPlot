@@ -635,6 +635,7 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
 	fontLegendChanged = false;
 	fontAxisChanged = false;
 
+	scale_offset = 0;
 	scale_min = -1;
 	scale_max = 1;
 	CheckBar = false;
@@ -836,8 +837,9 @@ void MathPlotConfigDialog::UpdateAxis(void)
 	{
 		CurrentScale = (mpScale*) m_plot->GetLayerXAxis();
 		cbAxisPosition->Clear();
-		for (int i = 0; i <= mpALIGN_BORDER_TOP; i++)
-			cbAxisPosition->Append(XAxis_Align[i]);
+		scale_offset = mpALIGN_BORDER_BOTTOM;
+		for (int i = scale_offset; i <= mpALIGN_BORDER_TOP; i++)
+			cbAxisPosition->Append(XAxis_Align[i - scale_offset]);
 		cbFormat->Enable();
 		if (CurrentScale)
 		cbFormat->SetSelection(((mpScaleX*) CurrentScale)->GetLabelMode());
@@ -847,8 +849,9 @@ void MathPlotConfigDialog::UpdateAxis(void)
 	{
 		CurrentScale = (mpScale*) m_plot->GetLayerYAxis();
 		cbAxisPosition->Clear();
-		for (int i = 0; i <= mpALIGN_BORDER_RIGHT; i++)
-			cbAxisPosition->Append(YAxis_Align[i]);
+		scale_offset = mpALIGN_BORDER_LEFT;
+		for (int i = scale_offset; i <= mpALIGN_BORDER_RIGHT; i++)
+			cbAxisPosition->Append(YAxis_Align[i - scale_offset]);
 		cbFormat->SetSelection(0);
 		cbFormat->Enable(false);
 		edFormat->Enable();
@@ -862,7 +865,7 @@ void MathPlotConfigDialog::UpdateAxis(void)
 		cbAxisPenWidth->SetSelection(CurrentScale->GetPen().GetWidth() - 1);
 		cbAxisPenStyle->SetSelection(CurrentScale->GetPen().GetStyle() - wxPENSTYLE_SOLID);
 		cbAxisVisible->SetValue(CurrentScale->IsVisible());
-		cbAxisPosition->SetSelection(CurrentScale->GetAlign());
+		cbAxisPosition->SetSelection(CurrentScale->GetAlign() - scale_offset);
 		edFormat->SetValue(CurrentScale->GetLabelFormat());
 		cbLogAxis->SetValue(CurrentScale->IsLogAxis());
 
@@ -1079,7 +1082,7 @@ void MathPlotConfigDialog::OnbApplyClick(wxCommandEvent& WXUNUSED(event))
 						(wxPenStyle) (cbAxisPenStyle->GetSelection() + wxPENSTYLE_SOLID));
 				CurrentScale->SetPen(pen);
 				CurrentScale->SetVisible(cbAxisVisible->GetValue());
-				CurrentScale->SetAlign(cbAxisPosition->GetSelection());
+				CurrentScale->SetAlign(scale_offset + cbAxisPosition->GetSelection());
 				CurrentScale->SetDrawOutsideMargins(cbAxisOutside->GetValue());
 				CurrentScale->SetLabelFormat(edFormat->GetValue());
 				if (ChoiceAxis->GetSelection() == 0)
