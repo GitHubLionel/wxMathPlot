@@ -6,7 +6,7 @@
 // Contributors:    Jose Luis Blanco, Val Greene, Lionel Reynaud
 // Created:         21/07/2003
 // Last edit:       22/02/2009
-// Last edit:       12/04/2023
+// Last edit:       24/04/2023
 // Copyright:       (c) David Schalig, Davide Rondini
 // Licence:         wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -806,7 +806,7 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLayer: public mpLayer
 		/** Checks whether a point is inside the info box rectangle.
 		 @param point The point to be checked
 		 @return \a true if the point is inside the bounding box */
-		virtual bool Inside(wxPoint &point);
+		virtual bool Inside(const wxPoint &point);
 
 		/** Moves the layer rectangle of given pixel deltas.
 		 @param delta The wxPoint container for delta coordinates along x and y. Units are in pixels. */
@@ -2104,7 +2104,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 		/** Check if a given point is inside the area of a mpInfoLayer and eventually returns its pointer.
 		 @param point The position to be checked
 		 @return If an info layer is found, returns its pointer, NULL otherwise */
-		mpInfoLayer* IsInsideInfoLayer(wxPoint& point);
+		mpInfoLayer* IsInsideInfoLayer(const wxPoint& point);
 
 		/** Sets the visibility of a layer by its name.
 		 @param name The layer name to set visibility
@@ -2270,7 +2270,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 		bool m_enableMouseNavigation;		//!< For pan/zoom with the mouse.
 		bool m_mouseMovedAfterRightClick;
 		long m_mouseRClick_X, m_mouseRClick_Y;		//!< For the right button "drag" feature
-		int m_mouseLClick_X, m_mouseLClick_Y;			//!< Starting coords for rectangular zoom selection
+		wxPoint m_mouseLClick;			    //!< Starting coords for rectangular zoom selection
 		bool m_enableScrollBars;
 		int m_scrollX, m_scrollY;
 		mpInfoLayer* m_movingInfoLayer;	//!< For moving info layers over the window area
@@ -2967,7 +2967,7 @@ class WXDLLIMPEXP_MATHPLOT mpBitmapLayer: public mpLayer
 
 // utilitary class
 
-// Direction for the Legend layer
+// Enumeration of classic colour
 typedef enum __mp_Colour
 {
 	mpBlue,

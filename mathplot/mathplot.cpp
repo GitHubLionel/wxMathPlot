@@ -6,7 +6,7 @@
 // Contributors:    Jose Luis Blanco, Val Greene, Lionel Reynaud
 // Created:         21/07/2003
 // Last edit:       09/09/2007
-// Last edit:       12/04/2023
+// Last edit:       24/04/2023
 // Copyright:       (c) David Schalig, Davide Rondini
 // Licence:         wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -287,12 +287,12 @@ mpInfoLayer::~mpInfoLayer()
 
 }
 
-void mpInfoLayer::UpdateInfo(mpWindow&WXUNUSED(w), wxEvent&WXUNUSED(event))
+void mpInfoLayer::UpdateInfo(mpWindow &WXUNUSED(w), wxEvent &WXUNUSED(event))
 {
 // Nothing to do here
 }
 
-bool mpInfoLayer::Inside(wxPoint &point)
+bool mpInfoLayer::Inside(const wxPoint &point)
 {
 #if wxCHECK_VERSION(2, 8, 0)
 	return m_dim.Contains(point);
@@ -422,7 +422,7 @@ void mpInfoLayer::SetInfoRectangle(mpWindow &w, int width, int height)
 void mpInfoLayer::DoPlot(wxDC &dc, mpWindow &w)
 {
 	SetInfoRectangle(w);
-	dc.DrawRectangle(m_dim.x, m_dim.y, m_dim.width, m_dim.height);
+	dc.DrawRectangle(m_dim);
 }
 
 wxPoint mpInfoLayer::GetPosition()
@@ -613,7 +613,7 @@ void mpInfoCoords::DoPlot(wxDC &dc, mpWindow &w)
 	m_oldDim = m_dim;
 
 	// Third : draw the coordinate
-	dc.DrawRectangle(m_dim.x, m_dim.y, m_dim.width, m_dim.height);
+	dc.DrawRectangle(m_dim);
 	dc.DrawText(m_content, m_dim.x + MARGIN_COORD + offset, m_dim.y + MARGIN_COORD);
 	if (m_series_coord)
 	{
@@ -2095,6 +2095,7 @@ void mpWindow::OnMouseMove(wxMouseEvent &event)
 	{
 		if (event.m_leftDown)
 		{
+			wxPoint moveVector(event.GetX() - m_mouseLClick.x, event.GetY() - m_mouseLClick.y);
 			if (m_movingInfoLayer == NULL)
 			{
 				wxClientDC dc(this);
@@ -2110,19 +2111,20 @@ void mpWindow::OnMouseMove(wxMouseEvent &event)
 				}
 
 				// Second : store new bitmap
-				m_zoom_dim = wxRect(m_mouseLClick_X, m_mouseLClick_Y, event.GetX() - m_mouseLClick_X, event.GetY() - m_mouseLClick_Y);
-				if (m_zoom_dim.width < 0)
-				{
-					m_zoom_dim.x += m_zoom_dim.width;
-					m_zoom_dim.width = abs(m_zoom_dim.width);
-				}
-				if (m_zoom_dim.height < 0)
-				{
-					m_zoom_dim.y += m_zoom_dim.height;
-					m_zoom_dim.height = abs(m_zoom_dim.height);
-				}
+				m_zoom_dim = wxRect(m_mouseLClick, wxSize(moveVector.x, moveVector.y));
 				if ((m_zoom_dim.width != 0) && (m_zoom_dim.height != 0))
 				{
+					if (m_zoom_dim.width < 0)
+					{
+						m_zoom_dim.x += m_zoom_dim.width;
+						m_zoom_dim.width = abs(m_zoom_dim.width);
+					}
+					if (m_zoom_dim.height < 0)
+					{
+						m_zoom_dim.y += m_zoom_dim.height;
+						m_zoom_dim.height = abs(m_zoom_dim.height);
+					}
+
 					m_zoom_bmp = new wxBitmap(m_zoom_dim.width, m_zoom_dim.height, dc);
 					wxMemoryDC m_coord_dc(&dc);
 					m_coord_dc.SelectObject(*m_zoom_bmp);
@@ -2139,7 +2141,6 @@ void mpWindow::OnMouseMove(wxMouseEvent &event)
 			}
 			else
 			{
-				wxPoint moveVector(event.GetX() - m_mouseLClick_X, event.GetY() - m_mouseLClick_Y);
 				m_movingInfoLayer->Move(moveVector);
 			}
 		}
@@ -2177,13 +2178,11 @@ void mpWindow::OnMouseLeave(wxMouseEvent &WXUNUSED(event))
 
 void mpWindow::OnMouseLeftDown(wxMouseEvent &event)
 {
-	m_mouseLClick_X = event.GetX();
-	m_mouseLClick_Y = event.GetY();
+	m_mouseLClick = event.GetPosition();
 #ifdef MATHPLOT_DO_LOGGING
 	wxLogMessage(wxT("mpWindow::OnMouseLeftDown() X = %d , Y = %d"), event.GetX(), event.GetY());
 #endif
-	wxPoint pointClicked = event.GetPosition();
-	m_movingInfoLayer = IsInsideInfoLayer(pointClicked);
+	m_movingInfoLayer = IsInsideInfoLayer(m_mouseLClick);
 #ifdef MATHPLOT_DO_LOGGING
 	if (m_movingInfoLayer != NULL)
 	{
@@ -2195,8 +2194,6 @@ void mpWindow::OnMouseLeftDown(wxMouseEvent &event)
 
 void mpWindow::OnMouseLeftRelease(wxMouseEvent &event)
 {
-	wxPoint release(event.GetX(), event.GetY());
-	wxPoint press(m_mouseLClick_X, m_mouseLClick_Y);
 	if (m_movingInfoLayer != NULL)
 	{
 		m_movingInfoLayer->UpdateReference();
@@ -2204,10 +2201,12 @@ void mpWindow::OnMouseLeftRelease(wxMouseEvent &event)
 	}
 	else
 	{
-		if (release != press)
+		DeleteAndNull(m_zoom_bmp);
+		wxPoint release(event.GetX(), event.GetY());
+		// Zoom if we have a real rectangle
+		if ((release.x != m_mouseLClick.x) && (release.y != m_mouseLClick.y))
 		{
-			DeleteAndNull(m_zoom_bmp);
-			ZoomRect(press, release);
+			ZoomRect(m_mouseLClick, release);
 		}
 	}
 	event.Skip();
@@ -3307,7 +3306,7 @@ mpScaleY* mpWindow::GetLayerYAxis()
 		return NULL;
 }
 
-mpInfoLayer* mpWindow::IsInsideInfoLayer(wxPoint &point)
+mpInfoLayer* mpWindow::IsInsideInfoLayer(const wxPoint &point)
 {
 	mpInfoType info;
 	for (wxLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
