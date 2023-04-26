@@ -584,10 +584,10 @@ void mpInfoCoords::DoPlot(wxDC &dc, mpWindow &w)
 	{
 		m_dim.x = m_mouseX + 2 * MARGIN_BOTTOM_OFFSET;
 		if (m_dim.x + m_dim.width > w.GetScreenX())
-			m_dim.x = m_mouseX - m_dim.width;
+			m_dim.x = m_mouseX - m_dim.width - 5;
 		m_dim.y = m_mouseY + 2 * MARGIN_BOTTOM_OFFSET;
 		if (m_dim.y + m_dim.height > w.GetScreenY())
-			m_dim.y = m_mouseY - m_dim.height;
+			m_dim.y = m_mouseY - m_dim.height - 5;
 	}
 
 	// Don't use stored bitmap when we repaint all
@@ -1627,6 +1627,13 @@ void mpScaleX::DoPlot(wxDC &dc, mpWindow &w)
 #endif
 		if ((p >= m_plotBondaries.startPx) && (p <= m_plotBondaries.endPx))
 		{
+			// draw grid
+			if (m_grids)
+			{
+				dc.SetPen(m_gridpen);
+				dc.DrawLine(p, m_plotBondaries.startPy + 1, p, m_plotBondaries.endPy - 1);
+			}
+
 			// draw axis ticks
 			if (m_ticks)
 			{
@@ -1635,13 +1642,6 @@ void mpScaleX::DoPlot(wxDC &dc, mpWindow &w)
 					dc.DrawLine(p, orgy, p, orgy - 4);
 				else
 					dc.DrawLine(p, orgy, p, orgy + 4);
-			}
-
-			// draw grid
-			if (m_grids)
-			{
-				dc.SetPen(m_gridpen);
-				dc.DrawLine(p, m_plotBondaries.startPy, p, m_plotBondaries.endPy);
 			}
 
 			// Write ticks labels in s string : compute size
@@ -1755,6 +1755,13 @@ void mpScaleY::DoPlot(wxDC &dc, mpWindow &w)
 		const int p = (int) ((w.GetPosY() - n) * scaleY);
 		if ((p > m_plotBondaries.startPy + labelHeigth) && (p < m_plotBondaries.endPy - labelHeigth))
 		{
+			// Draw axis grids
+			if (m_grids && (n != 0))
+			{
+				dc.SetPen(m_gridpen);
+				dc.DrawLine(m_plotBondaries.startPx + 1, p, m_plotBondaries.endPx - 1, p);
+			}
+
 			// Draw axis ticks
 			if (m_ticks)
 			{
@@ -1767,13 +1774,6 @@ void mpScaleY::DoPlot(wxDC &dc, mpWindow &w)
 				{
 					dc.DrawLine(orgx - 4, p, orgx, p);
 				}
-			}
-
-			// Draw axis grids
-			if (m_grids)
-			{
-				dc.SetPen(m_gridpen);
-				dc.DrawLine(m_plotBondaries.startPx, p, m_plotBondaries.endPx, p);
 			}
 
 			if (IsLogAxis())
@@ -1988,11 +1988,28 @@ void mpWindow::InitParameters()
 	m_movingInfoLayer = NULL;
 	m_InfoCoords = NULL;
 	m_zoom_bmp = NULL;
+	m_magnetize = false;
 
 	// Set all margins to 50
 	SetMargins(50, 50, 50, 50);
 
 	m_lockaspect = false;
+}
+
+void mpWindow::OnMouseLeftDown(wxMouseEvent &event)
+{
+	m_mouseLClick = event.GetPosition();
+#ifdef MATHPLOT_DO_LOGGING
+	wxLogMessage(wxT("mpWindow::OnMouseLeftDown() X = %d , Y = %d"), event.GetX(), event.GetY());
+#endif
+	m_movingInfoLayer = IsInsideInfoLayer(m_mouseLClick);
+#ifdef MATHPLOT_DO_LOGGING
+	if (m_movingInfoLayer != NULL)
+	{
+		wxLogMessage(wxT("mpWindow::OnMouseLeftDown() started moving layer %p"), m_movingInfoLayer);
+	}
+#endif
+	event.Skip();
 }
 
 // Mouse handler, for detecting when the user drag with the right button or just "clicks" for the menu
@@ -2002,54 +2019,13 @@ void mpWindow::OnMouseRightDown(wxMouseEvent &event)
 	m_mouseMovedAfterRightClick = false;
 	m_mouseRClick_X = event.GetX();
 	m_mouseRClick_Y = event.GetY();
+	if (m_magnetize)
+	{
+		m_magnet.SetRightClick();
+	}
 	if (m_enableMouseNavigation)
 	{
 		SetCursor(*wxCROSS_CURSOR);
-	}
-}
-
-// Process mouse wheel events
-// JLB
-void mpWindow::OnMouseWheel(wxMouseEvent &event)
-{
-	if (!m_enableMouseNavigation)
-	{
-		event.Skip();
-		return;
-	}
-
-	// Zoom in and out
-	if (!event.m_controlDown && !event.m_shiftDown)
-	{
-		wxPoint clickPt(event.GetX(), event.GetY());
-		// CTRL key hold: Zoom in/out:
-		if (event.GetWheelRotation() > 0)
-			ZoomIn(clickPt);
-		else
-			ZoomOut(clickPt);
-	}
-	else
-	{
-		// Scroll vertically or horizontally (this is SHIFT is hold down).
-		int change = -event.GetWheelRotation(); // Opposite direction (More intuitive)!
-		double changeUnitsX = change / m_scaleX;
-		double changeUnitsY = change / m_scaleY;
-
-		if (event.m_shiftDown)
-		{
-			m_posX += changeUnitsX;
-			m_desired.Xmax += changeUnitsX;
-			m_desired.Xmin += changeUnitsX;
-		}
-		else
-			if (event.m_controlDown)
-			{
-				m_posY -= changeUnitsY;
-				m_desired.Ymax -= changeUnitsY;
-				m_desired.Ymax -= changeUnitsY;
-			}
-
-		UpdateAll();
 	}
 }
 
@@ -2063,9 +2039,13 @@ void mpWindow::OnMouseMove(wxMouseEvent &event)
 		return;
 	}
 
+	// pan
 	if (event.m_rightDown)
 	{
 		m_mouseMovedAfterRightClick = true; // Hides the popup menu after releasing the button!
+
+		if (m_magnetize)
+		  m_magnet.ClearPlot(*this);
 
 		// The change:
 		int Ax = m_mouseRClick_X - event.GetX();
@@ -2093,8 +2073,12 @@ void mpWindow::OnMouseMove(wxMouseEvent &event)
 	}
 	else
 	{
+		// zoom select rectangle
 		if (event.m_leftDown)
 		{
+			if (m_magnetize)
+			  m_magnet.ClearPlot(*this);
+
 			wxPoint moveVector(event.GetX() - m_mouseLClick.x, event.GetY() - m_mouseLClick.y);
 			if (m_movingInfoLayer == NULL)
 			{
@@ -2146,6 +2130,11 @@ void mpWindow::OnMouseMove(wxMouseEvent &event)
 		}
 		else
 		{
+			if (m_magnetize && (event.GetEventType() == wxEVT_MOTION))
+			{
+				m_magnet.Plot(*this, wxPoint(event.GetX(), event.GetY()));
+			}
+
 			// Mouse move coordinate
 			if (m_InfoCoords && m_InfoCoords->IsVisible())
 			{
@@ -2155,40 +2144,6 @@ void mpWindow::OnMouseMove(wxMouseEvent &event)
 			}
 		}
 	}
-	event.Skip();
-}
-
-void mpWindow::OnMouseLeave(wxMouseEvent &WXUNUSED(event))
-{
-	if (m_InfoCoords && m_InfoCoords->IsVisible())
-	{
-		wxClientDC dc(this);
-		m_InfoCoords->ErasePlot(dc, *this);
-	}
-	if (m_zoom_bmp)
-	{
-		wxClientDC dc(this);
-		wxMemoryDC m_coord_dc(&dc);
-		m_coord_dc.SelectObject(*m_zoom_bmp);
-		dc.Blit(m_zoom_oldDim.x, m_zoom_oldDim.y, m_zoom_oldDim.width, m_zoom_oldDim.height, &m_coord_dc, 0, 0);
-		m_coord_dc.SelectObject(wxNullBitmap);
-		DeleteAndNull(m_zoom_bmp);
-	}
-}
-
-void mpWindow::OnMouseLeftDown(wxMouseEvent &event)
-{
-	m_mouseLClick = event.GetPosition();
-#ifdef MATHPLOT_DO_LOGGING
-	wxLogMessage(wxT("mpWindow::OnMouseLeftDown() X = %d , Y = %d"), event.GetX(), event.GetY());
-#endif
-	m_movingInfoLayer = IsInsideInfoLayer(m_mouseLClick);
-#ifdef MATHPLOT_DO_LOGGING
-	if (m_movingInfoLayer != NULL)
-	{
-		wxLogMessage(wxT("mpWindow::OnMouseLeftDown() started moving layer %p"), m_movingInfoLayer);
-	}
-#endif
 	event.Skip();
 }
 
@@ -2212,6 +2167,77 @@ void mpWindow::OnMouseLeftRelease(wxMouseEvent &event)
 	event.Skip();
 }
 
+// Process mouse wheel events
+// JLB
+void mpWindow::OnMouseWheel(wxMouseEvent &event)
+{
+	if (!m_enableMouseNavigation)
+	{
+		event.Skip();
+		return;
+	}
+
+	if (m_magnetize)
+	  m_magnet.ClearPlot(*this);
+
+	// Zoom in and out
+	if (!event.m_controlDown && !event.m_shiftDown)
+	{
+		wxPoint clickPt(event.GetX(), event.GetY());
+		// CTRL key hold: Zoom in/out:
+		if (event.GetWheelRotation() > 0)
+			ZoomIn(clickPt);
+		else
+			ZoomOut(clickPt);
+	}
+	else
+	{
+		// Scroll vertically or horizontally (this is SHIFT is hold down).
+		int change = -event.GetWheelRotation(); // Opposite direction (More intuitive)!
+		double changeUnitsX = change / m_scaleX;
+		double changeUnitsY = change / m_scaleY;
+
+		if (event.m_shiftDown)
+		{
+			m_posX += changeUnitsX;
+			m_desired.Xmax += changeUnitsX;
+			m_desired.Xmin += changeUnitsX;
+		}
+		else
+			if (event.m_controlDown)
+			{
+				m_posY -= changeUnitsY;
+				m_desired.Ymax -= changeUnitsY;
+				m_desired.Ymax -= changeUnitsY;
+			}
+
+		UpdateAll();
+	}
+}
+
+/**
+ * Mouve leave the plot area
+ */
+void mpWindow::OnMouseLeave(wxMouseEvent &WXUNUSED(event))
+{
+	if (m_InfoCoords && m_InfoCoords->IsVisible())
+	{
+		wxClientDC dc(this);
+		m_InfoCoords->ErasePlot(dc, *this);
+	}
+	if (m_zoom_bmp)
+	{
+		wxClientDC dc(this);
+		wxMemoryDC m_coord_dc(&dc);
+		m_coord_dc.SelectObject(*m_zoom_bmp);
+		dc.Blit(m_zoom_oldDim.x, m_zoom_oldDim.y, m_zoom_oldDim.width, m_zoom_oldDim.height, &m_coord_dc, 0, 0);
+		m_coord_dc.SelectObject(wxNullBitmap);
+		DeleteAndNull(m_zoom_bmp);
+	}
+	if (m_magnetize)
+		m_magnet.ClearPlot(*this);
+}
+
 void mpWindow::Fit()
 {
 	UpdateBBox();
@@ -2221,6 +2247,9 @@ void mpWindow::Fit()
 // JL
 void mpWindow::Fit(const mpFloatRect &rect, wxCoord *printSizeX, wxCoord *printSizeY)
 {
+	if (m_magnetize)
+		m_magnet.ClearPlot(*this);
+
 	// Save desired borders:
 	m_desired = rect;
 
@@ -2481,7 +2510,10 @@ void mpWindow::OnShowPopupMenu(wxMouseEvent &event)
 	{
 		m_clickedX = event.GetX();
 		m_clickedY = event.GetY();
+
 		PopupMenu(&m_popmenu, event.GetX(), event.GetY());
+//		if (m_magnetize)
+//			m_magnet.Plot(*this, wxPoint(event.GetX(), event.GetY()));
 	}
 }
 
@@ -3381,8 +3413,8 @@ void mpWindow::SetMargins(int top, int right, int bottom, int left)
 	m_margin.right = right;
 	m_margin.bottom = bottom;
 	m_margin.left = left;
-	m_plotWidth = m_scrX - (m_margin.left + m_margin.right);
-	m_plotHeight = m_scrY - (m_margin.top + m_margin.bottom);
+//	m_plotWidth = m_scrX - (m_margin.left + m_margin.right);
+//	m_plotHeight = m_scrY - (m_margin.top + m_margin.bottom);
 
 	m_plotBondaries.startPx = 0;
 	m_plotBondariesMargin.startPx = m_margin.left;
@@ -3393,6 +3425,8 @@ void mpWindow::SetMargins(int top, int right, int bottom, int left)
 	m_plotBondariesMargin.startPy = m_margin.top;
 	m_plotBondaries.endPy = m_scrY;
 	m_plotBondariesMargin.endPy = m_scrY - m_margin.bottom;
+
+//	m_magnet.UpdateBox(m_margin.left, m_margin.top, m_plotWidth, m_plotHeight);
 }
 
 wxBitmap* mpWindow::BitmapScreenshot(wxSize imageSize, bool fit)
@@ -4430,22 +4464,24 @@ void mpBitmapLayer::DoPlot(wxDC &dc, mpWindow &w)
 #endif
 
 	// Is there any visible region?
-	if (d_width > 0 && d_height > 0)
+	if ((d_width > 0) && (d_height > 0))
 	{
 		// Build the scaled bitmap from the image, only if it has changed:
-		if (m_scaledBitmap.GetWidth() != d_width || m_scaledBitmap.GetHeight() != d_height || m_scaledBitmap_offset_x != offset_x
-				|| m_scaledBitmap_offset_y != offset_y)
+		if (m_scaledBitmap.GetWidth() != d_width || m_scaledBitmap.GetHeight() != d_height ||
+				m_scaledBitmap_offset_x != offset_x || m_scaledBitmap_offset_y != offset_y)
 		{
-			wxRect r(wxRect(offset_x, offset_y, b_width, b_height));
+			wxRect r = wxRect(offset_x, offset_y, b_width, b_height);
 			// Just for the case....
 			if (r.x < 0)
 				r.x = 0;
 			if (r.y < 0)
 				r.y = 0;
-			if (r.width > m_bitmap.GetWidth())
-				r.width = m_bitmap.GetWidth();
-			if (r.height > m_bitmap.GetHeight())
-				r.height = m_bitmap.GetHeight();
+
+			// Correction : https://github.com/GitHubLionel/wxMathPlot/issues/8
+			if (r.x + r.width > m_bitmap.GetWidth())
+				r.width = m_bitmap.GetWidth() - r.x;
+			if (r.y + r.height > m_bitmap.GetHeight())
+				r.height = m_bitmap.GetHeight() - r.y;
 
 			m_scaledBitmap = wxBitmap(wxBitmap(m_bitmap).GetSubBitmap(r).ConvertToImage().Scale(d_width, d_height));
 			m_scaledBitmap_offset_x = offset_x;
@@ -4504,6 +4540,60 @@ void mpBitmapLayer::DoPlot(wxDC &dc, mpWindow &w)
 		}
 
 		dc.DrawText(m_name, tx, ty);
+	}
+}
+
+//-----------------------------------------------------------------------------
+// mpMagnet
+//-----------------------------------------------------------------------------
+
+void mpMagnet::Plot(mpWindow &w, const wxPoint &mousePos)
+{
+	wxClientDC dc(&w);
+	dc.SetPen(*wxBLACK_PEN);
+	dc.SetLogicalFunction(wxINVERT);
+
+	if (m_Inside)
+	{
+		dc.DrawLine(m_mousePosition_old.x, m_plot_size.y, m_mousePosition_old.x, m_plot_size.height);
+		dc.DrawLine(m_plot_size.x, m_mousePosition_old.y, m_plot_size.width, m_mousePosition_old.y);
+		m_Inside = false;
+		m_rightClick = false;
+	}
+
+	if (m_domain.Contains(mousePos))
+	{
+		if ((m_mousePosition_old.x != mousePos.x) || (m_mousePosition_old.y != mousePos.y))
+		{
+			if (m_rightClick)
+			{
+				m_rightClick = false;
+			}
+			else
+			{
+				dc.DrawLine(mousePos.x, m_plot_size.y, mousePos.x, m_plot_size.height);
+				dc.DrawLine(m_plot_size.x, mousePos.y, m_plot_size.width, mousePos.y);
+				dc.SetLogicalFunction(wxCOPY);
+				m_mousePosition_old = mousePos;
+				m_Inside = true;
+			}
+		}
+	}
+
+	dc.SetLogicalFunction(wxCOPY);
+}
+
+void mpMagnet::ClearPlot(mpWindow &w)
+{
+	if (m_Inside)
+	{
+		wxClientDC dc(&w);
+		dc.SetPen(*wxBLACK_PEN);
+		dc.SetLogicalFunction(wxINVERT);
+		dc.DrawLine(m_mousePosition_old.x, m_plot_size.y, m_mousePosition_old.x, m_plot_size.height);
+		dc.DrawLine(m_plot_size.x, m_mousePosition_old.y, m_plot_size.width, m_mousePosition_old.y);
+		m_Inside = false;
+		dc.SetLogicalFunction(wxCOPY);
 	}
 }
 

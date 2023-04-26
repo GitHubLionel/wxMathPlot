@@ -1527,6 +1527,42 @@ typedef std::deque<mpLayer*> wxLayerList;
  */
 typedef std::function<void(void *Sender, const wxString &classname, bool &cancel)> wxOnDeleteLayer;
 
+/**
+ * Class for drawing mouse magnetization
+ */
+class mpMagnet
+{
+	public:
+		mpMagnet()
+		{
+			m_Inside = false;
+			m_rightClick = false;
+		}
+		~mpMagnet()
+		{
+			;
+		}
+		void UpdateBox(wxCoord left, wxCoord top, wxCoord width, wxCoord height)
+		{
+			m_domain = wxRect(left, top, width, height);
+			m_plot_size = wxRect(left, top, width + left, height + top);
+		}
+		void Plot(mpWindow &w, const wxPoint &mousePos);
+		void ClearPlot(mpWindow &w);
+
+		void SetRightClick(void)
+		{
+			m_rightClick = true;
+		}
+
+	private:
+		wxRect m_domain;
+		wxRect m_plot_size;
+		wxPoint m_mousePosition_old;
+		bool m_Inside;
+		bool m_rightClick;
+};
+
 /** Canvas for plotting mpLayer implementations.
 
  This class defines a zoomable and moveable 2D plot canvas. Any number
@@ -1750,6 +1786,8 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 			m_plotBondariesMargin.endPx = m_scrX - m_margin.right;
 			m_plotBondaries.endPy = m_scrY;
 			m_plotBondariesMargin.endPy = m_scrY - m_margin.bottom;
+
+			m_magnet.UpdateBox(m_margin.left, m_margin.top, m_plotWidth, m_plotHeight);
 		}
 
 		/** Get current view's X dimension in device context units.
@@ -2009,11 +2047,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 		/** Set the top margin. @param top Top Margin */
 		void SetMarginTop(int top)
 		{
-			m_margin.top = top;
-			m_plotHeight = m_scrY - (m_margin.top + m_margin.bottom);
-
-			m_plotBondaries.startPy = 0;
-			m_plotBondariesMargin.startPy = m_margin.top;
+			SetMargins(top, m_margin.right, m_margin.bottom, m_margin.left);
 		}
 
 		/** Get the top margin. @param top Top Margin */
@@ -2025,11 +2059,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 		/** Set the right margin. @param right Right Margin */
 		void SetMarginRight(int right)
 		{
-			m_margin.right = right;
-			m_plotWidth = m_scrX - (m_margin.left + m_margin.right);
-
-			m_plotBondaries.endPx = m_scrX;
-			m_plotBondariesMargin.endPx = m_scrX - m_margin.right;
+			SetMargins(m_margin.top, right, m_margin.bottom, m_margin.left);
 		}
 
 		/** Get the right margin. @param right Right Margin */
@@ -2041,11 +2071,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 		/** Set the bottom margin. @param bottom Bottom Margin */
 		void SetMarginBottom(int bottom)
 		{
-			m_margin.bottom = bottom;
-			m_plotHeight = m_scrY - (m_margin.top + m_margin.bottom);
-
-			m_plotBondaries.endPy = m_scrY;
-			m_plotBondariesMargin.endPy = m_scrY - m_margin.bottom;
+			SetMargins(m_margin.top, m_margin.right, bottom, m_margin.left);
 		}
 
 		/** Get the bottom margin. @param bottom Bottom Margin */
@@ -2057,11 +2083,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 		/** Set the left margin. @param left Left Margin */
 		void SetMarginLeft(int left)
 		{
-			m_margin.left = left;
-			m_plotWidth = m_scrX - (m_margin.left + m_margin.right);
-
-			m_plotBondaries.startPx = 0;
-			m_plotBondariesMargin.startPx = m_margin.left;
+			SetMargins(m_margin.top, m_margin.right, m_margin.bottom, left);
 		}
 
 		/** Get the left margin. @param left Left Margin */
@@ -2181,13 +2203,22 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 			m_LogYaxis = log;
 		}
 
+		bool GetMagnetize() const
+		{
+			return m_magnetize;
+		}
+
+		void SetMagnetize(bool mag)
+		{
+			m_magnetize = mag;
+		}
+
 		void RefreshConfigWindow();
 
 	protected:
 		void OnPaint (wxPaintEvent &event);  									//!< Paint handler, will plot all attached layers
 		void OnSize (wxSizeEvent &event);											//!< Size handler, will update scroll bar sizes
 		void OnShowPopupMenu (wxMouseEvent &event);						//!< Mouse handler, will show context menu
-		void OnMouseRightDown (wxMouseEvent &event);					//!< Mouse handler, for detecting when the user drags with the right button or just "clicks" for the menu
 		void OnCenter (wxCommandEvent &event);								//!< Context menu handler
 		void OnFit (wxCommandEvent &event);										//!< Context menu handler
 		void OnToggleGrids (wxCommandEvent &event);						//!< Context menu handler
@@ -2200,11 +2231,12 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 		void OnZoomOut (wxCommandEvent &event);								//!< Context menu handler
 		void OnLockAspect (wxCommandEvent &event);						//!< Context menu handler
 		void OnMouseHelp (wxCommandEvent &event);							//!< Context menu handler
-		void OnMouseWheel (wxMouseEvent &event);							//!< Mouse handler for the wheel
-		void OnMouseMove (wxMouseEvent &event);								//!< Mouse handler for mouse motion (for pan)
-		void OnMouseLeave (wxMouseEvent &event);							//!< Mouse handler for mouse motion (for pan)
 		void OnMouseLeftDown (wxMouseEvent &event);						//!< Mouse left click (for rect zoom)
+		void OnMouseRightDown (wxMouseEvent &event);					//!< Mouse handler, for detecting when the user drags with the right button or just "clicks" for the menu
+		void OnMouseMove (wxMouseEvent &event);								//!< Mouse handler for mouse motion (for pan)
 		void OnMouseLeftRelease (wxMouseEvent &event);				//!< Mouse left click (for rect zoom)
+		void OnMouseWheel (wxMouseEvent &event);							//!< Mouse handler for the wheel
+		void OnMouseLeave (wxMouseEvent &event);							//!< Mouse handler for mouse motion (for pan)
 		void OnScrollThumbTrack (wxScrollWinEvent &event);		//!< Scroll thumb on scroll bar moving
 		void OnScrollPageUp (wxScrollWinEvent &event);				//!< Scroll page up
 		void OnScrollPageDown (wxScrollWinEvent &event);			//!< Scroll page down
@@ -2280,6 +2312,9 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 		wxRect m_zoom_dim;
 		wxRect m_zoom_oldDim;
 
+		bool m_magnetize; 							//!< For mouse magnetization
+		mpMagnet m_magnet;							//!< For mouse magnetization
+
 		bool m_LogXaxis = false;        //!< For logarithmic X axis
 		bool m_LogYaxis = false;	      //!< For logarithmic X axis
 
@@ -2294,7 +2329,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 
 		// To have direct access to m_Screenshot_dc
 		friend mpPrintout;
-	};
+};
 
 //-----------------------------------------------------------------------------
 // mpFXYVector - provided by Jose Luis Blanco

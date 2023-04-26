@@ -54,7 +54,7 @@
 													<option>1</option>
 												</object>
 											</object>
-											<flag>wxALL|wxEXPAND</flag>
+											<flag>wxLEFT|wxRIGHT|wxEXPAND</flag>
 											<border>5</border>
 										</object>
 									</object>
@@ -137,7 +137,7 @@
 													<option>1</option>
 												</object>
 											</object>
-											<flag>wxALL|wxEXPAND</flag>
+											<flag>wxLEFT|wxRIGHT|wxEXPAND</flag>
 											<border>5</border>
 										</object>
 									</object>
@@ -181,6 +181,13 @@
 													<object class="wxCheckBox" name="ID_CHECKBOX13" variable="cbCoordinates" member="yes">
 														<label>Series coordinates</label>
 														<tooltip>Shows the coordinates of the series closest to the mouse position</tooltip>
+													</object>
+													<flag>wxLEFT|wxRIGHT|wxEXPAND</flag>
+													<border>5</border>
+												</object>
+												<object class="sizeritem">
+													<object class="wxCheckBox" name="ID_CHECKBOX16" variable="cbMagnetize" member="yes">
+														<label>Magnetize</label>
 													</object>
 													<flag>wxALL|wxEXPAND</flag>
 													<border>5</border>

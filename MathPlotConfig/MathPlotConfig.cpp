@@ -30,6 +30,7 @@ const long MathPlotConfigDialog::ID_STATICTEXT18 = wxNewId();
 const long MathPlotConfigDialog::ID_CHOICE11 = wxNewId();
 const long MathPlotConfigDialog::ID_CHECKBOX10 = wxNewId();
 const long MathPlotConfigDialog::ID_CHECKBOX13 = wxNewId();
+const long MathPlotConfigDialog::ID_CHECKBOX16 = wxNewId();
 const long MathPlotConfigDialog::ID_STATICTEXT22 = wxNewId();
 const long MathPlotConfigDialog::ID_BUTTON10 = wxNewId();
 const long MathPlotConfigDialog::ID_STATICTEXT23 = wxNewId();
@@ -275,7 +276,7 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
 	cbTitleVisible = new wxCheckBox(Panel1, ID_CHECKBOX8, _T("Visible"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CHECKBOX8"));
 	cbTitleVisible->SetValue(false);
 	FlexGridSizer1->Add(cbTitleVisible, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
-	StaticBoxSizer1->Add(FlexGridSizer1, 0, wxALL|wxEXPAND, 5);
+	StaticBoxSizer1->Add(FlexGridSizer1, 0, wxLEFT|wxRIGHT|wxEXPAND, 5);
 	BoxSizer3->Add(StaticBoxSizer1, 0, wxALL|wxEXPAND, 2);
 	StaticBoxSizer2 = new wxStaticBoxSizer(wxVERTICAL, Panel1, _T("Margins "));
 	FlexGridSizer2 = new wxFlexGridSizer(2, 6, 0, 0);
@@ -298,7 +299,7 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
 	cbDrawBox = new wxCheckBox(Panel1, ID_CHECKBOX5, _T("Draw box"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CHECKBOX5"));
 	cbDrawBox->SetValue(false);
 	FlexGridSizer2->Add(cbDrawBox, 1, wxALL|wxEXPAND, 5);
-	StaticBoxSizer2->Add(FlexGridSizer2, 0, wxALL|wxEXPAND, 5);
+	StaticBoxSizer2->Add(FlexGridSizer2, 0, wxLEFT|wxRIGHT|wxEXPAND, 5);
 	BoxSizer3->Add(StaticBoxSizer2, 0, wxALL|wxEXPAND, 2);
 	StaticBoxSizer3 = new wxStaticBoxSizer(wxHORIZONTAL, Panel1, _T("Mouse coordinates "));
 	BoxSizer1 = new wxBoxSizer(wxVERTICAL);
@@ -316,7 +317,10 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
 	cbCoordinates = new wxCheckBox(Panel1, ID_CHECKBOX13, _T("Series coordinates"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CHECKBOX13"));
 	cbCoordinates->SetValue(false);
 	cbCoordinates->SetToolTip(_T("Shows the coordinates of the series closest to the mouse position"));
-	BoxSizer1->Add(cbCoordinates, 0, wxALL|wxEXPAND, 5);
+	BoxSizer1->Add(cbCoordinates, 0, wxLEFT|wxRIGHT|wxEXPAND, 5);
+	cbMagnetize = new wxCheckBox(Panel1, ID_CHECKBOX16, _T("Magnetize"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CHECKBOX16"));
+	cbMagnetize->SetValue(false);
+	BoxSizer1->Add(cbMagnetize, 0, wxALL|wxEXPAND, 5);
 	StaticBoxSizer3->Add(BoxSizer1, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	StaticBoxSizer4 = new wxStaticBoxSizer(wxHORIZONTAL, Panel1, _T("Brush "));
 	FlexGridSizer4 = new wxFlexGridSizer(2, 2, 0, 0);
@@ -670,6 +674,7 @@ void MathPlotConfigDialog::Initialize()
 
 	cbDrawBox->SetValue(m_plot->GetDrawBox());
 	bBGColor->SetBackgroundColour(m_plot->GetbgColour());
+	cbMagnetize->SetValue(m_plot->GetMagnetize());
 
 	CurrentLegend = (mpInfoLegend*) m_plot->GetLayerByClassName(_("mpInfoLegend"));
 	if (CurrentLegend)
@@ -1037,6 +1042,7 @@ void MathPlotConfigDialog::OnbApplyClick(wxCommandEvent& WXUNUSED(event))
 
 			m_plot->SetDrawBox(cbDrawBox->GetValue());
 			m_plot->SetbgColour(bBGColor->GetBackgroundColour());
+			m_plot->SetMagnetize(cbMagnetize->GetValue());
 
 			if (CurrentCoords)
 			{
@@ -1048,7 +1054,7 @@ void MathPlotConfigDialog::OnbApplyClick(wxCommandEvent& WXUNUSED(event))
 				CurrentCoords->SetBrush(brush);
 			}
 
-			m_plot->Refresh();
+			m_plot->UpdateAll();
 			break;
 		}
 		case 1: // Legend page
