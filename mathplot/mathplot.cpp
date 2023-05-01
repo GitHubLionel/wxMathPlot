@@ -2130,10 +2130,10 @@ void mpWindow::OnMouseMove(wxMouseEvent &event)
 		}
 		else
 		{
-			if (m_magnetize && (event.GetEventType() == wxEVT_MOTION))
-			{
-				m_magnet.Plot(*this, wxPoint(event.GetX(), event.GetY()));
-			}
+			// First need to clean the plot. If we do not do that, we can have
+			// problem with InfoCoord when it follow mouse position
+			if (m_magnetize)
+			  m_magnet.ClearPlot(*this);
 
 			// Mouse move coordinate
 			if (m_InfoCoords && m_InfoCoords->IsVisible())
@@ -2142,6 +2142,9 @@ void mpWindow::OnMouseMove(wxMouseEvent &event)
 				wxClientDC dc(this);
 				m_InfoCoords->Plot(dc, *this);
 			}
+
+			if (m_magnetize && (event.GetEventType() == wxEVT_MOTION))
+				m_magnet.Plot(*this, wxPoint(event.GetX(), event.GetY()));
 		}
 	}
 	event.Skip();
