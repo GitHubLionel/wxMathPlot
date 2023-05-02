@@ -2132,7 +2132,7 @@ void mpWindow::OnMouseMove(wxMouseEvent &event)
 		{
 			// First need to clean the plot. If we do not do that, we can have
 			// problem with InfoCoord when it follow mouse position
-			if (m_magnetize)
+			if (m_magnetize && (!m_repainting))
 			  m_magnet.ClearPlot(*this);
 
 			// Mouse move coordinate
@@ -2143,7 +2143,7 @@ void mpWindow::OnMouseMove(wxMouseEvent &event)
 				m_InfoCoords->Plot(dc, *this);
 			}
 
-			if (m_magnetize && (event.GetEventType() == wxEVT_MOTION))
+			if (m_magnetize && (!m_repainting) && (event.GetEventType() == wxEVT_MOTION))
 				m_magnet.Plot(*this, wxPoint(event.GetX(), event.GetY()));
 		}
 	}
@@ -2251,7 +2251,11 @@ void mpWindow::Fit()
 void mpWindow::Fit(const mpFloatRect &rect, wxCoord *printSizeX, wxCoord *printSizeY)
 {
 	if (m_magnetize)
+	{
 		m_magnet.ClearPlot(*this);
+		// Avoid paint cross if mouse move
+		m_repainting = true;
+	}
 
 	// Save desired borders:
 	m_desired = rect;
@@ -2515,8 +2519,6 @@ void mpWindow::OnShowPopupMenu(wxMouseEvent &event)
 		m_clickedY = event.GetY();
 
 		PopupMenu(&m_popmenu, event.GetX(), event.GetY());
-//		if (m_magnetize)
-//			m_magnet.Plot(*this, wxPoint(event.GetX(), event.GetY()));
 	}
 }
 
@@ -3027,6 +3029,9 @@ void mpWindow::UpdateAll()
 			}
 		}
 	}
+
+	if (m_magnetize)
+	  m_magnet.ClearPlot(*this);
 
 	Refresh(false);
 }
