@@ -4464,6 +4464,11 @@ void mpBitmapLayer::DoPlot(wxDC &dc, mpWindow &w)
 	wxCoord b_width = (wxCoord) ((dx1 - dx0 + 1) / screenPixelX);
 	wxCoord b_height = (wxCoord) ((dy1 - dy0 + 1) / screenPixelY);
 
+	if (b_width + offset_x > m_bitmap.GetWidth())
+		b_width = m_bitmap.GetWidth() - offset_x;
+	if (b_height + offset_y > m_bitmap.GetHeight())
+		b_height = m_bitmap.GetHeight() - offset_y;
+
 #ifdef MATHPLOT_DO_LOGGING
 	wxLogMessage(wxT("[mpBitmapLayer::Plot] screenPixel: x=%f y=%f  d_width=%ix%i"),
 			screenPixelX, screenPixelY, d_width, d_height);
@@ -4472,25 +4477,13 @@ void mpBitmapLayer::DoPlot(wxDC &dc, mpWindow &w)
 #endif
 
 	// Is there any visible region?
-	if ((d_width > 0) && (d_height > 0))
+	if ((d_width > 0) && (d_height > 0) && (b_width > 0) && (b_height > 0))
 	{
 		// Build the scaled bitmap from the image, only if it has changed:
 		if (m_scaledBitmap.GetWidth() != d_width || m_scaledBitmap.GetHeight() != d_height ||
 				m_scaledBitmap_offset_x != offset_x || m_scaledBitmap_offset_y != offset_y)
 		{
 			wxRect r = wxRect(offset_x, offset_y, b_width, b_height);
-			// Just for the case....
-			if (r.x < 0)
-				r.x = 0;
-			if (r.y < 0)
-				r.y = 0;
-
-			// Correction : https://github.com/GitHubLionel/wxMathPlot/issues/8
-			if (r.x + r.width > m_bitmap.GetWidth())
-				r.width = m_bitmap.GetWidth() - r.x;
-			if (r.y + r.height > m_bitmap.GetHeight())
-				r.height = m_bitmap.GetHeight() - r.y;
-
 			m_scaledBitmap = wxBitmap(wxBitmap(m_bitmap).GetSubBitmap(r).ConvertToImage().Scale(d_width, d_height));
 			m_scaledBitmap_offset_x = offset_x;
 			m_scaledBitmap_offset_y = offset_y;
