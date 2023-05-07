@@ -72,18 +72,18 @@
 #endif
 
 const wxString MathPlot::Popup_string[][2] = {
-		{_T("Center to this position"), _T("Center plot view to this position")},
-		{_T("Fit"), _T("Set plot view to show all items")},
-		{_T("Zoom in"), _T("Zoom in plot view.")},
-		{_T("Zoom out"), _T("Zoom out plot view.")},
-		{_T("Lock aspect"), _T("Lock horizontal and vertical zoom aspect.")},
-		{_T("Screen shot"), _T("Copy a screen shot to the clipboard")},
-		{_T("Toggle grids"), _T("Show/Hide grids")},
-		{_T("Toggle info coords"), _T("Show/Hide info coordinates")},
-		{_T("Configuration"), _T("Plot configuration")},
-		{_T("Load file"), _T("Load data file")},
-		{_T("Show mouse commands..."), _T("Show help about the mouse commands.")},
-		{_T("Toggle fullscreen"), _T("Toggle fullscreen.")}
+		{_("Center to this position"), _("Center plot view to this position")},
+		{_("Fit"), _("Set plot view to show all items")},
+		{_("Zoom in"), _("Zoom in plot view.")},
+		{_("Zoom out"), _("Zoom out plot view.")},
+		{_("Lock aspect"), _("Lock horizontal and vertical zoom aspect.")},
+		{_("Screen shot"), _("Copy a screen shot to the clipboard")},
+		{_("Toggle grids"), _("Show/Hide grids")},
+		{_("Toggle info coords"), _("Show/Hide info coordinates")},
+		{_("Configuration"), _("Plot configuration")},
+		{_("Load file"), _("Load data file")},
+		{_("Show mouse commands..."), _("Show help about the mouse commands.")},
+		{_("Toggle fullscreen"), _("Toggle fullscreen.")}
 };
 
 // Memory leak debugging
@@ -1472,16 +1472,16 @@ void mpScale::DrawScaleName(wxDC &dc, mpWindow &w, int origin, int labelSize)
 wxString mpScale::FormatLogValue(double n)
 {
 	// Special format for log axis : 10 ^ exponent
-	wxString s = _("");
+	wxString s = _T("");
 
 	if (n - floor(n) == 0)
 	{
 		int exp = (int) n;
 		if (exp == 0)
-			s = _("1");
+			s = _T("1");
 		else
 			if (exp == 1)
-				s = _("10");
+				s = _T("10");
 			else
 				s.Printf(_("10^%d"), (int)exp);
 	}
@@ -1496,7 +1496,7 @@ IMPLEMENT_DYNAMIC_CLASS(mpScaleX, mpScale)
 
 wxString mpScaleX::FormatValue(const wxString &fmt, double n)
 {
-	wxString s = _("");
+	wxString s = _T("");
 	struct tm timestruct;
 
 	switch (m_labelType)
@@ -2530,14 +2530,14 @@ void mpWindow::OnLockAspect(wxCommandEvent &WXUNUSED(event))
 void mpWindow::OnMouseHelp(wxCommandEvent &WXUNUSED(event))
 {
 	wxMessageBox(
-			_T(
+			_(
 					"Supported Mouse commands:\n \
         - Left button down + Mark area: Rectangular zoom\n \
         - Right button down + Move: Pan (Move)\n \
         - Wheel: Zoom in/out\n \
         - Wheel + SHIFT: Horizontal scroll\n \
         - Wheel + CTRL: Vertical scroll"),
-			_T("wxMathPlot help"), wxOK, this);
+			_("wxMathPlot help"), wxOK, this);
 }
 
 void mpWindow::OnFit(wxCommandEvent &WXUNUSED(event))
@@ -2564,7 +2564,7 @@ void mpWindow::OnToggleGrids(wxCommandEvent &WXUNUSED(event))
 
 void mpWindow::OnToggleCoords(wxCommandEvent &WXUNUSED(event))
 {
-	mpInfoCoords *coords = (mpInfoCoords*) GetLayerByClassName(_("mpInfoCoords"));
+	mpInfoCoords *coords = (mpInfoCoords*) GetLayerByClassName(_T("mpInfoCoords"));
 	if (coords)
 	{
 		coords->SetVisible(!coords->IsVisible());
@@ -2591,8 +2591,8 @@ void mpWindow::OnFullScreen(wxCommandEvent &WXUNUSED(event))
  */
 void mpWindow::OnLoadFile(wxCommandEvent &WXUNUSED(event))
 {
-	wxFileDialog OpenFile(this, _T("Select file"), wxEmptyString, wxEmptyString,
-			_T("Data files (*.dat)|*.dat|Csv files (csv.*)|csv.*|All files (*.*)|*.*"), wxFD_OPEN | wxFD_FILE_MUST_EXIST);
+	wxFileDialog OpenFile(this, _("Select file"), wxEmptyString, wxEmptyString,
+			_("Data files (*.dat)|*.dat|Csv files (csv.*)|csv.*|All files (*.*)|*.*"), wxFD_OPEN | wxFD_FILE_MUST_EXIST);
 
 	if (OpenFile.ShowModal() == wxID_OK)
 	{
@@ -2673,7 +2673,7 @@ bool mpWindow::AddLayer(mpLayer *layer, bool refreshDisplay)
 		// We just add a function, so we need to update the legend
 		if (layer->IsFunction(&function))
 		{
-			mpInfoLegend *legend = (mpInfoLegend*) this->GetLayerByClassName(_("mpInfoLegend"));
+			mpInfoLegend *legend = (mpInfoLegend*) this->GetLayerByClassName(_T("mpInfoLegend"));
 			if (legend)
 				legend->SetNeedUpdate();
 		}
@@ -3330,7 +3330,7 @@ mpLayer* mpWindow::GetLayerByClassName(const wxString &name)
 
 mpScaleX* mpWindow::GetLayerXAxis()
 {
-	mpLayer *layer = GetLayerByClassName(_("mpScaleX"));
+	mpLayer *layer = GetLayerByClassName(_T("mpScaleX"));
 	if (layer)
 	  return (mpScaleX *)layer;
 	else
@@ -3339,7 +3339,7 @@ mpScaleX* mpWindow::GetLayerXAxis()
 
 mpScaleY* mpWindow::GetLayerYAxis()
 {
-	mpLayer *layer = GetLayerByClassName(_("mpScaleY"));
+	mpLayer *layer = GetLayerByClassName(_T("mpScaleY"));
 	if (layer)
 	  return (mpScaleY *)layer;
 	else
@@ -3514,7 +3514,7 @@ void mpWindow::ClipboardScreenshot(wxSize imageSize, bool fit)
 		// CAUTION : Data objects are held by the clipboard,
 		// so do not delete them in the app.
 		if (!wxTheClipboard->SetData(new wxBitmapDataObject(screenImage)))
-			wxMessageBox(_T("Failed to copy image to clipboard"));
+			wxMessageBox(_("Failed to copy image to clipboard"));
 		wxTheClipboard->Flush();
 		wxTheClipboard->Close();
 	}
@@ -3566,7 +3566,7 @@ bool mpWindow::LoadFile(const wxString &filename)
 
 	fclose(file);
 
-	mpInfoLegend *legend = (mpInfoLegend*) GetLayerByClassName(_("mpInfoLegend"));
+	mpInfoLegend *legend = (mpInfoLegend*) GetLayerByClassName(_T("mpInfoLegend"));
 	if (legend)
 	{
 		legend->SetNeedUpdate();
@@ -3715,7 +3715,7 @@ void mpFXYVector::SetData(const std::vector<double> &xs, const std::vector<doubl
 	// Check if the data vectora are of the same size
 	if (xs.size() != ys.size())
 	{
-		wxLogError(_T("wxMathPlot error: X and Y vector are not of the same length!"));
+		wxLogError(_("wxMathPlot error: X and Y vector are not of the same length!"));
 		return;
 	}
 	// Copy the data:

@@ -81,6 +81,7 @@
 #include <wx/string.h>
 #include <wx/print.h>
 #include <wx/image.h>
+#include <wx/intl.h>
 
 #include <cmath>
 #include <deque>
@@ -1656,7 +1657,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 		 * Return the serie n
 		 * If the serie not exist then create it
 		 */
-		mpFXYVector* GetXYSeries(unsigned int n, const wxString &name = _T("Serie :"), bool create = true);
+		mpFXYVector* GetXYSeries(unsigned int n, const wxString &name = _("Serie :"), bool create = true);
 
 		/*!
 		 * Search the point of the layer plot nearest a point
@@ -2627,7 +2628,7 @@ class WXDLLIMPEXP_MATHPLOT mpPrintout: public wxPrintout
 			stretch_factor = 2;
 		}
 
-		mpPrintout(mpWindow *drawWindow, const wxChar *title = _T("wxMathPlot print output"), int factor = 2);
+		mpPrintout(mpWindow *drawWindow, const wxChar *title = _("wxMathPlot print output"), int factor = 2);
 		virtual ~mpPrintout()
 		{
 			;

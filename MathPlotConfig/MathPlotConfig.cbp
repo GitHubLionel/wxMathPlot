@@ -105,7 +105,7 @@
 			<wxsmith version="1">
 				<gui name="wxWidgets" src="MathPlotConfigApp.cpp" main="MathPlotConfigDialog" init_handlers="necessary" language="CPP" />
 				<resources>
-					<wxDialog wxs="wxsmith/MathPlotConfigdialog.wxs" src="MathPlotConfig.cpp" hdr="MathPlotConfig.h" fwddecl="0" i18n="0" name="MathPlotConfigDialog" language="CPP" />
+					<wxDialog wxs="wxsmith/MathPlotConfigdialog.wxs" src="MathPlotConfig.cpp" hdr="MathPlotConfig.h" fwddecl="0" i18n="1" name="MathPlotConfigDialog" language="CPP" />
 				</resources>
 			</wxsmith>
 		</Extensions>

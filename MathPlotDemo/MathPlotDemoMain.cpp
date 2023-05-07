@@ -11,6 +11,7 @@
 #include <wx/msgdlg.h>
 
 //(*InternalHeaders(MathPlotDemoFrame)
+#include <wx/intl.h>
 #include <wx/string.h>
 //*)
 
@@ -63,16 +64,16 @@ MathPlotDemoFrame::MathPlotDemoFrame(wxWindow* parent,wxWindowID id)
     //(*Initialize(MathPlotDemoFrame)
     wxBoxSizer* BoxSizer1;
 
-    Create(parent, wxID_ANY, _T("MathPlot Demo"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_FRAME_STYLE, _T("wxID_ANY"));
+    Create(parent, wxID_ANY, _("MathPlot Demo"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_FRAME_STYLE, _T("wxID_ANY"));
     SetClientSize(wxSize(800,400));
     AuiManager1 = new wxAuiManager(this, wxAUI_MGR_ALLOW_ACTIVE_PANE|wxAUI_MGR_DEFAULT);
     pLog = new wxPanel(this, ID_PANEL1, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL, _T("ID_PANEL1"));
     pLog->SetMinSize(wxSize(120,-1));
-    bDraw = new wxButton(pLog, ID_BUTTON1, _T("Draw sinus"), wxPoint(16,24), wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON1"));
-    bSample = new wxButton(pLog, ID_BUTTON2, _T("Draw Sample"), wxPoint(16,56), wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON2"));
-    bBar = new wxButton(pLog, ID_BUTTON3, _T("Draw Bar"), wxPoint(16,88), wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON3"));
-    bLog = new wxButton(pLog, ID_BUTTON4, _T("Log Y sample"), wxPoint(16,120), wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON4"));
-    bLogXY = new wxButton(pLog, ID_BUTTON5, _T("Log XY sample"), wxPoint(16,152), wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON5"));
+    bDraw = new wxButton(pLog, ID_BUTTON1, _("Draw sinus"), wxPoint(16,24), wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON1"));
+    bSample = new wxButton(pLog, ID_BUTTON2, _("Draw Sample"), wxPoint(16,56), wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON2"));
+    bBar = new wxButton(pLog, ID_BUTTON3, _("Draw Bar"), wxPoint(16,88), wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON3"));
+    bLog = new wxButton(pLog, ID_BUTTON4, _("Log Y sample"), wxPoint(16,120), wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON4"));
+    bLogXY = new wxButton(pLog, ID_BUTTON5, _("Log XY sample"), wxPoint(16,152), wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON5"));
     AuiManager1->AddPane(pLog, wxAuiPaneInfo().Name(_T("PaneName0")).DefaultPane().Caption(_("Log")).CaptionVisible().CloseButton(false).Left().Floatable(false).MinSize(wxSize(120,-1)).Movable(false));
     pPlot = new wxPanel(this, ID_PANEL2, wxPoint(227,228), wxDefaultSize, wxTAB_TRAVERSAL, _T("ID_PANEL2"));
     BoxSizer1 = new wxBoxSizer(wxVERTICAL);
@@ -122,7 +123,7 @@ void MathPlotDemoFrame::InitializePlot(void)
 	mPlot->AddLayer(bottomAxis);
 	mPlot->AddLayer(leftAxis);
 	mpTitle *plotTitle;
-	mPlot->AddLayer(plotTitle = new mpTitle(wxT("Demo MathPlot")));
+	mPlot->AddLayer(plotTitle = new mpTitle(_("Demo MathPlot")));
 
 	wxFont titleFont(12, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD);
 	plotTitle->SetFont(titleFont);

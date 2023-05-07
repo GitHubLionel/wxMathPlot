@@ -11,6 +11,7 @@
 #include <wx/msgdlg.h>
 
 //(*InternalHeaders(MathPlotConfigDialog)
+#include <wx/intl.h>
 #include <wx/string.h>
 //*)
 
@@ -107,8 +108,8 @@ const long MathPlotConfigDialog::ID_BUTTON3 = wxNewId();
 const long MathPlotConfigDialog::ID_BUTTON4 = wxNewId();
 //*)
 
-const wxString XAxis_Align[] = {_T("Bottom border"), _T("Bottom"), _T("Center"), _T("Top"), _T("Top border")};
-const wxString YAxis_Align[] = {_T("Left border"), _T("Left"), _T("Center"), _T("Right"), _T("Right border")};
+const wxString XAxis_Align[] = {_("Bottom border"), _("Bottom"), _("Center"), _("Top"), _("Top border")};
+const wxString YAxis_Align[] = {_("Left border"), _("Left"), _("Center"), _("Right"), _("Right border")};
 
 BEGIN_EVENT_TABLE(MathPlotConfigDialog,wxDialog)
 //(*EventTable(MathPlotConfigDialog)
@@ -120,48 +121,48 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
 	// Choices list
 	// Use this method to have correct sizing under Linux
   const wxString cbCoord_choices[] = {
-	  _T("Left center"),
-	  _T("Top left"),
-	  _T("Top center"),
-	  _T("Top right"),
-	  _T("Right center"),
-	  _T("Bottom left"),
-	  _T("Bottom center"),
-	  _T("Bottom right"),
-	  _T("Default position"),
-	  _T("Cursor position")
+	  _("Left center"),
+	  _("Top left"),
+	  _("Top center"),
+	  _("Top right"),
+	  _("Right center"),
+	  _("Bottom left"),
+	  _("Bottom center"),
+	  _("Bottom right"),
+	  _("Default position"),
+	  _("Cursor position")
   };
 
   const wxString cbBrushStyle_choices[] = {
-	  _T("Solid"),
-	  _T("Transparent")
+	  _("Solid"),
+	  _("Transparent")
   };
 
   const wxString cbLegendPosition_choices[] = {
-	  _T("Left center"),
-	  _T("Top left"),
-	  _T("Top center"),
-	  _T("Top right"),
-	  _T("Right center"),
-	  _T("Bottom left"),
-	  _T("Bottom center"),
-	  _T("Bottom right"),
-	  _T("Default position")
+	  _("Left center"),
+	  _("Top left"),
+	  _("Top center"),
+	  _("Top right"),
+	  _("Right center"),
+	  _("Bottom left"),
+	  _("Bottom center"),
+	  _("Bottom right"),
+	  _("Default position")
   };
 
   const wxString cbLegendStyle_choices[] = {
-	  _T("Line"),
-	  _T("Square")
+	  _("Line"),
+	  _("Square")
   };
 
   const wxString cbLegendDirection_choices[] = {
-	  _T("Vertical"),
-	  _T("Horizontal")
+	  _("Vertical"),
+	  _("Horizontal")
   };
 
   const wxString ChoiceAxis_choices[] = {
-	  _T("X axis"),
-	  _T("Y axis")
+	  _("X axis"),
+	  _("Y axis")
   };
 
   const wxString cbPenWidth_choices[] = {
@@ -178,41 +179,41 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   };
 
   const wxString cbPenStyle_choices[] = {
-	  _T("Solid"),
-	  _T("Dot"),
-	  _T("Long Dash"),
-	  _T("Short Dash"),
-	  _T("Dot Dash")
+	  _("Solid"),
+	  _("Dot"),
+	  _("Long Dash"),
+	  _("Short Dash"),
+	  _("Dot Dash")
   };
 
   const wxString cbFormat_choices[] = {
-	  _T("Normal"),
-	  _T("Time"),
-	  _T("Hours"),
-	  _T("Date"),
-	  _T("DateTime"),
-	  _T("User")
+	  _("Normal"),
+	  _("Time"),
+	  _("Hours"),
+	  _("Date"),
+	  _("DateTime"),
+	  _("User")
   };
 
   const wxString cbSeriesBrushStyle_choices[] = {
-	  _T("Solid"),
-	  _T("Transparent"),
-	  _T("BDiagonal"),
-	  _T("CrossDiagonal"),
-	  _T("FDiagonal"),
-	  _T("Cross"),
-	  _T("Horizontal"),
-	  _T("Vertical")
+	  _("Solid"),
+	  _("Transparent"),
+	  _("BDiagonal"),
+	  _("CrossDiagonal"),
+	  _("FDiagonal"),
+	  _("Cross"),
+	  _("Horizontal"),
+	  _("Vertical")
   };
 
   const wxString cbSeriesSymbolType_choices[] = {
-	  _T("None"),
-	  _T("Circle"),
-	  _T("Square"),
-	  _T("UpTriangle"),
-	  _T("DownTriangle"),
-	  _T("Cross"),
-	  _T("Plus")
+	  _("None"),
+	  _("Circle"),
+	  _("Square"),
+	  _("UpTriangle"),
+	  _("DownTriangle"),
+	  _("Cross"),
+	  _("Plus")
   };
 
 	//(*Initialize(MathPlotConfigDialog)
@@ -258,77 +259,77 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
 	wxStaticBoxSizer* StaticBoxSizer8;
 	wxStaticBoxSizer* StaticBoxSizer9;
 
-	Create(parent, wxID_ANY, _T("MathPlot Configuration"), wxDefaultPosition, wxDefaultSize, wxSTAY_ON_TOP|wxDEFAULT_DIALOG_STYLE, _T("wxID_ANY"));
+	Create(parent, wxID_ANY, _("MathPlot Configuration"), wxDefaultPosition, wxDefaultSize, wxSTAY_ON_TOP|wxDEFAULT_DIALOG_STYLE, _T("wxID_ANY"));
 	sizerMain = new wxBoxSizer(wxVERTICAL);
 	nbConfig = new wxNotebook(this, ID_NOTEBOOK1, wxDefaultPosition, wxDefaultSize, 0, _T("ID_NOTEBOOK1"));
 	Panel1 = new wxPanel(nbConfig, ID_PANEL17, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL, _T("ID_PANEL17"));
 	BoxSizer3 = new wxBoxSizer(wxVERTICAL);
-	StaticBoxSizer1 = new wxStaticBoxSizer(wxVERTICAL, Panel1, _T("Title "));
+	StaticBoxSizer1 = new wxStaticBoxSizer(wxVERTICAL, Panel1, _("Title "));
 	FlexGridSizer1 = new wxFlexGridSizer(2, 3, 0, 0);
 	FlexGridSizer1->AddGrowableCol(1);
-	StaticText11 = new wxStaticText(Panel1, ID_STATICTEXT11, _T("Title :"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT11"));
+	StaticText11 = new wxStaticText(Panel1, ID_STATICTEXT11, _("Title :"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT11"));
 	FlexGridSizer1->Add(StaticText11, 0, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
 	edTitle = new wxTextCtrl(Panel1, ID_TEXTCTRL3, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_TEXTCTRL3"));
 	FlexGridSizer1->Add(edTitle, 1, wxALL|wxEXPAND, 5);
-	bFontTitle = new wxButton(Panel1, ID_BUTTON5, _T("Font"), wxDefaultPosition, wxSize(64,-1), 0, wxDefaultValidator, _T("ID_BUTTON5"));
+	bFontTitle = new wxButton(Panel1, ID_BUTTON5, _("Font"), wxDefaultPosition, wxSize(64,-1), 0, wxDefaultValidator, _T("ID_BUTTON5"));
 	bFontTitle->Disable();
 	FlexGridSizer1->Add(bFontTitle, 0, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 5);
-	cbTitleVisible = new wxCheckBox(Panel1, ID_CHECKBOX8, _T("Visible"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CHECKBOX8"));
+	cbTitleVisible = new wxCheckBox(Panel1, ID_CHECKBOX8, _("Visible"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CHECKBOX8"));
 	cbTitleVisible->SetValue(false);
 	FlexGridSizer1->Add(cbTitleVisible, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
 	StaticBoxSizer1->Add(FlexGridSizer1, 0, wxLEFT|wxRIGHT|wxEXPAND, 5);
 	BoxSizer3->Add(StaticBoxSizer1, 0, wxALL|wxEXPAND, 2);
-	StaticBoxSizer2 = new wxStaticBoxSizer(wxVERTICAL, Panel1, _T("Margins "));
+	StaticBoxSizer2 = new wxStaticBoxSizer(wxVERTICAL, Panel1, _("Margins "));
 	FlexGridSizer2 = new wxFlexGridSizer(2, 6, 0, 0);
-	StaticText15 = new wxStaticText(Panel1, ID_STATICTEXT15, _T("Margins :"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT15"));
+	StaticText15 = new wxStaticText(Panel1, ID_STATICTEXT15, _("Margins :"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT15"));
 	FlexGridSizer2->Add(StaticText15, 0, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
-	edMarginTop = new wxTextCtrl(Panel1, ID_TEXTCTRL4, _T("50"), wxDefaultPosition, wxSize(40,-1), wxTE_RIGHT, wxIntegerValidator<unsigned int> (&int_top), _T("ID_TEXTCTRL4"));
-	edMarginTop->SetToolTip(_T("Top"));
+	edMarginTop = new wxTextCtrl(Panel1, ID_TEXTCTRL4, _("50"), wxDefaultPosition, wxSize(40,-1), wxTE_RIGHT, wxIntegerValidator<unsigned int> (&int_top), _T("ID_TEXTCTRL4"));
+	edMarginTop->SetToolTip(_("Top"));
 	FlexGridSizer2->Add(edMarginTop, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 2);
-	edMarginBottom = new wxTextCtrl(Panel1, ID_TEXTCTRL5, _T("50"), wxDefaultPosition, wxSize(40,-1), wxTE_RIGHT, wxIntegerValidator<unsigned int> (&int_bottom), _T("ID_TEXTCTRL5"));
-	edMarginBottom->SetToolTip(_T("Bottom"));
+	edMarginBottom = new wxTextCtrl(Panel1, ID_TEXTCTRL5, _("50"), wxDefaultPosition, wxSize(40,-1), wxTE_RIGHT, wxIntegerValidator<unsigned int> (&int_bottom), _T("ID_TEXTCTRL5"));
+	edMarginBottom->SetToolTip(_("Bottom"));
 	FlexGridSizer2->Add(edMarginBottom, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 2);
-	edMarginLeft = new wxTextCtrl(Panel1, ID_TEXTCTRL6, _T("50"), wxDefaultPosition, wxSize(40,-1), wxTE_RIGHT, wxIntegerValidator<unsigned int> (&int_left), _T("ID_TEXTCTRL6"));
-	edMarginLeft->SetToolTip(_T("Left"));
+	edMarginLeft = new wxTextCtrl(Panel1, ID_TEXTCTRL6, _("50"), wxDefaultPosition, wxSize(40,-1), wxTE_RIGHT, wxIntegerValidator<unsigned int> (&int_left), _T("ID_TEXTCTRL6"));
+	edMarginLeft->SetToolTip(_("Left"));
 	FlexGridSizer2->Add(edMarginLeft, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 2);
-	edMarginRight = new wxTextCtrl(Panel1, ID_TEXTCTRL7, _T("50"), wxDefaultPosition, wxSize(40,-1), wxTE_RIGHT, wxIntegerValidator<unsigned int> (&int_right), _T("ID_TEXTCTRL7"));
-	edMarginRight->SetToolTip(_T("Right"));
+	edMarginRight = new wxTextCtrl(Panel1, ID_TEXTCTRL7, _("50"), wxDefaultPosition, wxSize(40,-1), wxTE_RIGHT, wxIntegerValidator<unsigned int> (&int_right), _T("ID_TEXTCTRL7"));
+	edMarginRight->SetToolTip(_("Right"));
 	FlexGridSizer2->Add(edMarginRight, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 2);
-	bBGColor = new wxButton(Panel1, ID_BUTTON7, _T("bg color"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON7"));
+	bBGColor = new wxButton(Panel1, ID_BUTTON7, _("bg color"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON7"));
 	FlexGridSizer2->Add(bBGColor, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-	cbDrawBox = new wxCheckBox(Panel1, ID_CHECKBOX5, _T("Draw box"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CHECKBOX5"));
+	cbDrawBox = new wxCheckBox(Panel1, ID_CHECKBOX5, _("Draw box"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CHECKBOX5"));
 	cbDrawBox->SetValue(false);
 	FlexGridSizer2->Add(cbDrawBox, 1, wxALL|wxEXPAND, 5);
 	StaticBoxSizer2->Add(FlexGridSizer2, 0, wxLEFT|wxRIGHT|wxEXPAND, 5);
 	BoxSizer3->Add(StaticBoxSizer2, 0, wxALL|wxEXPAND, 2);
-	StaticBoxSizer3 = new wxStaticBoxSizer(wxHORIZONTAL, Panel1, _T("Mouse coordinates "));
+	StaticBoxSizer3 = new wxStaticBoxSizer(wxHORIZONTAL, Panel1, _("Mouse coordinates "));
 	BoxSizer1 = new wxBoxSizer(wxVERTICAL);
 	BoxSizer12 = new wxBoxSizer(wxHORIZONTAL);
-	StaticText18 = new wxStaticText(Panel1, ID_STATICTEXT18, _T("Position :"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT18"));
+	StaticText18 = new wxStaticText(Panel1, ID_STATICTEXT18, _("Position :"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT18"));
 	BoxSizer12->Add(StaticText18, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	cbCoord = new wxChoice(Panel1, ID_CHOICE11, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator, _T("ID_CHOICE11"));
 	cbCoord->Set(WXSIZEOF(cbCoord_choices), cbCoord_choices);
 	cbCoord->SetSelection(0);
 	BoxSizer12->Add(cbCoord, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	BoxSizer1->Add(BoxSizer12, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
-	cbCoordVisible = new wxCheckBox(Panel1, ID_CHECKBOX10, _T("Visible"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CHECKBOX10"));
+	cbCoordVisible = new wxCheckBox(Panel1, ID_CHECKBOX10, _("Visible"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CHECKBOX10"));
 	cbCoordVisible->SetValue(false);
 	BoxSizer1->Add(cbCoordVisible, 0, wxALL|wxEXPAND, 5);
-	cbCoordinates = new wxCheckBox(Panel1, ID_CHECKBOX13, _T("Series coordinates"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CHECKBOX13"));
+	cbCoordinates = new wxCheckBox(Panel1, ID_CHECKBOX13, _("Series coordinates"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CHECKBOX13"));
 	cbCoordinates->SetValue(false);
-	cbCoordinates->SetToolTip(_T("Shows the coordinates of the series closest to the mouse position"));
+	cbCoordinates->SetToolTip(_("Shows the coordinates of the series closest to the mouse position"));
 	BoxSizer1->Add(cbCoordinates, 0, wxLEFT|wxRIGHT|wxEXPAND, 5);
-	cbMagnetize = new wxCheckBox(Panel1, ID_CHECKBOX16, _T("Magnetize"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CHECKBOX16"));
+	cbMagnetize = new wxCheckBox(Panel1, ID_CHECKBOX16, _("Magnetize"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CHECKBOX16"));
 	cbMagnetize->SetValue(false);
 	BoxSizer1->Add(cbMagnetize, 0, wxALL|wxEXPAND, 5);
 	StaticBoxSizer3->Add(BoxSizer1, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-	StaticBoxSizer4 = new wxStaticBoxSizer(wxHORIZONTAL, Panel1, _T("Brush "));
+	StaticBoxSizer4 = new wxStaticBoxSizer(wxHORIZONTAL, Panel1, _("Brush "));
 	FlexGridSizer4 = new wxFlexGridSizer(2, 2, 0, 0);
-	StaticText22 = new wxStaticText(Panel1, ID_STATICTEXT22, _T("Color :"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT22"));
+	StaticText22 = new wxStaticText(Panel1, ID_STATICTEXT22, _("Color :"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT22"));
 	FlexGridSizer4->Add(StaticText22, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
 	bCoordBrushColor = new wxButton(Panel1, ID_BUTTON10, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON10"));
 	FlexGridSizer4->Add(bCoordBrushColor, 1, wxALL|wxEXPAND, 2);
-	StaticText23 = new wxStaticText(Panel1, ID_STATICTEXT23, _T("Style :"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT23"));
+	StaticText23 = new wxStaticText(Panel1, ID_STATICTEXT23, _("Style :"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT23"));
 	FlexGridSizer4->Add(StaticText23, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
 	cbCoordBrushStyle = new wxChoice(Panel1, ID_CHOICE13, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator, _T("ID_CHOICE13"));
 	cbCoordBrushStyle->Set(WXSIZEOF(cbBrushStyle_choices), cbBrushStyle_choices);
@@ -343,39 +344,39 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
 	Panel2 = new wxPanel(nbConfig, ID_PANEL15, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL, _T("ID_PANEL15"));
 	BoxSizer16 = new wxBoxSizer(wxHORIZONTAL);
 	FlexGridSizer6 = new wxFlexGridSizer(4, 2, 0, 0);
-	StaticText16 = new wxStaticText(Panel2, ID_STATICTEXT16, _T("Position :"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT16"));
+	StaticText16 = new wxStaticText(Panel2, ID_STATICTEXT16, _("Position :"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT16"));
 	FlexGridSizer6->Add(StaticText16, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
 	cbLegendPosition = new wxChoice(Panel2, ID_CHOICE10, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator, _T("ID_CHOICE10"));
 	cbLegendPosition->Set(WXSIZEOF(cbLegendPosition_choices), cbLegendPosition_choices);
 	cbLegendPosition->SetSelection(0);
 	FlexGridSizer6->Add(cbLegendPosition, 1, wxALL|wxEXPAND, 2);
-	StaticText24 = new wxStaticText(Panel2, ID_STATICTEXT24, _T("Style :"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT24"));
+	StaticText24 = new wxStaticText(Panel2, ID_STATICTEXT24, _("Style :"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT24"));
 	FlexGridSizer6->Add(StaticText24, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
 	cbLegendStyle = new wxChoice(Panel2, ID_CHOICE14, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator, _T("ID_CHOICE14"));
 	cbLegendStyle->Set(WXSIZEOF(cbLegendStyle_choices), cbLegendStyle_choices);
 	cbLegendStyle->SetSelection(0);
 	FlexGridSizer6->Add(cbLegendStyle, 1, wxALL|wxEXPAND, 2);
-	StaticText25 = new wxStaticText(Panel2, ID_STATICTEXT25, _T("Direction :"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT25"));
+	StaticText25 = new wxStaticText(Panel2, ID_STATICTEXT25, _("Direction :"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT25"));
 	FlexGridSizer6->Add(StaticText25, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
 	cbLegendDirection = new wxChoice(Panel2, ID_CHOICE15, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator, _T("ID_CHOICE15"));
 	cbLegendDirection->Set(WXSIZEOF(cbLegendDirection_choices), cbLegendDirection_choices);
 	cbLegendDirection->SetSelection(0);
 	FlexGridSizer6->Add(cbLegendDirection, 1, wxALL|wxEXPAND, 2);
-	cbLegendVisible = new wxCheckBox(Panel2, ID_CHECKBOX9, _T("Visible"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CHECKBOX9"));
+	cbLegendVisible = new wxCheckBox(Panel2, ID_CHECKBOX9, _("Visible"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CHECKBOX9"));
 	cbLegendVisible->SetValue(false);
 	FlexGridSizer6->Add(cbLegendVisible, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
 	BoxSizer16->Add(FlexGridSizer6, 1, wxALL|wxALIGN_TOP, 5);
 	BoxSizer15 = new wxBoxSizer(wxVERTICAL);
-	bFontLegend = new wxButton(Panel2, ID_BUTTON12, _T("Font"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON12"));
+	bFontLegend = new wxButton(Panel2, ID_BUTTON12, _("Font"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON12"));
 	bFontLegend->Disable();
 	BoxSizer15->Add(bFontLegend, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 5);
-	StaticBoxSizer5 = new wxStaticBoxSizer(wxHORIZONTAL, Panel2, _T("Brush "));
+	StaticBoxSizer5 = new wxStaticBoxSizer(wxHORIZONTAL, Panel2, _("Brush "));
 	FlexGridSizer7 = new wxFlexGridSizer(2, 2, 0, 0);
-	StaticText20 = new wxStaticText(Panel2, ID_STATICTEXT20, _T("Color :"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT20"));
+	StaticText20 = new wxStaticText(Panel2, ID_STATICTEXT20, _("Color :"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT20"));
 	FlexGridSizer7->Add(StaticText20, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
 	bLegendBrushColor = new wxButton(Panel2, ID_BUTTON9, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON9"));
 	FlexGridSizer7->Add(bLegendBrushColor, 1, wxALL|wxEXPAND, 2);
-	StaticText21 = new wxStaticText(Panel2, ID_STATICTEXT21, _T("Style :"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT21"));
+	StaticText21 = new wxStaticText(Panel2, ID_STATICTEXT21, _("Style :"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT21"));
 	FlexGridSizer7->Add(StaticText21, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
 	cbLegendBrushStyle = new wxChoice(Panel2, ID_CHOICE12, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator, _T("ID_CHOICE12"));
 	cbLegendBrushStyle->Set(WXSIZEOF(cbBrushStyle_choices), cbBrushStyle_choices); // reused
@@ -395,29 +396,29 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
 	BoxSizer4->Add(ChoiceAxis, 0, wxALL, 5);
 	FlexGridSizer8 = new wxFlexGridSizer(1, 3, 0, 0);
 	FlexGridSizer8->AddGrowableCol(1);
-	StaticText8 = new wxStaticText(Panel3, ID_STATICTEXT8, _T("Name :"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT8"));
+	StaticText8 = new wxStaticText(Panel3, ID_STATICTEXT8, _("Name :"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT8"));
 	FlexGridSizer8->Add(StaticText8, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
 	edAxisName = new wxTextCtrl(Panel3, ID_TEXTCTRL2, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_TEXTCTRL2"));
 	FlexGridSizer8->Add(edAxisName, 0, wxALL|wxEXPAND, 5);
-	bFontAxis = new wxButton(Panel3, ID_BUTTON8, _T("Font"), wxDefaultPosition, wxSize(64,-1), 0, wxDefaultValidator, _T("ID_BUTTON8"));
+	bFontAxis = new wxButton(Panel3, ID_BUTTON8, _("Font"), wxDefaultPosition, wxSize(64,-1), 0, wxDefaultValidator, _T("ID_BUTTON8"));
 	bFontAxis->Disable();
 	FlexGridSizer8->Add(bFontAxis, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	BoxSizer4->Add(FlexGridSizer8, 0, wxALL|wxEXPAND, 2);
 	BoxSizer6 = new wxBoxSizer(wxHORIZONTAL);
 	BoxSizer7 = new wxBoxSizer(wxVERTICAL);
-	StaticBoxSizer6 = new wxStaticBoxSizer(wxHORIZONTAL, Panel3, _T("Pen "));
+	StaticBoxSizer6 = new wxStaticBoxSizer(wxHORIZONTAL, Panel3, _("Pen "));
 	FlexGridSizer10 = new wxFlexGridSizer(3, 2, 0, 0);
-	StaticText12 = new wxStaticText(Panel3, ID_STATICTEXT12, _T("Color :"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT12"));
+	StaticText12 = new wxStaticText(Panel3, ID_STATICTEXT12, _("Color :"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT12"));
 	FlexGridSizer10->Add(StaticText12, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
 	bAxisPenColor = new wxButton(Panel3, ID_BUTTON6, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON6"));
 	FlexGridSizer10->Add(bAxisPenColor, 1, wxALL|wxEXPAND, 2);
-	StaticText13 = new wxStaticText(Panel3, ID_STATICTEXT13, _T("Width :"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT13"));
+	StaticText13 = new wxStaticText(Panel3, ID_STATICTEXT13, _("Width :"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT13"));
 	FlexGridSizer10->Add(StaticText13, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
 	cbAxisPenWidth = new wxChoice(Panel3, ID_CHOICE8, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator, _T("ID_CHOICE8"));
 	cbAxisPenWidth->Set(WXSIZEOF(cbPenWidth_choices), cbPenWidth_choices);
 	cbAxisPenWidth->SetSelection(0);
 	FlexGridSizer10->Add(cbAxisPenWidth, 1, wxALL|wxEXPAND, 2);
-	StaticText14 = new wxStaticText(Panel3, ID_STATICTEXT14, _T("Style :"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT14"));
+	StaticText14 = new wxStaticText(Panel3, ID_STATICTEXT14, _("Style :"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT14"));
 	FlexGridSizer10->Add(StaticText14, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
 	cbAxisPenStyle = new wxChoice(Panel3, ID_CHOICE9, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator, _T("ID_CHOICE9"));
 	cbAxisPenStyle->Set(WXSIZEOF(cbPenStyle_choices), cbPenStyle_choices);
@@ -425,20 +426,20 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
 	FlexGridSizer10->Add(cbAxisPenStyle, 1, wxALL|wxEXPAND, 2);
 	StaticBoxSizer6->Add(FlexGridSizer10, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
 	BoxSizer7->Add(StaticBoxSizer6, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 2);
-	StaticBoxSizer7 = new wxStaticBoxSizer(wxHORIZONTAL, Panel3, _T("Scale "));
+	StaticBoxSizer7 = new wxStaticBoxSizer(wxHORIZONTAL, Panel3, _("Scale "));
 	FlexGridSizer12 = new wxFlexGridSizer(3, 2, 0, 0);
-	cbAutoScale = new wxCheckBox(Panel3, ID_CHECKBOX11, _T("Auto"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CHECKBOX11"));
+	cbAutoScale = new wxCheckBox(Panel3, ID_CHECKBOX11, _("Auto"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CHECKBOX11"));
 	cbAutoScale->SetValue(true);
 	FlexGridSizer12->Add(cbAutoScale, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
 	FlexGridSizer12->Add(-1,-1,1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-	StaticText27 = new wxStaticText(Panel3, ID_STATICTEXT27, _T("Min :"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT27"));
+	StaticText27 = new wxStaticText(Panel3, ID_STATICTEXT27, _("Min :"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT27"));
 	FlexGridSizer12->Add(StaticText27, 1, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 5);
-	edScaleMin = new wxTextCtrl(Panel3, ID_TEXTCTRL9, _T("-1"), wxDefaultPosition, wxSize(64,-1), wxTE_RIGHT, wxFloatingPointValidator<double> (2, &scale_min), _T("ID_TEXTCTRL9"));
+	edScaleMin = new wxTextCtrl(Panel3, ID_TEXTCTRL9, _("-1"), wxDefaultPosition, wxSize(64,-1), wxTE_RIGHT, wxFloatingPointValidator<double> (2, &scale_min), _T("ID_TEXTCTRL9"));
 	edScaleMin->Disable();
 	FlexGridSizer12->Add(edScaleMin, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 2);
-	StaticText28 = new wxStaticText(Panel3, ID_STATICTEXT28, _T("Max :"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT28"));
+	StaticText28 = new wxStaticText(Panel3, ID_STATICTEXT28, _("Max :"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT28"));
 	FlexGridSizer12->Add(StaticText28, 1, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 5);
-	edScaleMax = new wxTextCtrl(Panel3, ID_TEXTCTRL10, _T("1"), wxDefaultPosition, wxSize(64,-1), wxTE_RIGHT, wxFloatingPointValidator<double> (2, &scale_max), _T("ID_TEXTCTRL10"));
+	edScaleMax = new wxTextCtrl(Panel3, ID_TEXTCTRL10, _("1"), wxDefaultPosition, wxSize(64,-1), wxTE_RIGHT, wxFloatingPointValidator<double> (2, &scale_max), _T("ID_TEXTCTRL10"));
 	edScaleMax->Disable();
 	FlexGridSizer12->Add(edScaleMax, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 2);
 	StaticBoxSizer7->Add(FlexGridSizer12, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
@@ -446,19 +447,19 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
 	BoxSizer6->Add(BoxSizer7, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 2);
 	BoxSizer5 = new wxBoxSizer(wxVERTICAL);
 	BoxSizer13 = new wxBoxSizer(wxHORIZONTAL);
-	StaticText17 = new wxStaticText(Panel3, ID_STATICTEXT17, _T("Position :"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT17"));
+	StaticText17 = new wxStaticText(Panel3, ID_STATICTEXT17, _("Position :"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT17"));
 	BoxSizer13->Add(StaticText17, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	cbAxisPosition = new wxChoice(Panel3, ID_CHOICE6, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator, _T("ID_CHOICE6"));
 	BoxSizer13->Add(cbAxisPosition, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	BoxSizer5->Add(BoxSizer13, 0, wxALL|wxALIGN_LEFT, 0);
-	cbAxisVisible = new wxCheckBox(Panel3, ID_CHECKBOX4, _T("Visible"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CHECKBOX4"));
+	cbAxisVisible = new wxCheckBox(Panel3, ID_CHECKBOX4, _("Visible"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CHECKBOX4"));
 	cbAxisVisible->SetValue(false);
 	BoxSizer5->Add(cbAxisVisible, 0, wxALL|wxALIGN_LEFT, 5);
-	cbAxisOutside = new wxCheckBox(Panel3, ID_CHECKBOX7, _T("Draw Outside Margins"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CHECKBOX7"));
+	cbAxisOutside = new wxCheckBox(Panel3, ID_CHECKBOX7, _("Draw Outside Margins"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CHECKBOX7"));
 	cbAxisOutside->SetValue(false);
 	BoxSizer5->Add(cbAxisOutside, 0, wxALL|wxALIGN_LEFT, 5);
 	BoxSizer14 = new wxBoxSizer(wxHORIZONTAL);
-	StaticText29 = new wxStaticText(Panel3, ID_STATICTEXT29, _T("Format :"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT29"));
+	StaticText29 = new wxStaticText(Panel3, ID_STATICTEXT29, _("Format :"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT29"));
 	BoxSizer14->Add(StaticText29, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	cbFormat = new wxChoice(Panel3, ID_CHOICE16, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator, _T("ID_CHOICE16"));
 	cbFormat->Set(WXSIZEOF(cbFormat_choices), cbFormat_choices);
@@ -466,14 +467,14 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
 	BoxSizer14->Add(cbFormat, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	BoxSizer5->Add(BoxSizer14, 0, wxALL|wxALIGN_LEFT, 0);
 	FlexGridSizer11 = new wxFlexGridSizer(1, 2, 0, 0);
-	StaticText26 = new wxStaticText(Panel3, ID_STATICTEXT26, _T("User Label Format :"), wxPoint(192,200), wxDefaultSize, 0, _T("ID_STATICTEXT26"));
+	StaticText26 = new wxStaticText(Panel3, ID_STATICTEXT26, _("User Label Format :"), wxPoint(192,200), wxDefaultSize, 0, _T("ID_STATICTEXT26"));
 	FlexGridSizer11->Add(StaticText26, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	edFormat = new wxTextCtrl(Panel3, ID_TEXTCTRL8, wxEmptyString, wxDefaultPosition, wxSize(60,-1), 0, wxDefaultValidator, _T("ID_TEXTCTRL8"));
 	edFormat->Disable();
-	edFormat->SetToolTip(_T("Format of the label for the axis. Should be like c++ format."));
+	edFormat->SetToolTip(_("Format of the label for the axis. Should be like c++ format."));
 	FlexGridSizer11->Add(edFormat, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	BoxSizer5->Add(FlexGridSizer11, 1, wxALL|wxALIGN_LEFT, 0);
-	cbLogAxis = new wxCheckBox(Panel3, ID_CHECKBOX15, _T("Logarithmic axis"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CHECKBOX15"));
+	cbLogAxis = new wxCheckBox(Panel3, ID_CHECKBOX15, _("Logarithmic axis"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CHECKBOX15"));
 	cbLogAxis->SetValue(false);
 	BoxSizer5->Add(cbLogAxis, 0, wxALL|wxEXPAND, 5);
 	BoxSizer6->Add(BoxSizer5, 0, wxALL|wxALIGN_TOP, 2);
@@ -485,36 +486,36 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
 	BoxSizer8 = new wxBoxSizer(wxVERTICAL);
 	FlexGridSizer13 = new wxFlexGridSizer(1, 3, 0, 0);
 	FlexGridSizer13->AddGrowableCol(1);
-	StaticText1 = new wxStaticText(Panel4, ID_STATICTEXT1, _T("Series name :"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT1"));
+	StaticText1 = new wxStaticText(Panel4, ID_STATICTEXT1, _("Series name :"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT1"));
 	FlexGridSizer13->Add(StaticText1, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
 	ChoiceSeries = new wxChoice(Panel4, ID_CHOICE1, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator, _T("ID_CHOICE1"));
 	FlexGridSizer13->Add(ChoiceSeries, 1, wxALL|wxEXPAND, 5);
-	bDelSeries = new wxButton(Panel4, ID_BUTTON11, _T("Delete"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON11"));
+	bDelSeries = new wxButton(Panel4, ID_BUTTON11, _("Delete"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON11"));
 	bDelSeries->Disable();
 	FlexGridSizer13->Add(bDelSeries, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	BoxSizer8->Add(FlexGridSizer13, 0, wxALL|wxEXPAND, 2);
 	FlexGridSizer14 = new wxFlexGridSizer(1, 2, 0, 0);
 	FlexGridSizer14->AddGrowableCol(1);
-	StaticText2 = new wxStaticText(Panel4, ID_STATICTEXT2, _T("Name :"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT2"));
+	StaticText2 = new wxStaticText(Panel4, ID_STATICTEXT2, _("Name :"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT2"));
 	FlexGridSizer14->Add(StaticText2, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
 	edSeriesName = new wxTextCtrl(Panel4, ID_TEXTCTRL1, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_TEXTCTRL1"));
 	FlexGridSizer14->Add(edSeriesName, 1, wxALL|wxEXPAND, 5);
 	BoxSizer8->Add(FlexGridSizer14, 0, wxALL|wxEXPAND, 2);
 	FlexGridSizer15 = new wxFlexGridSizer(1, 2, 0, 0);
 	BoxSizer9 = new wxBoxSizer(wxVERTICAL);
-	StaticBoxSizer8 = new wxStaticBoxSizer(wxHORIZONTAL, Panel4, _T("Pen "));
+	StaticBoxSizer8 = new wxStaticBoxSizer(wxHORIZONTAL, Panel4, _("Pen "));
 	FlexGridSizer17 = new wxFlexGridSizer(3, 2, 0, 0);
-	StaticText3 = new wxStaticText(Panel4, ID_STATICTEXT3, _T("Color :"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT3"));
+	StaticText3 = new wxStaticText(Panel4, ID_STATICTEXT3, _("Color :"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT3"));
 	FlexGridSizer17->Add(StaticText3, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
 	bSeriesPenColor = new wxButton(Panel4, ID_BUTTON1, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON1"));
 	FlexGridSizer17->Add(bSeriesPenColor, 1, wxALL|wxEXPAND, 2);
-	StaticText4 = new wxStaticText(Panel4, ID_STATICTEXT4, _T("Width :"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT4"));
+	StaticText4 = new wxStaticText(Panel4, ID_STATICTEXT4, _("Width :"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT4"));
 	FlexGridSizer17->Add(StaticText4, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
 	cbSeriesPenWidth = new wxChoice(Panel4, ID_CHOICE2, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator, _T("ID_CHOICE2"));
 	cbSeriesPenWidth->Set(WXSIZEOF(cbPenWidth_choices), cbPenWidth_choices); // reused
 	cbSeriesPenWidth->SetSelection(0);
 	FlexGridSizer17->Add(cbSeriesPenWidth, 1, wxALL|wxEXPAND, 2);
-	StaticText5 = new wxStaticText(Panel4, ID_STATICTEXT5, _T("Style :"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT5"));
+	StaticText5 = new wxStaticText(Panel4, ID_STATICTEXT5, _("Style :"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT5"));
 	FlexGridSizer17->Add(StaticText5, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
 	cbSeriesPenStyle = new wxChoice(Panel4, ID_CHOICE3, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator, _T("ID_CHOICE3"));
 	cbSeriesPenStyle->Set(WXSIZEOF(cbPenStyle_choices), cbPenStyle_choices); // reused
@@ -523,32 +524,32 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
 	StaticBoxSizer8->Add(FlexGridSizer17, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
 	BoxSizer9->Add(StaticBoxSizer8, 0, wxALL|wxALIGN_LEFT, 2);
 	BoxSizer11 = new wxBoxSizer(wxVERTICAL);
-	cbSeriesVisible = new wxCheckBox(Panel4, ID_CHECKBOX1, _T("Visible"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CHECKBOX1"));
+	cbSeriesVisible = new wxCheckBox(Panel4, ID_CHECKBOX1, _("Visible"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CHECKBOX1"));
 	cbSeriesVisible->SetValue(false);
 	BoxSizer11->Add(cbSeriesVisible, 1, wxALL|wxALIGN_LEFT, 3);
-	cbSeriesContinuity = new wxCheckBox(Panel4, ID_CHECKBOX2, _T("Continuity"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CHECKBOX2"));
+	cbSeriesContinuity = new wxCheckBox(Panel4, ID_CHECKBOX2, _("Continuity"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CHECKBOX2"));
 	cbSeriesContinuity->SetValue(false);
 	BoxSizer11->Add(cbSeriesContinuity, 1, wxALL|wxALIGN_LEFT, 3);
-	cbSeriesOutside = new wxCheckBox(Panel4, ID_CHECKBOX3, _T("Draw Outside Margins"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CHECKBOX3"));
+	cbSeriesOutside = new wxCheckBox(Panel4, ID_CHECKBOX3, _("Draw Outside Margins"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CHECKBOX3"));
 	cbSeriesOutside->SetValue(false);
 	BoxSizer11->Add(cbSeriesOutside, 1, wxALL|wxALIGN_LEFT, 3);
-	cbSeriesShowName = new wxCheckBox(Panel4, ID_CHECKBOX6, _T("Show name"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CHECKBOX6"));
+	cbSeriesShowName = new wxCheckBox(Panel4, ID_CHECKBOX6, _("Show name"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CHECKBOX6"));
 	cbSeriesShowName->SetValue(false);
 	BoxSizer11->Add(cbSeriesShowName, 1, wxALL|wxALIGN_LEFT, 3);
-	cbTractable = new wxCheckBox(Panel4, ID_CHECKBOX14, _T("Tractable"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CHECKBOX14"));
+	cbTractable = new wxCheckBox(Panel4, ID_CHECKBOX14, _("Tractable"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CHECKBOX14"));
 	cbTractable->SetValue(false);
-	cbTractable->SetToolTip(_T("Allow mouse coordinates"));
+	cbTractable->SetToolTip(_("Allow mouse coordinates"));
 	BoxSizer11->Add(cbTractable, 1, wxALL, 3);
 	BoxSizer9->Add(BoxSizer11, 0, wxALL|wxALIGN_LEFT, 5);
 	FlexGridSizer15->Add(BoxSizer9, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	BoxSizer10 = new wxBoxSizer(wxVERTICAL);
-	StaticBoxSizer9 = new wxStaticBoxSizer(wxHORIZONTAL, Panel4, _T("Brush "));
+	StaticBoxSizer9 = new wxStaticBoxSizer(wxHORIZONTAL, Panel4, _("Brush "));
 	FlexGridSizer16 = new wxFlexGridSizer(2, 2, 0, 0);
-	StaticText6 = new wxStaticText(Panel4, ID_STATICTEXT6, _T("Color :"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT6"));
+	StaticText6 = new wxStaticText(Panel4, ID_STATICTEXT6, _("Color :"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT6"));
 	FlexGridSizer16->Add(StaticText6, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
 	bSeriesBrushColor = new wxButton(Panel4, ID_BUTTON2, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON2"));
 	FlexGridSizer16->Add(bSeriesBrushColor, 1, wxALL|wxEXPAND, 2);
-	StaticText7 = new wxStaticText(Panel4, ID_STATICTEXT7, _T("Style :"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT7"));
+	StaticText7 = new wxStaticText(Panel4, ID_STATICTEXT7, _("Style :"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT7"));
 	FlexGridSizer16->Add(StaticText7, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
 	cbSeriesBrushStyle = new wxChoice(Panel4, ID_CHOICE4, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator, _T("ID_CHOICE4"));
 	cbSeriesBrushStyle->Set(WXSIZEOF(cbSeriesBrushStyle_choices), cbSeriesBrushStyle_choices);
@@ -556,15 +557,15 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
 	FlexGridSizer16->Add(cbSeriesBrushStyle, 1, wxALL|wxEXPAND, 2);
 	StaticBoxSizer9->Add(FlexGridSizer16, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
 	BoxSizer10->Add(StaticBoxSizer9, 0, wxALL|wxALIGN_LEFT, 2);
-	StaticBoxSizer10 = new wxStaticBoxSizer(wxHORIZONTAL, Panel4, _T("Symbol "));
+	StaticBoxSizer10 = new wxStaticBoxSizer(wxHORIZONTAL, Panel4, _("Symbol "));
 	FlexGridSizer18 = new wxFlexGridSizer(2, 2, 0, 0);
-	StaticText9 = new wxStaticText(Panel4, ID_STATICTEXT9, _T("Type :"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT9"));
+	StaticText9 = new wxStaticText(Panel4, ID_STATICTEXT9, _("Type :"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT9"));
 	FlexGridSizer18->Add(StaticText9, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
 	cbSeriesSymbolType = new wxChoice(Panel4, ID_CHOICE5, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator, _T("ID_CHOICE5"));
 	cbSeriesSymbolType->Set(WXSIZEOF(cbSeriesSymbolType_choices), cbSeriesSymbolType_choices);
 	cbSeriesSymbolType->SetSelection(0);
 	FlexGridSizer18->Add(cbSeriesSymbolType, 1, wxALL|wxEXPAND, 2);
-	StaticText10 = new wxStaticText(Panel4, ID_STATICTEXT10, _T("Size :"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT10"));
+	StaticText10 = new wxStaticText(Panel4, ID_STATICTEXT10, _("Size :"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT10"));
 	FlexGridSizer18->Add(StaticText10, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
 	cbSeriesSymbolSize = new wxSpinCtrl(Panel4, ID_SPINCTRL2, _T("4"), wxDefaultPosition, wxDefaultSize, 0, 4, 100, 4, _T("ID_SPINCTRL2"));
 	cbSeriesSymbolSize->SetValue(_T("4"));
@@ -572,13 +573,13 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
 	StaticBoxSizer10->Add(FlexGridSizer18, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
 	BoxSizer10->Add(StaticBoxSizer10, 0, wxALL, 2);
 	FlexGridSizer19 = new wxFlexGridSizer(1, 2, 0, 0);
-	StaticText19 = new wxStaticText(Panel4, ID_STATICTEXT19, _T("Skip point over :"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT19"));
+	StaticText19 = new wxStaticText(Panel4, ID_STATICTEXT19, _("Skip point over :"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT19"));
 	FlexGridSizer19->Add(StaticText19, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
 	cbSeriesStep = new wxSpinCtrl(Panel4, ID_SPINCTRL1, _T("1"), wxDefaultPosition, wxDefaultSize, 0, 1, 100, 1, _T("ID_SPINCTRL1"));
 	cbSeriesStep->SetValue(_T("1"));
 	FlexGridSizer19->Add(cbSeriesStep, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	BoxSizer10->Add(FlexGridSizer19, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-	cbBar = new wxCheckBox(Panel4, ID_CHECKBOX12, _T("View as bar"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CHECKBOX12"));
+	cbBar = new wxCheckBox(Panel4, ID_CHECKBOX12, _("View as bar"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CHECKBOX12"));
 	cbBar->SetValue(false);
 	cbBar->Disable();
 	BoxSizer10->Add(cbBar, 1, wxALL|wxEXPAND, 5);
@@ -587,15 +588,15 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
 	Panel4->SetSizer(BoxSizer8);
 	BoxSizer8->Fit(Panel4);
 	BoxSizer8->SetSizeHints(Panel4);
-	nbConfig->AddPage(Panel1, _T("General"), false);
-	nbConfig->AddPage(Panel2, _T("Legend"), false);
-	nbConfig->AddPage(Panel3, _T("Axis"), false);
-	nbConfig->AddPage(Panel4, _T("Series"), false);
+	nbConfig->AddPage(Panel1, _("General"), false);
+	nbConfig->AddPage(Panel2, _("Legend"), false);
+	nbConfig->AddPage(Panel3, _("Axis"), false);
+	nbConfig->AddPage(Panel4, _("Series"), false);
 	sizerMain->Add(nbConfig, 1, wxALL|wxEXPAND, 5);
 	BoxSizer2 = new wxBoxSizer(wxHORIZONTAL);
-	bApply = new wxButton(this, ID_BUTTON3, _T("Apply"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON3"));
+	bApply = new wxButton(this, ID_BUTTON3, _("Apply"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON3"));
 	BoxSizer2->Add(bApply, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 4);
-	bClose = new wxButton(this, ID_BUTTON4, _T("Close"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON4"));
+	bClose = new wxButton(this, ID_BUTTON4, _("Close"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON4"));
 	BoxSizer2->Add(bClose, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 4);
 	sizerMain->Add(BoxSizer2, 0, wxEXPAND, 4);
 	SetSizer(sizerMain);
@@ -654,7 +655,7 @@ MathPlotConfigDialog::~MathPlotConfigDialog()
 
 void MathPlotConfigDialog::Initialize()
 {
-	CurrentTitle = (mpText*) m_plot->GetLayerByClassName(_("mpTitle"));
+	CurrentTitle = (mpText*) m_plot->GetLayerByClassName(_T("mpTitle"));
 	if (CurrentTitle)
 	{
 		edTitle->SetValue(CurrentTitle->GetName());
@@ -676,7 +677,7 @@ void MathPlotConfigDialog::Initialize()
 	bBGColor->SetBackgroundColour(m_plot->GetbgColour());
 	cbMagnetize->SetValue(m_plot->GetMagnetize());
 
-	CurrentLegend = (mpInfoLegend*) m_plot->GetLayerByClassName(_("mpInfoLegend"));
+	CurrentLegend = (mpInfoLegend*) m_plot->GetLayerByClassName(_T("mpInfoLegend"));
 	if (CurrentLegend)
 	{
 		cbLegendPosition->SetSelection(CurrentLegend->GetLocation());
@@ -691,7 +692,7 @@ void MathPlotConfigDialog::Initialize()
 		bFontLegend->Enable();
 	}
 
-	CurrentCoords = (mpInfoCoords*) m_plot->GetLayerByClassName(_("mpInfoCoords"));
+	CurrentCoords = (mpInfoCoords*) m_plot->GetLayerByClassName(_T("mpInfoCoords"));
 	if (CurrentCoords)
 	{
 		cbCoord->SetSelection(CurrentCoords->GetLocation());
@@ -748,7 +749,7 @@ void MathPlotConfigDialog::OnbColorClick(wxCommandEvent &event)
 
 	wxColourDialog ColourDialog(this, &m_clrData);
 
-	ColourDialog.SetTitle(_T("Please choose the background colour"));
+	ColourDialog.SetTitle(_("Please choose the background colour"));
 	if (ColourDialog.ShowModal() == wxID_OK)
 	{
 		m_clrData = ColourDialog.GetColourData();
@@ -1005,7 +1006,7 @@ void MathPlotConfigDialog::OnbDelSeriesClick(wxCommandEvent& WXUNUSED(event))
 {
 	if (CurrentSerie && CurrentSerie->GetCanDelete())
 	{
-		if (wxMessageDialog(this, _T("Delete the serie ?"), _T("Confirmation"), wxYES_NO | wxCENTRE).ShowModal() == wxID_YES)
+		if (wxMessageDialog(this, _("Delete the serie ?"), _("Confirmation"), wxYES_NO | wxCENTRE).ShowModal() == wxID_YES)
 		{
 			m_plot->DelLayer(CurrentSerie, true, true);
 			if (CurrentLegend)
