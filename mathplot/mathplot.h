@@ -2628,7 +2628,7 @@ class WXDLLIMPEXP_MATHPLOT mpPrintout: public wxPrintout
 			stretch_factor = 2;
 		}
 
-		mpPrintout(mpWindow *drawWindow, const wxChar *title = _("wxMathPlot print output"), int factor = 2);
+		mpPrintout(mpWindow *drawWindow, const wxString &title = _("wxMathPlot print output"), int factor = 2);
 		virtual ~mpPrintout()
 		{
 			;

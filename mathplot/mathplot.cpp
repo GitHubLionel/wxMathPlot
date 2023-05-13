@@ -1610,7 +1610,7 @@ void mpScaleX::DoPlot(wxDC &dc, mpWindow &w)
 	double n0 = floor(w.GetPosX() / step) * step;
 	double n = 0;
 #ifdef MATHPLOT_DO_LOGGING
-	wxLogMessage(wxT("mpScaleX::Plot: dig: %f , step: %f, end: %f, n: %f"), dig, step, end, n0);
+	wxLogMessage(wxT("mpScaleX::Plot: step: %f, end: %f, n: %f"), step, end, n0);
 #endif
 
 	int labelH = 0; // Control labels heigth to decide where to put axis name (below labels or on top of axis)
@@ -4001,7 +4001,7 @@ mpTitle::mpTitle()
 
 IMPLEMENT_DYNAMIC_CLASS(mpPrintout, wxPrintout)
 
-mpPrintout::mpPrintout(mpWindow *drawWindow, const wxChar *title, int factor) :
+mpPrintout::mpPrintout(mpWindow *drawWindow, const wxString &title, int factor) :
 		wxPrintout(title)
 {
 	drawn = false;
