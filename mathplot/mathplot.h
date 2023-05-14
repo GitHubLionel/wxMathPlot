@@ -6,7 +6,7 @@
 // Contributors:    Jose Luis Blanco, Val Greene, Lionel Reynaud
 // Created:         21/07/2003
 // Last edit:       22/02/2009
-// Last edit:       24/04/2023
+// Last edit:       14/05/2023
 // Copyright:       (c) David Schalig, Davide Rondini
 // Licence:         wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -1536,8 +1536,9 @@ class mpMagnet
 	public:
 		mpMagnet()
 		{
-			m_Inside = false;
+			m_IsDrawn = false;
 			m_rightClick = false;
+			m_IsWasDrawn = false;
 		}
 		~mpMagnet()
 		{
@@ -1549,18 +1550,29 @@ class mpMagnet
 			m_plot_size = wxRect(left, top, width + left, height + top);
 		}
 		void Plot(mpWindow &w, const wxPoint &mousePos);
-		void ClearPlot(mpWindow &w);
+		void ClearPlot(mpWindow &w, const wxPoint &mousePos = wxDefaultPosition);
+		void ReInitDrawn(void)
+		{
+			m_IsWasDrawn = m_IsDrawn;
+			m_IsDrawn = false;
+		}
 
 		void SetRightClick(void)
 		{
 			m_rightClick = true;
 		}
 
+		bool GetIsWasDrawn(void)
+		{
+			return m_IsWasDrawn;
+		}
+
 	private:
 		wxRect m_domain;
 		wxRect m_plot_size;
 		wxPoint m_mousePosition_old;
-		bool m_Inside;
+		bool m_IsDrawn;
+		bool m_IsWasDrawn;
 		bool m_rightClick;
 };
 
@@ -2253,6 +2265,8 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 		void DoZoomOutXCalc (const int staticXpixel);
 		void DoZoomOutYCalc (const int staticYpixel);
 
+		void Zoom(bool zoomIn, const wxPoint &centerPoint);
+
 		/** Recalculate global layer bounding box, and save it in m_minX,...
 		 * \return true if there is any valid BBox information.
 		 */
@@ -2302,7 +2316,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 		bool m_enableDoubleBuffer;			//!< For double buffering. Default enabled
 		bool m_enableMouseNavigation;		//!< For pan/zoom with the mouse.
 		bool m_mouseMovedAfterRightClick;
-		long m_mouseRClick_X, m_mouseRClick_Y;		//!< For the right button "drag" feature
+		wxPoint m_mouseRClick;          //!< For the right button "drag" feature
 		wxPoint m_mouseLClick;			    //!< Starting coords for rectangular zoom selection
 		bool m_enableScrollBars;
 		int m_scrollX, m_scrollY;

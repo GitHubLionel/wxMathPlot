@@ -6,7 +6,7 @@
 // Contributors:    Jose Luis Blanco, Val Greene, Lionel Reynaud
 // Created:         21/07/2003
 // Last edit:       09/09/2007
-// Last edit:       24/04/2023
+// Last edit:       14/05/2023
 // Copyright:       (c) David Schalig, Davide Rondini
 // Licence:         wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -24,6 +24,9 @@
 // Comment out for release operation:
 // (Added by J.L.Blanco, Aug 2007)
 //#define MATHPLOT_DO_LOGGING
+
+// To help debug
+#define DEBUG_COUT(message)	std::cout << #message << std::endl;
 
 #ifdef __BORLANDC__
 #pragma hdrstop
@@ -2017,16 +2020,12 @@ void mpWindow::OnMouseLeftDown(wxMouseEvent &event)
 void mpWindow::OnMouseRightDown(wxMouseEvent &event)
 {
 	m_mouseMovedAfterRightClick = false;
-	m_mouseRClick_X = event.GetX();
-	m_mouseRClick_Y = event.GetY();
+	m_mouseRClick = wxPoint(event.GetX(), event.GetY());
 	if (m_magnetize)
-	{
 		m_magnet.SetRightClick();
-	}
+
 	if (m_enableMouseNavigation)
-	{
 		SetCursor(*wxCROSS_CURSOR);
-	}
 }
 
 // If the user "drags" with the right buttom pressed, do "pan"
@@ -2039,24 +2038,22 @@ void mpWindow::OnMouseMove(wxMouseEvent &event)
 		return;
 	}
 
+	// The current mouse position
+	wxPoint eventPoint = wxPoint(event.GetX(), event.GetY());
+
 	// pan
 	if (event.m_rightDown)
 	{
 		m_mouseMovedAfterRightClick = true; // Hides the popup menu after releasing the button!
 
-		if (m_magnetize)
-		  m_magnet.ClearPlot(*this);
-
 		// The change:
-		int Ax = m_mouseRClick_X - event.GetX();
-		int Ay = m_mouseRClick_Y - event.GetY();
+		wxPoint Axy = m_mouseRClick - eventPoint;
 
 		// For the next event, use relative to this coordinates.
-		m_mouseRClick_X = event.GetX();
-		m_mouseRClick_Y = event.GetY();
+		m_mouseRClick = eventPoint;
 
-		double Ax_units = Ax / m_scaleX;
-		double Ay_units = -Ay / m_scaleY;
+		double Ax_units = Axy.x / m_scaleX;
+		double Ay_units = -Axy.y / m_scaleY;
 
 		m_posX += Ax_units;
 		m_posY += Ay_units;
@@ -2079,7 +2076,7 @@ void mpWindow::OnMouseMove(wxMouseEvent &event)
 			if (m_magnetize)
 			  m_magnet.ClearPlot(*this);
 
-			wxPoint moveVector(event.GetX() - m_mouseLClick.x, event.GetY() - m_mouseLClick.y);
+			wxPoint moveVector = eventPoint - m_mouseLClick;
 			if (m_movingInfoLayer == NULL)
 			{
 				wxClientDC dc(this);
@@ -2122,11 +2119,12 @@ void mpWindow::OnMouseMove(wxMouseEvent &event)
 					dc.SetBrush(*wxTRANSPARENT_BRUSH);
 					dc.DrawRectangle(m_zoom_dim);
 				}
+
+				if (m_magnetize)
+					m_magnet.Plot(*this, eventPoint);
 			}
 			else
-			{
 				m_movingInfoLayer->Move(moveVector);
-			}
 		}
 		else
 		{
@@ -2144,7 +2142,7 @@ void mpWindow::OnMouseMove(wxMouseEvent &event)
 			}
 
 			if (m_magnetize && (!m_repainting) && (event.GetEventType() == wxEVT_MOTION))
-				m_magnet.Plot(*this, wxPoint(event.GetX(), event.GetY()));
+				m_magnet.Plot(*this, eventPoint);
 		}
 	}
 	event.Skip();
@@ -2180,18 +2178,11 @@ void mpWindow::OnMouseWheel(wxMouseEvent &event)
 		return;
 	}
 
-	if (m_magnetize)
-	  m_magnet.ClearPlot(*this);
-
 	// Zoom in and out
 	if (!event.m_controlDown && !event.m_shiftDown)
 	{
-		wxPoint clickPt(event.GetX(), event.GetY());
 		// CTRL key hold: Zoom in/out:
-		if (event.GetWheelRotation() > 0)
-			ZoomIn(clickPt);
-		else
-			ZoomOut(clickPt);
+		Zoom((event.GetWheelRotation() > 0), wxPoint(event.GetX(), event.GetY()));
 	}
 	else
 	{
@@ -2252,7 +2243,6 @@ void mpWindow::Fit(const mpFloatRect &rect, wxCoord *printSizeX, wxCoord *printS
 {
 	if (m_magnetize)
 	{
-		m_magnet.ClearPlot(*this);
 		// Avoid paint cross if mouse move
 		m_repainting = true;
 	}
@@ -2379,42 +2369,15 @@ void mpWindow::DoZoomOutYCalc(const int staticYpixel)
 
 void mpWindow::ZoomIn(const wxPoint &centerPoint)
 {
-	wxPoint c(centerPoint);
-	if (c == wxDefaultPosition)
-	{
-		int h, w;
-		GetClientSize(&w, &h);
-		SetScreen(w, h);
-		c.x = m_plotWidth / 2 + m_margin.left;
-		c.y = m_plotHeight / 2 - m_margin.top;
-	}
-
-	// Preserve the position of the clicked point:
-	double prior_layer_x = p2x(c.x);
-	double prior_layer_y = p2y(c.y);
-
-	// Zoom in:
-	m_scaleX = m_scaleX * zoomIncrementalFactor;
-	m_scaleY = m_scaleY * zoomIncrementalFactor;
-
-	// Adjust the new m_posx/y:
-	m_posX = prior_layer_x - c.x / m_scaleX;
-	m_posY = prior_layer_y + c.y / m_scaleY;
-
-	m_desired.Xmin = m_posX;
-	m_desired.Xmax = m_posX + m_plotWidth / m_scaleX;
-	m_desired.Ymax = m_posY;
-	m_desired.Ymin = m_posY - m_plotHeight / m_scaleY;
-
-#ifdef MATHPLOT_DO_LOGGING
-	wxLogMessage(wxT("mpWindow::ZoomIn() prior coords: (%f,%f), new coords: (%f,%f) SHOULD BE EQUAL!!"),
-			prior_layer_x, prior_layer_y, p2x(c.x), p2y(c.y));
-#endif
-
-	UpdateAll();
+	Zoom(true, centerPoint);
 }
 
 void mpWindow::ZoomOut(const wxPoint &centerPoint)
+{
+	Zoom(false, centerPoint);
+}
+
+void mpWindow::Zoom(bool zoomIn, const wxPoint &centerPoint)
 {
 	wxPoint c(centerPoint);
 	if (c == wxDefaultPosition)
@@ -2430,9 +2393,16 @@ void mpWindow::ZoomOut(const wxPoint &centerPoint)
 	double prior_layer_x = p2x(c.x);
 	double prior_layer_y = p2y(c.y);
 
-	// Zoom out:
-	m_scaleX = m_scaleX / zoomIncrementalFactor;
-	m_scaleY = m_scaleY / zoomIncrementalFactor;
+	if (zoomIn)
+	{
+		m_scaleX *= zoomIncrementalFactor;
+		m_scaleY *= zoomIncrementalFactor;
+	}
+	else
+	{
+		m_scaleX /= zoomIncrementalFactor;
+		m_scaleY /= zoomIncrementalFactor;
+	}
 
 	// Adjust the new m_posx/y:
 	m_posX = prior_layer_x - c.x / m_scaleX;
@@ -2444,7 +2414,7 @@ void mpWindow::ZoomOut(const wxPoint &centerPoint)
 	m_desired.Ymin = m_posY - m_plotHeight / m_scaleY;
 
 #ifdef MATHPLOT_DO_LOGGING
-	wxLogMessage(wxT("mpWindow::ZoomOut() prior coords: (%f,%f), new coords: (%f,%f) SHOULD BE EQUAL!!"),
+	wxLogMessage(wxT("mpWindow::Zoom() prior coords: (%f,%f), new coords: (%f,%f) SHOULD BE EQUAL!!"),
 			prior_layer_x, prior_layer_y, p2x(c.x), p2y(c.y));
 #endif
 	UpdateAll();
@@ -2622,12 +2592,12 @@ void mpWindow::OnCenter(wxCommandEvent &WXUNUSED(event))
 
 void mpWindow::OnZoomIn(wxCommandEvent &WXUNUSED(event))
 {
-	ZoomIn(wxPoint(m_mouseRClick_X, m_mouseRClick_Y));
+	Zoom(true, m_mouseRClick);
 }
 
 void mpWindow::OnZoomOut(wxCommandEvent &WXUNUSED(event))
 {
-	ZoomOut();
+	Zoom(false, wxDefaultPosition);
 }
 
 void mpWindow::OnSize(wxSizeEvent &WXUNUSED(event))
@@ -2843,6 +2813,11 @@ void mpWindow::OnPaint(wxPaintEvent &WXUNUSED(event))
 		m_buff_dc->SelectObject(wxNullBitmap);
 		delete m_buff_dc;
 	}
+
+	// We redraw the cross if necessary. We pass the mouse position if we do a pan operation.
+	if (m_magnetize && m_magnet.GetIsWasDrawn())
+		  m_magnet.ClearPlot(*this, m_mouseRClick);
+
 	m_repainting = false;
 }
 
@@ -3031,7 +3006,7 @@ void mpWindow::UpdateAll()
 	}
 
 	if (m_magnetize)
-	  m_magnet.ClearPlot(*this);
+	  m_magnet.ReInitDrawn();
 
 	Refresh(false);
 }
@@ -3421,8 +3396,6 @@ void mpWindow::SetMargins(int top, int right, int bottom, int left)
 	m_margin.right = right;
 	m_margin.bottom = bottom;
 	m_margin.left = left;
-//	m_plotWidth = m_scrX - (m_margin.left + m_margin.right);
-//	m_plotHeight = m_scrY - (m_margin.top + m_margin.bottom);
 
 	m_plotBondaries.startPx = 0;
 	m_plotBondariesMargin.startPx = m_margin.left;
@@ -3433,8 +3406,6 @@ void mpWindow::SetMargins(int top, int right, int bottom, int left)
 	m_plotBondariesMargin.startPy = m_margin.top;
 	m_plotBondaries.endPy = m_scrY;
 	m_plotBondariesMargin.endPy = m_scrY - m_margin.bottom;
-
-//	m_magnet.UpdateBox(m_margin.left, m_margin.top, m_plotWidth, m_plotHeight);
 }
 
 wxBitmap* mpWindow::BitmapScreenshot(wxSize imageSize, bool fit)
@@ -4554,11 +4525,11 @@ void mpMagnet::Plot(mpWindow &w, const wxPoint &mousePos)
 	dc.SetPen(*wxBLACK_PEN);
 	dc.SetLogicalFunction(wxINVERT);
 
-	if (m_Inside)
+	if (m_IsDrawn)
 	{
 		dc.DrawLine(m_mousePosition_old.x, m_plot_size.y, m_mousePosition_old.x, m_plot_size.height);
 		dc.DrawLine(m_plot_size.x, m_mousePosition_old.y, m_plot_size.width, m_mousePosition_old.y);
-		m_Inside = false;
+		m_IsDrawn = false;
 		m_rightClick = false;
 	}
 
@@ -4576,7 +4547,7 @@ void mpMagnet::Plot(mpWindow &w, const wxPoint &mousePos)
 				dc.DrawLine(m_plot_size.x, mousePos.y, m_plot_size.width, mousePos.y);
 				dc.SetLogicalFunction(wxCOPY);
 				m_mousePosition_old = mousePos;
-				m_Inside = true;
+				m_IsDrawn = true;
 			}
 		}
 	}
@@ -4584,16 +4555,20 @@ void mpMagnet::Plot(mpWindow &w, const wxPoint &mousePos)
 	dc.SetLogicalFunction(wxCOPY);
 }
 
-void mpMagnet::ClearPlot(mpWindow &w)
+void mpMagnet::ClearPlot(mpWindow &w, const wxPoint &mousePos)
 {
-	if (m_Inside)
+	if (m_IsDrawn || m_IsWasDrawn)
 	{
+		// Mouse position change when pan operation
+		if (m_IsWasDrawn && m_rightClick)
+			m_mousePosition_old = mousePos;
 		wxClientDC dc(&w);
 		dc.SetPen(*wxBLACK_PEN);
 		dc.SetLogicalFunction(wxINVERT);
 		dc.DrawLine(m_mousePosition_old.x, m_plot_size.y, m_mousePosition_old.x, m_plot_size.height);
 		dc.DrawLine(m_plot_size.x, m_mousePosition_old.y, m_plot_size.width, m_mousePosition_old.y);
-		m_Inside = false;
+		m_IsDrawn = m_IsWasDrawn;
+		m_IsWasDrawn = false;
 		dc.SetLogicalFunction(wxCOPY);
 	}
 }
