@@ -1550,7 +1550,8 @@ class mpMagnet
 			m_plot_size = wxRect(left, top, width + left, height + top);
 		}
 		void Plot(mpWindow &w, const wxPoint &mousePos);
-		void ClearPlot(mpWindow &w, const wxPoint &mousePos = wxDefaultPosition);
+		void ClearPlot(mpWindow &w);
+		void UpdatePlot(mpWindow &w, const wxPoint &mousePos);
 		void ReInitDrawn(void)
 		{
 			m_IsWasDrawn = m_IsDrawn;
@@ -1560,11 +1561,6 @@ class mpMagnet
 		void SetRightClick(void)
 		{
 			m_rightClick = true;
-		}
-
-		bool GetIsWasDrawn(void)
-		{
-			return m_IsWasDrawn;
 		}
 
 	private:

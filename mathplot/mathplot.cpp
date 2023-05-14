@@ -2815,8 +2815,8 @@ void mpWindow::OnPaint(wxPaintEvent &WXUNUSED(event))
 	}
 
 	// We redraw the cross if necessary. We pass the mouse position if we do a pan operation.
-	if (m_magnetize && m_magnet.GetIsWasDrawn())
-		  m_magnet.ClearPlot(*this, m_mouseRClick);
+	if (m_magnetize)
+		m_magnet.UpdatePlot(*this, m_mouseRClick);
 
 	m_repainting = false;
 }
@@ -4555,13 +4555,10 @@ void mpMagnet::Plot(mpWindow &w, const wxPoint &mousePos)
 	dc.SetLogicalFunction(wxCOPY);
 }
 
-void mpMagnet::ClearPlot(mpWindow &w, const wxPoint &mousePos)
+void mpMagnet::ClearPlot(mpWindow &w)
 {
 	if (m_IsDrawn || m_IsWasDrawn)
 	{
-		// Mouse position change when pan operation
-		if (m_IsWasDrawn && m_rightClick)
-			m_mousePosition_old = mousePos;
 		wxClientDC dc(&w);
 		dc.SetPen(*wxBLACK_PEN);
 		dc.SetLogicalFunction(wxINVERT);
@@ -4570,6 +4567,17 @@ void mpMagnet::ClearPlot(mpWindow &w, const wxPoint &mousePos)
 		m_IsDrawn = m_IsWasDrawn;
 		m_IsWasDrawn = false;
 		dc.SetLogicalFunction(wxCOPY);
+	}
+}
+
+void mpMagnet::UpdatePlot(mpWindow &w, const wxPoint &mousePos)
+{
+	if (m_IsWasDrawn)
+	{
+		// Mouse position change when pan operation
+		if (m_rightClick)
+			m_mousePosition_old = mousePos;
+		ClearPlot(w);
 	}
 }
 
