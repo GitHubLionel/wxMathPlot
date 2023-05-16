@@ -27,6 +27,7 @@
 
 // To help debug
 #define DEBUG_COUT(message)	std::cout << #message << std::endl;
+#define DEBUG_COUT2(message, test)	std::cout << #message << ((test) ? " true":" false") << std::endl;
 
 #ifdef __BORLANDC__
 #pragma hdrstop
@@ -2754,6 +2755,7 @@ void mpWindow::OnPaint(wxPaintEvent &WXUNUSED(event))
 	// J.L.Blanco @ Aug 2007: Added double buffer support
 	if (m_enableDoubleBuffer)
 	{
+		DEBUG_COUT(mpWindow::OnPaint enter >>>>> paint on the memory DC);
 		// Recreate Bitmap if sizes have changed
 		if (m_last_lx != m_scrX || m_last_ly != m_scrY)
 		{
@@ -2790,6 +2792,7 @@ void mpWindow::OnPaint(wxPaintEvent &WXUNUSED(event))
 
 	// Draw all the layers:
 	m_repainting = true;
+	DEBUG_COUT(mpWindow::OnPaint Paint all****);
 
 	mpFunctionType function;
 	mpScaleType scale;
@@ -2809,6 +2812,7 @@ void mpWindow::OnPaint(wxPaintEvent &WXUNUSED(event))
 	// If doublebuffer, draw now to the window:
 	if (m_enableDoubleBuffer)
 	{
+		DEBUG_COUT(mpWindow::OnPaint leave <<<<< memory DC copy to screen);
 		dc.Blit(0, 0, m_scrX, m_scrY, trgDc, 0, 0, wxCOPY);
 		m_buff_dc->SelectObject(wxNullBitmap);
 		delete m_buff_dc;
@@ -3004,7 +3008,7 @@ void mpWindow::UpdateAll()
 			}
 		}
 	}
-
+	DEBUG_COUT(mpWindow::UpdateAll);
 	if (m_magnetize)
 	  m_magnet.ReInitDrawn();
 
@@ -4524,6 +4528,7 @@ void mpMagnet::Plot(mpWindow &w, const wxPoint &mousePos)
 	wxClientDC dc(&w);
 	dc.SetPen(*wxBLACK_PEN);
 	dc.SetLogicalFunction(wxINVERT);
+	DEBUG_COUT2(mpMagnet::Plot enter >>>>>>> m_IsDrawn = , m_IsDrawn);
 
 	if (m_IsDrawn)
 	{
@@ -4543,6 +4548,7 @@ void mpMagnet::Plot(mpWindow &w, const wxPoint &mousePos)
 			}
 			else
 			{
+				DEBUG_COUT(mpMagnet::Plot draw COPY method!!!!!!);
 				dc.DrawLine(mousePos.x, m_plot_size.y, mousePos.x, m_plot_size.height);
 				dc.DrawLine(m_plot_size.x, mousePos.y, m_plot_size.width, mousePos.y);
 				dc.SetLogicalFunction(wxCOPY);
@@ -4551,12 +4557,13 @@ void mpMagnet::Plot(mpWindow &w, const wxPoint &mousePos)
 			}
 		}
 	}
-
+	DEBUG_COUT(mpMagnet::Plot leave <<<<<<<<<< );
 	dc.SetLogicalFunction(wxCOPY);
 }
 
 void mpMagnet::ClearPlot(mpWindow &w)
 {
+	DEBUG_COUT2(mpMagnet::ClearPlot m_IsDrawn = , m_IsDrawn);
 	if (m_IsDrawn || m_IsWasDrawn)
 	{
 		wxClientDC dc(&w);
@@ -4572,6 +4579,7 @@ void mpMagnet::ClearPlot(mpWindow &w)
 
 void mpMagnet::UpdatePlot(mpWindow &w, const wxPoint &mousePos)
 {
+	DEBUG_COUT2(mpMagnet::UpdatePlot m_IsWasDrawn = , m_IsWasDrawn);
 	if (m_IsWasDrawn)
 	{
 		// Mouse position change when pan operation
