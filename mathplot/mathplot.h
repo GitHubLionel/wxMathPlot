@@ -6,7 +6,7 @@
 // Contributors:    Jose Luis Blanco, Val Greene, Lionel Reynaud
 // Created:         21/07/2003
 // Last edit:       22/02/2009
-// Last edit:       14/05/2023
+// Last edit:       18/05/2023
 // Copyright:       (c) David Schalig, Davide Rondini
 // Licence:         wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -1552,9 +1552,10 @@ class mpMagnet
 		void Plot(mpWindow &w, const wxPoint &mousePos);
 		void ClearPlot(mpWindow &w);
 		void UpdatePlot(mpWindow &w, const wxPoint &mousePos);
-		void ReInitDrawn(void)
+		void SaveDrawState(void)
 		{
 			m_IsWasDrawn = m_IsDrawn;
+			// In any cases, set to false because we erase and repaint all the plot
 			m_IsDrawn = false;
 		}
 
@@ -1566,10 +1567,11 @@ class mpMagnet
 	private:
 		wxRect m_domain;
 		wxRect m_plot_size;
-		wxPoint m_mousePosition_old;
+		wxPoint m_mousePosition;
 		bool m_IsDrawn;
 		bool m_IsWasDrawn;
 		bool m_rightClick;
+		void DrawCross(mpWindow &w);
 };
 
 /** Canvas for plotting mpLayer implementations.
