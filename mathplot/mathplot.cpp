@@ -2071,9 +2071,11 @@ void mpWindow::OnMouseMove(wxMouseEvent &event)
 	}
 	else
 	{
+		wxClientDC dc(this);
+
 		// First need to clean the plot.
 		if (m_magnetize && (!m_repainting))
-		  m_magnet.ClearPlot(*this);
+		  m_magnet.ClearPlot(dc);
 
 		// zoom select rectangle
 		if (event.m_leftDown)
@@ -2081,8 +2083,6 @@ void mpWindow::OnMouseMove(wxMouseEvent &event)
 			wxPoint moveVector = eventPoint - m_mouseLClick;
 			if (m_movingInfoLayer == NULL)
 			{
-				wxClientDC dc(this);
-
 				// First : restaure stored bitmap
 				if (m_zoom_bmp)
 				{
@@ -2123,7 +2123,7 @@ void mpWindow::OnMouseMove(wxMouseEvent &event)
 				}
 
 				if (m_magnetize && (!m_repainting))
-					m_magnet.Plot(*this, eventPoint);
+					m_magnet.Plot(dc, eventPoint);
 			}
 			else
 				m_movingInfoLayer->Move(moveVector);
@@ -2134,12 +2134,11 @@ void mpWindow::OnMouseMove(wxMouseEvent &event)
 			if (m_InfoCoords && m_InfoCoords->IsVisible())
 			{
 				m_InfoCoords->UpdateInfo(*this, event);
-				wxClientDC dc(this);
 				m_InfoCoords->Plot(dc, *this);
 			}
 
 			if (m_magnetize && (!m_repainting) && (event.GetEventType() == wxEVT_MOTION))
-				m_magnet.Plot(*this, eventPoint);
+				m_magnet.Plot(dc, eventPoint);
 		}
 	}
 	event.Skip();
@@ -2211,14 +2210,13 @@ void mpWindow::OnMouseWheel(wxMouseEvent &event)
  */
 void mpWindow::OnMouseLeave(wxMouseEvent &WXUNUSED(event))
 {
+	wxClientDC dc(this);
 	if (m_InfoCoords && m_InfoCoords->IsVisible())
 	{
-		wxClientDC dc(this);
 		m_InfoCoords->ErasePlot(dc, *this);
 	}
 	if (m_zoom_bmp)
 	{
-		wxClientDC dc(this);
 		wxMemoryDC m_coord_dc(&dc);
 		m_coord_dc.SelectObject(*m_zoom_bmp);
 		dc.Blit(m_zoom_oldDim.x, m_zoom_oldDim.y, m_zoom_oldDim.width, m_zoom_oldDim.height, &m_coord_dc, 0, 0);
@@ -2226,7 +2224,9 @@ void mpWindow::OnMouseLeave(wxMouseEvent &WXUNUSED(event))
 		DeleteAndNull(m_zoom_bmp);
 	}
 	if (m_magnetize)
-		m_magnet.ClearPlot(*this);
+	{
+		m_magnet.ClearPlot(dc);
+	}
 }
 
 void mpWindow::Fit()
@@ -2813,7 +2813,7 @@ void mpWindow::OnPaint(wxPaintEvent &WXUNUSED(event))
 
 	// We redraw the cross if necessary. We pass the mouse position if we do a pan operation.
 	if (m_magnetize)
-		m_magnet.UpdatePlot(*this, m_mouseRClick);
+		m_magnet.UpdatePlot(dc, m_mouseRClick);
 
 	m_repainting = false;
 }
@@ -4520,7 +4520,7 @@ void mpBitmapLayer::DoPlot(wxDC &dc, mpWindow &w)
 // mpMagnet
 //-----------------------------------------------------------------------------
 
-void mpMagnet::Plot(mpWindow &w, const wxPoint &mousePos)
+void mpMagnet::Plot(wxClientDC &dc, const wxPoint &mousePos)
 {
 	if (m_domain.Contains(mousePos))
 	{
@@ -4534,40 +4534,39 @@ void mpMagnet::Plot(mpWindow &w, const wxPoint &mousePos)
 			else
 			{
 				m_mousePosition = mousePos;
-				DrawCross(w);
+				DrawCross(dc);
 				m_IsDrawn = true;
 			}
 		}
 	}
 }
 
-void mpMagnet::ClearPlot(mpWindow &w)
+void mpMagnet::ClearPlot(wxClientDC &dc)
 {
 	if (m_IsDrawn)
 	{
-		DrawCross(w);
+		DrawCross(dc);
 		m_IsDrawn = false;
 	}
 	// In any cases
 	m_IsWasDrawn = false;
 }
 
-void mpMagnet::UpdatePlot(mpWindow &w, const wxPoint &mousePos)
+void mpMagnet::UpdatePlot(wxClientDC &dc, const wxPoint &mousePos)
 {
 	if (m_IsWasDrawn)
 	{
 		// Mouse position has changed when pan operation
 		if (m_rightClick)
 			m_mousePosition = mousePos;
-		DrawCross(w);
+		DrawCross(dc);
 		m_IsDrawn = true;
 		m_IsWasDrawn = false;
 	}
 }
 
-void mpMagnet::DrawCross(mpWindow &w)
+void mpMagnet::DrawCross(wxClientDC &dc)
 {
-	wxClientDC dc(&w);
 	dc.SetPen(*wxBLACK_PEN);
 	dc.SetLogicalFunction(wxINVERT);
 	dc.DrawLine(m_mousePosition.x, m_plot_size.y, m_mousePosition.x, m_plot_size.height);

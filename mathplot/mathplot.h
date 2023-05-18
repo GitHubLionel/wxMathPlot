@@ -1549,9 +1549,9 @@ class mpMagnet
 			m_domain = wxRect(left, top, width, height);
 			m_plot_size = wxRect(left, top, width + left, height + top);
 		}
-		void Plot(mpWindow &w, const wxPoint &mousePos);
-		void ClearPlot(mpWindow &w);
-		void UpdatePlot(mpWindow &w, const wxPoint &mousePos);
+		void Plot(wxClientDC &dc, const wxPoint &mousePos);
+		void ClearPlot(wxClientDC &dc);
+		void UpdatePlot(wxClientDC &dc, const wxPoint &mousePos);
 		void SaveDrawState(void)
 		{
 			m_IsWasDrawn = m_IsDrawn;
@@ -1571,7 +1571,7 @@ class mpMagnet
 		bool m_IsDrawn;
 		bool m_IsWasDrawn;
 		bool m_rightClick;
-		void DrawCross(mpWindow &w);
+		void DrawCross(wxClientDC &dc);
 };
 
 /** Canvas for plotting mpLayer implementations.
