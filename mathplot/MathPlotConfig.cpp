@@ -771,7 +771,7 @@ void MathPlotConfigDialog::DoApplyColour(const wxColour &colour)
 
 void MathPlotConfigDialog::OnbFontClick(wxCommandEvent &event)
 {
-  wxButton *fontButton = wxDynamicCast(event.GetEventObject(), wxButton);
+  wxButton* fontButton = wxDynamicCast(event.GetEventObject(), wxButton);
 
   wxFontData retData;
   retData.SetInitialFont(fontButton->GetFont());
@@ -1126,7 +1126,7 @@ void MathPlotConfigDialog::OnbApplyClick(wxCommandEvent &WXUNUSED(event))
             BoundScale.Xmax = scale_max;
 
             // Get bound of the other axis
-            mpScale *axis = (mpScale*)m_plot->GetLayerYAxis();
+            mpScale* axis = (mpScale*)m_plot->GetLayerYAxis();
             if (!axis->GetAuto())
             {
               BoundScale.Ymin = axis->GetMinScale();
@@ -1139,7 +1139,7 @@ void MathPlotConfigDialog::OnbApplyClick(wxCommandEvent &WXUNUSED(event))
             BoundScale.Ymax = scale_max;
 
             // Get bound of the other axis
-            mpScale *axis = (mpScale*)m_plot->GetLayerXAxis();
+            mpScale* axis = (mpScale*)m_plot->GetLayerXAxis();
             if (!axis->GetAuto())
             {
               BoundScale.Xmin = axis->GetMinScale();

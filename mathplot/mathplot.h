@@ -6,7 +6,7 @@
 // Contributors:    Jose Luis Blanco, Val Greene, Lionel Reynaud
 // Created:         21/07/2003
 // Last edit:       22/02/2009
-// Last edit:       18/05/2023
+// Last edit:       19/05/2023
 // Copyright:       (c) David Schalig, Davide Rondini
 // Licence:         wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -109,14 +109,14 @@ namespace MathPlot
 #define Y_BORDER_SEPARATION 60
 
 /** When setting x labels in date/time format, convert input time to local time. */
-#define mpX_LOCALTIME	0x10
+#define mpX_LOCALTIME 0x10
 /** When setting x labels in date/time format, convert input time to UTC time (or just leave it raw). */
-#define mpX_UTCTIME	0x20
-#define mpX_RAWTIME	mpX_UTCTIME
+#define mpX_UTCTIME 0x20
+#define mpX_RAWTIME mpX_UTCTIME
 
 // An epsilon for float comparison to 0
-#define EPSILON		1e-8
-#define ISNOTNULL(x)	(fabs(x) > EPSILON)
+#define EPSILON   1e-8
+#define ISNOTNULL(x)  (fabs(x) > EPSILON)
 
 //-----------------------------------------------------------------------------
 // classes
@@ -192,8 +192,8 @@ enum
   mpID_ZOOM_OUT,           //!< Zoom out
   mpID_CENTER,             //!< Center view on click position
   mpID_LOCKASPECT,         //!< Lock x/y scaling aspect
-  mpID_TOGGLE_GRID,			   //!< Show/Hide grids
-  mpID_TOGGLE_COORD,	  	 //!< Show/Hide info coord
+  mpID_TOGGLE_GRID,        //!< Show/Hide grids
+  mpID_TOGGLE_COORD,       //!< Show/Hide info coord
   mpID_SCREENSHOT,         //!< Copy a screen shot to the clipboard
   mpID_CONFIG,             //!< Configuration
   mpID_LOAD_FILE,          //!< Load a file
@@ -554,7 +554,7 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
     }
 
     /** Set layer brush
-     @param brush brush, will be copied to internal class member	*/
+     @param brush brush, will be copied to internal class member  */
     void SetBrush(const wxBrush &brush)
     {
       m_brush = brush;
@@ -611,12 +611,14 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
       return m_drawOutsideMargins;
     }
 
-    /** Get a small square bitmap filled with the colour of the pen used in the layer. Useful to create legends or similar reference to the layers.
+    /** Get a small square bitmap filled with the colour of the pen used in the layer.
+     Useful to create legends or similar reference to the layers.
      @param side side length in pixels
      @return a wxBitmap filled with layer's colour */
     wxBitmap GetColourSquare(int side = 16);
 
-    /** Get layer type: a Layer can be of different types: plot lines, axis, info boxes, etc, this method returns the right value.
+    /** Get layer type: a Layer can be of different types: plot lines, axis, info boxes, etc,
+     this method returns the right value.
      @return An integer indicating layer type */
     mpLayerType GetLayerType() const
     {
@@ -723,7 +725,7 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
     }
 
   protected:
-    mpWindow *m_win;            //!< The wxWindow handle
+    mpWindow* m_win;            //!< The wxWindow handle
     mpLayerType m_type;         //!< Define layer type, which is assigned by constructor
     wxFont m_font;              //!< Layer's font
     wxColour m_fontcolour;      //!< Layer's font foreground colour
@@ -734,14 +736,14 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
     bool m_showName;            //!< States whether the name of the layer must be shown. Default : false
     bool m_drawOutsideMargins;  //!< Select if the layer should draw only inside margins or over all DC. Default : false
     unsigned int m_step;        //!< Step to get point to be draw. Default : 1
-    bool m_visible;	            //!< Toggles layer visibility. Default : true
+    bool m_visible;             //!< Toggles layer visibility. Default : true
     bool m_tractable;           //!< Is the layer tractable
     int m_flags;                //!< Holds label alignment. Default : mpALIGN_NE
     mpRect m_plotBondaries;     //!< The bondaries for plotting curve calculated by mpWindow
     mpSymbol m_symbol;          //!< A symbol for the plot in place of point. Default mpNone
     int m_symbolSize;           //!< Size of the symbol. Default 6
     int m_symbolSize2;          //!< Size of the symbol div 2.
-    bool m_CanDelete;    				//!< Is the layer can be deleted
+    bool m_CanDelete;           //!< Is the layer can be deleted
 
     /** Initialize the context
      */
@@ -940,7 +942,7 @@ class WXDLLIMPEXP_MATHPLOT mpInfoCoords: public mpInfoLayer
     unsigned int m_timeConv;
     wxCoord m_mouseX;
     wxCoord m_mouseY;
-    wxBitmap *m_coord_bmp;
+    wxBitmap* m_coord_bmp;
     wxRect m_oldDim;
     bool m_series_coord;
     wxPen m_penSeries;
@@ -1013,7 +1015,7 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLegend: public mpInfoLayer
     }
 
   protected:
-    wxBitmap *m_legend_bmp;
+    wxBitmap* m_legend_bmp;
     mpLegendStyle m_item_mode;
     mpLegendDirection m_item_direction;
 
@@ -1372,7 +1374,7 @@ class WXDLLIMPEXP_MATHPLOT mpScale: public mpLayer
     bool m_ticks;            //!< Flag to show ticks. Default true
     bool m_grids;            //!< Flag to show grids. Default false
     bool m_auto;             //!< Flag to autosize grids. Default true
-    double m_min, m_max;		 //!< Min and max scale when autosize is false
+    double m_min, m_max;     //!< Min and max scale when autosize is false
     wxString m_labelFormat;  //!< Format string used to print labels
 
     int GetOrigin(mpWindow &w);
@@ -1524,8 +1526,8 @@ typedef std::deque<mpLayer*> wxLayerList;
 /**
  * Define an event for when we delete a layer
  * Use like this :
- * 	your_plot->SetOnDeleteLayer([this](void *Sender, const wxString &classname, bool &cancel)
- {	your_event_function(Sender, classname, cancel);});
+ *  your_plot->SetOnDeleteLayer([this](void *Sender, const wxString &classname, bool &cancel)
+ {  your_event_function(Sender, classname, cancel);});
  */
 typedef std::function<void(void *Sender, const wxString &classname, bool &cancel)> wxOnDeleteLayer;
 
@@ -1701,7 +1703,8 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      */
     void SetScaleX(const double scaleX)
     {
-      if (ISNOTNULL(scaleX)) m_scaleX = scaleX;
+      if (ISNOTNULL(scaleX))
+        m_scaleX = scaleX;
       UpdateAll();
     }
 
@@ -1719,7 +1722,8 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      */
     void SetScaleY(const double scaleY)
     {
-      if (ISNOTNULL(scaleY)) m_scaleY = scaleY;
+      if (ISNOTNULL(scaleY))
+        m_scaleY = scaleY;
       UpdateAll();
     }
 
@@ -1839,7 +1843,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      * @sa p2y,x2p,y2p */
     inline double p2x(const wxCoord pixelCoordX)
     {
-      return m_posX + pixelCoordX/m_scaleX;
+      return m_posX + pixelCoordX / m_scaleX;
     }
 
     /** Converts mpWindow (screen) pixel coordinates into graph (floating point) coordinates,
@@ -1847,7 +1851,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      * @sa p2x,x2p,y2p */
     inline double p2y(const wxCoord pixelCoordY)
     {
-      return m_posY - pixelCoordY/m_scaleY;
+      return m_posY - pixelCoordY / m_scaleY;
     }
 
     /** Converts graph (floating point) coordinates into mpWindow (screen) pixel coordinates,
@@ -1855,7 +1859,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      * @sa p2x,p2y,y2p */
     inline wxCoord x2p(const double x)
     {
-      return (wxCoord) ((x-m_posX) * m_scaleX);
+      return (wxCoord)((x - m_posX) * m_scaleX);
     }
 
     /** Converts graph (floating point) coordinates into mpWindow (screen) pixel coordinates,
@@ -1863,7 +1867,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      * @sa p2x,p2y,x2p */
     inline wxCoord y2p(const double y)
     {
-      return (wxCoord) ((m_posY-y) * m_scaleY);
+      return (wxCoord)((m_posY - y) * m_scaleY);
     }
 
     /** Enable/disable the double-buffering of the window, eliminating the flicker (default=enabled).
@@ -2031,7 +2035,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     /**
      * Get a screen shot of the window plot
      */
-    wxBitmap *BitmapScreenshot(wxSize imageSize = wxDefaultSize, bool fit = false);
+    wxBitmap* BitmapScreenshot(wxSize imageSize = wxDefaultSize, bool fit = false);
 
     /**
      * Send the screen shot to the Clipboard
@@ -2118,8 +2122,10 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     /** Get the bondaries of the plot. */
     mpRect GetPlotBondaries(bool with_margin)
     {
-      if (with_margin) return m_plotBondariesMargin;
-      else return m_plotBondaries;
+      if (with_margin)
+        return m_plotBondariesMargin;
+      else
+        return m_plotBondaries;
     }
 
     /** Set the draw of the box around the plot. */
@@ -2137,7 +2143,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     /** Check if a given point is inside the area of a mpInfoLayer and eventually returns its pointer.
      @param point The position to be checked
      @return If an info layer is found, returns its pointer, NULL otherwise */
-    mpInfoLayer* IsInsideInfoLayer(const wxPoint& point);
+    mpInfoLayer* IsInsideInfoLayer(const wxPoint &point);
 
     /** Sets the visibility of a layer by its name.
      @param name The layer name to set visibility
@@ -2163,7 +2169,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      @param bgColour Background colour
      @param drawColour The colour used to draw all elements in foreground, axes excluded
      @param axesColour The colour used to draw axes (but not their labels) */
-    void SetColourTheme(const wxColour& bgColour, const wxColour& drawColour, const wxColour& axesColour);
+    void SetColourTheme(const wxColour &bgColour, const wxColour &drawColour, const wxColour &axesColour);
 
     /** Get axes draw colour
      @return reference to axis colour used in theme */
@@ -2177,7 +2183,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
       return m_bgColour;
     }
 
-    void SetbgColour(const wxColour& colour)
+    void SetbgColour(const wxColour &colour)
     {
       m_bgColour = colour;
     }
@@ -2226,42 +2232,42 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 
     void RefreshConfigWindow();
 
-    protected:
-    void OnPaint (wxPaintEvent &event);  									//!< Paint handler, will plot all attached layers
-    void OnSize (wxSizeEvent &event);//!< Size handler, will update scroll bar sizes
-    void OnShowPopupMenu (wxMouseEvent &event);//!< Mouse handler, will show context menu
-    void OnCenter (wxCommandEvent &event);//!< Context menu handler
-    void OnFit (wxCommandEvent &event);//!< Context menu handler
-    void OnToggleGrids (wxCommandEvent &event);//!< Context menu handler
-    void OnToggleCoords (wxCommandEvent &event);//!< Context menu handler
-    void OnScreenShot (wxCommandEvent &event);//!< Context menu handler
-    void OnFullScreen (wxCommandEvent &event);//!< Context menu handler
-    void OnConfiguration (wxCommandEvent &event);//!< Context menu handler
-    void OnLoadFile (wxCommandEvent &event);//!< Context menu handler
-    void OnZoomIn (wxCommandEvent &event);//!< Context menu handler
-    void OnZoomOut (wxCommandEvent &event);//!< Context menu handler
-    void OnLockAspect (wxCommandEvent &event);//!< Context menu handler
-    void OnMouseHelp (wxCommandEvent &event);//!< Context menu handler
-    void OnMouseLeftDown (wxMouseEvent &event);//!< Mouse left click (for rect zoom)
-    void OnMouseRightDown (wxMouseEvent &event);//!< Mouse handler, for detecting when the user drags with the right button or just "clicks" for the menu
-    void OnMouseMove (wxMouseEvent &event);//!< Mouse handler for mouse motion (for pan)
-    void OnMouseLeftRelease (wxMouseEvent &event);//!< Mouse left click (for rect zoom)
-    void OnMouseWheel (wxMouseEvent &event);//!< Mouse handler for the wheel
-    void OnMouseLeave (wxMouseEvent &event);//!< Mouse handler for mouse motion (for pan)
-    void OnScrollThumbTrack (wxScrollWinEvent &event);//!< Scroll thumb on scroll bar moving
-    void OnScrollPageUp (wxScrollWinEvent &event);//!< Scroll page up
-    void OnScrollPageDown (wxScrollWinEvent &event);//!< Scroll page down
-    void OnScrollLineUp (wxScrollWinEvent &event);//!< Scroll line up
-    void OnScrollLineDown (wxScrollWinEvent &event);//!< Scroll line down
-    void OnScrollTop (wxScrollWinEvent &event);//!< Scroll to top
-    void OnScrollBottom (wxScrollWinEvent &event);//!< Scroll to bottom
+  protected:
+    void OnPaint(wxPaintEvent &event);                    //!< Paint handler, will plot all attached layers
+    void OnSize(wxSizeEvent &event);                      //!< Size handler, will update scroll bar sizes
+    void OnShowPopupMenu(wxMouseEvent &event);            //!< Mouse handler, will show context menu
+    void OnCenter(wxCommandEvent &event);                 //!< Context menu handler
+    void OnFit(wxCommandEvent &event);                    //!< Context menu handler
+    void OnToggleGrids(wxCommandEvent &event);            //!< Context menu handler
+    void OnToggleCoords(wxCommandEvent &event);           //!< Context menu handler
+    void OnScreenShot(wxCommandEvent &event);             //!< Context menu handler
+    void OnFullScreen(wxCommandEvent &event);             //!< Context menu handler
+    void OnConfiguration(wxCommandEvent &event);          //!< Context menu handler
+    void OnLoadFile(wxCommandEvent &event);               //!< Context menu handler
+    void OnZoomIn(wxCommandEvent &event);                 //!< Context menu handler
+    void OnZoomOut(wxCommandEvent &event);                //!< Context menu handler
+    void OnLockAspect(wxCommandEvent &event);             //!< Context menu handler
+    void OnMouseHelp(wxCommandEvent &event);              //!< Context menu handler
+    void OnMouseLeftDown(wxMouseEvent &event);            //!< Mouse left click (for rect zoom)
+    void OnMouseRightDown(wxMouseEvent &event);           //!< Mouse handler, for detecting when the user drags with the right button or just "clicks" for the menu
+    void OnMouseMove(wxMouseEvent &event);                //!< Mouse handler for mouse motion (for pan)
+    void OnMouseLeftRelease(wxMouseEvent &event);         //!< Mouse left click (for rect zoom)
+    void OnMouseWheel(wxMouseEvent &event);               //!< Mouse handler for the wheel
+    void OnMouseLeave(wxMouseEvent &event);               //!< Mouse handler for mouse motion (for pan)
+    void OnScrollThumbTrack(wxScrollWinEvent &event);     //!< Scroll thumb on scroll bar moving
+    void OnScrollPageUp(wxScrollWinEvent &event);         //!< Scroll page up
+    void OnScrollPageDown(wxScrollWinEvent &event);       //!< Scroll page down
+    void OnScrollLineUp(wxScrollWinEvent &event);         //!< Scroll line up
+    void OnScrollLineDown(wxScrollWinEvent &event);       //!< Scroll line down
+    void OnScrollTop(wxScrollWinEvent &event);            //!< Scroll to top
+    void OnScrollBottom(wxScrollWinEvent &event);         //!< Scroll to bottom
 
-    void DoScrollCalc (const int position, const int orientation);
+    void DoScrollCalc(const int position, const int orientation);
 
-    void DoZoomInXCalc (const int staticXpixel);
-    void DoZoomInYCalc (const int staticYpixel);
-    void DoZoomOutXCalc (const int staticXpixel);
-    void DoZoomOutYCalc (const int staticYpixel);
+    void DoZoomInXCalc(const int staticXpixel);
+    void DoZoomInYCalc(const int staticYpixel);
+    void DoZoomOutXCalc(const int staticXpixel);
+    void DoZoomOutYCalc(const int staticYpixel);
 
     void Zoom(bool zoomIn, const wxPoint &centerPoint);
 
@@ -2275,98 +2281,97 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     wxTopLevelWindow* m_parent;
     bool m_fullscreen;
 
-    wxLayerList m_layers; 		//!< List of attached plot layers
-    mpScaleX* m_XAxis;//!< Pointer to the X axis layer
-    mpScaleY* m_YAxis;//!< Pointer to the Y axis layer
+    wxLayerList m_layers;   //!< List of attached plot layers
+    mpScaleX* m_XAxis;      //!< Pointer to the X axis layer
+    mpScaleY* m_YAxis;      //!< Pointer to the Y axis layer
 
-    wxMenu m_popmenu;//!< Canvas' context menu
-    bool m_lockaspect;//!< Scale aspect is locked or not
-    wxColour m_bgColour;//!< Background Colour
-    wxColour m_fgColour;//!< Foreground Colour
-    wxColour m_axColour;//!< Axes Colour
-    bool m_drawBox;//!< Draw box of the plot bound. Default true
+    wxMenu m_popmenu;       //!< Canvas' context menu
+    bool m_lockaspect;      //!< Scale aspect is locked or not
+    wxColour m_bgColour;    //!< Background Colour
+    wxColour m_fgColour;    //!< Foreground Colour
+    wxColour m_axColour;    //!< Axes Colour
+    bool m_drawBox;         //!< Draw box of the plot bound. Default true
 
-    mpFloatRect m_bound;//!< Global layer bounding box, left, right, top and bottom border incl.
-    double m_scaleX;//!< Current view's X scale
-    double m_scaleY;//!< Current view's Y scale
-    double m_posX;//!< Current view's X position
-    double m_posY;//!< Current view's Y position
-    int m_scrX;//!< Current view's X dimension
-    int m_scrY;//!< Current view's Y dimension
-    int m_clickedX;//!< Last mouse click X position, for centering and zooming the view
-    int m_clickedY;//!< Last mouse click Y position, for centering and zooming the view
+    mpFloatRect m_bound;    //!< Global layer bounding box, left, right, top and bottom border incl.
+    double m_scaleX;        //!< Current view's X scale
+    double m_scaleY;        //!< Current view's Y scale
+    double m_posX;          //!< Current view's X position
+    double m_posY;          //!< Current view's Y position
+    int m_scrX;             //!< Current view's X dimension
+    int m_scrY;             //!< Current view's Y dimension
+    int m_clickedX;         //!< Last mouse click X position, for centering and zooming the view
+    int m_clickedY;         //!< Last mouse click Y position, for centering and zooming the view
 
     /** These are updated in Fit() only, and may be different from the real borders (layer coordinates)
      * only if lock aspect ratio is true.
      */
     mpFloatRect m_desired;
 
-    mpRect m_margin;            	  //!< Margin around the plot. Default 50
-    wxCoord m_plotWidth;//!< Width of the plot = m_scrX - (m_margin.left + m_margin.right)
-    wxCoord m_plotHeight;//!< Height of the plot = m_scrY - (m_margin.top + m_margin.bottom)
+    mpRect m_margin;                    //!< Margin around the plot. Default 50
+    wxCoord m_plotWidth;                //!< Width of the plot = m_scrX - (m_margin.left + m_margin.right)
+    wxCoord m_plotHeight;               //!< Height of the plot = m_scrY - (m_margin.top + m_margin.bottom)
 
-    mpRect m_plotBondaries;//!< The full size of the plot. Calculated
-    mpRect m_plotBondariesMargin;//!< The size of the plot with the margins. Calculated
+    mpRect m_plotBondaries;             //!< The full size of the plot. Calculated
+    mpRect m_plotBondariesMargin;       //!< The size of the plot with the margins. Calculated
 
     bool m_repainting;
-    int m_last_lx, m_last_ly;//!< For double buffering
-    wxBitmap *m_buff_bmp;//!< For double buffering
-    bool m_enableDoubleBuffer;//!< For double buffering. Default enabled
-    bool m_enableMouseNavigation;//!< For pan/zoom with the mouse.
+    int m_last_lx, m_last_ly;           //!< For double buffering
+    wxBitmap* m_buff_bmp;               //!< For double buffering
+    bool m_enableDoubleBuffer;          //!< For double buffering. Default enabled
+    bool m_enableMouseNavigation;       //!< For pan/zoom with the mouse.
     bool m_mouseMovedAfterRightClick;
-    wxPoint m_mouseRClick;//!< For the right button "drag" feature
-    wxPoint m_mouseLClick;//!< Starting coords for rectangular zoom selection
+    wxPoint m_mouseRClick;              //!< For the right button "drag" feature
+    wxPoint m_mouseLClick;              //!< Starting coords for rectangular zoom selection
     bool m_enableScrollBars;
     int m_scrollX, m_scrollY;
-    mpInfoLayer* m_movingInfoLayer;//!< For moving info layers over the window area
-    mpInfoCoords* m_InfoCoords;//!< Shortcut to info coords layer
+    mpInfoLayer* m_movingInfoLayer;     //!< For moving info layers over the window area
+    mpInfoCoords* m_InfoCoords;         //!< Shortcut to info coords layer
 
-    wxBitmap *m_zoom_bmp;//!< For zoom selection
+    wxBitmap* m_zoom_bmp;               //!< For zoom selection
     wxRect m_zoom_dim;
     wxRect m_zoom_oldDim;
 
-    bool m_magnetize;//!< For mouse magnetization
-    mpMagnet m_magnet;//!< For mouse magnetization
+    bool m_magnetize;                   //!< For mouse magnetization
+    mpMagnet m_magnet;                  //!< For mouse magnetization
 
-    bool m_LogXaxis = false;//!< For logarithmic X axis
-    bool m_LogYaxis = false;//!< For logarithmic X axis
+    bool m_LogXaxis = false;            //!< For logarithmic X axis
+    bool m_LogYaxis = false;            //!< For logarithmic X axis
 
-    wxBitmap *m_Screenshot_bmp;//!< For clipboard, save and print
+    wxBitmap* m_Screenshot_bmp;         //!< For clipboard, save and print
 
-    MathPlotConfigDialog *m_configWindow = NULL;//!< For the config dialog
+    MathPlotConfigDialog* m_configWindow = NULL;   //!< For the config dialog
 
-    wxOnDeleteLayer m_OnDeleteLayer = NULL;//!< Event when we delete a layer
+    wxOnDeleteLayer m_OnDeleteLayer = NULL;        //!< Event when we delete a layer
 
-    DECLARE_DYNAMIC_CLASS(mpWindow)
-    DECLARE_EVENT_TABLE()
+  DECLARE_DYNAMIC_CLASS(mpWindow)DECLARE_EVENT_TABLE()
 
     // To have direct access to m_Screenshot_dc
     friend mpPrintout;
-  };
+};
 
 //-----------------------------------------------------------------------------
 // mpFXYVector - provided by Jose Luis Blanco
 //-----------------------------------------------------------------------------
 
-  /** A class providing graphs functionality for a 2D plot (either continuous or a set of points), from vectors of data.
-   This class can be used directly, the user does not need to derive any new class. Simply pass the data as two vectors
-   with the same length containing the X and Y coordinates to the method SetData.
+/** A class providing graphs functionality for a 2D plot (either continuous or a set of points), from vectors of data.
+ This class can be used directly, the user does not need to derive any new class. Simply pass the data as two vectors
+ with the same length containing the X and Y coordinates to the method SetData.
 
-   To generate a graph with a set of points, call
-   \code
-   layerVar->SetContinuity(false)
-   \endcode
+ To generate a graph with a set of points, call
+ \code
+ layerVar->SetContinuity(false)
+ \endcode
 
-   or
+ or
 
-   \code
-   layerVar->SetContinuity(true)
-   \endcode
+ \code
+ layerVar->SetContinuity(true)
+ \endcode
 
-   to render the sequence of coordinates as a continuous line.
+ to render the sequence of coordinates as a continuous line.
 
-   (Added: Jose Luis Blanco, AGO-2007)
-   */
+ (Added: Jose Luis Blanco, AGO-2007)
+ */
 class WXDLLIMPEXP_MATHPLOT mpFXYVector: public mpFXY
 {
   public:
@@ -2663,7 +2668,7 @@ class WXDLLIMPEXP_MATHPLOT mpPrintout: public wxPrintout
 
   private:
     bool drawn;
-    mpWindow *plotWindow;
+    mpWindow* plotWindow;
     int stretch_factor;  // To reduce the size of plot
 
   protected:

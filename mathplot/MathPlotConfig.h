@@ -51,14 +51,14 @@ class MathPlotConfigDialog: public wxDialog
 
   private:
 
-    mpWindow *m_plot;
-    mpText *CurrentTitle;
-    mpInfoLegend *CurrentLegend;
-    mpInfoCoords *CurrentCoords;
-    mpScale *CurrentScale;
-    mpLayer *CurrentSerie;
-    wxButton *colourButton;
-    wxChoice *CurrentChoice;
+    mpWindow* m_plot;
+    mpText* CurrentTitle;
+    mpInfoLegend* CurrentLegend;
+    mpInfoCoords* CurrentCoords;
+    mpScale* CurrentScale;
+    mpLayer* CurrentSerie;
+    wxButton* colourButton;
+    wxChoice* CurrentChoice;
     bool fontTitleChanged;
     bool fontLegendChanged;
     bool fontAxisChanged;
