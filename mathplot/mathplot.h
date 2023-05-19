@@ -1565,12 +1565,12 @@ class mpMagnet
 		}
 
 	private:
-		wxRect m_domain;
-		wxRect m_plot_size;
-		wxPoint m_mousePosition;
-		bool m_IsDrawn;
-		bool m_IsWasDrawn;
-		bool m_rightClick;
+		wxRect m_domain;           //!< The area delimited by axis (m_margin.left, m_margin.top, m_plotWidth, m_plotHeight)
+		wxRect m_plot_size;        //!< The coordinates for the cross (xmin, xmax), (ymin,ymax)
+		wxPoint m_mousePosition;   //!< The last position of the mouse
+		bool m_IsDrawn;            //!< Is that the cross is drawn ?
+		bool m_IsWasDrawn;         //!< Is that the cross was drawn before the OnPaint event ?
+		bool m_rightClick;         //!< Is the mouse right click ?
 		void DrawCross(wxClientDC &dc);
 };
 

@@ -2075,7 +2075,7 @@ void mpWindow::OnMouseMove(wxMouseEvent &event)
 
 		// First need to clean the plot.
 		if (m_magnetize && (!m_repainting))
-		  m_magnet.ClearPlot(dc);
+			m_magnet.ClearPlot(dc);
 
 		// zoom select rectangle
 		if (event.m_leftDown)
@@ -2794,13 +2794,13 @@ void mpWindow::OnPaint(wxPaintEvent &WXUNUSED(event))
 	for (wxLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
 	{
 		if ((*it)->IsScale(&scale) || (*it)->IsFunction(&function))
-		  (*it)->Plot(*trgDc, *this);
+			(*it)->Plot(*trgDc, *this);
 	}
 	// Second draw all others elements (so there are always front)
 	for (wxLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
 	{
 		if (!((*it)->IsScale(&scale) || (*it)->IsFunction(&function)))
-		  (*it)->Plot(*trgDc, *this);
+			(*it)->Plot(*trgDc, *this);
 	}
 
 	// If doublebuffer, draw now to the window:
