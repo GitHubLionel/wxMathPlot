@@ -6,7 +6,7 @@
 // Contributors:    Jose Luis Blanco, Val Greene, Lionel Reynaud
 // Created:         21/07/2003
 // Last edit:       22/02/2009
-// Last edit:       19/05/2023
+// Last edit:       23/05/2023
 // Copyright:       (c) David Schalig, Davide Rondini
 // Licence:         wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -184,7 +184,9 @@ typedef union
     double tab[4];
 } mpFloatRect;
 
-/** Command IDs used by mpWindow */
+/** Command IDs used by mpWindow
+ * Same order for the popup menu
+ */
 enum
 {
   mpID_FIT = 2000,         //!< Fit view to match bounding box of all layers
@@ -200,26 +202,6 @@ enum
   mpID_HELP_MOUSE,         //!< Shows information about the mouse commands
   mpID_FULLSCREEN          //!< Toggle fullscren only if parent is a frame windows
 };
-
-/** ID for popup text */
-enum
-{
-  pop_CENTER,
-  pop_FIT,
-  pop_ZOOM_IN,
-  pop_ZOOM_OUT,
-  pop_LOCKASPECT,
-  pop_SCREENSHOT,
-  pop_TOGGLE_GRID,
-  pop_TOGGLE_COORD,
-  pop_CONFIG,
-  pop_LOAD_FILE,
-  pop_HELP_MOUSE,
-  pop_FULLSCREEN
-};
-
-// The popup string
-extern const wxString Popup_string[][2];
 
 // Location for the Info layer
 typedef enum __mp_Location_Type
@@ -1413,7 +1395,7 @@ class WXDLLIMPEXP_MATHPLOT mpScaleX: public mpScale
      @param flags Set the position of the scale with respect to the window.
      @param grids Show grid or not. Give false (default) for not drawing the grid.
      @param type mpX_NORMAL for normal labels, mpX_TIME for time axis in hours, minutes, seconds. */
-    mpScaleX(const wxString &name = wxT("X"), int flags = mpALIGN_CENTERX, bool grids = false, unsigned int type = mpX_NORMAL) :
+    mpScaleX(const wxString &name = _T("X"), int flags = mpALIGN_CENTERX, bool grids = false, unsigned int type = mpX_NORMAL) :
         mpScale(name, flags, grids)
     {
       m_labelType = type;
@@ -1476,7 +1458,7 @@ class WXDLLIMPEXP_MATHPLOT mpScaleY: public mpScale
      @param name Label to plot by the ruler
      @param flags Set the position of the scale with respect to the window.
      @param grids Show grid or not. Give false (default) for not drawing the grid. */
-    mpScaleY(const wxString &name = wxT("Y"), int flags = mpALIGN_CENTERY, bool grids = false) :
+    mpScaleY(const wxString &name = _T("Y"), int flags = mpALIGN_CENTERY, bool grids = false) :
         mpScale(name, flags, grids)
     {
       ;
@@ -1669,7 +1651,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      * Return the serie n
      * If the serie not exist then create it
      */
-    mpFXYVector* GetXYSeries(unsigned int n, const wxString &name = _("Serie :"), bool create = true);
+    mpFXYVector* GetXYSeries(unsigned int n, const wxString &name = _T("Serie :"), bool create = true);
 
     /*!
      * Search the point of the layer plot nearest a point
@@ -2645,7 +2627,7 @@ class WXDLLIMPEXP_MATHPLOT mpPrintout: public wxPrintout
       stretch_factor = 2;
     }
 
-    mpPrintout(mpWindow *drawWindow, const wxString &title = _("wxMathPlot print output"), int factor = 2);
+    mpPrintout(mpWindow *drawWindow, const wxString &title = _T("wxMathPlot print output"), int factor = 2);
     virtual ~mpPrintout()
     {
       ;
@@ -2820,7 +2802,7 @@ class WXDLLIMPEXP_MATHPLOT mpCovarianceEllipse: public mpMovableObject
      * Initializes to a unity diagonal covariance matrix, a 95% confidence interval (2 sigmas), 32 segments, and a continuous plot (m_continuous=true).
      */
     mpCovarianceEllipse(double cov_00 = 1, double cov_11 = 1, double cov_01 = 0, double quantiles = 2, int segments = 32,
-        const wxString &layerName = wxT("")) :
+        const wxString &layerName = _T("")) :
         m_cov_00(cov_00), m_cov_11(cov_11), m_cov_01(cov_01), m_quantiles(quantiles), m_segments(segments)
     {
       m_type = mpLAYER_PLOT;
@@ -2905,7 +2887,7 @@ class WXDLLIMPEXP_MATHPLOT mpPolygon: public mpMovableObject
   public:
     /** Default constructor.
      */
-    mpPolygon(const wxString &layerName = wxT(""))
+    mpPolygon(const wxString &layerName = _T(""))
     {
       m_continuous = true;
       m_name = layerName;

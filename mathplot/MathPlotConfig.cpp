@@ -111,6 +111,11 @@ const long MathPlotConfigDialog::ID_BUTTON4 = wxNewId();
 const wxString XAxis_Align[] = {_("Bottom border"), _("Bottom"), _("Center"), _("Top"), _("Top border")};
 const wxString YAxis_Align[] = {_("Left border"), _("Left"), _("Center"), _("Right"), _("Right border")};
 
+// List of string message used
+const wxString MESS_COLOUR = _("Please choose the background colour");
+const wxString MESS_DELETE = _("Delete the serie ?");
+const wxString MESS_CONFIRM = _("Confirmation");
+
 BEGIN_EVENT_TABLE(MathPlotConfigDialog,wxDialog)
 //(*EventTable(MathPlotConfigDialog)
 //*)
@@ -751,7 +756,7 @@ void MathPlotConfigDialog::OnbColorClick(wxCommandEvent &event)
 
   wxColourDialog ColourDialog(this, &m_clrData);
 
-  ColourDialog.SetTitle(_("Please choose the background colour"));
+  ColourDialog.SetTitle(MESS_COLOUR);
   if (ColourDialog.ShowModal() == wxID_OK)
   {
     m_clrData = ColourDialog.GetColourData();
@@ -1008,7 +1013,7 @@ void MathPlotConfigDialog::OnbDelSeriesClick(wxCommandEvent &WXUNUSED(event))
 {
   if (CurrentSerie && CurrentSerie->GetCanDelete())
   {
-    if (wxMessageDialog(this, _("Delete the serie ?"), _("Confirmation"), wxYES_NO | wxCENTRE).ShowModal() == wxID_YES)
+    if (wxMessageDialog(this, MESS_DELETE, MESS_CONFIRM, wxYES_NO | wxCENTRE).ShowModal() == wxID_YES)
     {
       m_plot->DelLayer(CurrentSerie, true, true);
       if (CurrentLegend)

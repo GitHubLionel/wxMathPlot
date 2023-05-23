@@ -6,7 +6,7 @@
 // Contributors:    Jose Luis Blanco, Val Greene, Lionel Reynaud
 // Created:         21/07/2003
 // Last edit:       09/09/2007
-// Last edit:       19/05/2023
+// Last edit:       23/05/2023
 // Copyright:       (c) David Schalig, Davide Rondini
 // Licence:         wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -75,20 +75,34 @@
 #include "Images/Zoom_out.h"
 #endif
 
-const wxString MathPlot::Popup_string[][2] = {
-    {_("Center to this position"), _("Center plot view to this position")},
+const wxString Popup_string[][2] = {
     {_("Fit"), _("Set plot view to show all items")},
     {_("Zoom in"), _("Zoom in plot view.")},
     {_("Zoom out"), _("Zoom out plot view.")},
+    {_("Center to this position"), _("Center plot view to this position")},
     {_("Lock aspect"), _("Lock horizontal and vertical zoom aspect.")},
-    {_("Screen shot"), _("Copy a screen shot to the clipboard")},
     {_("Toggle grids"), _("Show/Hide grids")},
     {_("Toggle info coords"), _("Show/Hide info coordinates")},
+    {_("Screen shot"), _("Copy a screen shot to the clipboard")},
     {_("Configuration"), _("Plot configuration")},
     {_("Load file"), _("Load data file")},
     {_("Show mouse commands..."), _("Show help about the mouse commands.")},
     {_("Toggle fullscreen"), _("Toggle fullscreen.")}
 };
+
+// List of string message used
+const wxString MESS_HELP0 = _("wxMathPlot help");
+const wxString MESS_HELP1 = _("Supported Mouse commands:");
+const wxString MESS_HELP2 = _(" - Left button down + Mark area: Rectangular zoom");
+const wxString MESS_HELP3 = _(" - Right button down + Move: Pan (Move)");
+const wxString MESS_HELP4 = _(" - Wheel: Zoom in/out");
+const wxString MESS_HELP5 = _(" - Wheel + SHIFT: Horizontal scroll");
+const wxString MESS_HELP6 = _(" - Wheel + CTRL: Vertical scroll");
+
+const wxString MESS_LOAD = _("Select file");
+const wxString MESS_WILDCARD = _("Data files (*.dat)|*.dat|Csv files (csv.*)|csv.*|All files (*.*)|*.*");
+
+const wxString MESS_CLIPFAIL = _("Failed to copy image to clipboard");
 
 // Memory leak debugging
 #ifdef _DEBUG
@@ -342,7 +356,7 @@ void mpInfoLayer::SetInfoRectangle(mpWindow &w, int width, int height)
     if ((m_winX != scrx) || (m_winY != scry))
     {
 #ifdef MATHPLOT_DO_LOGGING
-      // wxLogMessage(wxT("mpInfoLayer::Plot() screen size has changed from %d x %d to %d x %d"), m_winX, m_winY, scrx, scry);
+      // wxLogMessage(_T("mpInfoLayer::Plot() screen size has changed from %d x %d to %d x %d"), m_winX, m_winY, scrx, scry);
 #endif
       if (m_winX != 1)
         m_dim.x = (int)floor((double)(m_dim.x * scrx / m_winX));
@@ -531,19 +545,19 @@ void mpInfoCoords::UpdateInfo(mpWindow &w, wxEvent &event)
     {
       case mpX_NORMAL:
       case mpX_USER:
-        m_content.Printf(wxT("x = %g\ny = %g"), xVal, yVal);
+        m_content.Printf(_T("x = %g\ny = %g"), xVal, yVal);
         break;
       case mpX_DATETIME:
       {
         if (DoubleToTimeStruct(xVal, m_timeConv, &timestruct))
-          m_content.Printf(wxT("x = %04d-%02d-%02dT%02d:%02d:%02d\ny = %f"), timestruct.tm_year + 1900, timestruct.tm_mon + 1,
+          m_content.Printf(_T("x = %04d-%02d-%02dT%02d:%02d:%02d\ny = %f"), timestruct.tm_year + 1900, timestruct.tm_mon + 1,
               timestruct.tm_mday, timestruct.tm_hour, timestruct.tm_min, timestruct.tm_sec, yVal);
         break;
       }
       case mpX_DATE:
       {
         if (DoubleToTimeStruct(xVal, m_timeConv, &timestruct))
-          m_content.Printf(wxT("x = %04d-%02d-%02d\ny = %f"), timestruct.tm_year + 1900, timestruct.tm_mon + 1, timestruct.tm_mday, yVal);
+          m_content.Printf(_T("x = %04d-%02d-%02d\ny = %f"), timestruct.tm_year + 1900, timestruct.tm_mon + 1, timestruct.tm_mday, yVal);
         break;
       }
       case mpX_TIME:
@@ -554,7 +568,7 @@ void mpInfoCoords::UpdateInfo(mpWindow &w, wxEvent &event)
         double hh = floor(modulus / 3600);
         double mm = floor((modulus - hh * 3600) / 60);
         double ss = modulus - hh * 3600 - mm * 60;
-        m_content.Printf(wxT("x = %02.0f:%02.0f:%02.0f\ny = %f"), sign * hh, mm, floor(ss), yVal);
+        m_content.Printf(_T("x = %02.0f:%02.0f:%02.0f\ny = %f"), sign * hh, mm, floor(ss), yVal);
         break;
       }
       default:
@@ -1304,7 +1318,7 @@ mpScale::mpScale(const wxString &name, int flags, bool grids)
   m_auto = true;
   m_min = -1;
   m_max = 1;
-  m_labelFormat = wxT("");
+  m_labelFormat = _T("");
 }
 
 int mpScale::GetOrigin(mpWindow &w)
@@ -1491,7 +1505,7 @@ wxString mpScale::FormatLogValue(double n)
       if (exp == 1)
         s = _T("10");
       else
-        s.Printf(_("10^%d"), (int)exp);
+        s.Printf(_T("10^%d"), (int)exp);
   }
   return s;
 }
@@ -1539,7 +1553,7 @@ wxString mpScaleX::FormatValue(const wxString &fmt, double n)
       double mm = floor((modulus - hh * 3600) / 60);
       double ss = modulus - hh * 3600 - mm * 60;
 #ifdef MATHPLOT_DO_LOGGING
-      wxLogMessage(wxT("%02.0f Hours, %02.0f minutes, %02.0f seconds"), sign * hh, mm, ss);
+      wxLogMessage(_T("%02.0f Hours, %02.0f minutes, %02.0f seconds"), sign * hh, mm, ss);
 #endif // MATHPLOT_DO_LOGGING
       if (fmt.Len() == 20) // Format with hours has 11 chars
         s.Printf(fmt, sign * hh, mm, floor(ss));
@@ -1584,32 +1598,32 @@ void mpScaleX::DoPlot(wxDC &dc, mpWindow &w)
         int tmp = (int)log10(step);
         if (tmp >= 1)
         {
-          fmt = wxT("%.g");
+          fmt = _T("%.g");
         }
         else
         {
           tmp = 8 - tmp;
-          fmt.Printf(wxT("%%.%dg"), tmp >= -1 ? 2 : -tmp);
+          fmt.Printf(_T("%%.%dg"), tmp >= -1 ? 2 : -tmp);
         }
       }
       break;
     }
     case mpX_DATETIME:
-      fmt = (wxT("%04d-%02d-%02dT%02d:%02d:%02d"));
+      fmt = (_T("%04d-%02d-%02dT%02d:%02d:%02d"));
       break;
     case mpX_DATE:
-      fmt = (wxT("%04d-%02d-%02d"));
+      fmt = (_T("%04d-%02d-%02d"));
       break;
     case mpX_TIME:
     {
       if (end / 60 < 2)
-        fmt = (wxT("%02.0f:%02.3f"));
+        fmt = (_T("%02.0f:%02.3f"));
       else
-        fmt = (wxT("%02.0f:%02.0f:%02.0f"));
+        fmt = (_T("%02.0f:%02.0f:%02.0f"));
       break;
     }
     case mpX_HOURS:
-      fmt = (wxT("%02.0f:%02.0f:%02.0f"));
+      fmt = (_T("%02.0f:%02.0f:%02.0f"));
       break;
     default:
       ;
@@ -1618,7 +1632,7 @@ void mpScaleX::DoPlot(wxDC &dc, mpWindow &w)
   double n0 = floor(w.GetPosX() / step) * step;
   double n = 0;
 #ifdef MATHPLOT_DO_LOGGING
-  wxLogMessage(wxT("mpScaleX::Plot: step: %f, end: %f, n: %f"), step, end, n0);
+  wxLogMessage(_T("mpScaleX::Plot: step: %f, end: %f, n: %f"), step, end, n0);
 #endif
 
   int labelH = 0; // Control labels heigth to decide where to put axis name (below labels or on top of axis)
@@ -1631,7 +1645,7 @@ void mpScaleX::DoPlot(wxDC &dc, mpWindow &w)
   {
     const int p = (int)((n - w.GetPosX()) * scaleX);
 #ifdef MATHPLOT_DO_LOGGING
-    wxLogMessage(wxT("mpScaleX::Plot: n: %f -> p = %d"), n, p);
+    wxLogMessage(_T("mpScaleX::Plot: n: %f -> p = %d"), n, p);
 #endif
     if ((p >= m_plotBondaries.startPx) && (p <= m_plotBondaries.endPx))
     {
@@ -1672,7 +1686,7 @@ void mpScaleX::DoPlot(wxDC &dc, mpWindow &w)
 
     const int p = (int)((n - w.GetPosX()) * scaleX);
 #ifdef MATHPLOT_DO_LOGGING
-    wxLogMessage(wxT("mpScaleX::Plot: n_label = %f -> p_label = %d"), n, p);
+    wxLogMessage(_T("mpScaleX::Plot: n_label = %f -> p_label = %d"), n, p);
 #endif
     if ((p >= m_plotBondaries.startPx) && (p <= m_plotBondaries.endPx))
     {
@@ -1733,9 +1747,9 @@ void mpScaleY::DoPlot(wxDC &dc, mpWindow &w)
     double minScaleAbs = fabs(w.GetDesiredYmin());
     double endscale = (maxScaleAbs > minScaleAbs) ? maxScaleAbs : minScaleAbs;
     if ((endscale < 1e4) && (endscale > 1e-3))
-      fmt = wxT("%.2f");
+      fmt = _T("%.2f");
     else
-      fmt = wxT("%.2e");
+      fmt = _T("%.2e");
   }
   else
   {
@@ -1797,7 +1811,7 @@ void mpScaleY::DoPlot(wxDC &dc, mpWindow &w)
       dc.GetTextExtent(s, &tx, &ty);
 #ifdef MATHPLOT_DO_LOGGING
       if (ty != labelHeigth)
-        wxLogMessage(wxT("mpScaleY::Plot: ty(%d) and labelHeigth(%d) differ!"), ty, labelHeigth);
+        wxLogMessage(_T("mpScaleY::Plot: ty(%d) and labelHeigth(%d) differ!"), ty, labelHeigth);
 #endif
       labelW = (labelW <= tx) ? tx : labelW;
       if ((tmp - p + labelHeigth) > MIN_Y_AXIS_LABEL_SEPARATION)
@@ -1865,7 +1879,7 @@ EVT_MENU(mpID_FULLSCREEN, mpWindow::OnFullScreen)
 END_EVENT_TABLE()
 
 mpWindow::mpWindow(wxWindow *parent, wxWindowID id, const wxPoint &pos, const wxSize &size, long flag) :
-    wxWindow(parent, id, pos, size, flag, wxT("Mathplot"))
+    wxWindow(parent, id, pos, size, flag, _T("Mathplot"))
 {
   // Search the top parent
   wxWindow* pWin = parent;
@@ -1889,66 +1903,39 @@ mpWindow::mpWindow(wxWindow *parent, wxWindowID id, const wxPoint &pos, const wx
   wxImage::AddHandler(new wxPNGHandler);
 #endif
 
+  int nbItem = mpID_HELP_MOUSE - mpID_FIT + 1;
+  if (m_parent) // Fullscreen available (last item)
+    nbItem++;
+
 #ifdef USE_ICON
   wxImage::AddHandler(new wxPNGHandler);
 
-  wxBitmap icon[] = {wxBITMAP_PNG_FROM_DATA(Center_24x24), wxBITMAP_PNG_FROM_DATA(Fit_24x24), wxBITMAP_PNG_FROM_DATA(Zoom_in_24x24),
-      wxBITMAP_PNG_FROM_DATA(Zoom_out_24x24), wxBITMAP_PNG_FROM_DATA(Screenshot_24x24), wxBITMAP_PNG_FROM_DATA(Grid_24x24),
-      wxBITMAP_PNG_FROM_DATA(Coordinates_24x24), wxBITMAP_PNG_FROM_DATA(Config_24x24), wxBITMAP_PNG_FROM_DATA(Load_24x24),
+  wxBitmap icon[] = {wxBITMAP_PNG_FROM_DATA(Fit_24x24), wxBITMAP_PNG_FROM_DATA(Zoom_in_24x24), wxBITMAP_PNG_FROM_DATA(Zoom_out_24x24),
+      wxBITMAP_PNG_FROM_DATA(Center_24x24),  wxNullBitmap, wxBITMAP_PNG_FROM_DATA(Grid_24x24), wxBITMAP_PNG_FROM_DATA(Coordinates_24x24),
+      wxBITMAP_PNG_FROM_DATA(Screenshot_24x24), wxBITMAP_PNG_FROM_DATA(Config_24x24), wxBITMAP_PNG_FROM_DATA(Load_24x24),
       wxBITMAP_PNG_FROM_DATA(Mouse_24x24), wxBITMAP_PNG_FROM_DATA(Fullscreen_24x24)};
 
   // Because of GTK problem, we must set bitmap BEFORE append the menu item
-  wxMenuItem* mymenu = new wxMenuItem(&m_popmenu, mpID_CENTER, Popup_string[pop_CENTER][0], Popup_string[pop_CENTER][1]);
-  mymenu->SetBitmap(icon[0]);
-  m_popmenu.Append(mymenu);
-  mymenu = new wxMenuItem(&m_popmenu, mpID_FIT, Popup_string[pop_FIT][0], Popup_string[pop_FIT][1]);
-  mymenu->SetBitmap(icon[1]);
-  m_popmenu.Append(mymenu);
-  mymenu = new wxMenuItem(&m_popmenu, mpID_ZOOM_IN, Popup_string[pop_ZOOM_IN][0], Popup_string[pop_ZOOM_IN][1]);
-  mymenu->SetBitmap(icon[2]);
-  m_popmenu.Append(mymenu);
-  mymenu = new wxMenuItem(&m_popmenu, mpID_ZOOM_OUT, Popup_string[pop_ZOOM_OUT][0], Popup_string[pop_ZOOM_OUT][1]);
-  mymenu->SetBitmap(icon[3]);
-  m_popmenu.Append(mymenu);
-  m_popmenu.AppendCheckItem(mpID_LOCKASPECT, Popup_string[pop_LOCKASPECT][0], Popup_string[pop_LOCKASPECT][1]);
-  mymenu = new wxMenuItem(&m_popmenu, mpID_SCREENSHOT, Popup_string[pop_SCREENSHOT][0], Popup_string[pop_SCREENSHOT][1]);
-  mymenu->SetBitmap(icon[4]);
-  m_popmenu.Append(mymenu);
-  mymenu = new wxMenuItem(&m_popmenu, mpID_TOGGLE_GRID, Popup_string[pop_TOGGLE_GRID][0], Popup_string[pop_TOGGLE_GRID][1]);
-  mymenu->SetBitmap(icon[5]);
-  m_popmenu.Append(mymenu);
-  mymenu = new wxMenuItem(&m_popmenu, mpID_TOGGLE_COORD, Popup_string[pop_TOGGLE_COORD][0], Popup_string[pop_TOGGLE_COORD][1]);
-  mymenu->SetBitmap(icon[6]);
-  m_popmenu.Append(mymenu);
-  mymenu = new wxMenuItem(&m_popmenu, mpID_CONFIG, Popup_string[pop_CONFIG][0], Popup_string[pop_CONFIG][1]);
-  mymenu->SetBitmap(icon[7]);
-  m_popmenu.Append(mymenu);
-  mymenu = new wxMenuItem(&m_popmenu, mpID_LOAD_FILE, Popup_string[pop_LOAD_FILE][0], Popup_string[pop_LOAD_FILE][1]);
-  mymenu->SetBitmap(icon[8]);
-  m_popmenu.Append(mymenu);
-  mymenu = new wxMenuItem(&m_popmenu, mpID_HELP_MOUSE, Popup_string[pop_HELP_MOUSE][0], Popup_string[pop_HELP_MOUSE][1]);
-  mymenu->SetBitmap(icon[9]);
-  m_popmenu.Append(mymenu);
-  if (m_parent)
+  wxMenuItem* mymenu;
+  for (int i = 0; i < nbItem; i++)
   {
-    mymenu = new wxMenuItem(&m_popmenu, mpID_FULLSCREEN, Popup_string[pop_FULLSCREEN][0], Popup_string[pop_FULLSCREEN][1]);
-    mymenu->SetBitmap(icon[10]);
-    m_popmenu.Append(mymenu);
+    if (mpID_FIT + i != mpID_LOCKASPECT)
+    {
+      mymenu = new wxMenuItem(&m_popmenu, mpID_FIT + i, Popup_string[i][0], Popup_string[i][1]);
+      mymenu->SetBitmap(icon[i]);
+      m_popmenu.Append(mymenu);
+    }
+    else
+      m_popmenu.AppendCheckItem(mpID_LOCKASPECT, Popup_string[i][0], Popup_string[i][1]);
   }
 #else
-  m_popmenu.Append(mpID_CENTER, Popup_string[pop_CENTER][0], Popup_string[pop_CENTER][1]);
-  m_popmenu.Append(mpID_FIT, Popup_string[pop_FIT][0], Popup_string[pop_FIT][1]);
-  m_popmenu.Append(mpID_ZOOM_IN, Popup_string[pop_ZOOM_IN][0], Popup_string[pop_ZOOM_IN][1]);
-  m_popmenu.Append(mpID_ZOOM_OUT, Popup_string[pop_ZOOM_OUT][0], Popup_string[pop_ZOOM_OUT][1]);
-  m_popmenu.AppendCheckItem(mpID_LOCKASPECT, Popup_string[pop_LOCKASPECT][0], Popup_string[pop_LOCKASPECT][1]);
-  m_popmenu.Append(mpID_SCREENSHOT, Popup_string[pop_SCREENSHOT][0], Popup_string[pop_SCREENSHOT][1]);
-  m_popmenu.Append(mpID_TOGGLE_GRID, Popup_string[pop_TOGGLE_GRID][0], Popup_string[pop_TOGGLE_GRID][1]);
-  m_popmenu.Append(mpID_TOGGLE_COORD, Popup_string[pop_TOGGLE_COORD][0], Popup_string[pop_TOGGLE_COORD][1]);
-  m_popmenu.Append(mpID_CONFIG, Popup_string[pop_CONFIG][0], Popup_string[pop_CONFIG][1]);
-  m_popmenu.Append(mpID_LOAD_FILE, Popup_string[pop_LOAD_FILE][0], Popup_string[pop_LOAD_FILE][1]);
-  m_popmenu.Append(mpID_HELP_MOUSE, Popup_string[pop_HELP_MOUSE][0], Popup_string[pop_HELP_MOUSE][1]);
-  if (m_parent)
-    m_popmenu.Append(mpID_FULLSCREEN, Popup_string[pop_FULLSCREEN][0], Popup_string[pop_FULLSCREEN][1]);
+  for (int i = 0; i < nbItem; i++)
+  {
+    if (mpID_FIT + i != mpID_LOCKASPECT)
+      m_popmenu.Append(mpID_FIT + i, Popup_string[i][0], Popup_string[i][1]);
+    else
+      m_popmenu.AppendCheckItem(mpID_LOCKASPECT, Popup_string[i][0], Popup_string[i][1]);
+  }
 #endif
 
   m_layers.clear();
@@ -2007,13 +1994,13 @@ void mpWindow::OnMouseLeftDown(wxMouseEvent &event)
 {
   m_mouseLClick = event.GetPosition();
 #ifdef MATHPLOT_DO_LOGGING
-  wxLogMessage(wxT("mpWindow::OnMouseLeftDown() X = %d , Y = %d"), event.GetX(), event.GetY());
+  wxLogMessage(_T("mpWindow::OnMouseLeftDown() X = %d , Y = %d"), event.GetX(), event.GetY());
 #endif
   m_movingInfoLayer = IsInsideInfoLayer(m_mouseLClick);
 #ifdef MATHPLOT_DO_LOGGING
   if (m_movingInfoLayer != NULL)
   {
-    wxLogMessage(wxT("mpWindow::OnMouseLeftDown() started moving layer %p"), m_movingInfoLayer);
+    wxLogMessage(_T("mpWindow::OnMouseLeftDown() started moving layer %p"), m_movingInfoLayer);
   }
 #endif
   event.Skip();
@@ -2069,7 +2056,7 @@ void mpWindow::OnMouseMove(wxMouseEvent &event)
     UpdateAll();
 
 #ifdef MATHPLOT_DO_LOGGING
-    wxLogMessage(wxT("[mpWindow::OnMouseMove] Ax:%i Ay:%i m_posX:%f m_posY:%f"), Ax, Ay, m_posX, m_posY);
+    wxLogMessage(_T("[mpWindow::OnMouseMove] Ax:%i Ay:%i m_posX:%f m_posY:%f"), Ax, Ay, m_posX, m_posY);
 #endif
   }
   else
@@ -2274,7 +2261,7 @@ void mpWindow::Fit(const mpFloatRect &rect, wxCoord *printSizeX, wxCoord *printS
   if (m_lockaspect)
   {
 #ifdef MATHPLOT_DO_LOGGING
-    wxLogMessage(wxT("mpWindow::Fit()(lock) m_scaleX=%f,m_scaleY=%f"), m_scaleX, m_scaleY);
+    wxLogMessage(_T("mpWindow::Fit()(lock) m_scaleX=%f,m_scaleY=%f"), m_scaleX, m_scaleY);
 #endif
     // Keep the lowest "scale" to fit the whole range required by that axis (to actually "fit"!):
     double s = m_scaleX < m_scaleY ? m_scaleX : m_scaleY;
@@ -2290,9 +2277,9 @@ void mpWindow::Fit(const mpFloatRect &rect, wxCoord *printSizeX, wxCoord *printS
   m_posY = (rect.Ymin + rect.Ymax) / 2 + (m_plotHeight / 2 + m_margin.top) / m_scaleY;
 
 #ifdef MATHPLOT_DO_LOGGING
-  wxLogMessage(wxT("mpWindow::Fit() m_desired.Xmin=%f m_desired.Xmax=%f  m_desired.Ymin=%f m_desired.Ymax=%f"),
+  wxLogMessage(_T("mpWindow::Fit() m_desired.Xmin=%f m_desired.Xmax=%f  m_desired.Ymin=%f m_desired.Ymax=%f"),
       m_desired.Xmin, m_desired.Xmax, m_desired.Ymin, m_desired.Ymax);
-  wxLogMessage(wxT("mpWindow::Fit() m_scaleX = %f , m_scrX = %d,m_scrY=%d, Ax=%f, Ay=%f, m_posX=%f, m_posY=%f"),
+  wxLogMessage(_T("mpWindow::Fit() m_scaleX = %f , m_scrX = %d,m_scrY=%d, Ax=%f, Ay=%f, m_posX=%f, m_posY=%f"),
       m_scaleX, m_scrX, m_scrY, Ax, Ay, m_posX, m_posY);
 #endif
 
@@ -2315,7 +2302,7 @@ void mpWindow::DoZoomInXCalc(const int staticXpixel)
   m_desired.Xmin = m_posX;
   m_desired.Xmax = m_posX + m_plotWidth / m_scaleX;
 #ifdef MATHPLOT_DO_LOGGING
-  wxLogMessage(wxT("mpWindow::DoZoomInXCalc() prior X coord: (%f), new X coord: (%f) SHOULD BE EQUAL!!"), staticX, p2x(staticXpixel));
+  wxLogMessage(_T("mpWindow::DoZoomInXCalc() prior X coord: (%f), new X coord: (%f) SHOULD BE EQUAL!!"), staticX, p2x(staticXpixel));
 #endif
 }
 
@@ -2331,7 +2318,7 @@ void mpWindow::DoZoomInYCalc(const int staticYpixel)
   m_desired.Ymax = m_posY;
   m_desired.Ymin = m_posY - m_plotHeight / m_scaleY;
 #ifdef MATHPLOT_DO_LOGGING
-  wxLogMessage(wxT("mpWindow::DoZoomInYCalc() prior Y coord: (%f), new Y coord: (%f) SHOULD BE EQUAL!!"), staticY, p2y(staticYpixel));
+  wxLogMessage(_T("mpWindow::DoZoomInYCalc() prior Y coord: (%f), new Y coord: (%f) SHOULD BE EQUAL!!"), staticY, p2y(staticYpixel));
 #endif
 }
 
@@ -2347,7 +2334,7 @@ void mpWindow::DoZoomOutXCalc(const int staticXpixel)
   m_desired.Xmin = m_posX;
   m_desired.Xmax = m_posX + m_plotWidth / m_scaleX;
 #ifdef MATHPLOT_DO_LOGGING
-  wxLogMessage(wxT("mpWindow::DoZoomOutXCalc() prior X coord: (%f), new X coord: (%f) SHOULD BE EQUAL!!"), staticX, p2x(staticXpixel));
+  wxLogMessage(_T("mpWindow::DoZoomOutXCalc() prior X coord: (%f), new X coord: (%f) SHOULD BE EQUAL!!"), staticX, p2x(staticXpixel));
 #endif
 }
 
@@ -2363,7 +2350,7 @@ void mpWindow::DoZoomOutYCalc(const int staticYpixel)
   m_desired.Ymax = m_posY;
   m_desired.Ymin = m_posY - m_plotHeight / m_scaleY;
 #ifdef MATHPLOT_DO_LOGGING
-  wxLogMessage(wxT("mpWindow::DoZoomOutYCalc() prior Y coord: (%f), new Y coord: (%f) SHOULD BE EQUAL!!"), staticY, p2y(staticYpixel));
+  wxLogMessage(_T("mpWindow::DoZoomOutYCalc() prior Y coord: (%f), new Y coord: (%f) SHOULD BE EQUAL!!"), staticY, p2y(staticYpixel));
 #endif
 }
 
@@ -2414,7 +2401,7 @@ void mpWindow::Zoom(bool zoomIn, const wxPoint &centerPoint)
   m_desired.Ymin = m_posY - m_plotHeight / m_scaleY;
 
 #ifdef MATHPLOT_DO_LOGGING
-  wxLogMessage(wxT("mpWindow::Zoom() prior coords: (%f,%f), new coords: (%f,%f) SHOULD BE EQUAL!!"),
+  wxLogMessage(_T("mpWindow::Zoom() prior coords: (%f,%f), new coords: (%f,%f) SHOULD BE EQUAL!!"),
       prior_layer_x, prior_layer_y, p2x(c.x), p2y(c.y));
 #endif
   UpdateAll();
@@ -2460,7 +2447,7 @@ void mpWindow::ZoomRect(wxPoint p0, wxPoint p1)
   zoom.Ymax = p0y > p1y ? p0y : p1y;
 
 #ifdef MATHPLOT_DO_LOGGING
-  wxLogMessage(wxT("Zoom: (%f,%f)-(%f,%f)"), zoom.Xmin, zoom.Ymin, zoom.Xmax, zoom.Ymax);
+  wxLogMessage(_T("Zoom: (%f,%f)-(%f,%f)"), zoom.Xmin, zoom.Ymin, zoom.Xmax, zoom.Ymax);
 #endif
 
   Fit(zoom);
@@ -2500,14 +2487,9 @@ void mpWindow::OnLockAspect(wxCommandEvent &WXUNUSED(event))
 void mpWindow::OnMouseHelp(wxCommandEvent &WXUNUSED(event))
 {
   wxMessageBox(
-      _(
-          "Supported Mouse commands:\n \
-        - Left button down + Mark area: Rectangular zoom\n \
-        - Right button down + Move: Pan (Move)\n \
-        - Wheel: Zoom in/out\n \
-        - Wheel + SHIFT: Horizontal scroll\n \
-        - Wheel + CTRL: Vertical scroll"),
-      _("wxMathPlot help"), wxOK, this);
+      MESS_HELP1 + _T("\n") + MESS_HELP2 + _T("\n") + MESS_HELP3 + _T("\n") +
+      MESS_HELP4 + _T("\n") + MESS_HELP5 + _T("\n") + MESS_HELP6,
+      MESS_HELP0, wxOK, this);
 }
 
 void mpWindow::OnFit(wxCommandEvent &WXUNUSED(event))
@@ -2561,8 +2543,8 @@ void mpWindow::OnFullScreen(wxCommandEvent &WXUNUSED(event))
  */
 void mpWindow::OnLoadFile(wxCommandEvent &WXUNUSED(event))
 {
-  wxFileDialog OpenFile(this, _("Select file"), wxEmptyString, wxEmptyString,
-      _("Data files (*.dat)|*.dat|Csv files (csv.*)|csv.*|All files (*.*)|*.*"), wxFD_OPEN | wxFD_FILE_MUST_EXIST);
+  wxFileDialog OpenFile(this, MESS_LOAD, wxEmptyString, wxEmptyString,
+      MESS_WILDCARD, wxFD_OPEN | wxFD_FILE_MUST_EXIST);
 
   if (OpenFile.ShowModal() == wxID_OK)
   {
@@ -2605,7 +2587,7 @@ void mpWindow::OnSize(wxSizeEvent &WXUNUSED(event))
   // Try to fit again with the new window size:
   Fit(m_desired);
 #ifdef MATHPLOT_DO_LOGGING
-  wxLogMessage(wxT("mpWindow::OnSize() m_scrX = %d, m_scrY = %d"), m_scrX, m_scrY);
+  wxLogMessage(_T("mpWindow::OnSize() m_scrX = %d, m_scrY = %d"), m_scrX, m_scrY);
 #endif // MATHPLOT_DO_LOGGING
 }
 
@@ -2744,7 +2726,7 @@ void mpWindow::OnPaint(wxPaintEvent &WXUNUSED(event))
   {
     int px = 0, py = 0;
 //    GetViewStart( &px, &py );
-    wxLogMessage(wxT("[mpWindow::OnPaint] vis.area:%ix%i px=%i py=%i"), m_scrX, m_scrY, px, py);
+    wxLogMessage(_T("[mpWindow::OnPaint] vis.area:%ix%i px=%i py=%i"), m_scrX, m_scrY, px, py);
   }
 #endif
 
@@ -2960,7 +2942,7 @@ bool mpWindow::UpdateBBox()
 
 #ifdef MATHPLOT_DO_LOGGING
   wxLogDebug
-  (wxT("[mpWindow::UpdateBBox] Bounding box: Xmin = %f, Xmax = %f, Ymin = %f, YMax = %f"), m_bound.Xmin, m_bound.Xmax, m_bound.Ymin,
+  (_T("[mpWindow::UpdateBBox] Bounding box: Xmin = %f, Xmax = %f, Ymin = %f, YMax = %f"), m_bound.Xmin, m_bound.Xmax, m_bound.Ymin,
       m_bound.Ymax);
 #endif // MATHPLOT_DO_LOGGING
   return first == false;
@@ -3188,7 +3170,7 @@ mpFXYVector* mpWindow::GetXYSeries(unsigned int n, const wxString &name, bool cr
   mpFXYVector* serie = (mpFXYVector*)this->GetLayerPlot(n, mpfFXYVector);
   if ((serie == NULL) && create)
   {
-    serie = new mpFXYVector(wxString::Format(wxT("%s %d"), name, n));
+    serie = new mpFXYVector(wxString::Format(_T("%s %d"), name, n));
     serie->SetContinuity(true);
     wxPen pen(wxIndexColour(n), 2, wxPENSTYLE_SOLID);
     serie->SetPen(pen);
@@ -3330,13 +3312,13 @@ mpInfoLayer* mpWindow::IsInsideInfoLayer(const wxPoint &point)
   for (wxLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
   {
 #ifdef MATHPLOT_DO_LOGGING
-    wxLogMessage(wxT("mpWindow::IsInsideInfoLayer() examinining layer = %p"), (*it));
+    wxLogMessage(_T("mpWindow::IsInsideInfoLayer() examinining layer = %p"), (*it));
 #endif // MATHPLOT_DO_LOGGING
     if ((*it)->IsInfo(&info))
     {
       mpInfoLayer* tmpLyr = (mpInfoLayer*)(*it);
 #ifdef MATHPLOT_DO_LOGGING
-      wxLogMessage(wxT("mpWindow::IsInsideInfoLayer() layer = %p"), (*it));
+      wxLogMessage(_T("mpWindow::IsInsideInfoLayer() layer = %p"), (*it));
 #endif // MATHPLOT_DO_LOGGING
       if (tmpLyr->Inside(point))
       {
@@ -3488,7 +3470,7 @@ void mpWindow::ClipboardScreenshot(wxSize imageSize, bool fit)
     // CAUTION : Data objects are held by the clipboard,
     // so do not delete them in the app.
     if (!wxTheClipboard->SetData(new wxBitmapDataObject(screenImage)))
-      wxMessageBox(_("Failed to copy image to clipboard"));
+      wxMessageBox(MESS_CLIPFAIL);
     wxTheClipboard->Flush();
     wxTheClipboard->Close();
   }
@@ -3689,8 +3671,7 @@ void mpFXYVector::SetData(const std::vector<double> &xs, const std::vector<doubl
   // Check if the data vectora are of the same size
   if (xs.size() != ys.size())
   {
-    wxLogError
-    (_("wxMathPlot error: X and Y vector are not of the same length!"));
+    wxLogError(_T("wxMathPlot error: X and Y vector are not of the same length!"));
     return;
   }
   // Copy the data:
@@ -4011,9 +3992,9 @@ bool mpPrintout::OnPrintPage(int page)
     marginY = (m_prnY - m_prnYw) / 2;
 
 #ifdef MATHPLOT_DO_LOGGING
-    wxLogMessage(wxT("Printer Size: %d x %d\n"), m_prnX, m_prnY);
-    wxLogMessage(wxT("Actual Screen Size: %d x %d\n"), plotWindow->GetScreenX(), plotWindow->GetScreenY());
-    wxLogMessage(wxT("Screen Size for Printer: %d x %d\n"), m_prnXw, m_prnYw);
+    wxLogMessage(_T("Printer Size: %d x %d\n"), m_prnX, m_prnY);
+    wxLogMessage(_T("Actual Screen Size: %d x %d\n"), plotWindow->GetScreenX(), plotWindow->GetScreenY());
+    wxLogMessage(_T("Screen Size for Printer: %d x %d\n"), m_prnXw, m_prnYw);
 #endif
 
     plotWindow->BitmapScreenshot(wxSize(m_prnXw / stretch_factor, m_prnYw / stretch_factor));
@@ -4075,8 +4056,7 @@ void mpMovableObject::ShapeUpdated()
   // Just in case...
   if (m_shape_xs.size() != m_shape_ys.size())
   {
-    wxLogError
-    (wxT("[mpMovableObject::ShapeUpdated] Error, m_shape_xs and m_shape_ys have different lengths!"));
+    wxLogError(_T("[mpMovableObject::ShapeUpdated] Error, m_shape_xs and m_shape_ys have different lengths!"));
   }
   else
   {
@@ -4224,20 +4204,17 @@ void mpCovarianceEllipse::RecalculateShape()
   // Preliminar checks:
   if (m_quantiles < 0)
   {
-    wxLogError
-    (wxT("[mpCovarianceEllipse] Error: quantiles must be non-negative"));
+    wxLogError(_T("[mpCovarianceEllipse] Error: quantiles must be non-negative"));
     return;
   }
   if (m_cov_00 < 0)
   {
-    wxLogError
-    (wxT("[mpCovarianceEllipse] Error: cov(0,0) must be non-negative"));
+    wxLogError(_T("[mpCovarianceEllipse] Error: cov(0,0) must be non-negative"));
     return;
   }
   if (m_cov_11 < 0)
   {
-    wxLogError
-    (wxT("[mpCovarianceEllipse] Error: cov(1,1) must be non-negative"));
+    wxLogError(_T("[mpCovarianceEllipse] Error: cov(1,1) must be non-negative"));
     return;
   }
 
@@ -4253,8 +4230,7 @@ void mpCovarianceEllipse::RecalculateShape()
 
   if (D < 0)
   {
-    wxLogError
-    (wxT("[mpCovarianceEllipse] Error: cov is not positive definite"));
+    wxLogError(_T("[mpCovarianceEllipse] Error: cov is not positive definite"));
     return;
   }
 
@@ -4338,8 +4314,7 @@ void mpPolygon::setPoints(const std::vector<double> &points_xs, const std::vecto
 {
   if (points_xs.size() != points_ys.size())
   {
-    wxLogError
-    (wxT("[mpPolygon] Error: points_xs and points_ys must have the same number of elements"));
+    wxLogError(_T("[mpPolygon] Error: points_xs and points_ys must have the same number of elements"));
   }
   else
   {
@@ -4372,8 +4347,7 @@ void mpBitmapLayer::SetBitmap(const wxImage &inBmp, double x, double y, double l
 {
   if (!inBmp.Ok())
   {
-    wxLogError
-    (wxT("[mpBitmapLayer] Assigned bitmap is not Ok()!"));
+    wxLogError(_T("[mpBitmapLayer] Assigned bitmap is not Ok()!"));
   }
   else
   {
@@ -4452,9 +4426,9 @@ void mpBitmapLayer::DoPlot(wxDC &dc, mpWindow &w)
     b_height = m_bitmap.GetHeight() - offset_y;
 
 #ifdef MATHPLOT_DO_LOGGING
-  wxLogMessage(wxT("[mpBitmapLayer::Plot] screenPixel: x=%f y=%f  d_width=%ix%i"),
+  wxLogMessage(_T("[mpBitmapLayer::Plot] screenPixel: x=%f y=%f  d_width=%ix%i"),
       screenPixelX, screenPixelY, d_width, d_height);
-  wxLogMessage(wxT("[mpBitmapLayer::Plot] offset: x=%i y=%i  bmpWidth=%ix%i"),
+  wxLogMessage(_T("[mpBitmapLayer::Plot] offset: x=%i y=%i  bmpWidth=%ix%i"),
       offset_x, offset_y, b_width, b_height);
 #endif
 
