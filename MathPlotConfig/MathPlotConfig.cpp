@@ -288,16 +288,16 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   FlexGridSizer2 = new wxFlexGridSizer(2, 6, 0, 0);
   StaticText15 = new wxStaticText(Panel1, ID_STATICTEXT15, _("Margins :"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT15"));
   FlexGridSizer2->Add(StaticText15, 0, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
-  edMarginTop = new wxTextCtrl(Panel1, ID_TEXTCTRL4, _("50"), wxDefaultPosition, wxSize(40,-1), wxTE_RIGHT, wxIntegerValidator<unsigned int> (&int_top), _T("ID_TEXTCTRL4"));
+  edMarginTop = new wxTextCtrl(Panel1, ID_TEXTCTRL4, _T("50"), wxDefaultPosition, wxSize(40,-1), wxTE_RIGHT, wxIntegerValidator<unsigned int> (&int_top), _T("ID_TEXTCTRL4"));
   edMarginTop->SetToolTip(_("Top"));
   FlexGridSizer2->Add(edMarginTop, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 2);
-  edMarginBottom = new wxTextCtrl(Panel1, ID_TEXTCTRL5, _("50"), wxDefaultPosition, wxSize(40,-1), wxTE_RIGHT, wxIntegerValidator<unsigned int> (&int_bottom), _T("ID_TEXTCTRL5"));
+  edMarginBottom = new wxTextCtrl(Panel1, ID_TEXTCTRL5, _T("50"), wxDefaultPosition, wxSize(40,-1), wxTE_RIGHT, wxIntegerValidator<unsigned int> (&int_bottom), _T("ID_TEXTCTRL5"));
   edMarginBottom->SetToolTip(_("Bottom"));
   FlexGridSizer2->Add(edMarginBottom, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 2);
-  edMarginLeft = new wxTextCtrl(Panel1, ID_TEXTCTRL6, _("50"), wxDefaultPosition, wxSize(40,-1), wxTE_RIGHT, wxIntegerValidator<unsigned int> (&int_left), _T("ID_TEXTCTRL6"));
+  edMarginLeft = new wxTextCtrl(Panel1, ID_TEXTCTRL6, _T("50"), wxDefaultPosition, wxSize(40,-1), wxTE_RIGHT, wxIntegerValidator<unsigned int> (&int_left), _T("ID_TEXTCTRL6"));
   edMarginLeft->SetToolTip(_("Left"));
   FlexGridSizer2->Add(edMarginLeft, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 2);
-  edMarginRight = new wxTextCtrl(Panel1, ID_TEXTCTRL7, _("50"), wxDefaultPosition, wxSize(40,-1), wxTE_RIGHT, wxIntegerValidator<unsigned int> (&int_right), _T("ID_TEXTCTRL7"));
+  edMarginRight = new wxTextCtrl(Panel1, ID_TEXTCTRL7, _T("50"), wxDefaultPosition, wxSize(40,-1), wxTE_RIGHT, wxIntegerValidator<unsigned int> (&int_right), _T("ID_TEXTCTRL7"));
   edMarginRight->SetToolTip(_("Right"));
   FlexGridSizer2->Add(edMarginRight, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 2);
   bBGColor = new wxButton(Panel1, ID_BUTTON7, _("bg color"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON7"));
@@ -344,8 +344,6 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   StaticBoxSizer3->Add(StaticBoxSizer4, 0, wxALL|wxALIGN_TOP, 5);
   BoxSizer3->Add(StaticBoxSizer3, 0, wxALL|wxEXPAND, 2);
   Panel1->SetSizer(BoxSizer3);
-  BoxSizer3->Fit(Panel1);
-  BoxSizer3->SetSizeHints(Panel1);
   Panel2 = new wxPanel(nbConfig, ID_PANEL15, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL, _T("ID_PANEL15"));
   BoxSizer16 = new wxBoxSizer(wxHORIZONTAL);
   FlexGridSizer6 = new wxFlexGridSizer(4, 2, 0, 0);
@@ -391,8 +389,6 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   BoxSizer15->Add(StaticBoxSizer5, 0, wxALL|wxEXPAND, 0);
   BoxSizer16->Add(BoxSizer15, 1, wxALL|wxALIGN_TOP, 5);
   Panel2->SetSizer(BoxSizer16);
-  BoxSizer16->Fit(Panel2);
-  BoxSizer16->SetSizeHints(Panel2);
   Panel3 = new wxPanel(nbConfig, ID_PANEL1, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL, _T("ID_PANEL1"));
   BoxSizer4 = new wxBoxSizer(wxVERTICAL);
   ChoiceAxis = new wxChoice(Panel3, ID_CHOICE7, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator, _T("ID_CHOICE7"));
@@ -439,12 +435,12 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   FlexGridSizer12->Add(-1,-1,1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
   StaticText27 = new wxStaticText(Panel3, ID_STATICTEXT27, _("Min :"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT27"));
   FlexGridSizer12->Add(StaticText27, 1, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 5);
-  edScaleMin = new wxTextCtrl(Panel3, ID_TEXTCTRL9, _("-1"), wxDefaultPosition, wxSize(64,-1), wxTE_RIGHT, wxFloatingPointValidator<double> (2, &scale_min), _T("ID_TEXTCTRL9"));
+  edScaleMin = new wxTextCtrl(Panel3, ID_TEXTCTRL9, _T("-1"), wxDefaultPosition, wxSize(64,-1), wxTE_RIGHT, wxFloatingPointValidator<double> (2, &scale_min), _T("ID_TEXTCTRL9"));
   edScaleMin->Disable();
   FlexGridSizer12->Add(edScaleMin, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 2);
   StaticText28 = new wxStaticText(Panel3, ID_STATICTEXT28, _("Max :"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT28"));
   FlexGridSizer12->Add(StaticText28, 1, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 5);
-  edScaleMax = new wxTextCtrl(Panel3, ID_TEXTCTRL10, _("1"), wxDefaultPosition, wxSize(64,-1), wxTE_RIGHT, wxFloatingPointValidator<double> (2, &scale_max), _T("ID_TEXTCTRL10"));
+  edScaleMax = new wxTextCtrl(Panel3, ID_TEXTCTRL10, _T("1"), wxDefaultPosition, wxSize(64,-1), wxTE_RIGHT, wxFloatingPointValidator<double> (2, &scale_max), _T("ID_TEXTCTRL10"));
   edScaleMax->Disable();
   FlexGridSizer12->Add(edScaleMax, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 2);
   StaticBoxSizer7->Add(FlexGridSizer12, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
@@ -485,8 +481,6 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   BoxSizer6->Add(BoxSizer5, 0, wxALL|wxALIGN_TOP, 2);
   BoxSizer4->Add(BoxSizer6, 0, wxALL|wxEXPAND, 0);
   Panel3->SetSizer(BoxSizer4);
-  BoxSizer4->Fit(Panel3);
-  BoxSizer4->SetSizeHints(Panel3);
   Panel4 = new wxPanel(nbConfig, ID_PANEL4, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL, _T("ID_PANEL4"));
   BoxSizer8 = new wxBoxSizer(wxVERTICAL);
   FlexGridSizer13 = new wxFlexGridSizer(1, 3, 0, 0);
@@ -591,8 +585,6 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   FlexGridSizer15->Add(BoxSizer10, 1, wxALL|wxALIGN_TOP|wxALIGN_CENTER_HORIZONTAL, 5);
   BoxSizer8->Add(FlexGridSizer15, 0, wxALL|wxEXPAND, 2);
   Panel4->SetSizer(BoxSizer8);
-  BoxSizer8->Fit(Panel4);
-  BoxSizer8->SetSizeHints(Panel4);
   nbConfig->AddPage(Panel1, _("General"), false);
   nbConfig->AddPage(Panel2, _("Legend"), false);
   nbConfig->AddPage(Panel3, _("Axis"), false);
@@ -605,26 +597,25 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   BoxSizer2->Add(bClose, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 4);
   sizerMain->Add(BoxSizer2, 0, wxEXPAND, 4);
   SetSizer(sizerMain);
-  sizerMain->Fit(this);
   sizerMain->SetSizeHints(this);
 
-  Connect(ID_BUTTON5,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&MathPlotConfigDialog::OnbFontClick);
-  Connect(ID_BUTTON7,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&MathPlotConfigDialog::OnbColorClick);
-  Connect(ID_BUTTON10,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&MathPlotConfigDialog::OnbColorClick);
-  Connect(ID_BUTTON12,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&MathPlotConfigDialog::OnbFontClick);
-  Connect(ID_BUTTON9,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&MathPlotConfigDialog::OnbColorClick);
-  Connect(ID_CHOICE7,wxEVT_COMMAND_CHOICE_SELECTED,(wxObjectEventFunction)&MathPlotConfigDialog::OnAxisSelect);
-  Connect(ID_BUTTON8,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&MathPlotConfigDialog::OnbFontClick);
-  Connect(ID_BUTTON6,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&MathPlotConfigDialog::OnbColorClick);
-  Connect(ID_CHECKBOX11,wxEVT_COMMAND_CHECKBOX_CLICKED,(wxObjectEventFunction)&MathPlotConfigDialog::OncbAutoScaleClick);
-  Connect(ID_CHOICE16,wxEVT_COMMAND_CHOICE_SELECTED,(wxObjectEventFunction)&MathPlotConfigDialog::OncbFormatSelect);
-  Connect(ID_CHOICE1,wxEVT_COMMAND_CHOICE_SELECTED,(wxObjectEventFunction)&MathPlotConfigDialog::OnChoiceSeries);
-  Connect(ID_BUTTON11,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&MathPlotConfigDialog::OnbDelSeriesClick);
-  Connect(ID_BUTTON1,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&MathPlotConfigDialog::OnbColorClick);
-  Connect(ID_BUTTON2,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&MathPlotConfigDialog::OnbColorClick);
-  Connect(ID_NOTEBOOK1,wxEVT_COMMAND_NOTEBOOK_PAGE_CHANGED,(wxObjectEventFunction)&MathPlotConfigDialog::OnnbConfigPageChanged);
-  Connect(ID_BUTTON3,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&MathPlotConfigDialog::OnbApplyClick);
-  Connect(ID_BUTTON4,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&MathPlotConfigDialog::OnQuit);
+  Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotConfigDialog::OnbFontClick, this, ID_BUTTON5);
+  Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotConfigDialog::OnbColorClick, this, ID_BUTTON7);
+  Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotConfigDialog::OnbColorClick, this, ID_BUTTON10);
+  Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotConfigDialog::OnbFontClick, this, ID_BUTTON12);
+  Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotConfigDialog::OnbColorClick, this, ID_BUTTON9);
+  Bind(wxEVT_COMMAND_CHOICE_SELECTED, &MathPlotConfigDialog::OnAxisSelect, this, ID_CHOICE7);
+  Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotConfigDialog::OnbFontClick, this, ID_BUTTON8);
+  Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotConfigDialog::OnbColorClick, this, ID_BUTTON6);
+  Bind(wxEVT_COMMAND_CHECKBOX_CLICKED, &MathPlotConfigDialog::OncbAutoScaleClick, this, ID_CHECKBOX11);
+  Bind(wxEVT_COMMAND_CHOICE_SELECTED, &MathPlotConfigDialog::OncbFormatSelect, this, ID_CHOICE16);
+  Bind(wxEVT_COMMAND_CHOICE_SELECTED, &MathPlotConfigDialog::OnChoiceSeries, this, ID_CHOICE1);
+  Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotConfigDialog::OnbDelSeriesClick, this, ID_BUTTON11);
+  Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotConfigDialog::OnbColorClick, this, ID_BUTTON1);
+  Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotConfigDialog::OnbColorClick, this, ID_BUTTON2);
+  Bind(wxEVT_COMMAND_NOTEBOOK_PAGE_CHANGED, &MathPlotConfigDialog::OnnbConfigPageChanged, this, ID_NOTEBOOK1);
+  Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotConfigDialog::OnbApplyClick, this, ID_BUTTON3);
+  Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotConfigDialog::OnQuit, this, ID_BUTTON4);
   //*)
 
 #ifdef _WIN32
