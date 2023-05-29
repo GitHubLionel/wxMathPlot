@@ -7,10 +7,10 @@
 		<object class="wxBoxSizer" variable="sizerMain" member="yes">
 			<orient>wxVERTICAL</orient>
 			<object class="sizeritem">
-				<object class="wxNotebook" name="ID_NOTEBOOK1" variable="nbConfig" member="yes">
+				<object class="wxNotebook" name="" variable="nbConfig" member="yes">
 					<handler function="OnnbConfigPageChanged" entry="EVT_NOTEBOOK_PAGE_CHANGED" />
 					<object class="notebookpage">
-						<object class="wxPanel" name="ID_PANEL17" variable="Panel1" member="yes">
+						<object class="wxPanel" name="" variable="Panel1" member="yes">
 							<object class="wxBoxSizer" variable="BoxSizer3" member="no">
 								<orient>wxVERTICAL</orient>
 								<object class="sizeritem">
@@ -23,20 +23,20 @@
 												<rows>2</rows>
 												<growablecols>1</growablecols>
 												<object class="sizeritem">
-													<object class="wxStaticText" name="ID_STATICTEXT11" variable="StaticText11" member="yes">
+													<object class="wxStaticText" name="" variable="StaticText11" member="yes">
 														<label>Title :</label>
 													</object>
 													<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
 													<border>5</border>
 												</object>
 												<object class="sizeritem">
-													<object class="wxTextCtrl" name="ID_TEXTCTRL3" variable="edTitle" member="yes" />
+													<object class="wxTextCtrl" name="" variable="edTitle" member="yes" />
 													<flag>wxALL|wxEXPAND</flag>
 													<border>5</border>
 													<option>1</option>
 												</object>
 												<object class="sizeritem">
-													<object class="wxButton" name="ID_BUTTON5" variable="bFontTitle" member="yes">
+													<object class="wxButton" name="" variable="bFontTitle" member="yes">
 														<label>Font</label>
 														<size>64,-1</size>
 														<enabled>0</enabled>
@@ -46,7 +46,7 @@
 													<border>5</border>
 												</object>
 												<object class="sizeritem">
-													<object class="wxCheckBox" name="ID_CHECKBOX8" variable="cbTitleVisible" member="yes">
+													<object class="wxCheckBox" name="" variable="cbTitleVisible" member="yes">
 														<label>Visible</label>
 													</object>
 													<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
@@ -70,14 +70,14 @@
 												<cols>6</cols>
 												<rows>2</rows>
 												<object class="sizeritem">
-													<object class="wxStaticText" name="ID_STATICTEXT15" variable="StaticText15" member="yes">
+													<object class="wxStaticText" name="" variable="StaticText15" member="yes">
 														<label>Margins :</label>
 													</object>
 													<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
 													<border>5</border>
 												</object>
 												<object class="sizeritem">
-													<object class="wxTextCtrl" name="ID_TEXTCTRL4" variable="edMarginTop" member="yes">
+													<object class="wxTextCtrl" name="" variable="edMarginTop" member="yes">
 														<value>50</value>
 														<size>40,-1</size>
 														<validator>wxIntegerValidator&lt;unsigned int&gt; (&amp;int__top)</validator>
@@ -88,7 +88,7 @@
 													<border>2</border>
 												</object>
 												<object class="sizeritem">
-													<object class="wxTextCtrl" name="ID_TEXTCTRL5" variable="edMarginBottom" member="yes">
+													<object class="wxTextCtrl" name="" variable="edMarginBottom" member="yes">
 														<value>50</value>
 														<size>40,-1</size>
 														<validator>wxIntegerValidator&lt;unsigned int&gt; (&amp;int__bottom)</validator>
@@ -99,7 +99,7 @@
 													<border>2</border>
 												</object>
 												<object class="sizeritem">
-													<object class="wxTextCtrl" name="ID_TEXTCTRL6" variable="edMarginLeft" member="yes">
+													<object class="wxTextCtrl" name="" variable="edMarginLeft" member="yes">
 														<value>50</value>
 														<size>40,-1</size>
 														<validator>wxIntegerValidator&lt;unsigned int&gt; (&amp;int__left)</validator>
@@ -110,7 +110,7 @@
 													<border>2</border>
 												</object>
 												<object class="sizeritem">
-													<object class="wxTextCtrl" name="ID_TEXTCTRL7" variable="edMarginRight" member="yes">
+													<object class="wxTextCtrl" name="" variable="edMarginRight" member="yes">
 														<value>50</value>
 														<size>40,-1</size>
 														<validator>wxIntegerValidator&lt;unsigned int&gt; (&amp;int__right)</validator>
@@ -121,7 +121,7 @@
 													<border>2</border>
 												</object>
 												<object class="sizeritem">
-													<object class="wxButton" name="ID_BUTTON7" variable="bBGColor" member="yes">
+													<object class="wxButton" name="" variable="bBGColor" member="yes">
 														<label>bg color</label>
 														<handler function="OnbColorClick" entry="EVT_BUTTON" />
 													</object>
@@ -129,7 +129,7 @@
 													<border>5</border>
 												</object>
 												<object class="sizeritem">
-													<object class="wxCheckBox" name="ID_CHECKBOX5" variable="cbDrawBox" member="yes">
+													<object class="wxCheckBox" name="" variable="cbDrawBox" member="yes">
 														<label>Draw box</label>
 													</object>
 													<flag>wxALL|wxEXPAND</flag>
@@ -153,14 +153,14 @@
 												<object class="sizeritem">
 													<object class="wxBoxSizer" variable="BoxSizer12" member="no">
 														<object class="sizeritem">
-															<object class="wxStaticText" name="ID_STATICTEXT18" variable="StaticText18" member="yes">
+															<object class="wxStaticText" name="" variable="StaticText18" member="yes">
 																<label>Position :</label>
 															</object>
 															<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
 															<border>5</border>
 														</object>
 														<object class="sizeritem">
-															<object class="wxChoice" name="ID_CHOICE11" variable="cbCoord" member="yes">
+															<object class="wxChoice" name="" variable="cbCoord" member="yes">
 																<extra_code>cbCoord-&gt;Set(WXSIZEOF(cbCoord__choices), cbCoord__choices);&#x0A;cbCoord-&gt;SetSelection(0);</extra_code>
 															</object>
 															<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
@@ -171,14 +171,14 @@
 													<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
 												</object>
 												<object class="sizeritem">
-													<object class="wxCheckBox" name="ID_CHECKBOX10" variable="cbCoordVisible" member="yes">
+													<object class="wxCheckBox" name="" variable="cbCoordVisible" member="yes">
 														<label>Visible</label>
 													</object>
 													<flag>wxALL|wxEXPAND</flag>
 													<border>5</border>
 												</object>
 												<object class="sizeritem">
-													<object class="wxCheckBox" name="ID_CHECKBOX13" variable="cbCoordinates" member="yes">
+													<object class="wxCheckBox" name="" variable="cbCoordinates" member="yes">
 														<label>Series coordinates</label>
 														<tooltip>Shows the coordinates of the series closest to the mouse position</tooltip>
 													</object>
@@ -186,7 +186,7 @@
 													<border>5</border>
 												</object>
 												<object class="sizeritem">
-													<object class="wxCheckBox" name="ID_CHECKBOX16" variable="cbMagnetize" member="yes">
+													<object class="wxCheckBox" name="" variable="cbMagnetize" member="yes">
 														<label>Magnetize</label>
 													</object>
 													<flag>wxALL|wxEXPAND</flag>
@@ -205,7 +205,7 @@
 														<cols>2</cols>
 														<rows>2</rows>
 														<object class="sizeritem">
-															<object class="wxStaticText" name="ID_STATICTEXT22" variable="StaticText22" member="yes">
+															<object class="wxStaticText" name="" variable="StaticText22" member="yes">
 																<label>Color :</label>
 															</object>
 															<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
@@ -213,7 +213,7 @@
 															<option>1</option>
 														</object>
 														<object class="sizeritem">
-															<object class="wxButton" name="ID_BUTTON10" variable="bCoordBrushColor" member="yes">
+															<object class="wxButton" name="" variable="bCoordBrushColor" member="yes">
 																<handler function="OnbColorClick" entry="EVT_BUTTON" />
 															</object>
 															<flag>wxALL|wxEXPAND</flag>
@@ -221,7 +221,7 @@
 															<option>1</option>
 														</object>
 														<object class="sizeritem">
-															<object class="wxStaticText" name="ID_STATICTEXT23" variable="StaticText23" member="yes">
+															<object class="wxStaticText" name="" variable="StaticText23" member="yes">
 																<label>Style :</label>
 															</object>
 															<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
@@ -229,7 +229,7 @@
 															<option>1</option>
 														</object>
 														<object class="sizeritem">
-															<object class="wxChoice" name="ID_CHOICE13" variable="cbCoordBrushStyle" member="yes">
+															<object class="wxChoice" name="" variable="cbCoordBrushStyle" member="yes">
 																<extra_code>cbCoordBrushStyle-&gt;Set(WXSIZEOF(cbBrushStyle__choices), cbBrushStyle__choices);&#x0A;cbCoordBrushStyle-&gt;SetSelection(0);</extra_code>
 															</object>
 															<flag>wxALL|wxEXPAND</flag>
@@ -252,14 +252,14 @@
 						<label>General</label>
 					</object>
 					<object class="notebookpage">
-						<object class="wxPanel" name="ID_PANEL15" variable="Panel2" member="yes">
+						<object class="wxPanel" name="" variable="Panel2" member="yes">
 							<object class="wxBoxSizer" variable="BoxSizer16" member="no">
 								<object class="sizeritem">
 									<object class="wxFlexGridSizer" variable="FlexGridSizer6" member="no">
 										<cols>2</cols>
 										<rows>4</rows>
 										<object class="sizeritem">
-											<object class="wxStaticText" name="ID_STATICTEXT16" variable="StaticText16" member="yes">
+											<object class="wxStaticText" name="" variable="StaticText16" member="yes">
 												<label>Position :</label>
 											</object>
 											<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
@@ -267,7 +267,7 @@
 											<option>1</option>
 										</object>
 										<object class="sizeritem">
-											<object class="wxChoice" name="ID_CHOICE10" variable="cbLegendPosition" member="yes">
+											<object class="wxChoice" name="" variable="cbLegendPosition" member="yes">
 												<extra_code>cbLegendPosition-&gt;Set(WXSIZEOF(cbLegendPosition__choices), cbLegendPosition__choices);&#x0A;cbLegendPosition-&gt;SetSelection(0);</extra_code>
 											</object>
 											<flag>wxALL|wxEXPAND</flag>
@@ -275,7 +275,7 @@
 											<option>1</option>
 										</object>
 										<object class="sizeritem">
-											<object class="wxStaticText" name="ID_STATICTEXT24" variable="StaticText24" member="yes">
+											<object class="wxStaticText" name="" variable="StaticText24" member="yes">
 												<label>Style :</label>
 											</object>
 											<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
@@ -283,7 +283,7 @@
 											<option>1</option>
 										</object>
 										<object class="sizeritem">
-											<object class="wxChoice" name="ID_CHOICE14" variable="cbLegendStyle" member="yes">
+											<object class="wxChoice" name="" variable="cbLegendStyle" member="yes">
 												<extra_code>cbLegendStyle-&gt;Set(WXSIZEOF(cbLegendStyle__choices), cbLegendStyle__choices);&#x0A;cbLegendStyle-&gt;SetSelection(0);</extra_code>
 											</object>
 											<flag>wxALL|wxEXPAND</flag>
@@ -291,7 +291,7 @@
 											<option>1</option>
 										</object>
 										<object class="sizeritem">
-											<object class="wxStaticText" name="ID_STATICTEXT25" variable="StaticText25" member="yes">
+											<object class="wxStaticText" name="" variable="StaticText25" member="yes">
 												<label>Direction :</label>
 											</object>
 											<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
@@ -299,7 +299,7 @@
 											<option>1</option>
 										</object>
 										<object class="sizeritem">
-											<object class="wxChoice" name="ID_CHOICE15" variable="cbLegendDirection" member="yes">
+											<object class="wxChoice" name="" variable="cbLegendDirection" member="yes">
 												<extra_code>cbLegendDirection-&gt;Set(WXSIZEOF(cbLegendDirection__choices), cbLegendDirection__choices);&#x0A;cbLegendDirection-&gt;SetSelection(0);</extra_code>
 											</object>
 											<flag>wxALL|wxEXPAND</flag>
@@ -307,7 +307,7 @@
 											<option>1</option>
 										</object>
 										<object class="sizeritem">
-											<object class="wxCheckBox" name="ID_CHECKBOX9" variable="cbLegendVisible" member="yes">
+											<object class="wxCheckBox" name="" variable="cbLegendVisible" member="yes">
 												<label>Visible</label>
 											</object>
 											<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
@@ -323,7 +323,7 @@
 									<object class="wxBoxSizer" variable="BoxSizer15" member="no">
 										<orient>wxVERTICAL</orient>
 										<object class="sizeritem">
-											<object class="wxButton" name="ID_BUTTON12" variable="bFontLegend" member="yes">
+											<object class="wxButton" name="" variable="bFontLegend" member="yes">
 												<label>Font</label>
 												<enabled>0</enabled>
 												<handler function="OnbFontClick" entry="EVT_BUTTON" />
@@ -339,7 +339,7 @@
 														<cols>2</cols>
 														<rows>2</rows>
 														<object class="sizeritem">
-															<object class="wxStaticText" name="ID_STATICTEXT20" variable="StaticText20" member="yes">
+															<object class="wxStaticText" name="" variable="StaticText20" member="yes">
 																<label>Color :</label>
 															</object>
 															<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
@@ -347,7 +347,7 @@
 															<option>1</option>
 														</object>
 														<object class="sizeritem">
-															<object class="wxButton" name="ID_BUTTON9" variable="bLegendBrushColor" member="yes">
+															<object class="wxButton" name="" variable="bLegendBrushColor" member="yes">
 																<handler function="OnbColorClick" entry="EVT_BUTTON" />
 															</object>
 															<flag>wxALL|wxEXPAND</flag>
@@ -355,7 +355,7 @@
 															<option>1</option>
 														</object>
 														<object class="sizeritem">
-															<object class="wxStaticText" name="ID_STATICTEXT21" variable="StaticText21" member="yes">
+															<object class="wxStaticText" name="" variable="StaticText21" member="yes">
 																<label>Style :</label>
 															</object>
 															<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
@@ -363,7 +363,7 @@
 															<option>1</option>
 														</object>
 														<object class="sizeritem">
-															<object class="wxChoice" name="ID_CHOICE12" variable="cbLegendBrushStyle" member="yes">
+															<object class="wxChoice" name="" variable="cbLegendBrushStyle" member="yes">
 																<extra_code>cbLegendBrushStyle-&gt;Set(WXSIZEOF(cbBrushStyle__choices), cbBrushStyle__choices); // reused&#x0A;cbLegendBrushStyle-&gt;SetSelection(0);</extra_code>
 															</object>
 															<flag>wxALL|wxEXPAND</flag>
@@ -387,11 +387,11 @@
 						<label>Legend</label>
 					</object>
 					<object class="notebookpage">
-						<object class="wxPanel" name="ID_PANEL1" variable="Panel3" member="yes">
+						<object class="wxPanel" name="" variable="Panel3" member="yes">
 							<object class="wxBoxSizer" variable="BoxSizer4" member="no">
 								<orient>wxVERTICAL</orient>
 								<object class="sizeritem">
-									<object class="wxChoice" name="ID_CHOICE7" variable="ChoiceAxis" member="yes">
+									<object class="wxChoice" name="" variable="ChoiceAxis" member="yes">
 										<extra_code>ChoiceAxis-&gt;Set(WXSIZEOF(ChoiceAxis__choices), ChoiceAxis__choices);&#x0A;ChoiceAxis-&gt;SetSelection(0);</extra_code>
 										<handler function="OnAxisSelect" entry="EVT_CHOICE" />
 									</object>
@@ -404,7 +404,7 @@
 										<rows>1</rows>
 										<growablecols>1</growablecols>
 										<object class="sizeritem">
-											<object class="wxStaticText" name="ID_STATICTEXT8" variable="StaticText8" member="yes">
+											<object class="wxStaticText" name="" variable="StaticText8" member="yes">
 												<label>Name :</label>
 											</object>
 											<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
@@ -412,12 +412,12 @@
 											<option>1</option>
 										</object>
 										<object class="sizeritem">
-											<object class="wxTextCtrl" name="ID_TEXTCTRL2" variable="edAxisName" member="yes" />
+											<object class="wxTextCtrl" name="" variable="edAxisName" member="yes" />
 											<flag>wxALL|wxEXPAND</flag>
 											<border>5</border>
 										</object>
 										<object class="sizeritem">
-											<object class="wxButton" name="ID_BUTTON8" variable="bFontAxis" member="yes">
+											<object class="wxButton" name="" variable="bFontAxis" member="yes">
 												<label>Font</label>
 												<size>64,-1</size>
 												<enabled>0</enabled>
@@ -444,7 +444,7 @@
 																<cols>2</cols>
 																<rows>3</rows>
 																<object class="sizeritem">
-																	<object class="wxStaticText" name="ID_STATICTEXT12" variable="StaticText12" member="yes">
+																	<object class="wxStaticText" name="" variable="StaticText12" member="yes">
 																		<label>Color :</label>
 																	</object>
 																	<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
@@ -452,7 +452,7 @@
 																	<option>1</option>
 																</object>
 																<object class="sizeritem">
-																	<object class="wxButton" name="ID_BUTTON6" variable="bAxisPenColor" member="yes">
+																	<object class="wxButton" name="" variable="bAxisPenColor" member="yes">
 																		<handler function="OnbColorClick" entry="EVT_BUTTON" />
 																	</object>
 																	<flag>wxALL|wxEXPAND</flag>
@@ -460,7 +460,7 @@
 																	<option>1</option>
 																</object>
 																<object class="sizeritem">
-																	<object class="wxStaticText" name="ID_STATICTEXT13" variable="StaticText13" member="yes">
+																	<object class="wxStaticText" name="" variable="StaticText13" member="yes">
 																		<label>Width :</label>
 																	</object>
 																	<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
@@ -468,7 +468,7 @@
 																	<option>1</option>
 																</object>
 																<object class="sizeritem">
-																	<object class="wxChoice" name="ID_CHOICE8" variable="cbAxisPenWidth" member="yes">
+																	<object class="wxChoice" name="" variable="cbAxisPenWidth" member="yes">
 																		<extra_code>cbAxisPenWidth-&gt;Set(WXSIZEOF(cbPenWidth__choices), cbPenWidth__choices);&#x0A;cbAxisPenWidth-&gt;SetSelection(0);</extra_code>
 																	</object>
 																	<flag>wxALL|wxEXPAND</flag>
@@ -476,7 +476,7 @@
 																	<option>1</option>
 																</object>
 																<object class="sizeritem">
-																	<object class="wxStaticText" name="ID_STATICTEXT14" variable="StaticText14" member="yes">
+																	<object class="wxStaticText" name="" variable="StaticText14" member="yes">
 																		<label>Style :</label>
 																	</object>
 																	<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
@@ -484,7 +484,7 @@
 																	<option>1</option>
 																</object>
 																<object class="sizeritem">
-																	<object class="wxChoice" name="ID_CHOICE9" variable="cbAxisPenStyle" member="yes">
+																	<object class="wxChoice" name="" variable="cbAxisPenStyle" member="yes">
 																		<extra_code>cbAxisPenStyle-&gt;Set(WXSIZEOF(cbPenStyle__choices), cbPenStyle__choices);&#x0A;cbAxisPenStyle-&gt;SetSelection(0);</extra_code>
 																	</object>
 																	<flag>wxALL|wxEXPAND</flag>
@@ -506,7 +506,7 @@
 																<cols>2</cols>
 																<rows>3</rows>
 																<object class="sizeritem">
-																	<object class="wxCheckBox" name="ID_CHECKBOX11" variable="cbAutoScale" member="yes">
+																	<object class="wxCheckBox" name="" variable="cbAutoScale" member="yes">
 																		<label>Auto</label>
 																		<checked>1</checked>
 																		<handler function="OncbAutoScaleClick" entry="EVT_CHECKBOX" />
@@ -521,7 +521,7 @@
 																	<option>1</option>
 																</object>
 																<object class="sizeritem">
-																	<object class="wxStaticText" name="ID_STATICTEXT27" variable="StaticText27" member="yes">
+																	<object class="wxStaticText" name="" variable="StaticText27" member="yes">
 																		<label>Min :</label>
 																	</object>
 																	<flag>wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL</flag>
@@ -529,7 +529,7 @@
 																	<option>1</option>
 																</object>
 																<object class="sizeritem">
-																	<object class="wxTextCtrl" name="ID_TEXTCTRL9" variable="edScaleMin" member="yes">
+																	<object class="wxTextCtrl" name="" variable="edScaleMin" member="yes">
 																		<value>-1</value>
 																		<size>64,-1</size>
 																		<validator>wxFloatingPointValidator&lt;double&gt; (2, &amp;scale__min)</validator>
@@ -541,7 +541,7 @@
 																	<option>1</option>
 																</object>
 																<object class="sizeritem">
-																	<object class="wxStaticText" name="ID_STATICTEXT28" variable="StaticText28" member="yes">
+																	<object class="wxStaticText" name="" variable="StaticText28" member="yes">
 																		<label>Max :</label>
 																	</object>
 																	<flag>wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL</flag>
@@ -549,7 +549,7 @@
 																	<option>1</option>
 																</object>
 																<object class="sizeritem">
-																	<object class="wxTextCtrl" name="ID_TEXTCTRL10" variable="edScaleMax" member="yes">
+																	<object class="wxTextCtrl" name="" variable="edScaleMax" member="yes">
 																		<value>1</value>
 																		<size>64,-1</size>
 																		<validator>wxFloatingPointValidator&lt;double&gt; (2, &amp;scale__max)</validator>
@@ -577,14 +577,14 @@
 												<object class="sizeritem">
 													<object class="wxBoxSizer" variable="BoxSizer13" member="no">
 														<object class="sizeritem">
-															<object class="wxStaticText" name="ID_STATICTEXT17" variable="StaticText17" member="yes">
+															<object class="wxStaticText" name="" variable="StaticText17" member="yes">
 																<label>Position :</label>
 															</object>
 															<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
 															<border>5</border>
 														</object>
 														<object class="sizeritem">
-															<object class="wxChoice" name="ID_CHOICE6" variable="cbAxisPosition" member="yes" />
+															<object class="wxChoice" name="" variable="cbAxisPosition" member="yes" />
 															<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
 															<border>5</border>
 															<option>1</option>
@@ -593,14 +593,14 @@
 													<flag>wxALL|wxALIGN_LEFT</flag>
 												</object>
 												<object class="sizeritem">
-													<object class="wxCheckBox" name="ID_CHECKBOX4" variable="cbAxisVisible" member="yes">
+													<object class="wxCheckBox" name="" variable="cbAxisVisible" member="yes">
 														<label>Visible</label>
 													</object>
 													<flag>wxALL|wxALIGN_LEFT</flag>
 													<border>5</border>
 												</object>
 												<object class="sizeritem">
-													<object class="wxCheckBox" name="ID_CHECKBOX7" variable="cbAxisOutside" member="yes">
+													<object class="wxCheckBox" name="" variable="cbAxisOutside" member="yes">
 														<label>Draw Outside Margins</label>
 													</object>
 													<flag>wxALL|wxALIGN_LEFT</flag>
@@ -609,14 +609,14 @@
 												<object class="sizeritem">
 													<object class="wxBoxSizer" variable="BoxSizer14" member="no">
 														<object class="sizeritem">
-															<object class="wxStaticText" name="ID_STATICTEXT29" variable="StaticText29" member="yes">
+															<object class="wxStaticText" name="" variable="StaticText29" member="yes">
 																<label>Format :</label>
 															</object>
 															<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
 															<border>5</border>
 														</object>
 														<object class="sizeritem">
-															<object class="wxChoice" name="ID_CHOICE16" variable="cbFormat" member="yes">
+															<object class="wxChoice" name="" variable="cbFormat" member="yes">
 																<extra_code>cbFormat-&gt;Set(WXSIZEOF(cbFormat__choices), cbFormat__choices);&#x0A;cbFormat-&gt;SetSelection(0);</extra_code>
 																<handler function="OncbFormatSelect" entry="EVT_CHOICE" />
 															</object>
@@ -632,7 +632,7 @@
 														<cols>2</cols>
 														<rows>1</rows>
 														<object class="sizeritem">
-															<object class="wxStaticText" name="ID_STATICTEXT26" variable="StaticText26" member="yes">
+															<object class="wxStaticText" name="" variable="StaticText26" member="yes">
 																<label>User Label Format :</label>
 																<pos>192,200</pos>
 															</object>
@@ -641,7 +641,7 @@
 															<option>1</option>
 														</object>
 														<object class="sizeritem">
-															<object class="wxTextCtrl" name="ID_TEXTCTRL8" variable="edFormat" member="yes">
+															<object class="wxTextCtrl" name="" variable="edFormat" member="yes">
 																<size>60,-1</size>
 																<enabled>0</enabled>
 																<tooltip>Format of the label for the axis. Should be like c++ format.</tooltip>
@@ -655,7 +655,7 @@
 													<option>1</option>
 												</object>
 												<object class="sizeritem">
-													<object class="wxCheckBox" name="ID_CHECKBOX15" variable="cbLogAxis" member="yes">
+													<object class="wxCheckBox" name="" variable="cbLogAxis" member="yes">
 														<label>Logarithmic axis</label>
 													</object>
 													<flag>wxALL|wxEXPAND</flag>
@@ -673,7 +673,7 @@
 						<label>Axis</label>
 					</object>
 					<object class="notebookpage">
-						<object class="wxPanel" name="ID_PANEL4" variable="Panel4" member="yes">
+						<object class="wxPanel" name="" variable="Panel4" member="yes">
 							<object class="wxBoxSizer" variable="BoxSizer8" member="no">
 								<orient>wxVERTICAL</orient>
 								<object class="sizeritem">
@@ -682,7 +682,7 @@
 										<rows>1</rows>
 										<growablecols>1</growablecols>
 										<object class="sizeritem">
-											<object class="wxStaticText" name="ID_STATICTEXT1" variable="StaticText1" member="yes">
+											<object class="wxStaticText" name="" variable="StaticText1" member="yes">
 												<label>Series name :</label>
 											</object>
 											<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
@@ -690,7 +690,7 @@
 											<option>1</option>
 										</object>
 										<object class="sizeritem">
-											<object class="wxChoice" name="ID_CHOICE1" variable="ChoiceSeries" member="yes">
+											<object class="wxChoice" name="" variable="ChoiceSeries" member="yes">
 												<handler function="OnChoiceSeries" entry="EVT_CHOICE" />
 											</object>
 											<flag>wxALL|wxEXPAND</flag>
@@ -698,7 +698,7 @@
 											<option>1</option>
 										</object>
 										<object class="sizeritem">
-											<object class="wxButton" name="ID_BUTTON11" variable="bDelSeries" member="yes">
+											<object class="wxButton" name="" variable="bDelSeries" member="yes">
 												<label>Delete</label>
 												<enabled>0</enabled>
 												<handler function="OnbDelSeriesClick" entry="EVT_BUTTON" />
@@ -717,7 +717,7 @@
 										<rows>1</rows>
 										<growablecols>1</growablecols>
 										<object class="sizeritem">
-											<object class="wxStaticText" name="ID_STATICTEXT2" variable="StaticText2" member="yes">
+											<object class="wxStaticText" name="" variable="StaticText2" member="yes">
 												<label>Name :</label>
 											</object>
 											<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
@@ -725,7 +725,7 @@
 											<option>1</option>
 										</object>
 										<object class="sizeritem">
-											<object class="wxTextCtrl" name="ID_TEXTCTRL1" variable="edSeriesName" member="yes" />
+											<object class="wxTextCtrl" name="" variable="edSeriesName" member="yes" />
 											<flag>wxALL|wxEXPAND</flag>
 											<border>5</border>
 											<option>1</option>
@@ -749,7 +749,7 @@
 																<cols>2</cols>
 																<rows>3</rows>
 																<object class="sizeritem">
-																	<object class="wxStaticText" name="ID_STATICTEXT3" variable="StaticText3" member="yes">
+																	<object class="wxStaticText" name="" variable="StaticText3" member="yes">
 																		<label>Color :</label>
 																	</object>
 																	<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
@@ -757,7 +757,7 @@
 																	<option>1</option>
 																</object>
 																<object class="sizeritem">
-																	<object class="wxButton" name="ID_BUTTON1" variable="bSeriesPenColor" member="yes">
+																	<object class="wxButton" name="" variable="bSeriesPenColor" member="yes">
 																		<handler function="OnbColorClick" entry="EVT_BUTTON" />
 																	</object>
 																	<flag>wxALL|wxEXPAND</flag>
@@ -765,7 +765,7 @@
 																	<option>1</option>
 																</object>
 																<object class="sizeritem">
-																	<object class="wxStaticText" name="ID_STATICTEXT4" variable="StaticText4" member="yes">
+																	<object class="wxStaticText" name="" variable="StaticText4" member="yes">
 																		<label>Width :</label>
 																	</object>
 																	<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
@@ -773,7 +773,7 @@
 																	<option>1</option>
 																</object>
 																<object class="sizeritem">
-																	<object class="wxChoice" name="ID_CHOICE2" variable="cbSeriesPenWidth" member="yes">
+																	<object class="wxChoice" name="" variable="cbSeriesPenWidth" member="yes">
 																		<extra_code>cbSeriesPenWidth-&gt;Set(WXSIZEOF(cbPenWidth__choices), cbPenWidth__choices); // reused&#x0A;cbSeriesPenWidth-&gt;SetSelection(0);</extra_code>
 																	</object>
 																	<flag>wxALL|wxEXPAND</flag>
@@ -781,7 +781,7 @@
 																	<option>1</option>
 																</object>
 																<object class="sizeritem">
-																	<object class="wxStaticText" name="ID_STATICTEXT5" variable="StaticText5" member="yes">
+																	<object class="wxStaticText" name="" variable="StaticText5" member="yes">
 																		<label>Style :</label>
 																	</object>
 																	<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
@@ -789,7 +789,7 @@
 																	<option>1</option>
 																</object>
 																<object class="sizeritem">
-																	<object class="wxChoice" name="ID_CHOICE3" variable="cbSeriesPenStyle" member="yes">
+																	<object class="wxChoice" name="" variable="cbSeriesPenStyle" member="yes">
 																		<extra_code>cbSeriesPenStyle-&gt;Set(WXSIZEOF(cbPenStyle__choices), cbPenStyle__choices); // reused&#x0A;cbSeriesPenStyle-&gt;SetSelection(0);</extra_code>
 																	</object>
 																	<flag>wxALL|wxEXPAND</flag>
@@ -807,7 +807,7 @@
 													<object class="wxBoxSizer" variable="BoxSizer11" member="no">
 														<orient>wxVERTICAL</orient>
 														<object class="sizeritem">
-															<object class="wxCheckBox" name="ID_CHECKBOX1" variable="cbSeriesVisible" member="yes">
+															<object class="wxCheckBox" name="" variable="cbSeriesVisible" member="yes">
 																<label>Visible</label>
 															</object>
 															<flag>wxALL|wxALIGN_LEFT</flag>
@@ -815,7 +815,7 @@
 															<option>1</option>
 														</object>
 														<object class="sizeritem">
-															<object class="wxCheckBox" name="ID_CHECKBOX2" variable="cbSeriesContinuity" member="yes">
+															<object class="wxCheckBox" name="" variable="cbSeriesContinuity" member="yes">
 																<label>Continuity</label>
 															</object>
 															<flag>wxALL|wxALIGN_LEFT</flag>
@@ -823,7 +823,7 @@
 															<option>1</option>
 														</object>
 														<object class="sizeritem">
-															<object class="wxCheckBox" name="ID_CHECKBOX3" variable="cbSeriesOutside" member="yes">
+															<object class="wxCheckBox" name="" variable="cbSeriesOutside" member="yes">
 																<label>Draw Outside Margins</label>
 															</object>
 															<flag>wxALL|wxALIGN_LEFT</flag>
@@ -831,7 +831,7 @@
 															<option>1</option>
 														</object>
 														<object class="sizeritem">
-															<object class="wxCheckBox" name="ID_CHECKBOX6" variable="cbSeriesShowName" member="yes">
+															<object class="wxCheckBox" name="" variable="cbSeriesShowName" member="yes">
 																<label>Show name</label>
 															</object>
 															<flag>wxALL|wxALIGN_LEFT</flag>
@@ -839,7 +839,7 @@
 															<option>1</option>
 														</object>
 														<object class="sizeritem">
-															<object class="wxCheckBox" name="ID_CHECKBOX14" variable="cbTractable" member="yes">
+															<object class="wxCheckBox" name="" variable="cbTractable" member="yes">
 																<label>Tractable</label>
 																<tooltip>Allow mouse coordinates</tooltip>
 															</object>
@@ -866,7 +866,7 @@
 																<cols>2</cols>
 																<rows>2</rows>
 																<object class="sizeritem">
-																	<object class="wxStaticText" name="ID_STATICTEXT6" variable="StaticText6" member="yes">
+																	<object class="wxStaticText" name="" variable="StaticText6" member="yes">
 																		<label>Color :</label>
 																	</object>
 																	<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
@@ -874,7 +874,7 @@
 																	<option>1</option>
 																</object>
 																<object class="sizeritem">
-																	<object class="wxButton" name="ID_BUTTON2" variable="bSeriesBrushColor" member="yes">
+																	<object class="wxButton" name="" variable="bSeriesBrushColor" member="yes">
 																		<handler function="OnbColorClick" entry="EVT_BUTTON" />
 																	</object>
 																	<flag>wxALL|wxEXPAND</flag>
@@ -882,7 +882,7 @@
 																	<option>1</option>
 																</object>
 																<object class="sizeritem">
-																	<object class="wxStaticText" name="ID_STATICTEXT7" variable="StaticText7" member="yes">
+																	<object class="wxStaticText" name="" variable="StaticText7" member="yes">
 																		<label>Style :</label>
 																	</object>
 																	<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
@@ -890,7 +890,7 @@
 																	<option>1</option>
 																</object>
 																<object class="sizeritem">
-																	<object class="wxChoice" name="ID_CHOICE4" variable="cbSeriesBrushStyle" member="yes">
+																	<object class="wxChoice" name="" variable="cbSeriesBrushStyle" member="yes">
 																		<extra_code>cbSeriesBrushStyle-&gt;Set(WXSIZEOF(cbSeriesBrushStyle__choices), cbSeriesBrushStyle__choices);&#x0A;cbSeriesBrushStyle-&gt;SetSelection(0);</extra_code>
 																	</object>
 																	<flag>wxALL|wxEXPAND</flag>
@@ -912,7 +912,7 @@
 																<cols>2</cols>
 																<rows>2</rows>
 																<object class="sizeritem">
-																	<object class="wxStaticText" name="ID_STATICTEXT9" variable="StaticText9" member="yes">
+																	<object class="wxStaticText" name="" variable="StaticText9" member="yes">
 																		<label>Type :</label>
 																	</object>
 																	<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
@@ -920,7 +920,7 @@
 																	<option>1</option>
 																</object>
 																<object class="sizeritem">
-																	<object class="wxChoice" name="ID_CHOICE5" variable="cbSeriesSymbolType" member="yes">
+																	<object class="wxChoice" name="" variable="cbSeriesSymbolType" member="yes">
 																		<extra_code>cbSeriesSymbolType-&gt;Set(WXSIZEOF(cbSeriesSymbolType__choices), cbSeriesSymbolType__choices);&#x0A;cbSeriesSymbolType-&gt;SetSelection(0);</extra_code>
 																	</object>
 																	<flag>wxALL|wxEXPAND</flag>
@@ -928,7 +928,7 @@
 																	<option>1</option>
 																</object>
 																<object class="sizeritem">
-																	<object class="wxStaticText" name="ID_STATICTEXT10" variable="StaticText10" member="yes">
+																	<object class="wxStaticText" name="" variable="StaticText10" member="yes">
 																		<label>Size :</label>
 																	</object>
 																	<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
@@ -936,7 +936,7 @@
 																	<option>1</option>
 																</object>
 																<object class="sizeritem">
-																	<object class="wxSpinCtrl" name="ID_SPINCTRL2" variable="cbSeriesSymbolSize" member="yes">
+																	<object class="wxSpinCtrl" name="" variable="cbSeriesSymbolSize" member="yes">
 																		<value>4</value>
 																		<min>4</min>
 																	</object>
@@ -956,7 +956,7 @@
 														<cols>2</cols>
 														<rows>1</rows>
 														<object class="sizeritem">
-															<object class="wxStaticText" name="ID_STATICTEXT19" variable="StaticText19" member="yes">
+															<object class="wxStaticText" name="" variable="StaticText19" member="yes">
 																<label>Skip point over :</label>
 															</object>
 															<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
@@ -964,7 +964,7 @@
 															<option>1</option>
 														</object>
 														<object class="sizeritem">
-															<object class="wxSpinCtrl" name="ID_SPINCTRL1" variable="cbSeriesStep" member="yes">
+															<object class="wxSpinCtrl" name="" variable="cbSeriesStep" member="yes">
 																<value>1</value>
 																<min>1</min>
 															</object>
@@ -977,7 +977,7 @@
 													<border>5</border>
 												</object>
 												<object class="sizeritem">
-													<object class="wxCheckBox" name="ID_CHECKBOX12" variable="cbBar" member="yes">
+													<object class="wxCheckBox" name="" variable="cbBar" member="yes">
 														<label>View as bar</label>
 														<enabled>0</enabled>
 													</object>
@@ -1006,7 +1006,7 @@
 			<object class="sizeritem">
 				<object class="wxBoxSizer" variable="BoxSizer2" member="yes">
 					<object class="sizeritem">
-						<object class="wxButton" name="ID_BUTTON3" variable="bApply" member="yes">
+						<object class="wxButton" name="" variable="bApply" member="yes">
 							<label>Apply</label>
 							<handler function="OnbApplyClick" entry="EVT_BUTTON" />
 						</object>
@@ -1015,7 +1015,7 @@
 						<option>1</option>
 					</object>
 					<object class="sizeritem">
-						<object class="wxButton" name="ID_BUTTON4" variable="bClose" member="yes">
+						<object class="wxButton" name="" variable="bClose" member="yes">
 							<label>Close</label>
 							<handler function="OnQuit" entry="EVT_BUTTON" />
 						</object>
