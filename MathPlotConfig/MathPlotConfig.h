@@ -1,6 +1,3 @@
-#ifndef HEADER_E1D3326BF670B452
-#define HEADER_E1D3326BF670B452
-
 /***************************************************************
  * Name:      MathPlotConfig.h
  * Purpose:   Defines Application Frame
@@ -197,5 +194,4 @@ class MathPlotConfigDialog: public wxDialog
 } // MathPlot namespace
 
 #endif // MATHPLOTCONFIGMAIN_H
-#endif // header guard 
 
