@@ -6,7 +6,7 @@
 // Contributors:    Jose Luis Blanco, Val Greene, Lionel Reynaud
 // Created:         21/07/2003
 // Last edit:       22/02/2009
-// Last edit:       23/05/2023
+// Last edit:       16/06/2023
 // Copyright:       (c) David Schalig, Davide Rondini
 // Licence:         wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -539,6 +539,9 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
      @param brush brush, will be copied to internal class member  */
     void SetBrush(const wxBrush &brush)
     {
+      if (brush == wxNullBrush)
+        m_brush = *wxTRANSPARENT_BRUSH;
+      else
       m_brush = brush;
     }
 
@@ -2325,6 +2328,9 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 
     wxOnDeleteLayer m_OnDeleteLayer = NULL;        //!< Event when we delete a layer
 
+  private:
+    void FillI18NString();
+
   DECLARE_DYNAMIC_CLASS(mpWindow)DECLARE_EVENT_TABLE()
 
     // To have direct access to m_Screenshot_dc
@@ -2928,6 +2934,7 @@ class WXDLLIMPEXP_MATHPLOT mpBitmapLayer: public mpLayer
       m_min_x = m_max_x = 0;
       m_min_y = m_max_y = 0;
       m_validImg = false;
+      m_bitmapChanged = false;
       m_scaledBitmap_offset_x = m_scaledBitmap_offset_y = 0;
     }
 
@@ -2992,6 +2999,7 @@ class WXDLLIMPEXP_MATHPLOT mpBitmapLayer: public mpLayer
     wxBitmap m_scaledBitmap;
     wxCoord m_scaledBitmap_offset_x, m_scaledBitmap_offset_y;
     bool m_validImg;
+    bool m_bitmapChanged;
 
     /** The shape of the bitmap:
      */

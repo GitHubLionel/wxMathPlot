@@ -6,7 +6,7 @@
 // Contributors:    Jose Luis Blanco, Val Greene, Lionel Reynaud
 // Created:         21/07/2003
 // Last edit:       09/09/2007
-// Last edit:       23/05/2023
+// Last edit:       16/06/2023
 // Copyright:       (c) David Schalig, Davide Rondini
 // Licence:         wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -75,34 +75,51 @@
 #include "Images/Zoom_out.h"
 #endif
 
-const wxString Popup_string[][2] = {
-    {_("Fit"), _("Set plot view to show all items")},
-    {_("Zoom in"), _("Zoom in plot view.")},
-    {_("Zoom out"), _("Zoom out plot view.")},
-    {_("Center to this position"), _("Center plot view to this position")},
-    {_("Lock aspect"), _("Lock horizontal and vertical zoom aspect.")},
-    {_("Toggle grids"), _("Show/Hide grids")},
-    {_("Toggle info coords"), _("Show/Hide info coordinates")},
-    {_("Screen shot"), _("Copy a screen shot to the clipboard")},
-    {_("Configuration"), _("Plot configuration")},
-    {_("Load file"), _("Load data file")},
-    {_("Show mouse commands..."), _("Show help about the mouse commands.")},
-    {_("Toggle fullscreen"), _("Toggle fullscreen.")}
-};
+wxString Popup_string[mpID_FULLSCREEN - mpID_FIT + 1][2] = {_T("")};
 
 // List of string message used
-const wxString MESS_HELP0 = _("wxMathPlot help");
-const wxString MESS_HELP1 = _("Supported Mouse commands:");
-const wxString MESS_HELP2 = _(" - Left button down + Mark area: Rectangular zoom");
-const wxString MESS_HELP3 = _(" - Right button down + Move: Pan (Move)");
-const wxString MESS_HELP4 = _(" - Wheel: Zoom in/out");
-const wxString MESS_HELP5 = _(" - Wheel + SHIFT: Horizontal scroll");
-const wxString MESS_HELP6 = _(" - Wheel + CTRL: Vertical scroll");
+wxString MESS_HELP0 = _T("");
+wxString MESS_HELP1 = _T("");
+wxString MESS_HELP2 = _T("");
+wxString MESS_HELP3 = _T("");
+wxString MESS_HELP4 = _T("");
+wxString MESS_HELP5 = _T("");
+wxString MESS_HELP6 = _T("");
 
-const wxString MESS_LOAD = _("Select file");
-const wxString MESS_WILDCARD = _("Data files (*.dat)|*.dat|Csv files (csv.*)|csv.*|All files (*.*)|*.*");
+wxString MESS_LOAD = _T("");
+wxString MESS_WILDCARD = _T("");
 
-const wxString MESS_CLIPFAIL = _("Failed to copy image to clipboard");
+wxString MESS_CLIPFAIL = _T("");
+
+void mpWindow::FillI18NString()
+{
+  Popup_string[0][0] = _("Fit");                     Popup_string[0][1] = _("Set plot view to show all items");
+  Popup_string[1][0] = _("Zoom in");                 Popup_string[1][1] = _("Zoom in plot view.");
+  Popup_string[2][0] = _("Zoom out");                Popup_string[2][1] = _("Zoom out plot view.");
+  Popup_string[3][0] = _("Center to this position"); Popup_string[3][1] = _("Center plot view to this position");
+  Popup_string[4][0] = _("Lock aspect");             Popup_string[4][1] = _("Lock horizontal and vertical zoom aspect.");
+  Popup_string[5][0] = _("Toggle grids");            Popup_string[5][1] = _("Show/Hide grids");
+  Popup_string[6][0] = _("Toggle info coords");      Popup_string[6][1] = _("Show/Hide info coordinates");
+  Popup_string[7][0] = _("Screen shot");             Popup_string[7][1] = _("Copy a screen shot to the clipboard");
+  Popup_string[8][0] = _("Configuration");           Popup_string[8][1] = _("Plot configuration");
+  Popup_string[9][0] = _("Load file");               Popup_string[9][1] = _("Load data file");
+  Popup_string[10][0] = _("Show mouse commands..."); Popup_string[10][1] = _("Show help about the mouse commands.");
+  Popup_string[11][0] = _("Toggle fullscreen");      Popup_string[11][1] = _("Toggle fullscreen.");
+
+  // List of string message used
+  MESS_HELP0 = _("wxMathPlot help");
+  MESS_HELP1 = _("Supported Mouse commands:");
+  MESS_HELP2 = _(" - Left button down + Mark area: Rectangular zoom");
+  MESS_HELP3 = _(" - Right button down + Move: Pan (Move)");
+  MESS_HELP4 = _(" - Wheel: Zoom in/out");
+  MESS_HELP5 = _(" - Wheel + SHIFT: Horizontal scroll");
+  MESS_HELP6 = _(" - Wheel + CTRL: Vertical scroll");
+
+  MESS_LOAD = _("Select file");
+  MESS_WILDCARD = _("Data files (*.dat)|*.dat|Csv files (csv.*)|csv.*|All files (*.*)|*.*");
+
+  MESS_CLIPFAIL = _("Failed to copy image to clipboard");
+}
 
 // Memory leak debugging
 #ifdef _DEBUG
@@ -1881,6 +1898,9 @@ END_EVENT_TABLE()
 mpWindow::mpWindow(wxWindow *parent, wxWindowID id, const wxPoint &pos, const wxSize &size, long flag) :
     wxWindow(parent, id, pos, size, flag, _T("Mathplot"))
 {
+  // Fill i18n string
+  FillI18NString();
+
   // Search the top parent
   wxWindow* pWin = parent;
   while (true)
@@ -2758,16 +2778,14 @@ void mpWindow::OnPaint(wxPaintEvent &WXUNUSED(event))
   // Draw background
   // Clean the screen
   trgDc->Clear();
-  trgDc->SetPen(*wxTRANSPARENT_PEN);
-  trgDc->SetBrush(*wxWHITE_BRUSH);
-  trgDc->DrawRectangle(0, 0, m_scrX, m_scrY);
-
   if (m_drawBox)
-  {
     trgDc->SetPen(*wxBLACK);
+  else
+    trgDc->SetPen(*wxTRANSPARENT_PEN);
+  trgDc->SetBrush(*wxWHITE_BRUSH);
     trgDc->DrawRectangle(0, 0, m_scrX, m_scrY);
-  }
 
+  // Draw background plot area
   trgDc->SetBrush(m_bgColour);
   trgDc->SetTextForeground(m_fgColour);
   trgDc->DrawRectangle(m_margin.left, m_margin.top, m_plotWidth, m_plotHeight);
@@ -3418,15 +3436,12 @@ wxBitmap* mpWindow::BitmapScreenshot(wxSize imageSize, bool fit)
   m_Screenshot_dc.SelectObject(*m_Screenshot_bmp);
 
   // Clean the screen
-  m_Screenshot_dc.SetPen(*wxTRANSPARENT_PEN);
-  m_Screenshot_dc.SetBrush(*wxWHITE_BRUSH);
-  m_Screenshot_dc.DrawRectangle(0, 0, m_scrX, m_scrY);
-
   if (m_drawBox)
-  {
     m_Screenshot_dc.SetPen(*wxBLACK);
+  else
+    m_Screenshot_dc.SetPen(*wxTRANSPARENT_PEN);
+  m_Screenshot_dc.SetBrush(*wxWHITE_BRUSH);
     m_Screenshot_dc.DrawRectangle(0, 0, m_scrX, m_scrY);
-  }
 
   m_Screenshot_dc.SetBrush(m_bgColour);
   m_Screenshot_dc.SetTextForeground(m_fgColour);
@@ -3933,6 +3948,12 @@ void mpText::DoPlot(wxDC &dc, mpWindow &w)
       ;
   }
 
+  // Keep at least one pixel
+  if (px < 3)
+    px = 3;
+  if (py < 3)
+    py = 3;
+
   // Erase background of text with current brush and pen
   dc.DrawRectangle(px - 2, py - 2, tw + 4, th + 4);
   dc.DrawText(GetName(), px, py);
@@ -4357,6 +4378,7 @@ void mpBitmapLayer::SetBitmap(const wxImage &inBmp, double x, double y, double l
     m_max_x = x + lx;
     m_max_y = y + ly;
     m_validImg = true;
+    m_bitmapChanged = true;
   }
 }
 
@@ -4437,12 +4459,13 @@ void mpBitmapLayer::DoPlot(wxDC &dc, mpWindow &w)
   {
     // Build the scaled bitmap from the image, only if it has changed:
     if (m_scaledBitmap.GetWidth() != d_width || m_scaledBitmap.GetHeight() != d_height || m_scaledBitmap_offset_x != offset_x
-        || m_scaledBitmap_offset_y != offset_y)
+        || m_scaledBitmap_offset_y != offset_y || m_bitmapChanged)
     {
       wxRect r = wxRect(offset_x, offset_y, b_width, b_height);
       m_scaledBitmap = wxBitmap(wxBitmap(m_bitmap).GetSubBitmap(r).ConvertToImage().Scale(d_width, d_height));
       m_scaledBitmap_offset_x = offset_x;
       m_scaledBitmap_offset_y = offset_y;
+      m_bitmapChanged = false;
     }
 
     // Draw it:
