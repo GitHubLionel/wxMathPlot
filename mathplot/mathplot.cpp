@@ -93,18 +93,30 @@ wxString MESS_CLIPFAIL = _T("");
 
 void mpWindow::FillI18NString()
 {
-  Popup_string[0][0] = _("Fit");                     Popup_string[0][1] = _("Set plot view to show all items");
-  Popup_string[1][0] = _("Zoom in");                 Popup_string[1][1] = _("Zoom in plot view.");
-  Popup_string[2][0] = _("Zoom out");                Popup_string[2][1] = _("Zoom out plot view.");
-  Popup_string[3][0] = _("Center to this position"); Popup_string[3][1] = _("Center plot view to this position");
-  Popup_string[4][0] = _("Lock aspect");             Popup_string[4][1] = _("Lock horizontal and vertical zoom aspect.");
-  Popup_string[5][0] = _("Toggle grids");            Popup_string[5][1] = _("Show/Hide grids");
-  Popup_string[6][0] = _("Toggle info coords");      Popup_string[6][1] = _("Show/Hide info coordinates");
-  Popup_string[7][0] = _("Screen shot");             Popup_string[7][1] = _("Copy a screen shot to the clipboard");
-  Popup_string[8][0] = _("Configuration");           Popup_string[8][1] = _("Plot configuration");
-  Popup_string[9][0] = _("Load file");               Popup_string[9][1] = _("Load data file");
-  Popup_string[10][0] = _("Show mouse commands..."); Popup_string[10][1] = _("Show help about the mouse commands.");
-  Popup_string[11][0] = _("Toggle fullscreen");      Popup_string[11][1] = _("Toggle fullscreen.");
+  Popup_string[0][0] = _("Fit");
+  Popup_string[0][1] = _("Set plot view to show all items");
+  Popup_string[1][0] = _("Zoom in");
+  Popup_string[1][1] = _("Zoom in plot view.");
+  Popup_string[2][0] = _("Zoom out");
+  Popup_string[2][1] = _("Zoom out plot view.");
+  Popup_string[3][0] = _("Center to this position");
+  Popup_string[3][1] = _("Center plot view to this position");
+  Popup_string[4][0] = _("Lock aspect");
+  Popup_string[4][1] = _("Lock horizontal and vertical zoom aspect.");
+  Popup_string[5][0] = _("Toggle grids");
+  Popup_string[5][1] = _("Show/Hide grids");
+  Popup_string[6][0] = _("Toggle info coords");
+  Popup_string[6][1] = _("Show/Hide info coordinates");
+  Popup_string[7][0] = _("Screen shot");
+  Popup_string[7][1] = _("Copy a screen shot to the clipboard");
+  Popup_string[8][0] = _("Configuration");
+  Popup_string[8][1] = _("Plot configuration");
+  Popup_string[9][0] = _("Load file");
+  Popup_string[9][1] = _("Load data file");
+  Popup_string[10][0] = _("Show mouse commands...");
+  Popup_string[10][1] = _("Show help about the mouse commands.");
+  Popup_string[11][0] = _("Toggle fullscreen");
+  Popup_string[11][1] = _("Toggle fullscreen.");
 
   // List of string message used
   MESS_HELP0 = _("wxMathPlot help");
@@ -1931,7 +1943,7 @@ mpWindow::mpWindow(wxWindow *parent, wxWindowID id, const wxPoint &pos, const wx
   wxImage::AddHandler(new wxPNGHandler);
 
   wxBitmap icon[] = {wxBITMAP_PNG_FROM_DATA(Fit_24x24), wxBITMAP_PNG_FROM_DATA(Zoom_in_24x24), wxBITMAP_PNG_FROM_DATA(Zoom_out_24x24),
-      wxBITMAP_PNG_FROM_DATA(Center_24x24),  wxNullBitmap, wxBITMAP_PNG_FROM_DATA(Grid_24x24), wxBITMAP_PNG_FROM_DATA(Coordinates_24x24),
+      wxBITMAP_PNG_FROM_DATA(Center_24x24), wxNullBitmap, wxBITMAP_PNG_FROM_DATA(Grid_24x24), wxBITMAP_PNG_FROM_DATA(Coordinates_24x24),
       wxBITMAP_PNG_FROM_DATA(Screenshot_24x24), wxBITMAP_PNG_FROM_DATA(Config_24x24), wxBITMAP_PNG_FROM_DATA(Load_24x24),
       wxBITMAP_PNG_FROM_DATA(Mouse_24x24), wxBITMAP_PNG_FROM_DATA(Fullscreen_24x24)};
 
@@ -2507,8 +2519,7 @@ void mpWindow::OnLockAspect(wxCommandEvent &WXUNUSED(event))
 void mpWindow::OnMouseHelp(wxCommandEvent &WXUNUSED(event))
 {
   wxMessageBox(
-      MESS_HELP1 + _T("\n") + MESS_HELP2 + _T("\n") + MESS_HELP3 + _T("\n") +
-      MESS_HELP4 + _T("\n") + MESS_HELP5 + _T("\n") + MESS_HELP6,
+      MESS_HELP1 + _T("\n") + MESS_HELP2 + _T("\n") + MESS_HELP3 + _T("\n") + MESS_HELP4 + _T("\n") + MESS_HELP5 + _T("\n") + MESS_HELP6,
       MESS_HELP0, wxOK, this);
 }
 
@@ -2563,8 +2574,7 @@ void mpWindow::OnFullScreen(wxCommandEvent &WXUNUSED(event))
  */
 void mpWindow::OnLoadFile(wxCommandEvent &WXUNUSED(event))
 {
-  wxFileDialog OpenFile(this, MESS_LOAD, wxEmptyString, wxEmptyString,
-      MESS_WILDCARD, wxFD_OPEN | wxFD_FILE_MUST_EXIST);
+  wxFileDialog OpenFile(this, MESS_LOAD, wxEmptyString, wxEmptyString, MESS_WILDCARD, wxFD_OPEN | wxFD_FILE_MUST_EXIST);
 
   if (OpenFile.ShowModal() == wxID_OK)
   {
@@ -2783,7 +2793,7 @@ void mpWindow::OnPaint(wxPaintEvent &WXUNUSED(event))
   else
     trgDc->SetPen(*wxTRANSPARENT_PEN);
   trgDc->SetBrush(*wxWHITE_BRUSH);
-    trgDc->DrawRectangle(0, 0, m_scrX, m_scrY);
+  trgDc->DrawRectangle(0, 0, m_scrX, m_scrY);
 
   // Draw background plot area
   trgDc->SetBrush(m_bgColour);
@@ -3441,7 +3451,7 @@ wxBitmap* mpWindow::BitmapScreenshot(wxSize imageSize, bool fit)
   else
     m_Screenshot_dc.SetPen(*wxTRANSPARENT_PEN);
   m_Screenshot_dc.SetBrush(*wxWHITE_BRUSH);
-    m_Screenshot_dc.DrawRectangle(0, 0, m_scrX, m_scrY);
+  m_Screenshot_dc.DrawRectangle(0, 0, m_scrX, m_scrY);
 
   m_Screenshot_dc.SetBrush(m_bgColour);
   m_Screenshot_dc.SetTextForeground(m_fgColour);

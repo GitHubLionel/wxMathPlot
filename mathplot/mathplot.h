@@ -542,7 +542,7 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
       if (brush == wxNullBrush)
         m_brush = *wxTRANSPARENT_BRUSH;
       else
-      m_brush = brush;
+        m_brush = brush;
     }
 
     /** Get brush set for this layer.
