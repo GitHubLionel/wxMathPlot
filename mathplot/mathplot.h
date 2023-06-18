@@ -53,13 +53,13 @@
  Jose Luis Blanco, Val Greene.<br>
  */
 
-//this definition uses windows dll to export function. 
-//WXDLLIMPEXP_MATHPLOT definition definition changed to WXDLLIMPEXP_MATHPLOT  
-//mathplot_EXPORTS will be defined by cmake 
-#ifdef mathplot_EXPORTS 
+//this definition uses windows dll to export function.
+//WXDLLIMPEXP_MATHPLOT definition definition changed to WXDLLIMPEXP_MATHPLOT
+//mathplot_EXPORTS will be defined by cmake
+#ifdef mathplot_EXPORTS
 #define WXDLLIMPEXP_MATHPLOT WXEXPORT
 #define WXDLLIMPEXP_DATA_MATHPLOT(type) WXEXPORT type
-#else // not making DLL 
+#else // not making DLL
 #define WXDLLIMPEXP_MATHPLOT
 #define WXDLLIMPEXP_DATA_MATHPLOT(type) type
 #endif
