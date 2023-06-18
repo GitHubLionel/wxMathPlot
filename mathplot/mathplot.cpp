@@ -3468,9 +3468,19 @@ wxBitmap* mpWindow::BitmapScreenshot(wxSize imageSize, bool fit)
   }
 
   // Draw all the layers:
+  mpFunctionType function;
+  mpScaleType scale;
+  // First draw scale and series
   for (wxLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
   {
-    (*it)->Plot(m_Screenshot_dc, *this);
+    if ((*it)->IsScale(&scale) || (*it)->IsFunction(&function))
+      (*it)->Plot(m_Screenshot_dc, *this);
+  }
+  // Second draw all others elements (so there are always front)
+  for (wxLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
+  {
+    if (!((*it)->IsScale(&scale) || (*it)->IsFunction(&function)))
+      (*it)->Plot(m_Screenshot_dc, *this);
   }
   m_Screenshot_dc.SelectObject(wxNullBitmap);
 
