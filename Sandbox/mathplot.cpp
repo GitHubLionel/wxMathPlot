@@ -2260,15 +2260,14 @@ void mpWindow::OnMouseLeave(wxMouseEvent &WXUNUSED(event))
   }
 }
 
+/**
+ * General fit
+ * Use global layer bounding box
+ */
 void mpWindow::Fit()
 {
   UpdateBBox();
   Fit(m_bound);
-}
-
-double mpWindow::ComputePosY(double scale)
-{
-  return (m_desired.Ymin + m_desired.Ymax) / 2 + (m_plotHeight / 2 + m_margin.top) / scale;
 }
 
 // JL
@@ -2344,7 +2343,7 @@ void mpWindow::DoZoomInXCalc(const int staticXpixel)
   // Preserve the position of the clicked point:
   double staticX = p2x(staticXpixel);
   // Zoom in:
-  m_scaleX = m_scaleX * zoomIncrementalFactor;
+  m_scaleX *= zoomIncrementalFactor;
   // Adjust the new m_posx
   m_posX = staticX - (staticXpixel / m_scaleX);
   // Adjust desired
@@ -2379,7 +2378,7 @@ void mpWindow::DoZoomOutXCalc(const int staticXpixel)
   // Preserve the position of the clicked point:
   double staticX = p2x(staticXpixel);
   // Zoom out:
-  m_scaleX = m_scaleX / zoomIncrementalFactor;
+  m_scaleX /= zoomIncrementalFactor;
   // Adjust the new m_posx/y:
   m_posX = staticX - (staticXpixel / m_scaleX);
   // Adjust desired
@@ -2468,13 +2467,13 @@ void mpWindow::Zoom(bool zoomIn, const wxPoint &centerPoint)
 
 void mpWindow::ZoomInX()
 {
-  m_scaleX = m_scaleX * zoomIncrementalFactor;
+  m_scaleX *= zoomIncrementalFactor;
   UpdateAll();
 }
 
 void mpWindow::ZoomOutX()
 {
-  m_scaleX = m_scaleX / zoomIncrementalFactor;
+  m_scaleX /= zoomIncrementalFactor;
   UpdateAll();
 }
 

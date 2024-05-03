@@ -1800,8 +1800,6 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
         return m_posY;
     }
 
-    double ComputePosY(double scale);
-
     /** Set current view's dimensions in device context units.
      Needed by plotting functions. It doesn't refresh display.
      @param scrX New position that corresponds to the center point of the view.
