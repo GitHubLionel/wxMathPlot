@@ -2314,14 +2314,22 @@ void mpWindow::Fit(const mpFloatRect &rect, wxCoord *printSizeX, wxCoord *printS
     m_scaleX = s;
     m_scaleY = s;
     m_scaleY2 = s;
+    FitWithBound = false;
   }
 
   // Adjusts corner coordinates: This should be simply:
   //   m_posX = m_minX;
   //   m_posY = m_maxY;
   // But account for centering if we have lock aspect:
+  double old_posY = m_posY;
   m_posX = (rect.Xmin + rect.Xmax) / 2 - (m_plotWidth / 2 + m_margin.left) / m_scaleX;
   m_posY = (rect.Ymin + rect.Ymax) / 2 + (m_plotHeight / 2 + m_margin.top) / m_scaleY;
+  if (FitWithBound)
+  {
+    m_posY2 += (m_posY - old_posY)/Y2Factor;
+    FitWithBound = false;
+  }
+  else
   m_posY2 = (rect.Ymin + rect.Ymax) / 2 + (m_plotHeight / 2 + m_margin.top) / m_scaleY2;
 
 #ifdef MATHPLOT_DO_LOGGING
@@ -2510,6 +2518,7 @@ void mpWindow::ZoomRect(wxPoint p0, wxPoint p1)
   wxLogMessage(_T("Zoom: (%f,%f)-(%f,%f)"), zoom.Xmin, zoom.Ymin, zoom.Xmax, zoom.Ymax);
 #endif
 
+  FitWithBound = true;
   Fit(zoom);
 }
 
@@ -2644,6 +2653,7 @@ void mpWindow::OnZoomOut(wxCommandEvent &WXUNUSED(event))
 void mpWindow::OnSize(wxSizeEvent &WXUNUSED(event))
 {
   // Try to fit again with the new window size:
+  FitWithBound = true;
   Fit(m_desired);
 #ifdef MATHPLOT_DO_LOGGING
   wxLogMessage(_T("mpWindow::OnSize() m_scrX = %d, m_scrY = %d"), m_scrX, m_scrY);

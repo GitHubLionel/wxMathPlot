@@ -2370,6 +2370,8 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
   private:
     void FillI18NString();
 
+    bool FitWithBound = false;
+
   DECLARE_DYNAMIC_CLASS(mpWindow)DECLARE_EVENT_TABLE()
 
     // To have direct access to m_Screenshot_dc
