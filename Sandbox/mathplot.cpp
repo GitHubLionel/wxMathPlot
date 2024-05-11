@@ -216,7 +216,6 @@ mpLayer::mpLayer() :
   m_symbol = mpsNone;
   m_symbolSize = 6;
   m_symbolSize2 = 3;
-  m_step = 1;
   m_CanDelete = true;
   m_busy = false;
 }
@@ -858,7 +857,19 @@ void mpInfoLegend::DoPlot(wxDC &dc, mpWindow &w)
 // mpFX implementations - functions
 //-----------------------------------------------------------------------------
 
-IMPLEMENT_ABSTRACT_CLASS(mpFX, mpLayer)
+IMPLEMENT_ABSTRACT_CLASS(mpFunction, mpLayer)
+
+mpFunction::mpFunction()
+{
+  m_step = 1;
+  UseY2Axis = false;
+}
+
+//-----------------------------------------------------------------------------
+// mpFX implementations - functions
+//-----------------------------------------------------------------------------
+
+IMPLEMENT_ABSTRACT_CLASS(mpFX, mpFunction)
 
 mpFX::mpFX(const wxString &name, int flags)
 {
@@ -966,7 +977,7 @@ void mpFX::DoPlot(wxDC &dc, mpWindow &w)
 // mpFY implementations - functions
 //-----------------------------------------------------------------------------
 
-IMPLEMENT_ABSTRACT_CLASS(mpFY, mpLayer)
+IMPLEMENT_ABSTRACT_CLASS(mpFY, mpFunction)
 
 mpFY::mpFY(const wxString &name, int flags)
 {
@@ -1074,7 +1085,7 @@ void mpFY::DoPlot(wxDC &dc, mpWindow &w)
 // mpFXY implementations - functions
 //-----------------------------------------------------------------------------
 
-IMPLEMENT_ABSTRACT_CLASS(mpFXY, mpLayer)
+IMPLEMENT_ABSTRACT_CLASS(mpFXY, mpFunction)
 
 mpFXY::mpFXY(const wxString &name, int flags, bool viewAsBar)
 {
@@ -1268,7 +1279,7 @@ void mpFXY::DoPlot(wxDC &dc, mpWindow &w)
 // mpProfile implementation
 //-----------------------------------------------------------------------------
 
-IMPLEMENT_ABSTRACT_CLASS(mpProfile, mpLayer)
+IMPLEMENT_ABSTRACT_CLASS(mpProfile, mpFunction)
 
 mpProfile::mpProfile(const wxString &name, int flags)
 {
@@ -3263,7 +3274,7 @@ mpLayer* mpWindow::GetClosestPlot(wxCoord ix, wxCoord iy, double *xnear, double 
         {
           mpFX* fx = (mpFX*)(*it);
           double fy = fx->DoGetY(this->p2x(ix));
-          if (abs(this->y2p(fy, fx->UseY2Axis) - iy) < NEAR_AREA)
+          if (abs(this->y2p(fy, fx->GetY2Axis()) - iy) < NEAR_AREA)
           {
             *xnear = this->p2x(ix);
             *ynear = fy;
@@ -3274,11 +3285,11 @@ mpLayer* mpWindow::GetClosestPlot(wxCoord ix, wxCoord iy, double *xnear, double 
         case mpfFY:
         {
           mpFY* fy = (mpFY*)(*it);
-          double fx = fy->DoGetX(this->p2y(iy, fy->UseY2Axis));
+          double fx = fy->DoGetX(this->p2y(iy, fy->GetY2Axis()));
           if (abs(this->x2p(fx) - ix) < NEAR_AREA)
           {
             *xnear = fx;
-            *ynear = this->p2y(iy, fy->UseY2Axis);
+            *ynear = this->p2y(iy, fy->GetY2Axis());
             result = (*it);
           }
           break;
@@ -3291,7 +3302,7 @@ mpLayer* mpWindow::GetClosestPlot(wxCoord ix, wxCoord iy, double *xnear, double 
           fxy->Rewind();
           while (fxy->DoGetNextXY(&xx, &yy))
           {
-            if ((abs(this->x2p(xx) - ix) < NEAR_AREA) && (abs(this->y2p(yy, fxy->UseY2Axis) - iy) < NEAR_AREA))
+            if ((abs(this->x2p(xx) - ix) < NEAR_AREA) && (abs(this->y2p(yy, fxy->GetY2Axis()) - iy) < NEAR_AREA))
             {
               *xnear = xx;
               *ynear = yy;
@@ -3306,14 +3317,14 @@ mpLayer* mpWindow::GetClosestPlot(wxCoord ix, wxCoord iy, double *xnear, double 
         {
           mpFXY* fxy = (mpFXY*)(*it);
           double xx, yy;
-          double zero = this->y2p(0.0, fxy->UseY2Axis);
+          double zero = this->y2p(0.0, fxy->GetY2Axis());
           fxy->Rewind();
           while (fxy->DoGetNextXY(&xx, &yy))
           {
             // We are in the x bar range
             if (abs(this->x2p(xx) - ix) < fxy->GetBarWidth())
             {
-              wxCoord yyp = this->y2p(yy, fxy->UseY2Axis);
+              wxCoord yyp = this->y2p(yy, fxy->GetY2Axis());
               // Check if we are over the bar
               if (((yy < 0) && ((iy >= zero) && (iy < yyp + NEAR_AREA))) || ((yy > 0) && ((iy <= zero) && (iy > yyp - NEAR_AREA))))
               {
