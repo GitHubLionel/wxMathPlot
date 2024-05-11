@@ -859,8 +859,10 @@ void mpInfoLegend::DoPlot(wxDC &dc, mpWindow &w)
 
 IMPLEMENT_ABSTRACT_CLASS(mpFunction, mpLayer)
 
-mpFunction::mpFunction()
+mpFunction::mpFunction(const wxString &name)
 {
+  m_type = mpLAYER_PLOT;
+  SetName(name);
   m_step = 1;
   UseY2Axis = false;
 }
@@ -871,10 +873,9 @@ mpFunction::mpFunction()
 
 IMPLEMENT_ABSTRACT_CLASS(mpFX, mpFunction)
 
-mpFX::mpFX(const wxString &name, int flags)
+mpFX::mpFX(const wxString &name, int flags) :
+  mpFunction(name)
 {
-  m_type = mpLAYER_PLOT;
-  SetName(name);
   m_flags = flags;
 }
 
@@ -979,10 +980,9 @@ void mpFX::DoPlot(wxDC &dc, mpWindow &w)
 
 IMPLEMENT_ABSTRACT_CLASS(mpFY, mpFunction)
 
-mpFY::mpFY(const wxString &name, int flags)
+mpFY::mpFY(const wxString &name, int flags) :
+  mpFunction(name)
 {
-  m_type = mpLAYER_PLOT;
-  SetName(name);
   m_flags = flags;
 }
 
@@ -1087,10 +1087,9 @@ void mpFY::DoPlot(wxDC &dc, mpWindow &w)
 
 IMPLEMENT_ABSTRACT_CLASS(mpFXY, mpFunction)
 
-mpFXY::mpFXY(const wxString &name, int flags, bool viewAsBar)
+mpFXY::mpFXY(const wxString &name, int flags, bool viewAsBar) :
+  mpFunction(name)
 {
-  m_type = mpLAYER_PLOT;
-  SetName(name);
   m_flags = flags;
   maxDrawX = minDrawX = maxDrawY = minDrawY = 0;
   m_deltaX = 1e+308; // Big number
@@ -1281,10 +1280,9 @@ void mpFXY::DoPlot(wxDC &dc, mpWindow &w)
 
 IMPLEMENT_ABSTRACT_CLASS(mpProfile, mpFunction)
 
-mpProfile::mpProfile(const wxString &name, int flags)
+mpProfile::mpProfile(const wxString &name, int flags) :
+  mpFunction(name)
 {
-  m_type = mpLAYER_PLOT;
-  SetName(name);
   m_flags = flags;
 }
 
@@ -3656,7 +3654,6 @@ IMPLEMENT_DYNAMIC_CLASS(mpFXYVector, mpFXY)
 mpFXYVector::mpFXYVector(const wxString &name, int flags, bool viewAsBar) :
     mpFXY(name, flags, viewAsBar)
 {
-  m_type = mpLAYER_PLOT;
   m_index = 0;
   m_minX = -1;
   m_maxX = 1;

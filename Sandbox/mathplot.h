@@ -1013,7 +1013,7 @@ class WXDLLIMPEXP_MATHPLOT mpFunction: public mpLayer
   public:
     /** Full constructor.
      */
-    mpFunction();
+    mpFunction(const wxString &name = wxEmptyString);
 
     /** Set step for plot.
      @param step */
