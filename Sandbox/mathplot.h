@@ -181,8 +181,10 @@ typedef union
         double Xmax;
         double Ymin;
         double Ymax;
+        double Y2min;
+        double Y2max;
     };
-    double tab[4];
+    double tab[6];
 } mpFloatRect;
 
 /** Command IDs used by mpWindow
@@ -355,6 +357,11 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
       return true;
     }
 
+    /**
+     * Return the bounding box, ie minX, maxX, minY and maxY
+     */
+    virtual void GetBBox(mpFloatRect *m_bound);
+
     /** Check whether the layer is a special object.
      The default implementation returns \a FALSE. It is overrided to \a TRUE in object
      class and its derivative.
@@ -364,20 +371,24 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
       *info = mpiNone;
       return false;
     }
+
     virtual bool IsFunction(mpFunctionType *function)
     {
       *function = mpfNone;
       return false;
     }
+
     virtual bool IsScale(mpScaleType *scale)
     {
       *scale = mpsScaleNone;
       return false;
     }
+
     virtual bool IsText()
     {
       return false;
     }
+
     virtual bool IsTitle()
     {
       return false;
@@ -1059,6 +1070,7 @@ class WXDLLIMPEXP_MATHPLOT mpFunction: public mpLayer
 
 /** Abstract base class providing plot and labeling functionality for functions F:X->Y.
  Override mpFX::GetY to implement a function.
+ Override mpFX::GetMinY and mpFX::GetMaxY to provide min and max Y range
  Optionally implement a constructor and pass a name (label) and a label alignment
  to the constructor mpFX::mpFX. If the layer name is empty, no label will be plotted.
  */
@@ -1104,6 +1116,7 @@ class WXDLLIMPEXP_MATHPLOT mpFX: public mpFunction
 
 /** Abstract base class providing plot and labeling functionality for functions F:Y->X.
  Override mpFY::GetX to implement a function.
+ Override mpFY::GetMinX and mpFY::GetMaxX to provide min and max X range
  Optionally implement a constructor and pass a name (label) and a label alignment
  to the constructor mpFY::mpFY. If the layer name is empty, no label will be plotted.
  */
@@ -1149,7 +1162,10 @@ class WXDLLIMPEXP_MATHPLOT mpFY: public mpFunction
 
 /** Abstract base class providing plot and labeling functionality for a locus plot F:N->X,Y.
  Locus argument N is assumed to be in range 0 .. MAX_N, and implicitly derived by enumerating
- all locus values. Override mpFXY::Rewind and mpFXY::GetNextXY to implement a locus.
+ all locus values.
+ Override mpFXY::Rewind and mpFXY::GetNextXY to implement a locus.
+ Override mpFXY::GetMinX and mpFXY::GetMaxX to provide min and max X range
+ Override mpFXY::GetMinY and mpFXY::GetMaxY to provide min and max Y range
  Optionally implement a constructor and pass a name (label) and a label alignment
  to the constructor mpFXY::mpFXY. If the layer name is empty, no label will be plotted.
  */

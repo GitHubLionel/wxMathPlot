@@ -220,6 +220,14 @@ mpLayer::mpLayer() :
   m_busy = false;
 }
 
+void mpLayer::GetBBox(mpFloatRect *m_bound)
+{
+  m_bound->Xmin = GetMinX();
+  m_bound->Xmax = GetMaxX();
+  m_bound->Ymin = m_bound->Y2min = GetMinY();
+  m_bound->Ymax = m_bound->Y2max = GetMaxY();
+}
+
 void mpLayer::Plot(wxDC &dc, mpWindow &w)
 {
   if ((!m_visible) || m_busy)
@@ -2010,11 +2018,11 @@ void mpWindow::InitParameters()
 {
   m_scaleX = m_scaleY = m_scaleY2 = 1.0;
   m_posX = m_posY = m_posY2 = 0;
-  m_desired.Xmin = m_desired.Ymin = 0;
-  m_desired.Xmax = m_desired.Ymax = 0;
+  m_desired.Xmin = m_desired.Ymin = m_desired.Y2min = 0;
+  m_desired.Xmax = m_desired.Ymax = m_desired.Y2max = 0;
   m_scrX = m_scrY = 64; // Fixed from m_scrX = m_scrX = 64;
-  m_bound.Xmin = m_bound.Ymin = 0;
-  m_bound.Xmax = m_bound.Ymax = 0;
+  m_bound.Xmin = m_bound.Ymin = m_bound.Y2min = 0;
+  m_bound.Xmax = m_bound.Ymax = m_bound.Y2max = 0;
   m_last_lx = m_last_ly = 0;
   m_XAxis = NULL;
   m_YAxis = NULL;
@@ -2100,6 +2108,8 @@ void mpWindow::OnMouseMove(wxMouseEvent &event)
     m_desired.Xmin += Ax_units;
     m_desired.Ymax += Ay_units;
     m_desired.Ymin += Ay_units;
+    m_desired.Y2max += Ay2_units;
+    m_desired.Y2min += Ay2_units;
 
     UpdateAll();
 
@@ -2239,6 +2249,8 @@ void mpWindow::OnMouseWheel(wxMouseEvent &event)
         m_posY2 -= changeUnitsY2;
         m_desired.Ymax -= changeUnitsY;
         m_desired.Ymax -= changeUnitsY;
+        m_desired.Y2max -= changeUnitsY2;
+        m_desired.Y2max -= changeUnitsY2;
       }
 
     UpdateAll();
@@ -2304,14 +2316,17 @@ void mpWindow::Fit(const mpFloatRect &rect, wxCoord *printSizeX, wxCoord *printS
     SetScreen(w, h);
   }
 
-  double Ax, Ay;
+  double Ax, Ay, Ay2;
 
   Ax = rect.Xmax - rect.Xmin;
   Ay = rect.Ymax - rect.Ymin;
+  Ay2 = rect.Y2max - rect.Y2min;
+  Y2Factor = Ay / Ay2;
 
   m_scaleX = ISNOTNULL(Ax) ? m_plotWidth / Ax : 1;
   m_scaleY = ISNOTNULL(Ay) ? m_plotHeight / Ay : 1;
-  m_scaleY2 = m_scaleY * Y2Factor;
+  m_scaleY2 = ISNOTNULL(Ay2) ? m_plotHeight / Ay2 : 1;
+//  m_scaleY2 = m_scaleY * Y2Factor;
 
   if (m_lockaspect)
   {
@@ -2339,7 +2354,7 @@ void mpWindow::Fit(const mpFloatRect &rect, wxCoord *printSizeX, wxCoord *printS
     FitWithBound = false;
   }
   else
-  m_posY2 = (rect.Ymin + rect.Ymax) / 2 + (m_plotHeight / 2 + m_margin.top) / m_scaleY2;
+    m_posY2 = (rect.Y2min + rect.Y2max) / 2 + (m_plotHeight / 2 + m_margin.top) / m_scaleY2;
 
 #ifdef MATHPLOT_DO_LOGGING
   wxLogMessage(_T("mpWindow::Fit() m_desired.Xmin=%f m_desired.Xmax=%f  m_desired.Ymin=%f m_desired.Ymax=%f"),
@@ -2385,6 +2400,8 @@ void mpWindow::DoZoomInYCalc(const int staticYpixel)
   // Adjust desired
   m_desired.Ymax = m_posY;
   m_desired.Ymin = m_posY - m_plotHeight / m_scaleY;
+  m_desired.Y2max = m_posY2;
+  m_desired.Y2min = m_posY2 - m_plotHeight / m_scaleY2;
 #ifdef MATHPLOT_DO_LOGGING
   wxLogMessage(_T("mpWindow::DoZoomInYCalc() prior Y coord: (%f), new Y coord: (%f) SHOULD BE EQUAL!!"), staticY, p2y(staticYpixel));
 #endif
@@ -2420,6 +2437,8 @@ void mpWindow::DoZoomOutYCalc(const int staticYpixel)
   // Adjust desired
   m_desired.Ymax = m_posY;
   m_desired.Ymin = m_posY - m_plotHeight / m_scaleY;
+  m_desired.Y2max = m_posY2;
+  m_desired.Y2min = m_posY2 - m_plotHeight / m_scaleY2;
 #ifdef MATHPLOT_DO_LOGGING
   wxLogMessage(_T("mpWindow::DoZoomOutYCalc() prior Y coord: (%f), new Y coord: (%f) SHOULD BE EQUAL!!"), staticY, p2y(staticYpixel));
 #endif
@@ -2474,6 +2493,8 @@ void mpWindow::Zoom(bool zoomIn, const wxPoint &centerPoint)
   m_desired.Xmax = m_posX + m_plotWidth / m_scaleX;
   m_desired.Ymax = m_posY;
   m_desired.Ymin = m_posY - m_plotHeight / m_scaleY;
+  m_desired.Y2max = m_posY2;
+  m_desired.Y2min = m_posY2 - m_plotHeight / m_scaleY2;
 
 #ifdef MATHPLOT_DO_LOGGING
   wxLogMessage(_T("mpWindow::Zoom() prior coords: (%f,%f), new coords: (%f,%f) SHOULD BE EQUAL!!"),
@@ -2513,8 +2534,10 @@ void mpWindow::ZoomRect(wxPoint p0, wxPoint p1)
   // Compute the 2 corners in graph coordinates:
   double p0x = p2x(p0.x);
   double p0y = p2y(p0.y);
+  double p0y2 = p2y(p0.y, true);
   double p1x = p2x(p1.x);
   double p1y = p2y(p1.y);
+  double p1y2 = p2y(p1.y, true);
 
   // Order them:
   mpFloatRect zoom;
@@ -2522,6 +2545,8 @@ void mpWindow::ZoomRect(wxPoint p0, wxPoint p1)
   zoom.Xmax = p0x > p1x ? p0x : p1x;
   zoom.Ymin = p0y < p1y ? p0y : p1y;
   zoom.Ymax = p0y > p1y ? p0y : p1y;
+  zoom.Y2min = p0y2 < p1y2 ? p0y2 : p1y2;
+  zoom.Y2max = p0y2 > p1y2 ? p0y2 : p1y2;
 
 #ifdef MATHPLOT_DO_LOGGING
   wxLogMessage(_T("Zoom: (%f,%f)-(%f,%f)"), zoom.Xmin, zoom.Ymin, zoom.Xmax, zoom.Ymax);
@@ -2931,6 +2956,8 @@ bool mpWindow::UpdateBBox()
 //  SetBound();
 
   // Search common bound for all functions
+  mpFloatRect f_bound;
+  mpFunctionType function;
   for (wxLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
   {
     mpLayer* f = *it;
@@ -2940,23 +2967,30 @@ bool mpWindow::UpdateBBox()
       if (first)
       {
         first = false;
-        m_bound.Xmin = f->GetMinX();
-        m_bound.Xmax = f->GetMaxX();
-
-        m_bound.Ymin = f->GetMinY();
-        m_bound.Ymax = f->GetMaxY();
+        f->GetBBox(&m_bound);
       }
       else
       {
-        if (f->GetMinX() < m_bound.Xmin)
-          m_bound.Xmin = f->GetMinX();
-        if (f->GetMaxX() > m_bound.Xmax)
-          m_bound.Xmax = f->GetMaxX();
+        f->GetBBox(&f_bound);
+        if (f_bound.Xmin < m_bound.Xmin)
+          m_bound.Xmin = f_bound.Xmin;
+        if (f_bound.Xmax > m_bound.Xmax)
+          m_bound.Xmax = f_bound.Xmax;
 
-        if (f->GetMinY() < m_bound.Ymin)
-          m_bound.Ymin = f->GetMinY();
-        if (f->GetMaxY() > m_bound.Ymax)
-          m_bound.Ymax = f->GetMaxY();
+        if ((f->IsFunction(&function)) && (((mpFunction *)f)->GetY2Axis()))
+        {
+          if (f_bound.Y2min < m_bound.Y2min)
+            m_bound.Y2min = f_bound.Y2min;
+          if (f_bound.Y2max > m_bound.Y2max)
+            m_bound.Y2max = f_bound.Y2max;
+      }
+      else
+      {
+          if (f_bound.Ymin < m_bound.Ymin)
+            m_bound.Ymin = f_bound.Ymin;
+          if (f_bound.Ymax > m_bound.Ymax)
+            m_bound.Ymax = f_bound.Ymax;
+        }
       }
     }
   }
