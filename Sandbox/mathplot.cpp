@@ -854,7 +854,7 @@ void mpInfoLegend::DoPlot(wxDC &dc, mpWindow &w)
 }
 
 //-----------------------------------------------------------------------------
-// mpFX implementations - functions
+// mpFunction implementations - functions
 //-----------------------------------------------------------------------------
 
 IMPLEMENT_ABSTRACT_CLASS(mpFunction, mpLayer)
@@ -3183,7 +3183,14 @@ void mpWindow::OnScrollBottom(wxScrollWinEvent &event)
 // End patch ngpaton
 
 // New methods implemented by Davide Rondini
-
+/**
+ * Several layer operations
+ * - CountLayers() : return the number of layer with BBox
+ * - CountLayersType() : return the number of layer who are of selected type
+ * - CountLayersFXYPlot() : return the number of layer who are FXYVector function plot
+ * - GetLayer(int position) : return the layer at position
+ * - GetLayerPlot(int position, mpFunctionType func) : return the layer at position if his function type is func
+ */
 unsigned int mpWindow::CountLayers()
 {
   unsigned int layerNo = 0;
@@ -3195,12 +3202,12 @@ unsigned int mpWindow::CountLayers()
   return layerNo;
 }
 
-unsigned int mpWindow::CountLayersPlot()
+unsigned int mpWindow::CountLayersType(mpLayerType type)
 {
   unsigned int layerNo = 0;
   for (wxLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
   {
-    if ((*it)->GetLayerType() == mpLAYER_PLOT)
+    if ((*it)->GetLayerType() == type)
       layerNo++;
   }
   return layerNo;
@@ -3234,6 +3241,23 @@ mpLayer* mpWindow::GetLayerPlot(int position, mpFunctionType func)
   for (wxLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
   {
     if ((*it)->IsFunction(&function) && ((func == mpfAllType) || (function == func)))
+    {
+      if (++layerNo == position)
+        return *it;
+    }
+  }
+  return NULL;
+}
+
+mpLayer* mpWindow::GetLayerAxis(int position, mpScaleType scale)
+{
+  int layerNo = -1;
+  mpScaleType thescale;
+  if (position < 0)
+    return NULL;
+  for (wxLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
+  {
+    if ((*it)->IsScale(&thescale) && ((scale == mpsAllType) || (thescale == scale)))
     {
       if (++layerNo == position)
         return *it;

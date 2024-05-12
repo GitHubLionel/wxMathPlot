@@ -298,7 +298,8 @@ typedef enum __Scale_Type
 {
   mpsScaleNone,
   mpsScaleX,
-  mpsScaleY
+  mpsScaleY,
+  mpsAllType
 } mpScaleType;
 
 //-----------------------------------------------------------------------------
@@ -1847,6 +1848,10 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      */
     mpLayer* GetLayerPlot(int position, mpFunctionType func = mpfAllType);
 
+    /*! Get the layer axis in list position indicated.
+     */
+    mpLayer* GetLayerAxis(int position, mpScaleType scale = mpsAllType);
+
     /*!
      * Return the serie n
      * If the serie not exist then create it
@@ -2166,7 +2171,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     /** Counts the number of plot layers: this is to count only the layers which have a plot.
      \return The number of profiles plotted.
      */
-    unsigned int CountLayersPlot();
+    unsigned int CountLayersType(mpLayerType type);
     unsigned int CountLayersFXYPlot();
 
     /** Draws the mpWindow on a page for printing

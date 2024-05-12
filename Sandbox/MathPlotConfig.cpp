@@ -236,12 +236,7 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   Panel2->SetSizer(BoxSizer16);
   Panel3 = new wxPanel(nbConfig, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL);
   BoxSizer4 = new wxBoxSizer(wxVERTICAL);
-  const wxString ChoiceAxis_choices[] = {
-  _("X axis"),
-  _("Y axis"),
-  };
-  ChoiceAxis = new wxChoice(Panel3, wxID_ANY, wxDefaultPosition, wxDefaultSize, 2, ChoiceAxis_choices, 0, wxDefaultValidator);
-  ChoiceAxis->SetSelection(0);
+  ChoiceAxis = new wxChoice(Panel3, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator);
   BoxSizer4->Add(ChoiceAxis, 0, wxALL, 5);
   FlexGridSizer8 = new wxFlexGridSizer(1, 3, 0, 0);
   FlexGridSizer8->AddGrowableCol(1);
@@ -351,7 +346,10 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   BoxSizer5->Add(FlexGridSizer11, 1, wxALL|wxALIGN_LEFT, 0);
   cbLogAxis = new wxCheckBox(Panel3, wxID_ANY, _("Logarithmic axis"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
   cbLogAxis->SetValue(false);
-  BoxSizer5->Add(cbLogAxis, 0, wxALL|wxEXPAND, 5);
+  BoxSizer5->Add(cbLogAxis, 0, wxALL|wxALIGN_LEFT, 5);
+  cbIsY2Axis = new wxCheckBox(Panel3, wxID_ANY, _("Is Y2 axis"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
+  cbIsY2Axis->SetValue(false);
+  BoxSizer5->Add(cbIsY2Axis, 0, wxALL|wxALIGN_LEFT, 5);
   BoxSizer6->Add(BoxSizer5, 0, wxALL|wxALIGN_TOP, 2);
   BoxSizer4->Add(BoxSizer6, 0, wxALL|wxEXPAND, 0);
   Panel3->SetSizer(BoxSizer4);
@@ -432,7 +430,7 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   BoxSizer11->Add(cbTractable, 1, wxALL|wxALIGN_LEFT, 3);
   cbSecondYAxis = new wxCheckBox(Panel4, wxID_ANY, _("Use second Y axis"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
   cbSecondYAxis->SetValue(false);
-  BoxSizer11->Add(cbSecondYAxis, 1, wxALL|wxALIGN_LEFT, 5);
+  BoxSizer11->Add(cbSecondYAxis, 1, wxALL|wxALIGN_LEFT, 3);
   BoxSizer9->Add(BoxSizer11, 0, wxALL|wxALIGN_LEFT, 5);
   FlexGridSizer15->Add(BoxSizer9, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
   BoxSizer10 = new wxBoxSizer(wxVERTICAL);
@@ -612,12 +610,27 @@ void MathPlotConfigDialog::Initialize()
   }
 
   // X axis
+  ChoiceAxis->Clear();
+  for (unsigned int i = 0; i < m_plot->CountLayersType(mpLAYER_AXIS); i++)
+  {
+    mpScale *axis = (mpScale*)m_plot->GetLayerAxis(i);
+    wxString classname = axis->GetClassInfo()->GetClassName();
+    if (classname.IsSameAs(_T("mpScaleX")))
+      ChoiceAxis->Append(_T("X axis - ") + axis->GetName());
+    else
+    {
+      if (((mpScaleY*)axis)->isY2Axis)
+        ChoiceAxis->Append(_T("Y2 axis - ") + axis->GetName());
+      else
+        ChoiceAxis->Append(_T("Y axis - ") + axis->GetName());
+    }
+  }
   ChoiceAxis->SetSelection(0);
   UpdateAxis();
 
   // Fill series counter
   ChoiceSeries->Clear();
-  for (unsigned int i = 0; i < m_plot->CountLayersPlot(); i++)
+  for (unsigned int i = 0; i < m_plot->CountLayersType(mpLAYER_PLOT); i++)
   {
     ChoiceSeries->Append(((mpLayer*)m_plot->GetLayerPlot(i))->GetName());
   }
@@ -749,11 +762,15 @@ void MathPlotConfigDialog::UpdateAxis(void)
   const wxString XAxis_Align[] = {_("Bottom border"), _("Bottom"), _("Center"), _("Top"), _("Top border")};
   const wxString YAxis_Align[] = {_("Left border"), _("Left"), _("Center"), _("Right"), _("Right border")};
 
-  mpFloatRect BoundScale = m_plot->Get_Bound();
+  CurrentScale = (mpScale*)m_plot->GetLayerAxis(ChoiceAxis->GetSelection());
+  if (!CurrentScale)
+    return;
+  wxString classname = CurrentScale->GetClassInfo()->GetClassName();
 
-  if (ChoiceAxis->GetSelection() == 0)
+  if (classname.IsSameAs(_T("mpScaleX")))
   {
-    CurrentScale = (mpScale*)m_plot->GetLayerXAxis();
+//    CurrentScale = (mpScale*)m_plot->GetLayerXAxis();
+    cbIsY2Axis->Show(false);
     cbAxisPosition->Clear();
     scale_offset = mpALIGN_BORDER_BOTTOM;
     for (int i = scale_offset; i <= mpALIGN_BORDER_TOP; i++)
@@ -765,7 +782,9 @@ void MathPlotConfigDialog::UpdateAxis(void)
   }
   else
   {
-    CurrentScale = (mpScale*)m_plot->GetLayerYAxis();
+//    CurrentScale = (mpScale*)m_plot->GetLayerYAxis();
+    cbIsY2Axis->Show(true);
+    cbIsY2Axis->SetValue(((mpScaleY*)CurrentScale)->isY2Axis);
     cbAxisPosition->Clear();
     scale_offset = mpALIGN_BORDER_LEFT;
     for (int i = scale_offset; i <= mpALIGN_BORDER_RIGHT; i++)
@@ -775,8 +794,6 @@ void MathPlotConfigDialog::UpdateAxis(void)
     edFormat->Enable();
   }
 
-  if (CurrentScale)
-  {
     edAxisName->SetValue(CurrentScale->GetName());
     // Pen config
     bAxisPenColor->SetBackgroundColour(CurrentScale->GetPen().GetColour());
@@ -793,12 +810,13 @@ void MathPlotConfigDialog::UpdateAxis(void)
     bFontAxis->Enable();
 
     // Scale
+  mpFloatRect BoundScale = m_plot->Get_Bound();
     cbAutoScale->SetValue(CurrentScale->GetAuto());
     edScaleMin->Enable(!CurrentScale->GetAuto());
     edScaleMax->Enable(!CurrentScale->GetAuto());
     if (CurrentScale->GetAuto())
     {
-      if (ChoiceAxis->GetSelection() == 0)
+    if (classname.IsSameAs(_T("mpScaleX")))
       {
         scale_min = BoundScale.Xmin;
         scale_max = BoundScale.Xmax;
@@ -817,7 +835,6 @@ void MathPlotConfigDialog::UpdateAxis(void)
     edScaleMin->GetValidator()->TransferToWindow();
     edScaleMax->GetValidator()->TransferToWindow();
   }
-}
 
 void MathPlotConfigDialog::OnAxisSelect(wxCommandEvent &WXUNUSED(event))
 {
@@ -1005,7 +1022,9 @@ void MathPlotConfigDialog::OnbApplyClick(wxCommandEvent &WXUNUSED(event))
         CurrentScale->SetAlign(scale_offset + cbAxisPosition->GetSelection());
         CurrentScale->SetDrawOutsideMargins(cbAxisOutside->GetValue());
         CurrentScale->SetLabelFormat(edFormat->GetValue());
-        if (ChoiceAxis->GetSelection() == 0)
+        wxString classname = CurrentScale->GetClassInfo()->GetClassName();
+
+        if (classname.IsSameAs(_T("mpScaleX")))
         {
           ((mpScaleX*)CurrentScale)->SetLabelMode(cbFormat->GetSelection());
           // Update InfoCoords if present
@@ -1013,6 +1032,10 @@ void MathPlotConfigDialog::OnbApplyClick(wxCommandEvent &WXUNUSED(event))
           {
             CurrentCoords->SetLabelMode(cbFormat->GetSelection());
           }
+        }
+        else
+        {
+          ((mpScaleY*)CurrentScale)->isY2Axis = cbIsY2Axis->GetValue();
         }
         CurrentScale->SetLogAxis(cbLogAxis->GetValue());
 

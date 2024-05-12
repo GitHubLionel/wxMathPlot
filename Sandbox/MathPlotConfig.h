@@ -106,6 +106,7 @@ class MathPlotConfigDialog: public wxDialog
     wxCheckBox* cbCoordVisible;
     wxCheckBox* cbCoordinates;
     wxCheckBox* cbDrawBox;
+    wxCheckBox* cbIsY2Axis;
     wxCheckBox* cbLegendVisible;
     wxCheckBox* cbLogAxis;
     wxCheckBox* cbMagnetize;
