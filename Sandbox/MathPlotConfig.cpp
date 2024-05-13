@@ -238,12 +238,13 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   Panel3 = new wxPanel(nbConfig, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL);
   BoxSizer4 = new wxBoxSizer(wxVERTICAL);
   FlexGridSizer3 = new wxFlexGridSizer(1, 3, 0, 0);
+  FlexGridSizer3->AddGrowableCol(0);
   ChoiceAxis = new wxChoice(Panel3, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator);
-  FlexGridSizer3->Add(ChoiceAxis, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+  FlexGridSizer3->Add(ChoiceAxis, 1, wxALL|wxEXPAND, 5);
   bAddXAxis = new wxButton(Panel3, wxID_ANY, _("Add X axis"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
-  FlexGridSizer3->Add(bAddXAxis, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+  FlexGridSizer3->Add(bAddXAxis, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
   bAddYAxis = new wxButton(Panel3, wxID_ANY, _("Add Y axis"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
-  FlexGridSizer3->Add(bAddYAxis, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+  FlexGridSizer3->Add(bAddYAxis, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
   BoxSizer4->Add(FlexGridSizer3, 0, wxALL|wxEXPAND, 2);
   FlexGridSizer8 = new wxFlexGridSizer(1, 3, 0, 0);
   FlexGridSizer8->AddGrowableCol(1);
@@ -1053,10 +1054,12 @@ void MathPlotConfigDialog::OnbApplyClick(wxCommandEvent &WXUNUSED(event))
         CurrentScale->SetAlign(scale_offset + cbAxisPosition->GetSelection());
         CurrentScale->SetDrawOutsideMargins(cbAxisOutside->GetValue());
         CurrentScale->SetLabelFormat(edFormat->GetValue());
-        wxString classname = CurrentScale->GetClassInfo()->GetClassName();
 
+        wxString newName = _T("");
+        wxString classname = CurrentScale->GetClassInfo()->GetClassName();
         if (classname.IsSameAs(_T("mpScaleX")))
         {
+          newName = _T("X axis - ");
           ((mpScaleX*)CurrentScale)->SetLabelMode(cbFormat->GetSelection());
           // Update InfoCoords if present
           if (CurrentCoords)
@@ -1067,7 +1070,13 @@ void MathPlotConfigDialog::OnbApplyClick(wxCommandEvent &WXUNUSED(event))
         else
         {
           ((mpScaleY*)CurrentScale)->isY2Axis = cbIsY2Axis->GetValue();
+          if (cbIsY2Axis->GetValue())
+            newName = _T("Y2 axis - ");
+          else
+            newName = _T("Y axis - ");
         }
+        // Update name in choice list
+        ChoiceAxis->SetString(ChoiceAxis->GetCurrentSelection(), newName + edAxisName->GetValue());
         CurrentScale->SetLogAxis(cbLogAxis->GetValue());
 
         CurrentScale->SetAuto(cbAutoScale->GetValue());
