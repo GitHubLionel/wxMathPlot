@@ -11,6 +11,9 @@
 #include <wx/msgdlg.h>
 
 //(*InternalHeaders(MathPlotDemoFrame)
+#include <wx/artprov.h>
+#include <wx/bitmap.h>
+#include <wx/image.h>
 #include <wx/intl.h>
 #include <wx/string.h>
 //*)
@@ -52,6 +55,10 @@ const long MathPlotDemoFrame::ID_BUTTON5 = wxNewId();
 const long MathPlotDemoFrame::ID_PANEL1 = wxNewId();
 const long MathPlotDemoFrame::ID_MATHPLOT1 = wxNewId();
 const long MathPlotDemoFrame::ID_PANEL2 = wxNewId();
+const long MathPlotDemoFrame::idMenuPreview = wxNewId();
+const long MathPlotDemoFrame::idMenuPrint = wxNewId();
+const long MathPlotDemoFrame::idMenuExit = wxNewId();
+const long MathPlotDemoFrame::idMenuAbout = wxNewId();
 //*)
 
 BEGIN_EVENT_TABLE(MathPlotDemoFrame,wxFrame)
@@ -63,6 +70,12 @@ MathPlotDemoFrame::MathPlotDemoFrame(wxWindow* parent,wxWindowID id)
 {
     //(*Initialize(MathPlotDemoFrame)
     wxBoxSizer* BoxSizer1;
+    wxMenu* Menu1;
+    wxMenu* Menu3;
+    wxMenuBar* MenuBar1;
+    wxMenuItem* miAbout;
+    wxMenuItem* miPreview;
+    wxMenuItem* miQuit;
 
     Create(parent, wxID_ANY, _("MathPlot Demo"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_FRAME_STYLE, _T("wxID_ANY"));
     SetClientSize(wxSize(800,400));
@@ -82,16 +95,36 @@ MathPlotDemoFrame::MathPlotDemoFrame(wxWindow* parent,wxWindowID id)
     mPlot->Fit();
     BoxSizer1->Add(mPlot, 1, wxALL|wxEXPAND, 5);
     pPlot->SetSizer(BoxSizer1);
-    BoxSizer1->Fit(pPlot);
-    BoxSizer1->SetSizeHints(pPlot);
     AuiManager1->AddPane(pPlot, wxAuiPaneInfo().Name(_T("PaneName1")).DefaultPane().Caption(_("Plot")).CaptionVisible().MaximizeButton().CloseButton(false).Center());
     AuiManager1->Update();
+    MenuBar1 = new wxMenuBar();
+    Menu1 = new wxMenu();
+    miPreview = new wxMenuItem(Menu1, idMenuPreview, _("Print Preview"), wxEmptyString, wxITEM_NORMAL);
+    miPreview->SetBitmap(wxArtProvider::GetBitmap(wxART_MAKE_ART_ID_FROM_STR(_T("wxART_FULL_SCREEN")),wxART_MENU));
+    Menu1->Append(miPreview);
+    miPrint = new wxMenuItem(Menu1, idMenuPrint, _("Print"), wxEmptyString, wxITEM_NORMAL);
+    miPrint->SetBitmap(wxArtProvider::GetBitmap(wxART_MAKE_ART_ID_FROM_STR(_T("wxART_PRINT")),wxART_MENU));
+    Menu1->Append(miPrint);
+    miQuit = new wxMenuItem(Menu1, idMenuExit, _("Exit\tAlt-X"), wxEmptyString, wxITEM_NORMAL);
+    miQuit->SetBitmap(wxArtProvider::GetBitmap(wxART_MAKE_ART_ID_FROM_STR(_T("wxART_QUIT")),wxART_MENU));
+    Menu1->Append(miQuit);
+    MenuBar1->Append(Menu1, _("File"));
+    Menu3 = new wxMenu();
+    miAbout = new wxMenuItem(Menu3, idMenuAbout, _("About\tF1"), wxEmptyString, wxITEM_NORMAL);
+    miAbout->SetBitmap(wxArtProvider::GetBitmap(wxART_MAKE_ART_ID_FROM_STR(_T("wxART_INFORMATION")),wxART_MENU));
+    Menu3->Append(miAbout);
+    MenuBar1->Append(Menu3, _("Help"));
+    SetMenuBar(MenuBar1);
 
-    Connect(ID_BUTTON1,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&MathPlotDemoFrame::OnbDrawClick);
-    Connect(ID_BUTTON2,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&MathPlotDemoFrame::OnbSampleClick);
-    Connect(ID_BUTTON3,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&MathPlotDemoFrame::OnbBarClick);
-    Connect(ID_BUTTON4,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&MathPlotDemoFrame::OnbLogClick);
-    Connect(ID_BUTTON5,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&MathPlotDemoFrame::OnbLogXYClick);
+    Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotDemoFrame::OnbDrawClick, this, ID_BUTTON1);
+    Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotDemoFrame::OnbSampleClick, this, ID_BUTTON2);
+    Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotDemoFrame::OnbBarClick, this, ID_BUTTON3);
+    Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotDemoFrame::OnbLogClick, this, ID_BUTTON4);
+    Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotDemoFrame::OnbLogXYClick, this, ID_BUTTON5);
+    Bind(wxEVT_COMMAND_MENU_SELECTED, &MathPlotDemoFrame::OnmiPreviewSelected, this, idMenuPreview);
+    Bind(wxEVT_COMMAND_MENU_SELECTED, &MathPlotDemoFrame::OnmiPrintSelected, this, idMenuPrint);
+    Bind(wxEVT_COMMAND_MENU_SELECTED, &MathPlotDemoFrame::OnmiQuitSelected, this, idMenuExit);
+    Bind(wxEVT_COMMAND_MENU_SELECTED, &MathPlotDemoFrame::OnmiAboutSelected, this, idMenuAbout);
     //*)
 
     InitializePlot();
@@ -150,7 +183,7 @@ void MathPlotDemoFrame::CleanPlot(void)
   bottomAxis->SetAuto(true);
 }
 
-void MathPlotDemoFrame::OnbDrawClick(wxCommandEvent& event)
+void MathPlotDemoFrame::OnbDrawClick(wxCommandEvent &WXUNUSED(event))
 {
   CleanPlot();
 	// add a simple sinus serie
@@ -160,7 +193,7 @@ void MathPlotDemoFrame::OnbDrawClick(wxCommandEvent& event)
 	mPlot->Fit();
 }
 
-void MathPlotDemoFrame::OnbSampleClick(wxCommandEvent& event)
+void MathPlotDemoFrame::OnbSampleClick(wxCommandEvent &WXUNUSED(event))
 {
   CleanPlot();
 
@@ -172,7 +205,7 @@ void MathPlotDemoFrame::OnbSampleClick(wxCommandEvent& event)
 	mPlot->Fit();
 }
 
-void MathPlotDemoFrame::OnbBarClick(wxCommandEvent& event)
+void MathPlotDemoFrame::OnbBarClick(wxCommandEvent &WXUNUSED(event))
 {
   CleanPlot();
 
@@ -192,7 +225,7 @@ void MathPlotDemoFrame::OnbBarClick(wxCommandEvent& event)
 	mPlot->Fit();
 }
 
-void MathPlotDemoFrame::OnbLogClick(wxCommandEvent& event)
+void MathPlotDemoFrame::OnbLogClick(wxCommandEvent &WXUNUSED(event))
 {
   CleanPlot();
 
@@ -205,7 +238,7 @@ void MathPlotDemoFrame::OnbLogClick(wxCommandEvent& event)
   mPlot->Fit();
 }
 
-void MathPlotDemoFrame::OnbLogXYClick(wxCommandEvent& event)
+void MathPlotDemoFrame::OnbLogXYClick(wxCommandEvent &WXUNUSED(event))
 {
   CleanPlot();
 
@@ -231,4 +264,38 @@ void MathPlotDemoFrame::OnbLogXYClick(wxCommandEvent& event)
 
   mPlot->AddLayer(Power2);
   mPlot->Fit();
+}
+
+void MathPlotDemoFrame::OnmiQuitSelected(wxCommandEvent &WXUNUSED(event))
+{
+  Close(true);
+}
+
+void MathPlotDemoFrame::OnmiAboutSelected(wxCommandEvent &WXUNUSED(event))
+{
+	wxMessageBox(wxString::Format("Welcome to %s MathPlot Demo!\n"
+			"\n"
+			"This is the minimal wxWidgets sample\n"
+			"running under %s.",
+	wxVERSION_STRING, wxGetOsDescription()), "About wxWidgets MathPlot demo",
+	wxOK | wxICON_INFORMATION, this);
+}
+
+void MathPlotDemoFrame::OnmiPreviewSelected(wxCommandEvent &WXUNUSED(event))
+{
+  // Pass two printout objects: for preview, and possible printing.
+  mpPrintout *plotPrint = new mpPrintout(mPlot);
+  mpPrintout *plotPrintPreview = new mpPrintout(mPlot);
+  wxPrintPreview *preview = new wxPrintPreview(plotPrintPreview, plotPrint);
+  wxPreviewFrame *frame = new wxPreviewFrame(preview, this, wxT("Print Plot"), wxPoint(100, 100), wxSize(600, 650));
+  frame->Centre(wxBOTH);
+  frame->Initialize();
+  frame->Show(true);
+}
+
+void MathPlotDemoFrame::OnmiPrintSelected(wxCommandEvent &WXUNUSED(event))
+{
+  wxPrinter printer;
+  mpPrintout printout(mPlot, wxT("Plot print"));
+  printer.Print(this, &printout, true);
 }

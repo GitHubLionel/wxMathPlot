@@ -15,6 +15,7 @@
 #include <wx/aui/aui.h>
 #include <wx/button.h>
 #include <wx/frame.h>
+#include <wx/menu.h>
 #include <wx/panel.h>
 #include <wx/sizer.h>
 //*)
@@ -34,6 +35,10 @@ class MathPlotDemoFrame: public wxFrame
         void OnbBarClick(wxCommandEvent& event);
         void OnbLogClick(wxCommandEvent& event);
         void OnbLogXYClick(wxCommandEvent& event);
+        void OnmiQuitSelected(wxCommandEvent& event);
+        void OnmiAboutSelected(wxCommandEvent& event);
+        void OnmiPreviewSelected(wxCommandEvent& event);
+        void OnmiPrintSelected(wxCommandEvent& event);
         //*)
 
         //(*Identifiers(MathPlotDemoFrame)
@@ -45,6 +50,10 @@ class MathPlotDemoFrame: public wxFrame
         static const long ID_PANEL1;
         static const long ID_MATHPLOT1;
         static const long ID_PANEL2;
+        static const long idMenuPreview;
+        static const long idMenuPrint;
+        static const long idMenuExit;
+        static const long idMenuAbout;
         //*)
 
         //(*Declarations(MathPlotDemoFrame)
@@ -55,6 +64,7 @@ class MathPlotDemoFrame: public wxFrame
         wxButton* bLog;
         wxButton* bLogXY;
         wxButton* bSample;
+        wxMenuItem* miPrint;
         wxPanel* pLog;
         wxPanel* pPlot;
         //*)

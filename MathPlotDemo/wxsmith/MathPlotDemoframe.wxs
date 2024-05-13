@@ -74,5 +74,35 @@
 				<firstadd>0</firstadd>
 			</object>
 		</object>
+		<object class="wxMenuBar" variable="MenuBar1" member="no">
+			<object class="wxMenu" variable="Menu1" member="no">
+				<label>File</label>
+				<object class="wxMenuItem" name="idMenuPreview" variable="miPreview" member="no">
+					<label>Print Preview</label>
+					<bitmap stock_id="wxART_FULL_SCREEN" stock_client="wxART_MENU" />
+					<handler function="OnmiPreviewSelected" entry="EVT_MENU" />
+				</object>
+				<object class="wxMenuItem" name="idMenuPrint" variable="miPrint" member="yes">
+					<label>Print</label>
+					<bitmap stock_id="wxART_PRINT" stock_client="wxART_MENU" />
+					<handler function="OnmiPrintSelected" entry="EVT_MENU" />
+				</object>
+				<object class="wxMenuItem" name="idMenuExit" variable="miQuit" member="no">
+					<label>Exit</label>
+					<accel>Alt-X</accel>
+					<bitmap stock_id="wxART_QUIT" stock_client="wxART_MENU" />
+					<handler function="OnmiQuitSelected" entry="EVT_MENU" />
+				</object>
+			</object>
+			<object class="wxMenu" variable="Menu3" member="no">
+				<label>Help</label>
+				<object class="wxMenuItem" name="idMenuAbout" variable="miAbout" member="no">
+					<label>About</label>
+					<accel>F1</accel>
+					<bitmap stock_id="wxART_INFORMATION" stock_client="wxART_MENU" />
+					<handler function="OnmiAboutSelected" entry="EVT_MENU" />
+				</object>
+			</object>
+		</object>
 	</object>
 </wxsmith>
