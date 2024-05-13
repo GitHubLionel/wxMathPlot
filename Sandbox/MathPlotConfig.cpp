@@ -59,6 +59,7 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   wxFlexGridSizer* FlexGridSizer19;
   wxFlexGridSizer* FlexGridSizer1;
   wxFlexGridSizer* FlexGridSizer2;
+  wxFlexGridSizer* FlexGridSizer3;
   wxFlexGridSizer* FlexGridSizer4;
   wxFlexGridSizer* FlexGridSizer6;
   wxFlexGridSizer* FlexGridSizer7;
@@ -236,8 +237,14 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   Panel2->SetSizer(BoxSizer16);
   Panel3 = new wxPanel(nbConfig, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL);
   BoxSizer4 = new wxBoxSizer(wxVERTICAL);
+  FlexGridSizer3 = new wxFlexGridSizer(1, 3, 0, 0);
   ChoiceAxis = new wxChoice(Panel3, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator);
-  BoxSizer4->Add(ChoiceAxis, 0, wxALL, 5);
+  FlexGridSizer3->Add(ChoiceAxis, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+  bAddXAxis = new wxButton(Panel3, wxID_ANY, _("Add X axis"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
+  FlexGridSizer3->Add(bAddXAxis, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+  bAddYAxis = new wxButton(Panel3, wxID_ANY, _("Add Y axis"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
+  FlexGridSizer3->Add(bAddYAxis, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+  BoxSizer4->Add(FlexGridSizer3, 0, wxALL|wxEXPAND, 2);
   FlexGridSizer8 = new wxFlexGridSizer(1, 3, 0, 0);
   FlexGridSizer8->AddGrowableCol(1);
   StaticText8 = new wxStaticText(Panel3, wxID_ANY, _("Name :"), wxDefaultPosition, wxDefaultSize, 0);
@@ -517,6 +524,8 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   bFontLegend->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotConfigDialog::OnbFontClick, this);
   bLegendBrushColor->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotConfigDialog::OnbColorClick, this);
   ChoiceAxis->Bind(wxEVT_COMMAND_CHOICE_SELECTED, &MathPlotConfigDialog::OnAxisSelect, this);
+  bAddXAxis->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotConfigDialog::OnbAddAxisClick, this);
+  bAddYAxis->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotConfigDialog::OnbAddAxisClick, this);
   bFontAxis->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotConfigDialog::OnbFontClick, this);
   bAxisPenColor->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotConfigDialog::OnbColorClick, this);
   cbAutoScale->Bind(wxEVT_COMMAND_CHECKBOX_CLICKED, &MathPlotConfigDialog::OncbAutoScaleClick, this);
@@ -777,7 +786,6 @@ void MathPlotConfigDialog::UpdateAxis(void)
 
   if (classname.IsSameAs(_T("mpScaleX")))
   {
-//    CurrentScale = (mpScale*)m_plot->GetLayerXAxis();
     cbIsY2Axis->Show(false);
     cbAxisPosition->Clear();
     scale_offset = mpALIGN_BORDER_BOTTOM;
@@ -790,7 +798,6 @@ void MathPlotConfigDialog::UpdateAxis(void)
   }
   else
   {
-//    CurrentScale = (mpScale*)m_plot->GetLayerYAxis();
     cbIsY2Axis->Show(true);
     cbIsY2Axis->SetValue(((mpScaleY*)CurrentScale)->isY2Axis);
     cbAxisPosition->Clear();
@@ -844,6 +851,19 @@ void MathPlotConfigDialog::UpdateAxis(void)
     edScaleMin->GetValidator()->TransferToWindow();
     edScaleMax->GetValidator()->TransferToWindow();
   }
+
+void MathPlotConfigDialog::OnbAddAxisClick(wxCommandEvent& event)
+{
+  wxButton *bt = wxDynamicCast(event.GetEventObject(), wxButton);
+  mpScale *newAxis = NULL;
+  if (bt == bAddXAxis)
+    newAxis = (mpScale *)new mpScaleX(wxT("New X"), mpALIGN_CENTERX, true, mpX_NORMAL);
+  else
+    newAxis = (mpScale *)new mpScaleY(wxT("New Y"), mpALIGN_CENTERY, true);
+  m_plot->AddLayer(newAxis);
+  ChoiceAxis->SetSelection(ChoiceAxis->GetCount() - 1);
+  UpdateAxis();
+}
 
 void MathPlotConfigDialog::OnAxisSelect(wxCommandEvent &WXUNUSED(event))
 {

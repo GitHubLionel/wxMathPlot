@@ -80,6 +80,7 @@ class MathPlotConfigDialog: public wxDialog
     void OnbApplyClick(wxCommandEvent &event);
     void OnbFontClick(wxCommandEvent &event);
     void OnbDelSeriesClick(wxCommandEvent &event);
+    void OnbAddAxisClick(wxCommandEvent& event);
     //*)
 
     //(*Identifiers(MathPlotConfigDialog)
@@ -88,6 +89,8 @@ class MathPlotConfigDialog: public wxDialog
     //(*Declarations(MathPlotConfigDialog)
     wxBoxSizer* BoxSizer2;
     wxBoxSizer* sizerMain;
+    wxButton* bAddXAxis;
+    wxButton* bAddYAxis;
     wxButton* bApply;
     wxButton* bAxisPenColor;
     wxButton* bBGColor;
