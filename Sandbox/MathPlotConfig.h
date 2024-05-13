@@ -67,6 +67,7 @@ class MathPlotConfigDialog: public wxDialog
     int scale_offset;
     double scale_min, scale_max;
     bool CheckBar;
+    bool Y2AxisExist;
 
     //(*Handlers(MathPlotConfigDialog)
     void OnQuit(wxCommandEvent &event);
@@ -106,6 +107,7 @@ class MathPlotConfigDialog: public wxDialog
     wxCheckBox* cbCoordVisible;
     wxCheckBox* cbCoordinates;
     wxCheckBox* cbDrawBox;
+    wxCheckBox* cbGridVisible;
     wxCheckBox* cbIsY2Axis;
     wxCheckBox* cbLegendVisible;
     wxCheckBox* cbLogAxis;

@@ -316,6 +316,9 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   cbAxisVisible = new wxCheckBox(Panel3, wxID_ANY, _("Visible"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
   cbAxisVisible->SetValue(false);
   BoxSizer5->Add(cbAxisVisible, 0, wxALL|wxALIGN_LEFT, 5);
+  cbGridVisible = new wxCheckBox(Panel3, wxID_ANY, _("Show grid"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
+  cbGridVisible->SetValue(false);
+  BoxSizer5->Add(cbGridVisible, 0, wxALL|wxALIGN_LEFT, 5);
   cbAxisOutside = new wxCheckBox(Panel3, wxID_ANY, _("Draw Outside Margins"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
   cbAxisOutside->SetValue(false);
   BoxSizer5->Add(cbAxisOutside, 0, wxALL|wxALIGN_LEFT, 5);
@@ -550,6 +553,7 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   scale_min = -1;
   scale_max = 1;
   CheckBar = false;
+  Y2AxisExist = false;
 //    Initialize();
 }
 
@@ -611,6 +615,7 @@ void MathPlotConfigDialog::Initialize()
 
   // X axis
   ChoiceAxis->Clear();
+  Y2AxisExist = false;
   for (unsigned int i = 0; i < m_plot->CountLayersType(mpLAYER_AXIS); i++)
   {
     mpScale *axis = (mpScale*)m_plot->GetLayerAxis(i);
@@ -620,7 +625,10 @@ void MathPlotConfigDialog::Initialize()
     else
     {
       if (((mpScaleY*)axis)->isY2Axis)
+      {
         ChoiceAxis->Append(_T("Y2 axis - ") + axis->GetName());
+        Y2AxisExist = true;
+      }
       else
         ChoiceAxis->Append(_T("Y axis - ") + axis->GetName());
     }
@@ -800,6 +808,7 @@ void MathPlotConfigDialog::UpdateAxis(void)
     cbAxisPenWidth->SetSelection(CurrentScale->GetPen().GetWidth() - 1);
     cbAxisPenStyle->SetSelection(CurrentScale->GetPen().GetStyle() - wxPENSTYLE_SOLID);
     cbAxisVisible->SetValue(CurrentScale->IsVisible());
+  cbGridVisible->SetValue(CurrentScale->GetShowGrids());
     cbAxisPosition->SetSelection(CurrentScale->GetAlign() - scale_offset);
     edFormat->SetValue(CurrentScale->GetLabelFormat());
     cbLogAxis->SetValue(CurrentScale->IsLogAxis());
@@ -905,6 +914,7 @@ void MathPlotConfigDialog::UpdateSelectedSerie(void)
     cbSeriesShowName->SetValue(CurrentSerie->GetShowName());
     cbTractable->SetValue(CurrentSerie->IsTractable());
     cbSecondYAxis->SetValue(CurrentSerie->GetY2Axis());
+    cbSecondYAxis->Enable(Y2AxisExist);
 
     cbSeriesStep->SetValue(CurrentSerie->GetStep());
 
@@ -1019,6 +1029,7 @@ void MathPlotConfigDialog::OnbApplyClick(wxCommandEvent &WXUNUSED(event))
             (wxPenStyle)(cbAxisPenStyle->GetSelection() + wxPENSTYLE_SOLID));
         CurrentScale->SetPen(pen);
         CurrentScale->SetVisible(cbAxisVisible->GetValue());
+        CurrentScale->ShowGrids(cbGridVisible->GetValue());
         CurrentScale->SetAlign(scale_offset + cbAxisPosition->GetSelection());
         CurrentScale->SetDrawOutsideMargins(cbAxisOutside->GetValue());
         CurrentScale->SetLabelFormat(edFormat->GetValue());

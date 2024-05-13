@@ -2604,14 +2604,12 @@ void mpWindow::OnToggleGrids(wxCommandEvent &WXUNUSED(event))
   mpScaleX* scaleX = GetLayerXAxis();
   if (scaleX)
   {
-    bool grid = scaleX->GetShowGrids();
-    scaleX->ShowGrids(!grid);
+    scaleX->ShowGrids(!scaleX->GetShowGrids());
   }
   mpScaleY* scaleY = GetLayerYAxis();
   if (scaleY)
   {
-    bool grid = scaleY->GetShowGrids();
-    scaleY->ShowGrids(!grid);
+    scaleY->ShowGrids(!scaleY->GetShowGrids());
   }
   UpdateAll();
 }
@@ -3022,6 +3020,14 @@ bool mpWindow::UpdateBBox()
       m_bound.Ymin = 0;
     else
       m_bound.Ymax = 0;
+  }
+
+  if (m_bound.Y2min == m_bound.Y2max)
+  {
+    if (m_bound.Y2max > 0)
+      m_bound.Y2min = 0;
+    else
+      m_bound.Y2max = 0;
   }
 
   // Log X axis
