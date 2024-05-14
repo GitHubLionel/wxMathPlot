@@ -563,7 +563,6 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   scale_min = -1;
   scale_max = 1;
   CheckBar = false;
-  Y2AxisExist = false;
 //    Initialize();
 }
 
@@ -625,7 +624,6 @@ void MathPlotConfigDialog::Initialize()
 
   // X axis
   ChoiceAxis->Clear();
-  Y2AxisExist = false;
   for (unsigned int i = 0; i < m_plot->CountLayersType(mpLAYER_AXIS); i++)
   {
     mpScale *axis = (mpScale*)m_plot->GetLayerAxis(i);
@@ -634,10 +632,9 @@ void MathPlotConfigDialog::Initialize()
       ChoiceAxis->Append(_T("X axis - ") + axis->GetName());
     else
     {
-      if (((mpScaleY*)axis)->isY2Axis)
+      if (((mpScaleY*)axis)->IsY2Axis())
       {
         ChoiceAxis->Append(_T("Y2 axis - ") + axis->GetName());
-        Y2AxisExist = true;
       }
       else
         ChoiceAxis->Append(_T("Y axis - ") + axis->GetName());
@@ -800,7 +797,7 @@ void MathPlotConfigDialog::UpdateAxis(void)
   else
   {
     cbIsY2Axis->Show(true);
-    cbIsY2Axis->SetValue(((mpScaleY*)CurrentScale)->isY2Axis);
+    cbIsY2Axis->SetValue(((mpScaleY*)CurrentScale)->IsY2Axis());
     cbAxisPosition->Clear();
     scale_offset = mpALIGN_BORDER_LEFT;
     for (int i = scale_offset; i <= mpALIGN_BORDER_RIGHT; i++)
@@ -935,7 +932,7 @@ void MathPlotConfigDialog::UpdateSelectedSerie(void)
     cbSeriesShowName->SetValue(CurrentSerie->GetShowName());
     cbTractable->SetValue(CurrentSerie->IsTractable());
     cbSecondYAxis->SetValue(CurrentSerie->GetY2Axis());
-    cbSecondYAxis->Enable(Y2AxisExist);
+    cbSecondYAxis->Enable(m_plot->Y2AxisExist());
 
     cbSeriesStep->SetValue(CurrentSerie->GetStep());
 
@@ -1069,7 +1066,7 @@ void MathPlotConfigDialog::OnbApplyClick(wxCommandEvent &WXUNUSED(event))
         }
         else
         {
-          ((mpScaleY*)CurrentScale)->isY2Axis = cbIsY2Axis->GetValue();
+          ((mpScaleY*)CurrentScale)->SetY2Axis(cbIsY2Axis->GetValue());
           if (cbIsY2Axis->GetValue())
             newName = _T("Y2 axis - ");
           else
@@ -1127,6 +1124,9 @@ void MathPlotConfigDialog::OnbApplyClick(wxCommandEvent &WXUNUSED(event))
 
         // Refresh page
         UpdateAxis();
+        cbSecondYAxis->Enable(m_plot->Y2AxisExist());
+        if (!m_plot->Y2AxisExist())
+          cbSecondYAxis->SetValue(false);
       }
       break;
 

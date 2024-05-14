@@ -479,11 +479,6 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
       ;
     }
 
-    /** Draw a symbol in place of point.
-     @return void
-     */
-    virtual void DrawSymbol(wxDC &dc, wxCoord x, wxCoord y);
-
     /** Set layer name
      @param name Name, will be copied to internal class member
      */
@@ -563,22 +558,6 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
     const wxBrush& GetBrush() const
     {
       return m_brush;
-    }
-
-    /** Set the 'continuity' property of the layer (true: draws a continuous line, false: draws separate points (default)).
-     * @sa GetContinuity
-     */
-    void SetContinuity(bool continuity)
-    {
-      m_continuous = continuity;
-    }
-
-    /** Gets the 'continuity' property of the layer.
-     * @sa SetContinuity
-     */
-    bool GetContinuity() const
-    {
-      return m_continuous;
     }
 
     /** Set Name visibility.
@@ -665,35 +644,6 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
       return m_flags;
     }
 
-    /** Set symbol.
-     @param symbol (choose between mps...) */
-    void SetSymbol(mpSymbol symbol)
-    {
-      m_symbol = symbol;
-    }
-
-    /** Get symbol.
-     @return symbol */
-    mpSymbol GetSymbol() const
-    {
-      return m_symbol;
-    }
-
-    /** Set symbol size.
-     @param size  */
-    void SetSymbolSize(int size)
-    {
-      m_symbolSize = size;
-      m_symbolSize2 = size / 2;
-    }
-
-    /** Get symbol size.
-     @return size  */
-    int GetSymbolSize() const
-    {
-      return m_symbolSize;
-    }
-
     /** Set CanDelete for plot.
      @param CanDelete */
     void SetCanDelete(bool canDelete)
@@ -716,16 +666,12 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
     wxPen m_pen;                //!< Layer's pen. Default Colour = Black, width = 1, style = wxPENSTYLE_SOLID
     wxBrush m_brush;            //!< Layer's brush. Default wxTRANSPARENT_BRUSH
     wxString m_name;            //!< Layer's name
-    bool m_continuous;          //!< Specify if the layer will be plotted as a continuous line or a set of points. Default false
     bool m_showName;            //!< States whether the name of the layer must be shown. Default : false
     bool m_drawOutsideMargins;  //!< Select if the layer should draw only inside margins or over all DC. Default : false
     bool m_visible;             //!< Toggles layer visibility. Default : true
     bool m_tractable;           //!< Is the layer tractable
     int m_flags;                //!< Holds label alignment. Default : mpALIGN_NE
     mpRect m_plotBondaries;     //!< The bondaries for plotting curve calculated by mpWindow
-    mpSymbol m_symbol;          //!< A symbol for the plot in place of point. Default mpNone
-    int m_symbolSize;           //!< Size of the symbol. Default 6
-    int m_symbolSize2;          //!< Size of the symbol div 2.
     bool m_CanDelete;           //!< Is the layer can be deleted
 
     /** Initialize the context
@@ -1027,6 +973,22 @@ class WXDLLIMPEXP_MATHPLOT mpFunction: public mpLayer
      */
     mpFunction(const wxString &name = wxEmptyString);
 
+    /** Set the 'continuity' property of the layer (true: draws a continuous line, false: draws separate points (default)).
+     * @sa GetContinuity
+     */
+    void SetContinuity(bool continuity)
+    {
+      m_continuous = continuity;
+    }
+
+    /** Gets the 'continuity' property of the layer.
+     * @sa SetContinuity
+     */
+    bool GetContinuity() const
+    {
+      return m_continuous;
+    }
+
     /** Set step for plot.
      @param step */
     void SetStep(unsigned int step)
@@ -1040,6 +1002,40 @@ class WXDLLIMPEXP_MATHPLOT mpFunction: public mpLayer
     {
       return m_step;
     }
+
+    /** Set symbol.
+     @param symbol (choose between mps...) */
+    void SetSymbol(mpSymbol symbol)
+    {
+      m_symbol = symbol;
+    }
+
+    /** Get symbol.
+     @return symbol */
+    mpSymbol GetSymbol() const
+    {
+      return m_symbol;
+    }
+
+    /** Set symbol size.
+     @param size  */
+    void SetSymbolSize(int size)
+    {
+      m_symbolSize = size;
+      m_symbolSize2 = size / 2;
+    }
+
+    /** Get symbol size.
+     @return size  */
+    int GetSymbolSize() const
+    {
+      return m_symbolSize;
+    }
+
+    /** Draw a symbol in place of point.
+     @return void
+     */
+    virtual void DrawSymbol(wxDC &dc, wxCoord x, wxCoord y);
 
     /** Set use of second Y axis
      @param _useY2 for the scaling
@@ -1058,13 +1054,17 @@ class WXDLLIMPEXP_MATHPLOT mpFunction: public mpLayer
     }
 
   protected:
-
+    bool m_continuous;          //!< Specify if the layer will be plotted as a continuous line or a set of points. Default false
+    mpSymbol m_symbol;          //!< A symbol for the plot in place of point. Default mpNone
+    int m_symbolSize;           //!< Size of the symbol. Default 6
+    int m_symbolSize2;          //!< Size of the symbol div 2.
     unsigned int m_step;        //!< Step to get point to be draw. Default : 1
     /**
      * Use Y2 axis
      * This second axis must exist
      */
     bool UseY2Axis;
+
   DECLARE_DYNAMIC_CLASS(mpFunction)
 };
 
@@ -1674,7 +1674,7 @@ class WXDLLIMPEXP_MATHPLOT mpScaleY: public mpScale
     mpScaleY(const wxString &name = _T("Y"), int flags = mpALIGN_CENTERY, bool grids = false, bool Y2Axis = false) :
         mpScale(name, flags, grids)
     {
-      isY2Axis = Y2Axis;
+      m_isY2Axis = Y2Axis;
     }
 
     /** Layer plot handler.
@@ -1696,9 +1696,14 @@ class WXDLLIMPEXP_MATHPLOT mpScaleY: public mpScale
     virtual bool IsLogAxis();
     virtual void SetLogAxis(bool log);
 
-    bool isY2Axis;
+    virtual bool IsY2Axis()
+    {
+      return m_isY2Axis;
+    }
+    virtual void SetY2Axis(bool y2Axis);
 
   protected:
+    bool m_isY2Axis;
 
   DECLARE_DYNAMIC_CLASS(mpScaleY)
 };
@@ -1816,8 +1821,6 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
       return &m_popmenu;
     }
 
-    double Y2Factor = 2.0;
-
     /** Add a plot layer to the canvas.
      @param layer Pointer to layer. The mpLayer object will get under control of mpWindow,
      i.e. it will be delete'd on mpWindow destruction
@@ -1877,7 +1880,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     /*!
      * Search the point of the layer plot nearest a point
      */
-    mpLayer* GetClosestPlot(wxCoord ix, wxCoord iy, double *xnear, double *ynear);
+    mpLayer* GetClosestPlot(wxCoord ix, wxCoord iy, double *xnear, double *ynear, bool *isY2Axis);
 
     /*! Get the layer by its name (case sensitive).
      @param name The name of the layer to retrieve
@@ -2449,6 +2452,13 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 
     void RefreshConfigWindow();
 
+    void Update_CountY2Axis(bool Y2Axis);
+
+    bool Y2AxisExist(void)
+    {
+      return m_countY2Axis > 0;
+    }
+
   protected:
     void OnPaint(wxPaintEvent &event);                    //!< Paint handler, will plot all attached layers
     void OnSize(wxSizeEvent &event);                      //!< Size handler, will update scroll bar sizes
@@ -2563,9 +2573,8 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     wxOnDeleteLayer m_OnDeleteLayer = NULL;        //!< Event when we delete a layer
 
   private:
+    int m_countY2Axis = 0;
     void FillI18NString();
-
-    bool FitWithBound = false;
 
   DECLARE_DYNAMIC_CLASS(mpWindow)DECLARE_EVENT_TABLE()
 
@@ -2752,8 +2761,9 @@ class WXDLLIMPEXP_MATHPLOT mpPrintout: public wxPrintout
  *  To ease the implementation of descendent classes, mpMovableObject will
  *  be in charge of Bounding Box computation and layer rendering, assuming that
  *  the object updates its shape in m_shape_xs & m_shape_ys.
+ *  We derive from mpFunction to have symbol and continuity properties
  */
-class WXDLLIMPEXP_MATHPLOT mpMovableObject: public mpLayer
+class WXDLLIMPEXP_MATHPLOT mpMovableObject: public mpFunction
 {
   public:
     /** Default constructor (sets location and rotation to (0,0,0))
