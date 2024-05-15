@@ -1496,7 +1496,7 @@ class WXDLLIMPEXP_MATHPLOT mpScale: public mpLayer
 
     /** Set axis Label format (used for mpX_NORMAL draw mode).
      @param format The format string */
-    void SetLabelFormat(const wxString &format)
+    virtual void SetLabelFormat(const wxString &format)
     {
       m_labelFormat = format;
     }
@@ -1617,6 +1617,12 @@ class WXDLLIMPEXP_MATHPLOT mpScaleX: public mpScale
     /** Layer plot handler.
      This implementation will plot the ruler adjusted to the visible area. */
     virtual void DoPlot(wxDC &dc, mpWindow &w);
+
+    virtual void SetLabelFormat(const wxString &format)
+    {
+      mpScale::SetLabelFormat(format);
+      m_labelType = mpX_USER;
+    }
 
     /** Get X axis label view mode.
      @return mpX_NORMAL for normal labels, mpX_TIME for time axis in hours, minutes, seconds. */
@@ -2476,7 +2482,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     void OnLockAspect(wxCommandEvent &event);             //!< Context menu handler
     void OnMouseHelp(wxCommandEvent &event);              //!< Context menu handler
     void OnMouseLeftDown(wxMouseEvent &event);            //!< Mouse left click (for rect zoom)
-    void OnMouseRightDown(wxMouseEvent &event);           //!< Mouse handler, for detecting when the user drags with the right button or just "clicks" for the menu
+    void OnMouseRightDown(wxMouseEvent &event); //!< Mouse handler, for detecting when the user drags with the right button or just "clicks" for the menu
     void OnMouseMove(wxMouseEvent &event);                //!< Mouse handler for mouse motion (for pan)
     void OnMouseLeftRelease(wxMouseEvent &event);         //!< Mouse left click (for rect zoom)
     void OnMouseWheel(wxMouseEvent &event);               //!< Mouse handler for the wheel

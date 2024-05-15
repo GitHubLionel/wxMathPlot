@@ -502,7 +502,7 @@ void mpInfoCoords::UpdateInfo(mpWindow &w, wxEvent &event)
   {
     double xVal = 0.0, yVal = 0.0, y2Val = 0.0;
     bool isY2Axis = false;
-  struct tm timestruct;
+    struct tm timestruct;
 
     m_mouseX = ((wxMouseEvent&)event).GetX();
     m_mouseY = ((wxMouseEvent&)event).GetY();
@@ -539,13 +539,13 @@ void mpInfoCoords::UpdateInfo(mpWindow &w, wxEvent &event)
     {
       case mpX_NORMAL:
       case mpX_USER:
-          m_content.Printf(_T("x = %g"), xVal);
+        m_content.Printf(_T("x = %g"), xVal);
         break;
       case mpX_DATETIME:
       {
         if (DoubleToTimeStruct(xVal, m_timeConv, &timestruct))
-          m_content.Printf(_T("x = %04d-%02d-%02dT%02d:%02d:%02d"), timestruct.tm_year + 1900, timestruct.tm_mon + 1,
-              timestruct.tm_mday, timestruct.tm_hour, timestruct.tm_min, timestruct.tm_sec);
+          m_content.Printf(_T("x = %04d-%02d-%02dT%02d:%02d:%02d"), timestruct.tm_year + 1900, timestruct.tm_mon + 1, timestruct.tm_mday,
+              timestruct.tm_hour, timestruct.tm_min, timestruct.tm_sec);
         break;
       }
       case mpX_DATE:
@@ -903,7 +903,7 @@ void mpFunction::DrawSymbol(wxDC &dc, wxCoord x, wxCoord y)
 IMPLEMENT_ABSTRACT_CLASS(mpFX, mpFunction)
 
 mpFX::mpFX(const wxString &name, int flags) :
-  mpFunction(name)
+    mpFunction(name)
 {
   m_flags = flags;
 }
@@ -1010,7 +1010,7 @@ void mpFX::DoPlot(wxDC &dc, mpWindow &w)
 IMPLEMENT_ABSTRACT_CLASS(mpFY, mpFunction)
 
 mpFY::mpFY(const wxString &name, int flags) :
-  mpFunction(name)
+    mpFunction(name)
 {
   m_flags = flags;
 }
@@ -1117,7 +1117,7 @@ void mpFY::DoPlot(wxDC &dc, mpWindow &w)
 IMPLEMENT_ABSTRACT_CLASS(mpFXY, mpFunction)
 
 mpFXY::mpFXY(const wxString &name, int flags, bool viewAsBar) :
-  mpFunction(name)
+    mpFunction(name)
 {
   m_flags = flags;
   maxDrawX = minDrawX = maxDrawY = minDrawY = 0;
@@ -1573,7 +1573,7 @@ bool mpFXYVector::AddData(const double x, const double y, bool updatePlot)
 IMPLEMENT_ABSTRACT_CLASS(mpProfile, mpFunction)
 
 mpProfile::mpProfile(const wxString &name, int flags) :
-  mpFunction(name)
+    mpFunction(name)
 {
   m_flags = flags;
 }
@@ -1922,14 +1922,14 @@ void mpScaleX::DoPlot(wxDC &dc, mpWindow &w)
     case mpX_NORMAL:
     case mpX_USER:
     {
-      if (!m_labelFormat.IsEmpty())
+      if ((m_labelType == mpX_USER) && (!m_labelFormat.IsEmpty()))
       {
         fmt = m_labelFormat;
       }
       else
       {
         int tmp = (int)log10(step);
-        if (tmp >= 1)
+        if (tmp > 1)
         {
           fmt = _T("%.g");
         }
@@ -2045,7 +2045,7 @@ void mpScaleX::DoPlot(wxDC &dc, mpWindow &w)
 bool mpScaleX::IsLogAxis()
 {
   if (m_win)
-  return m_win->IsLogXaxis();
+    return m_win->IsLogXaxis();
   else
     return false;
 }
@@ -2053,7 +2053,7 @@ bool mpScaleX::IsLogAxis()
 void mpScaleX::SetLogAxis(bool log)
 {
   if (m_win)
-  m_win->SetLogXaxis(log);
+    m_win->SetLogXaxis(log);
 }
 
 //-----------------------------------------------------------------------------
@@ -2170,7 +2170,7 @@ void mpScaleY::DoPlot(wxDC &dc, mpWindow &w)
 bool mpScaleY::IsLogAxis()
 {
   if (m_win)
-  return m_win->IsLogYaxis();
+    return m_win->IsLogYaxis();
   else
     return false;
 }
@@ -2178,7 +2178,7 @@ bool mpScaleY::IsLogAxis()
 void mpScaleY::SetLogAxis(bool log)
 {
   if (m_win)
-  m_win->SetLogYaxis(log);
+    m_win->SetLogYaxis(log);
 }
 
 void mpScaleY::SetY2Axis(bool y2Axis)
@@ -2646,7 +2646,7 @@ void mpWindow::Fit(const mpFloatRect &rect, wxCoord *printSizeX, wxCoord *printS
   // But account for centering if we have lock aspect:
   m_posX = (rect.Xmin + rect.Xmax) / 2 - (m_plotWidth / 2 + m_margin.left) / m_scaleX;
   m_posY = (rect.Ymin + rect.Ymax) / 2 + (m_plotHeight / 2 + m_margin.top) / m_scaleY;
-    m_posY2 = (rect.Y2min + rect.Y2max) / 2 + (m_plotHeight / 2 + m_margin.top) / m_scaleY2;
+  m_posY2 = (rect.Y2min + rect.Y2max) / 2 + (m_plotHeight / 2 + m_margin.top) / m_scaleY2;
 
 #ifdef MATHPLOT_DO_LOGGING
   wxLogMessage(_T("mpWindow::Fit() m_desired.Xmin=%f m_desired.Xmax=%f  m_desired.Ymin=%f m_desired.Ymax=%f"),
@@ -3009,10 +3009,10 @@ bool mpWindow::AddLayer(mpLayer *layer, bool refreshDisplay)
       if (scale == mpsScaleY)
       {
         if (m_YAxis == NULL)
-      {
-        // Only the first Y axis
-        m_YAxis = (mpScaleY*)layer;
-      }
+        {
+          // Only the first Y axis
+          m_YAxis = (mpScaleY*)layer;
+        }
         if (((mpScaleY*)layer)->IsY2Axis())
           Update_CountY2Axis(true);
       }
@@ -3278,15 +3278,15 @@ bool mpWindow::UpdateBBox()
         if (f_bound.Xmax > m_bound.Xmax)
           m_bound.Xmax = f_bound.Xmax;
 
-        if ((f->IsFunction(&function)) && (((mpFunction *)f)->GetY2Axis()))
+        if ((f->IsFunction(&function)) && (((mpFunction*)f)->GetY2Axis()))
         {
           if (f_bound.Y2min < m_bound.Y2min)
             m_bound.Y2min = f_bound.Y2min;
           if (f_bound.Y2max > m_bound.Y2max)
             m_bound.Y2max = f_bound.Y2max;
-      }
-      else
-      {
+        }
+        else
+        {
           if (f_bound.Ymin < m_bound.Ymin)
             m_bound.Ymin = f_bound.Ymin;
           if (f_bound.Ymax > m_bound.Ymax)
@@ -3768,7 +3768,7 @@ void mpWindow::Update_CountY2Axis(bool Y2Axis)
     for (wxLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
     {
       if ((*it)->GetLayerType() == mpLAYER_PLOT)
-        ((mpFunction *)(*it))->SetY2Axis(false);
+        ((mpFunction*)(*it))->SetY2Axis(false);
     }
   }
 }
@@ -4034,8 +4034,6 @@ void mpWindow::RefreshConfigWindow()
   if (m_configWindow)
     m_configWindow->Initialize();
 }
-
-
 
 //-----------------------------------------------------------------------------
 // mpText - provided by Val Greene
@@ -4327,7 +4325,7 @@ void mpMovableObject::DoPlot(wxDC &dc, mpWindow &w)
         if (m_symbol != mpsNone)
           DrawSymbol(dc, w.x2p(*(itX++)), w.y2p(*(itY++)));
         else
-        dc.DrawPoint(w.x2p(*(itX++)), w.y2p(*(itY++)));
+          dc.DrawPoint(w.x2p(*(itX++)), w.y2p(*(itY++)));
       }
     }
     else
@@ -4339,7 +4337,7 @@ void mpMovableObject::DoPlot(wxDC &dc, mpWindow &w)
         if (m_symbol != mpsNone)
           DrawSymbol(dc, cx, cy);
         else
-        dc.DrawLine(cx, cy, cx, cy);
+          dc.DrawLine(cx, cy, cx, cy);
       }
     }
   }
