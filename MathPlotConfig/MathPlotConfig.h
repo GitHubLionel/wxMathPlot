@@ -35,6 +35,7 @@ namespace MathPlot
 
 class WXDLLIMPEXP_MATHPLOT mpWindow;
 class WXDLLIMPEXP_MATHPLOT mpLayer;
+class WXDLLIMPEXP_MATHPLOT mpFunction;
 class WXDLLIMPEXP_MATHPLOT mpInfoCoords;
 class WXDLLIMPEXP_MATHPLOT mpInfoLegend;
 class WXDLLIMPEXP_MATHPLOT mpScale;
@@ -56,7 +57,7 @@ class MathPlotConfigDialog: public wxDialog
     mpInfoLegend* CurrentLegend;
     mpInfoCoords* CurrentCoords;
     mpScale* CurrentScale;
-    mpLayer* CurrentSerie;
+    mpFunction* CurrentSerie;
     wxButton* colourButton;
     wxChoice* CurrentChoice;
     bool fontTitleChanged;
@@ -66,6 +67,7 @@ class MathPlotConfigDialog: public wxDialog
     int scale_offset;
     double scale_min, scale_max;
     bool CheckBar;
+    bool Y2AxisExist;
 
     //(*Handlers(MathPlotConfigDialog)
     void OnQuit(wxCommandEvent &event);
@@ -78,6 +80,7 @@ class MathPlotConfigDialog: public wxDialog
     void OnbApplyClick(wxCommandEvent &event);
     void OnbFontClick(wxCommandEvent &event);
     void OnbDelSeriesClick(wxCommandEvent &event);
+    void OnbAddAxisClick(wxCommandEvent& event);
     //*)
 
     //(*Identifiers(MathPlotConfigDialog)
@@ -86,6 +89,8 @@ class MathPlotConfigDialog: public wxDialog
     //(*Declarations(MathPlotConfigDialog)
     wxBoxSizer* BoxSizer2;
     wxBoxSizer* sizerMain;
+    wxButton* bAddXAxis;
+    wxButton* bAddYAxis;
     wxButton* bApply;
     wxButton* bAxisPenColor;
     wxButton* bBGColor;
@@ -105,9 +110,12 @@ class MathPlotConfigDialog: public wxDialog
     wxCheckBox* cbCoordVisible;
     wxCheckBox* cbCoordinates;
     wxCheckBox* cbDrawBox;
+    wxCheckBox* cbGridVisible;
+    wxCheckBox* cbIsY2Axis;
     wxCheckBox* cbLegendVisible;
     wxCheckBox* cbLogAxis;
     wxCheckBox* cbMagnetize;
+    wxCheckBox* cbSecondYAxis;
     wxCheckBox* cbSeriesContinuity;
     wxCheckBox* cbSeriesOutside;
     wxCheckBox* cbSeriesShowName;

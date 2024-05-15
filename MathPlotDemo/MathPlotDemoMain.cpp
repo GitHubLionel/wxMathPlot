@@ -188,7 +188,7 @@ void MathPlotDemoFrame::OnbDrawClick(wxCommandEvent &WXUNUSED(event))
   CleanPlot();
 	// add a simple sinus serie
 	mpFXYVector *serie = mPlot->GetXYSeries(0);
-	for (int i = 0; i < 100; i++)
+	for (int i = 0; i <= 100; i++)
 		serie->AddData(i / 10.0, sin(i / 10.0), true);
 	mPlot->Fit();
 }

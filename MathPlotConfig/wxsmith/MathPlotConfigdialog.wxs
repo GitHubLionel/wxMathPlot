@@ -173,6 +173,7 @@
 																	<item>Default position</item>
 																	<item>Cursor position</item>
 																</content>
+																<use_items_array>1</use_items_array>
 																<selection>0</selection>
 																<extra_code>cbCoord-&gt;Set(WXSIZEOF(cbCoord__choices), cbCoord__choices);&#x0A;cbCoord-&gt;SetSelection(0);</extra_code>
 															</object>
@@ -247,6 +248,7 @@
 																	<item>Solid</item>
 																	<item>Transparent</item>
 																</content>
+																<use_items_array>1</use_items_array>
 																<selection>0</selection>
 															</object>
 															<flag>wxALL|wxEXPAND</flag>
@@ -296,6 +298,7 @@
 													<item>Bottom right</item>
 													<item>Default position</item>
 												</content>
+												<use_items_array>1</use_items_array>
 												<selection>0</selection>
 											</object>
 											<flag>wxALL|wxEXPAND</flag>
@@ -316,6 +319,7 @@
 													<item>Line</item>
 													<item>Square</item>
 												</content>
+												<use_items_array>1</use_items_array>
 												<selection>0</selection>
 											</object>
 											<flag>wxALL|wxEXPAND</flag>
@@ -336,6 +340,7 @@
 													<item>Vertical</item>
 													<item>Horizontal</item>
 												</content>
+												<use_items_array>1</use_items_array>
 												<selection>0</selection>
 											</object>
 											<flag>wxALL|wxEXPAND</flag>
@@ -404,6 +409,7 @@
 																	<item>Solid</item>
 																	<item>Transparent</item>
 																</content>
+																<use_items_array>1</use_items_array>
 																<selection>0</selection>
 															</object>
 															<flag>wxALL|wxEXPAND</flag>
@@ -431,16 +437,38 @@
 							<object class="wxBoxSizer" variable="BoxSizer4" member="no">
 								<orient>wxVERTICAL</orient>
 								<object class="sizeritem">
-									<object class="wxChoice" name="" variable="ChoiceAxis" member="yes">
-										<content>
-											<item>X axis</item>
-											<item>Y axis</item>
-										</content>
-										<selection>0</selection>
-										<handler function="OnAxisSelect" entry="EVT_CHOICE" />
+									<object class="wxFlexGridSizer" variable="FlexGridSizer3" member="no">
+										<cols>3</cols>
+										<rows>1</rows>
+										<growablecols>0</growablecols>
+										<object class="sizeritem">
+											<object class="wxChoice" name="" variable="ChoiceAxis" member="yes">
+												<use_items_array>1</use_items_array>
+												<handler function="OnAxisSelect" entry="EVT_CHOICE" />
+											</object>
+											<flag>wxALL|wxEXPAND</flag>
+											<border>5</border>
+											<option>1</option>
+										</object>
+										<object class="sizeritem">
+											<object class="wxButton" name="" variable="bAddXAxis" member="yes">
+												<label>Add X axis</label>
+												<handler function="OnbAddAxisClick" entry="EVT_BUTTON" />
+											</object>
+											<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+											<border>5</border>
+										</object>
+										<object class="sizeritem">
+											<object class="wxButton" name="" variable="bAddYAxis" member="yes">
+												<label>Add Y axis</label>
+												<handler function="OnbAddAxisClick" entry="EVT_BUTTON" />
+											</object>
+											<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+											<border>5</border>
+										</object>
 									</object>
-									<flag>wxALL</flag>
-									<border>5</border>
+									<flag>wxALL|wxEXPAND</flag>
+									<border>2</border>
 								</object>
 								<object class="sizeritem">
 									<object class="wxFlexGridSizer" variable="FlexGridSizer8" member="no">
@@ -525,6 +553,7 @@
 																			<item>9</item>
 																			<item>10</item>
 																		</content>
+																		<use_items_array>1</use_items_array>
 																		<selection>0</selection>
 																	</object>
 																	<flag>wxALL|wxEXPAND</flag>
@@ -548,6 +577,7 @@
 																			<item>Short Dash</item>
 																			<item>Dot Dash</item>
 																		</content>
+																		<use_items_array>1</use_items_array>
 																		<selection>0</selection>
 																	</object>
 																	<flag>wxALL|wxEXPAND</flag>
@@ -663,6 +693,13 @@
 													<border>5</border>
 												</object>
 												<object class="sizeritem">
+													<object class="wxCheckBox" name="" variable="cbGridVisible" member="yes">
+														<label>Show grid</label>
+													</object>
+													<flag>wxALL|wxALIGN_LEFT</flag>
+													<border>5</border>
+												</object>
+												<object class="sizeritem">
 													<object class="wxCheckBox" name="" variable="cbAxisOutside" member="yes">
 														<label>Draw Outside Margins</label>
 													</object>
@@ -688,6 +725,7 @@
 																	<item>DateTime</item>
 																	<item>User</item>
 																</content>
+																<use_items_array>1</use_items_array>
 																<selection>0</selection>
 																<extra_code>cbFormat-&gt;Set(WXSIZEOF(cbFormat__choices), cbFormat__choices);&#x0A;cbFormat-&gt;SetSelection(0);</extra_code>
 																<handler function="OncbFormatSelect" entry="EVT_CHOICE" />
@@ -730,7 +768,14 @@
 													<object class="wxCheckBox" name="" variable="cbLogAxis" member="yes">
 														<label>Logarithmic axis</label>
 													</object>
-													<flag>wxALL|wxEXPAND</flag>
+													<flag>wxALL|wxALIGN_LEFT</flag>
+													<border>5</border>
+												</object>
+												<object class="sizeritem">
+													<object class="wxCheckBox" name="" variable="cbIsY2Axis" member="yes">
+														<label>Is Y2 axis</label>
+													</object>
+													<flag>wxALL|wxALIGN_LEFT</flag>
 													<border>5</border>
 												</object>
 											</object>
@@ -858,6 +903,7 @@
 																			<item>9</item>
 																			<item>10</item>
 																		</content>
+																		<use_items_array>1</use_items_array>
 																		<selection>0</selection>
 																	</object>
 																	<flag>wxALL|wxEXPAND</flag>
@@ -881,6 +927,7 @@
 																			<item>Short Dash</item>
 																			<item>Dot Dash</item>
 																		</content>
+																		<use_items_array>1</use_items_array>
 																		<selection>0</selection>
 																	</object>
 																	<flag>wxALL|wxEXPAND</flag>
@@ -934,7 +981,15 @@
 																<label>Tractable</label>
 																<tooltip>Allow mouse coordinates</tooltip>
 															</object>
-															<flag>wxALL</flag>
+															<flag>wxALL|wxALIGN_LEFT</flag>
+															<border>3</border>
+															<option>1</option>
+														</object>
+														<object class="sizeritem">
+															<object class="wxCheckBox" name="" variable="cbSecondYAxis" member="yes">
+																<label>Use second Y axis</label>
+															</object>
+															<flag>wxALL|wxALIGN_LEFT</flag>
 															<border>3</border>
 															<option>1</option>
 														</object>
@@ -992,6 +1047,7 @@
 																			<item>Horizontal</item>
 																			<item>Vertical</item>
 																		</content>
+																		<use_items_array>1</use_items_array>
 																		<selection>0</selection>
 																	</object>
 																	<flag>wxALL|wxEXPAND</flag>
@@ -1031,6 +1087,7 @@
 																			<item>Cross</item>
 																			<item>Plus</item>
 																		</content>
+																		<use_items_array>1</use_items_array>
 																		<selection>0</selection>
 																	</object>
 																	<flag>wxALL|wxEXPAND</flag>
