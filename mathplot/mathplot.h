@@ -1337,6 +1337,13 @@ class WXDLLIMPEXP_MATHPLOT mpFXYVector: public mpFXY
       return true;
     }
 
+    /** Set small percentage added when compute the bound
+     */
+    void SetLimitPercent(double limit)
+    {
+      m_limit_percent = limit;
+    }
+
   protected:
     /** The internal copy of the set of data to draw.
      */
@@ -1353,6 +1360,10 @@ class WXDLLIMPEXP_MATHPLOT mpFXYVector: public mpFXY
     /** Loaded at SetData
      */
     double m_minX, m_maxX, m_minY, m_maxY, m_lastX;
+
+    /** small percentage added when compute the bound
+     */
+    double m_limit_percent;
 
     /** Rewind value enumeration with mpFXY::GetNextXY.
      Overridden in this implementation.
@@ -1881,7 +1892,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      * Return the serie n
      * If the serie not exist then create it
      */
-    mpFXYVector* GetXYSeries(unsigned int n, const wxString &name = _T("Serie :"), bool create = true);
+    mpFXYVector* GetXYSeries(unsigned int n, const wxString &name = _T("Serie "), bool create = true);
 
     /*!
      * Search the point of the layer plot nearest a point

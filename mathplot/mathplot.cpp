@@ -1317,6 +1317,7 @@ mpFXYVector::mpFXYVector(const wxString &name, int flags, bool viewAsBar) :
   m_maxX = 1;
   m_minY = -1;
   m_maxY = 1;
+  m_limit_percent = 0.02;
   m_deltaX = 1e+308; // Big number
   m_xs.clear();
   m_ys.clear();
@@ -1407,8 +1408,6 @@ void mpFXYVector::Clear()
 
 void mpFXYVector::SetData(const std::vector<double> &xs, const std::vector<double> &ys)
 {
-  // We add 2% to the limit
-#define LIMIT 0.02
   // Check if the data vectora are of the same size
   if (xs.size() != ys.size())
   {
@@ -1423,20 +1422,20 @@ void mpFXYVector::SetData(const std::vector<double> &xs, const std::vector<doubl
   if (xs.size() > 0)
   {
     bool first = true;
-    m_minX = xs[0] - (fabs(xs[0]) * LIMIT);
-    m_maxX = xs[0] + (fabs(xs[0]) * LIMIT);
-    m_minY = ys[0] - (fabs(ys[0]) * LIMIT);
-    m_maxY = ys[0] + (fabs(ys[0]) * LIMIT);
+    m_minX = xs[0] - (fabs(xs[0]) * m_limit_percent);
+    m_maxX = xs[0] + (fabs(xs[0]) * m_limit_percent);
+    m_minY = ys[0] - (fabs(ys[0]) * m_limit_percent);
+    m_maxY = ys[0] + (fabs(ys[0]) * m_limit_percent);
 
     std::vector<double>::const_iterator it;
 
     for (it = xs.begin(); it != xs.end(); it++)
     {
       if (*it < m_minX)
-        m_minX = (*it) - (fabs((*it)) * LIMIT);
+        m_minX = (*it) - (fabs((*it)) * m_limit_percent);
       else
         if (*it > m_maxX)
-          m_maxX = (*it) + (fabs((*it)) * LIMIT);
+          m_maxX = (*it) + (fabs((*it)) * m_limit_percent);
 
       if (first)
       {
@@ -1455,10 +1454,10 @@ void mpFXYVector::SetData(const std::vector<double> &xs, const std::vector<doubl
     for (it = ys.begin(); it != ys.end(); it++)
     {
       if (*it < m_minY)
-        m_minY = (*it) - (fabs((*it)) * LIMIT);
+        m_minY = (*it) - (fabs((*it)) * m_limit_percent);
       else
         if (*it > m_maxY)
-          m_maxY = (*it) + (fabs((*it)) * LIMIT);
+          m_maxY = (*it) + (fabs((*it)) * m_limit_percent);
     }
   }
   else
@@ -1477,7 +1476,6 @@ void mpFXYVector::SetData(const std::vector<double> &xs, const std::vector<doubl
  */
 bool mpFXYVector::AddData(const double x, const double y, bool updatePlot)
 {
-#define LIMIT 0.02
   bool new_limit = false;
   double bbox[4];
   m_win->GetBoundingBox(bbox);
@@ -1491,13 +1489,13 @@ bool mpFXYVector::AddData(const double x, const double y, bool updatePlot)
     // X scale
     if (m_xs[0] > m_xs[1])
     {
-      m_minX = m_xs[1] - (fabs(m_xs[1]) * LIMIT);
-      m_maxX = m_xs[0] + (fabs(m_xs[0]) * LIMIT);
+      m_minX = m_xs[1] - (fabs(m_xs[1]) * m_limit_percent);
+      m_maxX = m_xs[0] + (fabs(m_xs[0]) * m_limit_percent);
     }
     else
     {
-      m_minX = m_xs[0] - (fabs(m_xs[0]) * LIMIT);
-      m_maxX = m_xs[1] + (fabs(m_xs[1]) * LIMIT);
+      m_minX = m_xs[0] - (fabs(m_xs[0]) * m_limit_percent);
+      m_maxX = m_xs[1] + (fabs(m_xs[1]) * m_limit_percent);
     }
     m_deltaX = abs(m_xs[1] - m_lastX);
     m_lastX = m_xs[1];
@@ -1505,13 +1503,13 @@ bool mpFXYVector::AddData(const double x, const double y, bool updatePlot)
     // Y scale
     if (m_ys[0] > m_ys[1])
     {
-      m_minY = m_ys[1] - (fabs(m_ys[1]) * LIMIT);
-      m_maxY = m_ys[0] + (fabs(m_ys[0]) * LIMIT);
+      m_minY = m_ys[1] - (fabs(m_ys[1]) * m_limit_percent);
+      m_maxY = m_ys[0] + (fabs(m_ys[0]) * m_limit_percent);
     }
     else
     {
-      m_minY = m_ys[0] - (fabs(m_ys[0]) * LIMIT);
-      m_maxY = m_ys[1] + (fabs(m_ys[1]) * LIMIT);
+      m_minY = m_ys[0] - (fabs(m_ys[0]) * m_limit_percent);
+      m_maxY = m_ys[1] + (fabs(m_ys[1]) * m_limit_percent);
     }
     new_limit = true;
   }
@@ -1520,14 +1518,14 @@ bool mpFXYVector::AddData(const double x, const double y, bool updatePlot)
     // X scale
     if (x < m_minX)
     {
-      m_minX = x - (fabs(x) * LIMIT);
+      m_minX = x - (fabs(x) * m_limit_percent);
       if (m_minX < bbox[0])
         new_limit = true;
     }
     else
       if (x > m_maxX)
       {
-        m_maxX = x + (fabs(x) * LIMIT);
+        m_maxX = x + (fabs(x) * m_limit_percent);
         if (m_maxX > bbox[1])
           new_limit = true;
       }
@@ -1544,14 +1542,14 @@ bool mpFXYVector::AddData(const double x, const double y, bool updatePlot)
     // Y scale
     if (y < m_minY)
     {
-      m_minY = y - (fabs(y) * LIMIT);
+      m_minY = y - (fabs(y) * m_limit_percent);
       if (m_minY < bbox[2])
         new_limit = true;
     }
     else
       if (y > m_maxY)
       {
-        m_maxY = y + (fabs(y) * LIMIT);
+        m_maxY = y + (fabs(y) * m_limit_percent);
         if (m_maxY > bbox[3])
           new_limit = true;
       }
