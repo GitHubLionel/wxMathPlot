@@ -1582,9 +1582,9 @@ class WXDLLIMPEXP_MATHPLOT mpScale: public mpLayer
     double m_min, m_max;     //!< Min and max scale when autosize is false
     wxString m_labelFormat;  //!< Format string used to print labels
 
-    int GetOrigin(mpWindow &w);
+    virtual int GetOrigin(mpWindow &w) = 0;
     double GetStep(double scale);
-    void DrawScaleName(wxDC &dc, mpWindow &w, int origin, int labelSize);
+    virtual void DrawScaleName(wxDC &dc, mpWindow &w, int origin, int labelSize) = 0;
 
     wxString FormatLogValue(double n);
 
@@ -1669,6 +1669,8 @@ class WXDLLIMPEXP_MATHPLOT mpScaleX: public mpScale
     unsigned int m_labelType;  //!< Select labels mode: mpX_NORMAL for normal labels, mpX_TIME for time axis in hours, minutes, seconds
     unsigned int m_timeConv;   //!< Selects if time has to be converted to local time or not.
 
+    virtual int GetOrigin(mpWindow &w);
+    virtual void DrawScaleName(wxDC &dc, mpWindow &w, int origin, int labelSize);
     wxString FormatValue(const wxString &fmt, double n);
 
   DECLARE_DYNAMIC_CLASS(mpScaleX)
@@ -1721,6 +1723,9 @@ class WXDLLIMPEXP_MATHPLOT mpScaleY: public mpScale
 
   protected:
     bool m_isY2Axis;
+
+    virtual int GetOrigin(mpWindow &w);
+    virtual void DrawScaleName(wxDC &dc, mpWindow &w, int origin, int labelSize);
 
   DECLARE_DYNAMIC_CLASS(mpScaleY)
 };

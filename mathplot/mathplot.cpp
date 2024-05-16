@@ -1649,10 +1649,52 @@ mpScale::mpScale(const wxString &name, int flags, bool grids)
   m_labelFormat = _T("");
 }
 
+double mpScale::GetStep(double scale)
+{
+const double DIGIT = 128.0;
+const double DIGIT_LOG = 128.0;
+
+  double dig;
+  if (IsLogAxis())
+  {
+    dig = floor(log10(DIGIT_LOG / scale));
+    if (scale > DIGIT_LOG)
+      dig += 1;
+  }
+  else
+    dig = floor(log10(DIGIT / scale));
+  return pow(10, dig);
+}
+
+wxString mpScale::FormatLogValue(double n)
+{
+  // Special format for log axis : 10 ^ exponent
+  wxString s = _T("");
+
+  if (n - floor(n) == 0)
+  {
+    int exp = (int)n;
+    if (exp == 0)
+      s = _T("1");
+    else
+      if (exp == 1)
+        s = _T("10");
+      else
+        s.Printf(_T("10^%d"), (int)exp);
+  }
+  return s;
+}
+
+//-----------------------------------------------------------------------------
+// mpScaleX
+//-----------------------------------------------------------------------------
+
+IMPLEMENT_DYNAMIC_CLASS(mpScaleX, mpScale)
+
 /**
  * Get the origin of axis and initialize the plot bondaries
  */
-int mpScale::GetOrigin(mpWindow &w)
+int mpScaleX::GetOrigin(mpWindow &w)
 {
   int origin = 0;
   // Get bondaries
@@ -1687,57 +1729,13 @@ int mpScale::GetOrigin(mpWindow &w)
       origin = w.GetScreenY() - 1;
       break;
 
-      // Scale Y : vertical axis
-    case mpALIGN_BORDER_LEFT:
-      origin = 1;
-      break;
-    case mpALIGN_LEFT:
-    {
-      if (m_drawOutsideMargins)
-        origin = Y_BORDER_SEPARATION;
-      else
-        origin = w.GetMarginLeft();
-      break;
-    }
-    case mpALIGN_CENTERY:
-      origin = w.x2p(0);
-      break;
-    case mpALIGN_RIGHT:
-    {
-      if (m_drawOutsideMargins)
-        origin = w.GetScreenX() - Y_BORDER_SEPARATION;
-      else
-        origin = w.GetScreenX() - w.GetMarginRight();
-      break;
-    }
-    case mpALIGN_BORDER_RIGHT:
-      origin = w.GetScreenX() - 1;
-      break;
-
     default:
       ;  // Nothing
   }
   return origin;
 }
 
-double mpScale::GetStep(double scale)
-{
-#define DIGIT 128.0
-#define DIGIT_LOG 128.0
-
-  double dig;
-  if (IsLogAxis())
-  {
-    dig = floor(log10(DIGIT_LOG / scale));
-    if (scale > DIGIT_LOG)
-      dig += 1;
-  }
-  else
-    dig = floor(log10(DIGIT / scale));
-  return pow(10, dig);
-}
-
-void mpScale::DrawScaleName(wxDC &dc, mpWindow &w, int origin, int labelSize)
+void mpScaleX::DrawScaleName(wxDC &dc, mpWindow &w, int origin, int labelSize)
 {
   wxCoord tx, ty;
 
@@ -1782,70 +1780,10 @@ void mpScale::DrawScaleName(wxDC &dc, mpWindow &w, int origin, int labelSize)
       dc.DrawText(m_name, m_plotBondaries.endPx - tx - 4, origin + labelSize + 6);
       break;
 
-      // Scale Y : vertical axis
-    case mpALIGN_BORDER_LEFT:
-      dc.DrawText(m_name, labelSize + 8, m_plotBondaries.startPy + 4);
-      break;
-    case mpALIGN_LEFT:
-    {
-      if ((!m_drawOutsideMargins) && (w.GetMarginLeft() > (ty + labelSize + 8)))
-      {
-        dc.DrawRotatedText(m_name, origin - labelSize - ty - 6, (m_plotBondaries.endPy + m_plotBondaries.startPy + tx) >> 1, 90);
-      }
-      else
-      {
-        dc.DrawText(m_name, origin + 4, m_plotBondaries.startPy + 4);
-      }
-      break;
-    }
-    case mpALIGN_CENTERY:
-      dc.DrawText(m_name, origin + 4, m_plotBondaries.startPy + 4);
-      break;
-    case mpALIGN_RIGHT:
-    {
-      if ((!m_drawOutsideMargins) && (w.GetMarginRight() > (ty + labelSize + 8)))
-      {
-        dc.DrawRotatedText(m_name, origin + labelSize + 6, (m_plotBondaries.endPy + m_plotBondaries.startPy + tx) >> 1, 90);
-      }
-      else
-      {
-        dc.DrawText(m_name, origin - tx - 4, m_plotBondaries.startPy + 4);
-      }
-      break;
-    }
-    case mpALIGN_BORDER_RIGHT:
-      dc.DrawText(m_name, origin - tx - labelSize - 6, m_plotBondaries.startPy + 4);
-      break;
-
     default:
       ;
   }
 }
-
-wxString mpScale::FormatLogValue(double n)
-{
-  // Special format for log axis : 10 ^ exponent
-  wxString s = _T("");
-
-  if (n - floor(n) == 0)
-  {
-    int exp = (int)n;
-    if (exp == 0)
-      s = _T("1");
-    else
-      if (exp == 1)
-        s = _T("10");
-      else
-        s.Printf(_T("10^%d"), (int)exp);
-  }
-  return s;
-}
-
-//-----------------------------------------------------------------------------
-// mpScaleX
-//-----------------------------------------------------------------------------
-
-IMPLEMENT_DYNAMIC_CLASS(mpScaleX, mpScale)
 
 wxString mpScaleX::FormatValue(const wxString &fmt, double n)
 {
@@ -2059,6 +1997,98 @@ void mpScaleX::SetLogAxis(bool log)
 //-----------------------------------------------------------------------------
 
 IMPLEMENT_DYNAMIC_CLASS(mpScaleY, mpScale)
+
+/**
+ * Get the origin of axis and initialize the plot bondaries
+ */
+int mpScaleY::GetOrigin(mpWindow &w)
+{
+  int origin = 0;
+  // Get bondaries
+  m_plotBondaries = w.GetPlotBondaries(!m_drawOutsideMargins);
+
+  switch (m_flags)
+  {
+    // Scale Y : vertical axis
+    case mpALIGN_BORDER_LEFT:
+      origin = 1;
+      break;
+    case mpALIGN_LEFT:
+    {
+      if (m_drawOutsideMargins)
+        origin = Y_BORDER_SEPARATION;
+      else
+        origin = w.GetMarginLeft();
+      break;
+    }
+    case mpALIGN_CENTERY:
+      origin = w.x2p(0);
+      break;
+    case mpALIGN_RIGHT:
+    {
+      if (m_drawOutsideMargins)
+        origin = w.GetScreenX() - Y_BORDER_SEPARATION;
+      else
+        origin = w.GetScreenX() - w.GetMarginRight();
+      break;
+    }
+    case mpALIGN_BORDER_RIGHT:
+      origin = w.GetScreenX() - 1;
+      break;
+
+    default:
+      ;  // Nothing
+  }
+  return origin;
+}
+
+void mpScaleY::DrawScaleName(wxDC &dc, mpWindow &w, int origin, int labelSize)
+{
+  wxCoord tx, ty;
+
+  // Draw axis name
+  dc.GetTextExtent(m_name, &tx, &ty);
+  switch (m_flags)
+  {
+    // Scale Y : vertical axis
+    case mpALIGN_BORDER_LEFT:
+      dc.DrawText(m_name, labelSize + 8, m_plotBondaries.startPy + 4);
+      break;
+    case mpALIGN_LEFT:
+    {
+      if ((!m_drawOutsideMargins) && (w.GetMarginLeft() > (ty + labelSize + 8)))
+      {
+        dc.DrawRotatedText(m_name, origin - labelSize - ty - 6, (m_plotBondaries.endPy + m_plotBondaries.startPy + tx) >> 1, 90);
+      }
+      else
+      {
+        dc.DrawText(m_name, origin + 4, m_plotBondaries.startPy + 4);
+      }
+      break;
+    }
+    case mpALIGN_CENTERY:
+      dc.DrawText(m_name, origin + 4, m_plotBondaries.startPy + 4);
+      break;
+    case mpALIGN_RIGHT:
+    {
+      if ((!m_drawOutsideMargins) && (w.GetMarginRight() > (ty + labelSize + 8)))
+      {
+        dc.DrawRotatedText(m_name, origin + labelSize + 6, (m_plotBondaries.endPy + m_plotBondaries.startPy + tx) >> 1, 90);
+      }
+      else
+      {
+        dc.DrawText(m_name, origin - tx - 4, m_plotBondaries.startPy + 4);
+      }
+      break;
+    }
+    case mpALIGN_BORDER_RIGHT:
+      dc.DrawText(m_name, origin - tx - labelSize - 6, m_plotBondaries.startPy + 4);
+      break;
+
+    default:
+      ;
+  }
+}
 
 void mpScaleY::DoPlot(wxDC &dc, mpWindow &w)
 {
