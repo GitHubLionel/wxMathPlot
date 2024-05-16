@@ -563,7 +563,6 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   scale_min = -1;
   scale_max = 1;
   CheckBar = false;
-  Y2AxisExist = false;
 //    Initialize();
 }
 
@@ -629,17 +628,19 @@ void MathPlotConfigDialog::Initialize()
   {
     mpScale* axis = (mpScale*)m_plot->GetLayerAxis(i);
     wxString classname = axis->GetClassInfo()->GetClassName();
+    // Only mpScaleX and mpScaleY should be added to the list
     if (classname.IsSameAs(_T("mpScaleX")))
       ChoiceAxis->Append(_T("X axis - ") + axis->GetName());
     else
-    {
-      if (((mpScaleY*)axis)->IsY2Axis())
+      if (classname.IsSameAs(_T("mpScaleY")))
       {
-        ChoiceAxis->Append(_T("Y2 axis - ") + axis->GetName());
+        if (((mpScaleY*)axis)->IsY2Axis())
+        {
+          ChoiceAxis->Append(_T("Y2 axis - ") + axis->GetName());
+        }
+        else
+          ChoiceAxis->Append(_T("Y axis - ") + axis->GetName());
       }
-      else
-        ChoiceAxis->Append(_T("Y axis - ") + axis->GetName());
-    }
   }
   ChoiceAxis->SetSelection(0);
   UpdateAxis();
