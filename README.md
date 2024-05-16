@@ -8,6 +8,7 @@ I have made some improvements like :
 - add "view as bar" for XY functions
 - view fullscreen if plot is in a single frame
 - add in the demo the samples of the original project
+- add second Y axis management
 - lot of things ...<br>
 I keep the philosophy and the structure so it was easy to update existing project (I hope !).
 
