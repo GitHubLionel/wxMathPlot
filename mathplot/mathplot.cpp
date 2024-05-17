@@ -1121,7 +1121,7 @@ mpFXY::mpFXY(const wxString &name, int flags, bool viewAsBar) :
 {
   m_flags = flags;
   maxDrawX = minDrawX = maxDrawY = minDrawY = 0;
-  m_deltaX = 1e+308; // Big number
+  m_deltaX = m_deltaY = 1e+308; // Big number
   SetViewMode(viewAsBar);
 }
 
@@ -1317,8 +1317,6 @@ mpFXYVector::mpFXYVector(const wxString &name, int flags, bool viewAsBar) :
   m_maxX = 1;
   m_minY = -1;
   m_maxY = 1;
-  m_limit_percent = 0.02;
-  m_deltaX = 1e+308; // Big number
   m_xs.clear();
   m_ys.clear();
   SetReserve(1000);
@@ -1402,7 +1400,7 @@ void mpFXYVector::Clear()
   m_maxX = 1;
   m_minY = -1;
   m_maxY = 1;
-  m_deltaX = 1e+308; // Big number
+  m_deltaX = m_deltaY = 1e+308; // Big number
   Rewind();
 }
 
@@ -1421,43 +1419,45 @@ void mpFXYVector::SetData(const std::vector<double> &xs, const std::vector<doubl
   // Update internal variables for the bounding box.
   if (xs.size() > 0)
   {
-    bool first = true;
-    m_minX = xs[0] - (fabs(xs[0]) * m_limit_percent);
-    m_maxX = xs[0] + (fabs(xs[0]) * m_limit_percent);
-    m_minY = ys[0] - (fabs(ys[0]) * m_limit_percent);
-    m_maxY = ys[0] + (fabs(ys[0]) * m_limit_percent);
+    m_minX = m_maxX = xs[0];
+    m_minY = m_maxY = ys[0];
 
     std::vector<double>::const_iterator it;
 
-    for (it = xs.begin(); it != xs.end(); it++)
+    // X scale
+    it = xs.begin();
+    m_lastX = (*it);
+    m_deltaX = 1e+308; // Big number
+    it++;
+    for (; it != xs.end(); it++)
     {
+      if (abs((*it) - m_lastX) < m_deltaX)
+        m_deltaX = abs((*it) - m_lastX);
+      m_lastX = (*it);
+
       if (*it < m_minX)
-        m_minX = (*it) - (fabs((*it)) * m_limit_percent);
+        m_minX = (*it) - m_deltaX;
       else
         if (*it > m_maxX)
-          m_maxX = (*it) + (fabs((*it)) * m_limit_percent);
-
-      if (first)
-      {
-        m_lastX = (*it);
-        first = false;
-      }
-      else
-      {
-        if (abs((*it) - m_lastX) < m_deltaX)
-          m_deltaX = abs((*it) - m_lastX);
-
-        m_lastX = *it;
-      }
+          m_maxX = (*it) + m_deltaX;
     }
 
-    for (it = ys.begin(); it != ys.end(); it++)
+    // Y scale
+    it = ys.begin();
+    m_lastY = (*it);
+    m_deltaY = 1e+308; // Big number
+    it++;
+    for (; it != ys.end(); it++)
     {
+      if (abs((*it) - m_lastY) < m_deltaY)
+        m_deltaY = abs((*it) - m_lastY);
+      m_lastY = (*it);
+
       if (*it < m_minY)
-        m_minY = (*it) - (fabs((*it)) * m_limit_percent);
+        m_minY = (*it) - m_deltaY;
       else
         if (*it > m_maxY)
-          m_maxY = (*it) + (fabs((*it)) * m_limit_percent);
+          m_maxY = (*it) + m_deltaY;
     }
   }
   else
@@ -1477,80 +1477,56 @@ void mpFXYVector::SetData(const std::vector<double> &xs, const std::vector<doubl
 bool mpFXYVector::AddData(const double x, const double y, bool updatePlot)
 {
   bool new_limit = false;
-  double bbox[4];
-  m_win->GetBoundingBox(bbox);
+  mpFloatRect* bbox = m_win->GetBoundingBox();
 
   m_xs.push_back(x);
   m_ys.push_back(y);
 
-  // We have exactly 2 points, we can update min max
-  if (m_xs.size() == 2)
+  // first point
+  if (m_xs.size() == 1)
   {
-    // X scale
-    if (m_xs[0] > m_xs[1])
-    {
-      m_minX = m_xs[1] - (fabs(m_xs[1]) * m_limit_percent);
-      m_maxX = m_xs[0] + (fabs(m_xs[0]) * m_limit_percent);
-    }
-    else
-    {
-      m_minX = m_xs[0] - (fabs(m_xs[0]) * m_limit_percent);
-      m_maxX = m_xs[1] + (fabs(m_xs[1]) * m_limit_percent);
-    }
-    m_deltaX = abs(m_xs[1] - m_lastX);
-    m_lastX = m_xs[1];
-
-    // Y scale
-    if (m_ys[0] > m_ys[1])
-    {
-      m_minY = m_ys[1] - (fabs(m_ys[1]) * m_limit_percent);
-      m_maxY = m_ys[0] + (fabs(m_ys[0]) * m_limit_percent);
-    }
-    else
-    {
-      m_minY = m_ys[0] - (fabs(m_ys[0]) * m_limit_percent);
-      m_maxY = m_ys[1] + (fabs(m_ys[1]) * m_limit_percent);
-    }
-    new_limit = true;
+    m_minX = m_maxX = x;
+    m_lastX = x;
+    m_deltaX = 1e+308; // Big number
+    m_minY = m_maxY = y;
+    m_lastY = y;
+    m_deltaY = 1e+308; // Big number
   }
   else
   {
     // X scale
+    if (abs(x - m_lastX) < m_deltaX)
+      m_deltaX = abs(x - m_lastX);
+    m_lastX = x;
     if (x < m_minX)
     {
-      m_minX = x - (fabs(x) * m_limit_percent);
-      if (m_minX < bbox[0])
+      m_minX = x - m_deltaX;
+      if (m_minX < bbox->Xmin)
         new_limit = true;
     }
     else
       if (x > m_maxX)
       {
-        m_maxX = x + (fabs(x) * m_limit_percent);
-        if (m_maxX > bbox[1])
+        m_maxX = x + m_deltaX;
+        if (m_maxX > bbox->Xmax)
           new_limit = true;
       }
 
-    if (m_xs.size() == 1)
-      m_lastX = m_xs[0];
-    else
-    {
-      if (abs(x - m_lastX) < m_deltaX)
-        m_deltaX = abs(x - m_lastX);
-      m_lastX = x;
-    }
-
     // Y scale
+    if (abs(y - m_lastY) < m_deltaY)
+      m_deltaY = abs(y - m_lastY);
+    m_lastY = y;
     if (y < m_minY)
     {
-      m_minY = y - (fabs(y) * m_limit_percent);
-      if (m_minY < bbox[2])
+      m_minY = y - m_deltaY;
+      if (m_minY < bbox->Ymin)
         new_limit = true;
     }
     else
       if (y > m_maxY)
       {
-        m_maxY = y + (fabs(y) * m_limit_percent);
-        if (m_maxY > bbox[3])
+        m_maxY = y + m_deltaY;
+        if (m_maxY > bbox->Ymax)
           new_limit = true;
       }
   }

@@ -1182,6 +1182,11 @@ class WXDLLIMPEXP_MATHPLOT mpFXY: public mpFunction
      */
     virtual void Rewind() = 0;
 
+    /** Clears all the data, leaving the layer empty.
+     * @sa SetData
+     */
+    virtual void Clear() = 0;
+
     /** Get locus value for next N.
      Override this function in your implementation.
      @param x Returns X value
@@ -1228,7 +1233,7 @@ class WXDLLIMPEXP_MATHPLOT mpFXY: public mpFunction
     wxCoord maxDrawX, minDrawX, maxDrawY, minDrawY;
 
     // Min delta between 2 x coordinate (used for view as bar)
-    double m_deltaX;
+    double m_deltaX, m_deltaY;
 
     // The width of a bar
     int m_BarWidth;
@@ -1337,13 +1342,6 @@ class WXDLLIMPEXP_MATHPLOT mpFXYVector: public mpFXY
       return true;
     }
 
-    /** Set small percentage added when compute the bound
-     */
-    void SetLimitPercent(double limit)
-    {
-      m_limit_percent = limit;
-    }
-
   protected:
     /** The internal copy of the set of data to draw.
      */
@@ -1359,11 +1357,7 @@ class WXDLLIMPEXP_MATHPLOT mpFXYVector: public mpFXY
 
     /** Loaded at SetData
      */
-    double m_minX, m_maxX, m_minY, m_maxY, m_lastX;
-
-    /** small percentage added when compute the bound
-     */
-    double m_limit_percent;
+    double m_minX, m_maxX, m_minY, m_maxY, m_lastX, m_lastY;
 
     /** Rewind value enumeration with mpFXY::GetNextXY.
      Overridden in this implementation.
@@ -2255,6 +2249,10 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     /** Returns the bounding box coordinates
      @param bbox Pointer to a 6-element double array where to store bounding box coordinates. */
     void GetBoundingBox(double *bbox);
+    mpFloatRect *GetBoundingBox(void)
+    {
+      return &m_bound;
+    }
 
     /** Enable/disable scrollbars
      @param status Set to true to show scrollbars */
