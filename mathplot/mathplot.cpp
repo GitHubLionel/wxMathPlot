@@ -3256,6 +3256,7 @@ void mpWindow::SetBound()
 bool mpWindow::UpdateBBox()
 {
   bool first = true;
+  bool firstY2 = true;
 
   // To update bound of mpFX and mpFY functions
 //  SetBound();
@@ -3284,10 +3285,19 @@ bool mpWindow::UpdateBBox()
 
         if ((f->IsFunction(&function)) && (((mpFunction*)f)->GetY2Axis()))
         {
-          if (f_bound.Y2min < m_bound.Y2min)
+          if (firstY2)
+          {
             m_bound.Y2min = f_bound.Y2min;
-          if (f_bound.Y2max > m_bound.Y2max)
             m_bound.Y2max = f_bound.Y2max;
+            firstY2 = false;
+          }
+          else
+          {
+            if (f_bound.Y2min < m_bound.Y2min)
+              m_bound.Y2min = f_bound.Y2min;
+            if (f_bound.Y2max > m_bound.Y2max)
+              m_bound.Y2max = f_bound.Y2max;
+          }
         }
         else
         {
