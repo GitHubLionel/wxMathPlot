@@ -124,6 +124,8 @@ namespace MathPlot
 
 class WXDLLIMPEXP_MATHPLOT mpLayer;
 class WXDLLIMPEXP_MATHPLOT mpFunction;
+class WXDLLIMPEXP_MATHPLOT mpHorizontalLine;
+class WXDLLIMPEXP_MATHPLOT mpVerticalLine;
 class WXDLLIMPEXP_MATHPLOT mpFX;
 class WXDLLIMPEXP_MATHPLOT mpFY;
 class WXDLLIMPEXP_MATHPLOT mpFXY;
@@ -314,7 +316,8 @@ typedef enum __mp_Layer_Type
   mpLAYER_AXIS,    //!< Axis type layer
   mpLAYER_PLOT,    //!< Plot type layer
   mpLAYER_INFO,    //!< Info box type layer
-  mpLAYER_BITMAP   //!< Bitmap type layer
+  mpLAYER_BITMAP,  //!< Bitmap type layer
+  mpLAYER_CUSTOM   //!< Custom type layer
 } mpLayerType;
 
 /** Plot layer, abstract base class.
@@ -358,7 +361,8 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
     }
 
     /**
-     * Return the bounding box, ie minX, maxX, minY and maxY
+     * Return the bounding box, ie minX, maxX, minY and maxY of the object
+     * Here we don't use extra Y2 values
      */
     virtual void GetBBox(mpFloatRect *m_bound);
 
@@ -971,7 +975,7 @@ class WXDLLIMPEXP_MATHPLOT mpFunction: public mpLayer
   public:
     /** Full constructor.
      */
-    mpFunction(const wxString &name = wxEmptyString);
+    mpFunction(const wxString &name = wxEmptyString, bool useY2Axis = false);
 
     /** Set the 'continuity' property of the layer (true: draws a continuous line, false: draws separate points (default)).
      * @sa GetContinuity
@@ -1042,7 +1046,7 @@ class WXDLLIMPEXP_MATHPLOT mpFunction: public mpLayer
      */
     void SetY2Axis(bool _useY2)
     {
-      UseY2Axis = _useY2;
+      m_UseY2Axis = _useY2;
     }
 
     /** Get use of second Y axis
@@ -1050,7 +1054,7 @@ class WXDLLIMPEXP_MATHPLOT mpFunction: public mpLayer
      */
     bool GetY2Axis() const
     {
-      return UseY2Axis;
+      return m_UseY2Axis;
     }
 
   protected:
@@ -1063,9 +1067,67 @@ class WXDLLIMPEXP_MATHPLOT mpFunction: public mpLayer
      * Use Y2 axis
      * This second axis must exist
      */
-    bool UseY2Axis;
+    bool m_UseY2Axis;
 
   DECLARE_DYNAMIC_CLASS(mpFunction)
+};
+
+/** Abstract class providing an horizontal line.
+ */
+class WXDLLIMPEXP_MATHPLOT mpHorizontalLine: public mpFunction
+{
+  public:
+    mpHorizontalLine(double yvalue, const wxColour& color = *wxGREEN, bool useY2Axis = false);
+
+    // We don't want to include horizontal line in BBox computation
+    virtual bool HasBBox() override
+    {
+      return false;
+    }
+
+    virtual void DoPlot(wxDC &dc, mpWindow &w);
+
+    /** Set y
+     @param yvalue
+     */
+    void SetYValue(double yvalue)
+    {
+      m_yvalue = yvalue;
+    }
+
+  protected:
+    double m_yvalue;
+
+    DECLARE_DYNAMIC_CLASS(mpHorizontalLine)
+};
+
+/** Abstract class providing an horizontal line.
+ */
+class WXDLLIMPEXP_MATHPLOT mpVerticalLine: public mpFunction
+{
+  public:
+    mpVerticalLine(double xvalue, const wxColour& color = *wxGREEN);
+
+    // We don't want to include horizontal line in BBox computation
+    virtual bool HasBBox() override
+    {
+      return false;
+    }
+
+    virtual void DoPlot(wxDC &dc, mpWindow &w);
+
+    /** Set x
+     @param xvalue
+     */
+    void SetXValue(double xvalue)
+    {
+      m_xvalue = xvalue;
+    }
+
+  protected:
+    double m_xvalue;
+
+    DECLARE_DYNAMIC_CLASS(mpVerticalLine)
 };
 
 /** Abstract base class providing plot and labeling functionality for functions F:X->Y.
@@ -1080,7 +1142,7 @@ class WXDLLIMPEXP_MATHPLOT mpFX: public mpFunction
     /** @param name  Label
      @param flags Label alignment, pass one of #mpALIGN_RIGHT, #mpALIGN_CENTER, #mpALIGN_LEFT.
      */
-    mpFX(const wxString &name = wxEmptyString, int flags = mpALIGN_RIGHT);
+    mpFX(const wxString &name = wxEmptyString, int flags = mpALIGN_RIGHT, bool useY2Axis = false);
 
     /** Get function value for argument.
      Override this function in your implementation.
@@ -1126,7 +1188,7 @@ class WXDLLIMPEXP_MATHPLOT mpFY: public mpFunction
     /** @param name  Label
      @param flags Label alignment, pass one of #mpALIGN_BOTTOM, #mpALIGN_CENTER, #mpALIGN_TOP.
      */
-    mpFY(const wxString &name = wxEmptyString, int flags = mpALIGN_TOP);
+    mpFY(const wxString &name = wxEmptyString, int flags = mpALIGN_TOP, bool useY2Axis = false);
 
     /** Get function value for argument.
      Override this function in your implementation.
@@ -1175,7 +1237,7 @@ class WXDLLIMPEXP_MATHPLOT mpFXY: public mpFunction
     /** @param name  Label
      @param flags Label alignment, pass one of #mpALIGN_NE, #mpALIGN_NW, #mpALIGN_SW, #mpALIGN_SE.
      */
-    mpFXY(const wxString &name = wxEmptyString, int flags = mpALIGN_NE, bool viewAsBar = false);
+    mpFXY(const wxString &name = wxEmptyString, int flags = mpALIGN_NE, bool viewAsBar = false, bool useY2Axis = false);
 
     /** Rewind value enumeration with mpFXY::GetNextXY.
      Override this function in your implementation.
@@ -1185,7 +1247,10 @@ class WXDLLIMPEXP_MATHPLOT mpFXY: public mpFunction
     /** Clears all the data, leaving the layer empty.
      * @sa SetData
      */
-    virtual void Clear() = 0;
+    virtual void Clear()
+    {
+      // Nothing to do here
+    }
 
     /** Get locus value for next N.
      Override this function in your implementation.
@@ -1282,7 +1347,7 @@ class WXDLLIMPEXP_MATHPLOT mpFXYVector: public mpFXY
     /** @param name  Label
      @param flags Label alignment, pass one of #mpALIGN_NE, #mpALIGN_NW, #mpALIGN_SW, #mpALIGN_SE.
      */
-    mpFXYVector(const wxString &name = wxEmptyString, int flags = mpALIGN_NE, bool viewAsBar = false);
+    mpFXYVector(const wxString &name = wxEmptyString, int flags = mpALIGN_NE, bool viewAsBar = false, bool useY2Axis = false);
 
     /** destrutor
      */
@@ -1910,15 +1975,20 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      */
     mpLayer* GetLayerByClassName(const wxString &name);
 
-    /*! Get scale X layer (X axis).
+    /*! Get the first scale X layer (X axis).
      @return A pointer to the mpScaleX object, or NULL if not found.
      */
     mpScaleX* GetLayerXAxis();
 
-    /*! Get scale Y layer (Y axis).
+    /*! Get the first scale Y layer (Y axis).
      @return A pointer to the mpScaleY object, or NULL if not found.
      */
     mpScaleY* GetLayerYAxis();
+
+    /*! Get the first scale Y2 layer (Y2 axis).
+     @return A pointer to the mpScaleY object, or NULL if not found.
+     */
+    mpScaleY* GetLayerY2Axis();
 
     /** Set current view's X scale and refresh display.
      @param scaleX New scale, must not be 0.
@@ -2531,6 +2601,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     wxLayerList m_layers;   //!< List of attached plot layers
     mpScaleX* m_XAxis;      //!< Pointer to the X axis layer
     mpScaleY* m_YAxis;      //!< Pointer to the Y axis layer
+    mpScaleY* m_Y2Axis;     //!< Pointer to the Y2 axis layer
 
     wxMenu m_popmenu;       //!< Canvas' context menu
     bool m_lockaspect;      //!< Scale aspect is locked or not
