@@ -214,6 +214,7 @@ mpLayer::mpLayer() :
   m_flags = mpALIGN_NE;
   m_CanDelete = true;
   m_busy = false;
+  m_ZIndex = mpZIndex_BACKGROUND;
 }
 
 void mpLayer::GetBBox(mpFloatRect *m_bound)
@@ -274,6 +275,7 @@ mpInfoLayer::mpInfoLayer()
   m_winX = 1;
   m_winY = 1;
   m_location = mpMarginNone;
+  m_ZIndex = mpZIndex_INFO;
 }
 
 mpInfoLayer::mpInfoLayer(wxRect rect, const wxBrush &brush, mpLocation location)
@@ -851,6 +853,7 @@ mpFunction::mpFunction(const wxString &name, bool useY2Axis)
   m_continuous = false; // Default
   m_step = 1;
   m_UseY2Axis = useY2Axis;
+  m_ZIndex = mpZIndex_PLOT;
 }
 
 void mpFunction::DrawSymbol(wxDC &dc, wxCoord x, wxCoord y)
@@ -902,13 +905,13 @@ void mpFunction::DrawSymbol(wxDC &dc, wxCoord x, wxCoord y)
 
 IMPLEMENT_ABSTRACT_CLASS(mpHorizontalLine, mpFunction)
 
-mpHorizontalLine::mpHorizontalLine(double yvalue, const wxColour& color, bool useY2Axis) :
+mpHorizontalLine::mpHorizontalLine(double yvalue, const wxPen &pen, bool useY2Axis) :
     mpFunction(wxT("Horizontal line"), useY2Axis)
 {
   m_yvalue = yvalue;
   m_type = mpLAYER_CUSTOM;
-  wxPen FXpen(color, 1, wxPENSTYLE_SOLID);
-  SetPen(FXpen);
+  m_ZIndex = mpZIndex_CUSTOM;
+  SetPen(pen);
   SetDrawOutsideMargins(false);
   SetY2Axis(useY2Axis);
 }
@@ -934,13 +937,13 @@ void mpHorizontalLine::DoPlot(wxDC &dc, mpWindow &w)
 
 IMPLEMENT_ABSTRACT_CLASS(mpVerticalLine, mpFunction)
 
-mpVerticalLine::mpVerticalLine(double xvalue, const wxColour& color) :
+mpVerticalLine::mpVerticalLine(double xvalue, const wxPen &pen) :
     mpFunction(wxT("Vertical line"))
 {
   m_xvalue = xvalue;
   m_type = mpLAYER_CUSTOM;
-  wxPen FXpen(color, 1, wxPENSTYLE_SOLID);
-  SetPen(FXpen);
+  m_ZIndex = mpZIndex_CUSTOM;
+  SetPen(pen);
   SetDrawOutsideMargins(false);
 }
 
@@ -1686,6 +1689,7 @@ mpScale::mpScale(const wxString &name, int flags, bool grids)
   m_min = -1;
   m_max = 1;
   m_labelFormat = _T("");
+  m_ZIndex = mpZIndex_AXIS;
 }
 
 double mpScale::GetStep(double scale)
@@ -3249,20 +3253,14 @@ void mpWindow::OnPaint(wxPaintEvent &WXUNUSED(event))
   trgDc->SetTextForeground(m_fgColour);
   trgDc->DrawRectangle(m_margin.left, m_margin.top, m_plotWidth, m_plotHeight);
 
-  // Draw all the layers:
-  mpFunctionType function;
-  mpScaleType scale;
-  // First draw scale and series
+  // Draw all the layers in Z order
+  for (int i = mpZIndex_BACKGROUND; i < mpZIndex_END; i++)
+  {
   for (wxLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
   {
-    if ((*it)->IsScale(&scale) || (*it)->IsFunction(&function))
+      if ((*it)->GetZIndex() == i)
       (*it)->Plot(*trgDc, *this);
   }
-  // Second draw all others elements (so there are always front)
-  for (wxLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
-  {
-    if (!((*it)->IsScale(&scale) || (*it)->IsFunction(&function)))
-      (*it)->Plot(*trgDc, *this);
   }
 
   // If doublebuffer, draw now to the window:
@@ -4035,20 +4033,14 @@ wxBitmap* mpWindow::BitmapScreenshot(wxSize imageSize, bool fit)
       Fit(m_desired, &sizeX, &sizeY);
   }
 
-  // Draw all the layers:
-  mpFunctionType function;
-  mpScaleType scale;
-  // First draw scale and series
+  // Draw all the layers in Z order
+  for (int i = mpZIndex_BACKGROUND; i < mpZIndex_END; i++)
+  {
   for (wxLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
   {
-    if ((*it)->IsScale(&scale) || (*it)->IsFunction(&function))
+      if ((*it)->GetZIndex() == i)
       (*it)->Plot(m_Screenshot_dc, *this);
   }
-  // Second draw all others elements (so there are always front)
-  for (wxLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
-  {
-    if (!((*it)->IsScale(&scale) || (*it)->IsFunction(&function)))
-      (*it)->Plot(m_Screenshot_dc, *this);
   }
   m_Screenshot_dc.SelectObject(wxNullBitmap);
 
@@ -4174,12 +4166,9 @@ IMPLEMENT_DYNAMIC_CLASS(mpText, mpLayer)
  @param offsetx x position in percentage (0-100)
  @param offsetx y position in percentage (0-100)
  */
-mpText::mpText(const wxString &name, int offsetx, int offsety)
+mpText::mpText(const wxString &name, int offsetx, int offsety) :
+    mpText(name)
 {
-  m_type = mpLAYER_INFO;
-  SetName(name);
-  m_location = mpMarginNone;
-
   if (offsetx >= 0 && offsetx <= 100)
     m_offsetx = offsetx;
   else
@@ -4194,13 +4183,10 @@ mpText::mpText(const wxString &name, int offsetx, int offsety)
 /** @param name text to be displayed
  @param location in the margin
  */
-mpText::mpText(const wxString &name, mpLocation marginLocation)
+mpText::mpText(const wxString &name, mpLocation marginLocation) :
+    mpText(name)
 {
-  m_type = mpLAYER_INFO;
-  SetName(name);
   m_location = marginLocation;
-  m_offsetx = 5;
-  m_offsety = 50;
 }
 
 /** mpText Layer plot handler.

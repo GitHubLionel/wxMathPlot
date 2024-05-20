@@ -320,6 +320,22 @@ typedef enum __mp_Layer_Type
   mpLAYER_CUSTOM   //!< Custom type layer
 } mpLayerType;
 
+/**
+ * Z order for drawing layer
+ * Background is the deeper (bitmap layer)
+ * Then draw axis, custom layer, function, info (info, coord, legend, ...) and finally text (text, title)
+ */
+typedef enum __mp_Layer_ZOrder
+{
+  mpZIndex_BACKGROUND,   //!< Bitmap type layer
+  mpZIndex_AXIS,         //!< Axis type layer
+  mpZIndex_CUSTOM,       //!< Custom type layer
+  mpZIndex_PLOT,         //!< Plot (function) type layer
+  mpZIndex_INFO,         //!< Info box type layer
+  mpZIndex_TEXT,         //!< Text box type layer
+  mpZIndex_END           //!< Just the end of ZOrder
+} mpLayerZOrder;
+
 /** Plot layer, abstract base class.
  Any number of mpLayer implementations can be attached to mpWindow.
  Examples for mpLayer implementations are function graphs, or scale rulers.
@@ -662,6 +678,13 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
       return m_CanDelete;
     }
 
+    /** Get the ZIndex of the plot.
+     @return m_ZIndex*/
+    mpLayerZOrder GetZIndex(void)
+    {
+      return m_ZIndex;
+    }
+
   protected:
     mpWindow* m_win;            //!< The wxWindow handle
     mpLayerType m_type;         //!< Define layer type, which is assigned by constructor
@@ -677,6 +700,7 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
     int m_flags;                //!< Holds label alignment. Default : mpALIGN_NE
     mpRect m_plotBondaries;     //!< The bondaries for plotting curve calculated by mpWindow
     bool m_CanDelete;           //!< Is the layer can be deleted
+    mpLayerZOrder m_ZIndex;     //!< The index in Z-Order to draw the layer
 
     /** Initialize the context
      */
@@ -1077,7 +1101,7 @@ class WXDLLIMPEXP_MATHPLOT mpFunction: public mpLayer
 class WXDLLIMPEXP_MATHPLOT mpHorizontalLine: public mpFunction
 {
   public:
-    mpHorizontalLine(double yvalue, const wxColour& color = *wxGREEN, bool useY2Axis = false);
+    mpHorizontalLine(double yvalue, const wxPen &pen = *wxGREEN_PEN, bool useY2Axis = false);
 
     // We don't want to include horizontal line in BBox computation
     virtual bool HasBBox() override
@@ -1101,14 +1125,14 @@ class WXDLLIMPEXP_MATHPLOT mpHorizontalLine: public mpFunction
     DECLARE_DYNAMIC_CLASS(mpHorizontalLine)
 };
 
-/** Abstract class providing an horizontal line.
+/** Abstract class providing an vertical line.
  */
 class WXDLLIMPEXP_MATHPLOT mpVerticalLine: public mpFunction
 {
   public:
-    mpVerticalLine(double xvalue, const wxColour& color = *wxGREEN);
+    mpVerticalLine(double xvalue, const wxPen &pen = *wxGREEN_PEN);
 
-    // We don't want to include horizontal line in BBox computation
+    // We don't want to include vertical line in BBox computation
     virtual bool HasBBox() override
     {
       return false;
@@ -2689,11 +2713,14 @@ class WXDLLIMPEXP_MATHPLOT mpText: public mpLayer
   public:
     /** Default constructor.
      */
-    mpText()
+    mpText(const wxString &name = wxEmptyString)
     {
+      m_type = mpLAYER_INFO;
+      SetName(name);
       m_offsetx = 5;
       m_offsety = 50;
       m_location = mpMarginNone;
+      m_ZIndex = mpZIndex_TEXT;
     }
 
     /** @param name text to be drawn in the plot
