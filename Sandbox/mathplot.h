@@ -118,12 +118,17 @@ namespace MathPlot
 #define EPSILON   1e-8
 #define ISNOTNULL(x)  (fabs(x) > EPSILON)
 
+// A small extra margin for the plot boundary
+#define EXTRA_MARGIN  8
+
 //-----------------------------------------------------------------------------
 // classes
 //-----------------------------------------------------------------------------
 
 class WXDLLIMPEXP_MATHPLOT mpLayer;
 class WXDLLIMPEXP_MATHPLOT mpFunction;
+class WXDLLIMPEXP_MATHPLOT mpHorizontalLine;
+class WXDLLIMPEXP_MATHPLOT mpVerticalLine;
 class WXDLLIMPEXP_MATHPLOT mpFX;
 class WXDLLIMPEXP_MATHPLOT mpFY;
 class WXDLLIMPEXP_MATHPLOT mpFXY;
@@ -314,8 +319,25 @@ typedef enum __mp_Layer_Type
   mpLAYER_AXIS,    //!< Axis type layer
   mpLAYER_PLOT,    //!< Plot type layer
   mpLAYER_INFO,    //!< Info box type layer
-  mpLAYER_BITMAP   //!< Bitmap type layer
+  mpLAYER_BITMAP,  //!< Bitmap type layer
+  mpLAYER_CUSTOM   //!< Custom type layer
 } mpLayerType;
+
+/**
+ * Z order for drawing layer
+ * Background is the deeper (bitmap layer)
+ * Then draw axis, custom layer, function, info (info, coord, legend, ...) and finally text (text, title)
+ */
+typedef enum __mp_Layer_ZOrder
+{
+  mpZIndex_BACKGROUND,   //!< Bitmap type layer
+  mpZIndex_AXIS,         //!< Axis type layer
+  mpZIndex_CUSTOM,       //!< Custom type layer
+  mpZIndex_PLOT,         //!< Plot (function) type layer
+  mpZIndex_INFO,         //!< Info box type layer
+  mpZIndex_TEXT,         //!< Text box type layer
+  mpZIndex_END           //!< Just the end of ZOrder
+} mpLayerZOrder;
 
 /** Plot layer, abstract base class.
  Any number of mpLayer implementations can be attached to mpWindow.
@@ -358,7 +380,8 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
     }
 
     /**
-     * Return the bounding box, ie minX, maxX, minY and maxY
+     * Return the bounding box, ie minX, maxX, minY and maxY of the object
+     * Here we don't use extra Y2 values
      */
     virtual void GetBBox(mpFloatRect *m_bound);
 
@@ -658,6 +681,13 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
       return m_CanDelete;
     }
 
+    /** Get the ZIndex of the plot.
+     @return m_ZIndex*/
+    mpLayerZOrder GetZIndex(void)
+    {
+      return m_ZIndex;
+    }
+
   protected:
     mpWindow* m_win;            //!< The wxWindow handle
     mpLayerType m_type;         //!< Define layer type, which is assigned by constructor
@@ -673,6 +703,7 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
     int m_flags;                //!< Holds label alignment. Default : mpALIGN_NE
     mpRect m_plotBondaries;     //!< The bondaries for plotting curve calculated by mpWindow
     bool m_CanDelete;           //!< Is the layer can be deleted
+    mpLayerZOrder m_ZIndex;     //!< The index in Z-Order to draw the layer
 
     /** Initialize the context
      */
@@ -971,7 +1002,7 @@ class WXDLLIMPEXP_MATHPLOT mpFunction: public mpLayer
   public:
     /** Full constructor.
      */
-    mpFunction(const wxString &name = wxEmptyString);
+    mpFunction(const wxString &name = wxEmptyString, bool useY2Axis = false);
 
     /** Set the 'continuity' property of the layer (true: draws a continuous line, false: draws separate points (default)).
      * @sa GetContinuity
@@ -1042,7 +1073,7 @@ class WXDLLIMPEXP_MATHPLOT mpFunction: public mpLayer
      */
     void SetY2Axis(bool _useY2)
     {
-      UseY2Axis = _useY2;
+      m_UseY2Axis = _useY2;
     }
 
     /** Get use of second Y axis
@@ -1050,7 +1081,7 @@ class WXDLLIMPEXP_MATHPLOT mpFunction: public mpLayer
      */
     bool GetY2Axis() const
     {
-      return UseY2Axis;
+      return m_UseY2Axis;
     }
 
   protected:
@@ -1063,9 +1094,67 @@ class WXDLLIMPEXP_MATHPLOT mpFunction: public mpLayer
      * Use Y2 axis
      * This second axis must exist
      */
-    bool UseY2Axis;
+    bool m_UseY2Axis;
 
   DECLARE_DYNAMIC_CLASS(mpFunction)
+};
+
+/** Abstract class providing an horizontal line.
+ */
+class WXDLLIMPEXP_MATHPLOT mpHorizontalLine: public mpFunction
+{
+  public:
+    mpHorizontalLine(double yvalue, const wxPen &pen = *wxGREEN_PEN, bool useY2Axis = false);
+
+    // We don't want to include horizontal line in BBox computation
+    virtual bool HasBBox() override
+    {
+      return false;
+    }
+
+    virtual void DoPlot(wxDC &dc, mpWindow &w);
+
+    /** Set y
+     @param yvalue
+     */
+    void SetYValue(double yvalue)
+    {
+      m_yvalue = yvalue;
+    }
+
+  protected:
+    double m_yvalue;
+
+    DECLARE_DYNAMIC_CLASS(mpHorizontalLine)
+};
+
+/** Abstract class providing an vertical line.
+ */
+class WXDLLIMPEXP_MATHPLOT mpVerticalLine: public mpFunction
+{
+  public:
+    mpVerticalLine(double xvalue, const wxPen &pen = *wxGREEN_PEN);
+
+    // We don't want to include vertical line in BBox computation
+    virtual bool HasBBox() override
+    {
+      return false;
+    }
+
+    virtual void DoPlot(wxDC &dc, mpWindow &w);
+
+    /** Set x
+     @param xvalue
+     */
+    void SetXValue(double xvalue)
+    {
+      m_xvalue = xvalue;
+    }
+
+  protected:
+    double m_xvalue;
+
+    DECLARE_DYNAMIC_CLASS(mpVerticalLine)
 };
 
 /** Abstract base class providing plot and labeling functionality for functions F:X->Y.
@@ -1080,7 +1169,7 @@ class WXDLLIMPEXP_MATHPLOT mpFX: public mpFunction
     /** @param name  Label
      @param flags Label alignment, pass one of #mpALIGN_RIGHT, #mpALIGN_CENTER, #mpALIGN_LEFT.
      */
-    mpFX(const wxString &name = wxEmptyString, int flags = mpALIGN_RIGHT);
+    mpFX(const wxString &name = wxEmptyString, int flags = mpALIGN_RIGHT, bool useY2Axis = false);
 
     /** Get function value for argument.
      Override this function in your implementation.
@@ -1126,7 +1215,7 @@ class WXDLLIMPEXP_MATHPLOT mpFY: public mpFunction
     /** @param name  Label
      @param flags Label alignment, pass one of #mpALIGN_BOTTOM, #mpALIGN_CENTER, #mpALIGN_TOP.
      */
-    mpFY(const wxString &name = wxEmptyString, int flags = mpALIGN_TOP);
+    mpFY(const wxString &name = wxEmptyString, int flags = mpALIGN_TOP, bool useY2Axis = false);
 
     /** Get function value for argument.
      Override this function in your implementation.
@@ -1175,12 +1264,20 @@ class WXDLLIMPEXP_MATHPLOT mpFXY: public mpFunction
     /** @param name  Label
      @param flags Label alignment, pass one of #mpALIGN_NE, #mpALIGN_NW, #mpALIGN_SW, #mpALIGN_SE.
      */
-    mpFXY(const wxString &name = wxEmptyString, int flags = mpALIGN_NE, bool viewAsBar = false);
+    mpFXY(const wxString &name = wxEmptyString, int flags = mpALIGN_NE, bool viewAsBar = false, bool useY2Axis = false);
 
     /** Rewind value enumeration with mpFXY::GetNextXY.
      Override this function in your implementation.
      */
     virtual void Rewind() = 0;
+
+    /** Clears all the data, leaving the layer empty.
+     * @sa SetData
+     */
+    virtual void Clear()
+    {
+      // Nothing to do here
+    }
 
     /** Get locus value for next N.
      Override this function in your implementation.
@@ -1228,7 +1325,7 @@ class WXDLLIMPEXP_MATHPLOT mpFXY: public mpFunction
     wxCoord maxDrawX, minDrawX, maxDrawY, minDrawY;
 
     // Min delta between 2 x coordinate (used for view as bar)
-    double m_deltaX;
+    double m_deltaX, m_deltaY;
 
     // The width of a bar
     int m_BarWidth;
@@ -1277,7 +1374,7 @@ class WXDLLIMPEXP_MATHPLOT mpFXYVector: public mpFXY
     /** @param name  Label
      @param flags Label alignment, pass one of #mpALIGN_NE, #mpALIGN_NW, #mpALIGN_SW, #mpALIGN_SE.
      */
-    mpFXYVector(const wxString &name = wxEmptyString, int flags = mpALIGN_NE, bool viewAsBar = false);
+    mpFXYVector(const wxString &name = wxEmptyString, int flags = mpALIGN_NE, bool viewAsBar = false, bool useY2Axis = false);
 
     /** destrutor
      */
@@ -1352,7 +1449,7 @@ class WXDLLIMPEXP_MATHPLOT mpFXYVector: public mpFXY
 
     /** Loaded at SetData
      */
-    double m_minX, m_maxX, m_minY, m_maxY, m_lastX;
+    double m_minX, m_maxX, m_minY, m_maxY, m_lastX, m_lastY;
 
     /** Rewind value enumeration with mpFXY::GetNextXY.
      Overridden in this implementation.
@@ -1571,9 +1668,9 @@ class WXDLLIMPEXP_MATHPLOT mpScale: public mpLayer
     double m_min, m_max;     //!< Min and max scale when autosize is false
     wxString m_labelFormat;  //!< Format string used to print labels
 
-    int GetOrigin(mpWindow &w);
+    virtual int GetOrigin(mpWindow &w) = 0;
     double GetStep(double scale);
-    void DrawScaleName(wxDC &dc, mpWindow &w, int origin, int labelSize);
+    virtual void DrawScaleName(wxDC &dc, mpWindow &w, int origin, int labelSize) = 0;
 
     wxString FormatLogValue(double n);
 
@@ -1658,6 +1755,8 @@ class WXDLLIMPEXP_MATHPLOT mpScaleX: public mpScale
     unsigned int m_labelType;  //!< Select labels mode: mpX_NORMAL for normal labels, mpX_TIME for time axis in hours, minutes, seconds
     unsigned int m_timeConv;   //!< Selects if time has to be converted to local time or not.
 
+    virtual int GetOrigin(mpWindow &w);
+    virtual void DrawScaleName(wxDC &dc, mpWindow &w, int origin, int labelSize);
     wxString FormatValue(const wxString &fmt, double n);
 
   DECLARE_DYNAMIC_CLASS(mpScaleX)
@@ -1710,6 +1809,9 @@ class WXDLLIMPEXP_MATHPLOT mpScaleY: public mpScale
 
   protected:
     bool m_isY2Axis;
+
+    virtual int GetOrigin(mpWindow &w);
+    virtual void DrawScaleName(wxDC &dc, mpWindow &w, int origin, int labelSize);
 
   DECLARE_DYNAMIC_CLASS(mpScaleY)
 };
@@ -1881,7 +1983,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      * Return the serie n
      * If the serie not exist then create it
      */
-    mpFXYVector* GetXYSeries(unsigned int n, const wxString &name = _T("Serie :"), bool create = true);
+    mpFXYVector* GetXYSeries(unsigned int n, const wxString &name = _T("Serie "), bool create = true);
 
     /*!
      * Search the point of the layer plot nearest a point
@@ -1900,15 +2002,20 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      */
     mpLayer* GetLayerByClassName(const wxString &name);
 
-    /*! Get scale X layer (X axis).
+    /*! Get the first scale X layer (X axis).
      @return A pointer to the mpScaleX object, or NULL if not found.
      */
     mpScaleX* GetLayerXAxis();
 
-    /*! Get scale Y layer (Y axis).
+    /*! Get the first scale Y layer (Y axis).
      @return A pointer to the mpScaleY object, or NULL if not found.
      */
     mpScaleY* GetLayerYAxis();
+
+    /*! Get the first scale Y2 layer (Y2 axis).
+     @return A pointer to the mpScaleY object, or NULL if not found.
+     */
+    mpScaleY* GetLayerY2Axis();
 
     /** Set current view's X scale and refresh display.
      @param scaleX New scale, must not be 0.
@@ -2239,6 +2346,10 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     /** Returns the bounding box coordinates
      @param bbox Pointer to a 6-element double array where to store bounding box coordinates. */
     void GetBoundingBox(double *bbox);
+    mpFloatRect *GetBoundingBox(void)
+    {
+      return &m_bound;
+    }
 
     /** Enable/disable scrollbars
      @param status Set to true to show scrollbars */
@@ -2348,10 +2459,16 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     /** Get the bondaries of the plot. */
     mpRect GetPlotBondaries(bool with_margin) const
     {
+      mpRect bond;
       if (with_margin)
-        return m_plotBondariesMargin;
+        bond = m_plotBondariesMargin;
       else
-        return m_plotBondaries;
+        bond = m_plotBondaries;
+      bond.startPx -= EXTRA_MARGIN;
+      bond.endPx += EXTRA_MARGIN;
+      bond.startPy -= EXTRA_MARGIN;
+      bond.endPy += EXTRA_MARGIN;
+      return bond;
     }
 
     /** Set the draw of the box around the plot. */
@@ -2517,6 +2634,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     wxLayerList m_layers;   //!< List of attached plot layers
     mpScaleX* m_XAxis;      //!< Pointer to the X axis layer
     mpScaleY* m_YAxis;      //!< Pointer to the Y axis layer
+    mpScaleY* m_Y2Axis;     //!< Pointer to the Y2 axis layer
 
     wxMenu m_popmenu;       //!< Canvas' context menu
     bool m_lockaspect;      //!< Scale aspect is locked or not
@@ -2604,11 +2722,14 @@ class WXDLLIMPEXP_MATHPLOT mpText: public mpLayer
   public:
     /** Default constructor.
      */
-    mpText()
+    mpText(const wxString &name = wxEmptyString)
     {
+      m_type = mpLAYER_INFO;
+      SetName(name);
       m_offsetx = 5;
       m_offsety = 50;
       m_location = mpMarginNone;
+      m_ZIndex = mpZIndex_TEXT;
     }
 
     /** @param name text to be drawn in the plot

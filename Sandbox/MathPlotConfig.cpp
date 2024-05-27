@@ -563,6 +563,8 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   scale_min = -1;
   scale_max = 1;
   CheckBar = false;
+  SecondYAxisChange = false;
+  SerieVisibleChange = false;
 //    Initialize();
 }
 
@@ -626,19 +628,21 @@ void MathPlotConfigDialog::Initialize()
   ChoiceAxis->Clear();
   for (unsigned int i = 0; i < m_plot->CountLayersType(mpLAYER_AXIS); i++)
   {
-    mpScale *axis = (mpScale*)m_plot->GetLayerAxis(i);
+    mpScale* axis = (mpScale*)m_plot->GetLayerAxis(i);
     wxString classname = axis->GetClassInfo()->GetClassName();
+    // Only mpScaleX and mpScaleY should be added to the list
     if (classname.IsSameAs(_T("mpScaleX")))
-      ChoiceAxis->Append(_T("X axis - ") + axis->GetName());
+      ChoiceAxis->Append(_T("X axis - ") + axis->GetName(), axis);
     else
-    {
-      if (((mpScaleY*)axis)->IsY2Axis())
+      if (classname.IsSameAs(_T("mpScaleY")))
       {
-        ChoiceAxis->Append(_T("Y2 axis - ") + axis->GetName());
+        if (((mpScaleY*)axis)->IsY2Axis())
+        {
+          ChoiceAxis->Append(_T("Y2 axis - ") + axis->GetName(), axis);
+        }
+        else
+          ChoiceAxis->Append(_T("Y axis - ") + axis->GetName(), axis);
       }
-      else
-        ChoiceAxis->Append(_T("Y axis - ") + axis->GetName());
-    }
   }
   ChoiceAxis->SetSelection(0);
   UpdateAxis();
@@ -777,7 +781,8 @@ void MathPlotConfigDialog::UpdateAxis(void)
   const wxString XAxis_Align[] = {_("Bottom border"), _("Bottom"), _("Center"), _("Top"), _("Top border")};
   const wxString YAxis_Align[] = {_("Left border"), _("Left"), _("Center"), _("Right"), _("Right border")};
 
-  CurrentScale = (mpScale*)m_plot->GetLayerAxis(ChoiceAxis->GetSelection());
+  CurrentScale = (mpScale*)ChoiceAxis->GetClientData(ChoiceAxis->GetSelection());
+//  CurrentScale = (mpScale*)m_plot->GetLayerAxis(ChoiceAxis->GetSelection());
   if (!CurrentScale)
     return;
   wxString classname = CurrentScale->GetClassInfo()->GetClassName();
@@ -790,8 +795,7 @@ void MathPlotConfigDialog::UpdateAxis(void)
     for (int i = scale_offset; i <= mpALIGN_BORDER_TOP; i++)
       cbAxisPosition->Append(XAxis_Align[i - scale_offset]);
     cbFormat->Enable();
-    if (CurrentScale)
-      cbFormat->SetSelection(((mpScaleX*)CurrentScale)->GetLabelMode());
+    cbFormat->SetSelection(((mpScaleX*)CurrentScale)->GetLabelMode());
     edFormat->Enable(cbFormat->GetSelection() == 5);
   }
   else
@@ -807,33 +811,40 @@ void MathPlotConfigDialog::UpdateAxis(void)
     edFormat->Enable();
   }
 
-    edAxisName->SetValue(CurrentScale->GetName());
-    // Pen config
-    bAxisPenColor->SetBackgroundColour(CurrentScale->GetPen().GetColour());
-    cbAxisPenWidth->SetSelection(CurrentScale->GetPen().GetWidth() - 1);
-    cbAxisPenStyle->SetSelection(CurrentScale->GetPen().GetStyle() - wxPENSTYLE_SOLID);
-    cbAxisVisible->SetValue(CurrentScale->IsVisible());
+  edAxisName->SetValue(CurrentScale->GetName());
+  // Pen config
+  bAxisPenColor->SetBackgroundColour(CurrentScale->GetPen().GetColour());
+  cbAxisPenWidth->SetSelection(CurrentScale->GetPen().GetWidth() - 1);
+  cbAxisPenStyle->SetSelection(CurrentScale->GetPen().GetStyle() - wxPENSTYLE_SOLID);
+  cbAxisVisible->SetValue(CurrentScale->IsVisible());
   cbGridVisible->SetValue(CurrentScale->GetShowGrids());
-    cbAxisPosition->SetSelection(CurrentScale->GetAlign() - scale_offset);
-    edFormat->SetValue(CurrentScale->GetLabelFormat());
-    cbLogAxis->SetValue(CurrentScale->IsLogAxis());
+  cbAxisPosition->SetSelection(CurrentScale->GetAlign() - scale_offset);
+  edFormat->SetValue(CurrentScale->GetLabelFormat());
+  cbLogAxis->SetValue(CurrentScale->IsLogAxis());
 
-    cbAxisOutside->SetValue(CurrentScale->GetDrawOutsideMargins());
+  cbAxisOutside->SetValue(CurrentScale->GetDrawOutsideMargins());
 
-    UpdateFont(CurrentScale, bFontAxis, true);
-    bFontAxis->Enable();
+  UpdateFont(CurrentScale, bFontAxis, true);
+  bFontAxis->Enable();
 
-    // Scale
+  // Scale
   mpFloatRect BoundScale = m_plot->Get_Bound();
-    cbAutoScale->SetValue(CurrentScale->GetAuto());
-    edScaleMin->Enable(!CurrentScale->GetAuto());
-    edScaleMax->Enable(!CurrentScale->GetAuto());
-    if (CurrentScale->GetAuto())
-    {
+  cbAutoScale->SetValue(CurrentScale->GetAuto());
+  edScaleMin->Enable(!CurrentScale->GetAuto());
+  edScaleMax->Enable(!CurrentScale->GetAuto());
+  if (CurrentScale->GetAuto())
+  {
     if (classname.IsSameAs(_T("mpScaleX")))
+    {
+      scale_min = BoundScale.Xmin;
+      scale_max = BoundScale.Xmax;
+    }
+    else
+    {
+      if (((mpScaleY*)CurrentScale)->IsY2Axis())
       {
-        scale_min = BoundScale.Xmin;
-        scale_max = BoundScale.Xmax;
+        scale_min = BoundScale.Y2min;
+        scale_max = BoundScale.Y2max;
       }
       else
       {
@@ -841,26 +852,29 @@ void MathPlotConfigDialog::UpdateAxis(void)
         scale_max = BoundScale.Ymax;
       }
     }
-    else
-    {
-      scale_min = CurrentScale->GetMinScale();
-      scale_max = CurrentScale->GetMaxScale();
-    }
-    edScaleMin->GetValidator()->TransferToWindow();
-    edScaleMax->GetValidator()->TransferToWindow();
   }
-
-void MathPlotConfigDialog::OnbAddAxisClick(wxCommandEvent& event)
-{
-  wxButton *bt = wxDynamicCast(event.GetEventObject(), wxButton);
-  mpScale *newAxis = NULL;
-  if (bt == bAddXAxis)
-    newAxis = (mpScale *)new mpScaleX(wxT("New X"), mpALIGN_CENTERX, true, mpX_NORMAL);
   else
-    newAxis = (mpScale *)new mpScaleY(wxT("New Y"), mpALIGN_CENTERY, true);
-  m_plot->AddLayer(newAxis);
-  ChoiceAxis->SetSelection(ChoiceAxis->GetCount() - 1);
-  UpdateAxis();
+  {
+    scale_min = CurrentScale->GetMinScale();
+    scale_max = CurrentScale->GetMaxScale();
+  }
+  edScaleMin->GetValidator()->TransferToWindow();
+  edScaleMax->GetValidator()->TransferToWindow();
+}
+
+void MathPlotConfigDialog::OnbAddAxisClick(wxCommandEvent &event)
+{
+  wxButton* bt = wxDynamicCast(event.GetEventObject(), wxButton);
+  mpScale* newAxis = NULL;
+  if (bt == bAddXAxis)
+    newAxis = (mpScale*)new mpScaleX(wxT("New X"), mpALIGN_CENTERX, true, mpX_NORMAL);
+  else
+    newAxis = (mpScale*)new mpScaleY(wxT("New Y"), mpALIGN_CENTERY, true);
+  if (m_plot->AddLayer(newAxis))
+  {
+    ChoiceAxis->SetSelection(ChoiceAxis->GetCount() - 1);
+    UpdateAxis();
+  }
 }
 
 void MathPlotConfigDialog::OnAxisSelect(wxCommandEvent &WXUNUSED(event))
@@ -926,12 +940,14 @@ void MathPlotConfigDialog::UpdateSelectedSerie(void)
     cbSeriesSymbolType->SetSelection(CurrentSerie->GetSymbol());
     cbSeriesSymbolSize->SetValue(CurrentSerie->GetSymbolSize());
 
-    cbSeriesVisible->SetValue(CurrentSerie->IsVisible());
+    SerieVisibleChange = CurrentSerie->IsVisible();
+    cbSeriesVisible->SetValue(SerieVisibleChange);
     cbSeriesContinuity->SetValue(CurrentSerie->GetContinuity());
     cbSeriesOutside->SetValue(CurrentSerie->GetDrawOutsideMargins());
     cbSeriesShowName->SetValue(CurrentSerie->GetShowName());
     cbTractable->SetValue(CurrentSerie->IsTractable());
-    cbSecondYAxis->SetValue(CurrentSerie->GetY2Axis());
+    SecondYAxisChange = CurrentSerie->GetY2Axis();
+    cbSecondYAxis->SetValue(SecondYAxisChange);
     cbSecondYAxis->Enable(m_plot->Y2AxisExist());
 
     cbSeriesStep->SetValue(CurrentSerie->GetStep());
@@ -1091,27 +1107,41 @@ void MathPlotConfigDialog::OnbApplyClick(wxCommandEvent &WXUNUSED(event))
         if (!CurrentScale->GetAuto())
         {
           mpFloatRect BoundScale = m_plot->Get_Bound();
-          if (ChoiceAxis->GetSelection() == 0)
+          if (classname.IsSameAs(_T("mpScaleX"))) // X axis
           {
             BoundScale.Xmin = scale_min;
             BoundScale.Xmax = scale_max;
 
             // Get bound of the other axis
             mpScale* axis = (mpScale*)m_plot->GetLayerYAxis();
-            if (!axis->GetAuto())
+            if (axis && (!axis->GetAuto()))
             {
               BoundScale.Ymin = axis->GetMinScale();
               BoundScale.Ymax = axis->GetMaxScale();
             }
+            axis = (mpScale*)m_plot->GetLayerY2Axis();
+            if (axis && (!axis->GetAuto()))
+            {
+              BoundScale.Y2min = axis->GetMinScale();
+              BoundScale.Y2max = axis->GetMaxScale();
+            }
           }
-          else
+          else // Y or Y2 axis
           {
-            BoundScale.Ymin = scale_min;
-            BoundScale.Ymax = scale_max;
+            if (cbIsY2Axis->GetValue())
+            {
+              BoundScale.Y2min = scale_min;
+              BoundScale.Y2max = scale_max;
+            }
+            else
+            {
+              BoundScale.Ymin = scale_min;
+              BoundScale.Ymax = scale_max;
+            }
 
             // Get bound of the other axis
             mpScale* axis = (mpScale*)m_plot->GetLayerXAxis();
-            if (!axis->GetAuto())
+            if (axis && (!axis->GetAuto()))
             {
               BoundScale.Xmin = axis->GetMinScale();
               BoundScale.Xmax = axis->GetMaxScale();
@@ -1168,7 +1198,15 @@ void MathPlotConfigDialog::OnbApplyClick(wxCommandEvent &WXUNUSED(event))
         if (CurrentLegend)
           CurrentLegend->SetNeedUpdate();
 
-        m_plot->Refresh();
+        // We need to fit if we change visibility or Y axis
+        if ((SecondYAxisChange != cbSecondYAxis->GetValue()) | (SerieVisibleChange != cbSeriesVisible->GetValue()))
+        {
+          SecondYAxisChange = cbSecondYAxis->GetValue();
+          SerieVisibleChange = cbSeriesVisible->GetValue();
+          m_plot->Fit();
+        }
+        else
+          m_plot->Refresh();
       }
       break;
     default:

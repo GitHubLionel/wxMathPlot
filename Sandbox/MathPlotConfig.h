@@ -67,6 +67,8 @@ class MathPlotConfigDialog: public wxDialog
     int scale_offset;
     double scale_min, scale_max;
     bool CheckBar;
+    bool SecondYAxisChange;
+    bool SerieVisibleChange;
 
     //(*Handlers(MathPlotConfigDialog)
     void OnQuit(wxCommandEvent &event);
@@ -79,7 +81,7 @@ class MathPlotConfigDialog: public wxDialog
     void OnbApplyClick(wxCommandEvent &event);
     void OnbFontClick(wxCommandEvent &event);
     void OnbDelSeriesClick(wxCommandEvent &event);
-    void OnbAddAxisClick(wxCommandEvent& event);
+    void OnbAddAxisClick(wxCommandEvent &event);
     //*)
 
     //(*Identifiers(MathPlotConfigDialog)
