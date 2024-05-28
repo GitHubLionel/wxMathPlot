@@ -2128,7 +2128,8 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
       m_plotBondaries.endPy = m_scrY;
       m_plotBondariesMargin.endPy = m_scrY - m_margin.bottom;
 
-      m_magnet.UpdateBox(m_margin.left, m_margin.top, m_plotWidth, m_plotHeight);
+      m_magnet.UpdateBox(m_margin.left - EXTRA_MARGIN, m_margin.top - EXTRA_MARGIN,
+          m_plotWidth + 2*EXTRA_MARGIN, m_plotHeight + 2*EXTRA_MARGIN);
     }
 
     /** Get current view's X dimension in device context units.
