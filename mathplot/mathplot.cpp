@@ -3116,9 +3116,6 @@ bool mpWindow::AddLayer(mpLayer *layer, bool refreshDisplay)
     mpScaleType scale;
     mpFunctionType function;
 
-    // add the layer to the layer list
-    m_layers.push_back(layer);
-
     if (layer->IsInfo(&info))
     {
       if (info == mpiCoords)
@@ -3137,6 +3134,9 @@ bool mpWindow::AddLayer(mpLayer *layer, bool refreshDisplay)
         m_InfoLegend = (mpInfoLegend*)layer;
       }
     }
+
+    // add the layer to the layer list
+    m_layers.push_back(layer);
 
     if (layer->IsScale(&scale))
     {
