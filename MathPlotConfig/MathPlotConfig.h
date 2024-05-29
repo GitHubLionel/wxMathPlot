@@ -48,7 +48,8 @@ class MathPlotConfigDialog: public wxDialog
     MathPlotConfigDialog(wxWindow *parent, wxWindowID id = -1);
     virtual ~MathPlotConfigDialog();
 
-    void Initialize();
+    void Initialize(int page = -1);
+    void SelectChoiceSerie(unsigned int serie);
 
   private:
 

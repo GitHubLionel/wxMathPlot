@@ -118,6 +118,9 @@ namespace MathPlot
 #define EPSILON   1e-8
 #define ISNOTNULL(x)  (fabs(x) > EPSILON)
 
+// A small extra margin for the plot boundary
+#define EXTRA_MARGIN  8
+
 //-----------------------------------------------------------------------------
 // classes
 //-----------------------------------------------------------------------------
@@ -778,11 +781,17 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLayer: public mpLayer
 
     /** Returns the position of the upper left corner of the box (in pixels)
      @return The rectangle position */
-    wxPoint GetPosition();
+    wxPoint GetPosition() const
+    {
+      return m_dim.GetPosition();
+    }
 
     /** Returns the size of the box (in pixels)
      @return The rectangle size */
-    wxSize GetSize();
+    wxSize GetSize() const
+    {
+      return m_dim.GetSize();
+    }
 
     /** Returns the current rectangle coordinates.
      @return The info layer rectangle */
@@ -962,6 +971,8 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLegend: public mpInfoLayer
       m_need_update = true;
     }
 
+    int GetPointed(mpWindow &w, wxPoint eventPoint);
+
     /** Specifies that this is an InfoLegend box layer.
      @return always \a TRUE
      @sa mpLayer::IsInfoLegend */
@@ -978,6 +989,7 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLegend: public mpInfoLayer
 
   private:
     bool m_need_update;
+    int m_layer_count;
     void UpdateBitmap(wxDC &dc, mpWindow &w);
 
   DECLARE_DYNAMIC_CLASS(mpInfoLegend)
@@ -2125,7 +2137,8 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
       m_plotBondaries.endPy = m_scrY;
       m_plotBondariesMargin.endPy = m_scrY - m_margin.bottom;
 
-      m_magnet.UpdateBox(m_margin.left, m_margin.top, m_plotWidth, m_plotHeight);
+      m_magnet.UpdateBox(m_margin.left - EXTRA_MARGIN, m_margin.top - EXTRA_MARGIN,
+          m_plotWidth + 2*EXTRA_MARGIN, m_plotHeight + 2*EXTRA_MARGIN);
     }
 
     /** Get current view's X dimension in device context units.
@@ -2456,10 +2469,16 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     /** Get the bondaries of the plot. */
     mpRect GetPlotBondaries(bool with_margin) const
     {
+      mpRect bond;
       if (with_margin)
-        return m_plotBondariesMargin;
+        bond = m_plotBondariesMargin;
       else
-        return m_plotBondaries;
+        bond = m_plotBondaries;
+      bond.startPx -= EXTRA_MARGIN;
+      bond.endPx += EXTRA_MARGIN;
+      bond.startPy -= EXTRA_MARGIN;
+      bond.endPy += EXTRA_MARGIN;
+      return bond;
     }
 
     /** Set the draw of the box around the plot. */
@@ -2670,6 +2689,8 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     int m_scrollX, m_scrollY;
     mpInfoLayer* m_movingInfoLayer;     //!< For moving info layers over the window area
     mpInfoCoords* m_InfoCoords;         //!< Shortcut to info coords layer
+    mpInfoLegend* m_InfoLegend;
+    bool m_InInfoLegend;
 
     wxBitmap* m_zoom_bmp;               //!< For zoom selection
     wxRect m_zoom_dim;

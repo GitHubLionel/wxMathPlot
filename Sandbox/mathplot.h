@@ -781,11 +781,17 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLayer: public mpLayer
 
     /** Returns the position of the upper left corner of the box (in pixels)
      @return The rectangle position */
-    wxPoint GetPosition();
+    wxPoint GetPosition() const
+    {
+      return m_dim.GetPosition();
+    }
 
     /** Returns the size of the box (in pixels)
      @return The rectangle size */
-    wxSize GetSize();
+    wxSize GetSize() const
+    {
+      return m_dim.GetSize();
+    }
 
     /** Returns the current rectangle coordinates.
      @return The info layer rectangle */
@@ -965,6 +971,8 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLegend: public mpInfoLayer
       m_need_update = true;
     }
 
+    int GetPointed(mpWindow &w, wxPoint eventPoint);
+
     /** Specifies that this is an InfoLegend box layer.
      @return always \a TRUE
      @sa mpLayer::IsInfoLegend */
@@ -981,6 +989,7 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLegend: public mpInfoLayer
 
   private:
     bool m_need_update;
+    int m_layer_count;
     void UpdateBitmap(wxDC &dc, mpWindow &w);
 
   DECLARE_DYNAMIC_CLASS(mpInfoLegend)
@@ -2680,6 +2689,8 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     int m_scrollX, m_scrollY;
     mpInfoLayer* m_movingInfoLayer;     //!< For moving info layers over the window area
     mpInfoCoords* m_InfoCoords;         //!< Shortcut to info coords layer
+    mpInfoLegend* m_InfoLegend;
+    bool m_InInfoLegend;
 
     wxBitmap* m_zoom_bmp;               //!< For zoom selection
     wxRect m_zoom_dim;

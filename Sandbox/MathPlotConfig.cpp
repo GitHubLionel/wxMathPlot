@@ -574,7 +574,7 @@ MathPlotConfigDialog::~MathPlotConfigDialog()
   //*)
 }
 
-void MathPlotConfigDialog::Initialize()
+void MathPlotConfigDialog::Initialize(int page)
 {
   CurrentTitle = (mpText*)m_plot->GetLayerByClassName(_T("mpTitle"));
   if (CurrentTitle)
@@ -656,11 +656,10 @@ void MathPlotConfigDialog::Initialize()
   bDelSeries->Enable(ChoiceSeries->GetCount() > 0);
 
   // Select the first serie
-  if (ChoiceSeries->GetCount() > 0)
-  {
-    ChoiceSeries->SetSelection(0);
-    UpdateSelectedSerie();
-  }
+  SelectChoiceSerie(0);
+
+  if (page != -1)
+    nbConfig->SetSelection(page);
 
   switch (nbConfig->GetSelection())
   {
@@ -918,6 +917,15 @@ int MathPlotConfigDialog::BrushStyleToId(wxBrushStyle style)
     {
       return style - wxBRUSHSTYLE_BDIAGONAL_HATCH + 2;
     }
+}
+
+void MathPlotConfigDialog::SelectChoiceSerie(unsigned int serie)
+{
+  if ((ChoiceSeries->GetCount() > 0) && (serie < ChoiceSeries->GetCount()))
+  {
+    ChoiceSeries->SetSelection(serie);
+    UpdateSelectedSerie();
+  }
 }
 
 void MathPlotConfigDialog::UpdateSelectedSerie(void)

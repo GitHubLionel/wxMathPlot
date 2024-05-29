@@ -434,16 +434,6 @@ void mpInfoLayer::DoPlot(wxDC &dc, mpWindow &w)
   dc.DrawRectangle(m_dim);
 }
 
-wxPoint mpInfoLayer::GetPosition()
-{
-  return m_dim.GetPosition();
-}
-
-wxSize mpInfoLayer::GetSize()
-{
-  return m_dim.GetSize();
-}
-
 //-----------------------------------------------------------------------------
 // mpInfoCoords
 //-----------------------------------------------------------------------------
@@ -683,6 +673,7 @@ mpInfoLegend::mpInfoLegend() :
   m_location = mpMarginBottomCenter;
   m_legend_bmp = NULL;
   m_need_update = true;
+  m_layer_count = 0;
 }
 
 mpInfoLegend::mpInfoLegend(wxRect rect, const wxBrush &brush, mpLocation location) :
@@ -692,6 +683,7 @@ mpInfoLegend::mpInfoLegend(wxRect rect, const wxBrush &brush, mpLocation locatio
   m_item_direction = mpVertical;
   m_legend_bmp = NULL;
   m_need_update = true;
+  m_layer_count = 0;
 }
 
 mpInfoLegend::~mpInfoLegend()
@@ -727,11 +719,13 @@ void mpInfoLegend::UpdateBitmap(wxDC &dc, mpWindow &w)
   DeleteAndNull(m_legend_bmp);
 
   // Get series name
+  m_layer_count = 0;
   for (unsigned int p = 0; p < w.CountAllLayers(); p++)
   {
     ly = w.GetLayer(p);
     if ((ly->GetLayerType() == mpLAYER_PLOT) && (ly->IsVisible()))
     {
+      m_layer_count++;
       wxString label = ly->GetName();
       wxPen lpen = ly->GetPen();
 
@@ -835,6 +829,35 @@ void mpInfoLegend::DoPlot(wxDC &dc, mpWindow &w)
 #endif
     buff_dc.SelectObject(wxNullBitmap);
   }
+}
+
+int mpInfoLegend::GetPointed(mpWindow &w, wxPoint eventPoint)
+{
+  if (m_layer_count == 0)
+    return -1;
+
+  int rect_click, c = -1;
+
+  // We can consider that each name of serie is in an rectangular area.
+  // So we just need to determine in whitch rectangular we have clicked
+  if (m_item_direction == mpVertical)
+    rect_click = (eventPoint.y - m_dim.y) / (m_dim.height / m_layer_count);
+  else
+    rect_click = (eventPoint.x - m_dim.x) / (m_dim.width / m_layer_count);
+
+  for (unsigned int p = 0; p < w.CountAllLayers(); p++)
+  {
+    mpLayer* ly = w.GetLayer(p);
+    if (ly->GetLayerType() == mpLAYER_PLOT)
+    {
+      c++;
+      if (!ly->IsVisible())
+        rect_click++;
+      if (c == rect_click)
+        return c;
+    }
+  }
+  return -1;
 }
 
 //-----------------------------------------------------------------------------
@@ -2416,6 +2439,8 @@ void mpWindow::InitParameters()
   m_mouseMovedAfterRightClick = false;
   m_movingInfoLayer = NULL;
   m_InfoCoords = NULL;
+  m_InfoLegend = NULL;
+  m_InInfoLegend = false;
   m_zoom_bmp = NULL;
   m_magnetize = false;
   m_enableScrollBars = false;
@@ -2439,6 +2464,17 @@ void mpWindow::OnMouseLeftDown(wxMouseEvent &event)
     wxLogMessage(_T("mpWindow::OnMouseLeftDown() started moving layer %p"), m_movingInfoLayer);
   }
 #endif
+  if (m_InInfoLegend)
+  {
+    int select = m_InfoLegend->GetPointed(*this, m_mouseLClick);
+    if (m_configWindow == NULL)
+      m_configWindow = new MathPlotConfigDialog(this);
+
+    m_configWindow->Initialize(3);
+    m_configWindow->SelectChoiceSerie(select);
+    m_configWindow->Show();
+  }
+
   event.Skip();
 }
 
@@ -2565,6 +2601,16 @@ void mpWindow::OnMouseMove(wxMouseEvent &event)
       {
         m_InfoCoords->UpdateInfo(*this, event);
         m_InfoCoords->Plot(dc, *this);
+      }
+
+      // Mouse move on legend
+      if (m_InfoLegend && m_InfoLegend->IsVisible())
+      {
+        m_InInfoLegend = m_InfoLegend->Inside(eventPoint);
+        if (m_InInfoLegend)
+          SetCursor(wxCursor(wxCURSOR_HAND));
+        else
+          SetCursor(*wxSTANDARD_CURSOR);
       }
 
       if (m_magnetize && (!m_repainting) && (event.GetEventType() == wxEVT_MOTION))
@@ -3073,12 +3119,23 @@ bool mpWindow::AddLayer(mpLayer *layer, bool refreshDisplay)
     // add the layer to the layer list
     m_layers.push_back(layer);
 
-    if (layer->IsInfo(&info) && (info == mpiCoords))
+    if (layer->IsInfo(&info))
     {
-      // Only one info coords is allowed
-      if (m_InfoCoords)
-        return false;
-      m_InfoCoords = (mpInfoCoords*)layer;
+      if (info == mpiCoords)
+      {
+        // Only one info coords is allowed
+        if (m_InfoCoords)
+          return false;
+        m_InfoCoords = (mpInfoCoords*)layer;
+      }
+
+      if (info == mpiLegend)
+      {
+        // Only one info legend is allowed
+        if (m_InfoLegend)
+          return false;
+        m_InfoLegend = (mpInfoLegend*)layer;
+      }
     }
 
     if (layer->IsScale(&scale))

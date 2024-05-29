@@ -434,16 +434,6 @@ void mpInfoLayer::DoPlot(wxDC &dc, mpWindow &w)
   dc.DrawRectangle(m_dim);
 }
 
-wxPoint mpInfoLayer::GetPosition()
-{
-  return m_dim.GetPosition();
-}
-
-wxSize mpInfoLayer::GetSize()
-{
-  return m_dim.GetSize();
-}
-
 //-----------------------------------------------------------------------------
 // mpInfoCoords
 //-----------------------------------------------------------------------------
@@ -683,6 +673,7 @@ mpInfoLegend::mpInfoLegend() :
   m_location = mpMarginBottomCenter;
   m_legend_bmp = NULL;
   m_need_update = true;
+  m_layer_count = 0;
 }
 
 mpInfoLegend::mpInfoLegend(wxRect rect, const wxBrush &brush, mpLocation location) :
@@ -692,6 +683,7 @@ mpInfoLegend::mpInfoLegend(wxRect rect, const wxBrush &brush, mpLocation locatio
   m_item_direction = mpVertical;
   m_legend_bmp = NULL;
   m_need_update = true;
+  m_layer_count = 0;
 }
 
 mpInfoLegend::~mpInfoLegend()
@@ -727,11 +719,13 @@ void mpInfoLegend::UpdateBitmap(wxDC &dc, mpWindow &w)
   DeleteAndNull(m_legend_bmp);
 
   // Get series name
+  m_layer_count = 0;
   for (unsigned int p = 0; p < w.CountAllLayers(); p++)
   {
     ly = w.GetLayer(p);
     if ((ly->GetLayerType() == mpLAYER_PLOT) && (ly->IsVisible()))
     {
+      m_layer_count++;
       wxString label = ly->GetName();
       wxPen lpen = ly->GetPen();
 
@@ -835,6 +829,35 @@ void mpInfoLegend::DoPlot(wxDC &dc, mpWindow &w)
 #endif
     buff_dc.SelectObject(wxNullBitmap);
   }
+}
+
+int mpInfoLegend::GetPointed(mpWindow &w, wxPoint eventPoint)
+{
+  if (m_layer_count == 0)
+    return -1;
+
+  int rect_click, c = -1;
+
+  // We can consider that each name of serie is in an rectangular area.
+  // So we just need to determine in whitch rectangular we have clicked
+  if (m_item_direction == mpVertical)
+    rect_click = (eventPoint.y - m_dim.y) / (m_dim.height / m_layer_count);
+  else
+    rect_click = (eventPoint.x - m_dim.x) / (m_dim.width / m_layer_count);
+
+  for (unsigned int p = 0; p < w.CountAllLayers(); p++)
+  {
+    mpLayer* ly = w.GetLayer(p);
+    if (ly->GetLayerType() == mpLAYER_PLOT)
+    {
+      c++;
+      if (!ly->IsVisible())
+        rect_click++;
+      if (c == rect_click)
+        return c;
+    }
+  }
+  return -1;
 }
 
 //-----------------------------------------------------------------------------
@@ -991,7 +1014,8 @@ void mpFX::DoPlot(wxDC &dc, mpWindow &w)
 
   if (!m_drawOutsideMargins)
   {
-    wxRect rect(m_plotBondaries.startPx, m_plotBondaries.startPy, m_plotBondaries.endPx - m_plotBondaries.startPx,
+    wxRect rect(m_plotBondaries.startPx, m_plotBondaries.startPy,
+        m_plotBondaries.endPx - m_plotBondaries.startPx,
         m_plotBondaries.endPy - m_plotBondaries.startPy);
     dc.SetClippingRegion(rect);
   }
@@ -1098,7 +1122,8 @@ void mpFY::DoPlot(wxDC &dc, mpWindow &w)
 
   if (!m_drawOutsideMargins)
   {
-    wxRect rect(m_plotBondaries.startPx, m_plotBondaries.startPy, m_plotBondaries.endPx - m_plotBondaries.startPx,
+    wxRect rect(m_plotBondaries.startPx, m_plotBondaries.startPy,
+        m_plotBondaries.endPx - m_plotBondaries.startPx,
         m_plotBondaries.endPy - m_plotBondaries.startPy);
     dc.SetClippingRegion(rect);
   }
@@ -1244,7 +1269,8 @@ void mpFXY::DoPlot(wxDC &dc, mpWindow &w)
 
   if (!m_drawOutsideMargins)
   {
-    wxRect rect(m_plotBondaries.startPx, m_plotBondaries.startPy, m_plotBondaries.endPx - m_plotBondaries.startPx,
+    wxRect rect(m_plotBondaries.startPx , m_plotBondaries.startPy,
+        m_plotBondaries.endPx - m_plotBondaries.startPx,
         m_plotBondaries.endPy - m_plotBondaries.startPy);
     dc.SetClippingRegion(rect);
   }
@@ -1754,18 +1780,21 @@ int mpScaleX::GetOrigin(mpWindow &w)
       if (m_drawOutsideMargins)
         origin = X_BORDER_SEPARATION;
       else
-        origin = w.GetMarginTop();
+        origin = w.GetMarginTop() - EXTRA_MARGIN;
       break;
     }
     case mpALIGN_CENTERX:
       origin = w.y2p(0);
+      // Draw nothing if we are outside margins
+      if (!m_drawOutsideMargins && ((origin > (w.GetScreenY() - w.GetMarginBottom())) || (origin < w.GetMarginTop())))
+        origin = -1;
       break;
     case mpALIGN_BOTTOM:
     {
       if (m_drawOutsideMargins)
         origin = w.GetScreenY() - X_BORDER_SEPARATION;
       else
-        origin = w.GetScreenY() - w.GetMarginBottom();
+        origin = w.GetScreenY() - w.GetMarginBottom() + EXTRA_MARGIN - 1;
       break;
     }
     case mpALIGN_BORDER_BOTTOM:
@@ -1884,7 +1913,7 @@ void mpScaleX::DoPlot(wxDC &dc, mpWindow &w)
   int orgy = GetOrigin(w);
 
   // Draw nothing if we are outside margins
-  if (!m_drawOutsideMargins && ((orgy > (w.GetScreenY() - w.GetMarginBottom())) || (orgy < w.GetMarginTop())))
+  if (orgy == -1)
     return;
 
   // Draw X axis
@@ -2061,18 +2090,20 @@ int mpScaleY::GetOrigin(mpWindow &w)
       if (m_drawOutsideMargins)
         origin = Y_BORDER_SEPARATION;
       else
-        origin = w.GetMarginLeft();
+        origin = w.GetMarginLeft() - EXTRA_MARGIN - 1;
       break;
     }
     case mpALIGN_CENTERY:
       origin = w.x2p(0);
+      if (!m_drawOutsideMargins && ((origin > (w.GetScreenX() - w.GetMarginRight())) || (origin + 1 < w.GetMarginLeft())))
+        origin = -1;
       break;
     case mpALIGN_RIGHT:
     {
       if (m_drawOutsideMargins)
         origin = w.GetScreenX() - Y_BORDER_SEPARATION;
       else
-        origin = w.GetScreenX() - w.GetMarginRight();
+        origin = w.GetScreenX() - w.GetMarginRight() + EXTRA_MARGIN - 2;
       break;
     }
     case mpALIGN_BORDER_RIGHT:
@@ -2138,7 +2169,7 @@ void mpScaleY::DoPlot(wxDC &dc, mpWindow &w)
   int orgx = GetOrigin(w);
 
   // Draw nothing if we are outside margins
-  if (!m_drawOutsideMargins && ((orgx > (w.GetScreenX() - w.GetMarginRight())) || (orgx + 1 < w.GetMarginLeft())))
+  if (orgx == -1)
     return;
 
   // Draw Y axis
@@ -2408,6 +2439,8 @@ void mpWindow::InitParameters()
   m_mouseMovedAfterRightClick = false;
   m_movingInfoLayer = NULL;
   m_InfoCoords = NULL;
+  m_InfoLegend = NULL;
+  m_InInfoLegend = false;
   m_zoom_bmp = NULL;
   m_magnetize = false;
   m_enableScrollBars = false;
@@ -2431,6 +2464,17 @@ void mpWindow::OnMouseLeftDown(wxMouseEvent &event)
     wxLogMessage(_T("mpWindow::OnMouseLeftDown() started moving layer %p"), m_movingInfoLayer);
   }
 #endif
+  if (m_InInfoLegend)
+  {
+    int select = m_InfoLegend->GetPointed(*this, m_mouseLClick);
+    if (m_configWindow == NULL)
+      m_configWindow = new MathPlotConfigDialog(this);
+
+    m_configWindow->Initialize(3);
+    m_configWindow->SelectChoiceSerie(select);
+    m_configWindow->Show();
+  }
+
   event.Skip();
 }
 
@@ -2557,6 +2601,16 @@ void mpWindow::OnMouseMove(wxMouseEvent &event)
       {
         m_InfoCoords->UpdateInfo(*this, event);
         m_InfoCoords->Plot(dc, *this);
+      }
+
+      // Mouse move on legend
+      if (m_InfoLegend && m_InfoLegend->IsVisible())
+      {
+        m_InInfoLegend = m_InfoLegend->Inside(eventPoint);
+        if (m_InInfoLegend)
+          SetCursor(wxCursor(wxCURSOR_HAND));
+        else
+          SetCursor(*wxSTANDARD_CURSOR);
       }
 
       if (m_magnetize && (!m_repainting) && (event.GetEventType() == wxEVT_MOTION))
@@ -3065,12 +3119,23 @@ bool mpWindow::AddLayer(mpLayer *layer, bool refreshDisplay)
     // add the layer to the layer list
     m_layers.push_back(layer);
 
-    if (layer->IsInfo(&info) && (info == mpiCoords))
+    if (layer->IsInfo(&info))
     {
-      // Only one info coords is allowed
-      if (m_InfoCoords)
-        return false;
-      m_InfoCoords = (mpInfoCoords*)layer;
+      if (info == mpiCoords)
+      {
+        // Only one info coords is allowed
+        if (m_InfoCoords)
+          return false;
+        m_InfoCoords = (mpInfoCoords*)layer;
+      }
+
+      if (info == mpiLegend)
+      {
+        // Only one info legend is allowed
+        if (m_InfoLegend)
+          return false;
+        m_InfoLegend = (mpInfoLegend*)layer;
+      }
     }
 
     if (layer->IsScale(&scale))
@@ -3251,16 +3316,17 @@ void mpWindow::OnPaint(wxPaintEvent &WXUNUSED(event))
   // Draw background plot area
   trgDc->SetBrush(m_bgColour);
   trgDc->SetTextForeground(m_fgColour);
-  trgDc->DrawRectangle(m_margin.left, m_margin.top, m_plotWidth, m_plotHeight);
+  trgDc->DrawRectangle(m_margin.left - EXTRA_MARGIN, m_margin.top - EXTRA_MARGIN,
+      m_plotWidth + 2*EXTRA_MARGIN, m_plotHeight + 2*EXTRA_MARGIN);
 
   // Draw all the layers in Z order
   for (int i = mpZIndex_BACKGROUND; i < mpZIndex_END; i++)
   {
-  for (wxLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
-  {
+    for (wxLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
+    {
       if ((*it)->GetZIndex() == i)
-      (*it)->Plot(*trgDc, *this);
-  }
+        (*it)->Plot(*trgDc, *this);
+    }
   }
 
   // If doublebuffer, draw now to the window:
@@ -4021,7 +4087,8 @@ wxBitmap* mpWindow::BitmapScreenshot(wxSize imageSize, bool fit)
 
   m_Screenshot_dc.SetBrush(m_bgColour);
   m_Screenshot_dc.SetTextForeground(m_fgColour);
-  m_Screenshot_dc.DrawRectangle(m_margin.left, m_margin.top, m_plotWidth, m_plotHeight);
+  m_Screenshot_dc.DrawRectangle(m_margin.left - EXTRA_MARGIN, m_margin.top - EXTRA_MARGIN,
+      m_plotWidth + 2*EXTRA_MARGIN, m_plotHeight + 2*EXTRA_MARGIN);
 
   if (fit)
   {
@@ -4036,11 +4103,11 @@ wxBitmap* mpWindow::BitmapScreenshot(wxSize imageSize, bool fit)
   // Draw all the layers in Z order
   for (int i = mpZIndex_BACKGROUND; i < mpZIndex_END; i++)
   {
-  for (wxLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
-  {
+    for (wxLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
+    {
       if ((*it)->GetZIndex() == i)
-      (*it)->Plot(m_Screenshot_dc, *this);
-  }
+        (*it)->Plot(m_Screenshot_dc, *this);
+    }
   }
   m_Screenshot_dc.SelectObject(wxNullBitmap);
 
