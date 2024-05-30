@@ -22,6 +22,8 @@
 const wxString MESS_TRANSPARENT = _("Transparent not work on Linux");
 const wxString MESS_COLOUR = _("Please choose the background colour");
 const wxString MESS_DELETE = _("Delete the serie ?");
+const wxString MESS_LINES_ADD = _("Add horizontal line (vertical if No) ?");
+const wxString MESS_LINES_DELETE = _("Delete the line ?");
 const wxString MESS_CONFIRM = _("Confirmation");
 
 BEGIN_EVENT_TABLE(MathPlotConfigDialog,wxDialog)
@@ -39,6 +41,9 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   wxBoxSizer* BoxSizer14;
   wxBoxSizer* BoxSizer15;
   wxBoxSizer* BoxSizer16;
+  wxBoxSizer* BoxSizer17;
+  wxBoxSizer* BoxSizer18;
+  wxBoxSizer* BoxSizer19;
   wxBoxSizer* BoxSizer1;
   wxBoxSizer* BoxSizer3;
   wxBoxSizer* BoxSizer4;
@@ -58,13 +63,18 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   wxFlexGridSizer* FlexGridSizer18;
   wxFlexGridSizer* FlexGridSizer19;
   wxFlexGridSizer* FlexGridSizer1;
+  wxFlexGridSizer* FlexGridSizer20;
+  wxFlexGridSizer* FlexGridSizer21;
   wxFlexGridSizer* FlexGridSizer2;
   wxFlexGridSizer* FlexGridSizer3;
   wxFlexGridSizer* FlexGridSizer4;
+  wxFlexGridSizer* FlexGridSizer5;
   wxFlexGridSizer* FlexGridSizer6;
   wxFlexGridSizer* FlexGridSizer7;
   wxFlexGridSizer* FlexGridSizer8;
+  wxFlexGridSizer* FlexGridSizer9;
   wxStaticBoxSizer* StaticBoxSizer10;
+  wxStaticBoxSizer* StaticBoxSizer11;
   wxStaticBoxSizer* StaticBoxSizer1;
   wxStaticBoxSizer* StaticBoxSizer2;
   wxStaticBoxSizer* StaticBoxSizer3;
@@ -144,13 +154,17 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   cbCoordVisible = new wxCheckBox(Panel1, wxID_ANY, _("Visible"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
   cbCoordVisible->SetValue(false);
   BoxSizer1->Add(cbCoordVisible, 0, wxALL|wxEXPAND, 5);
+  cbCoordOutside = new wxCheckBox(Panel1, wxID_ANY, _("Coordinates in Margins"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
+  cbCoordOutside->SetValue(false);
+  cbCoordOutside->SetToolTip(_("Shows the coordinates when the mouse is in the margins"));
+  BoxSizer1->Add(cbCoordOutside, 0, wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND, 5);
   cbCoordinates = new wxCheckBox(Panel1, wxID_ANY, _("Series coordinates"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
   cbCoordinates->SetValue(false);
   cbCoordinates->SetToolTip(_("Shows the coordinates of the series closest to the mouse position"));
-  BoxSizer1->Add(cbCoordinates, 0, wxLEFT|wxRIGHT|wxEXPAND, 5);
+  BoxSizer1->Add(cbCoordinates, 0, wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND, 5);
   cbMagnetize = new wxCheckBox(Panel1, wxID_ANY, _("Magnetize"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
   cbMagnetize->SetValue(false);
-  BoxSizer1->Add(cbMagnetize, 0, wxALL|wxEXPAND, 5);
+  BoxSizer1->Add(cbMagnetize, 0, wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND, 5);
   StaticBoxSizer3->Add(BoxSizer1, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
   StaticBoxSizer4 = new wxStaticBoxSizer(wxHORIZONTAL, Panel1, _("Brush "));
   FlexGridSizer4 = new wxFlexGridSizer(2, 2, 0, 0);
@@ -505,10 +519,96 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   FlexGridSizer15->Add(BoxSizer10, 1, wxALL|wxALIGN_TOP|wxALIGN_CENTER_HORIZONTAL, 5);
   BoxSizer8->Add(FlexGridSizer15, 0, wxALL|wxEXPAND, 2);
   Panel4->SetSizer(BoxSizer8);
+  Panel5 = new wxPanel(nbConfig, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL);
+  BoxSizer17 = new wxBoxSizer(wxVERTICAL);
+  FlexGridSizer5 = new wxFlexGridSizer(1, 5, 0, 0);
+  FlexGridSizer5->AddGrowableCol(0);
+  ChoiceLines = new wxChoice(Panel5, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator);
+  FlexGridSizer5->Add(ChoiceLines, 1, wxALL|wxEXPAND, 5);
+  bAddLines = new wxButton(Panel5, wxID_ANY, _("Add"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
+  FlexGridSizer5->Add(bAddLines, 0, wxTOP|wxBOTTOM|wxRIGHT|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+  bDelLines = new wxButton(Panel5, wxID_ANY, _("Delete"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
+  bDelLines->Disable();
+  FlexGridSizer5->Add(bDelLines, 0, wxTOP|wxBOTTOM|wxRIGHT|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+  BoxSizer17->Add(FlexGridSizer5, 0, wxALL|wxEXPAND, 2);
+  FlexGridSizer9 = new wxFlexGridSizer(2, 4, 0, 0);
+  FlexGridSizer9->AddGrowableCol(1);
+  StaticText31 = new wxStaticText(Panel5, wxID_ANY, _("Name :"), wxDefaultPosition, wxDefaultSize, 0);
+  FlexGridSizer9->Add(StaticText31, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
+  edLinesName = new wxTextCtrl(Panel5, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
+  FlexGridSizer9->Add(edLinesName, 1, wxALL|wxEXPAND, 5);
+  rbLinesHor = new wxRadioButton(Panel5, wxID_ANY, _("Horizontal"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
+  rbLinesHor->Disable();
+  FlexGridSizer9->Add(rbLinesHor, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+  rbLinesVert = new wxRadioButton(Panel5, wxID_ANY, _("Vertical"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
+  rbLinesVert->Disable();
+  FlexGridSizer9->Add(rbLinesVert, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+  StaticText30 = new wxStaticText(Panel5, wxID_ANY, _("Value :"), wxDefaultPosition, wxDefaultSize, 0);
+  FlexGridSizer9->Add(StaticText30, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+  edLinesValue = new wxTextCtrl(Panel5, wxID_ANY, _T("1"), wxDefaultPosition, wxSize(64,-1), wxTE_RIGHT, wxFloatingPointValidator<double> (2, &line_value));
+  FlexGridSizer9->Add(edLinesValue, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
+  BoxSizer17->Add(FlexGridSizer9, 0, wxALL|wxEXPAND, 2);
+  FlexGridSizer20 = new wxFlexGridSizer(1, 2, 0, 0);
+  BoxSizer18 = new wxBoxSizer(wxHORIZONTAL);
+  StaticBoxSizer11 = new wxStaticBoxSizer(wxHORIZONTAL, Panel5, _("Pen "));
+  FlexGridSizer21 = new wxFlexGridSizer(3, 2, 0, 0);
+  StaticText32 = new wxStaticText(Panel5, wxID_ANY, _("Color :"), wxDefaultPosition, wxDefaultSize, 0);
+  FlexGridSizer21->Add(StaticText32, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
+  bLinesPenColor = new wxButton(Panel5, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
+  FlexGridSizer21->Add(bLinesPenColor, 1, wxALL|wxEXPAND, 2);
+  StaticText33 = new wxStaticText(Panel5, wxID_ANY, _("Width :"), wxDefaultPosition, wxDefaultSize, 0);
+  FlexGridSizer21->Add(StaticText33, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
+  const wxString cbLinesPenWidth_choices[] = {
+  _T("1"),
+  _T("2"),
+  _T("3"),
+  _T("4"),
+  _T("5"),
+  _T("6"),
+  _T("7"),
+  _T("8"),
+  _T("9"),
+  _T("10"),
+  };
+  cbLinesPenWidth = new wxChoice(Panel5, wxID_ANY, wxDefaultPosition, wxDefaultSize, 10, cbLinesPenWidth_choices, 0, wxDefaultValidator);
+  cbLinesPenWidth->SetSelection(0);
+  FlexGridSizer21->Add(cbLinesPenWidth, 1, wxALL|wxEXPAND, 2);
+  StaticText34 = new wxStaticText(Panel5, wxID_ANY, _("Style :"), wxDefaultPosition, wxDefaultSize, 0);
+  FlexGridSizer21->Add(StaticText34, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
+  const wxString cbLinesPenStyle_choices[] = {
+  _("Solid"),
+  _("Dot"),
+  _("Long Dash"),
+  _("Short Dash"),
+  _("Dot Dash"),
+  };
+  cbLinesPenStyle = new wxChoice(Panel5, wxID_ANY, wxDefaultPosition, wxDefaultSize, 5, cbLinesPenStyle_choices, 0, wxDefaultValidator);
+  cbLinesPenStyle->SetSelection(0);
+  FlexGridSizer21->Add(cbLinesPenStyle, 1, wxALL|wxEXPAND, 2);
+  StaticBoxSizer11->Add(FlexGridSizer21, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
+  BoxSizer18->Add(StaticBoxSizer11, 0, wxALL, 2);
+  BoxSizer19 = new wxBoxSizer(wxVERTICAL);
+  cbLinesVisible = new wxCheckBox(Panel5, wxID_ANY, _("Visible"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
+  cbLinesVisible->SetValue(false);
+  BoxSizer19->Add(cbLinesVisible, 1, wxALL|wxALIGN_LEFT, 3);
+  cbLinesOutside = new wxCheckBox(Panel5, wxID_ANY, _("Draw Outside Margins"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
+  cbLinesOutside->SetValue(false);
+  BoxSizer19->Add(cbLinesOutside, 1, wxALL|wxALIGN_LEFT, 3);
+  cbLinesShowName = new wxCheckBox(Panel5, wxID_ANY, _("Show name"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
+  cbLinesShowName->SetValue(false);
+  BoxSizer19->Add(cbLinesShowName, 1, wxALL|wxALIGN_LEFT, 3);
+  cbLinesSecondYAxis = new wxCheckBox(Panel5, wxID_ANY, _("Use second Y axis"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
+  cbLinesSecondYAxis->SetValue(false);
+  BoxSizer19->Add(cbLinesSecondYAxis, 1, wxALL|wxALIGN_LEFT, 3);
+  BoxSizer18->Add(BoxSizer19, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5);
+  FlexGridSizer20->Add(BoxSizer18, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+  BoxSizer17->Add(FlexGridSizer20, 0, wxALL|wxEXPAND, 2);
+  Panel5->SetSizer(BoxSizer17);
   nbConfig->AddPage(Panel1, _("General"), false);
   nbConfig->AddPage(Panel2, _("Legend"), false);
   nbConfig->AddPage(Panel3, _("Axis"), false);
   nbConfig->AddPage(Panel4, _("Series"), false);
+  nbConfig->AddPage(Panel5, _("Lines"), false);
   sizerMain->Add(nbConfig, 1, wxALL|wxEXPAND, 5);
   BoxSizer2 = new wxBoxSizer(wxHORIZONTAL);
   bApply = new wxButton(this, wxID_ANY, _("Apply"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
@@ -535,6 +635,10 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   bDelSeries->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotConfigDialog::OnbDelSeriesClick, this);
   bSeriesPenColor->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotConfigDialog::OnbColorClick, this);
   bSeriesBrushColor->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotConfigDialog::OnbColorClick, this);
+  ChoiceLines->Bind(wxEVT_COMMAND_CHOICE_SELECTED, &MathPlotConfigDialog::OnChoiceLinesSelect, this);
+  bAddLines->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotConfigDialog::OnbAddLinesClick, this);
+  bDelLines->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotConfigDialog::OnbDelLinesClick, this);
+  bLinesPenColor->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotConfigDialog::OnbColorClick, this);
   nbConfig->Bind(wxEVT_COMMAND_NOTEBOOK_PAGE_CHANGED, &MathPlotConfigDialog::OnnbConfigPageChanged, this);
   bApply->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotConfigDialog::OnbApplyClick, this);
   bClose->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotConfigDialog::OnQuit, this);
@@ -550,6 +654,7 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   CurrentTitle = NULL;
   CurrentChoice = NULL;
   CurrentSerie = NULL;
+  CurrentLine = NULL;
   CurrentLegend = NULL;
   CurrentCoords = NULL;
   // The plot window
@@ -562,6 +667,7 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   scale_offset = 0;
   scale_min = -1;
   scale_max = 1;
+  line_value = 1;
   CheckBar = false;
   SecondYAxisChange = false;
   SerieVisibleChange = false;
@@ -576,6 +682,7 @@ MathPlotConfigDialog::~MathPlotConfigDialog()
 
 void MathPlotConfigDialog::Initialize(int page)
 {
+  // General page
   CurrentTitle = (mpText*)m_plot->GetLayerByClassName(_T("mpTitle"));
   if (CurrentTitle)
   {
@@ -598,6 +705,19 @@ void MathPlotConfigDialog::Initialize(int page)
   bBGColor->SetBackgroundColour(m_plot->GetbgColour());
   cbMagnetize->SetValue(m_plot->GetMagnetize());
 
+  CurrentCoords = (mpInfoCoords*)m_plot->GetLayerByClassName(_T("mpInfoCoords"));
+  if (CurrentCoords)
+  {
+    cbCoord->SetSelection(CurrentCoords->GetLocation());
+    cbCoordVisible->SetValue(CurrentCoords->IsVisible());
+    cbCoordOutside->SetValue(CurrentCoords->GetDrawOutsideMargins());
+    cbCoordinates->SetValue(CurrentCoords->IsSeriesCoord());
+    // Brush config
+    bCoordBrushColor->SetBackgroundColour(CurrentCoords->GetBrush().GetColour());
+    cbCoordBrushStyle->SetSelection(BrushStyleToId(CurrentCoords->GetBrush().GetStyle()));
+  }
+
+  // Legend page
   CurrentLegend = (mpInfoLegend*)m_plot->GetLayerByClassName(_T("mpInfoLegend"));
   if (CurrentLegend)
   {
@@ -613,18 +733,7 @@ void MathPlotConfigDialog::Initialize(int page)
     bFontLegend->Enable();
   }
 
-  CurrentCoords = (mpInfoCoords*)m_plot->GetLayerByClassName(_T("mpInfoCoords"));
-  if (CurrentCoords)
-  {
-    cbCoord->SetSelection(CurrentCoords->GetLocation());
-    cbCoordVisible->SetValue(CurrentCoords->IsVisible());
-    cbCoordinates->SetValue(CurrentCoords->IsSeriesCoord());
-    // Brush config
-    bCoordBrushColor->SetBackgroundColour(CurrentCoords->GetBrush().GetColour());
-    cbCoordBrushStyle->SetSelection(BrushStyleToId(CurrentCoords->GetBrush().GetStyle()));
-  }
-
-  // X axis
+  // Axis page
   ChoiceAxis->Clear();
   for (unsigned int i = 0; i < m_plot->CountLayersType(mpLAYER_AXIS); i++)
   {
@@ -647,7 +756,7 @@ void MathPlotConfigDialog::Initialize(int page)
   ChoiceAxis->SetSelection(0);
   UpdateAxis();
 
-  // Fill series counter
+  // Series page
   ChoiceSeries->Clear();
   for (unsigned int i = 0; i < m_plot->CountLayersType(mpLAYER_PLOT); i++)
   {
@@ -658,6 +767,20 @@ void MathPlotConfigDialog::Initialize(int page)
   // Select the first serie
   SelectChoiceSerie(0);
 
+  // Lines page
+  ChoiceLines->Clear();
+  for (unsigned int i = 0; i < m_plot->CountLayersType(mpLAYER_LINE); i++)
+  {
+    ChoiceLines->Append(((mpLayer*)m_plot->GetLayersType(i, mpLAYER_LINE))->GetName());
+  }
+  bDelLines->Enable(ChoiceLines->GetCount() > 0);
+  if (ChoiceLines->GetCount() > 0)
+  {
+    ChoiceLines->SetSelection(0);
+    UpdateSelectedLine();
+  }
+
+  // Choice selection
   if (page != -1)
     nbConfig->SetSelection(page);
 
@@ -668,6 +791,9 @@ void MathPlotConfigDialog::Initialize(int page)
       break;
     case 3:
       CurrentChoice = ChoiceSeries;
+      break;
+    case 4:
+      CurrentChoice = ChoiceLines;
       break;
     default:
       CurrentChoice = NULL;
@@ -771,6 +897,9 @@ void MathPlotConfigDialog::OnnbConfigPageChanged(wxNotebookEvent &event)
       break;
     case 3:
       CurrentChoice = ChoiceSeries;
+      break;
+    case 4:
+      CurrentChoice = ChoiceLines;
       break;
   }
 }
@@ -1000,6 +1129,84 @@ void MathPlotConfigDialog::OnbDelSeriesClick(wxCommandEvent &WXUNUSED(event))
   }
 }
 
+void MathPlotConfigDialog::UpdateSelectedLine(void)
+{
+  CurrentLine = (mpLine*)m_plot->GetLayersType(ChoiceLines->GetSelection(), mpLAYER_LINE);
+
+  if (CurrentLine)
+  {
+    CurrentChoice = ChoiceLines;
+
+    edLinesName->SetValue(CurrentLine->GetName());
+    line_value = CurrentLine->GetValue();
+    edLinesValue->GetValidator()->TransferToWindow();
+
+    // Pen config
+    bLinesPenColor->SetBackgroundColour(CurrentLine->GetPen().GetColour());
+    cbLinesPenWidth->SetSelection(CurrentLine->GetPen().GetWidth() - 1);
+    cbLinesPenStyle->SetSelection(CurrentLine->GetPen().GetStyle() - wxPENSTYLE_SOLID);
+
+    cbLinesVisible->SetValue(CurrentLine->IsVisible());
+    cbLinesOutside->SetValue(CurrentLine->GetDrawOutsideMargins());
+    cbLinesShowName->SetValue(CurrentLine->GetShowName());
+    cbLinesSecondYAxis->SetValue(CurrentLine->GetY2Axis());
+    cbLinesSecondYAxis->Enable(m_plot->Y2AxisExist());
+
+    if (CurrentLine->IsHorizontal())
+    {
+      rbLinesHor->SetValue(true);
+      rbLinesVert->SetValue(false);
+      cbLinesSecondYAxis->Show(true);
+    }
+    else
+    {
+      rbLinesHor->SetValue(false);
+      rbLinesVert->SetValue(true);
+      cbLinesSecondYAxis->Show(false);
+    }
+  }
+  else
+    CurrentChoice = NULL;
+}
+
+void MathPlotConfigDialog::OnChoiceLinesSelect(wxCommandEvent &WXUNUSED(event))
+{
+  UpdateSelectedLine();
+}
+
+void MathPlotConfigDialog::OnbAddLinesClick(wxCommandEvent &WXUNUSED(event))
+{
+  int answer = wxMessageDialog(this, MESS_LINES_ADD, MESS_CONFIRM, wxYES_NO | wxCANCEL | wxCENTRE).ShowModal();
+
+  if (answer == wxID_CANCEL)
+    return;
+
+  mpLine* newLine = NULL;
+  if (answer == wxID_YES)
+    newLine = (mpLine*)new mpHorizontalLine(1.0);
+  else
+    newLine = (mpLine*)new mpVerticalLine(1.0);
+  if (m_plot->AddLayer(newLine))
+  {
+    ChoiceLines->SetSelection(ChoiceLines->GetCount() - 1);
+    UpdateSelectedLine();
+  }
+}
+
+void MathPlotConfigDialog::OnbDelLinesClick(wxCommandEvent &WXUNUSED(event))
+{
+  if (CurrentLine)
+  {
+    if (wxMessageDialog(this, MESS_LINES_DELETE, MESS_CONFIRM, wxYES_NO | wxCENTRE).ShowModal() == wxID_YES)
+    {
+      m_plot->DelLayer(CurrentLine, true, true);
+      m_plot->Fit();
+      CurrentLine = NULL;
+      Initialize();
+    }
+  }
+}
+
 void MathPlotConfigDialog::OnbApplyClick(wxCommandEvent &WXUNUSED(event))
 {
   switch (nbConfig->GetSelection())
@@ -1031,6 +1238,7 @@ void MathPlotConfigDialog::OnbApplyClick(wxCommandEvent &WXUNUSED(event))
       {
         CurrentCoords->SetLocation((mpLocation)cbCoord->GetSelection());
         CurrentCoords->SetVisible(cbCoordVisible->GetValue());
+        CurrentCoords->SetDrawOutsideMargins(cbCoordOutside->GetValue());
         CurrentCoords->SetSeriesCoord(cbCoordinates->GetValue());
         // Brush config
         wxBrush brush(bCoordBrushColor->GetBackgroundColour(), IdToBrushStyle(cbCoordBrushStyle->GetSelection()));
@@ -1163,8 +1371,12 @@ void MathPlotConfigDialog::OnbApplyClick(wxCommandEvent &WXUNUSED(event))
         // Refresh page
         UpdateAxis();
         cbSecondYAxis->Enable(m_plot->Y2AxisExist());
+        cbLinesSecondYAxis->Enable(m_plot->Y2AxisExist());
         if (!m_plot->Y2AxisExist())
+        {
           cbSecondYAxis->SetValue(false);
+          cbLinesSecondYAxis->SetValue(false);
+        }
       }
       break;
 
@@ -1215,6 +1427,27 @@ void MathPlotConfigDialog::OnbApplyClick(wxCommandEvent &WXUNUSED(event))
         }
         else
           m_plot->Refresh();
+      }
+      break;
+
+    case 4: // Line page
+      if ((CurrentChoice == ChoiceLines) && (CurrentLine != NULL))
+      {
+        CurrentLine->SetName(edLinesName->GetValue());
+        ChoiceLines->SetString(ChoiceLines->GetSelection(), edLinesName->GetValue());
+        edLinesValue->GetValidator()->TransferFromWindow();
+        CurrentLine->SetValue(line_value);
+
+        // Pen config
+        wxPen pen(bLinesPenColor->GetBackgroundColour(), cbLinesPenWidth->GetSelection() + 1,
+            (wxPenStyle)(cbLinesPenStyle->GetSelection() + wxPENSTYLE_SOLID));
+        CurrentLine->SetPen(pen);
+
+        CurrentLine->SetVisible(cbLinesVisible->GetValue());
+        CurrentLine->SetDrawOutsideMargins(cbLinesOutside->GetValue());
+        CurrentLine->SetShowName(cbLinesShowName->GetValue());
+        CurrentLine->SetY2Axis(cbLinesSecondYAxis->GetValue());
+        m_plot->Refresh();
       }
       break;
     default:

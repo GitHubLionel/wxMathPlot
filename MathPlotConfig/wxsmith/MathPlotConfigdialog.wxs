@@ -192,18 +192,26 @@
 													<border>5</border>
 												</object>
 												<object class="sizeritem">
+													<object class="wxCheckBox" name="" variable="cbCoordOutside" member="yes">
+														<label>Coordinates in Margins</label>
+														<tooltip>Shows the coordinates when the mouse is in the margins</tooltip>
+													</object>
+													<flag>wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND</flag>
+													<border>5</border>
+												</object>
+												<object class="sizeritem">
 													<object class="wxCheckBox" name="" variable="cbCoordinates" member="yes">
 														<label>Series coordinates</label>
 														<tooltip>Shows the coordinates of the series closest to the mouse position</tooltip>
 													</object>
-													<flag>wxLEFT|wxRIGHT|wxEXPAND</flag>
+													<flag>wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND</flag>
 													<border>5</border>
 												</object>
 												<object class="sizeritem">
 													<object class="wxCheckBox" name="" variable="cbMagnetize" member="yes">
 														<label>Magnetize</label>
 													</object>
-													<flag>wxALL|wxEXPAND</flag>
+													<flag>wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND</flag>
 													<border>5</border>
 												</object>
 											</object>
@@ -1164,6 +1172,242 @@
 							</object>
 						</object>
 						<label>Series</label>
+					</object>
+					<object class="notebookpage">
+						<object class="wxPanel" name="" variable="Panel5" member="yes">
+							<object class="wxBoxSizer" variable="BoxSizer17" member="no">
+								<orient>wxVERTICAL</orient>
+								<object class="sizeritem">
+									<object class="wxFlexGridSizer" variable="FlexGridSizer5" member="no">
+										<cols>5</cols>
+										<rows>1</rows>
+										<growablecols>0</growablecols>
+										<object class="sizeritem">
+											<object class="wxChoice" name="" variable="ChoiceLines" member="yes">
+												<handler function="OnChoiceLinesSelect" entry="EVT_CHOICE" />
+											</object>
+											<flag>wxALL|wxEXPAND</flag>
+											<border>5</border>
+											<option>1</option>
+										</object>
+										<object class="sizeritem">
+											<object class="wxButton" name="" variable="bAddLines" member="yes">
+												<label>Add</label>
+												<handler function="OnbAddLinesClick" entry="EVT_BUTTON" />
+											</object>
+											<flag>wxTOP|wxBOTTOM|wxRIGHT|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+											<border>5</border>
+										</object>
+										<object class="sizeritem">
+											<object class="wxButton" name="" variable="bDelLines" member="yes">
+												<label>Delete</label>
+												<enabled>0</enabled>
+												<handler function="OnbDelLinesClick" entry="EVT_BUTTON" />
+											</object>
+											<flag>wxTOP|wxBOTTOM|wxRIGHT|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+											<border>5</border>
+										</object>
+									</object>
+									<flag>wxALL|wxEXPAND</flag>
+									<border>2</border>
+								</object>
+								<object class="sizeritem">
+									<object class="wxFlexGridSizer" variable="FlexGridSizer9" member="no">
+										<cols>4</cols>
+										<rows>2</rows>
+										<growablecols>1</growablecols>
+										<object class="sizeritem">
+											<object class="wxStaticText" name="" variable="StaticText31" member="yes">
+												<label>Name :</label>
+											</object>
+											<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+											<border>5</border>
+											<option>1</option>
+										</object>
+										<object class="sizeritem">
+											<object class="wxTextCtrl" name="" variable="edLinesName" member="yes" />
+											<flag>wxALL|wxEXPAND</flag>
+											<border>5</border>
+											<option>1</option>
+										</object>
+										<object class="sizeritem">
+											<object class="wxRadioButton" name="" variable="rbLinesHor" member="yes">
+												<label>Horizontal</label>
+												<enabled>0</enabled>
+											</object>
+											<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+											<border>5</border>
+										</object>
+										<object class="sizeritem">
+											<object class="wxRadioButton" name="" variable="rbLinesVert" member="yes">
+												<label>Vertical</label>
+												<enabled>0</enabled>
+											</object>
+											<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+											<border>5</border>
+										</object>
+										<object class="sizeritem">
+											<object class="wxStaticText" name="" variable="StaticText30" member="yes">
+												<label>Value :</label>
+											</object>
+											<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+											<border>5</border>
+											<option>1</option>
+										</object>
+										<object class="sizeritem">
+											<object class="wxTextCtrl" name="" variable="edLinesValue" member="yes">
+												<value>1</value>
+												<size>64,-1</size>
+												<validator>wxFloatingPointValidator&lt;double&gt; (2, &amp;line__value)</validator>
+												<style>wxTE_RIGHT</style>
+											</object>
+											<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+											<border>5</border>
+											<option>1</option>
+										</object>
+									</object>
+									<flag>wxALL|wxEXPAND</flag>
+									<border>2</border>
+								</object>
+								<object class="sizeritem">
+									<object class="wxFlexGridSizer" variable="FlexGridSizer20" member="no">
+										<cols>2</cols>
+										<rows>1</rows>
+										<object class="sizeritem">
+											<object class="wxBoxSizer" variable="BoxSizer18" member="no">
+												<object class="sizeritem">
+													<object class="wxStaticBoxSizer" variable="StaticBoxSizer11" member="no">
+														<label>Pen </label>
+														<object class="sizeritem">
+															<object class="wxFlexGridSizer" variable="FlexGridSizer21" member="no">
+																<cols>2</cols>
+																<rows>3</rows>
+																<object class="sizeritem">
+																	<object class="wxStaticText" name="" variable="StaticText32" member="yes">
+																		<label>Color :</label>
+																	</object>
+																	<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+																	<border>5</border>
+																	<option>1</option>
+																</object>
+																<object class="sizeritem">
+																	<object class="wxButton" name="" variable="bLinesPenColor" member="yes">
+																		<handler function="OnbColorClick" entry="EVT_BUTTON" />
+																	</object>
+																	<flag>wxALL|wxEXPAND</flag>
+																	<border>2</border>
+																	<option>1</option>
+																</object>
+																<object class="sizeritem">
+																	<object class="wxStaticText" name="" variable="StaticText33" member="yes">
+																		<label>Width :</label>
+																	</object>
+																	<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+																	<border>5</border>
+																	<option>1</option>
+																</object>
+																<object class="sizeritem">
+																	<object class="wxChoice" name="" variable="cbLinesPenWidth" member="yes">
+																		<content>
+																			<item>1</item>
+																			<item>2</item>
+																			<item>3</item>
+																			<item>4</item>
+																			<item>5</item>
+																			<item>6</item>
+																			<item>7</item>
+																			<item>8</item>
+																			<item>9</item>
+																			<item>10</item>
+																		</content>
+																		<use_items_array>1</use_items_array>
+																		<selection>0</selection>
+																	</object>
+																	<flag>wxALL|wxEXPAND</flag>
+																	<border>2</border>
+																	<option>1</option>
+																</object>
+																<object class="sizeritem">
+																	<object class="wxStaticText" name="" variable="StaticText34" member="yes">
+																		<label>Style :</label>
+																	</object>
+																	<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+																	<border>5</border>
+																	<option>1</option>
+																</object>
+																<object class="sizeritem">
+																	<object class="wxChoice" name="" variable="cbLinesPenStyle" member="yes">
+																		<content>
+																			<item>Solid</item>
+																			<item>Dot</item>
+																			<item>Long Dash</item>
+																			<item>Short Dash</item>
+																			<item>Dot Dash</item>
+																		</content>
+																		<use_items_array>1</use_items_array>
+																		<selection>0</selection>
+																	</object>
+																	<flag>wxALL|wxEXPAND</flag>
+																	<border>2</border>
+																	<option>1</option>
+																</object>
+															</object>
+															<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+														</object>
+													</object>
+													<flag>wxALL</flag>
+													<border>2</border>
+												</object>
+												<object class="sizeritem">
+													<object class="wxBoxSizer" variable="BoxSizer19" member="no">
+														<orient>wxVERTICAL</orient>
+														<object class="sizeritem">
+															<object class="wxCheckBox" name="" variable="cbLinesVisible" member="yes">
+																<label>Visible</label>
+															</object>
+															<flag>wxALL|wxALIGN_LEFT</flag>
+															<border>3</border>
+															<option>1</option>
+														</object>
+														<object class="sizeritem">
+															<object class="wxCheckBox" name="" variable="cbLinesOutside" member="yes">
+																<label>Draw Outside Margins</label>
+															</object>
+															<flag>wxALL|wxALIGN_LEFT</flag>
+															<border>3</border>
+															<option>1</option>
+														</object>
+														<object class="sizeritem">
+															<object class="wxCheckBox" name="" variable="cbLinesShowName" member="yes">
+																<label>Show name</label>
+															</object>
+															<flag>wxALL|wxALIGN_LEFT</flag>
+															<border>3</border>
+															<option>1</option>
+														</object>
+														<object class="sizeritem">
+															<object class="wxCheckBox" name="" variable="cbLinesSecondYAxis" member="yes">
+																<label>Use second Y axis</label>
+															</object>
+															<flag>wxALL|wxALIGN_LEFT</flag>
+															<border>3</border>
+															<option>1</option>
+														</object>
+													</object>
+													<flag>wxALL|wxALIGN_CENTER_VERTICAL</flag>
+													<border>5</border>
+												</object>
+											</object>
+											<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+											<border>5</border>
+										</object>
+									</object>
+									<flag>wxALL|wxEXPAND</flag>
+									<border>2</border>
+								</object>
+							</object>
+						</object>
+						<label>Lines</label>
 					</object>
 				</object>
 				<flag>wxALL|wxEXPAND</flag>

@@ -127,6 +127,7 @@ namespace MathPlot
 
 class WXDLLIMPEXP_MATHPLOT mpLayer;
 class WXDLLIMPEXP_MATHPLOT mpFunction;
+class WXDLLIMPEXP_MATHPLOT mpLine;
 class WXDLLIMPEXP_MATHPLOT mpHorizontalLine;
 class WXDLLIMPEXP_MATHPLOT mpVerticalLine;
 class WXDLLIMPEXP_MATHPLOT mpFX;
@@ -320,7 +321,7 @@ typedef enum __mp_Layer_Type
   mpLAYER_PLOT,    //!< Plot type layer
   mpLAYER_INFO,    //!< Info box type layer
   mpLAYER_BITMAP,  //!< Bitmap type layer
-  mpLAYER_CUSTOM   //!< Custom type layer
+  mpLAYER_LINE     //!< Line (horizontal or vertical) type layer
 } mpLayerType;
 
 /**
@@ -332,7 +333,7 @@ typedef enum __mp_Layer_ZOrder
 {
   mpZIndex_BACKGROUND,   //!< Bitmap type layer
   mpZIndex_AXIS,         //!< Axis type layer
-  mpZIndex_CUSTOM,       //!< Custom type layer
+  mpZIndex_LINE,         //!< Line (horizontal or vertical) type layer
   mpZIndex_PLOT,         //!< Plot (function) type layer
   mpZIndex_INFO,         //!< Info box type layer
   mpZIndex_TEXT,         //!< Text box type layer
@@ -1108,60 +1109,89 @@ class WXDLLIMPEXP_MATHPLOT mpFunction: public mpLayer
   DECLARE_DYNAMIC_CLASS(mpFunction)
 };
 
-/** Abstract class providing an horizontal line.
+/** Abstract class providing a line.
  */
-class WXDLLIMPEXP_MATHPLOT mpHorizontalLine: public mpFunction
+class WXDLLIMPEXP_MATHPLOT mpLine: public mpFunction
 {
   public:
-    mpHorizontalLine(double yvalue, const wxPen &pen = *wxGREEN_PEN, bool useY2Axis = false);
+    mpLine(double value, const wxPen &pen = *wxGREEN_PEN);
 
-    // We don't want to include horizontal line in BBox computation
+    // We don't want to include line (horizontal or vertical) in BBox computation
     virtual bool HasBBox() override
     {
       return false;
     }
+
+    /** Set x or y
+     @param value
+     */
+    double GetValue() const
+    {
+      return m_value;
+    }
+
+    /** Set x or y
+     @param value
+     */
+    void SetValue(const double value)
+    {
+      m_value = value;
+    }
+
+    /** Get if is horizontal line
+     */
+    bool IsHorizontal(void) const
+    {
+      return m_IsHorizontal;
+    }
+
+  protected:
+    double m_value;
+    bool m_IsHorizontal;
+
+    DECLARE_DYNAMIC_CLASS(mpLine)
+};
+
+/** Abstract class providing an horizontal line.
+ */
+class WXDLLIMPEXP_MATHPLOT mpHorizontalLine: public mpLine
+{
+  public:
+    mpHorizontalLine(double yvalue, const wxPen &pen = *wxGREEN_PEN, bool useY2Axis = false);
 
     virtual void DoPlot(wxDC &dc, mpWindow &w);
 
     /** Set y
      @param yvalue
      */
-    void SetYValue(double yvalue)
+    void SetYValue(const double yvalue)
     {
-      m_yvalue = yvalue;
+      SetValue(yvalue);
     }
 
   protected:
-    double m_yvalue;
 
     DECLARE_DYNAMIC_CLASS(mpHorizontalLine)
 };
 
 /** Abstract class providing an vertical line.
  */
-class WXDLLIMPEXP_MATHPLOT mpVerticalLine: public mpFunction
+class WXDLLIMPEXP_MATHPLOT mpVerticalLine: public mpLine
 {
   public:
     mpVerticalLine(double xvalue, const wxPen &pen = *wxGREEN_PEN);
-
-    // We don't want to include vertical line in BBox computation
-    virtual bool HasBBox() override
-    {
-      return false;
-    }
 
     virtual void DoPlot(wxDC &dc, mpWindow &w);
 
     /** Set x
      @param xvalue
      */
-    void SetXValue(double xvalue)
+    void SetXValue(const double xvalue)
     {
-      m_xvalue = xvalue;
+      SetValue(xvalue);
     }
 
   protected:
-    double m_xvalue;
 
     DECLARE_DYNAMIC_CLASS(mpVerticalLine)
 };
@@ -1871,6 +1901,12 @@ class mpMagnet
       m_domain = wxRect(left, top, width, height);
       m_plot_size = wxRect(left, top, width + left, height + top);
     }
+    void UpdateBox(const wxRect &size)
+    {
+      m_domain = size;
+      m_plot_size = wxRect(size.GetLeft(), size.GetTop(),
+          size.GetWidth() + size.GetLeft(), size.GetHeight() + size.GetTop());
+    }
     void Plot(wxClientDC &dc, const wxPoint &mousePos);
     void ClearPlot(wxClientDC &dc);
     void UpdatePlot(wxClientDC &dc, const wxPoint &mousePos);
@@ -1977,6 +2013,14 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      */
     mpLayer* GetLayer(int position);
 
+    /*! Get the layer of a certain type in list position indicated.
+     N.B. You <i>must</i> know the index of the layer inside the list!
+     @param position position of the layer in the layers list
+     @param type of the layer
+     @return pointer to mpLayer
+     */
+    mpLayer* GetLayersType(int position, mpLayerType type);
+
     /*! Get the layer plot in list position indicated.
      N.B. You <i>must</i> know the index of the layer plot inside the list of plot!
      @param position position of the layer plot in the layers plot list
@@ -2005,7 +2049,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      */
     mpLayer* GetLayerByName(const wxString &name);
 
-    /*! Get the layer by its class name (case sensitive).
+    /*! Get the first layer by its class name (case sensitive).
      @param name The class name of the layer to retrieve
      @return A pointer to the mpLayer object, or NULL if not found.
      */
@@ -2137,8 +2181,10 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
       m_plotBondaries.endPy = m_scrY;
       m_plotBondariesMargin.endPy = m_scrY - m_margin.bottom;
 
-      m_magnet.UpdateBox(m_margin.left - EXTRA_MARGIN, m_margin.top - EXTRA_MARGIN,
+      m_PlotArea = wxRect(m_margin.left - EXTRA_MARGIN, m_margin.top - EXTRA_MARGIN,
           m_plotWidth + 2*EXTRA_MARGIN, m_plotHeight + 2*EXTRA_MARGIN);
+
+      m_magnet.UpdateBox(m_PlotArea);
     }
 
     /** Get current view's X dimension in device context units.
@@ -2676,6 +2722,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 
     mpRect m_plotBondaries;             //!< The full size of the plot. Calculated
     mpRect m_plotBondariesMargin;       //!< The size of the plot with the margins. Calculated
+    wxRect m_PlotArea;                  //!< The full size of the plot with EXTRA_MARGIN
 
     bool m_repainting;
     int m_last_lx, m_last_ly;           //!< For double buffering

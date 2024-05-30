@@ -19,6 +19,7 @@
 #include <wx/dialog.h>
 #include <wx/notebook.h>
 #include <wx/panel.h>
+#include <wx/radiobut.h>
 #include <wx/sizer.h>
 #include <wx/spinctrl.h>
 #include <wx/stattext.h>
@@ -36,6 +37,7 @@ namespace MathPlot
 class WXDLLIMPEXP_MATHPLOT mpWindow;
 class WXDLLIMPEXP_MATHPLOT mpLayer;
 class WXDLLIMPEXP_MATHPLOT mpFunction;
+class WXDLLIMPEXP_MATHPLOT mpLine;
 class WXDLLIMPEXP_MATHPLOT mpInfoCoords;
 class WXDLLIMPEXP_MATHPLOT mpInfoLegend;
 class WXDLLIMPEXP_MATHPLOT mpScale;
@@ -59,6 +61,7 @@ class MathPlotConfigDialog: public wxDialog
     mpInfoCoords* CurrentCoords;
     mpScale* CurrentScale;
     mpFunction* CurrentSerie;
+    mpLine* CurrentLine;
     wxButton* colourButton;
     wxChoice* CurrentChoice;
     bool fontTitleChanged;
@@ -67,6 +70,7 @@ class MathPlotConfigDialog: public wxDialog
     unsigned int int_top, int_bottom, int_left, int_right;
     int scale_offset;
     double scale_min, scale_max;
+    double line_value;
     bool CheckBar;
     bool SecondYAxisChange;
     bool SerieVisibleChange;
@@ -83,6 +87,9 @@ class MathPlotConfigDialog: public wxDialog
     void OnbFontClick(wxCommandEvent &event);
     void OnbDelSeriesClick(wxCommandEvent &event);
     void OnbAddAxisClick(wxCommandEvent &event);
+    void OnChoiceLinesSelect(wxCommandEvent& event);
+    void OnbAddLinesClick(wxCommandEvent& event);
+    void OnbDelLinesClick(wxCommandEvent& event);
     //*)
 
     //(*Identifiers(MathPlotConfigDialog)
@@ -91,6 +98,7 @@ class MathPlotConfigDialog: public wxDialog
     //(*Declarations(MathPlotConfigDialog)
     wxBoxSizer* BoxSizer2;
     wxBoxSizer* sizerMain;
+    wxButton* bAddLines;
     wxButton* bAddXAxis;
     wxButton* bAddYAxis;
     wxButton* bApply;
@@ -98,23 +106,30 @@ class MathPlotConfigDialog: public wxDialog
     wxButton* bBGColor;
     wxButton* bClose;
     wxButton* bCoordBrushColor;
+    wxButton* bDelLines;
     wxButton* bDelSeries;
     wxButton* bFontAxis;
     wxButton* bFontLegend;
     wxButton* bFontTitle;
     wxButton* bLegendBrushColor;
+    wxButton* bLinesPenColor;
     wxButton* bSeriesBrushColor;
     wxButton* bSeriesPenColor;
     wxCheckBox* cbAutoScale;
     wxCheckBox* cbAxisOutside;
     wxCheckBox* cbAxisVisible;
     wxCheckBox* cbBar;
+    wxCheckBox* cbCoordOutside;
     wxCheckBox* cbCoordVisible;
     wxCheckBox* cbCoordinates;
     wxCheckBox* cbDrawBox;
     wxCheckBox* cbGridVisible;
     wxCheckBox* cbIsY2Axis;
     wxCheckBox* cbLegendVisible;
+    wxCheckBox* cbLinesOutside;
+    wxCheckBox* cbLinesSecondYAxis;
+    wxCheckBox* cbLinesShowName;
+    wxCheckBox* cbLinesVisible;
     wxCheckBox* cbLogAxis;
     wxCheckBox* cbMagnetize;
     wxCheckBox* cbSecondYAxis;
@@ -125,6 +140,7 @@ class MathPlotConfigDialog: public wxDialog
     wxCheckBox* cbTitleVisible;
     wxCheckBox* cbTractable;
     wxChoice* ChoiceAxis;
+    wxChoice* ChoiceLines;
     wxChoice* ChoiceSeries;
     wxChoice* cbAxisPenStyle;
     wxChoice* cbAxisPenWidth;
@@ -136,6 +152,8 @@ class MathPlotConfigDialog: public wxDialog
     wxChoice* cbLegendDirection;
     wxChoice* cbLegendPosition;
     wxChoice* cbLegendStyle;
+    wxChoice* cbLinesPenStyle;
+    wxChoice* cbLinesPenWidth;
     wxChoice* cbSeriesBrushStyle;
     wxChoice* cbSeriesPenStyle;
     wxChoice* cbSeriesPenWidth;
@@ -145,6 +163,9 @@ class MathPlotConfigDialog: public wxDialog
     wxPanel* Panel2;
     wxPanel* Panel3;
     wxPanel* Panel4;
+    wxPanel* Panel5;
+    wxRadioButton* rbLinesHor;
+    wxRadioButton* rbLinesVert;
     wxSpinCtrl* cbSeriesStep;
     wxSpinCtrl* cbSeriesSymbolSize;
     wxStaticText* StaticText10;
@@ -169,6 +190,11 @@ class MathPlotConfigDialog: public wxDialog
     wxStaticText* StaticText28;
     wxStaticText* StaticText29;
     wxStaticText* StaticText2;
+    wxStaticText* StaticText30;
+    wxStaticText* StaticText31;
+    wxStaticText* StaticText32;
+    wxStaticText* StaticText33;
+    wxStaticText* StaticText34;
     wxStaticText* StaticText3;
     wxStaticText* StaticText4;
     wxStaticText* StaticText5;
@@ -178,6 +204,8 @@ class MathPlotConfigDialog: public wxDialog
     wxStaticText* StaticText9;
     wxTextCtrl* edAxisName;
     wxTextCtrl* edFormat;
+    wxTextCtrl* edLinesName;
+    wxTextCtrl* edLinesValue;
     wxTextCtrl* edMarginBottom;
     wxTextCtrl* edMarginLeft;
     wxTextCtrl* edMarginRight;
@@ -189,6 +217,7 @@ class MathPlotConfigDialog: public wxDialog
     //*)
 
     void UpdateSelectedSerie(void);
+    void UpdateSelectedLine(void);
     void UpdateAxis(void);
 
     void DoApplyColour(const wxColour &colour);

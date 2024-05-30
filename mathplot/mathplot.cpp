@@ -482,6 +482,7 @@ mpInfoCoords::~mpInfoCoords()
 {
   DeleteAndNull(m_coord_bmp);
 }
+
 void mpInfoCoords::SetVisible(bool show)
 {
   m_visible = show;
@@ -926,16 +927,35 @@ void mpFunction::DrawSymbol(wxDC &dc, wxCoord x, wxCoord y)
 // mpHorizontalLine implementations - functions
 //-----------------------------------------------------------------------------
 
+IMPLEMENT_ABSTRACT_CLASS(mpLine, mpFunction)
+
+mpLine::mpLine(double value, const wxPen &pen) :
+    mpFunction()
+{
+  m_value = value;
+  m_type = mpLAYER_LINE;
+  m_ZIndex = mpZIndex_LINE;
+  m_IsHorizontal = false;
+  SetPen(pen);
+  SetDrawOutsideMargins(false);
+}
+
+//-----------------------------------------------------------------------------
+// mpHorizontalLine implementations - functions
+//-----------------------------------------------------------------------------
+
 IMPLEMENT_ABSTRACT_CLASS(mpHorizontalLine, mpFunction)
 
 mpHorizontalLine::mpHorizontalLine(double yvalue, const wxPen &pen, bool useY2Axis) :
-    mpFunction(wxT("Horizontal line"), useY2Axis)
+    mpLine(yvalue, pen)
 {
-  m_yvalue = yvalue;
-  m_type = mpLAYER_CUSTOM;
-  m_ZIndex = mpZIndex_CUSTOM;
-  SetPen(pen);
-  SetDrawOutsideMargins(false);
+//  m_yvalue = yvalue;
+//  m_type = mpLAYER_LINE;
+//  m_ZIndex = mpZIndex_LINE;
+//  SetPen(pen);
+//  SetDrawOutsideMargins(false);  : mpFunction(wxT("Horizontal line"), useY2Axis)
+  SetName(wxT("Horizontal line"));
+  m_IsHorizontal = true;
   SetY2Axis(useY2Axis);
 }
 
@@ -944,7 +964,7 @@ void mpHorizontalLine::DoPlot(wxDC &dc, mpWindow &w)
   // Get bondaries
   m_plotBondaries = w.GetPlotBondaries(!m_drawOutsideMargins);
 
-  wxCoord iy = w.y2p(m_yvalue, m_UseY2Axis);
+  wxCoord iy = w.y2p(m_value, m_UseY2Axis);
 
   // Draw nothing if we are outside margins
   if (!m_drawOutsideMargins && ((iy > (w.GetScreenY() - w.GetMarginBottom())) || (iy < w.GetMarginTop())))
@@ -952,6 +972,29 @@ void mpHorizontalLine::DoPlot(wxDC &dc, mpWindow &w)
 
   // Draw horizontal line from boundary minX to boundary maxX
   dc.DrawLine(m_plotBondaries.startPx, iy, m_plotBondaries.endPx, iy);
+
+  if (m_showName && !m_name.IsEmpty())
+  {
+    wxCoord tx, ty;
+    dc.GetTextExtent(m_name, &tx, &ty);
+
+    switch (m_flags)
+    {
+      case mpALIGN_RIGHT:
+      case mpALIGN_BORDER_RIGHT:
+      case mpALIGN_NE:
+      case mpALIGN_SE:
+        tx = (w.GetScreenX() - tx) - w.GetMarginRight() - 8;
+        break;
+      case mpALIGN_CENTERY:
+        tx = ((w.GetPlotWidth() - tx) / 2) + w.GetMarginLeft();
+        break;
+      default:  // mpALIGN_LEFT & mpALIGN_BORDER_LEFT
+        tx = w.GetMarginLeft() + 8;
+    }
+
+    dc.DrawText(m_name, tx, iy);
+  }
 }
 
 //-----------------------------------------------------------------------------
@@ -961,13 +1004,10 @@ void mpHorizontalLine::DoPlot(wxDC &dc, mpWindow &w)
 IMPLEMENT_ABSTRACT_CLASS(mpVerticalLine, mpFunction)
 
 mpVerticalLine::mpVerticalLine(double xvalue, const wxPen &pen) :
-    mpFunction(wxT("Vertical line"))
+    mpLine(xvalue, pen)
 {
-  m_xvalue = xvalue;
-  m_type = mpLAYER_CUSTOM;
-  m_ZIndex = mpZIndex_CUSTOM;
-  SetPen(pen);
-  SetDrawOutsideMargins(false);
+  SetName(wxT("Vertical line"));
+  m_IsHorizontal = false;
 }
 
 void mpVerticalLine::DoPlot(wxDC &dc, mpWindow &w)
@@ -975,7 +1015,7 @@ void mpVerticalLine::DoPlot(wxDC &dc, mpWindow &w)
   // Get bondaries
   m_plotBondaries = w.GetPlotBondaries(!m_drawOutsideMargins);
 
-  wxCoord ix = w.x2p(m_xvalue);
+  wxCoord ix = w.x2p(m_value);
 
   // Draw nothing if we are outside margins
   if (!m_drawOutsideMargins && ((ix > (w.GetScreenX() - w.GetMarginRight())) || (ix + 1 < w.GetMarginLeft())))
@@ -983,6 +1023,29 @@ void mpVerticalLine::DoPlot(wxDC &dc, mpWindow &w)
 
   // Draw vertical line from boundary minX to boundary maxX
   dc.DrawLine(ix, m_plotBondaries.startPy, ix, m_plotBondaries.endPy);
+
+  if (m_showName && !m_name.IsEmpty())
+  {
+    wxCoord tx, ty;
+    dc.GetTextExtent(m_name, &tx, &ty);
+
+    switch (m_flags)
+    {
+      case mpALIGN_TOP:
+      case mpALIGN_BORDER_TOP:
+      case mpALIGN_NW:
+      case mpALIGN_NE:
+        ty = w.GetMarginTop() + 8;
+        break;
+      case mpALIGN_CENTERX:
+        ty = ((w.GetPlotHeight() - ty) / 2) + w.GetMarginTop();
+        break;
+      default:  // mpALIGN_BOTTOM & mpALIGN_BORDER_BOTTOM
+        ty = w.GetScreenY() - w.GetMarginBottom() - ty - 8;
+    }
+
+    dc.DrawText(m_name, ix, ty);
+  }
 }
 
 //-----------------------------------------------------------------------------
@@ -2599,8 +2662,13 @@ void mpWindow::OnMouseMove(wxMouseEvent &event)
       // Mouse move coordinate
       if (m_InfoCoords && m_InfoCoords->IsVisible())
       {
-        m_InfoCoords->UpdateInfo(*this, event);
-        m_InfoCoords->Plot(dc, *this);
+        if ((m_InfoCoords->GetDrawOutsideMargins()) || (m_PlotArea.Contains(eventPoint)))
+        {
+          m_InfoCoords->UpdateInfo(*this, event);
+          m_InfoCoords->Plot(dc, *this);
+        }
+        else
+          m_InfoCoords->ErasePlot(dc, *this);
       }
 
       // Mouse move on legend
@@ -3316,8 +3384,7 @@ void mpWindow::OnPaint(wxPaintEvent &WXUNUSED(event))
   // Draw background plot area
   trgDc->SetBrush(m_bgColour);
   trgDc->SetTextForeground(m_fgColour);
-  trgDc->DrawRectangle(m_margin.left - EXTRA_MARGIN, m_margin.top - EXTRA_MARGIN,
-      m_plotWidth + 2*EXTRA_MARGIN, m_plotHeight + 2*EXTRA_MARGIN);
+  trgDc->DrawRectangle(m_PlotArea);
 
   // Draw all the layers in Z order
   for (int i = mpZIndex_BACKGROUND; i < mpZIndex_END; i++)
@@ -3722,6 +3789,22 @@ unsigned int mpWindow::CountLayersType(mpLayerType type)
   return layerNo;
 }
 
+mpLayer* mpWindow::GetLayersType(int position, mpLayerType type)
+{
+  int layerNo = -1;
+  if (position < 0)
+    return NULL;
+  for (wxLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
+  {
+    if ((*it)->GetLayerType() == type)
+    {
+      if (++layerNo == position)
+        return *it;
+    }
+  }
+  return NULL;
+}
+
 unsigned int mpWindow::CountLayersFXYPlot()
 {
   unsigned int layerNo = 0;
@@ -4051,6 +4134,9 @@ void mpWindow::SetMargins(int top, int right, int bottom, int left)
   m_plotBondariesMargin.startPy = m_margin.top;
   m_plotBondaries.endPy = m_scrY;
   m_plotBondariesMargin.endPy = m_scrY - m_margin.bottom;
+
+  m_PlotArea = wxRect(m_margin.left - EXTRA_MARGIN, m_margin.top - EXTRA_MARGIN,
+            m_plotWidth + 2*EXTRA_MARGIN, m_plotHeight + 2*EXTRA_MARGIN);
 }
 
 wxBitmap* mpWindow::BitmapScreenshot(wxSize imageSize, bool fit)
@@ -4087,8 +4173,7 @@ wxBitmap* mpWindow::BitmapScreenshot(wxSize imageSize, bool fit)
 
   m_Screenshot_dc.SetBrush(m_bgColour);
   m_Screenshot_dc.SetTextForeground(m_fgColour);
-  m_Screenshot_dc.DrawRectangle(m_margin.left - EXTRA_MARGIN, m_margin.top - EXTRA_MARGIN,
-      m_plotWidth + 2*EXTRA_MARGIN, m_plotHeight + 2*EXTRA_MARGIN);
+  m_Screenshot_dc.DrawRectangle(m_PlotArea);
 
   if (fit)
   {
