@@ -2599,12 +2599,12 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      * It is an axis property but as we need to control the bound and the scale,
      * it is easiest to declare this property here
      */
-    bool IsLogXaxis()
+    bool IsLogXaxis() const
     {
       return m_LogXaxis;
     }
 
-    bool IsLogYaxis()
+    bool IsLogYaxis() const
     {
       return m_LogYaxis;
     }
@@ -2633,7 +2633,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 
     void Update_CountY2Axis(bool Y2Axis);
 
-    bool Y2AxisExist(void)
+    bool Y2AxisExist(void) const
     {
       return m_countY2Axis > 0;
     }

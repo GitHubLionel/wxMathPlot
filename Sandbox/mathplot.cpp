@@ -716,10 +716,7 @@ void mpInfoLegend::UpdateBitmap(wxDC &dc, mpWindow &w)
   mpLayer* ly = NULL;
   wxBrush sqrBrush(*wxWHITE, wxBRUSHSTYLE_SOLID);
 
-  // Delete old bitmap
-  DeleteAndNull(m_legend_bmp);
-
-  // Get series name
+  // Get series name and create new bitmap legend
   m_layer_count = 0;
   for (unsigned int p = 0; p < w.CountAllLayers(); p++)
   {
@@ -729,6 +726,7 @@ void mpInfoLegend::UpdateBitmap(wxDC &dc, mpWindow &w)
       m_layer_count++;
       wxString label = ly->GetName();
       wxPen lpen = ly->GetPen();
+      lpen.SetWidth(2);
 
       buff_dc.SetPen(lpen);
       buff_dc.GetTextExtent(label, &tmpX, &tmpY);
@@ -742,13 +740,13 @@ void mpInfoLegend::UpdateBitmap(wxDC &dc, mpWindow &w)
 
       if (m_item_mode == mpLegendLine)
       {
-        buff_dc.DrawLine(posX, posY, posX + LEGEND_LINEWIDTH, posY);
+        buff_dc.DrawLine(posX, posY + 1, posX + LEGEND_LINEWIDTH, posY + 1);
       }
       else  // m_item_mode == mpLEGEND_SQUARE
       {
         sqrBrush.SetColour(lpen.GetColour());
         buff_dc.SetBrush(sqrBrush);
-        buff_dc.DrawRectangle(posX, posY - (LEGEND_LINEWIDTH >> 1),
+        buff_dc.DrawRectangle(posX, posY - (LEGEND_LINEWIDTH >> 1) + 1,
         LEGEND_LINEWIDTH, LEGEND_LINEWIDTH);
       }
 
@@ -775,6 +773,10 @@ void mpInfoLegend::UpdateBitmap(wxDC &dc, mpWindow &w)
     }
   }
 
+  // Delete old bitmap
+  DeleteAndNull(m_legend_bmp);
+
+  // Copy new bitmap to m_legend_bmp
   if ((width != 0) && (height != 0))
   {
     buff_dc.SetPen(*wxBLACK_PEN);
@@ -949,11 +951,6 @@ IMPLEMENT_ABSTRACT_CLASS(mpHorizontalLine, mpFunction)
 mpHorizontalLine::mpHorizontalLine(double yvalue, const wxPen &pen, bool useY2Axis) :
     mpLine(yvalue, pen)
 {
-//  m_yvalue = yvalue;
-//  m_type = mpLAYER_LINE;
-//  m_ZIndex = mpZIndex_LINE;
-//  SetPen(pen);
-//  SetDrawOutsideMargins(false);  : mpFunction(wxT("Horizontal line"), useY2Axis)
   SetName(wxT("Horizontal line"));
   m_IsHorizontal = true;
   SetY2Axis(useY2Axis);
@@ -964,7 +961,11 @@ void mpHorizontalLine::DoPlot(wxDC &dc, mpWindow &w)
   // Get bondaries
   m_plotBondaries = w.GetPlotBondaries(!m_drawOutsideMargins);
 
-  wxCoord iy = w.y2p(m_value, m_UseY2Axis);
+  wxCoord iy;
+  if (m_win->IsLogYaxis())
+    iy = w.y2p(log10(m_value), m_UseY2Axis);
+  else
+    iy = w.y2p(m_value, m_UseY2Axis);
 
   // Draw nothing if we are outside margins
   if (!m_drawOutsideMargins && ((iy > (w.GetScreenY() - w.GetMarginBottom())) || (iy < w.GetMarginTop())))
@@ -1015,7 +1016,11 @@ void mpVerticalLine::DoPlot(wxDC &dc, mpWindow &w)
   // Get bondaries
   m_plotBondaries = w.GetPlotBondaries(!m_drawOutsideMargins);
 
-  wxCoord ix = w.x2p(m_value);
+  wxCoord ix;
+  if (m_win->IsLogXaxis())
+    ix = w.x2p(log10(m_value));
+  else
+    ix = w.x2p(m_value);
 
   // Draw nothing if we are outside margins
   if (!m_drawOutsideMargins && ((ix > (w.GetScreenX() - w.GetMarginRight())) || (ix + 1 < w.GetMarginLeft())))
