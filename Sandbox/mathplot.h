@@ -2630,6 +2630,11 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     }
 
     void RefreshConfigWindow();
+    /**
+     * Give access to the config dialog window
+     * @param : Create. Create the dialog if not exist (default false)
+     */
+    MathPlotConfigDialog* GetConfigWindow(bool Create = false);
 
     void Update_CountY2Axis(bool Y2Axis);
 

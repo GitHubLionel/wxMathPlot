@@ -4313,6 +4313,14 @@ void mpWindow::RefreshConfigWindow()
     m_configWindow->Initialize();
 }
 
+MathPlotConfigDialog* mpWindow::GetConfigWindow(bool Create)
+{
+  if (Create && (m_configWindow == NULL))
+    m_configWindow = new MathPlotConfigDialog(this);
+
+  return m_configWindow;
+}
+
 //-----------------------------------------------------------------------------
 // mpText - provided by Val Greene
 //-----------------------------------------------------------------------------
