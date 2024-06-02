@@ -41,10 +41,10 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   wxBoxSizer* BoxSizer14;
   wxBoxSizer* BoxSizer15;
   wxBoxSizer* BoxSizer16;
-  wxBoxSizer* BoxSizer17;
   wxBoxSizer* BoxSizer18;
   wxBoxSizer* BoxSizer19;
   wxBoxSizer* BoxSizer1;
+  wxBoxSizer* BoxSizer2;
   wxBoxSizer* BoxSizer3;
   wxBoxSizer* BoxSizer4;
   wxBoxSizer* BoxSizer5;
@@ -250,7 +250,7 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   BoxSizer16->Add(BoxSizer15, 1, wxALL|wxALIGN_TOP, 5);
   Panel2->SetSizer(BoxSizer16);
   Panel3 = new wxPanel(nbConfig, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL);
-  BoxSizer4 = new wxBoxSizer(wxVERTICAL);
+  sizerAxis = new wxBoxSizer(wxVERTICAL);
   FlexGridSizer3 = new wxFlexGridSizer(1, 3, 0, 0);
   FlexGridSizer3->AddGrowableCol(0);
   ChoiceAxis = new wxChoice(Panel3, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator);
@@ -259,7 +259,7 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   FlexGridSizer3->Add(bAddXAxis, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
   bAddYAxis = new wxButton(Panel3, wxID_ANY, _("Add Y axis"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
   FlexGridSizer3->Add(bAddYAxis, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-  BoxSizer4->Add(FlexGridSizer3, 0, wxALL|wxEXPAND, 2);
+  sizerAxis->Add(FlexGridSizer3, 0, wxALL|wxEXPAND, 2);
   FlexGridSizer8 = new wxFlexGridSizer(1, 3, 0, 0);
   FlexGridSizer8->AddGrowableCol(1);
   StaticText8 = new wxStaticText(Panel3, wxID_ANY, _("Name :"), wxDefaultPosition, wxDefaultSize, 0);
@@ -269,7 +269,7 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   bFontAxis = new wxButton(Panel3, wxID_ANY, _("Font"), wxDefaultPosition, wxSize(64,-1), 0, wxDefaultValidator);
   bFontAxis->Disable();
   FlexGridSizer8->Add(bFontAxis, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-  BoxSizer4->Add(FlexGridSizer8, 0, wxALL|wxEXPAND, 2);
+  sizerAxis->Add(FlexGridSizer8, 0, wxALL|wxEXPAND, 2);
   BoxSizer6 = new wxBoxSizer(wxHORIZONTAL);
   BoxSizer7 = new wxBoxSizer(wxVERTICAL);
   StaticBoxSizer6 = new wxStaticBoxSizer(wxHORIZONTAL, Panel3, _("Pen "));
@@ -376,8 +376,8 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   cbIsY2Axis->SetValue(false);
   BoxSizer5->Add(cbIsY2Axis, 0, wxALL|wxALIGN_LEFT, 5);
   BoxSizer6->Add(BoxSizer5, 0, wxALL|wxALIGN_TOP, 2);
-  BoxSizer4->Add(BoxSizer6, 0, wxALL|wxEXPAND, 0);
-  Panel3->SetSizer(BoxSizer4);
+  sizerAxis->Add(BoxSizer6, 0, wxALL|wxEXPAND, 0);
+  Panel3->SetSizer(sizerAxis);
   Panel4 = new wxPanel(nbConfig, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL);
   BoxSizer8 = new wxBoxSizer(wxVERTICAL);
   FlexGridSizer13 = new wxFlexGridSizer(1, 3, 0, 0);
@@ -520,7 +520,7 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   BoxSizer8->Add(FlexGridSizer15, 0, wxALL|wxEXPAND, 2);
   Panel4->SetSizer(BoxSizer8);
   Panel5 = new wxPanel(nbConfig, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL);
-  BoxSizer17 = new wxBoxSizer(wxVERTICAL);
+  sizerLines = new wxBoxSizer(wxVERTICAL);
   FlexGridSizer5 = new wxFlexGridSizer(1, 5, 0, 0);
   FlexGridSizer5->AddGrowableCol(0);
   ChoiceLines = new wxChoice(Panel5, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator);
@@ -530,33 +530,35 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   bDelLines = new wxButton(Panel5, wxID_ANY, _("Delete"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
   bDelLines->Disable();
   FlexGridSizer5->Add(bDelLines, 0, wxTOP|wxBOTTOM|wxRIGHT|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-  BoxSizer17->Add(FlexGridSizer5, 0, wxALL|wxEXPAND, 2);
+  sizerLines->Add(FlexGridSizer5, 0, wxALL|wxEXPAND, 2);
+  pLines = new wxPanel(Panel5, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL);
+  BoxSizer4 = new wxBoxSizer(wxVERTICAL);
   FlexGridSizer9 = new wxFlexGridSizer(2, 4, 0, 0);
   FlexGridSizer9->AddGrowableCol(1);
-  StaticText31 = new wxStaticText(Panel5, wxID_ANY, _("Name :"), wxDefaultPosition, wxDefaultSize, 0);
+  StaticText31 = new wxStaticText(pLines, wxID_ANY, _("Name :"), wxDefaultPosition, wxDefaultSize, 0);
   FlexGridSizer9->Add(StaticText31, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
-  edLinesName = new wxTextCtrl(Panel5, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
+  edLinesName = new wxTextCtrl(pLines, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
   FlexGridSizer9->Add(edLinesName, 1, wxALL|wxEXPAND, 5);
-  rbLinesHor = new wxRadioButton(Panel5, wxID_ANY, _("Horizontal"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
+  rbLinesHor = new wxRadioButton(pLines, wxID_ANY, _("Horizontal"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
   rbLinesHor->Disable();
   FlexGridSizer9->Add(rbLinesHor, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-  rbLinesVert = new wxRadioButton(Panel5, wxID_ANY, _("Vertical"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
+  rbLinesVert = new wxRadioButton(pLines, wxID_ANY, _("Vertical"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
   rbLinesVert->Disable();
   FlexGridSizer9->Add(rbLinesVert, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-  StaticText30 = new wxStaticText(Panel5, wxID_ANY, _("Value :"), wxDefaultPosition, wxDefaultSize, 0);
+  StaticText30 = new wxStaticText(pLines, wxID_ANY, _("Value :"), wxDefaultPosition, wxDefaultSize, 0);
   FlexGridSizer9->Add(StaticText30, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-  edLinesValue = new wxTextCtrl(Panel5, wxID_ANY, _T("1"), wxDefaultPosition, wxSize(64,-1), wxTE_RIGHT, wxFloatingPointValidator<double> (2, &line_value));
+  edLinesValue = new wxTextCtrl(pLines, wxID_ANY, _T("1"), wxDefaultPosition, wxSize(64,-1), wxTE_RIGHT, wxFloatingPointValidator<double> (2, &line_value));
   FlexGridSizer9->Add(edLinesValue, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
-  BoxSizer17->Add(FlexGridSizer9, 0, wxALL|wxEXPAND, 2);
+  BoxSizer4->Add(FlexGridSizer9, 0, wxALL|wxEXPAND, 5);
   FlexGridSizer20 = new wxFlexGridSizer(1, 2, 0, 0);
   BoxSizer18 = new wxBoxSizer(wxHORIZONTAL);
-  StaticBoxSizer11 = new wxStaticBoxSizer(wxHORIZONTAL, Panel5, _("Pen "));
+  StaticBoxSizer11 = new wxStaticBoxSizer(wxHORIZONTAL, pLines, _("Pen "));
   FlexGridSizer21 = new wxFlexGridSizer(3, 2, 0, 0);
-  StaticText32 = new wxStaticText(Panel5, wxID_ANY, _("Color :"), wxDefaultPosition, wxDefaultSize, 0);
+  StaticText32 = new wxStaticText(pLines, wxID_ANY, _("Color :"), wxDefaultPosition, wxDefaultSize, 0);
   FlexGridSizer21->Add(StaticText32, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
-  bLinesPenColor = new wxButton(Panel5, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
+  bLinesPenColor = new wxButton(pLines, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
   FlexGridSizer21->Add(bLinesPenColor, 1, wxALL|wxEXPAND, 2);
-  StaticText33 = new wxStaticText(Panel5, wxID_ANY, _("Width :"), wxDefaultPosition, wxDefaultSize, 0);
+  StaticText33 = new wxStaticText(pLines, wxID_ANY, _("Width :"), wxDefaultPosition, wxDefaultSize, 0);
   FlexGridSizer21->Add(StaticText33, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
   const wxString cbLinesPenWidth_choices[] = {
   _T("1"),
@@ -570,10 +572,10 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   _T("9"),
   _T("10"),
   };
-  cbLinesPenWidth = new wxChoice(Panel5, wxID_ANY, wxDefaultPosition, wxDefaultSize, 10, cbLinesPenWidth_choices, 0, wxDefaultValidator);
+  cbLinesPenWidth = new wxChoice(pLines, wxID_ANY, wxDefaultPosition, wxDefaultSize, 10, cbLinesPenWidth_choices, 0, wxDefaultValidator);
   cbLinesPenWidth->SetSelection(0);
   FlexGridSizer21->Add(cbLinesPenWidth, 1, wxALL|wxEXPAND, 2);
-  StaticText34 = new wxStaticText(Panel5, wxID_ANY, _("Style :"), wxDefaultPosition, wxDefaultSize, 0);
+  StaticText34 = new wxStaticText(pLines, wxID_ANY, _("Style :"), wxDefaultPosition, wxDefaultSize, 0);
   FlexGridSizer21->Add(StaticText34, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
   const wxString cbLinesPenStyle_choices[] = {
   _("Solid"),
@@ -582,28 +584,30 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   _("Short Dash"),
   _("Dot Dash"),
   };
-  cbLinesPenStyle = new wxChoice(Panel5, wxID_ANY, wxDefaultPosition, wxDefaultSize, 5, cbLinesPenStyle_choices, 0, wxDefaultValidator);
+  cbLinesPenStyle = new wxChoice(pLines, wxID_ANY, wxDefaultPosition, wxDefaultSize, 5, cbLinesPenStyle_choices, 0, wxDefaultValidator);
   cbLinesPenStyle->SetSelection(0);
   FlexGridSizer21->Add(cbLinesPenStyle, 1, wxALL|wxEXPAND, 2);
   StaticBoxSizer11->Add(FlexGridSizer21, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
   BoxSizer18->Add(StaticBoxSizer11, 0, wxALL, 2);
   BoxSizer19 = new wxBoxSizer(wxVERTICAL);
-  cbLinesVisible = new wxCheckBox(Panel5, wxID_ANY, _("Visible"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
+  cbLinesVisible = new wxCheckBox(pLines, wxID_ANY, _("Visible"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
   cbLinesVisible->SetValue(false);
   BoxSizer19->Add(cbLinesVisible, 1, wxALL|wxALIGN_LEFT, 3);
-  cbLinesOutside = new wxCheckBox(Panel5, wxID_ANY, _("Draw Outside Margins"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
+  cbLinesOutside = new wxCheckBox(pLines, wxID_ANY, _("Draw Outside Margins"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
   cbLinesOutside->SetValue(false);
   BoxSizer19->Add(cbLinesOutside, 1, wxALL|wxALIGN_LEFT, 3);
-  cbLinesShowName = new wxCheckBox(Panel5, wxID_ANY, _("Show name"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
+  cbLinesShowName = new wxCheckBox(pLines, wxID_ANY, _("Show name"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
   cbLinesShowName->SetValue(false);
   BoxSizer19->Add(cbLinesShowName, 1, wxALL|wxALIGN_LEFT, 3);
-  cbLinesSecondYAxis = new wxCheckBox(Panel5, wxID_ANY, _("Use second Y axis"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
+  cbLinesSecondYAxis = new wxCheckBox(pLines, wxID_ANY, _("Use second Y axis"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
   cbLinesSecondYAxis->SetValue(false);
   BoxSizer19->Add(cbLinesSecondYAxis, 1, wxALL|wxALIGN_LEFT, 3);
   BoxSizer18->Add(BoxSizer19, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5);
   FlexGridSizer20->Add(BoxSizer18, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-  BoxSizer17->Add(FlexGridSizer20, 0, wxALL|wxEXPAND, 2);
-  Panel5->SetSizer(BoxSizer17);
+  BoxSizer4->Add(FlexGridSizer20, 0, wxALL|wxEXPAND, 5);
+  pLines->SetSizer(BoxSizer4);
+  sizerLines->Add(pLines, 1, wxEXPAND, 5);
+  Panel5->SetSizer(sizerLines);
   nbConfig->AddPage(Panel1, _("General"), false);
   nbConfig->AddPage(Panel2, _("Legend"), false);
   nbConfig->AddPage(Panel3, _("Axis"), false);
@@ -779,6 +783,8 @@ void MathPlotConfigDialog::Initialize(int page)
     ChoiceLines->SetSelection(0);
     UpdateSelectedLine();
   }
+  else
+    pLines->Show(false);
 
   // Choice selection
   if (page != -1)
@@ -988,6 +994,11 @@ void MathPlotConfigDialog::UpdateAxis(void)
   }
   edScaleMin->GetValidator()->TransferToWindow();
   edScaleMax->GetValidator()->TransferToWindow();
+  // For unix GTK problem with the visibility of cbIsY2Axis
+#ifdef _WIN32
+#else
+  sizerAxis->Layout();
+#endif
 }
 
 void MathPlotConfigDialog::OnbAddAxisClick(wxCommandEvent &event)
@@ -1102,7 +1113,6 @@ void MathPlotConfigDialog::UpdateSelectedSerie(void)
       cbBar->Disable();
       cbBar->SetValue(false);
     }
-
   }
   else
     CurrentChoice = NULL;
@@ -1190,6 +1200,11 @@ void MathPlotConfigDialog::OnbAddLinesClick(wxCommandEvent &WXUNUSED(event))
   {
     ChoiceLines->SetSelection(ChoiceLines->GetCount() - 1);
     UpdateSelectedLine();
+    pLines->Show(true);
+#ifdef _WIN32
+#else
+    sizerLines->Layout();
+#endif
   }
 }
 

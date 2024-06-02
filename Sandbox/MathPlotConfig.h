@@ -96,7 +96,8 @@ class MathPlotConfigDialog: public wxDialog
     //*)
 
     //(*Declarations(MathPlotConfigDialog)
-    wxBoxSizer* BoxSizer2;
+    wxBoxSizer* sizerAxis;
+    wxBoxSizer* sizerLines;
     wxBoxSizer* sizerMain;
     wxButton* bAddLines;
     wxButton* bAddXAxis;
@@ -164,6 +165,7 @@ class MathPlotConfigDialog: public wxDialog
     wxPanel* Panel3;
     wxPanel* Panel4;
     wxPanel* Panel5;
+    wxPanel* pLines;
     wxRadioButton* rbLinesHor;
     wxRadioButton* rbLinesVert;
     wxSpinCtrl* cbSeriesStep;
