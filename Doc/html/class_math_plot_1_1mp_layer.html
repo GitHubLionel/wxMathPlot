@@ -94,21 +94,15 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_layer.html#a2b5f567008f1268bb6d31ed3ddc839fc">GetBBox</a> (<a class="el" href="union_math_plot_1_1mp_float_rect.html">mpFloatRect</a> *m_bound)</td></tr>
 <tr class="memdesc:a2b5f567008f1268bb6d31ed3ddc839fc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the bounding box, ie minX, maxX, minY and maxY of the object Here we don't use extra Y2 values. <br /></td></tr>
 <tr class="separator:a2b5f567008f1268bb6d31ed3ddc839fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4303a6e2e6a9ece63869a8749632baf8"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_layer.html#a4303a6e2e6a9ece63869a8749632baf8">IsInfo</a> (mpInfoType *info)</td></tr>
-<tr class="memdesc:a4303a6e2e6a9ece63869a8749632baf8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check whether the layer is a special object.  <a href="class_math_plot_1_1mp_layer.html#a4303a6e2e6a9ece63869a8749632baf8">More...</a><br /></td></tr>
-<tr class="separator:a4303a6e2e6a9ece63869a8749632baf8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4a592664d34408cfe1f25353524ccf25"><td class="memItemLeft" align="right" valign="top"><a id="a4a592664d34408cfe1f25353524ccf25"></a>
-virtual bool&#160;</td><td class="memItemRight" valign="bottom"><b>IsFunction</b> (mpFunctionType *function)</td></tr>
-<tr class="separator:a4a592664d34408cfe1f25353524ccf25"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a89da9a4bb00f87d8416e5de3ba7e7645"><td class="memItemLeft" align="right" valign="top"><a id="a89da9a4bb00f87d8416e5de3ba7e7645"></a>
-virtual bool&#160;</td><td class="memItemRight" valign="bottom"><b>IsScale</b> (mpScaleType *scale)</td></tr>
-<tr class="separator:a89da9a4bb00f87d8416e5de3ba7e7645"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a312abfb0cd26271f8c5991c609443a59"><td class="memItemLeft" align="right" valign="top"><a id="a312abfb0cd26271f8c5991c609443a59"></a>
-virtual bool&#160;</td><td class="memItemRight" valign="bottom"><b>IsText</b> ()</td></tr>
-<tr class="separator:a312abfb0cd26271f8c5991c609443a59"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae00c7d4b36be26aeeb5299a4fbc17365"><td class="memItemLeft" align="right" valign="top"><a id="ae00c7d4b36be26aeeb5299a4fbc17365"></a>
-virtual bool&#160;</td><td class="memItemRight" valign="bottom"><b>IsTitle</b> ()</td></tr>
-<tr class="separator:ae00c7d4b36be26aeeb5299a4fbc17365"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa3a17628172c670e7b83768cce3952e4"><td class="memItemLeft" align="right" valign="top">mpLayerType&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_layer.html#aa3a17628172c670e7b83768cce3952e4">GetLayerType</a> () const</td></tr>
+<tr class="memdesc:aa3a17628172c670e7b83768cce3952e4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get layer type: a Layer can be of different types: plot, lines, axis, info boxes, etc, this method returns the right value.  <a href="class_math_plot_1_1mp_layer.html#aa3a17628172c670e7b83768cce3952e4">More...</a><br /></td></tr>
+<tr class="separator:aa3a17628172c670e7b83768cce3952e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a597b30a93757349a9b7181280057b89f"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_layer.html#a597b30a93757349a9b7181280057b89f">GetLayerSubType</a> () const</td></tr>
+<tr class="memdesc:a597b30a93757349a9b7181280057b89f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get layer subtype: each layer type can have several flavors.  <a href="class_math_plot_1_1mp_layer.html#a597b30a93757349a9b7181280057b89f">More...</a><br /></td></tr>
+<tr class="separator:a597b30a93757349a9b7181280057b89f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a244c4f7c1edeed6871fda25904cdd33f"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_layer.html#a244c4f7c1edeed6871fda25904cdd33f">IsLayerType</a> (mpLayerType type, int *sub_type)</td></tr>
+<tr class="memdesc:a244c4f7c1edeed6871fda25904cdd33f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specifies that if the layer is of type "type".  <a href="class_math_plot_1_1mp_layer.html#a244c4f7c1edeed6871fda25904cdd33f">More...</a><br /></td></tr>
+<tr class="separator:a244c4f7c1edeed6871fda25904cdd33f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5917777dc54b475bba161966ab64817d"><td class="memItemLeft" align="right" valign="top">virtual double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_layer.html#a5917777dc54b475bba161966ab64817d">GetMinX</a> ()</td></tr>
 <tr class="memdesc:a5917777dc54b475bba161966ab64817d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get inclusive left border of bounding box.  <a href="class_math_plot_1_1mp_layer.html#a5917777dc54b475bba161966ab64817d">More...</a><br /></td></tr>
 <tr class="separator:a5917777dc54b475bba161966ab64817d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -124,8 +118,8 @@ virtual bool&#160;</td><td class="memItemRight" valign="bottom"><b>IsTitle</b> (
 <tr class="memitem:a13fa2fdda9c7db573c498a6d1a6486a3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_layer.html#a13fa2fdda9c7db573c498a6d1a6486a3">Plot</a> (wxDC &amp;dc, <a class="el" href="class_math_plot_1_1mp_window.html">mpWindow</a> &amp;w)</td></tr>
 <tr class="memdesc:a13fa2fdda9c7db573c498a6d1a6486a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Plot given view of layer to the given device context.  <a href="class_math_plot_1_1mp_layer.html#a13fa2fdda9c7db573c498a6d1a6486a3">More...</a><br /></td></tr>
 <tr class="separator:a13fa2fdda9c7db573c498a6d1a6486a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a33078b7dae13a53ea735d179c530e7c7"><td class="memItemLeft" align="right" valign="top"><a id="a33078b7dae13a53ea735d179c530e7c7"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>DoPlot</b> (wxDC &amp;dc, <a class="el" href="class_math_plot_1_1mp_window.html">mpWindow</a> &amp;w)=0</td></tr>
+<tr class="memitem:a33078b7dae13a53ea735d179c530e7c7"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_layer.html#a33078b7dae13a53ea735d179c530e7c7">DoPlot</a> (wxDC &amp;dc, <a class="el" href="class_math_plot_1_1mp_window.html">mpWindow</a> &amp;w)=0</td></tr>
+<tr class="memdesc:a33078b7dae13a53ea735d179c530e7c7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pure virtual method to plot the layer.  <a href="class_math_plot_1_1mp_layer.html#a33078b7dae13a53ea735d179c530e7c7">More...</a><br /></td></tr>
 <tr class="separator:a33078b7dae13a53ea735d179c530e7c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9749c40a970c0ba7d7d52cfe96ba35c2"><td class="memItemLeft" align="right" valign="top"><a id="a9749c40a970c0ba7d7d52cfe96ba35c2"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_layer.html#a9749c40a970c0ba7d7d52cfe96ba35c2">DoBeforePlot</a> ()</td></tr>
@@ -164,9 +158,9 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 <tr class="memitem:a911f1c66690a9f113864f8f77b692ad2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_layer.html#a911f1c66690a9f113864f8f77b692ad2">SetShowName</a> (bool show)</td></tr>
 <tr class="memdesc:a911f1c66690a9f113864f8f77b692ad2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set Name visibility.  <a href="class_math_plot_1_1mp_layer.html#a911f1c66690a9f113864f8f77b692ad2">More...</a><br /></td></tr>
 <tr class="separator:a911f1c66690a9f113864f8f77b692ad2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9eacc0601f8bfa337fc052e47048e330"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_layer.html#a9eacc0601f8bfa337fc052e47048e330">GetShowName</a> ()</td></tr>
-<tr class="memdesc:a9eacc0601f8bfa337fc052e47048e330"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get Name visibility.  <a href="class_math_plot_1_1mp_layer.html#a9eacc0601f8bfa337fc052e47048e330">More...</a><br /></td></tr>
-<tr class="separator:a9eacc0601f8bfa337fc052e47048e330"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae0a94accb2124722cc3783b625628f59"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_layer.html#ae0a94accb2124722cc3783b625628f59">GetShowName</a> () const</td></tr>
+<tr class="memdesc:ae0a94accb2124722cc3783b625628f59"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get Name visibility.  <a href="class_math_plot_1_1mp_layer.html#ae0a94accb2124722cc3783b625628f59">More...</a><br /></td></tr>
+<tr class="separator:ae0a94accb2124722cc3783b625628f59"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6cac0c7dbd87e1bc9d6e859e542732d3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_layer.html#a6cac0c7dbd87e1bc9d6e859e542732d3">SetDrawOutsideMargins</a> (bool drawModeOutside)</td></tr>
 <tr class="memdesc:a6cac0c7dbd87e1bc9d6e859e542732d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set Draw mode: inside or outside margins.  <a href="class_math_plot_1_1mp_layer.html#a6cac0c7dbd87e1bc9d6e859e542732d3">More...</a><br /></td></tr>
 <tr class="separator:a6cac0c7dbd87e1bc9d6e859e542732d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -176,18 +170,15 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 <tr class="memitem:a513a1d20cc7e3927b2415382737c577c"><td class="memItemLeft" align="right" valign="top">wxBitmap&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_layer.html#a513a1d20cc7e3927b2415382737c577c">GetColourSquare</a> (int side=16)</td></tr>
 <tr class="memdesc:a513a1d20cc7e3927b2415382737c577c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a small square bitmap filled with the colour of the pen used in the layer.  <a href="class_math_plot_1_1mp_layer.html#a513a1d20cc7e3927b2415382737c577c">More...</a><br /></td></tr>
 <tr class="separator:a513a1d20cc7e3927b2415382737c577c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa3a17628172c670e7b83768cce3952e4"><td class="memItemLeft" align="right" valign="top">mpLayerType&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_layer.html#aa3a17628172c670e7b83768cce3952e4">GetLayerType</a> () const</td></tr>
-<tr class="memdesc:aa3a17628172c670e7b83768cce3952e4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get layer type: a Layer can be of different types: plot lines, axis, info boxes, etc, this method returns the right value.  <a href="class_math_plot_1_1mp_layer.html#aa3a17628172c670e7b83768cce3952e4">More...</a><br /></td></tr>
-<tr class="separator:aa3a17628172c670e7b83768cce3952e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a03b5bb737439f239ad9a4f9910950fdf"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_layer.html#a03b5bb737439f239ad9a4f9910950fdf">IsVisible</a> ()</td></tr>
-<tr class="memdesc:a03b5bb737439f239ad9a4f9910950fdf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether the layer is visible or not.  <a href="class_math_plot_1_1mp_layer.html#a03b5bb737439f239ad9a4f9910950fdf">More...</a><br /></td></tr>
-<tr class="separator:a03b5bb737439f239ad9a4f9910950fdf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1f1155622a4fffe57f03bc8df172f060"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_layer.html#a1f1155622a4fffe57f03bc8df172f060">IsVisible</a> () const</td></tr>
+<tr class="memdesc:a1f1155622a4fffe57f03bc8df172f060"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether the layer is visible or not.  <a href="class_math_plot_1_1mp_layer.html#a1f1155622a4fffe57f03bc8df172f060">More...</a><br /></td></tr>
+<tr class="separator:a1f1155622a4fffe57f03bc8df172f060"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a387d1d3deedda256a314c490a1d45be2"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_layer.html#a387d1d3deedda256a314c490a1d45be2">SetVisible</a> (bool show)</td></tr>
 <tr class="memdesc:a387d1d3deedda256a314c490a1d45be2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets layer visibility.  <a href="class_math_plot_1_1mp_layer.html#a387d1d3deedda256a314c490a1d45be2">More...</a><br /></td></tr>
 <tr class="separator:a387d1d3deedda256a314c490a1d45be2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a98833de4122a3552b1d4a597cd94c1a7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_layer.html#a98833de4122a3552b1d4a597cd94c1a7">IsTractable</a> ()</td></tr>
-<tr class="memdesc:a98833de4122a3552b1d4a597cd94c1a7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether the layer is tractable or not.  <a href="class_math_plot_1_1mp_layer.html#a98833de4122a3552b1d4a597cd94c1a7">More...</a><br /></td></tr>
-<tr class="separator:a98833de4122a3552b1d4a597cd94c1a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac5044bf84914bc65bd6478fc418a6a71"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_layer.html#ac5044bf84914bc65bd6478fc418a6a71">IsTractable</a> () const</td></tr>
+<tr class="memdesc:ac5044bf84914bc65bd6478fc418a6a71"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether the layer is tractable or not.  <a href="class_math_plot_1_1mp_layer.html#ac5044bf84914bc65bd6478fc418a6a71">More...</a><br /></td></tr>
+<tr class="separator:ac5044bf84914bc65bd6478fc418a6a71"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a69fe10fa6595c649b0a6b84b09df40f2"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_layer.html#a69fe10fa6595c649b0a6b84b09df40f2">SetTractable</a> (bool track)</td></tr>
 <tr class="memdesc:a69fe10fa6595c649b0a6b84b09df40f2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets layer tractability.  <a href="class_math_plot_1_1mp_layer.html#a69fe10fa6595c649b0a6b84b09df40f2">More...</a><br /></td></tr>
 <tr class="separator:a69fe10fa6595c649b0a6b84b09df40f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -203,9 +194,9 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 <tr class="memitem:a84ca557733ca675c262667ec067f79ce"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_layer.html#a84ca557733ca675c262667ec067f79ce">GetCanDelete</a> (void) const</td></tr>
 <tr class="memdesc:a84ca557733ca675c262667ec067f79ce"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get CanDelete for plot.  <a href="class_math_plot_1_1mp_layer.html#a84ca557733ca675c262667ec067f79ce">More...</a><br /></td></tr>
 <tr class="separator:a84ca557733ca675c262667ec067f79ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0cf8536599223a181e3346d09ad82877"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_math_plot.html#a9184999e26cf5531b6ca0d992107d55d">mpLayerZOrder</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_layer.html#a0cf8536599223a181e3346d09ad82877">GetZIndex</a> (void)</td></tr>
-<tr class="memdesc:a0cf8536599223a181e3346d09ad82877"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the ZIndex of the plot.  <a href="class_math_plot_1_1mp_layer.html#a0cf8536599223a181e3346d09ad82877">More...</a><br /></td></tr>
-<tr class="separator:a0cf8536599223a181e3346d09ad82877"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a406352adc509b7bb0d8c5775d1625185"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_math_plot.html#a9184999e26cf5531b6ca0d992107d55d">mpLayerZOrder</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_layer.html#a406352adc509b7bb0d8c5775d1625185">GetZIndex</a> (void) const</td></tr>
+<tr class="memdesc:a406352adc509b7bb0d8c5775d1625185"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the ZIndex of the plot.  <a href="class_math_plot_1_1mp_layer.html#a406352adc509b7bb0d8c5775d1625185">More...</a><br /></td></tr>
+<tr class="separator:a406352adc509b7bb0d8c5775d1625185"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
@@ -224,6 +215,10 @@ Protected Attributes</h2></td></tr>
 mpLayerType&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_layer.html#ad7265c8d70efb1ce36b1fde5c0399de4">m_type</a></td></tr>
 <tr class="memdesc:ad7265c8d70efb1ce36b1fde5c0399de4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Define layer type, which is assigned by constructor. <br /></td></tr>
 <tr class="separator:ad7265c8d70efb1ce36b1fde5c0399de4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a277956aa22d6c1c348c77b8b646f5fa1"><td class="memItemLeft" align="right" valign="top"><a id="a277956aa22d6c1c348c77b8b646f5fa1"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_layer.html#a277956aa22d6c1c348c77b8b646f5fa1">m_subtype</a></td></tr>
+<tr class="memdesc:a277956aa22d6c1c348c77b8b646f5fa1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Define layer sub type, which is assigned by constructor. <br /></td></tr>
+<tr class="separator:a277956aa22d6c1c348c77b8b646f5fa1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a05e3e813b5b9530eb10f4b254dabe692"><td class="memItemLeft" align="right" valign="top"><a id="a05e3e813b5b9530eb10f4b254dabe692"></a>
 wxFont&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_layer.html#a05e3e813b5b9530eb10f4b254dabe692">m_font</a></td></tr>
 <tr class="memdesc:a05e3e813b5b9530eb10f4b254dabe692"><td class="mdescLeft">&#160;</td><td class="mdescRight">Layer's font. <br /></td></tr>
@@ -282,6 +277,47 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <p>Any number of <a class="el" href="class_math_plot_1_1mp_layer.html" title="Plot layer, abstract base class.">mpLayer</a> implementations can be attached to <a class="el" href="class_math_plot_1_1mp_window.html" title="Canvas for plotting mpLayer implementations.">mpWindow</a>. Examples for <a class="el" href="class_math_plot_1_1mp_layer.html" title="Plot layer, abstract base class.">mpLayer</a> implementations are function graphs, or scale rulers.</p>
 <p>For convenience <a class="el" href="class_math_plot_1_1mp_layer.html" title="Plot layer, abstract base class.">mpLayer</a> defines a name, a font (wxFont), a pen (wxPen), and a continuity property (bool) as class members. The default values at constructor are the default font, a black pen, and continuity set to false (draw separate points). These may or may not be used by implementations. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="a33078b7dae13a53ea735d179c530e7c7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a33078b7dae13a53ea735d179c530e7c7">&#9670;&nbsp;</a></span>DoPlot()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void MathPlot::mpLayer::DoPlot </td>
+          <td>(</td>
+          <td class="paramtype">wxDC &amp;&#160;</td>
+          <td class="paramname"><em>dc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class_math_plot_1_1mp_window.html">mpWindow</a> &amp;&#160;</td>
+          <td class="paramname"><em>w</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Pure virtual method to plot the layer. </p>
+<p>Must be overidden and implemented by derived classes. </p>
+
+<p>Implemented in <a class="el" href="class_math_plot_1_1mp_bitmap_layer.html#a400f185f5f201d84a66c4e70f2663e9d">MathPlot::mpBitmapLayer</a>, <a class="el" href="class_math_plot_1_1mp_movable_object.html#aaf011efe39378cfda76132115c76d485">MathPlot::mpMovableObject</a>, <a class="el" href="class_math_plot_1_1mp_text.html#a630986a2bf23e5322c559103bfb831c9">MathPlot::mpText</a>, <a class="el" href="class_math_plot_1_1mp_scale_y.html#a48874ddbb63341d8407a7e28f4f68c7f">MathPlot::mpScaleY</a>, <a class="el" href="class_math_plot_1_1mp_scale_x.html#af09819eb5e18f2d3606954107b02960c">MathPlot::mpScaleX</a>, <a class="el" href="class_math_plot_1_1mp_profile.html#a68d99fff73feacbe945f991f7a4dcbc9">MathPlot::mpProfile</a>, <a class="el" href="class_math_plot_1_1mp_f_x_y.html#a9e9318d19070ab12182949765e2624cc">MathPlot::mpFXY</a>, <a class="el" href="class_math_plot_1_1mp_f_y.html#a4163b25c23e0d5ae2d28d2b7eeb42391">MathPlot::mpFY</a>, <a class="el" href="class_math_plot_1_1mp_f_x.html#ae4c5250b84709c87164ecd9e9d8e5ca6">MathPlot::mpFX</a>, <a class="el" href="class_math_plot_1_1mp_vertical_line.html#a065c285edbc3f2850e5fb487b09c4af8">MathPlot::mpVerticalLine</a>, <a class="el" href="class_math_plot_1_1mp_horizontal_line.html#ab0b6581b44a0fbc4fc18e2a51daaa993">MathPlot::mpHorizontalLine</a>, <a class="el" href="class_math_plot_1_1mp_info_legend.html#ac3b7af3ba3308bb989630a68dbacf0d2">MathPlot::mpInfoLegend</a>, <a class="el" href="class_math_plot_1_1mp_info_coords.html#a54c2dd1ba9a36c0becb080ff5e3b5128">MathPlot::mpInfoCoords</a>, and <a class="el" href="class_math_plot_1_1mp_info_layer.html#a5e0a79553b6835659a3d9826f096da09">MathPlot::mpInfoLayer</a>.</p>
+
+</div>
+</div>
 <a id="ae836d3e03300fd484d3effa98ab29a77"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae836d3e03300fd484d3effa98ab29a77">&#9670;&nbsp;</a></span>GetAlign()</h2>
 
@@ -478,6 +514,35 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 
 </div>
 </div>
+<a id="a597b30a93757349a9b7181280057b89f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a597b30a93757349a9b7181280057b89f">&#9670;&nbsp;</a></span>GetLayerSubType()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int MathPlot::mpLayer::GetLayerSubType </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get layer subtype: each layer type can have several flavors. </p>
+<dl class="section return"><dt>Returns</dt><dd>An integer indicating layer subtype </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_math_plot_1_1mp_layer.html#a597b30a93757349a9b7181280057b89f" title="Get layer subtype: each layer type can have several flavors.">mpLayer::GetLayerSubType</a> </dd></dl>
+
+</div>
+</div>
 <a id="aa3a17628172c670e7b83768cce3952e4"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa3a17628172c670e7b83768cce3952e4">&#9670;&nbsp;</a></span>GetLayerType()</h2>
 
@@ -501,8 +566,9 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 </table>
 </div><div class="memdoc">
 
-<p>Get layer type: a Layer can be of different types: plot lines, axis, info boxes, etc, this method returns the right value. </p>
+<p>Get layer type: a Layer can be of different types: plot, lines, axis, info boxes, etc, this method returns the right value. </p>
 <dl class="section return"><dt>Returns</dt><dd>An integer indicating layer type </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_math_plot_1_1mp_layer.html#aa3a17628172c670e7b83768cce3952e4" title="Get layer type: a Layer can be of different types: plot, lines, axis, info boxes, etc,...">mpLayer::GetLayerType</a> </dd></dl>
 
 </div>
 </div>
@@ -682,8 +748,8 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 
 </div>
 </div>
-<a id="a9eacc0601f8bfa337fc052e47048e330"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9eacc0601f8bfa337fc052e47048e330">&#9670;&nbsp;</a></span>GetShowName()</h2>
+<a id="ae0a94accb2124722cc3783b625628f59"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae0a94accb2124722cc3783b625628f59">&#9670;&nbsp;</a></span>GetShowName()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -695,7 +761,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
           <td class="memname">bool MathPlot::mpLayer::GetShowName </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
   </td>
@@ -710,8 +776,8 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 
 </div>
 </div>
-<a id="a0cf8536599223a181e3346d09ad82877"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0cf8536599223a181e3346d09ad82877">&#9670;&nbsp;</a></span>GetZIndex()</h2>
+<a id="a406352adc509b7bb0d8c5775d1625185"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a406352adc509b7bb0d8c5775d1625185">&#9670;&nbsp;</a></span>GetZIndex()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -724,7 +790,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
           <td>(</td>
           <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
   </td>
@@ -775,8 +841,8 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 
 </div>
 </div>
-<a id="a4303a6e2e6a9ece63869a8749632baf8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4303a6e2e6a9ece63869a8749632baf8">&#9670;&nbsp;</a></span>IsInfo()</h2>
+<a id="a244c4f7c1edeed6871fda25904cdd33f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a244c4f7c1edeed6871fda25904cdd33f">&#9670;&nbsp;</a></span>IsLayerType()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -785,11 +851,21 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual bool MathPlot::mpLayer::IsInfo </td>
+          <td class="memname">virtual bool MathPlot::mpLayer::IsLayerType </td>
           <td>(</td>
-          <td class="paramtype">mpInfoType *&#160;</td>
-          <td class="paramname"><em>info</em></td><td>)</td>
+          <td class="paramtype">mpLayerType&#160;</td>
+          <td class="paramname"><em>type</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">int *&#160;</td>
+          <td class="paramname"><em>sub_type</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -799,15 +875,20 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 </table>
 </div><div class="memdoc">
 
-<p>Check whether the layer is a special object. </p>
-<p>The default implementation returns <em>FALSE</em>. It is overrided to <em>TRUE</em> in object class and its derivative. </p><dl class="section return"><dt>Returns</dt><dd>whether the layer is a specific object </dd></dl>
-
-<p>Reimplemented in <a class="el" href="class_math_plot_1_1mp_info_legend.html#abb894650859edb2d236b40daacc7ad3b">MathPlot::mpInfoLegend</a>, <a class="el" href="class_math_plot_1_1mp_info_coords.html#ac7649478b594516384e59a2fd78108b5">MathPlot::mpInfoCoords</a>, and <a class="el" href="class_math_plot_1_1mp_info_layer.html#adff693cb0783f0f862527ceaa8011117">MathPlot::mpInfoLayer</a>.</p>
+<p>Specifies that if the layer is of type "type". </p>
+<p>if true then get the subtype </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">type</td><td></td></tr>
+    <tr><td class="paramname">subtype</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_math_plot_1_1mp_layer.html#a244c4f7c1edeed6871fda25904cdd33f" title="Specifies that if the layer is of type &quot;type&quot;.">mpLayer::IsLayerType</a> </dd></dl>
 
 </div>
 </div>
-<a id="a98833de4122a3552b1d4a597cd94c1a7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a98833de4122a3552b1d4a597cd94c1a7">&#9670;&nbsp;</a></span>IsTractable()</h2>
+<a id="ac5044bf84914bc65bd6478fc418a6a71"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac5044bf84914bc65bd6478fc418a6a71">&#9670;&nbsp;</a></span>IsTractable()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -819,7 +900,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
           <td class="memname">bool MathPlot::mpLayer::IsTractable </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
   </td>
@@ -834,8 +915,8 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 
 </div>
 </div>
-<a id="a03b5bb737439f239ad9a4f9910950fdf"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a03b5bb737439f239ad9a4f9910950fdf">&#9670;&nbsp;</a></span>IsVisible()</h2>
+<a id="a1f1155622a4fffe57f03bc8df172f060"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1f1155622a4fffe57f03bc8df172f060">&#9670;&nbsp;</a></span>IsVisible()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -847,7 +928,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
           <td class="memname">bool MathPlot::mpLayer::IsVisible </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
   </td>
@@ -1295,10 +1376,10 @@ V ascending Y                               |
 </div>
 </div>
 </div><!-- contents -->
-<div class="ttc" id="aclass_math_plot_1_1mp_window_html_a03a05877ac0cc0a96b172c7b2728f205"><div class="ttname"><a href="class_math_plot_1_1mp_window.html#a03a05877ac0cc0a96b172c7b2728f205">MathPlot::mpWindow::GetPosY</a></div><div class="ttdeci">double GetPosY(bool Y2=false) const</div><div class="ttdoc">Get current view's Y position.</div><div class="ttdef"><b>Definition:</b> mathplot.h:2159</div></div>
-<div class="ttc" id="aclass_math_plot_1_1mp_window_html_ae1a893c90c088bc2622bb420aa595e77"><div class="ttname"><a href="class_math_plot_1_1mp_window.html#ae1a893c90c088bc2622bb420aa595e77">MathPlot::mpWindow::GetScaleX</a></div><div class="ttdeci">double GetScaleX(void) const</div><div class="ttdoc">Get current view's X scale.</div><div class="ttdef"><b>Definition:</b> mathplot.h:2087</div></div>
-<div class="ttc" id="aclass_math_plot_1_1mp_window_html_a78b866cee3ef5ff5df91d58707ba8af3"><div class="ttname"><a href="class_math_plot_1_1mp_window.html#a78b866cee3ef5ff5df91d58707ba8af3">MathPlot::mpWindow::GetScaleY</a></div><div class="ttdeci">double GetScaleY(bool Y2=false) const</div><div class="ttdoc">Get current view's Y scale.</div><div class="ttdef"><b>Definition:</b> mathplot.h:2106</div></div>
-<div class="ttc" id="aclass_math_plot_1_1mp_window_html_a7d4ee5c67898708fc9a10479630746a6"><div class="ttname"><a href="class_math_plot_1_1mp_window.html#a7d4ee5c67898708fc9a10479630746a6">MathPlot::mpWindow::GetPosX</a></div><div class="ttdeci">double GetPosX(void) const</div><div class="ttdoc">Get current view's X position.</div><div class="ttdef"><b>Definition:</b> mathplot.h:2140</div></div>
+<div class="ttc" id="aclass_math_plot_1_1mp_window_html_a03a05877ac0cc0a96b172c7b2728f205"><div class="ttname"><a href="class_math_plot_1_1mp_window.html#a03a05877ac0cc0a96b172c7b2728f205">MathPlot::mpWindow::GetPosY</a></div><div class="ttdeci">double GetPosY(bool Y2=false) const</div><div class="ttdoc">Get current view's Y position.</div><div class="ttdef"><b>Definition:</b> mathplot.h:2093</div></div>
+<div class="ttc" id="aclass_math_plot_1_1mp_window_html_ae1a893c90c088bc2622bb420aa595e77"><div class="ttname"><a href="class_math_plot_1_1mp_window.html#ae1a893c90c088bc2622bb420aa595e77">MathPlot::mpWindow::GetScaleX</a></div><div class="ttdeci">double GetScaleX(void) const</div><div class="ttdoc">Get current view's X scale.</div><div class="ttdef"><b>Definition:</b> mathplot.h:2021</div></div>
+<div class="ttc" id="aclass_math_plot_1_1mp_window_html_a78b866cee3ef5ff5df91d58707ba8af3"><div class="ttname"><a href="class_math_plot_1_1mp_window.html#a78b866cee3ef5ff5df91d58707ba8af3">MathPlot::mpWindow::GetScaleY</a></div><div class="ttdeci">double GetScaleY(bool Y2=false) const</div><div class="ttdoc">Get current view's Y scale.</div><div class="ttdef"><b>Definition:</b> mathplot.h:2040</div></div>
+<div class="ttc" id="aclass_math_plot_1_1mp_window_html_a7d4ee5c67898708fc9a10479630746a6"><div class="ttname"><a href="class_math_plot_1_1mp_window.html#a7d4ee5c67898708fc9a10479630746a6">MathPlot::mpWindow::GetPosX</a></div><div class="ttdeci">double GetPosX(void) const</div><div class="ttdoc">Get current view's X position.</div><div class="ttdef"><b>Definition:</b> mathplot.h:2074</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by&#160;<a href="http://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.8.20

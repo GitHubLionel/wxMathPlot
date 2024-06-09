@@ -1100,13 +1100,11 @@ void MathPlotConfigDialog::UpdateSelectedSerie(void)
 
     cbSeriesStep->SetValue(CurrentSerie->GetStep());
 
-    mpFunctionType func;
-    CheckBar = (CurrentSerie->IsFunction(&func) && ((func == mpfFXYVector) || (func == mpfBar)));
-
+    CheckBar = (CurrentSerie->GetLayerSubType() == mpfFXYVector);
     if (CheckBar)
     {
       cbBar->Enable();
-      cbBar->SetValue(func == mpfBar);
+      cbBar->SetValue(((mpFXY*)CurrentSerie)->ViewAsBar());
     }
     else
     {

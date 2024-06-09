@@ -102,12 +102,9 @@ virtual double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" 
 virtual double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_movable_object.html#a3d13e9ad902e6d0886c36b569b8f1f50">GetMaxY</a> ()</td></tr>
 <tr class="memdesc:a3d13e9ad902e6d0886c36b569b8f1f50"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get inclusive top border of bounding box. <br /></td></tr>
 <tr class="separator:a3d13e9ad902e6d0886c36b569b8f1f50"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaf011efe39378cfda76132115c76d485"><td class="memItemLeft" align="right" valign="top"><a id="aaf011efe39378cfda76132115c76d485"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>DoPlot</b> (wxDC &amp;dc, <a class="el" href="class_math_plot_1_1mp_window.html">mpWindow</a> &amp;w)</td></tr>
+<tr class="memitem:aaf011efe39378cfda76132115c76d485"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_movable_object.html#aaf011efe39378cfda76132115c76d485">DoPlot</a> (wxDC &amp;dc, <a class="el" href="class_math_plot_1_1mp_window.html">mpWindow</a> &amp;w)</td></tr>
+<tr class="memdesc:aaf011efe39378cfda76132115c76d485"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pure virtual method to plot the layer.  <a href="class_math_plot_1_1mp_movable_object.html#aaf011efe39378cfda76132115c76d485">More...</a><br /></td></tr>
 <tr class="separator:aaf011efe39378cfda76132115c76d485"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a54522b1c234dbf34bbdb06881d91de39"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_movable_object.html#a54522b1c234dbf34bbdb06881d91de39">IsFunction</a> (mpFunctionType *function)</td></tr>
-<tr class="memdesc:a54522b1c234dbf34bbdb06881d91de39"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specifies that this is a FX layer.  <a href="class_math_plot_1_1mp_movable_object.html#a54522b1c234dbf34bbdb06881d91de39">More...</a><br /></td></tr>
-<tr class="separator:a54522b1c234dbf34bbdb06881d91de39"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_class_math_plot_1_1mp_function"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_class_math_plot_1_1mp_function')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="class_math_plot_1_1mp_function.html">MathPlot::mpFunction</a></td></tr>
 <tr class="memitem:a23ed60d85cd9cfbf2df3bc62c23915c7 inherit pub_methods_class_math_plot_1_1mp_function"><td class="memItemLeft" align="right" valign="top"><a id="a23ed60d85cd9cfbf2df3bc62c23915c7"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_function.html#a23ed60d85cd9cfbf2df3bc62c23915c7">mpFunction</a> (const wxString &amp;name=wxEmptyString, bool useY2Axis=false)</td></tr>
@@ -155,18 +152,15 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_layer.html#a2b5f567008f1268bb6d31ed3ddc839fc">GetBBox</a> (<a class="el" href="union_math_plot_1_1mp_float_rect.html">mpFloatRect</a> *m_bound)</td></tr>
 <tr class="memdesc:a2b5f567008f1268bb6d31ed3ddc839fc inherit pub_methods_class_math_plot_1_1mp_layer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the bounding box, ie minX, maxX, minY and maxY of the object Here we don't use extra Y2 values. <br /></td></tr>
 <tr class="separator:a2b5f567008f1268bb6d31ed3ddc839fc inherit pub_methods_class_math_plot_1_1mp_layer"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4303a6e2e6a9ece63869a8749632baf8 inherit pub_methods_class_math_plot_1_1mp_layer"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_layer.html#a4303a6e2e6a9ece63869a8749632baf8">IsInfo</a> (mpInfoType *info)</td></tr>
-<tr class="memdesc:a4303a6e2e6a9ece63869a8749632baf8 inherit pub_methods_class_math_plot_1_1mp_layer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check whether the layer is a special object.  <a href="class_math_plot_1_1mp_layer.html#a4303a6e2e6a9ece63869a8749632baf8">More...</a><br /></td></tr>
-<tr class="separator:a4303a6e2e6a9ece63869a8749632baf8 inherit pub_methods_class_math_plot_1_1mp_layer"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a89da9a4bb00f87d8416e5de3ba7e7645 inherit pub_methods_class_math_plot_1_1mp_layer"><td class="memItemLeft" align="right" valign="top"><a id="a89da9a4bb00f87d8416e5de3ba7e7645"></a>
-virtual bool&#160;</td><td class="memItemRight" valign="bottom"><b>IsScale</b> (mpScaleType *scale)</td></tr>
-<tr class="separator:a89da9a4bb00f87d8416e5de3ba7e7645 inherit pub_methods_class_math_plot_1_1mp_layer"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a312abfb0cd26271f8c5991c609443a59 inherit pub_methods_class_math_plot_1_1mp_layer"><td class="memItemLeft" align="right" valign="top"><a id="a312abfb0cd26271f8c5991c609443a59"></a>
-virtual bool&#160;</td><td class="memItemRight" valign="bottom"><b>IsText</b> ()</td></tr>
-<tr class="separator:a312abfb0cd26271f8c5991c609443a59 inherit pub_methods_class_math_plot_1_1mp_layer"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae00c7d4b36be26aeeb5299a4fbc17365 inherit pub_methods_class_math_plot_1_1mp_layer"><td class="memItemLeft" align="right" valign="top"><a id="ae00c7d4b36be26aeeb5299a4fbc17365"></a>
-virtual bool&#160;</td><td class="memItemRight" valign="bottom"><b>IsTitle</b> ()</td></tr>
-<tr class="separator:ae00c7d4b36be26aeeb5299a4fbc17365 inherit pub_methods_class_math_plot_1_1mp_layer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa3a17628172c670e7b83768cce3952e4 inherit pub_methods_class_math_plot_1_1mp_layer"><td class="memItemLeft" align="right" valign="top">mpLayerType&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_layer.html#aa3a17628172c670e7b83768cce3952e4">GetLayerType</a> () const</td></tr>
+<tr class="memdesc:aa3a17628172c670e7b83768cce3952e4 inherit pub_methods_class_math_plot_1_1mp_layer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get layer type: a Layer can be of different types: plot, lines, axis, info boxes, etc, this method returns the right value.  <a href="class_math_plot_1_1mp_layer.html#aa3a17628172c670e7b83768cce3952e4">More...</a><br /></td></tr>
+<tr class="separator:aa3a17628172c670e7b83768cce3952e4 inherit pub_methods_class_math_plot_1_1mp_layer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a597b30a93757349a9b7181280057b89f inherit pub_methods_class_math_plot_1_1mp_layer"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_layer.html#a597b30a93757349a9b7181280057b89f">GetLayerSubType</a> () const</td></tr>
+<tr class="memdesc:a597b30a93757349a9b7181280057b89f inherit pub_methods_class_math_plot_1_1mp_layer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get layer subtype: each layer type can have several flavors.  <a href="class_math_plot_1_1mp_layer.html#a597b30a93757349a9b7181280057b89f">More...</a><br /></td></tr>
+<tr class="separator:a597b30a93757349a9b7181280057b89f inherit pub_methods_class_math_plot_1_1mp_layer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a244c4f7c1edeed6871fda25904cdd33f inherit pub_methods_class_math_plot_1_1mp_layer"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_layer.html#a244c4f7c1edeed6871fda25904cdd33f">IsLayerType</a> (mpLayerType type, int *sub_type)</td></tr>
+<tr class="memdesc:a244c4f7c1edeed6871fda25904cdd33f inherit pub_methods_class_math_plot_1_1mp_layer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specifies that if the layer is of type "type".  <a href="class_math_plot_1_1mp_layer.html#a244c4f7c1edeed6871fda25904cdd33f">More...</a><br /></td></tr>
+<tr class="separator:a244c4f7c1edeed6871fda25904cdd33f inherit pub_methods_class_math_plot_1_1mp_layer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a13fa2fdda9c7db573c498a6d1a6486a3 inherit pub_methods_class_math_plot_1_1mp_layer"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_layer.html#a13fa2fdda9c7db573c498a6d1a6486a3">Plot</a> (wxDC &amp;dc, <a class="el" href="class_math_plot_1_1mp_window.html">mpWindow</a> &amp;w)</td></tr>
 <tr class="memdesc:a13fa2fdda9c7db573c498a6d1a6486a3 inherit pub_methods_class_math_plot_1_1mp_layer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Plot given view of layer to the given device context.  <a href="class_math_plot_1_1mp_layer.html#a13fa2fdda9c7db573c498a6d1a6486a3">More...</a><br /></td></tr>
 <tr class="separator:a13fa2fdda9c7db573c498a6d1a6486a3 inherit pub_methods_class_math_plot_1_1mp_layer"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -207,9 +201,9 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 <tr class="memitem:a911f1c66690a9f113864f8f77b692ad2 inherit pub_methods_class_math_plot_1_1mp_layer"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_layer.html#a911f1c66690a9f113864f8f77b692ad2">SetShowName</a> (bool show)</td></tr>
 <tr class="memdesc:a911f1c66690a9f113864f8f77b692ad2 inherit pub_methods_class_math_plot_1_1mp_layer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set Name visibility.  <a href="class_math_plot_1_1mp_layer.html#a911f1c66690a9f113864f8f77b692ad2">More...</a><br /></td></tr>
 <tr class="separator:a911f1c66690a9f113864f8f77b692ad2 inherit pub_methods_class_math_plot_1_1mp_layer"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9eacc0601f8bfa337fc052e47048e330 inherit pub_methods_class_math_plot_1_1mp_layer"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_layer.html#a9eacc0601f8bfa337fc052e47048e330">GetShowName</a> ()</td></tr>
-<tr class="memdesc:a9eacc0601f8bfa337fc052e47048e330 inherit pub_methods_class_math_plot_1_1mp_layer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get Name visibility.  <a href="class_math_plot_1_1mp_layer.html#a9eacc0601f8bfa337fc052e47048e330">More...</a><br /></td></tr>
-<tr class="separator:a9eacc0601f8bfa337fc052e47048e330 inherit pub_methods_class_math_plot_1_1mp_layer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae0a94accb2124722cc3783b625628f59 inherit pub_methods_class_math_plot_1_1mp_layer"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_layer.html#ae0a94accb2124722cc3783b625628f59">GetShowName</a> () const</td></tr>
+<tr class="memdesc:ae0a94accb2124722cc3783b625628f59 inherit pub_methods_class_math_plot_1_1mp_layer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get Name visibility.  <a href="class_math_plot_1_1mp_layer.html#ae0a94accb2124722cc3783b625628f59">More...</a><br /></td></tr>
+<tr class="separator:ae0a94accb2124722cc3783b625628f59 inherit pub_methods_class_math_plot_1_1mp_layer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6cac0c7dbd87e1bc9d6e859e542732d3 inherit pub_methods_class_math_plot_1_1mp_layer"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_layer.html#a6cac0c7dbd87e1bc9d6e859e542732d3">SetDrawOutsideMargins</a> (bool drawModeOutside)</td></tr>
 <tr class="memdesc:a6cac0c7dbd87e1bc9d6e859e542732d3 inherit pub_methods_class_math_plot_1_1mp_layer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set Draw mode: inside or outside margins.  <a href="class_math_plot_1_1mp_layer.html#a6cac0c7dbd87e1bc9d6e859e542732d3">More...</a><br /></td></tr>
 <tr class="separator:a6cac0c7dbd87e1bc9d6e859e542732d3 inherit pub_methods_class_math_plot_1_1mp_layer"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -219,18 +213,15 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 <tr class="memitem:a513a1d20cc7e3927b2415382737c577c inherit pub_methods_class_math_plot_1_1mp_layer"><td class="memItemLeft" align="right" valign="top">wxBitmap&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_layer.html#a513a1d20cc7e3927b2415382737c577c">GetColourSquare</a> (int side=16)</td></tr>
 <tr class="memdesc:a513a1d20cc7e3927b2415382737c577c inherit pub_methods_class_math_plot_1_1mp_layer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a small square bitmap filled with the colour of the pen used in the layer.  <a href="class_math_plot_1_1mp_layer.html#a513a1d20cc7e3927b2415382737c577c">More...</a><br /></td></tr>
 <tr class="separator:a513a1d20cc7e3927b2415382737c577c inherit pub_methods_class_math_plot_1_1mp_layer"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa3a17628172c670e7b83768cce3952e4 inherit pub_methods_class_math_plot_1_1mp_layer"><td class="memItemLeft" align="right" valign="top">mpLayerType&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_layer.html#aa3a17628172c670e7b83768cce3952e4">GetLayerType</a> () const</td></tr>
-<tr class="memdesc:aa3a17628172c670e7b83768cce3952e4 inherit pub_methods_class_math_plot_1_1mp_layer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get layer type: a Layer can be of different types: plot lines, axis, info boxes, etc, this method returns the right value.  <a href="class_math_plot_1_1mp_layer.html#aa3a17628172c670e7b83768cce3952e4">More...</a><br /></td></tr>
-<tr class="separator:aa3a17628172c670e7b83768cce3952e4 inherit pub_methods_class_math_plot_1_1mp_layer"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a03b5bb737439f239ad9a4f9910950fdf inherit pub_methods_class_math_plot_1_1mp_layer"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_layer.html#a03b5bb737439f239ad9a4f9910950fdf">IsVisible</a> ()</td></tr>
-<tr class="memdesc:a03b5bb737439f239ad9a4f9910950fdf inherit pub_methods_class_math_plot_1_1mp_layer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether the layer is visible or not.  <a href="class_math_plot_1_1mp_layer.html#a03b5bb737439f239ad9a4f9910950fdf">More...</a><br /></td></tr>
-<tr class="separator:a03b5bb737439f239ad9a4f9910950fdf inherit pub_methods_class_math_plot_1_1mp_layer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1f1155622a4fffe57f03bc8df172f060 inherit pub_methods_class_math_plot_1_1mp_layer"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_layer.html#a1f1155622a4fffe57f03bc8df172f060">IsVisible</a> () const</td></tr>
+<tr class="memdesc:a1f1155622a4fffe57f03bc8df172f060 inherit pub_methods_class_math_plot_1_1mp_layer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether the layer is visible or not.  <a href="class_math_plot_1_1mp_layer.html#a1f1155622a4fffe57f03bc8df172f060">More...</a><br /></td></tr>
+<tr class="separator:a1f1155622a4fffe57f03bc8df172f060 inherit pub_methods_class_math_plot_1_1mp_layer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a387d1d3deedda256a314c490a1d45be2 inherit pub_methods_class_math_plot_1_1mp_layer"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_layer.html#a387d1d3deedda256a314c490a1d45be2">SetVisible</a> (bool show)</td></tr>
 <tr class="memdesc:a387d1d3deedda256a314c490a1d45be2 inherit pub_methods_class_math_plot_1_1mp_layer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets layer visibility.  <a href="class_math_plot_1_1mp_layer.html#a387d1d3deedda256a314c490a1d45be2">More...</a><br /></td></tr>
 <tr class="separator:a387d1d3deedda256a314c490a1d45be2 inherit pub_methods_class_math_plot_1_1mp_layer"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a98833de4122a3552b1d4a597cd94c1a7 inherit pub_methods_class_math_plot_1_1mp_layer"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_layer.html#a98833de4122a3552b1d4a597cd94c1a7">IsTractable</a> ()</td></tr>
-<tr class="memdesc:a98833de4122a3552b1d4a597cd94c1a7 inherit pub_methods_class_math_plot_1_1mp_layer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether the layer is tractable or not.  <a href="class_math_plot_1_1mp_layer.html#a98833de4122a3552b1d4a597cd94c1a7">More...</a><br /></td></tr>
-<tr class="separator:a98833de4122a3552b1d4a597cd94c1a7 inherit pub_methods_class_math_plot_1_1mp_layer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac5044bf84914bc65bd6478fc418a6a71 inherit pub_methods_class_math_plot_1_1mp_layer"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_layer.html#ac5044bf84914bc65bd6478fc418a6a71">IsTractable</a> () const</td></tr>
+<tr class="memdesc:ac5044bf84914bc65bd6478fc418a6a71 inherit pub_methods_class_math_plot_1_1mp_layer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether the layer is tractable or not.  <a href="class_math_plot_1_1mp_layer.html#ac5044bf84914bc65bd6478fc418a6a71">More...</a><br /></td></tr>
+<tr class="separator:ac5044bf84914bc65bd6478fc418a6a71 inherit pub_methods_class_math_plot_1_1mp_layer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a69fe10fa6595c649b0a6b84b09df40f2 inherit pub_methods_class_math_plot_1_1mp_layer"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_layer.html#a69fe10fa6595c649b0a6b84b09df40f2">SetTractable</a> (bool track)</td></tr>
 <tr class="memdesc:a69fe10fa6595c649b0a6b84b09df40f2 inherit pub_methods_class_math_plot_1_1mp_layer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets layer tractability.  <a href="class_math_plot_1_1mp_layer.html#a69fe10fa6595c649b0a6b84b09df40f2">More...</a><br /></td></tr>
 <tr class="separator:a69fe10fa6595c649b0a6b84b09df40f2 inherit pub_methods_class_math_plot_1_1mp_layer"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -246,9 +237,9 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 <tr class="memitem:a84ca557733ca675c262667ec067f79ce inherit pub_methods_class_math_plot_1_1mp_layer"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_layer.html#a84ca557733ca675c262667ec067f79ce">GetCanDelete</a> (void) const</td></tr>
 <tr class="memdesc:a84ca557733ca675c262667ec067f79ce inherit pub_methods_class_math_plot_1_1mp_layer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get CanDelete for plot.  <a href="class_math_plot_1_1mp_layer.html#a84ca557733ca675c262667ec067f79ce">More...</a><br /></td></tr>
 <tr class="separator:a84ca557733ca675c262667ec067f79ce inherit pub_methods_class_math_plot_1_1mp_layer"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0cf8536599223a181e3346d09ad82877 inherit pub_methods_class_math_plot_1_1mp_layer"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_math_plot.html#a9184999e26cf5531b6ca0d992107d55d">mpLayerZOrder</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_layer.html#a0cf8536599223a181e3346d09ad82877">GetZIndex</a> (void)</td></tr>
-<tr class="memdesc:a0cf8536599223a181e3346d09ad82877 inherit pub_methods_class_math_plot_1_1mp_layer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the ZIndex of the plot.  <a href="class_math_plot_1_1mp_layer.html#a0cf8536599223a181e3346d09ad82877">More...</a><br /></td></tr>
-<tr class="separator:a0cf8536599223a181e3346d09ad82877 inherit pub_methods_class_math_plot_1_1mp_layer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a406352adc509b7bb0d8c5775d1625185 inherit pub_methods_class_math_plot_1_1mp_layer"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_math_plot.html#a9184999e26cf5531b6ca0d992107d55d">mpLayerZOrder</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_layer.html#a406352adc509b7bb0d8c5775d1625185">GetZIndex</a> (void) const</td></tr>
+<tr class="memdesc:a406352adc509b7bb0d8c5775d1625185 inherit pub_methods_class_math_plot_1_1mp_layer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the ZIndex of the plot.  <a href="class_math_plot_1_1mp_layer.html#a406352adc509b7bb0d8c5775d1625185">More...</a><br /></td></tr>
+<tr class="separator:a406352adc509b7bb0d8c5775d1625185 inherit pub_methods_class_math_plot_1_1mp_layer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
@@ -337,6 +328,10 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 mpLayerType&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_layer.html#ad7265c8d70efb1ce36b1fde5c0399de4">m_type</a></td></tr>
 <tr class="memdesc:ad7265c8d70efb1ce36b1fde5c0399de4 inherit pro_attribs_class_math_plot_1_1mp_layer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Define layer type, which is assigned by constructor. <br /></td></tr>
 <tr class="separator:ad7265c8d70efb1ce36b1fde5c0399de4 inherit pro_attribs_class_math_plot_1_1mp_layer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a277956aa22d6c1c348c77b8b646f5fa1 inherit pro_attribs_class_math_plot_1_1mp_layer"><td class="memItemLeft" align="right" valign="top"><a id="a277956aa22d6c1c348c77b8b646f5fa1"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_layer.html#a277956aa22d6c1c348c77b8b646f5fa1">m_subtype</a></td></tr>
+<tr class="memdesc:a277956aa22d6c1c348c77b8b646f5fa1 inherit pro_attribs_class_math_plot_1_1mp_layer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Define layer sub type, which is assigned by constructor. <br /></td></tr>
+<tr class="separator:a277956aa22d6c1c348c77b8b646f5fa1 inherit pro_attribs_class_math_plot_1_1mp_layer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a05e3e813b5b9530eb10f4b254dabe692 inherit pro_attribs_class_math_plot_1_1mp_layer"><td class="memItemLeft" align="right" valign="top"><a id="a05e3e813b5b9530eb10f4b254dabe692"></a>
 wxFont&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_layer.html#a05e3e813b5b9530eb10f4b254dabe692">m_font</a></td></tr>
 <tr class="memdesc:a05e3e813b5b9530eb10f4b254dabe692 inherit pro_attribs_class_math_plot_1_1mp_layer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Layer's font. <br /></td></tr>
@@ -394,6 +389,47 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <div class="textblock"><p>This virtual class represents objects that can be moved to an arbitrary 2D location+rotation. </p>
 <p>The current transformation is set through SetCoordinateBase. To ease the implementation of descendent classes, <a class="el" href="class_math_plot_1_1mp_movable_object.html" title="This virtual class represents objects that can be moved to an arbitrary 2D location+rotation.">mpMovableObject</a> will be in charge of Bounding Box computation and layer rendering, assuming that the object updates its shape in m_shape_xs &amp; m_shape_ys. We derive from <a class="el" href="class_math_plot_1_1mp_function.html" title="Plot layer implementing an abstract function class.">mpFunction</a> to have symbol and continuity properties </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="aaf011efe39378cfda76132115c76d485"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaf011efe39378cfda76132115c76d485">&#9670;&nbsp;</a></span>DoPlot()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void mpMovableObject::DoPlot </td>
+          <td>(</td>
+          <td class="paramtype">wxDC &amp;&#160;</td>
+          <td class="paramname"><em>dc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class_math_plot_1_1mp_window.html">mpWindow</a> &amp;&#160;</td>
+          <td class="paramname"><em>w</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Pure virtual method to plot the layer. </p>
+<p>Must be overidden and implemented by derived classes. </p>
+
+<p>Implements <a class="el" href="class_math_plot_1_1mp_layer.html#a33078b7dae13a53ea735d179c530e7c7">MathPlot::mpLayer</a>.</p>
+
+</div>
+</div>
 <a id="a6cc3439df3f9842de499cac4bd73a6cf"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6cc3439df3f9842de499cac4bd73a6cf">&#9670;&nbsp;</a></span>HasBBox()</h2>
 
@@ -427,38 +463,6 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 </dl>
 
 <p>Reimplemented from <a class="el" href="class_math_plot_1_1mp_layer.html#aaffbe6ee67545c8741f5a2dd1dd5dc5c">MathPlot::mpLayer</a>.</p>
-
-</div>
-</div>
-<a id="a54522b1c234dbf34bbdb06881d91de39"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a54522b1c234dbf34bbdb06881d91de39">&#9670;&nbsp;</a></span>IsFunction()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual bool MathPlot::mpMovableObject::IsFunction </td>
-          <td>(</td>
-          <td class="paramtype">mpFunctionType *&#160;</td>
-          <td class="paramname"><em>function</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Specifies that this is a FX layer. </p>
-<dl class="section return"><dt>Returns</dt><dd>always <em>TRUE</em> </dd></dl>
-<dl class="section see"><dt>See also</dt><dd>mpLayer::IsFonction </dd></dl>
-
-<p>Reimplemented from <a class="el" href="class_math_plot_1_1mp_layer.html">MathPlot::mpLayer</a>.</p>
 
 </div>
 </div>

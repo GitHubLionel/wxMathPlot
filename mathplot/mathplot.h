@@ -6,7 +6,7 @@
 // Contributors:    Jose Luis Blanco, Val Greene, Lionel Reynaud
 // Created:         21/07/2003
 // Last edit:       22/02/2009
-// Last edit:       16/06/2023
+// Last edit:       05/06/2024
 // Copyright:       (c) David Schalig, Davide Rondini
 // Licence:         wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -179,6 +179,12 @@ typedef union
     wxCoord tab[4];
 } mpRect;
 
+/**
+ * A structure used for the computation of bounds in real unit (not in screen pixel)
+ * X refer to X axis
+ * Y refer to Y axis
+ * Y2 refer to Y2 axis when it is defined
+ */
 typedef union
 {
     struct
@@ -290,6 +296,13 @@ typedef enum __Info_Type
   mpiLegend
 } mpInfoType;
 
+typedef enum __Text_Type
+{
+  mptNone,
+  mptText,
+  mptTitle
+} mpTextType;
+
 typedef enum __Function_Type
 {
   mpfNone,
@@ -297,8 +310,8 @@ typedef enum __Function_Type
   mpfFY,
   mpfFXY,
   mpfFXYVector,
-  mpfBar,
   mpfMovable,
+  mpfLine,
   mpfAllType
 } mpFunctionType;
 
@@ -320,6 +333,7 @@ typedef enum __mp_Layer_Type
   mpLAYER_AXIS,    //!< Axis type layer
   mpLAYER_PLOT,    //!< Plot type layer
   mpLAYER_INFO,    //!< Info box type layer
+  mpLAYER_TEXT,    //!< Text box type layer
   mpLAYER_BITMAP,  //!< Bitmap type layer
   mpLAYER_LINE     //!< Line (horizontal or vertical) type layer
 } mpLayerType;
@@ -386,36 +400,33 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
      */
     virtual void GetBBox(mpFloatRect *m_bound);
 
-    /** Check whether the layer is a special object.
-     The default implementation returns \a FALSE. It is overrided to \a TRUE in object
-     class and its derivative.
-     @return whether the layer is a specific object */
-    virtual bool IsInfo(mpInfoType *info)
+    /** Get layer type: a Layer can be of different types: plot, lines, axis, info boxes, etc,
+     this method returns the right value.
+     @return An integer indicating layer type
+     @sa mpLayer::GetLayerType */
+    mpLayerType GetLayerType() const
     {
-      *info = mpiNone;
-      return false;
+      return m_type;
     }
 
-    virtual bool IsFunction(mpFunctionType *function)
+    /** Get layer subtype: each layer type can have several flavors.
+     @return An integer indicating layer subtype
+     @sa mpLayer::GetLayerSubType */
+    int GetLayerSubType() const
     {
-      *function = mpfNone;
-      return false;
+      return m_subtype;
     }
 
-    virtual bool IsScale(mpScaleType *scale)
+    /** Specifies that if the layer is of type "type".
+     if true then get the subtype
+     @param type
+     @param subtype
+     @sa mpLayer::IsLayerType
+     */
+    virtual bool IsLayerType(mpLayerType type, int *sub_type)
     {
-      *scale = mpsScaleNone;
-      return false;
-    }
-
-    virtual bool IsText()
-    {
-      return false;
-    }
-
-    virtual bool IsTitle()
-    {
-      return false;
+      *sub_type = m_subtype;
+      return (m_type == type);
     }
 
     /** Get inclusive left border of bounding box.
@@ -493,6 +504,10 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
      */
     void Plot(wxDC &dc, mpWindow &w);
 
+    /**
+     * Pure virtual method to plot the layer.
+     * Must be overidden and implemented by derived classes.
+     */
     virtual void DoPlot(wxDC &dc, mpWindow &w) = 0;
 
     /**
@@ -593,7 +608,7 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
 
     /** Get Name visibility.
      @return \a true if visible */
-    inline bool GetShowName()
+    inline bool GetShowName() const
     {
       return m_showName;
     }
@@ -618,17 +633,9 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
      @return a wxBitmap filled with layer's colour */
     wxBitmap GetColourSquare(int side = 16);
 
-    /** Get layer type: a Layer can be of different types: plot lines, axis, info boxes, etc,
-     this method returns the right value.
-     @return An integer indicating layer type */
-    mpLayerType GetLayerType() const
-    {
-      return m_type;
-    }
-
     /** Checks whether the layer is visible or not.
      @return \a true if visible */
-    inline bool IsVisible()
+    inline bool IsVisible() const
     {
       return m_visible;
     }
@@ -642,7 +649,7 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
 
     /** Checks whether the layer is tractable or not.
      @return \a true if visible */
-    inline bool IsTractable()
+    inline bool IsTractable() const
     {
       return m_tractable;
     }
@@ -684,7 +691,7 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
 
     /** Get the ZIndex of the plot.
      @return m_ZIndex*/
-    mpLayerZOrder GetZIndex(void)
+    mpLayerZOrder GetZIndex(void) const
     {
       return m_ZIndex;
     }
@@ -692,6 +699,7 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
   protected:
     mpWindow* m_win;            //!< The wxWindow handle
     mpLayerType m_type;         //!< Define layer type, which is assigned by constructor
+    int m_subtype;              //!< Define layer sub type, which is assigned by constructor
     wxFont m_font;              //!< Layer's font
     wxColour m_fontcolour;      //!< Layer's font foreground colour
     wxPen m_pen;                //!< Layer's pen. Default Colour = Black, width = 1, style = wxPENSTYLE_SOLID
@@ -758,15 +766,6 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLayer: public mpLayer
      @param w the window to plot
      @sa mpLayer::Plot */
     virtual void DoPlot(wxDC &dc, mpWindow &w);
-
-    /** Specifies that this is an Info box layer.
-     @return always \a TRUE
-     @sa mpLayer::IsInfo */
-    virtual bool IsInfo(mpInfoType *info)
-    {
-      *info = mpiInfo;
-      return true;
-    }
 
     /** Checks whether a point is inside the info box rectangle.
      @param point The point to be checked
@@ -873,15 +872,6 @@ class WXDLLIMPEXP_MATHPLOT mpInfoCoords: public mpInfoLayer
       m_timeConv = time_conv;
     }
 
-    /** Specifies that this is an InfoCoords box layer.
-     @return always \a TRUE
-     @sa mpLayer::IsInfoCoords */
-    virtual bool IsInfo(mpInfoType *info)
-    {
-      *info = mpiCoords;
-      return true;
-    }
-
     /** Set the series coordinates of the mouse position (if tractable set)
      */
     void SetSeriesCoord(bool show)
@@ -973,15 +963,6 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLegend: public mpInfoLayer
     }
 
     int GetPointed(mpWindow &w, wxPoint eventPoint);
-
-    /** Specifies that this is an InfoLegend box layer.
-     @return always \a TRUE
-     @sa mpLayer::IsInfoLegend */
-    virtual bool IsInfo(mpInfoType *info)
-    {
-      *info = mpiLegend;
-      return true;
-    }
 
   protected:
     wxBitmap* m_legend_bmp;
@@ -1228,15 +1209,6 @@ class WXDLLIMPEXP_MATHPLOT mpFX: public mpFunction
      */
     virtual void DoPlot(wxDC &dc, mpWindow &w);
 
-    /** Specifies that this is a FX layer.
-     @return always \a TRUE
-     @sa mpLayer::IsFonction*/
-    virtual bool IsFunction(mpFunctionType *function)
-    {
-      *function = mpfFX;
-      return true;
-    }
-
   protected:
 
   DECLARE_DYNAMIC_CLASS(mpFX)
@@ -1273,15 +1245,6 @@ class WXDLLIMPEXP_MATHPLOT mpFY: public mpFunction
      put a label according to the aligment specified.
      */
     virtual void DoPlot(wxDC &dc, mpWindow &w);
-
-    /** Specifies that this is a FY layer.
-     @return always \a TRUE
-     @sa mpLayer::IsFunction */
-    virtual bool IsFunction(mpFunctionType *function)
-    {
-      *function = mpfFY;
-      return true;
-    }
 
   protected:
 
@@ -1336,15 +1299,6 @@ class WXDLLIMPEXP_MATHPLOT mpFXY: public mpFunction
      */
     virtual void DoPlot(wxDC &dc, mpWindow &w);
 
-    /** Specifies that this is a FXY layer.
-     @return always \a TRUE
-     @sa mpLayer::IsFunction */
-    virtual bool IsFunction(mpFunctionType *function)
-    {
-      *function = mpfFXY;
-      return true;
-    }
-
     /**
      * If true, XY series is plotted as bar
      */
@@ -1356,6 +1310,14 @@ class WXDLLIMPEXP_MATHPLOT mpFXY: public mpFunction
     int GetBarWidth(void) const
     {
       return m_BarWidth;
+    }
+
+    /**
+     * return true if XY serie is ploted with bar
+     */
+    bool ViewAsBar(void) const
+    {
+      return m_ViewAsBar;
     }
 
   protected:
@@ -1459,18 +1421,6 @@ class WXDLLIMPEXP_MATHPLOT mpFXYVector: public mpFXY
     int GetReserve() const
     {
       return m_reserveXY;
-    }
-
-    /** Specifies that this is a FXYVector layer.
-     @return always \a TRUE
-     @sa mpLayer::IsFunction */
-    virtual bool IsFunction(mpFunctionType *function)
-    {
-      if (m_ViewAsBar)
-        *function = mpfBar;
-      else
-        *function = mpfFXYVector;
-      return true;
     }
 
   protected:
@@ -1746,6 +1696,7 @@ class WXDLLIMPEXP_MATHPLOT mpScaleX: public mpScale
     mpScaleX(const wxString &name = _T("X"), int flags = mpALIGN_CENTERX, bool grids = false, unsigned int type = mpX_NORMAL) :
         mpScale(name, flags, grids)
     {
+      m_subtype = mpsScaleX;
       m_labelType = type;
       m_timeConv = mpX_RAWTIME;
     }
@@ -1773,15 +1724,6 @@ class WXDLLIMPEXP_MATHPLOT mpScaleX: public mpScale
     {
       m_labelType = mode;
       m_timeConv = time_conv;
-    }
-
-    /** Specifies that this is a ScaleX layer.
-     @return always \a TRUE
-     @sa mpLayer::IsScale */
-    virtual bool IsScale(mpScaleType *scale)
-    {
-      *scale = mpsScaleX;
-      return true;
     }
 
     /**
@@ -1818,21 +1760,13 @@ class WXDLLIMPEXP_MATHPLOT mpScaleY: public mpScale
     mpScaleY(const wxString &name = _T("Y"), int flags = mpALIGN_CENTERY, bool grids = false, bool Y2Axis = false) :
         mpScale(name, flags, grids)
     {
+      m_subtype = mpsScaleY;
       m_isY2Axis = Y2Axis;
     }
 
     /** Layer plot handler.
      This implementation will plot the ruler adjusted to the visible area. */
     virtual void DoPlot(wxDC &dc, mpWindow &w);
-
-    /** Specifies that this is a ScaleY layer.
-     @return always \a TRUE
-     @sa mpLayer::IsScale */
-    virtual bool IsScale(mpScaleType *scale)
-    {
-      *scale = mpsScaleY;
-      return true;
-    }
 
     /**
      * Logarithmic Y axis
@@ -1869,8 +1803,8 @@ class WXDLLIMPEXP_MATHPLOT mpScaleY: public mpScale
 
 /*@}*/
 /** Define the type for the list of layers inside mpWindow */
-//WX_DECLARE_HASH_MAP( int, mpLayer*, wxIntegerHash, wxIntegerEqual, wxLayerList );
-typedef std::deque<mpLayer*> wxLayerList;
+//WX_DECLARE_HASH_MAP( int, mpLayer*, wxIntegerHash, wxIntegerEqual, mpLayerList );
+typedef std::deque<mpLayer*> mpLayerList;
 
 /**
  * Define an event for when we delete a layer
@@ -1878,7 +1812,7 @@ typedef std::deque<mpLayer*> wxLayerList;
  *  your_plot->SetOnDeleteLayer([this](void *Sender, const wxString &classname, bool &cancel)
  {  your_event_function(Sender, classname, cancel);});
  */
-typedef std::function<void(void *Sender, const wxString &classname, bool &cancel)> wxOnDeleteLayer;
+typedef std::function<void(void *Sender, const wxString &classname, bool &cancel)> mpOnDeleteLayer;
 
 /**
  * Class for drawing mouse magnetization
@@ -2436,13 +2370,14 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     void ClipboardScreenshot(wxSize imageSize = wxDefaultSize, bool fit = false);
 
     /**
-     * Load file
+     * Load a data file like a csv file
+     * Data must be formated in 2 columns X value and Y value separated by space or ; or tab character
      */
     bool LoadFile(const wxString &filename);
 
     /** This value sets the zoom steps whenever the user clicks "Zoom in/out" or performs zoom with the mouse wheel.
      *  It must be a number above unity. This number is used for zoom in, and its inverse for zoom out. Set to 1.5 by default. */
-    static double zoomIncrementalFactor;
+    static double m_zoomIncrementalFactor;
 
     /** Set window margins, creating a blank area where some kinds of layers cannot draw.
      * This is useful for example to draw axes outside the area where the plots are drawn.
@@ -2589,7 +2524,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 
     /** On delete layer event
      @return reference to event */
-    void SetOnDeleteLayer(wxOnDeleteLayer event)
+    void SetOnDeleteLayer(mpOnDeleteLayer event)
     {
       m_OnDeleteLayer = event;
     }
@@ -2692,7 +2627,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     wxTopLevelWindow* m_parent;
     bool m_fullscreen;
 
-    wxLayerList m_layers;   //!< List of attached plot layers
+    mpLayerList m_layers;   //!< List of attached plot layers
     mpScaleX* m_XAxis;      //!< Pointer to the X axis layer
     mpScaleY* m_YAxis;      //!< Pointer to the Y axis layer
     mpScaleY* m_Y2Axis;     //!< Pointer to the Y2 axis layer
@@ -2758,7 +2693,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 
     MathPlotConfigDialog* m_configWindow = NULL;   //!< For the config dialog
 
-    wxOnDeleteLayer m_OnDeleteLayer = NULL;        //!< Event when we delete a layer
+    mpOnDeleteLayer m_OnDeleteLayer = NULL;        //!< Event when we delete a layer
 
   private:
     int m_countY2Axis = 0;
@@ -2788,7 +2723,8 @@ class WXDLLIMPEXP_MATHPLOT mpText: public mpLayer
      */
     mpText(const wxString &name = wxEmptyString)
     {
-      m_type = mpLAYER_INFO;
+      m_type = mpLAYER_TEXT;
+      m_subtype = mptText;
       SetName(name);
       m_offsetx = 5;
       m_offsety = 50;
@@ -2815,14 +2751,6 @@ class WXDLLIMPEXP_MATHPLOT mpText: public mpLayer
     virtual bool HasBBox()
     {
       return false;
-    }
-
-    /** Specifies that this is a Text layer.
-     @return always \a TRUE
-     @sa mpLayer::IsText */
-    virtual bool IsText()
-    {
-      return true;
     }
 
     /** Set the location of the box
@@ -2878,16 +2806,9 @@ class WXDLLIMPEXP_MATHPLOT mpTitle: public mpText
     mpTitle(const wxString &name) :
         mpText(name, mpMarginTopCenter)
     {
+      m_subtype = mptTitle;
       SetPen(*wxWHITE_PEN);
       SetBrush(*wxWHITE_BRUSH);
-    }
-
-    /** Specifies that this is a Title layer.
-     @return always \a TRUE
-     @sa mpLayer::IsTitle */
-    virtual bool IsTitle()
-    {
-      return true;
     }
 
   protected:
@@ -2963,6 +2884,7 @@ class WXDLLIMPEXP_MATHPLOT mpMovableObject: public mpFunction
         m_reference_x(0), m_reference_y(0), m_reference_phi(0), m_shape_xs(0), m_shape_ys(0)
     {
       m_type = mpLAYER_PLOT;
+      m_subtype = mpfMovable;
       m_bbox_min_x = m_bbox_max_x = 0;
       m_bbox_min_y = m_bbox_max_y = 0;
     }
@@ -3027,15 +2949,6 @@ class WXDLLIMPEXP_MATHPLOT mpMovableObject: public mpFunction
 
     virtual void DoPlot(wxDC &dc, mpWindow &w);
 
-    /** Specifies that this is a FX layer.
-     @return always \a TRUE
-     @sa mpLayer::IsFonction*/
-    virtual bool IsFunction(mpFunctionType *function)
-    {
-      *function = mpfMovable;
-      return true;
-    }
-
   protected:
 
     /** The coordinates of the object (orientation "phi" is in radians).
@@ -3089,10 +3002,9 @@ class WXDLLIMPEXP_MATHPLOT mpCovarianceEllipse: public mpMovableObject
      * Initializes to a unity diagonal covariance matrix, a 95% confidence interval (2 sigmas), 32 segments, and a continuous plot (m_continuous=true).
      */
     mpCovarianceEllipse(double cov_00 = 1, double cov_11 = 1, double cov_01 = 0, double quantiles = 2, int segments = 32,
-        const wxString &layerName = _T("")) :
+        const wxString &layerName = _T("")) : mpMovableObject(),
         m_cov_00(cov_00), m_cov_11(cov_11), m_cov_01(cov_01), m_quantiles(quantiles), m_segments(segments)
     {
-      m_type = mpLAYER_PLOT;
       m_continuous = true;
       m_name = layerName;
       RecalculateShape();
@@ -3174,7 +3086,7 @@ class WXDLLIMPEXP_MATHPLOT mpPolygon: public mpMovableObject
   public:
     /** Default constructor.
      */
-    mpPolygon(const wxString &layerName = _T(""))
+    mpPolygon(const wxString &layerName = _T("")) : mpMovableObject()
     {
       m_continuous = true;
       m_name = layerName;

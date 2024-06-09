@@ -266,7 +266,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="separator:abd14dfd38768171f567f116630256891"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a08570919d051e11827c4b3412a6658be"><td class="memItemLeft" align="right" valign="top"><a id="a08570919d051e11827c4b3412a6658be"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_window.html#a08570919d051e11827c4b3412a6658be">LoadFile</a> (const wxString &amp;filename)</td></tr>
-<tr class="memdesc:a08570919d051e11827c4b3412a6658be"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load file. <br /></td></tr>
+<tr class="memdesc:a08570919d051e11827c4b3412a6658be"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load a data file like a csv file Data must be formated in 2 columns X value and Y value separated by space or ; or tab character. <br /></td></tr>
 <tr class="separator:a08570919d051e11827c4b3412a6658be"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a31f302c5a5d89e16b135a4bc5919d61c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_window.html#a31f302c5a5d89e16b135a4bc5919d61c">SetMargins</a> (int top, int right, int bottom, int left)</td></tr>
 <tr class="memdesc:a31f302c5a5d89e16b135a4bc5919d61c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set window margins, creating a blank area where some kinds of layers cannot draw.  <a href="class_math_plot_1_1mp_window.html#a31f302c5a5d89e16b135a4bc5919d61c">More...</a><br /></td></tr>
@@ -342,9 +342,9 @@ const wxColour &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>Getbg
 <tr class="memitem:afc2ae7c410334f9c1a1c2ece1347dd44"><td class="memItemLeft" align="right" valign="top"><a id="afc2ae7c410334f9c1a1c2ece1347dd44"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>SetbgColour</b> (const wxColour &amp;colour)</td></tr>
 <tr class="separator:afc2ae7c410334f9c1a1c2ece1347dd44"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad495e6de084f8f33d19a654eafb72284"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_window.html#ad495e6de084f8f33d19a654eafb72284">SetOnDeleteLayer</a> (<a class="el" href="namespace_math_plot.html#a480f6cb1056e00d0a560071e605e8548">wxOnDeleteLayer</a> event)</td></tr>
-<tr class="memdesc:ad495e6de084f8f33d19a654eafb72284"><td class="mdescLeft">&#160;</td><td class="mdescRight">On delete layer event.  <a href="class_math_plot_1_1mp_window.html#ad495e6de084f8f33d19a654eafb72284">More...</a><br /></td></tr>
-<tr class="separator:ad495e6de084f8f33d19a654eafb72284"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aed3409b17f47504249530d722f8bf2ea"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_window.html#aed3409b17f47504249530d722f8bf2ea">SetOnDeleteLayer</a> (<a class="el" href="namespace_math_plot.html#a5e1d20775c1b89cf25e7aa54f01a8837">mpOnDeleteLayer</a> event)</td></tr>
+<tr class="memdesc:aed3409b17f47504249530d722f8bf2ea"><td class="mdescLeft">&#160;</td><td class="mdescRight">On delete layer event.  <a href="class_math_plot_1_1mp_window.html#aed3409b17f47504249530d722f8bf2ea">More...</a><br /></td></tr>
+<tr class="separator:aed3409b17f47504249530d722f8bf2ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4e684014cf0f302f9da2616861d1908e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_window.html#a4e684014cf0f302f9da2616861d1908e">IsLogXaxis</a> () const</td></tr>
 <tr class="memdesc:a4e684014cf0f302f9da2616861d1908e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Log axis control.  <a href="class_math_plot_1_1mp_window.html#a4e684014cf0f302f9da2616861d1908e">More...</a><br /></td></tr>
 <tr class="separator:a4e684014cf0f302f9da2616861d1908e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -378,9 +378,9 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>Y2AxisExist</b> (void
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
-<tr class="memitem:acce3d5f69474e30021f705818a4d504e"><td class="memItemLeft" align="right" valign="top">static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_window.html#acce3d5f69474e30021f705818a4d504e">zoomIncrementalFactor</a> = 1.5</td></tr>
-<tr class="memdesc:acce3d5f69474e30021f705818a4d504e"><td class="mdescLeft">&#160;</td><td class="mdescRight">This value sets the zoom steps whenever the user clicks "Zoom in/out" or performs zoom with the mouse wheel.  <a href="class_math_plot_1_1mp_window.html#acce3d5f69474e30021f705818a4d504e">More...</a><br /></td></tr>
-<tr class="separator:acce3d5f69474e30021f705818a4d504e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac4c1bab02e35343453bfd6bc06e2c9f8"><td class="memItemLeft" align="right" valign="top">static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_window.html#ac4c1bab02e35343453bfd6bc06e2c9f8">m_zoomIncrementalFactor</a> = 1.5</td></tr>
+<tr class="memdesc:ac4c1bab02e35343453bfd6bc06e2c9f8"><td class="mdescLeft">&#160;</td><td class="mdescRight">This value sets the zoom steps whenever the user clicks "Zoom in/out" or performs zoom with the mouse wheel.  <a href="class_math_plot_1_1mp_window.html#ac4c1bab02e35343453bfd6bc06e2c9f8">More...</a><br /></td></tr>
+<tr class="separator:ac4c1bab02e35343453bfd6bc06e2c9f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
@@ -527,10 +527,10 @@ wxTopLevelWindow *&#160;</td><td class="memItemRight" valign="bottom"><b>m_paren
 <tr class="memitem:af898e76a20d7347e8d6b572be4ab2b16"><td class="memItemLeft" align="right" valign="top"><a id="af898e76a20d7347e8d6b572be4ab2b16"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>m_fullscreen</b></td></tr>
 <tr class="separator:af898e76a20d7347e8d6b572be4ab2b16"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0f8e5da1ed617d086f73cdee0d353b18"><td class="memItemLeft" align="right" valign="top"><a id="a0f8e5da1ed617d086f73cdee0d353b18"></a>
-<a class="el" href="namespace_math_plot.html#af9bddc716c3fbf03fcd7a29b89c7c06c">wxLayerList</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_window.html#a0f8e5da1ed617d086f73cdee0d353b18">m_layers</a></td></tr>
-<tr class="memdesc:a0f8e5da1ed617d086f73cdee0d353b18"><td class="mdescLeft">&#160;</td><td class="mdescRight">List of attached plot layers. <br /></td></tr>
-<tr class="separator:a0f8e5da1ed617d086f73cdee0d353b18"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa743c6e4a31e6392edee54614194556c"><td class="memItemLeft" align="right" valign="top"><a id="aa743c6e4a31e6392edee54614194556c"></a>
+<a class="el" href="namespace_math_plot.html#a7013af89cfcadc1b597c49dc55626246">mpLayerList</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_window.html#aa743c6e4a31e6392edee54614194556c">m_layers</a></td></tr>
+<tr class="memdesc:aa743c6e4a31e6392edee54614194556c"><td class="mdescLeft">&#160;</td><td class="mdescRight">List of attached plot layers. <br /></td></tr>
+<tr class="separator:aa743c6e4a31e6392edee54614194556c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afe4c1943e5ca82f319fef35979cf8365"><td class="memItemLeft" align="right" valign="top"><a id="afe4c1943e5ca82f319fef35979cf8365"></a>
 <a class="el" href="class_math_plot_1_1mp_scale_x.html">mpScaleX</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_window.html#afe4c1943e5ca82f319fef35979cf8365">m_XAxis</a></td></tr>
 <tr class="memdesc:afe4c1943e5ca82f319fef35979cf8365"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pointer to the X axis layer. <br /></td></tr>
@@ -729,10 +729,10 @@ wxBitmap *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href
 <a class="el" href="class_math_plot_1_1_math_plot_config_dialog.html">MathPlotConfigDialog</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_window.html#a6222cafcc7315f71c2a54412c3d7dd84">m_configWindow</a> = NULL</td></tr>
 <tr class="memdesc:a6222cafcc7315f71c2a54412c3d7dd84"><td class="mdescLeft">&#160;</td><td class="mdescRight">For the config dialog. <br /></td></tr>
 <tr class="separator:a6222cafcc7315f71c2a54412c3d7dd84"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4167922f126ebc8dc3cadf6289f760f3"><td class="memItemLeft" align="right" valign="top"><a id="a4167922f126ebc8dc3cadf6289f760f3"></a>
-<a class="el" href="namespace_math_plot.html#a480f6cb1056e00d0a560071e605e8548">wxOnDeleteLayer</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_window.html#a4167922f126ebc8dc3cadf6289f760f3">m_OnDeleteLayer</a> = NULL</td></tr>
-<tr class="memdesc:a4167922f126ebc8dc3cadf6289f760f3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Event when we delete a layer. <br /></td></tr>
-<tr class="separator:a4167922f126ebc8dc3cadf6289f760f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afeb7c337a10741ebf31132602645f54d"><td class="memItemLeft" align="right" valign="top"><a id="afeb7c337a10741ebf31132602645f54d"></a>
+<a class="el" href="namespace_math_plot.html#a5e1d20775c1b89cf25e7aa54f01a8837">mpOnDeleteLayer</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_window.html#afeb7c337a10741ebf31132602645f54d">m_OnDeleteLayer</a> = NULL</td></tr>
+<tr class="memdesc:afeb7c337a10741ebf31132602645f54d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Event when we delete a layer. <br /></td></tr>
+<tr class="separator:afeb7c337a10741ebf31132602645f54d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Canvas for plotting <a class="el" href="class_math_plot_1_1mp_layer.html" title="Plot layer, abstract base class.">mpLayer</a> implementations. </p>
@@ -2669,8 +2669,8 @@ wxBitmap *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href
 
 </div>
 </div>
-<a id="ad495e6de084f8f33d19a654eafb72284"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad495e6de084f8f33d19a654eafb72284">&#9670;&nbsp;</a></span>SetOnDeleteLayer()</h2>
+<a id="aed3409b17f47504249530d722f8bf2ea"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aed3409b17f47504249530d722f8bf2ea">&#9670;&nbsp;</a></span>SetOnDeleteLayer()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2681,7 +2681,7 @@ wxBitmap *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href
         <tr>
           <td class="memname">void MathPlot::mpWindow::SetOnDeleteLayer </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="namespace_math_plot.html#a480f6cb1056e00d0a560071e605e8548">wxOnDeleteLayer</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="namespace_math_plot.html#a5e1d20775c1b89cf25e7aa54f01a8837">mpOnDeleteLayer</a>&#160;</td>
           <td class="paramname"><em>event</em></td><td>)</td>
           <td></td>
         </tr>
@@ -3090,8 +3090,8 @@ wxBitmap *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="acce3d5f69474e30021f705818a4d504e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acce3d5f69474e30021f705818a4d504e">&#9670;&nbsp;</a></span>zoomIncrementalFactor</h2>
+<a id="ac4c1bab02e35343453bfd6bc06e2c9f8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac4c1bab02e35343453bfd6bc06e2c9f8">&#9670;&nbsp;</a></span>m_zoomIncrementalFactor</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -3100,7 +3100,7 @@ wxBitmap *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">double mpWindow::zoomIncrementalFactor = 1.5</td>
+          <td class="memname">double mpWindow::m_zoomIncrementalFactor = 1.5</td>
         </tr>
       </table>
   </td>

@@ -62,6 +62,7 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A 2D ellipse, described by a 2x2 covariance matrix.  <a href="class_math_plot_1_1mp_covariance_ellipse.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">union &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="union_math_plot_1_1mp_float_rect.html">mpFloatRect</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A structure used for the computation of bounds in real unit (not in screen pixel) X refer to X axis Y refer to Y axis Y2 refer to Y2 axis when it is defined.  <a href="union_math_plot_1_1mp_float_rect.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_function.html">mpFunction</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Plot layer implementing an abstract function class.  <a href="class_math_plot_1_1mp_function.html#details">More...</a><br /></td></tr>
@@ -165,6 +166,9 @@ typedef enum MathPlot::__Symbol_Type&#160;</td><td class="memItemRight" valign="
 <tr class="memitem:a56cc4915f65ae5089520caa278ca452a"><td class="memItemLeft" align="right" valign="top"><a id="a56cc4915f65ae5089520caa278ca452a"></a>
 typedef enum MathPlot::__Info_Type&#160;</td><td class="memItemRight" valign="bottom"><b>mpInfoType</b></td></tr>
 <tr class="separator:a56cc4915f65ae5089520caa278ca452a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a48fe2626bfee4d7d22e958c7bd061a15"><td class="memItemLeft" align="right" valign="top"><a id="a48fe2626bfee4d7d22e958c7bd061a15"></a>
+typedef enum MathPlot::__Text_Type&#160;</td><td class="memItemRight" valign="bottom"><b>mpTextType</b></td></tr>
+<tr class="separator:a48fe2626bfee4d7d22e958c7bd061a15"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7e46ca13d3b5f622315df85b67c3b97f"><td class="memItemLeft" align="right" valign="top"><a id="a7e46ca13d3b5f622315df85b67c3b97f"></a>
 typedef enum MathPlot::__Function_Type&#160;</td><td class="memItemRight" valign="bottom"><b>mpFunctionType</b></td></tr>
 <tr class="separator:a7e46ca13d3b5f622315df85b67c3b97f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -270,6 +274,11 @@ Enumerations</h2></td></tr>
 <b>mpiLegend</b>
  }</td></tr>
 <tr class="separator:af78cc72cdc52e4b354b1bb93c583b889"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3075663da60a59e1a70863cb114182e9"><td class="memItemLeft" align="right" valign="top"><a id="a3075663da60a59e1a70863cb114182e9"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><b>__Text_Type</b> { <b>mptNone</b>, 
+<b>mptText</b>, 
+<b>mptTitle</b>
+ }</td></tr>
+<tr class="separator:a3075663da60a59e1a70863cb114182e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6037b871a36b00d55f99a630fc530990"><td class="memItemLeft" align="right" valign="top"><a id="a6037b871a36b00d55f99a630fc530990"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><b>__Function_Type</b> { <br />
 &#160;&#160;<b>mpfNone</b>, 
 <b>mpfFX</b>, 
@@ -277,8 +286,8 @@ Enumerations</h2></td></tr>
 <b>mpfFXY</b>, 
 <br />
 &#160;&#160;<b>mpfFXYVector</b>, 
-<b>mpfBar</b>, 
 <b>mpfMovable</b>, 
+<b>mpfLine</b>, 
 <b>mpfAllType</b>
 <br />
  }</td></tr>
@@ -295,7 +304,8 @@ Enumerations</h2></td></tr>
 <a class="el" href="namespace_math_plot.html#ada98ad01a14d9f810d8d9bd9a44066b6abf81eace9ba8833b2927cb049cc08fda">mpLAYER_PLOT</a>, 
 <a class="el" href="namespace_math_plot.html#ada98ad01a14d9f810d8d9bd9a44066b6ab6c3fe623b1e8ecd76a3931ef8a0e8f0">mpLAYER_INFO</a>, 
 <br />
-&#160;&#160;<a class="el" href="namespace_math_plot.html#ada98ad01a14d9f810d8d9bd9a44066b6a500f496bf7a083f30b89fe286061081a">mpLAYER_BITMAP</a>, 
+&#160;&#160;<a class="el" href="namespace_math_plot.html#ada98ad01a14d9f810d8d9bd9a44066b6ae4e0835d0023cea0846f43d707dc3a5e">mpLAYER_TEXT</a>, 
+<a class="el" href="namespace_math_plot.html#ada98ad01a14d9f810d8d9bd9a44066b6a500f496bf7a083f30b89fe286061081a">mpLAYER_BITMAP</a>, 
 <a class="el" href="namespace_math_plot.html#ada98ad01a14d9f810d8d9bd9a44066b6aecdfdb2c29f1b333edba8ab6e3db7f5c">mpLAYER_LINE</a>
 <br />
  }</td></tr>
@@ -358,14 +368,14 @@ Constants defining mouse modes for mpWindow</h2></td></tr>
 <br />
  }</td></tr>
 <tr class="separator:a3931fe356360c94939773bd1695d2b40"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af9bddc716c3fbf03fcd7a29b89c7c06c"><td class="memItemLeft" align="right" valign="top"><a id="af9bddc716c3fbf03fcd7a29b89c7c06c"></a>
-typedef std::deque&lt; <a class="el" href="class_math_plot_1_1mp_layer.html">mpLayer</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_math_plot.html#af9bddc716c3fbf03fcd7a29b89c7c06c">wxLayerList</a></td></tr>
-<tr class="memdesc:af9bddc716c3fbf03fcd7a29b89c7c06c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Define the type for the list of layers inside <a class="el" href="class_math_plot_1_1mp_window.html" title="Canvas for plotting mpLayer implementations.">mpWindow</a>. <br /></td></tr>
-<tr class="separator:af9bddc716c3fbf03fcd7a29b89c7c06c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a480f6cb1056e00d0a560071e605e8548"><td class="memItemLeft" align="right" valign="top"><a id="a480f6cb1056e00d0a560071e605e8548"></a>
-typedef std::function&lt; void(void *Sender, const wxString &amp;classname, bool &amp;cancel)&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_math_plot.html#a480f6cb1056e00d0a560071e605e8548">wxOnDeleteLayer</a></td></tr>
-<tr class="memdesc:a480f6cb1056e00d0a560071e605e8548"><td class="mdescLeft">&#160;</td><td class="mdescRight">Define an event for when we delete a layer Use like this : your_plot-&gt;SetOnDeleteLayer([this](void *Sender, const wxString &amp;classname, bool &amp;cancel) { your_event_function(Sender, classname, cancel);});. <br /></td></tr>
-<tr class="separator:a480f6cb1056e00d0a560071e605e8548"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7013af89cfcadc1b597c49dc55626246"><td class="memItemLeft" align="right" valign="top"><a id="a7013af89cfcadc1b597c49dc55626246"></a>
+typedef std::deque&lt; <a class="el" href="class_math_plot_1_1mp_layer.html">mpLayer</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_math_plot.html#a7013af89cfcadc1b597c49dc55626246">mpLayerList</a></td></tr>
+<tr class="memdesc:a7013af89cfcadc1b597c49dc55626246"><td class="mdescLeft">&#160;</td><td class="mdescRight">Define the type for the list of layers inside <a class="el" href="class_math_plot_1_1mp_window.html" title="Canvas for plotting mpLayer implementations.">mpWindow</a>. <br /></td></tr>
+<tr class="separator:a7013af89cfcadc1b597c49dc55626246"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5e1d20775c1b89cf25e7aa54f01a8837"><td class="memItemLeft" align="right" valign="top"><a id="a5e1d20775c1b89cf25e7aa54f01a8837"></a>
+typedef std::function&lt; void(void *Sender, const wxString &amp;classname, bool &amp;cancel)&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_math_plot.html#a5e1d20775c1b89cf25e7aa54f01a8837">mpOnDeleteLayer</a></td></tr>
+<tr class="memdesc:a5e1d20775c1b89cf25e7aa54f01a8837"><td class="mdescLeft">&#160;</td><td class="mdescRight">Define an event for when we delete a layer Use like this : your_plot-&gt;SetOnDeleteLayer([this](void *Sender, const wxString &amp;classname, bool &amp;cancel) { your_event_function(Sender, classname, cancel);});. <br /></td></tr>
+<tr class="separator:a5e1d20775c1b89cf25e7aa54f01a8837"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7a4fea69bfdda09ecd9810beca2b1d78"><td class="memItemLeft" align="right" valign="top"><a id="a7a4fea69bfdda09ecd9810beca2b1d78"></a>
 typedef enum MathPlot::__mp_Colour&#160;</td><td class="memItemRight" valign="bottom"><b>mpColour</b></td></tr>
 <tr class="separator:a7a4fea69bfdda09ecd9810beca2b1d78"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -454,6 +464,8 @@ typedef enum MathPlot::__mp_Colour&#160;</td><td class="memItemRight" valign="bo
 <tr><td class="fieldname"><a id="ada98ad01a14d9f810d8d9bd9a44066b6abf81eace9ba8833b2927cb049cc08fda"></a>mpLAYER_PLOT&#160;</td><td class="fielddoc"><p>Plot type layer. </p>
 </td></tr>
 <tr><td class="fieldname"><a id="ada98ad01a14d9f810d8d9bd9a44066b6ab6c3fe623b1e8ecd76a3931ef8a0e8f0"></a>mpLAYER_INFO&#160;</td><td class="fielddoc"><p>Info box type layer. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ada98ad01a14d9f810d8d9bd9a44066b6ae4e0835d0023cea0846f43d707dc3a5e"></a>mpLAYER_TEXT&#160;</td><td class="fielddoc"><p>Text box type layer. </p>
 </td></tr>
 <tr><td class="fieldname"><a id="ada98ad01a14d9f810d8d9bd9a44066b6a500f496bf7a083f30b89fe286061081a"></a>mpLAYER_BITMAP&#160;</td><td class="fielddoc"><p>Bitmap type layer. </p>
 </td></tr>

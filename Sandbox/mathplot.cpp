@@ -6,7 +6,7 @@
 // Contributors:    Jose Luis Blanco, Val Greene, Lionel Reynaud
 // Created:         21/07/2003
 // Last edit:       09/09/2007
-// Last edit:       16/06/2023
+// Last edit:       05/06/2024
 // Copyright:       (c) David Schalig, Davide Rondini
 // Licence:         wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -24,6 +24,7 @@
 // Comment out for release operation:
 // (Added by J.L.Blanco, Aug 2007)
 //#define MATHPLOT_DO_LOGGING
+//#define MATHPLOT_LOG_SCALE  // For log scale debug
 
 // To help debug
 #define DEBUG_COUT(message) std::cout << #message << std::endl;
@@ -160,7 +161,7 @@ void mpWindow::FillI18NString()
 #define MARGIN_COORD_X2 2*MARGIN_COORD
 
 // See doxygen comments.
-double mpWindow::zoomIncrementalFactor = 1.5;
+double mpWindow::m_zoomIncrementalFactor = 1.5;
 
 // Delete and null pointer
 #define DeleteAndNull(ptr)  \
@@ -267,6 +268,7 @@ IMPLEMENT_ABSTRACT_CLASS(mpInfoLayer, mpLayer)
 mpInfoLayer::mpInfoLayer()
 {
   m_type = mpLAYER_INFO;
+  m_subtype = mpiInfo;
   m_dim = wxRect(0, 0, 1, 1);
   m_brush = *wxTRANSPARENT_BRUSH;
   m_brush.SetColour(*wxWHITE);
@@ -281,6 +283,7 @@ mpInfoLayer::mpInfoLayer()
 mpInfoLayer::mpInfoLayer(wxRect rect, const wxBrush &brush, mpLocation location)
 {
   m_type = mpLAYER_INFO;
+  m_subtype = mpiInfo;
   m_brush = brush;
   if (m_brush.GetStyle() == wxBRUSHSTYLE_TRANSPARENT)
     m_brush.SetColour(*wxWHITE);
@@ -347,7 +350,7 @@ void mpInfoLayer::SetInfoRectangle(mpWindow &w, int width, int height)
     if ((m_winX != scrx) || (m_winY != scry))
     {
 #ifdef MATHPLOT_DO_LOGGING
-      // wxLogMessage(_T("mpInfoLayer::Plot() screen size has changed from %d x %d to %d x %d"), m_winX, m_winY, scrx, scry);
+//      wxLogMessage(_T("mpInfoLayer::Plot() screen size has changed from %d x %d to %d x %d"), m_winX, m_winY, scrx, scry);
 #endif
       if (m_winX != 1)
         m_dim.x = (int)floor((double)(m_dim.x * scrx / m_winX));
@@ -443,6 +446,7 @@ IMPLEMENT_DYNAMIC_CLASS(mpInfoCoords, mpInfoLayer)
 mpInfoCoords::mpInfoCoords() :
     mpInfoLayer()
 {
+  m_subtype = mpiCoords;
   m_labelType = mpX_NORMAL;
   m_timeConv = 0;
   m_mouseX = m_mouseY = 0;
@@ -458,6 +462,7 @@ mpInfoCoords::mpInfoCoords() :
 mpInfoCoords::mpInfoCoords(mpLocation location) :
     mpInfoLayer()
 {
+  m_subtype = mpiCoords;
   m_labelType = mpX_NORMAL;
   m_timeConv = 0;
   m_mouseX = m_mouseY = 0;
@@ -471,6 +476,7 @@ mpInfoCoords::mpInfoCoords(mpLocation location) :
 mpInfoCoords::mpInfoCoords(wxRect rect, const wxBrush &brush, mpLocation location) :
     mpInfoLayer(rect, brush, location)
 {
+  m_subtype = mpiCoords;
   m_labelType = mpX_NORMAL;
   m_timeConv = 0;
   m_mouseX = m_mouseY = 0;
@@ -668,6 +674,7 @@ IMPLEMENT_DYNAMIC_CLASS(mpInfoLegend, mpInfoLayer)
 mpInfoLegend::mpInfoLegend() :
     mpInfoLayer()
 {
+  m_subtype = mpiLegend;
   SetBrush(*wxWHITE_BRUSH);
   m_item_mode = mpLegendLine;
   m_item_direction = mpVertical;
@@ -680,6 +687,7 @@ mpInfoLegend::mpInfoLegend() :
 mpInfoLegend::mpInfoLegend(wxRect rect, const wxBrush &brush, mpLocation location) :
     mpInfoLayer(rect, brush, location)
 {
+  m_subtype = mpiLegend;
   m_item_mode = mpLegendLine;
   m_item_direction = mpVertical;
   m_legend_bmp = NULL;
@@ -872,6 +880,7 @@ IMPLEMENT_ABSTRACT_CLASS(mpFunction, mpLayer)
 mpFunction::mpFunction(const wxString &name, bool useY2Axis)
 {
   m_type = mpLAYER_PLOT;
+  m_subtype = mpfAllType;
   SetName(name);
   m_symbol = mpsNone;
   m_symbolSize = 6;
@@ -936,6 +945,7 @@ mpLine::mpLine(double value, const wxPen &pen) :
 {
   m_value = value;
   m_type = mpLAYER_LINE;
+  m_subtype = mpfLine;
   m_ZIndex = mpZIndex_LINE;
   m_IsHorizontal = false;
   SetPen(pen);
@@ -1062,6 +1072,7 @@ IMPLEMENT_ABSTRACT_CLASS(mpFX, mpFunction)
 mpFX::mpFX(const wxString &name, int flags, bool useY2Axis) :
     mpFunction(name, useY2Axis)
 {
+  m_subtype = mpfFX;
   m_flags = flags;
 }
 
@@ -1170,6 +1181,7 @@ IMPLEMENT_ABSTRACT_CLASS(mpFY, mpFunction)
 mpFY::mpFY(const wxString &name, int flags, bool useY2Axis) :
     mpFunction(name, useY2Axis)
 {
+  m_subtype = mpfFY;
   m_flags = flags;
 }
 
@@ -1278,6 +1290,7 @@ IMPLEMENT_ABSTRACT_CLASS(mpFXY, mpFunction)
 mpFXY::mpFXY(const wxString &name, int flags, bool viewAsBar, bool useY2Axis) :
     mpFunction(name, useY2Axis)
 {
+  m_subtype = mpfFXY;
   m_flags = flags;
   maxDrawX = minDrawX = maxDrawY = minDrawY = 0;
   m_deltaX = m_deltaY = 1e+308; // Big number
@@ -1472,6 +1485,7 @@ IMPLEMENT_DYNAMIC_CLASS(mpFXYVector, mpFXY)
 mpFXYVector::mpFXYVector(const wxString &name, int flags, bool viewAsBar, bool useY2Axis) :
     mpFXY(name, flags, viewAsBar, useY2Axis)
 {
+  m_subtype = mpfFXYVector;
   m_index = 0;
   m_minX = -1;
   m_maxX = 1;
@@ -1772,6 +1786,7 @@ IMPLEMENT_ABSTRACT_CLASS(mpScale, mpLayer)
 mpScale::mpScale(const wxString &name, int flags, bool grids)
 {
   m_type = mpLAYER_AXIS;
+  m_subtype = mpsScaleNone;
   SetName(name);
   SetFont((wxFont const&)*wxSMALL_FONT);
   SetPen((wxPen const&)*wxGREY_PEN);
@@ -1961,7 +1976,7 @@ wxString mpScaleX::FormatValue(const wxString &fmt, double n)
       double hh = floor(modulus / 3600);
       double mm = floor((modulus - hh * 3600) / 60);
       double ss = modulus - hh * 3600 - mm * 60;
-#ifdef MATHPLOT_DO_LOGGING
+#if defined(MATHPLOT_DO_LOGGING) && defined(MATHPLOT_LOG_SCALE)
       wxLogMessage(_T("%02.0f Hours, %02.0f minutes, %02.0f seconds"), sign * hh, mm, ss);
 #endif // MATHPLOT_DO_LOGGING
       if (fmt.Len() == 20) // Format with hours has 11 chars
@@ -2040,7 +2055,7 @@ void mpScaleX::DoPlot(wxDC &dc, mpWindow &w)
 
   double n0 = floor(w.GetPosX() / step) * step;
   double n = 0;
-#ifdef MATHPLOT_DO_LOGGING
+#if defined(MATHPLOT_DO_LOGGING) && defined(MATHPLOT_LOG_SCALE)
   wxLogMessage(_T("mpScaleX::Plot: step: %f, end: %f, n: %f"), step, end, n0);
 #endif
 
@@ -2053,7 +2068,7 @@ void mpScaleX::DoPlot(wxDC &dc, mpWindow &w)
   for (n = n0; n < end; n += step)
   {
     const int p = (int)((n - w.GetPosX()) * scaleX);
-#ifdef MATHPLOT_DO_LOGGING
+#if defined(MATHPLOT_DO_LOGGING) && defined(MATHPLOT_LOG_SCALE)
     wxLogMessage(_T("mpScaleX::Plot: n: %f -> p = %d"), n, p);
 #endif
     if ((p >= m_plotBondaries.startPx) && (p <= m_plotBondaries.endPx))
@@ -2094,7 +2109,7 @@ void mpScaleX::DoPlot(wxDC &dc, mpWindow &w)
       n = 0;
 
     const int p = (int)((n - w.GetPosX()) * scaleX);
-#ifdef MATHPLOT_DO_LOGGING
+#if defined(MATHPLOT_DO_LOGGING) && defined(MATHPLOT_LOG_SCALE)
     wxLogMessage(_T("mpScaleX::Plot: n_label = %f -> p_label = %d"), n, p);
 #endif
     if ((p >= m_plotBondaries.startPx) && (p <= m_plotBondaries.endPx))
@@ -2317,7 +2332,7 @@ void mpScaleY::DoPlot(wxDC &dc, mpWindow &w)
 
       // Print ticks labels
       dc.GetTextExtent(s, &tx, &ty);
-#ifdef MATHPLOT_DO_LOGGING
+#if defined(MATHPLOT_DO_LOGGING) && defined(MATHPLOT_LOG_SCALE)
       if (ty != labelHeigth)
         wxLogMessage(_T("mpScaleY::Plot: ty(%d) and labelHeigth(%d) differ!"), ty, labelHeigth);
 #endif
@@ -2600,7 +2615,7 @@ void mpWindow::OnMouseMove(wxMouseEvent &event)
     UpdateAll();
 
 #ifdef MATHPLOT_DO_LOGGING
-    wxLogMessage(_T("[mpWindow::OnMouseMove] Ax:%i Ay:%i m_posX:%f m_posY:%f"), Ax, Ay, m_posX, m_posY);
+    wxLogMessage(_T("[mpWindow::OnMouseMove] Ax:%i Ay:%i m_posX:%f m_posY:%f"), Axy.x, Axy.y, m_posX, m_posY);
 #endif
   }
   else
@@ -2866,7 +2881,7 @@ void mpWindow::DoZoomInXCalc(const int staticXpixel)
   // Preserve the position of the clicked point:
   double staticX = p2x(staticXpixel);
   // Zoom in:
-  m_scaleX *= zoomIncrementalFactor;
+  m_scaleX *= m_zoomIncrementalFactor;
   // Adjust the new m_posx
   m_posX = staticX - (staticXpixel / m_scaleX);
   // Adjust desired
@@ -2883,8 +2898,8 @@ void mpWindow::DoZoomInYCalc(const int staticYpixel)
   double staticY = p2y(staticYpixel);
   double staticY2 = p2y(staticYpixel, true);
   // Zoom in:
-  m_scaleY *= zoomIncrementalFactor;
-  m_scaleY2 *= zoomIncrementalFactor;
+  m_scaleY *= m_zoomIncrementalFactor;
+  m_scaleY2 *= m_zoomIncrementalFactor;
   // Adjust the new m_posy:
   m_posY = staticY + (staticYpixel / m_scaleY);
   m_posY2 = staticY2 + (staticYpixel / m_scaleY2);
@@ -2903,7 +2918,7 @@ void mpWindow::DoZoomOutXCalc(const int staticXpixel)
   // Preserve the position of the clicked point:
   double staticX = p2x(staticXpixel);
   // Zoom out:
-  m_scaleX /= zoomIncrementalFactor;
+  m_scaleX /= m_zoomIncrementalFactor;
   // Adjust the new m_posx/y:
   m_posX = staticX - (staticXpixel / m_scaleX);
   // Adjust desired
@@ -2920,8 +2935,8 @@ void mpWindow::DoZoomOutYCalc(const int staticYpixel)
   double staticY = p2y(staticYpixel);
   double staticY2 = p2y(staticYpixel, true);
   // Zoom out:
-  m_scaleY /= zoomIncrementalFactor;
-  m_scaleY2 /= zoomIncrementalFactor;
+  m_scaleY /= m_zoomIncrementalFactor;
+  m_scaleY2 /= m_zoomIncrementalFactor;
   // Adjust the new m_posx/y:
   m_posY = staticY + (staticYpixel / m_scaleY);
   m_posY2 = staticY2 + (staticYpixel / m_scaleY2);
@@ -2964,15 +2979,15 @@ void mpWindow::Zoom(bool zoomIn, const wxPoint &centerPoint)
 
   if (zoomIn)
   {
-    m_scaleX *= zoomIncrementalFactor;
-    m_scaleY *= zoomIncrementalFactor;
-    m_scaleY2 *= zoomIncrementalFactor;
+    m_scaleX *= m_zoomIncrementalFactor;
+    m_scaleY *= m_zoomIncrementalFactor;
+    m_scaleY2 *= m_zoomIncrementalFactor;
   }
   else
   {
-    m_scaleX /= zoomIncrementalFactor;
-    m_scaleY /= zoomIncrementalFactor;
-    m_scaleY2 /= zoomIncrementalFactor;
+    m_scaleX /= m_zoomIncrementalFactor;
+    m_scaleY /= m_zoomIncrementalFactor;
+    m_scaleY2 /= m_zoomIncrementalFactor;
   }
 
   // Adjust the new m_posx/y:
@@ -2996,27 +3011,27 @@ void mpWindow::Zoom(bool zoomIn, const wxPoint &centerPoint)
 
 void mpWindow::ZoomInX()
 {
-  m_scaleX *= zoomIncrementalFactor;
+  m_scaleX *= m_zoomIncrementalFactor;
   UpdateAll();
 }
 
 void mpWindow::ZoomOutX()
 {
-  m_scaleX /= zoomIncrementalFactor;
+  m_scaleX /= m_zoomIncrementalFactor;
   UpdateAll();
 }
 
 void mpWindow::ZoomInY()
 {
-  m_scaleY *= zoomIncrementalFactor;
-  m_scaleY2 *= zoomIncrementalFactor;
+  m_scaleY *= m_zoomIncrementalFactor;
+  m_scaleY2 *= m_zoomIncrementalFactor;
   UpdateAll();
 }
 
 void mpWindow::ZoomOutY()
 {
-  m_scaleY /= zoomIncrementalFactor;
-  m_scaleY2 /= zoomIncrementalFactor;
+  m_scaleY /= m_zoomIncrementalFactor;
+  m_scaleY2 /= m_zoomIncrementalFactor;
   UpdateAll();
 }
 
@@ -3185,11 +3200,10 @@ bool mpWindow::AddLayer(mpLayer *layer, bool refreshDisplay)
 {
   if (layer != NULL)
   {
-    mpInfoType info;
-    mpScaleType scale;
-    mpFunctionType function;
+    int info;
+    int scale;
 
-    if (layer->IsInfo(&info))
+    if (layer->IsLayerType(mpLAYER_INFO, &info))
     {
       if (info == mpiCoords)
       {
@@ -3211,7 +3225,7 @@ bool mpWindow::AddLayer(mpLayer *layer, bool refreshDisplay)
     // add the layer to the layer list
     m_layers.push_back(layer);
 
-    if (layer->IsScale(&scale))
+    if (layer->IsLayerType(mpLAYER_AXIS, &scale))
     {
       if ((scale == mpsScaleX) && (m_XAxis == NULL))
       {
@@ -3237,7 +3251,7 @@ bool mpWindow::AddLayer(mpLayer *layer, bool refreshDisplay)
     }
 
     // We just add a function, so we need to update the legend
-    if (layer->IsFunction(&function))
+    if (layer->GetLayerType() == mpLAYER_PLOT)
     {
       mpInfoLegend* legend = (mpInfoLegend*)this->GetLayerByClassName(_T("mpInfoLegend"));
       if (legend)
@@ -3257,7 +3271,7 @@ bool mpWindow::AddLayer(mpLayer *layer, bool refreshDisplay)
 
 bool mpWindow::DelLayer(mpLayer *layer, bool alsoDeleteObject, bool refreshDisplay)
 {
-  for (wxLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
+  for (mpLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
   {
     if (*it == layer)
     {
@@ -3275,8 +3289,8 @@ bool mpWindow::DelLayer(mpLayer *layer, bool alsoDeleteObject, bool refreshDispl
         if (layer == m_YAxis)
           m_YAxis = NULL;
         // In case we suppress an Y2 axis
-        mpScaleType scale;
-        if ((layer->IsScale(&scale)) && (scale == mpsScaleY))
+        int scale;
+        if ((layer->IsLayerType(mpLAYER_AXIS, &scale)) && (scale == mpsScaleY))
         {
           if (((mpScaleY*)layer)->IsY2Axis())
             Update_CountY2Axis(false);
@@ -3318,10 +3332,10 @@ void mpWindow::DelAllLayers(bool alsoDeleteObject, bool refreshDisplay)
 
 void mpWindow::DelAllPlot(bool alsoDeleteObject, mpFunctionType func, bool refreshDisplay)
 {
-  mpFunctionType function;
-  for (wxLayerList::reverse_iterator it = m_layers.rbegin(); it != m_layers.rend(); it++)
+  int function;
+  for (mpLayerList::reverse_iterator it = m_layers.rbegin(); it != m_layers.rend(); it++)
   {
-    if ((*it)->IsFunction(&function) && ((func == mpfAllType) || (function == func)))
+    if ((*it)->IsLayerType(mpLAYER_PLOT, &function) && ((func == mpfAllType) || (function == func)))
     {
       DelLayer((mpLayer*)(*it), alsoDeleteObject, false);
     }
@@ -3394,7 +3408,7 @@ void mpWindow::OnPaint(wxPaintEvent &WXUNUSED(event))
   // Draw all the layers in Z order
   for (int i = mpZIndex_BACKGROUND; i < mpZIndex_END; i++)
   {
-    for (wxLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
+    for (mpLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
     {
       if ((*it)->GetZIndex() == i)
         (*it)->Plot(*trgDc, *this);
@@ -3436,10 +3450,10 @@ void mpWindow::SetBound()
 
   if (HaveXAxis || HaveYAxis)
   {
-    mpFunctionType function;
-    for (wxLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
+    int function;
+    for (mpLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
     {
-      if ((*it)->IsFunction(&function))
+      if ((*it)->IsLayerType(mpLAYER_PLOT, &function))
       {
         if ((function == mpfFX) && HaveXAxis)
         {
@@ -3468,11 +3482,15 @@ bool mpWindow::UpdateBBox()
 
   // To update bound of mpFX and mpFY functions
 //  SetBound();
+#ifdef MATHPLOT_DO_LOGGING
+  wxLogMessage
+  (_T("[mpWindow::UpdateBBox] Bounding box enter: Xmin = %f, Xmax = %f, Ymin = %f, YMax = %f"), m_bound.Xmin, m_bound.Xmax, m_bound.Ymin,
+      m_bound.Ymax);
+#endif // MATHPLOT_DO_LOGGING
 
   // Search common bound for all functions
   mpFloatRect f_bound;
-  mpFunctionType function;
-  for (wxLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
+  for (mpLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
   {
     mpLayer* f = *it;
 
@@ -3493,7 +3511,7 @@ bool mpWindow::UpdateBBox()
           m_bound.Xmax = f_bound.Xmax;
       }
 
-      if ((f->IsFunction(&function)) && (((mpFunction*)f)->GetY2Axis()))
+      if ((f->GetLayerType() == mpLAYER_PLOT) && (((mpFunction*)f)->GetY2Axis()))
       {
         if (firstY2)
         {
@@ -3597,8 +3615,8 @@ bool mpWindow::UpdateBBox()
   }
 
 #ifdef MATHPLOT_DO_LOGGING
-  wxLogDebug
-  (_T("[mpWindow::UpdateBBox] Bounding box: Xmin = %f, Xmax = %f, Ymin = %f, YMax = %f"), m_bound.Xmin, m_bound.Xmax, m_bound.Ymin,
+  wxLogMessage
+  (_T("[mpWindow::UpdateBBox] Bounding box exit: Xmin = %f, Xmax = %f, Ymin = %f, YMax = %f"), m_bound.Xmin, m_bound.Xmax, m_bound.Ymin,
       m_bound.Ymax);
 #endif // MATHPLOT_DO_LOGGING
   return first == false;
@@ -3775,7 +3793,7 @@ void mpWindow::OnScrollBottom(wxScrollWinEvent &event)
 unsigned int mpWindow::CountLayers()
 {
   unsigned int layerNo = 0;
-  for (wxLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
+  for (mpLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
   {
     if ((*it)->HasBBox())
       layerNo++;
@@ -3786,7 +3804,7 @@ unsigned int mpWindow::CountLayers()
 unsigned int mpWindow::CountLayersType(mpLayerType type)
 {
   unsigned int layerNo = 0;
-  for (wxLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
+  for (mpLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
   {
     if ((*it)->GetLayerType() == type)
       layerNo++;
@@ -3799,7 +3817,7 @@ mpLayer* mpWindow::GetLayersType(int position, mpLayerType type)
   int layerNo = -1;
   if (position < 0)
     return NULL;
-  for (wxLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
+  for (mpLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
   {
     if ((*it)->GetLayerType() == type)
     {
@@ -3813,10 +3831,10 @@ mpLayer* mpWindow::GetLayersType(int position, mpLayerType type)
 unsigned int mpWindow::CountLayersFXYPlot()
 {
   unsigned int layerNo = 0;
-  mpFunctionType function;
-  for (wxLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
+  int function;
+  for (mpLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
   {
-    if ((*it)->IsFunction(&function) && (function == mpfFXYVector))
+    if ((*it)->IsLayerType(mpLAYER_PLOT, &function) && (function == mpfFXYVector))
       layerNo++;
   }
   return layerNo;
@@ -3832,12 +3850,12 @@ mpLayer* mpWindow::GetLayer(int position)
 mpLayer* mpWindow::GetLayerPlot(int position, mpFunctionType func)
 {
   int layerNo = -1;
-  mpFunctionType function;
+  int function;
   if (position < 0)
     return NULL;
-  for (wxLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
+  for (mpLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
   {
-    if ((*it)->IsFunction(&function) && ((func == mpfAllType) || (function == func)))
+    if ((*it)->IsLayerType(mpLAYER_PLOT, &function) && ((func == mpfAllType) || (function == func)))
     {
       if (++layerNo == position)
         return *it;
@@ -3849,12 +3867,12 @@ mpLayer* mpWindow::GetLayerPlot(int position, mpFunctionType func)
 mpLayer* mpWindow::GetLayerAxis(int position, mpScaleType scale)
 {
   int layerNo = -1;
-  mpScaleType thescale;
+  int thescale;
   if (position < 0)
     return NULL;
-  for (wxLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
+  for (mpLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
   {
-    if ((*it)->IsScale(&thescale) && ((scale == mpsAllType) || (thescale == scale)))
+    if ((*it)->IsLayerType(mpLAYER_AXIS, &thescale) && ((scale == mpsAllType) || (thescale == scale)))
     {
       if (++layerNo == position)
         return *it;
@@ -3880,12 +3898,12 @@ mpFXYVector* mpWindow::GetXYSeries(unsigned int n, const wxString &name, bool cr
 mpLayer* mpWindow::GetClosestPlot(wxCoord ix, wxCoord iy, double *xnear, double *ynear, bool *isY2Axis)
 {
 #define NEAR_AREA 8
-  mpFunctionType function;
+  int function;
   mpLayer* result = NULL;
 
-  for (wxLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
+  for (mpLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
   {
-    if ((*it)->IsTractable() && (*it)->IsVisible() && (*it)->IsFunction(&function))
+    if ((*it)->IsTractable() && (*it)->IsVisible() && (*it)->IsLayerType(mpLAYER_PLOT, &function))
     {
       switch (function)
       {
@@ -3920,35 +3938,34 @@ mpLayer* mpWindow::GetClosestPlot(wxCoord ix, wxCoord iy, double *xnear, double 
         {
           mpFXY* fxy = (mpFXY*)(*it);
           double xx, yy;
-          fxy->Rewind();
-          while (fxy->DoGetNextXY(&xx, &yy))
+          if (fxy->ViewAsBar())
           {
-            if ((abs(this->x2p(xx) - ix) < NEAR_AREA) && (abs(this->y2p(yy, fxy->GetY2Axis()) - iy) < NEAR_AREA))
+            double zero = this->y2p(0.0, fxy->GetY2Axis());
+            fxy->Rewind();
+            while (fxy->DoGetNextXY(&xx, &yy))
             {
-              *xnear = xx;
-              *ynear = yy;
-              *isY2Axis = fxy->GetY2Axis();
-              result = (*it);
-              break;
+              // We are in the x bar range
+              if (abs(this->x2p(xx) - ix) < fxy->GetBarWidth())
+              {
+                wxCoord yyp = this->y2p(yy, fxy->GetY2Axis());
+                // Check if we are over the bar
+                if (((yy < 0) && ((iy >= zero) && (iy < yyp + NEAR_AREA))) || ((yy > 0) && ((iy <= zero) && (iy > yyp - NEAR_AREA))))
+                {
+                  *xnear = xx;
+                  *ynear = yy;
+                  *isY2Axis = fxy->GetY2Axis();
+                  result = (*it);
+                  break;
+                }
+              }
             }
           }
-
-          break;
-        }
-        case mpfBar:
-        {
-          mpFXY* fxy = (mpFXY*)(*it);
-          double xx, yy;
-          double zero = this->y2p(0.0, fxy->GetY2Axis());
-          fxy->Rewind();
-          while (fxy->DoGetNextXY(&xx, &yy))
+          else
           {
-            // We are in the x bar range
-            if (abs(this->x2p(xx) - ix) < fxy->GetBarWidth())
+            fxy->Rewind();
+            while (fxy->DoGetNextXY(&xx, &yy))
             {
-              wxCoord yyp = this->y2p(yy, fxy->GetY2Axis());
-              // Check if we are over the bar
-              if (((yy < 0) && ((iy >= zero) && (iy < yyp + NEAR_AREA))) || ((yy > 0) && ((iy <= zero) && (iy > yyp - NEAR_AREA))))
+              if ((abs(this->x2p(xx) - ix) < NEAR_AREA) && (abs(this->y2p(yy, fxy->GetY2Axis()) - iy) < NEAR_AREA))
               {
                 *xnear = xx;
                 *ynear = yy;
@@ -3958,9 +3975,9 @@ mpLayer* mpWindow::GetClosestPlot(wxCoord ix, wxCoord iy, double *xnear, double 
               }
             }
           }
-
           break;
         }
+
         default: // nothing to do in others cases
           ;
       }
@@ -3973,7 +3990,7 @@ mpLayer* mpWindow::GetClosestPlot(wxCoord ix, wxCoord iy, double *xnear, double 
 
 mpLayer* mpWindow::GetLayerByName(const wxString &name)
 {
-  for (wxLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
+  for (mpLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
     if ((*it)->GetName().IsSameAs(name))
       return *it;
   return NULL;    // Not found
@@ -3981,7 +3998,7 @@ mpLayer* mpWindow::GetLayerByName(const wxString &name)
 
 mpLayer* mpWindow::GetLayerByClassName(const wxString &name)
 {
-  for (wxLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
+  for (mpLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
   {
     wxString classname = (*it)->GetClassInfo()->GetClassName();
     if (classname.IsSameAs(name))
@@ -3995,7 +4012,7 @@ mpLayer* mpWindow::GetLayerByClassName(const wxString &name)
  */
 mpScaleX* mpWindow::GetLayerXAxis()
 {
-  for (wxLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
+  for (mpLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
   {
     wxString classname = (*it)->GetClassInfo()->GetClassName();
     if (classname.IsSameAs(_T("mpScaleX")))
@@ -4009,7 +4026,7 @@ mpScaleX* mpWindow::GetLayerXAxis()
  */
 mpScaleY* mpWindow::GetLayerYAxis()
 {
-  for (wxLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
+  for (mpLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
   {
     wxString classname = (*it)->GetClassInfo()->GetClassName();
     if ((classname.IsSameAs(_T("mpScaleY"))) && (!(((mpScaleY*)(*it))->IsY2Axis())))
@@ -4023,7 +4040,7 @@ mpScaleY* mpWindow::GetLayerYAxis()
  */
 mpScaleY* mpWindow::GetLayerY2Axis()
 {
-  for (wxLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
+  for (mpLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
   {
     wxString classname = (*it)->GetClassInfo()->GetClassName();
     if ((classname.IsSameAs(_T("mpScaleY"))) && (((mpScaleY*)(*it))->IsY2Axis()))
@@ -4046,7 +4063,7 @@ void mpWindow::Update_CountY2Axis(bool Y2Axis)
   // If we have no Y2Axis, we must verify that no plot is on Y2 axis
   if (m_countY2Axis == 0)
   {
-    for (wxLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
+    for (mpLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
     {
       if ((*it)->GetLayerType() == mpLAYER_PLOT)
         ((mpFunction*)(*it))->SetY2Axis(false);
@@ -4056,13 +4073,12 @@ void mpWindow::Update_CountY2Axis(bool Y2Axis)
 
 mpInfoLayer* mpWindow::IsInsideInfoLayer(const wxPoint &point)
 {
-  mpInfoType info;
-  for (wxLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
+  for (mpLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
   {
 #ifdef MATHPLOT_DO_LOGGING
     wxLogMessage(_T("mpWindow::IsInsideInfoLayer() examinining layer = %p"), (*it));
 #endif // MATHPLOT_DO_LOGGING
-    if ((*it)->IsInfo(&info))
+    if ((*it)->GetLayerType() == mpLAYER_INFO)
     {
       mpInfoLayer* tmpLyr = (mpInfoLayer*)(*it);
 #ifdef MATHPLOT_DO_LOGGING
@@ -4193,7 +4209,7 @@ wxBitmap* mpWindow::BitmapScreenshot(wxSize imageSize, bool fit)
   // Draw all the layers in Z order
   for (int i = mpZIndex_BACKGROUND; i < mpZIndex_END; i++)
   {
-    for (wxLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
+    for (mpLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
     {
       if ((*it)->GetZIndex() == i)
         (*it)->Plot(m_Screenshot_dc, *this);
@@ -4290,20 +4306,20 @@ void mpWindow::SetColourTheme(const wxColour &bgColour, const wxColour &drawColo
   m_axColour = axesColour;
 
   // cycle between layers to set colours and properties to them
-  for (wxLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
+  for (mpLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
   {
-    if ((*it)->GetLayerType() == mpLAYER_AXIS)
+    mpLayerType type = (*it)->GetLayerType();
+    wxPen pen = (*it)->GetPen(); // Get the old pen to modify only colour, not style or width
+
+    if (type == mpLAYER_AXIS)
     {
-      wxPen axisPen = (*it)->GetPen(); // Get the old pen to modify only colour, not style or width
-      axisPen.SetColour(axesColour);
-      (*it)->SetPen(axisPen);
+      pen.SetColour(axesColour);
     }
-    if ((*it)->GetLayerType() == mpLAYER_INFO)
+    if ((type == mpLAYER_INFO) || (type == mpLAYER_TEXT))
     {
-      wxPen infoPen = (*it)->GetPen(); // Get the old pen to modify only colour, not style or width
-      infoPen.SetColour(drawColour);
-      (*it)->SetPen(infoPen);
+      pen.SetColour(drawColour);
     }
+    (*it)->SetPen(pen);
   }
 }
 
@@ -4442,6 +4458,7 @@ IMPLEMENT_DYNAMIC_CLASS(mpTitle, mpText)
 
 mpTitle::mpTitle()
 {
+  m_subtype = mptTitle;
   m_location = mpMarginTopCenter;
   SetPen(*wxWHITE_PEN);
   SetBrush(*wxWHITE_BRUSH);
