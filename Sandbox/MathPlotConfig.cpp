@@ -354,8 +354,9 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   _("Date"),
   _("DateTime"),
   _("User"),
+  _("None"),
   };
-  cbFormat = new wxChoice(Panel3, wxID_ANY, wxDefaultPosition, wxDefaultSize, 6, cbFormat_choices, 0, wxDefaultValidator);
+  cbFormat = new wxChoice(Panel3, wxID_ANY, wxDefaultPosition, wxDefaultSize, 7, cbFormat_choices, 0, wxDefaultValidator);
   cbFormat->SetSelection(0);
   cbFormat->Set(WXSIZEOF(cbFormat_choices), cbFormat_choices);
   cbFormat->SetSelection(0);

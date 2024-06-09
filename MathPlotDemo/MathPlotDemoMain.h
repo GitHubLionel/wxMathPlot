@@ -39,6 +39,7 @@ class MathPlotDemoFrame: public wxFrame
         void OnmiAboutSelected(wxCommandEvent& event);
         void OnmiPreviewSelected(wxCommandEvent& event);
         void OnmiPrintSelected(wxCommandEvent& event);
+        void OnbBarChartClick(wxCommandEvent& event);
         //*)
 
         //(*Identifiers(MathPlotDemoFrame)
@@ -47,6 +48,7 @@ class MathPlotDemoFrame: public wxFrame
         static const long ID_BUTTON3;
         static const long ID_BUTTON4;
         static const long ID_BUTTON5;
+        static const long ID_BUTTON6;
         static const long ID_PANEL1;
         static const long ID_MATHPLOT1;
         static const long ID_PANEL2;
@@ -60,6 +62,7 @@ class MathPlotDemoFrame: public wxFrame
         mpWindow* mPlot;
         wxAuiManager* AuiManager1;
         wxButton* bBar;
+        wxButton* bBarChart;
         wxButton* bDraw;
         wxButton* bLog;
         wxButton* bLogXY;

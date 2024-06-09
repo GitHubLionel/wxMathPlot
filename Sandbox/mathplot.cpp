@@ -1778,6 +1778,150 @@ void mpProfile::DoPlot(wxDC &dc, mpWindow &w)
 }
 
 //-----------------------------------------------------------------------------
+// mpBarChart implementation
+//-----------------------------------------------------------------------------
+
+IMPLEMENT_ABSTRACT_CLASS(mpBarChart, mpFunction)
+
+mpBarChart::mpBarChart(const wxString &name) :
+    mpFunction(name)
+{
+  m_type = mpLAYER_CHART;
+  m_subtype = 0;
+  m_max_value = 0;
+  m_width = 0.5;
+  SetBarColour(wxColour(0, 0, 255));
+  SetBarLabelPosition(mpBAR_NONE);
+}
+
+void mpBarChart::DoPlot(wxDC &dc, mpWindow &w)
+{
+  size_t binIndex = 0;
+  int labelX = 0, labelY = 0;
+  int labelW = 0, labelH = 0;
+  bool drawLabels = (labels.size() == values.size()) && (m_labelPos != mpBAR_NONE);
+  wxCoord rect_x_tl = 0, rect_y_tl = 0, rect_width = 0, rect_height = 0;
+  wxString currentLabel;
+
+  if (values.size() > 0)
+  {
+    for (binIndex = 0; binIndex < values.size(); binIndex++)
+    {
+      rect_x_tl = w.x2p(((double)binIndex) + 1.0 - 0.5 * m_width);
+      rect_y_tl = w.y2p(values[binIndex]);
+      rect_width = m_width * w.GetScaleX();
+      rect_height = values[binIndex] * w.GetScaleY();
+      dc.DrawRectangle(rect_x_tl, rect_y_tl, rect_width, rect_height);
+      if (drawLabels)
+      {
+        currentLabel = wxConvUTF8.cMB2WX(labels[binIndex].c_str());
+        dc.GetTextExtent(currentLabel, &labelW, &labelH);
+        switch (m_labelPos)
+        {
+          case mpBAR_AXIS_H:
+            labelX = rect_x_tl;
+            labelY = w.y2p(0.0) + labelH;
+            break;
+          case mpBAR_AXIS_V:
+            labelX = w.x2p(((double)binIndex) + 1.0) - (labelH >> 1);
+            labelY = w.y2p(-0.05 * m_max_value) + labelW;
+            break;
+          case mpBAR_INSIDE:
+            labelX = w.x2p(((double)binIndex) + 1.0) - (labelH >> 1);
+            labelY = w.y2p(0.05 * m_max_value);
+            break;
+          case mpBAR_TOP:
+            labelX = rect_x_tl;
+            labelY = rect_y_tl - 10 - labelH;
+            break;
+          default:
+            // Default: omit labels
+            break;
+        }
+        dc.DrawRotatedText(currentLabel, labelX, labelY, m_labelAngle);
+      }
+    }
+  }
+}
+
+void mpBarChart::SetBarValues(const std::vector<double> &data)
+{
+  values.clear();
+  values = data;
+
+  // Found max value
+  m_max_value = 0;
+  for (size_t ii = 0; ii < values.size(); ii++)
+  {
+    if (m_max_value < values[ii])
+      m_max_value = values[ii];
+  }
+}
+
+void mpBarChart::SetBarLabels(const std::vector<std::string> &labelArray)
+{
+  labels.clear();
+  labels = labelArray;
+}
+
+void mpBarChart::Clear()
+{
+  values.clear();
+  labels.clear();
+  m_max_value = 0;
+}
+
+void mpBarChart::SetBarColour(const wxColour &colour)
+{
+  m_barColour = colour;
+  wxBrush brush(m_barColour, wxBRUSHSTYLE_SOLID);
+  SetBrush(brush);
+}
+
+void mpBarChart::SetBarLabelPosition(int position)
+{
+  m_labelPos = position;
+  switch (m_labelPos)
+  {
+    case mpBAR_AXIS_H:
+    case mpBAR_TOP:
+      m_labelAngle = 0;
+      break;
+    case mpBAR_AXIS_V:
+    case mpBAR_INSIDE:
+      m_labelAngle = 90;
+      break;
+    default:
+      m_labelAngle = 0;
+      break;
+  }
+}
+
+double mpBarChart::GetMinX()
+{
+  if (values.size() > 0)
+  {
+    return 1.0 - m_width;
+  }
+  return 0.0;
+}
+
+double mpBarChart::GetMaxX()
+{
+  return (((double)values.size()) + m_width * 0.5);
+}
+
+double mpBarChart::GetMinY()
+{
+  return 0.0;
+}
+
+double mpBarChart::GetMaxY()
+{
+  return m_max_value;
+}
+
+//-----------------------------------------------------------------------------
 // mpScale implementations
 //-----------------------------------------------------------------------------
 
@@ -2007,7 +2151,7 @@ void mpScaleX::DoPlot(wxDC &dc, mpWindow &w)
   const double end = w.GetPosX() + (double)w.GetScreenX() / scaleX;
 
   // Get string format
-  wxString fmt;
+  wxString fmt = _T("");
   switch (m_labelType)
   {
     case mpX_NORMAL:
@@ -3253,9 +3397,7 @@ bool mpWindow::AddLayer(mpLayer *layer, bool refreshDisplay)
     // We just add a function, so we need to update the legend
     if (layer->GetLayerType() == mpLAYER_PLOT)
     {
-      mpInfoLegend* legend = (mpInfoLegend*)this->GetLayerByClassName(_T("mpInfoLegend"));
-      if (legend)
-        legend->SetNeedUpdate();
+      RefreshLegend();
     }
 
     layer->SetWindow(*this);
@@ -3299,6 +3441,8 @@ bool mpWindow::DelLayer(mpLayer *layer, bool alsoDeleteObject, bool refreshDispl
         if (alsoDeleteObject)
           delete *it;
         m_layers.erase(it); // this deleted the reference only
+        // Refresh
+        RefreshLegend();
         if (refreshDisplay)
           UpdateAll();
         RefreshConfigWindow();
@@ -3340,6 +3484,7 @@ void mpWindow::DelAllPlot(bool alsoDeleteObject, mpFunctionType func, bool refre
       DelLayer((mpLayer*)(*it), alsoDeleteObject, false);
     }
   }
+  RefreshLegend();
   if (refreshDisplay)
     UpdateAll();
   RefreshConfigWindow();
@@ -4007,6 +4152,13 @@ mpLayer* mpWindow::GetLayerByClassName(const wxString &name)
   return NULL;    // Not found
 }
 
+void mpWindow::RefreshLegend(void)
+{
+  mpInfoLegend* legend = (mpInfoLegend*)GetLayerByClassName(_T("mpInfoLegend"));
+  if (legend)
+    legend->SetNeedUpdate();
+}
+
 /**
  * Get the first scale X layer (X axis) or NULL if not found
  */
@@ -4290,11 +4442,7 @@ bool mpWindow::LoadFile(const wxString &filename)
 
   fclose(file);
 
-  mpInfoLegend* legend = (mpInfoLegend*)GetLayerByClassName(_T("mpInfoLegend"));
-  if (legend)
-  {
-    legend->SetNeedUpdate();
-  }
+  RefreshLegend();
   return true;
 }
 

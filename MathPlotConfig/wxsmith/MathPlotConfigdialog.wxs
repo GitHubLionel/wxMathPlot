@@ -732,6 +732,7 @@
 																	<item>Date</item>
 																	<item>DateTime</item>
 																	<item>User</item>
+																	<item>None</item>
 																</content>
 																<use_items_array>1</use_items_array>
 																<selection>0</selection>

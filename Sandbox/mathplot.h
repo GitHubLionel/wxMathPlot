@@ -135,6 +135,7 @@ class WXDLLIMPEXP_MATHPLOT mpFY;
 class WXDLLIMPEXP_MATHPLOT mpFXY;
 class WXDLLIMPEXP_MATHPLOT mpFXYVector;
 class WXDLLIMPEXP_MATHPLOT mpProfile;
+class WXDLLIMPEXP_MATHPLOT mpBarChart;
 class WXDLLIMPEXP_MATHPLOT mpScale;
 class WXDLLIMPEXP_MATHPLOT mpScaleX;
 class WXDLLIMPEXP_MATHPLOT mpScaleY;
@@ -335,7 +336,8 @@ typedef enum __mp_Layer_Type
   mpLAYER_INFO,    //!< Info box type layer
   mpLAYER_TEXT,    //!< Text box type layer
   mpLAYER_BITMAP,  //!< Bitmap type layer
-  mpLAYER_LINE     //!< Line (horizontal or vertical) type layer
+  mpLAYER_LINE,    //!< Line (horizontal or vertical) type layer
+  mpLAYER_CHART,   //!< Chart type layer (bar chart)
 } mpLayerType;
 
 /**
@@ -349,6 +351,7 @@ typedef enum __mp_Layer_ZOrder
   mpZIndex_AXIS,         //!< Axis type layer
   mpZIndex_LINE,         //!< Line (horizontal or vertical) type layer
   mpZIndex_PLOT,         //!< Plot (function) type layer
+  mpZIndex_CHART,        //!< Chart type layer
   mpZIndex_INFO,         //!< Info box type layer
   mpZIndex_TEXT,         //!< Text box type layer
   mpZIndex_END           //!< Just the end of ZOrder
@@ -1524,6 +1527,97 @@ class WXDLLIMPEXP_MATHPLOT mpProfile: public mpFunction
   DECLARE_DYNAMIC_CLASS(mpProfile)
 };
 
+//-----------------------------------------------------------------------------
+// mpBarChart  - provided by Jose David Rondini
+//-----------------------------------------------------------------------------
+/* Defines for bar charts label positioning. */
+#define mpBAR_NONE      0       //!< No bar labels
+#define mpBAR_AXIS_H    1       //!< Labels under X axis - horizontal layout
+#define mpBAR_AXIS_V    2       //!< Labels under X axis - vertical layout
+#define mpBAR_INSIDE    3       //!< Labels inside bar rectangle
+#define mpBAR_TOP       4       //!< Labels over the bar
+
+/** \brief Layer for bar chart.
+ */
+class WXDLLIMPEXP_MATHPLOT mpBarChart: public mpFunction
+{
+  public:
+    /** Debault constructor */
+    mpBarChart(const wxString &name = wxEmptyString);
+
+    /** Destructor */
+    ~mpBarChart()
+    {
+      Clear();
+    }
+
+    /** Layer plot handler.
+     This implementation will plot the a rectangle for each point from
+     x axis and y value.
+     */
+    virtual void DoPlot(wxDC &dc, mpWindow &w);
+
+    /** Set bar values.
+     @param data Vector of double. */
+    void SetBarValues(const std::vector<double> &data);
+
+    /** Set bar label values.
+     @param labelArray Vector of strings containing labels. */
+    void SetBarLabels(const std::vector<std::string> &labelArray);
+
+    /** Clears all the data, leaving the layer empty.
+     * @sa SetBarValues, SetBarLabels
+     */
+    void Clear();
+
+    void SetBarColour(const wxColour &colour);
+
+    void SetColumnWidth(const double colWidth)
+    {
+      m_width = colWidth;
+    }
+
+    /** Set bar labels positioning. */
+    void SetBarLabelPosition(int position);
+
+    virtual bool HasBBox()
+    {
+      return (values.size() > 0);
+    }
+
+    /** Get inclusive left border of bounding box.
+     @return Value
+     */
+    virtual double GetMinX();
+
+    /** Get inclusive right border of bounding box.
+     @return Value
+     */
+    virtual double GetMaxX();
+
+    /** Get inclusive bottom border of bounding box.
+     @return Value
+     */
+    virtual double GetMinY();
+
+    /** Get inclusive top border of bounding box.
+     @return Value
+     */
+    virtual double GetMaxY();
+
+  protected:
+    std::vector<double> values;
+    std::vector<std::string> labels;
+
+    double m_max_value;
+    double m_width;
+    wxColour m_barColour;
+    int m_labelPos;
+    double m_labelAngle;
+
+    DECLARE_DYNAMIC_CLASS(mpBarChart)
+};
+
 /*@}*/
 
 //-----------------------------------------------------------------------------
@@ -1679,6 +1773,8 @@ class WXDLLIMPEXP_MATHPLOT mpScale: public mpLayer
 #define mpX_DATETIME 0x04
 /** Set label user defined */
 #define mpX_USER 0x05
+/** Set no label for X axis (useful for bar) */
+#define mpX_NONE 0x06
 
 /** Plot layer implementing a x-scale ruler.
  The ruler is fixed at Y=0 in the coordinate system. A label is plotted at
@@ -1988,6 +2084,11 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      @return A pointer to the mpLayer object, or NULL if not found.
      */
     mpLayer* GetLayerByClassName(const wxString &name);
+
+    /*!
+     * Flag for refresh legend
+     */
+    void RefreshLegend(void);
 
     /*! Get the first scale X layer (X axis).
      @return A pointer to the mpScaleX object, or NULL if not found.

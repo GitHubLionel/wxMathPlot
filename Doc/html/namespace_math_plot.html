@@ -55,6 +55,9 @@ $(function() {
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1_math_plot_config_dialog.html">MathPlotConfigDialog</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_bar_chart.html">mpBarChart</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Layer for bar chart.  <a href="class_math_plot_1_1mp_bar_chart.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_bitmap_layer.html">mpBitmapLayer</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A layer that allows you to have a bitmap image printed in the <a class="el" href="class_math_plot_1_1mp_window.html" title="Canvas for plotting mpLayer implementations.">mpWindow</a>.  <a href="class_math_plot_1_1mp_bitmap_layer.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -306,7 +309,8 @@ Enumerations</h2></td></tr>
 <br />
 &#160;&#160;<a class="el" href="namespace_math_plot.html#ada98ad01a14d9f810d8d9bd9a44066b6ae4e0835d0023cea0846f43d707dc3a5e">mpLAYER_TEXT</a>, 
 <a class="el" href="namespace_math_plot.html#ada98ad01a14d9f810d8d9bd9a44066b6a500f496bf7a083f30b89fe286061081a">mpLAYER_BITMAP</a>, 
-<a class="el" href="namespace_math_plot.html#ada98ad01a14d9f810d8d9bd9a44066b6aecdfdb2c29f1b333edba8ab6e3db7f5c">mpLAYER_LINE</a>
+<a class="el" href="namespace_math_plot.html#ada98ad01a14d9f810d8d9bd9a44066b6aecdfdb2c29f1b333edba8ab6e3db7f5c">mpLAYER_LINE</a>, 
+<a class="el" href="namespace_math_plot.html#ada98ad01a14d9f810d8d9bd9a44066b6a51d4f1c2bb4d5730c82d6bf0434e3202">mpLAYER_CHART</a>
 <br />
  }</td></tr>
 <tr class="separator:ada98ad01a14d9f810d8d9bd9a44066b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -316,7 +320,8 @@ Enumerations</h2></td></tr>
 <a class="el" href="namespace_math_plot.html#ae6288bbcd112f6d15d0ea9dc06b40786a52ee2bee0dff046477d3277b6db607da">mpZIndex_LINE</a>, 
 <a class="el" href="namespace_math_plot.html#ae6288bbcd112f6d15d0ea9dc06b40786a7d57d80295eb09b80ed75dfeaf2cfc71">mpZIndex_PLOT</a>, 
 <br />
-&#160;&#160;<a class="el" href="namespace_math_plot.html#ae6288bbcd112f6d15d0ea9dc06b40786a6c2eb06e4766138cb182f825bcf72578">mpZIndex_INFO</a>, 
+&#160;&#160;<a class="el" href="namespace_math_plot.html#ae6288bbcd112f6d15d0ea9dc06b40786ac9767ecca3aace699e187d3c8a99ecc5">mpZIndex_CHART</a>, 
+<a class="el" href="namespace_math_plot.html#ae6288bbcd112f6d15d0ea9dc06b40786a6c2eb06e4766138cb182f825bcf72578">mpZIndex_INFO</a>, 
 <a class="el" href="namespace_math_plot.html#ae6288bbcd112f6d15d0ea9dc06b40786a7d1271a1eff0374149fdf4d8e662facf">mpZIndex_TEXT</a>, 
 <a class="el" href="namespace_math_plot.html#ae6288bbcd112f6d15d0ea9dc06b40786a956ad617cac6830558c0b1f7d52da581">mpZIndex_END</a>
 <br />
@@ -471,6 +476,8 @@ typedef enum MathPlot::__mp_Colour&#160;</td><td class="memItemRight" valign="bo
 </td></tr>
 <tr><td class="fieldname"><a id="ada98ad01a14d9f810d8d9bd9a44066b6aecdfdb2c29f1b333edba8ab6e3db7f5c"></a>mpLAYER_LINE&#160;</td><td class="fielddoc"><p>Line (horizontal or vertical) type layer. </p>
 </td></tr>
+<tr><td class="fieldname"><a id="ada98ad01a14d9f810d8d9bd9a44066b6a51d4f1c2bb4d5730c82d6bf0434e3202"></a>mpLAYER_CHART&#160;</td><td class="fielddoc"><p>Chart type layer (bar chart) </p>
+</td></tr>
 </table>
 
 </div>
@@ -496,6 +503,8 @@ typedef enum MathPlot::__mp_Colour&#160;</td><td class="memItemRight" valign="bo
 <tr><td class="fieldname"><a id="ae6288bbcd112f6d15d0ea9dc06b40786a52ee2bee0dff046477d3277b6db607da"></a>mpZIndex_LINE&#160;</td><td class="fielddoc"><p>Line (horizontal or vertical) type layer. </p>
 </td></tr>
 <tr><td class="fieldname"><a id="ae6288bbcd112f6d15d0ea9dc06b40786a7d57d80295eb09b80ed75dfeaf2cfc71"></a>mpZIndex_PLOT&#160;</td><td class="fielddoc"><p>Plot (function) type layer. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ae6288bbcd112f6d15d0ea9dc06b40786ac9767ecca3aace699e187d3c8a99ecc5"></a>mpZIndex_CHART&#160;</td><td class="fielddoc"><p>Chart type layer. </p>
 </td></tr>
 <tr><td class="fieldname"><a id="ae6288bbcd112f6d15d0ea9dc06b40786a6c2eb06e4766138cb182f825bcf72578"></a>mpZIndex_INFO&#160;</td><td class="fielddoc"><p>Info box type layer. </p>
 </td></tr>

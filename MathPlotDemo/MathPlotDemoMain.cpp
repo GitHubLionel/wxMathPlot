@@ -52,6 +52,7 @@ const long MathPlotDemoFrame::ID_BUTTON2 = wxNewId();
 const long MathPlotDemoFrame::ID_BUTTON3 = wxNewId();
 const long MathPlotDemoFrame::ID_BUTTON4 = wxNewId();
 const long MathPlotDemoFrame::ID_BUTTON5 = wxNewId();
+const long MathPlotDemoFrame::ID_BUTTON6 = wxNewId();
 const long MathPlotDemoFrame::ID_PANEL1 = wxNewId();
 const long MathPlotDemoFrame::ID_MATHPLOT1 = wxNewId();
 const long MathPlotDemoFrame::ID_PANEL2 = wxNewId();
@@ -87,6 +88,7 @@ MathPlotDemoFrame::MathPlotDemoFrame(wxWindow* parent,wxWindowID id)
     bBar = new wxButton(pLog, ID_BUTTON3, _("Draw Bar"), wxPoint(16,88), wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON3"));
     bLog = new wxButton(pLog, ID_BUTTON4, _("Log Y sample"), wxPoint(16,120), wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON4"));
     bLogXY = new wxButton(pLog, ID_BUTTON5, _("Log XY sample"), wxPoint(16,152), wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON5"));
+    bBarChart = new wxButton(pLog, ID_BUTTON6, _("Draw BarChart"), wxPoint(16,184), wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON6"));
     AuiManager1->AddPane(pLog, wxAuiPaneInfo().Name(_T("PaneName0")).DefaultPane().Caption(_("Log")).CaptionVisible().CloseButton(false).Left().Floatable(false).MinSize(wxSize(120,-1)).Movable(false));
     pPlot = new wxPanel(this, ID_PANEL2, wxPoint(227,228), wxDefaultSize, wxTAB_TRAVERSAL, _T("ID_PANEL2"));
     BoxSizer1 = new wxBoxSizer(wxVERTICAL);
@@ -95,6 +97,8 @@ MathPlotDemoFrame::MathPlotDemoFrame(wxWindow* parent,wxWindowID id)
     mPlot->Fit();
     BoxSizer1->Add(mPlot, 1, wxALL|wxEXPAND, 5);
     pPlot->SetSizer(BoxSizer1);
+    BoxSizer1->Fit(pPlot);
+    BoxSizer1->SetSizeHints(pPlot);
     AuiManager1->AddPane(pPlot, wxAuiPaneInfo().Name(_T("PaneName1")).DefaultPane().Caption(_("Plot")).CaptionVisible().MaximizeButton().CloseButton(false).Center());
     AuiManager1->Update();
     MenuBar1 = new wxMenuBar();
@@ -121,6 +125,7 @@ MathPlotDemoFrame::MathPlotDemoFrame(wxWindow* parent,wxWindowID id)
     Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotDemoFrame::OnbBarClick, this, ID_BUTTON3);
     Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotDemoFrame::OnbLogClick, this, ID_BUTTON4);
     Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotDemoFrame::OnbLogXYClick, this, ID_BUTTON5);
+    Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotDemoFrame::OnbBarChartClick, this, ID_BUTTON6);
     Bind(wxEVT_COMMAND_MENU_SELECTED, &MathPlotDemoFrame::OnmiPreviewSelected, this, idMenuPreview);
     Bind(wxEVT_COMMAND_MENU_SELECTED, &MathPlotDemoFrame::OnmiPrintSelected, this, idMenuPrint);
     Bind(wxEVT_COMMAND_MENU_SELECTED, &MathPlotDemoFrame::OnmiQuitSelected, this, idMenuExit);
@@ -181,6 +186,7 @@ void MathPlotDemoFrame::CleanPlot(void)
 	leftAxis->SetAlign(mpALIGN_CENTERY);
   leftAxis->SetLogAxis(false);
   bottomAxis->SetAuto(true);
+  mPlot->DelLayer(mPlot->GetLayerByName(_T("BarChart")));
 }
 
 void MathPlotDemoFrame::OnbDrawClick(wxCommandEvent &WXUNUSED(event))
@@ -266,6 +272,38 @@ void MathPlotDemoFrame::OnbLogXYClick(wxCommandEvent &WXUNUSED(event))
   mPlot->Fit();
 }
 
+void MathPlotDemoFrame::OnbBarChartClick(wxCommandEvent &WXUNUSED(event))
+{
+  CleanPlot();
+  mpBarChart* barChart = new mpBarChart(_T("BarChart"));
+  // Create vector for y and fill it with data
+  std::vector<double> vectory;
+  double ycoord;
+  for (unsigned int p = 0; p < 5; p++)
+  {
+    ycoord = 1.5 * ((double)p) + 1.0;
+    vectory.push_back(ycoord);
+  }
+  barChart->SetBarValues(vectory);
+  std::vector<std::string> labels;
+  std::string label;
+  label.assign("Red");
+  labels.push_back(label);
+  label.assign("Green");
+  labels.push_back(label);
+  label.assign("Blue");
+  labels.push_back(label);
+  label.assign("Black");
+  labels.push_back(label);
+  label.assign("Yellow");
+  labels.push_back(label);
+  barChart->SetBarLabels(labels);
+  barChart->SetBarColour(wxColour(125, 200, 255));
+  barChart->SetBarLabelPosition(mpBAR_TOP);
+  mPlot->AddLayer(barChart);
+  mPlot->Fit();
+}
+
 void MathPlotDemoFrame::OnmiQuitSelected(wxCommandEvent &WXUNUSED(event))
 {
   Close(true);
@@ -299,3 +337,4 @@ void MathPlotDemoFrame::OnmiPrintSelected(wxCommandEvent &WXUNUSED(event))
   mpPrintout printout(mPlot, wxT("Plot print"));
   printer.Print(this, &printout, true);
 }
+
