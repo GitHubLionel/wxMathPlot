@@ -270,6 +270,8 @@ mpInfoLayer::mpInfoLayer()
   m_type = mpLAYER_INFO;
   m_subtype = mpiInfo;
   m_dim = wxRect(0, 0, 1, 1);
+  m_oldDim = m_dim;
+  m_info_bmp = NULL;
   m_brush = *wxTRANSPARENT_BRUSH;
   m_brush.SetColour(*wxWHITE);
   m_reference.x = 0;
@@ -280,23 +282,26 @@ mpInfoLayer::mpInfoLayer()
   m_ZIndex = mpZIndex_INFO;
 }
 
-mpInfoLayer::mpInfoLayer(wxRect rect, const wxBrush &brush, mpLocation location)
+mpInfoLayer::mpInfoLayer(wxRect rect, const wxBrush &brush, mpLocation location) :
+    mpInfoLayer()
 {
-  m_type = mpLAYER_INFO;
-  m_subtype = mpiInfo;
   m_brush = brush;
   if (m_brush.GetStyle() == wxBRUSHSTYLE_TRANSPARENT)
     m_brush.SetColour(*wxWHITE);
   m_reference.x = rect.x;
   m_reference.y = rect.y;
-  m_winX = 1;
-  m_winY = 1;
   m_location = location;
 }
 
 mpInfoLayer::~mpInfoLayer()
 {
+  DeleteAndNull(m_info_bmp);
+}
 
+void mpInfoLayer::SetVisible(bool show)
+{
+  m_visible = show;
+  DeleteAndNull(m_info_bmp);
 }
 
 void mpInfoLayer::UpdateInfo(mpWindow &WXUNUSED(w), wxEvent &WXUNUSED(event))
@@ -437,6 +442,18 @@ void mpInfoLayer::DoPlot(wxDC &dc, mpWindow &w)
   dc.DrawRectangle(m_dim);
 }
 
+void mpInfoLayer::ErasePlot(wxDC &dc, mpWindow &WXUNUSED(w))
+{
+  if (m_info_bmp)
+  {
+    wxMemoryDC m_info_dc(&dc);
+    m_info_dc.SelectObject(*m_info_bmp);
+    dc.Blit(m_oldDim.x, m_oldDim.y, m_oldDim.width, m_oldDim.height, &m_info_dc, 0, 0);
+    m_info_dc.SelectObject(wxNullBitmap);
+    DeleteAndNull(m_info_bmp);
+  }
+}
+
 //-----------------------------------------------------------------------------
 // mpInfoCoords
 //-----------------------------------------------------------------------------
@@ -450,7 +467,6 @@ mpInfoCoords::mpInfoCoords() :
   m_labelType = mpX_NORMAL;
   m_timeConv = 0;
   m_mouseX = m_mouseY = 0;
-  m_coord_bmp = NULL;
   m_location = mpMarginBottomRight;
   wxBrush coord(wxColour(232, 232, 232), wxBRUSHSTYLE_SOLID);
   SetBrush(coord);
@@ -466,11 +482,11 @@ mpInfoCoords::mpInfoCoords(mpLocation location) :
   m_labelType = mpX_NORMAL;
   m_timeConv = 0;
   m_mouseX = m_mouseY = 0;
-  m_coord_bmp = NULL;
   m_location = location;
   m_series_coord = false;
   wxBrush coord(wxColour(232, 232, 232), wxBRUSHSTYLE_SOLID);
   SetBrush(coord);
+  m_content = _T("");
 }
 
 mpInfoCoords::mpInfoCoords(wxRect rect, const wxBrush &brush, mpLocation location) :
@@ -480,23 +496,14 @@ mpInfoCoords::mpInfoCoords(wxRect rect, const wxBrush &brush, mpLocation locatio
   m_labelType = mpX_NORMAL;
   m_timeConv = 0;
   m_mouseX = m_mouseY = 0;
-  m_coord_bmp = NULL;
   m_series_coord = false;
-}
-
-mpInfoCoords::~mpInfoCoords()
-{
-  DeleteAndNull(m_coord_bmp);
-}
-
-void mpInfoCoords::SetVisible(bool show)
-{
-  m_visible = show;
-  DeleteAndNull(m_coord_bmp);
+  m_content = _T("");
 }
 
 void mpInfoCoords::UpdateInfo(mpWindow &w, wxEvent &event)
 {
+  m_content.Clear();
+
   if (event.GetEventType() == wxEVT_MOTION)
   {
     double xVal = 0.0, yVal = 0.0, y2Val = 0.0;
@@ -505,8 +512,6 @@ void mpInfoCoords::UpdateInfo(mpWindow &w, wxEvent &event)
 
     m_mouseX = ((wxMouseEvent&)event).GetX();
     m_mouseY = ((wxMouseEvent&)event).GetY();
-
-    m_content.Clear();
 
     if (m_series_coord)
     {
@@ -586,6 +591,12 @@ void mpInfoCoords::UpdateInfo(mpWindow &w, wxEvent &event)
   }
 }
 
+void mpInfoCoords::ErasePlot(wxDC &dc, mpWindow &w)
+{
+  mpInfoLayer::ErasePlot(dc, w);
+  m_content.Empty();
+}
+
 void mpInfoCoords::DoPlot(wxDC &dc, mpWindow &w)
 {
   if (m_content.IsEmpty())
@@ -619,22 +630,22 @@ void mpInfoCoords::DoPlot(wxDC &dc, mpWindow &w)
 
   // Don't use stored bitmap when we repaint all
   if (w.IsRepainting())
-    DeleteAndNull(m_coord_bmp);
+    DeleteAndNull(m_info_bmp);
 
   // First : restaure stored bitmap
-  if (m_coord_bmp)
+  if (m_info_bmp)
   {
     wxMemoryDC m_coord_dc(&dc);
-    m_coord_dc.SelectObject(*m_coord_bmp);
+    m_coord_dc.SelectObject(*m_info_bmp);
     dc.Blit(m_oldDim.x, m_oldDim.y, m_oldDim.width, m_oldDim.height, &m_coord_dc, 0, 0);
     m_coord_dc.SelectObject(wxNullBitmap);
-    DeleteAndNull(m_coord_bmp);
+    DeleteAndNull(m_info_bmp);
   }
 
   // Second : store new bitmap
-  m_coord_bmp = new wxBitmap(m_dim.width, m_dim.height, dc);
+  m_info_bmp = new wxBitmap(m_dim.width, m_dim.height, dc);
   wxMemoryDC m_coord_dc(&dc);
-  m_coord_dc.SelectObject(*m_coord_bmp);
+  m_coord_dc.SelectObject(*m_info_bmp);
   m_coord_dc.Blit(0, 0, m_dim.width, m_dim.height, &dc, m_dim.x, m_dim.y);
   m_coord_dc.SelectObject(wxNullBitmap);
   m_oldDim = m_dim;
@@ -653,18 +664,6 @@ void mpInfoCoords::DoPlot(wxDC &dc, mpWindow &w)
   }
 }
 
-void mpInfoCoords::ErasePlot(wxDC &dc, mpWindow &WXUNUSED(w))
-{
-  if (m_coord_bmp)
-  {
-    wxMemoryDC m_coord_dc(&dc);
-    m_coord_dc.SelectObject(*m_coord_bmp);
-    dc.Blit(m_oldDim.x, m_oldDim.y, m_oldDim.width, m_oldDim.height, &m_coord_dc, 0, 0);
-    m_coord_dc.SelectObject(wxNullBitmap);
-    DeleteAndNull(m_coord_bmp);
-  }
-}
-
 //-----------------------------------------------------------------------------
 // mpInfoLegend
 //-----------------------------------------------------------------------------
@@ -679,7 +678,6 @@ mpInfoLegend::mpInfoLegend() :
   m_item_mode = mpLegendLine;
   m_item_direction = mpVertical;
   m_location = mpMarginBottomCenter;
-  m_legend_bmp = NULL;
   m_need_update = true;
   m_layer_count = 0;
 }
@@ -690,14 +688,8 @@ mpInfoLegend::mpInfoLegend(wxRect rect, const wxBrush &brush, mpLocation locatio
   m_subtype = mpiLegend;
   m_item_mode = mpLegendLine;
   m_item_direction = mpVertical;
-  m_legend_bmp = NULL;
   m_need_update = true;
   m_layer_count = 0;
-}
-
-mpInfoLegend::~mpInfoLegend()
-{
-  DeleteAndNull(m_legend_bmp);
 }
 
 void mpInfoLegend::UpdateBitmap(wxDC &dc, mpWindow &w)
@@ -782,7 +774,7 @@ void mpInfoLegend::UpdateBitmap(wxDC &dc, mpWindow &w)
   }
 
   // Delete old bitmap
-  DeleteAndNull(m_legend_bmp);
+  DeleteAndNull(m_info_bmp);
 
   // Copy new bitmap to m_legend_bmp
   if ((width != 0) && (height != 0))
@@ -802,13 +794,16 @@ void mpInfoLegend::UpdateBitmap(wxDC &dc, mpWindow &w)
     SetInfoRectangle(w, width, height);
 
     // Transfert to the legend bitmap
-    m_legend_bmp = new wxBitmap(width, height, dc);
+    m_info_bmp = new wxBitmap(width, height, dc);
     wxMemoryDC buff_dc2(&dc);
-    buff_dc2.SelectObject(*m_legend_bmp);
+    buff_dc2.SelectObject(*m_info_bmp);
     buff_dc2.Blit(0, 0, width, height, &buff_dc, 0, 0);
     buff_dc2.SelectObject(wxNullBitmap);
     m_need_update = false;
   }
+  else
+    // To avoid mouse focus on empty legend
+    SetInfoRectangle(w, 1, 1);
 
   buff_dc.SelectObject(wxNullBitmap);
   delete buff_bmp;
@@ -822,10 +817,10 @@ void mpInfoLegend::DoPlot(wxDC &dc, mpWindow &w)
     // In case we have resize
     SetInfoRectangle(w, m_dim.width, m_dim.height);
 
-  if (m_legend_bmp && (m_dim.width != 0) && (m_dim.height != 0))
+  if (m_info_bmp && (m_dim.width != 0) && (m_dim.height != 0))
   {
     wxMemoryDC buff_dc(&dc);
-    buff_dc.SelectObject(*m_legend_bmp);
+    buff_dc.SelectObject(*m_info_bmp);
 
     // Draw the info bitmap to the current dc
     // wxAND not work on Linux
@@ -1778,25 +1773,85 @@ void mpProfile::DoPlot(wxDC &dc, mpWindow &w)
 }
 
 //-----------------------------------------------------------------------------
-// mpBarChart implementation
+// mpChart implementation
 //-----------------------------------------------------------------------------
 
-IMPLEMENT_ABSTRACT_CLASS(mpBarChart, mpFunction)
+IMPLEMENT_ABSTRACT_CLASS(mpChart, mpFunction)
 
-mpBarChart::mpBarChart(const wxString &name) :
+mpChart::mpChart(const wxString &name) :
     mpFunction(name)
 {
   m_type = mpLAYER_CHART;
-  m_subtype = 0;
+  m_subtype = mpcChartNone;
   m_max_value = 0;
-  m_width = 0.5;
+  m_total_value = 0;
+}
+
+void mpChart::SetChartValues(const std::vector<double> &data)
+{
+  values.clear();
+  values = data;
+
+  // Found max value
+  m_max_value = 0;
+  m_total_value = 0;
+  for (size_t ii = 0; ii < values.size(); ii++)
+  {
+    if (m_max_value < values[ii])
+      m_max_value = values[ii];
+    m_total_value += values[ii];
+  }
+}
+
+void mpChart::SetChartLabels(const std::vector<std::string> &labelArray)
+{
+  labels.clear();
+  labels = labelArray;
+}
+
+void mpChart::AddData(const double &data, const std::string &label)
+{
+  values.push_back(data);
+  labels.push_back(label);
+  if (values.size() == 1)
+  {
+    m_max_value = data;
+    m_total_value = data;
+  }
+  else
+  {
+    if (m_max_value < data)
+      m_max_value = data;
+    m_total_value += data;
+  }
+}
+
+void mpChart::Clear()
+{
+  values.clear();
+  labels.clear();
+  m_max_value = 0;
+  m_total_value = 0;
+}
+
+//-----------------------------------------------------------------------------
+// mpBarChart implementation
+//-----------------------------------------------------------------------------
+
+IMPLEMENT_ABSTRACT_CLASS(mpBarChart, mpChart)
+
+mpBarChart::mpBarChart(const wxString &name, double width) :
+    mpChart(name)
+{
+  m_type = mpLAYER_CHART;
+  m_subtype = mpcBarChart;
+  m_width = width;
   SetBarColour(wxColour(0, 0, 255));
   SetBarLabelPosition(mpBAR_NONE);
 }
 
 void mpBarChart::DoPlot(wxDC &dc, mpWindow &w)
 {
-  size_t binIndex = 0;
   int labelX = 0, labelY = 0;
   int labelW = 0, labelH = 0;
   bool drawLabels = (labels.size() == values.size()) && (m_labelPos != mpBAR_NONE);
@@ -1805,7 +1860,7 @@ void mpBarChart::DoPlot(wxDC &dc, mpWindow &w)
 
   if (values.size() > 0)
   {
-    for (binIndex = 0; binIndex < values.size(); binIndex++)
+    for (size_t binIndex = 0; binIndex < values.size(); binIndex++)
     {
       rect_x_tl = w.x2p(((double)binIndex) + 1.0 - 0.5 * m_width);
       rect_y_tl = w.y2p(values[binIndex]);
@@ -1842,33 +1897,6 @@ void mpBarChart::DoPlot(wxDC &dc, mpWindow &w)
       }
     }
   }
-}
-
-void mpBarChart::SetBarValues(const std::vector<double> &data)
-{
-  values.clear();
-  values = data;
-
-  // Found max value
-  m_max_value = 0;
-  for (size_t ii = 0; ii < values.size(); ii++)
-  {
-    if (m_max_value < values[ii])
-      m_max_value = values[ii];
-  }
-}
-
-void mpBarChart::SetBarLabels(const std::vector<std::string> &labelArray)
-{
-  labels.clear();
-  labels = labelArray;
-}
-
-void mpBarChart::Clear()
-{
-  values.clear();
-  labels.clear();
-  m_max_value = 0;
 }
 
 void mpBarChart::SetBarColour(const wxColour &colour)
@@ -1919,6 +1947,81 @@ double mpBarChart::GetMinY()
 double mpBarChart::GetMaxY()
 {
   return m_max_value;
+}
+
+//-----------------------------------------------------------------------------
+// mpPieChart implementation
+//-----------------------------------------------------------------------------
+
+IMPLEMENT_ABSTRACT_CLASS(mpPieChart, mpChart)
+
+mpPieChart::mpPieChart(const wxString &name, double radius) :
+    mpChart(name)
+{
+  m_type = mpLAYER_CHART;
+  m_subtype = mpcBarChart;
+  m_radius = radius;
+  wxBrush brush(wxColour(125, 200, 255), wxBRUSHSTYLE_SOLID);
+  SetBrush(brush);
+}
+
+void mpPieChart::DoPlot(wxDC &dc, mpWindow &w)
+{
+  int labelX = 0, labelY = 0;
+  int labelW = 0, labelH = 0;
+  bool drawLabels = (labels.size() == values.size());
+  wxCoord x1 = 0, y1 = 0, x2 = 0, y2 = 0, xc = 0, yc = 0;
+  double angle = 0;
+  double anglepie = 0;
+  double angletxt = 0;
+  double scale = w.GetScaleY() / w.GetScaleX();
+  wxCoord offset = (scale == 1 ? 0 : (wxCoord)(w.x2p(0) / 2));
+  wxString currentLabel;
+
+  if (values.size() > 0)
+  {
+    xc = w.x2p(0) * scale + offset;
+    x1 = w.x2p(m_radius) * scale + offset;
+    y1 = yc = w.y2p(0);
+
+    for (size_t binIndex = 0; binIndex < values.size(); binIndex++)
+    {
+      angle = values[binIndex] / m_total_value * (2.0 * M_PI);
+      anglepie += angle;
+      x2 = w.x2p(m_radius * cos(anglepie)) * scale + offset;
+      y2 = w.y2p(m_radius * sin(anglepie));
+      wxBrush brush(GetColour(binIndex), wxBRUSHSTYLE_SOLID);
+      dc.SetBrush(brush);
+      dc.DrawArc(x1, y1, x2, y2, xc, yc);
+      if (drawLabels)
+      {
+        currentLabel = wxConvUTF8.cMB2WX(labels[binIndex].c_str());
+        dc.GetTextExtent(currentLabel, &labelW, &labelH);
+        labelX = w.x2p(m_radius * cos(angletxt + angle / 2.0)) * scale + offset + 10;
+        labelY = w.y2p(m_radius * sin(angletxt + angle / 2.0));
+        dc.DrawText(currentLabel, labelX, labelY);
+        angletxt += angle;
+      }
+      x1 = x2;
+      y1 = y2;
+    }
+  }
+}
+
+void mpPieChart::SetPieColours(const std::vector<wxColour> &colourArray)
+{
+  colours.clear();
+  colours = colourArray;
+}
+
+const wxColour& mpPieChart::GetColour(unsigned int id)
+{
+  // Create colours if necessary
+  while (id >= colours.size())
+  {
+    colours.push_back(wxIndexColour(colours.size()));
+  }
+  return colours[id];
 }
 
 //-----------------------------------------------------------------------------

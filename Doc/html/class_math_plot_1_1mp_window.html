@@ -75,9 +75,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ae7f0bf730360565f233f237ed02f5fe1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_window.html#ae7f0bf730360565f233f237ed02f5fe1">AddLayer</a> (<a class="el" href="class_math_plot_1_1mp_layer.html">mpLayer</a> *layer, bool refreshDisplay=true)</td></tr>
 <tr class="memdesc:ae7f0bf730360565f233f237ed02f5fe1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add a plot layer to the canvas.  <a href="class_math_plot_1_1mp_window.html#ae7f0bf730360565f233f237ed02f5fe1">More...</a><br /></td></tr>
 <tr class="separator:ae7f0bf730360565f233f237ed02f5fe1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a96d23b580ab2ccc7129d4daf53044698"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_window.html#a96d23b580ab2ccc7129d4daf53044698">DelLayer</a> (<a class="el" href="class_math_plot_1_1mp_layer.html">mpLayer</a> *layer, bool alsoDeleteObject=false, bool refreshDisplay=true)</td></tr>
-<tr class="memdesc:a96d23b580ab2ccc7129d4daf53044698"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove a plot layer from the canvas.  <a href="class_math_plot_1_1mp_window.html#a96d23b580ab2ccc7129d4daf53044698">More...</a><br /></td></tr>
-<tr class="separator:a96d23b580ab2ccc7129d4daf53044698"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a04c8a5b427902c7ffc776539d736e47a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_window.html#a04c8a5b427902c7ffc776539d736e47a">DelLayer</a> (<a class="el" href="class_math_plot_1_1mp_layer.html">mpLayer</a> *layer, bool alsoDeleteObject, bool refreshDisplay=true)</td></tr>
+<tr class="memdesc:a04c8a5b427902c7ffc776539d736e47a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove a plot layer from the canvas.  <a href="class_math_plot_1_1mp_window.html#a04c8a5b427902c7ffc776539d736e47a">More...</a><br /></td></tr>
+<tr class="separator:a04c8a5b427902c7ffc776539d736e47a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0338decb02a973670e7c851fac15671e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_window.html#a0338decb02a973670e7c851fac15671e">DelAllLayers</a> (bool alsoDeleteObject, bool refreshDisplay=true)</td></tr>
 <tr class="memdesc:a0338decb02a973670e7c851fac15671e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove all layers from the plot.  <a href="class_math_plot_1_1mp_window.html#a0338decb02a973670e7c851fac15671e">More...</a><br /></td></tr>
 <tr class="separator:a0338decb02a973670e7c851fac15671e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -954,8 +954,8 @@ wxBitmap *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href
 
 </div>
 </div>
-<a id="a96d23b580ab2ccc7129d4daf53044698"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a96d23b580ab2ccc7129d4daf53044698">&#9670;&nbsp;</a></span>DelLayer()</h2>
+<a id="a04c8a5b427902c7ffc776539d736e47a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a04c8a5b427902c7ffc776539d736e47a">&#9670;&nbsp;</a></span>DelLayer()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -970,7 +970,7 @@ wxBitmap *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>alsoDeleteObject</em> = <code>false</code>, </td>
+          <td class="paramname"><em>alsoDeleteObject</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -996,7 +996,7 @@ wxBitmap *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>true if layer is deleted correctly</dd></dl>
-<p>N.B. Only the layer reference in the <a class="el" href="class_math_plot_1_1mp_window.html" title="Canvas for plotting mpLayer implementations.">mpWindow</a> is deleted, the layer object still exists! </p>
+<p>N.B. Only the layer reference in the <a class="el" href="class_math_plot_1_1mp_window.html" title="Canvas for plotting mpLayer implementations.">mpWindow</a> is deleted, the layer object still exists if alsoDeleteObject is false </p>
 
 </div>
 </div>

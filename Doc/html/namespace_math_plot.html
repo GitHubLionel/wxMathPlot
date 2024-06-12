@@ -61,6 +61,9 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_bitmap_layer.html">mpBitmapLayer</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A layer that allows you to have a bitmap image printed in the <a class="el" href="class_math_plot_1_1mp_window.html" title="Canvas for plotting mpLayer implementations.">mpWindow</a>.  <a href="class_math_plot_1_1mp_bitmap_layer.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_chart.html">mpChart</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">abstract Layer for chart (bar and pie).  <a href="class_math_plot_1_1mp_chart.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_covariance_ellipse.html">mpCovarianceEllipse</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A 2D ellipse, described by a 2x2 covariance matrix.  <a href="class_math_plot_1_1mp_covariance_ellipse.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -105,6 +108,9 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_movable_object.html">mpMovableObject</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">This virtual class represents objects that can be moved to an arbitrary 2D location+rotation.  <a href="class_math_plot_1_1mp_movable_object.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_pie_chart.html">mpPieChart</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Layer for pie chart.  <a href="class_math_plot_1_1mp_pie_chart.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_math_plot_1_1mp_polygon.html">mpPolygon</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">An arbitrary polygon, descendant of <a class="el" href="class_math_plot_1_1mp_movable_object.html" title="This virtual class represents objects that can be moved to an arbitrary 2D location+rotation.">mpMovableObject</a>.  <a href="class_math_plot_1_1mp_polygon.html#details">More...</a><br /></td></tr>
@@ -178,6 +184,9 @@ typedef enum MathPlot::__Function_Type&#160;</td><td class="memItemRight" valign
 <tr class="memitem:ac7806682f46eab45c0976b990072e603"><td class="memItemLeft" align="right" valign="top"><a id="ac7806682f46eab45c0976b990072e603"></a>
 typedef enum MathPlot::__Scale_Type&#160;</td><td class="memItemRight" valign="bottom"><b>mpScaleType</b></td></tr>
 <tr class="separator:ac7806682f46eab45c0976b990072e603"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a69f24ae44819eec757e15d33c0417b47"><td class="memItemLeft" align="right" valign="top"><a id="a69f24ae44819eec757e15d33c0417b47"></a>
+typedef enum MathPlot::__Chart_Type&#160;</td><td class="memItemRight" valign="bottom"><b>mpChartType</b></td></tr>
+<tr class="separator:a69f24ae44819eec757e15d33c0417b47"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a96313b6401db41e68cb84810fa3f2b57"><td class="memItemLeft" align="right" valign="top"><a id="a96313b6401db41e68cb84810fa3f2b57"></a>
 typedef enum <a class="el" href="namespace_math_plot.html#ada98ad01a14d9f810d8d9bd9a44066b6">MathPlot::__mp_Layer_Type</a>&#160;</td><td class="memItemRight" valign="bottom"><b>mpLayerType</b></td></tr>
 <tr class="separator:a96313b6401db41e68cb84810fa3f2b57"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -301,6 +310,12 @@ Enumerations</h2></td></tr>
 <b>mpsAllType</b>
  }</td></tr>
 <tr class="separator:add6fdadc0f83cf7739946651a2889173"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae1d8848ba9507b83517291df40bf2211"><td class="memItemLeft" align="right" valign="top"><a id="ae1d8848ba9507b83517291df40bf2211"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><b>__Chart_Type</b> { <b>mpcChartNone</b>, 
+<b>mpcBarChart</b>, 
+<b>mpcPieChart</b>, 
+<b>mpcAllType</b>
+ }</td></tr>
+<tr class="separator:ae1d8848ba9507b83517291df40bf2211"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ada98ad01a14d9f810d8d9bd9a44066b6"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_math_plot.html#ada98ad01a14d9f810d8d9bd9a44066b6">__mp_Layer_Type</a> { <br />
 &#160;&#160;<a class="el" href="namespace_math_plot.html#ada98ad01a14d9f810d8d9bd9a44066b6a38e0b6c8ee69681c7339d0a11c8c29c5">mpLAYER_UNDEF</a>, 
 <a class="el" href="namespace_math_plot.html#ada98ad01a14d9f810d8d9bd9a44066b6ace0e1e54c3f272122d24cbe6cb946547">mpLAYER_AXIS</a>, 

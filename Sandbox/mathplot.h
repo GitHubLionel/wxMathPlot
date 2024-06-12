@@ -135,6 +135,7 @@ class WXDLLIMPEXP_MATHPLOT mpFY;
 class WXDLLIMPEXP_MATHPLOT mpFXY;
 class WXDLLIMPEXP_MATHPLOT mpFXYVector;
 class WXDLLIMPEXP_MATHPLOT mpProfile;
+class WXDLLIMPEXP_MATHPLOT mpChart;
 class WXDLLIMPEXP_MATHPLOT mpBarChart;
 class WXDLLIMPEXP_MATHPLOT mpScale;
 class WXDLLIMPEXP_MATHPLOT mpScaleX;
@@ -323,6 +324,14 @@ typedef enum __Scale_Type
   mpsScaleY,
   mpsAllType
 } mpScaleType;
+
+typedef enum __Chart_Type
+{
+  mpcChartNone,
+  mpcBarChart,
+  mpcPieChart,
+  mpcAllType
+} mpChartType;
 
 //-----------------------------------------------------------------------------
 // mpLayer
@@ -751,6 +760,10 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLayer: public mpLayer
     /** Destructor */
     virtual ~mpInfoLayer();
 
+    /** Sets layer visibility.
+     @param show visibility bool. */
+    virtual void SetVisible(bool show);
+
     /** Updates the content of the info box. Should be overidden by derived classes.
      Update may behave in different ways according to the type of event which called it.
      @param w parent mpWindow from which to obtain informations
@@ -769,6 +782,11 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLayer: public mpLayer
      @param w the window to plot
      @sa mpLayer::Plot */
     virtual void DoPlot(wxDC &dc, mpWindow &w);
+
+    /**
+     * Just delete the bitmap of the info
+     */
+    virtual void ErasePlot(wxDC &dc, mpWindow &w);
 
     /** Checks whether a point is inside the info box rectangle.
      @param point The point to be checked
@@ -819,6 +837,8 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLayer: public mpLayer
 
   protected:
     wxRect m_dim;           //!< The bounding rectangle of the box. It may be resized dynamically by the Plot method.
+    wxRect m_oldDim;        //!< Keep the old values of m_dim
+    wxBitmap* m_info_bmp;   //!< The bitmap that contain the info
     wxPoint m_reference;    //!< Holds the reference point for movements
     int m_winX, m_winY;     //!< Holds the mpWindow size. Used to rescale position when window is resized.
     mpLocation m_location;  //!< Location of the box in the margin. Default mpMarginNone = use coordinates
@@ -850,22 +870,23 @@ class WXDLLIMPEXP_MATHPLOT mpInfoCoords: public mpInfoLayer
     mpInfoCoords(wxRect rect, const wxBrush &brush = *wxTRANSPARENT_BRUSH, mpLocation location = mpMarginNone);
 
     /** Default destructor */
-    ~mpInfoCoords();
-
-    virtual void SetVisible(bool show);
+    ~mpInfoCoords()
+    {
+      ;
+    }
 
     /** Updates the content of the info box. It is used to update coordinates.
      @param w parent mpWindow from which to obtain information
      @param event The event which called the update. */
     virtual void UpdateInfo(mpWindow &w, wxEvent &event);
 
+    virtual void ErasePlot(wxDC &dc, mpWindow &w);
+
     /** Plot method.
      @param dc the device content where to plot
      @param w the window to plot
      @sa mpLayer::Plot */
     virtual void DoPlot(wxDC &dc, mpWindow &w);
-
-    void ErasePlot(wxDC &dc, mpWindow &w);
 
     /** Set X axis label view mode.
      @param mode mpX_NORMAL for normal labels, mpX_TIME for time axis in hours, minutes, seconds. */
@@ -902,8 +923,6 @@ class WXDLLIMPEXP_MATHPLOT mpInfoCoords: public mpInfoLayer
     unsigned int m_timeConv;
     wxCoord m_mouseX;
     wxCoord m_mouseY;
-    wxBitmap* m_coord_bmp;
-    wxRect m_oldDim;
     bool m_series_coord;
     wxPen m_penSeries;
 
@@ -928,7 +947,10 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLegend: public mpInfoLayer
     mpInfoLegend(wxRect rect, const wxBrush &brush = *wxWHITE_BRUSH, mpLocation location = mpMarginNone);
 
     /**  Default destructor */
-    ~mpInfoLegend();
+    ~mpInfoLegend()
+    {
+      ;
+    }
 
     /** Plot method.
      @param dc the device content where to plot
@@ -968,7 +990,6 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLegend: public mpInfoLayer
     int GetPointed(mpWindow &w, wxPoint eventPoint);
 
   protected:
-    wxBitmap* m_legend_bmp;
     mpLegendStyle m_item_mode;
     mpLegendDirection m_item_direction;
 
@@ -1281,7 +1302,7 @@ class WXDLLIMPEXP_MATHPLOT mpFXY: public mpFunction
      */
     virtual void Clear()
     {
-      // Nothing to do here
+      ;
     }
 
     /** Get locus value for next N.
@@ -1528,7 +1549,58 @@ class WXDLLIMPEXP_MATHPLOT mpProfile: public mpFunction
 };
 
 //-----------------------------------------------------------------------------
-// mpBarChart  - provided by Jose David Rondini
+// mpChart
+//-----------------------------------------------------------------------------
+/** \brief abstract Layer for chart (bar and pie).
+ */
+class WXDLLIMPEXP_MATHPLOT mpChart: public mpFunction
+{
+  public:
+    /** Debault constructor */
+    mpChart(const wxString &name = wxEmptyString);
+
+    /** Destructor */
+    ~mpChart()
+    {
+      Clear();
+    }
+
+    /** Set bar values.
+     @param data Vector of double. */
+    void SetChartValues(const std::vector<double> &data);
+
+    /** Set bar label values.
+     @param labelArray Vector of strings containing labels. */
+    void SetChartLabels(const std::vector<std::string> &labelArray);
+
+    /** Add data and label
+     @param data
+     @param label
+     */
+    void AddData(const double &data, const std::string &label);
+
+    /** Clears all the data, leaving the layer empty.
+     * @sa SetBarValues, SetBarLabels
+     */
+    virtual void Clear();
+
+    virtual bool HasBBox()
+    {
+      return (values.size() > 0);
+    }
+
+  protected:
+    std::vector<double> values;
+    std::vector<std::string> labels;
+
+    double m_max_value;
+    double m_total_value;
+
+    DECLARE_DYNAMIC_CLASS(mpChart)
+};
+
+//-----------------------------------------------------------------------------
+// mpBarChart  - provided by Jose Davide Rondini
 //-----------------------------------------------------------------------------
 /* Defines for bar charts label positioning. */
 #define mpBAR_NONE      0       //!< No bar labels
@@ -1539,11 +1611,11 @@ class WXDLLIMPEXP_MATHPLOT mpProfile: public mpFunction
 
 /** \brief Layer for bar chart.
  */
-class WXDLLIMPEXP_MATHPLOT mpBarChart: public mpFunction
+class WXDLLIMPEXP_MATHPLOT mpBarChart: public mpChart
 {
   public:
     /** Debault constructor */
-    mpBarChart(const wxString &name = wxEmptyString);
+    mpBarChart(const wxString &name = wxEmptyString, double width = 0.5);
 
     /** Destructor */
     ~mpBarChart()
@@ -1557,19 +1629,6 @@ class WXDLLIMPEXP_MATHPLOT mpBarChart: public mpFunction
      */
     virtual void DoPlot(wxDC &dc, mpWindow &w);
 
-    /** Set bar values.
-     @param data Vector of double. */
-    void SetBarValues(const std::vector<double> &data);
-
-    /** Set bar label values.
-     @param labelArray Vector of strings containing labels. */
-    void SetBarLabels(const std::vector<std::string> &labelArray);
-
-    /** Clears all the data, leaving the layer empty.
-     * @sa SetBarValues, SetBarLabels
-     */
-    void Clear();
-
     void SetBarColour(const wxColour &colour);
 
     void SetColumnWidth(const double colWidth)
@@ -1579,11 +1638,6 @@ class WXDLLIMPEXP_MATHPLOT mpBarChart: public mpFunction
 
     /** Set bar labels positioning. */
     void SetBarLabelPosition(int position);
-
-    virtual bool HasBBox()
-    {
-      return (values.size() > 0);
-    }
 
     /** Get inclusive left border of bounding box.
      @return Value
@@ -1606,14 +1660,81 @@ class WXDLLIMPEXP_MATHPLOT mpBarChart: public mpFunction
     virtual double GetMaxY();
 
   protected:
-    std::vector<double> values;
-    std::vector<std::string> labels;
 
-    double m_max_value;
     double m_width;
     wxColour m_barColour;
     int m_labelPos;
     double m_labelAngle;
+
+    DECLARE_DYNAMIC_CLASS(mpBarChart)
+};
+
+/** \brief Layer for pie chart.
+ * Create a very basic Pie Chart.
+ * You must "Lock Aspect" if you want a centered pie.
+ */
+class WXDLLIMPEXP_MATHPLOT mpPieChart: public mpChart
+{
+  public:
+    /** Debault constructor */
+    mpPieChart(const wxString &name = wxEmptyString, double radius = 20);
+
+    /** Destructor */
+    ~mpPieChart()
+    {
+      Clear();
+      colours.clear();
+    }
+
+    /** Layer plot handler.
+     This implementation will plot the a rectangle for each point from
+     x axis and y value.
+     */
+    virtual void DoPlot(wxDC &dc, mpWindow &w);
+
+    /** Set colours for the pie.
+     @param colourArray Vector of wxColour.
+     If colours is not provided then colours is created by the program. */
+    void SetPieColours(const std::vector<wxColour> &colourArray);
+
+    /** Get inclusive left border of bounding box.
+     @return Value
+     */
+    virtual double GetMinX()
+    {
+      return -m_radius;
+    }
+
+    /** Get inclusive right border of bounding box.
+     @return Value
+     */
+    virtual double GetMaxX()
+    {
+      return m_radius;
+    }
+
+    /** Get inclusive bottom border of bounding box.
+     @return Value
+     */
+    virtual double GetMinY()
+    {
+      return -m_radius;
+    }
+
+    /** Get inclusive top border of bounding box.
+     @return Value
+     */
+    virtual double GetMaxY()
+    {
+      return m_radius;
+    }
+
+  protected:
+
+    double m_radius;
+    std::vector<wxColour> colours;
+
+    const wxColour& GetColour(unsigned int id);
 
     DECLARE_DYNAMIC_CLASS(mpBarChart)
 };
@@ -2019,9 +2140,9 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      @param refreshDisplay States whether to refresh the display (UpdateAll) after removing the layer.
      @return true if layer is deleted correctly
 
-     N.B. Only the layer reference in the mpWindow is deleted, the layer object still exists!
+     N.B. Only the layer reference in the mpWindow is deleted, the layer object still exists if alsoDeleteObject is false
      */
-    bool DelLayer(mpLayer *layer, bool alsoDeleteObject = false, bool refreshDisplay = true);
+    bool DelLayer(mpLayer *layer, bool alsoDeleteObject, bool refreshDisplay = true);
 
     /** Remove all layers from the plot.
      @param alsoDeleteObject If set to true, the mpLayer objects will be also "deleted", not just removed from the internal list.

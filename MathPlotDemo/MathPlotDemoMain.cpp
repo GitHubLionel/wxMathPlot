@@ -186,7 +186,7 @@ void MathPlotDemoFrame::CleanPlot(void)
 	leftAxis->SetAlign(mpALIGN_CENTERY);
   leftAxis->SetLogAxis(false);
   bottomAxis->SetAuto(true);
-  mPlot->DelLayer(mPlot->GetLayerByName(_T("BarChart")));
+  mPlot->DelLayer(mPlot->GetLayerByName(_T("BarChart")), true);
 }
 
 void MathPlotDemoFrame::OnbDrawClick(wxCommandEvent &WXUNUSED(event))
@@ -284,7 +284,7 @@ void MathPlotDemoFrame::OnbBarChartClick(wxCommandEvent &WXUNUSED(event))
     ycoord = 1.5 * ((double)p) + 1.0;
     vectory.push_back(ycoord);
   }
-  barChart->SetBarValues(vectory);
+  barChart->SetChartValues(vectory);
   std::vector<std::string> labels;
   std::string label;
   label.assign("Red");
@@ -297,7 +297,7 @@ void MathPlotDemoFrame::OnbBarChartClick(wxCommandEvent &WXUNUSED(event))
   labels.push_back(label);
   label.assign("Yellow");
   labels.push_back(label);
-  barChart->SetBarLabels(labels);
+  barChart->SetChartLabels(labels);
   barChart->SetBarColour(wxColour(125, 200, 255));
   barChart->SetBarLabelPosition(mpBAR_TOP);
   mPlot->AddLayer(barChart);

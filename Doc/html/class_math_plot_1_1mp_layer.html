@@ -67,7 +67,7 @@ Inheritance diagram for MathPlot::mpLayer:</div>
 <area href="class_math_plot_1_1mp_info_layer.html" title="Base class to create small rectangular info boxes mpInfoLayer is the base class to create a small rec..." alt="MathPlot::mpInfoLayer" shape="rect" coords="537,112,706,136"/>
 <area href="class_math_plot_1_1mp_scale.html" title="Plot layer implementing an abstract scale ruler." alt="MathPlot::mpScale" shape="rect" coords="895,112,1064,136"/>
 <area href="class_math_plot_1_1mp_text.html" title="Plot layer implementing a text string." alt="MathPlot::mpText" shape="rect" coords="1253,112,1422,136"/>
-<area href="class_math_plot_1_1mp_bar_chart.html" title="Layer for bar chart." alt="MathPlot::mpBarChart" shape="rect" coords="358,168,527,192"/>
+<area href="class_math_plot_1_1mp_chart.html" title="abstract Layer for chart (bar and pie)." alt="MathPlot::mpChart" shape="rect" coords="358,168,527,192"/>
 <area href="class_math_plot_1_1mp_f_x.html" title="Abstract base class providing plot and labeling functionality for functions F:X-&gt;Y." alt="MathPlot::mpFX" shape="rect" coords="358,224,527,248"/>
 <area href="class_math_plot_1_1mp_f_x_y.html" title="Abstract base class providing plot and labeling functionality for a locus plot F:N-&gt;X,..." alt="MathPlot::mpFXY" shape="rect" coords="358,280,527,304"/>
 <area href="class_math_plot_1_1mp_f_y.html" title="Abstract base class providing plot and labeling functionality for functions F:Y-&gt;X." alt="MathPlot::mpFY" shape="rect" coords="358,336,527,360"/>
@@ -315,7 +315,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <p>Pure virtual method to plot the layer. </p>
 <p>Must be overidden and implemented by derived classes. </p>
 
-<p>Implemented in <a class="el" href="class_math_plot_1_1mp_bitmap_layer.html#a400f185f5f201d84a66c4e70f2663e9d">MathPlot::mpBitmapLayer</a>, <a class="el" href="class_math_plot_1_1mp_movable_object.html#aaf011efe39378cfda76132115c76d485">MathPlot::mpMovableObject</a>, <a class="el" href="class_math_plot_1_1mp_text.html#a630986a2bf23e5322c559103bfb831c9">MathPlot::mpText</a>, <a class="el" href="class_math_plot_1_1mp_scale_y.html#a48874ddbb63341d8407a7e28f4f68c7f">MathPlot::mpScaleY</a>, <a class="el" href="class_math_plot_1_1mp_scale_x.html#af09819eb5e18f2d3606954107b02960c">MathPlot::mpScaleX</a>, <a class="el" href="class_math_plot_1_1mp_bar_chart.html#add87c752610b3b3510d511ef03123580">MathPlot::mpBarChart</a>, <a class="el" href="class_math_plot_1_1mp_profile.html#a68d99fff73feacbe945f991f7a4dcbc9">MathPlot::mpProfile</a>, <a class="el" href="class_math_plot_1_1mp_f_x_y.html#a9e9318d19070ab12182949765e2624cc">MathPlot::mpFXY</a>, <a class="el" href="class_math_plot_1_1mp_f_y.html#a4163b25c23e0d5ae2d28d2b7eeb42391">MathPlot::mpFY</a>, <a class="el" href="class_math_plot_1_1mp_f_x.html#ae4c5250b84709c87164ecd9e9d8e5ca6">MathPlot::mpFX</a>, <a class="el" href="class_math_plot_1_1mp_vertical_line.html#a065c285edbc3f2850e5fb487b09c4af8">MathPlot::mpVerticalLine</a>, <a class="el" href="class_math_plot_1_1mp_horizontal_line.html#ab0b6581b44a0fbc4fc18e2a51daaa993">MathPlot::mpHorizontalLine</a>, <a class="el" href="class_math_plot_1_1mp_info_legend.html#ac3b7af3ba3308bb989630a68dbacf0d2">MathPlot::mpInfoLegend</a>, <a class="el" href="class_math_plot_1_1mp_info_coords.html#a54c2dd1ba9a36c0becb080ff5e3b5128">MathPlot::mpInfoCoords</a>, and <a class="el" href="class_math_plot_1_1mp_info_layer.html#a5e0a79553b6835659a3d9826f096da09">MathPlot::mpInfoLayer</a>.</p>
+<p>Implemented in <a class="el" href="class_math_plot_1_1mp_bitmap_layer.html#a400f185f5f201d84a66c4e70f2663e9d">MathPlot::mpBitmapLayer</a>, <a class="el" href="class_math_plot_1_1mp_movable_object.html#aaf011efe39378cfda76132115c76d485">MathPlot::mpMovableObject</a>, <a class="el" href="class_math_plot_1_1mp_text.html#a630986a2bf23e5322c559103bfb831c9">MathPlot::mpText</a>, <a class="el" href="class_math_plot_1_1mp_scale_y.html#a48874ddbb63341d8407a7e28f4f68c7f">MathPlot::mpScaleY</a>, <a class="el" href="class_math_plot_1_1mp_scale_x.html#af09819eb5e18f2d3606954107b02960c">MathPlot::mpScaleX</a>, <a class="el" href="class_math_plot_1_1mp_pie_chart.html#a905554bcc9b9ccdf81c5acc50d5f73eb">MathPlot::mpPieChart</a>, <a class="el" href="class_math_plot_1_1mp_bar_chart.html#add87c752610b3b3510d511ef03123580">MathPlot::mpBarChart</a>, <a class="el" href="class_math_plot_1_1mp_profile.html#a68d99fff73feacbe945f991f7a4dcbc9">MathPlot::mpProfile</a>, <a class="el" href="class_math_plot_1_1mp_f_x_y.html#a9e9318d19070ab12182949765e2624cc">MathPlot::mpFXY</a>, <a class="el" href="class_math_plot_1_1mp_f_y.html#a4163b25c23e0d5ae2d28d2b7eeb42391">MathPlot::mpFY</a>, <a class="el" href="class_math_plot_1_1mp_f_x.html#ae4c5250b84709c87164ecd9e9d8e5ca6">MathPlot::mpFX</a>, <a class="el" href="class_math_plot_1_1mp_vertical_line.html#a065c285edbc3f2850e5fb487b09c4af8">MathPlot::mpVerticalLine</a>, <a class="el" href="class_math_plot_1_1mp_horizontal_line.html#ab0b6581b44a0fbc4fc18e2a51daaa993">MathPlot::mpHorizontalLine</a>, <a class="el" href="class_math_plot_1_1mp_info_legend.html#ac3b7af3ba3308bb989630a68dbacf0d2">MathPlot::mpInfoLegend</a>, <a class="el" href="class_math_plot_1_1mp_info_coords.html#a54c2dd1ba9a36c0becb080ff5e3b5128">MathPlot::mpInfoCoords</a>, and <a class="el" href="class_math_plot_1_1mp_info_layer.html#a5e0a79553b6835659a3d9826f096da09">MathPlot::mpInfoLayer</a>.</p>
 
 </div>
 </div>
@@ -599,7 +599,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <p>Get inclusive right border of bounding box. </p>
 <dl class="section return"><dt>Returns</dt><dd>Value </dd></dl>
 
-<p>Reimplemented in <a class="el" href="class_math_plot_1_1mp_bitmap_layer.html#a2182782e9e8462685176ed1b97d3afac">MathPlot::mpBitmapLayer</a>, <a class="el" href="class_math_plot_1_1mp_movable_object.html#ab3ad8f104e9e3ddd0a3984c1c32d10ae">MathPlot::mpMovableObject</a>, <a class="el" href="class_math_plot_1_1mp_bar_chart.html#a48a75ca59b1574cde73317baef427f24">MathPlot::mpBarChart</a>, and <a class="el" href="class_math_plot_1_1mp_f_x_y_vector.html#ad18479fb3379dac980948481c8213545">MathPlot::mpFXYVector</a>.</p>
+<p>Reimplemented in <a class="el" href="class_math_plot_1_1mp_bitmap_layer.html#a2182782e9e8462685176ed1b97d3afac">MathPlot::mpBitmapLayer</a>, <a class="el" href="class_math_plot_1_1mp_movable_object.html#ab3ad8f104e9e3ddd0a3984c1c32d10ae">MathPlot::mpMovableObject</a>, <a class="el" href="class_math_plot_1_1mp_pie_chart.html#aa2c70d1f152af93f1b22cf328ad7cefc">MathPlot::mpPieChart</a>, <a class="el" href="class_math_plot_1_1mp_bar_chart.html#a48a75ca59b1574cde73317baef427f24">MathPlot::mpBarChart</a>, and <a class="el" href="class_math_plot_1_1mp_f_x_y_vector.html#ad18479fb3379dac980948481c8213545">MathPlot::mpFXYVector</a>.</p>
 
 </div>
 </div>
@@ -629,7 +629,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <p>Get inclusive top border of bounding box. </p>
 <dl class="section return"><dt>Returns</dt><dd>Value </dd></dl>
 
-<p>Reimplemented in <a class="el" href="class_math_plot_1_1mp_bitmap_layer.html#a6510838d4eab2abd7f220bd818b7f62f">MathPlot::mpBitmapLayer</a>, <a class="el" href="class_math_plot_1_1mp_movable_object.html#a3d13e9ad902e6d0886c36b569b8f1f50">MathPlot::mpMovableObject</a>, <a class="el" href="class_math_plot_1_1mp_bar_chart.html#ac06b94f8a9f9a033ef0e05a7dbec5298">MathPlot::mpBarChart</a>, and <a class="el" href="class_math_plot_1_1mp_f_x_y_vector.html#aa33943a360e9e2c5be15b81b108aab86">MathPlot::mpFXYVector</a>.</p>
+<p>Reimplemented in <a class="el" href="class_math_plot_1_1mp_bitmap_layer.html#a6510838d4eab2abd7f220bd818b7f62f">MathPlot::mpBitmapLayer</a>, <a class="el" href="class_math_plot_1_1mp_movable_object.html#a3d13e9ad902e6d0886c36b569b8f1f50">MathPlot::mpMovableObject</a>, <a class="el" href="class_math_plot_1_1mp_pie_chart.html#a01aef268b8d9846f33ff56a384757a98">MathPlot::mpPieChart</a>, <a class="el" href="class_math_plot_1_1mp_bar_chart.html#ac06b94f8a9f9a033ef0e05a7dbec5298">MathPlot::mpBarChart</a>, and <a class="el" href="class_math_plot_1_1mp_f_x_y_vector.html#aa33943a360e9e2c5be15b81b108aab86">MathPlot::mpFXYVector</a>.</p>
 
 </div>
 </div>
@@ -659,7 +659,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <p>Get inclusive left border of bounding box. </p>
 <dl class="section return"><dt>Returns</dt><dd>Value </dd></dl>
 
-<p>Reimplemented in <a class="el" href="class_math_plot_1_1mp_bitmap_layer.html#adc9f9c82932d1cda12c8cec2f492a87c">MathPlot::mpBitmapLayer</a>, <a class="el" href="class_math_plot_1_1mp_movable_object.html#aa2010a60596391e61aeae8acc81c1c80">MathPlot::mpMovableObject</a>, <a class="el" href="class_math_plot_1_1mp_bar_chart.html#aff646bfbb2d794115848c283ebc75a24">MathPlot::mpBarChart</a>, and <a class="el" href="class_math_plot_1_1mp_f_x_y_vector.html#aa458ffa72602acd256d3e5672dfb744c">MathPlot::mpFXYVector</a>.</p>
+<p>Reimplemented in <a class="el" href="class_math_plot_1_1mp_bitmap_layer.html#adc9f9c82932d1cda12c8cec2f492a87c">MathPlot::mpBitmapLayer</a>, <a class="el" href="class_math_plot_1_1mp_movable_object.html#aa2010a60596391e61aeae8acc81c1c80">MathPlot::mpMovableObject</a>, <a class="el" href="class_math_plot_1_1mp_pie_chart.html#a12a09fb552b6b8fd5125c4cd7ace3faf">MathPlot::mpPieChart</a>, <a class="el" href="class_math_plot_1_1mp_bar_chart.html#aff646bfbb2d794115848c283ebc75a24">MathPlot::mpBarChart</a>, and <a class="el" href="class_math_plot_1_1mp_f_x_y_vector.html#aa458ffa72602acd256d3e5672dfb744c">MathPlot::mpFXYVector</a>.</p>
 
 </div>
 </div>
@@ -689,7 +689,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <p>Get inclusive bottom border of bounding box. </p>
 <dl class="section return"><dt>Returns</dt><dd>Value </dd></dl>
 
-<p>Reimplemented in <a class="el" href="class_math_plot_1_1mp_bitmap_layer.html#aef2874a129c71a45c370fdeb8d167dc5">MathPlot::mpBitmapLayer</a>, <a class="el" href="class_math_plot_1_1mp_movable_object.html#a101b418b18418264a18a8865f0f32f39">MathPlot::mpMovableObject</a>, <a class="el" href="class_math_plot_1_1mp_bar_chart.html#afae04ce15f4d9f13cf41a3615a70ae07">MathPlot::mpBarChart</a>, and <a class="el" href="class_math_plot_1_1mp_f_x_y_vector.html#ab48989543218d3385a8a4e42c47729d9">MathPlot::mpFXYVector</a>.</p>
+<p>Reimplemented in <a class="el" href="class_math_plot_1_1mp_bitmap_layer.html#aef2874a129c71a45c370fdeb8d167dc5">MathPlot::mpBitmapLayer</a>, <a class="el" href="class_math_plot_1_1mp_movable_object.html#a101b418b18418264a18a8865f0f32f39">MathPlot::mpMovableObject</a>, <a class="el" href="class_math_plot_1_1mp_pie_chart.html#a3b01522a6960c4c5c23ab2e8c07cf4c1">MathPlot::mpPieChart</a>, <a class="el" href="class_math_plot_1_1mp_bar_chart.html#afae04ce15f4d9f13cf41a3615a70ae07">MathPlot::mpBarChart</a>, and <a class="el" href="class_math_plot_1_1mp_f_x_y_vector.html#ab48989543218d3385a8a4e42c47729d9">MathPlot::mpFXYVector</a>.</p>
 
 </div>
 </div>
@@ -838,7 +838,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
   </dd>
 </dl>
 
-<p>Reimplemented in <a class="el" href="class_math_plot_1_1mp_line.html#ada7227385cf80799ebb619d9c05f5a18">MathPlot::mpLine</a>, <a class="el" href="class_math_plot_1_1mp_movable_object.html#a6cc3439df3f9842de499cac4bd73a6cf">MathPlot::mpMovableObject</a>, <a class="el" href="class_math_plot_1_1mp_text.html#a3ffa5403823ed89d9b36fecdf10451ef">MathPlot::mpText</a>, <a class="el" href="class_math_plot_1_1mp_scale.html#ad707dea6162f15b212b0dd1527e652d0">MathPlot::mpScale</a>, <a class="el" href="class_math_plot_1_1mp_bar_chart.html#ab46d2b51412eb73bef666babc827f588">MathPlot::mpBarChart</a>, and <a class="el" href="class_math_plot_1_1mp_info_layer.html#a71539452b68ede26b7f0e6fbd7fc5028">MathPlot::mpInfoLayer</a>.</p>
+<p>Reimplemented in <a class="el" href="class_math_plot_1_1mp_line.html#ada7227385cf80799ebb619d9c05f5a18">MathPlot::mpLine</a>, <a class="el" href="class_math_plot_1_1mp_movable_object.html#a6cc3439df3f9842de499cac4bd73a6cf">MathPlot::mpMovableObject</a>, <a class="el" href="class_math_plot_1_1mp_text.html#a3ffa5403823ed89d9b36fecdf10451ef">MathPlot::mpText</a>, <a class="el" href="class_math_plot_1_1mp_scale.html#ad707dea6162f15b212b0dd1527e652d0">MathPlot::mpScale</a>, <a class="el" href="class_math_plot_1_1mp_chart.html#a0ec012afd5e207389adbae63dcd01950">MathPlot::mpChart</a>, and <a class="el" href="class_math_plot_1_1mp_info_layer.html#a71539452b68ede26b7f0e6fbd7fc5028">MathPlot::mpInfoLayer</a>.</p>
 
 </div>
 </div>
@@ -1372,15 +1372,15 @@ V ascending Y                               |
   </dd>
 </dl>
 
-<p>Reimplemented in <a class="el" href="class_math_plot_1_1mp_info_coords.html#a5688e4b3cb9cd02b320902771a011b29">MathPlot::mpInfoCoords</a>.</p>
+<p>Reimplemented in <a class="el" href="class_math_plot_1_1mp_info_layer.html#a7c5aaad159b6173071749765906d040c">MathPlot::mpInfoLayer</a>.</p>
 
 </div>
 </div>
 </div><!-- contents -->
-<div class="ttc" id="aclass_math_plot_1_1mp_window_html_a03a05877ac0cc0a96b172c7b2728f205"><div class="ttname"><a href="class_math_plot_1_1mp_window.html#a03a05877ac0cc0a96b172c7b2728f205">MathPlot::mpWindow::GetPosY</a></div><div class="ttdeci">double GetPosY(bool Y2=false) const</div><div class="ttdoc">Get current view's Y position.</div><div class="ttdef"><b>Definition:</b> mathplot.h:2194</div></div>
-<div class="ttc" id="aclass_math_plot_1_1mp_window_html_ae1a893c90c088bc2622bb420aa595e77"><div class="ttname"><a href="class_math_plot_1_1mp_window.html#ae1a893c90c088bc2622bb420aa595e77">MathPlot::mpWindow::GetScaleX</a></div><div class="ttdeci">double GetScaleX(void) const</div><div class="ttdoc">Get current view's X scale.</div><div class="ttdef"><b>Definition:</b> mathplot.h:2122</div></div>
-<div class="ttc" id="aclass_math_plot_1_1mp_window_html_a78b866cee3ef5ff5df91d58707ba8af3"><div class="ttname"><a href="class_math_plot_1_1mp_window.html#a78b866cee3ef5ff5df91d58707ba8af3">MathPlot::mpWindow::GetScaleY</a></div><div class="ttdeci">double GetScaleY(bool Y2=false) const</div><div class="ttdoc">Get current view's Y scale.</div><div class="ttdef"><b>Definition:</b> mathplot.h:2141</div></div>
-<div class="ttc" id="aclass_math_plot_1_1mp_window_html_a7d4ee5c67898708fc9a10479630746a6"><div class="ttname"><a href="class_math_plot_1_1mp_window.html#a7d4ee5c67898708fc9a10479630746a6">MathPlot::mpWindow::GetPosX</a></div><div class="ttdeci">double GetPosX(void) const</div><div class="ttdoc">Get current view's X position.</div><div class="ttdef"><b>Definition:</b> mathplot.h:2175</div></div>
+<div class="ttc" id="aclass_math_plot_1_1mp_window_html_a03a05877ac0cc0a96b172c7b2728f205"><div class="ttname"><a href="class_math_plot_1_1mp_window.html#a03a05877ac0cc0a96b172c7b2728f205">MathPlot::mpWindow::GetPosY</a></div><div class="ttdeci">double GetPosY(bool Y2=false) const</div><div class="ttdoc">Get current view's Y position.</div><div class="ttdef"><b>Definition:</b> mathplot.h:2315</div></div>
+<div class="ttc" id="aclass_math_plot_1_1mp_window_html_ae1a893c90c088bc2622bb420aa595e77"><div class="ttname"><a href="class_math_plot_1_1mp_window.html#ae1a893c90c088bc2622bb420aa595e77">MathPlot::mpWindow::GetScaleX</a></div><div class="ttdeci">double GetScaleX(void) const</div><div class="ttdoc">Get current view's X scale.</div><div class="ttdef"><b>Definition:</b> mathplot.h:2243</div></div>
+<div class="ttc" id="aclass_math_plot_1_1mp_window_html_a78b866cee3ef5ff5df91d58707ba8af3"><div class="ttname"><a href="class_math_plot_1_1mp_window.html#a78b866cee3ef5ff5df91d58707ba8af3">MathPlot::mpWindow::GetScaleY</a></div><div class="ttdeci">double GetScaleY(bool Y2=false) const</div><div class="ttdoc">Get current view's Y scale.</div><div class="ttdef"><b>Definition:</b> mathplot.h:2262</div></div>
+<div class="ttc" id="aclass_math_plot_1_1mp_window_html_a7d4ee5c67898708fc9a10479630746a6"><div class="ttname"><a href="class_math_plot_1_1mp_window.html#a7d4ee5c67898708fc9a10479630746a6">MathPlot::mpWindow::GetPosX</a></div><div class="ttdeci">double GetPosX(void) const</div><div class="ttdoc">Get current view's X position.</div><div class="ttdef"><b>Definition:</b> mathplot.h:2296</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by&#160;<a href="http://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.8.20
