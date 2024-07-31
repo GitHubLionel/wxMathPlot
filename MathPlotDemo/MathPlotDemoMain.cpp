@@ -21,28 +21,24 @@
 #include "Sample.h"
 
 //helper functions
-enum wxbuildinfoformat {
-    short_f, long_f };
+enum wxBuildInfoFormat { short_f, long_f };
 
-wxString wxbuildinfo(wxbuildinfoformat format)
+wxString wxBuildInfo(wxBuildInfoFormat format)
 {
     wxString wxbuild(wxVERSION_STRING);
+    if (format == long_f ) {
+		#if defined(__WXMSW__)
+				wxbuild << _T("-Windows");
+		#elif defined(__UNIX__)
+				wxbuild << _T("-Linux");
+		#endif
 
-    if (format == long_f )
-    {
-#if defined(__WXMSW__)
-        wxbuild << _T("-Windows");
-#elif defined(__UNIX__)
-        wxbuild << _T("-Linux");
-#endif
-
-#if wxUSE_UNICODE
-        wxbuild << _T("-Unicode build");
-#else
-        wxbuild << _T("-ANSI build");
-#endif // wxUSE_UNICODE
+		#if wxUSE_UNICODE
+				wxbuild << _T("-Unicode build");
+		#else
+				wxbuild << _T("-ANSI build");
+		#endif // wxUSE_UNICODE
     }
-
     return wxbuild;
 }
 
@@ -191,23 +187,22 @@ void MathPlotDemoFrame::CleanPlot(void)
 
 void MathPlotDemoFrame::OnbDrawClick(wxCommandEvent &WXUNUSED(event))
 {
-  CleanPlot();
-	// add a simple sinus serie
-	mpFXYVector *serie = mPlot->GetXYSeries(0);
+	CleanPlot();
+	// add a simple sinus series
+	mpFXYVector *series = mPlot->GetXYSeries(0);
 	for (int i = 0; i <= 100; i++)
-		serie->AddData(i / 10.0, sin(i / 10.0), true);
+		series->AddData(i / 10.0, sin(i / 10.0), true);
 	mPlot->Fit();
 }
 
 void MathPlotDemoFrame::OnbSampleClick(wxCommandEvent &WXUNUSED(event))
 {
-  CleanPlot();
-
-  // Sample from the original wxMathPlot widget
+    CleanPlot();
+    // Sample from the original wxMathPlot widget
 	mPlot->AddLayer(new MyFunction());
 	mPlot->AddLayer(new MySIN(10.0, 220.0));
 	mPlot->AddLayer(new MyCOSinverse(10.0, 100.0));
-  mPlot->AddLayer(new MyLissajoux(125.0));
+    mPlot->AddLayer(new MyLissajoux(125.0));
 	mPlot->Fit();
 }
 
@@ -311,12 +306,16 @@ void MathPlotDemoFrame::OnmiQuitSelected(wxCommandEvent &WXUNUSED(event))
 
 void MathPlotDemoFrame::OnmiAboutSelected(wxCommandEvent &WXUNUSED(event))
 {
-	wxMessageBox(wxString::Format("Welcome to %s MathPlot Demo!\n"
-			"\n"
-			"This is the minimal wxWidgets sample\n"
-			"running under %s.",
-	wxVERSION_STRING, wxGetOsDescription()), "About wxWidgets MathPlot demo",
-	wxOK | wxICON_INFORMATION, this);
+	wxMessageBox(
+		wxString::Format(
+			"Welcome to MathPlot Demo!\n"
+			"Demonstrates available plot types...\n"
+			"Build Info: %s\n"
+			"Lionel github version, running under %s.",
+			wxBuildInfo(long_f), wxGetOsDescription()
+		),
+		"About wxWidgets MathPlot demo",
+		wxOK | wxICON_INFORMATION, this);
 }
 
 void MathPlotDemoFrame::OnmiPreviewSelected(wxCommandEvent &WXUNUSED(event))
