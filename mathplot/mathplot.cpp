@@ -3,10 +3,10 @@
 // Purpose:         Framework for plotting in wxWindows
 // Original Author: David Schalig
 // Maintainer:      Davide Rondini
-// Contributors:    Jose Luis Blanco, Val Greene, Lionel Reynaud
+// Contributors:    Jose Luis Blanco, Val Greene, Lionel Reynaud, Dave Nadler
 // Created:         21/07/2003
 // Last edit:       09/09/2007
-// Last edit:       05/06/2024
+// Last edit:       07/31/2024
 // Copyright:       (c) David Schalig, Davide Rondini
 // Licence:         wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -238,7 +238,7 @@ void mpLayer::Plot(wxDC &dc, mpWindow &w)
   m_busy = false;
 }
 
-void mpLayer::UpdateContext(wxDC &dc)
+void mpLayer::UpdateContext(wxDC &dc) const
 {
   dc.SetPen(m_pen);
   dc.SetBrush(m_brush);
@@ -4390,7 +4390,7 @@ void mpWindow::SetLayerVisible(const unsigned int position, bool viewable)
   }
 }
 
-void mpWindow::GetBoundingBox(double *bbox)
+void mpWindow::GetBoundingBox(double *bbox) const
 {
   bbox[0] = m_bound.Xmin;
   bbox[1] = m_bound.Xmax;
@@ -4809,7 +4809,7 @@ inline void SinCos(double Angle, double *sinA, double *cosA)
 
 IMPLEMENT_DYNAMIC_CLASS(mpMovableObject, mpLayer)
 
-void mpMovableObject::TranslatePoint(double x, double y, double &out_x, double &out_y)
+void mpMovableObject::TranslatePoint(double x, double y, double &out_x, double &out_y) const
 {
   double ccos, csin;
   SinCos(m_reference_phi, &csin, &ccos);
@@ -5330,7 +5330,7 @@ void mpMagnet::UpdatePlot(wxClientDC &dc, const wxPoint &mousePos)
   }
 }
 
-void mpMagnet::DrawCross(wxClientDC &dc)
+void mpMagnet::DrawCross(wxClientDC &dc) const
 {
   // Note : wxINVERT not work on Linux GTK
   dc.SetPen(*wxBLACK_PEN);
