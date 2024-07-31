@@ -1433,7 +1433,8 @@ void MathPlotConfigDialog::OnbApplyClick(wxCommandEvent &WXUNUSED(event))
           CurrentLegend->SetNeedUpdate();
 
         // We need to fit if we change visibility or Y axis
-        if ((SecondYAxisChange != cbSecondYAxis->GetValue()) | (SerieVisibleChange != cbSeriesVisible->GetValue()))
+        if ( (SecondYAxisChange != cbSecondYAxis->GetValue())    ||
+			 (SerieVisibleChange != cbSeriesVisible->GetValue())   )
         {
           SecondYAxisChange = cbSecondYAxis->GetValue();
           SerieVisibleChange = cbSeriesVisible->GetValue();
