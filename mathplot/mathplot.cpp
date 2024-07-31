@@ -3542,9 +3542,12 @@ bool mpWindow::DelLayer(mpLayer *layer, bool alsoDeleteObject, bool refreshDispl
         }
         // Also delete the object?
         if (alsoDeleteObject)
-          delete *it;
-        m_layers.erase(it); // this deleted the reference only
-        // Refresh
+          delete *it; // delete the object pointed at by the iterator
+		// Remove pointer to the object from m_layers.
+		// WARNING: 'erase' invalidates 'it' and all m_layers iterators in existence 
+        m_layers.erase(it);
+		it = m_layers.begin(); // ...so reset 'it' as it was invalidated by above 'erase'
+		// Refresh
         RefreshLegend();
         if (refreshDisplay)
           UpdateAll();
@@ -3565,7 +3568,7 @@ void mpWindow::DelAllLayers(bool alsoDeleteObject, bool refreshDisplay)
     // Also delete the object?
     if (alsoDeleteObject)
       delete m_layers[0];
-    m_layers.erase(m_layers.begin()); // this deleted the reference only
+    m_layers.erase(m_layers.begin()); // remove ptr to object from m_layers
   }
   m_InfoCoords = NULL;
   m_movingInfoLayer = NULL;
@@ -3584,7 +3587,8 @@ void mpWindow::DelAllPlot(bool alsoDeleteObject, mpFunctionType func, bool refre
   {
     if ((*it)->IsLayerType(mpLAYER_PLOT, &function) && ((func == mpfAllType) || (function == func)))
     {
-      DelLayer((mpLayer*)(*it), alsoDeleteObject, false);
+      DelLayer((mpLayer*)(*it), alsoDeleteObject, false); // may invalidate m_layers iterators
+	  it = m_layers.rbegin(); // ... so reset iterator to end of m_layers vector
     }
   }
   RefreshLegend();
