@@ -1527,12 +1527,12 @@ void mpFXYVector::DrawAddedPoint(double x, double y)
     if (m_continuous)
     {
       // Last coordinates
-	  size_t localIdx = m_index--; // we assume that m_step = 1 in this context
-      double xlast = m_xs[localIdx];
+	  size_t lastPtIdx = m_index--; // we assume that m_step = 1 in this context
+      double xlast = m_xs[lastPtIdx];
       if (m_win->IsLogXaxis())
         xlast = log10(xlast);
       wxCoord ixlast = m_win->x2p(xlast);
-      double ylast = m_ys[localIdx];
+      double ylast = m_ys[lastPtIdx];
       if (m_win->IsLogYaxis())
         ylast = log10(ylast);
       wxCoord iylast = m_win->y2p(ylast, m_UseY2Axis);
