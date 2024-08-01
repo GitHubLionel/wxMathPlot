@@ -3,10 +3,10 @@
 // Purpose:         Framework for plotting in wxWindows
 // Original Author: David Schalig
 // Maintainer:      Davide Rondini
-// Contributors:    Jose Luis Blanco, Val Greene, Lionel Reynaud
+// Contributors:    Jose Luis Blanco, Val Greene, Lionel Reynaud, Dave Nadler
 // Created:         21/07/2003
 // Last edit:       09/09/2007
-// Last edit:       05/06/2024
+// Last edit:       07/31/2024
 // Copyright:       (c) David Schalig, Davide Rondini
 // Licence:         wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -238,7 +238,7 @@ void mpLayer::Plot(wxDC &dc, mpWindow &w)
   m_busy = false;
 }
 
-void mpLayer::UpdateContext(wxDC &dc)
+void mpLayer::UpdateContext(wxDC &dc) const
 {
   dc.SetPen(m_pen);
   dc.SetBrush(m_brush);
@@ -1526,12 +1526,13 @@ void mpFXYVector::DrawAddedPoint(double x, double y)
   {
     if (m_continuous)
     {
-      // Last coordinates (we assume that m_step = 1 in this context)
-      double xlast = m_xs[m_index - 1];
+      // Last coordinates
+      size_t lastPtIdx = m_index--; // we assume that m_step = 1 in this context
+      double xlast = m_xs[lastPtIdx];
       if (m_win->IsLogXaxis())
         xlast = log10(xlast);
       wxCoord ixlast = m_win->x2p(xlast);
-      double ylast = m_ys[m_index - 1];
+      double ylast = m_ys[lastPtIdx];
       if (m_win->IsLogYaxis())
         ylast = log10(ylast);
       wxCoord iylast = m_win->y2p(ylast, m_UseY2Axis);
@@ -3542,8 +3543,12 @@ bool mpWindow::DelLayer(mpLayer *layer, bool alsoDeleteObject, bool refreshDispl
         }
         // Also delete the object?
         if (alsoDeleteObject)
-          delete *it;
-        m_layers.erase(it); // this deleted the reference only
+        delete *it; // delete the object pointed at by the iterator
+        // Remove pointer to the object from m_layers.
+        // WARNING: 'erase' invalidates 'it' and all m_layers iterators in existence
+        m_layers.erase(it);
+        it = m_layers.begin(); // ...so reset 'it' as it was invalidated by above 'erase'
+                               // but it is not necessary since we leave the loop
         // Refresh
         RefreshLegend();
         if (refreshDisplay)
@@ -3565,7 +3570,7 @@ void mpWindow::DelAllLayers(bool alsoDeleteObject, bool refreshDisplay)
     // Also delete the object?
     if (alsoDeleteObject)
       delete m_layers[0];
-    m_layers.erase(m_layers.begin()); // this deleted the reference only
+    m_layers.erase(m_layers.begin()); // remove ptr to object from m_layers
   }
   m_InfoCoords = NULL;
   m_movingInfoLayer = NULL;
@@ -3580,27 +3585,14 @@ void mpWindow::DelAllLayers(bool alsoDeleteObject, bool refreshDisplay)
 void mpWindow::DelAllPlot(bool alsoDeleteObject, mpFunctionType func, bool refreshDisplay)
 {
   int function;
-//  for (mpLayerList::reverse_iterator it = m_layers.rbegin(); it != m_layers.rend(); it++)
-//  {
-//    if ((*it)->IsLayerType(mpLAYER_PLOT, &function) && ((func == mpfAllType) || (function == func)))
-//    {
-//      DelLayer((mpLayer*)(*it), alsoDeleteObject, false);
-//    }
-//  }
-
-  mpLayerList::iterator it = m_layers.begin();
-  do
+  for (mpLayerList::reverse_iterator it = m_layers.rbegin(); it != m_layers.rend(); it++)
   {
     if ((*it)->IsLayerType(mpLAYER_PLOT, &function) && ((func == mpfAllType) || (function == func)))
     {
-      DelLayer((mpLayer*)(*it), alsoDeleteObject, false);
-      it = m_layers.begin(); // Restart to the first layer
+      DelLayer((mpLayer*)(*it), alsoDeleteObject, false); // may invalidate m_layers iterators
+      it = m_layers.rbegin(); // ... so reset iterator to end of m_layers vector
     }
-    else
-      it++;
-  } while (it != m_layers.end());
-
-
+  }
   RefreshLegend();
   if (refreshDisplay)
     UpdateAll();
@@ -4400,7 +4392,7 @@ void mpWindow::SetLayerVisible(const unsigned int position, bool viewable)
   }
 }
 
-void mpWindow::GetBoundingBox(double *bbox)
+void mpWindow::GetBoundingBox(double *bbox) const
 {
   bbox[0] = m_bound.Xmin;
   bbox[1] = m_bound.Xmax;
@@ -4819,7 +4811,7 @@ inline void SinCos(double Angle, double *sinA, double *cosA)
 
 IMPLEMENT_DYNAMIC_CLASS(mpMovableObject, mpLayer)
 
-void mpMovableObject::TranslatePoint(double x, double y, double &out_x, double &out_y)
+void mpMovableObject::TranslatePoint(double x, double y, double &out_x, double &out_y) const
 {
   double ccos, csin;
   SinCos(m_reference_phi, &csin, &ccos);
@@ -5340,7 +5332,7 @@ void mpMagnet::UpdatePlot(wxClientDC &dc, const wxPoint &mousePos)
   }
 }
 
-void mpMagnet::DrawCross(wxClientDC &dc)
+void mpMagnet::DrawCross(wxClientDC &dc) const
 {
   // Note : wxINVERT not work on Linux GTK
   dc.SetPen(*wxBLACK_PEN);

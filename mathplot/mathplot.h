@@ -3,10 +3,10 @@
 // Purpose:         Framework for plotting in wxWindows
 // Original Author: David Schalig
 // Maintainer:      Davide Rondini
-// Contributors:    Jose Luis Blanco, Val Greene, Lionel Reynaud
+// Contributors:    Jose Luis Blanco, Val Greene, Lionel Reynaud, Dave Nadler
 // Created:         21/07/2003
 // Last edit:       22/02/2009
-// Last edit:       05/06/2024
+// Last edit:       07/31/2024
 // Copyright:       (c) David Schalig, Davide Rondini
 // Licence:         wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -728,7 +728,7 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
 
     /** Initialize the context
      */
-    void UpdateContext(wxDC &dc);
+    void UpdateContext(wxDC &dc) const;
 
   private:
     bool m_busy;                //!< Test if we are busy (plot operation)
@@ -2080,7 +2080,7 @@ class mpMagnet
     bool m_IsDrawn;            //!< Is that the cross is drawn ?
     bool m_IsWasDrawn;         //!< Is that the cross was drawn before the OnPaint event ?
     bool m_rightClick;         //!< Is the mouse right click ?
-    void DrawCross(wxClientDC &dc);
+    void DrawCross(wxClientDC &dc) const;
 };
 
 /** Canvas for plotting mpLayer implementations.
@@ -2557,7 +2557,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 
     /** Returns the bounding box coordinates
      @param bbox Pointer to a 6-element double array where to store bounding box coordinates. */
-    void GetBoundingBox(double *bbox);
+    void GetBoundingBox(double *bbox) const;
     mpFloatRect *GetBoundingBox(void)
     {
       return &m_bound;
@@ -2999,7 +2999,7 @@ class WXDLLIMPEXP_MATHPLOT mpText: public mpLayer
 
     /** Get the offset
      @return void */
-    void GetOffset(int *offX, int *offY)
+    void GetOffset(int *offX, int *offY) const
     {
       *offX = m_offsetx;
       *offY = m_offsety;
@@ -3179,7 +3179,7 @@ class WXDLLIMPEXP_MATHPLOT mpMovableObject: public mpFunction
 
     /** A method for 2D translation and rotation, using the current transformation stored in m_reference_x,m_reference_y,m_reference_phi.
      */
-    void TranslatePoint(double x, double y, double &out_x, double &out_y);
+    void TranslatePoint(double x, double y, double &out_x, double &out_y) const;
 
     /** This contains the object points, in local coordinates (to be transformed by the current transformation).
      */
