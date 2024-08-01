@@ -1527,7 +1527,7 @@ void mpFXYVector::DrawAddedPoint(double x, double y)
     if (m_continuous)
     {
       // Last coordinates
-	  size_t lastPtIdx = m_index--; // we assume that m_step = 1 in this context
+      size_t lastPtIdx = m_index--; // we assume that m_step = 1 in this context
       double xlast = m_xs[lastPtIdx];
       if (m_win->IsLogXaxis())
         xlast = log10(xlast);
@@ -3543,12 +3543,13 @@ bool mpWindow::DelLayer(mpLayer *layer, bool alsoDeleteObject, bool refreshDispl
         }
         // Also delete the object?
         if (alsoDeleteObject)
-          delete *it; // delete the object pointed at by the iterator
-		// Remove pointer to the object from m_layers.
-		// WARNING: 'erase' invalidates 'it' and all m_layers iterators in existence 
+        delete *it; // delete the object pointed at by the iterator
+        // Remove pointer to the object from m_layers.
+        // WARNING: 'erase' invalidates 'it' and all m_layers iterators in existence
         m_layers.erase(it);
-		it = m_layers.begin(); // ...so reset 'it' as it was invalidated by above 'erase'
-		// Refresh
+        it = m_layers.begin(); // ...so reset 'it' as it was invalidated by above 'erase'
+                               // but it is not necessary since we leave the loop
+        // Refresh
         RefreshLegend();
         if (refreshDisplay)
           UpdateAll();
@@ -3589,7 +3590,7 @@ void mpWindow::DelAllPlot(bool alsoDeleteObject, mpFunctionType func, bool refre
     if ((*it)->IsLayerType(mpLAYER_PLOT, &function) && ((func == mpfAllType) || (function == func)))
     {
       DelLayer((mpLayer*)(*it), alsoDeleteObject, false); // may invalidate m_layers iterators
-	  it = m_layers.rbegin(); // ... so reset iterator to end of m_layers vector
+      it = m_layers.rbegin(); // ... so reset iterator to end of m_layers vector
     }
   }
   RefreshLegend();

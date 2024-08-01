@@ -26,6 +26,7 @@ enum wxBuildInfoFormat { short_f, long_f };
 wxString wxBuildInfo(wxBuildInfoFormat format)
 {
     wxString wxbuild(wxVERSION_STRING);
+
     if (format == long_f ) {
 		#if defined(__WXMSW__)
 				wxbuild << _T("-Windows");
@@ -197,8 +198,8 @@ void MathPlotDemoFrame::OnbDrawClick(wxCommandEvent &WXUNUSED(event))
 
 void MathPlotDemoFrame::OnbSampleClick(wxCommandEvent &WXUNUSED(event))
 {
-    CleanPlot();
-    // Sample from the original wxMathPlot widget
+	CleanPlot();
+  // Sample from the original wxMathPlot widget
 	mPlot->AddLayer(new MyFunction());
 	mPlot->AddLayer(new MySIN(10.0, 220.0));
 	mPlot->AddLayer(new MyCOSinverse(10.0, 100.0));
