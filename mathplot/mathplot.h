@@ -2140,7 +2140,8 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      @param refreshDisplay States whether to refresh the display (UpdateAll) after removing the layer.
      @return true if layer is deleted correctly
 
-     N.B. Only the layer reference in the mpWindow is deleted, the layer object still exists if alsoDeleteObject is false
+     N.B. If alsoDeleteObject is false, only the layer pointer in the mpWindow is removed, the layer object still exists.
+	 WARNING: Invalidates any extant m_layers iterators!
      */
     bool DelLayer(mpLayer *layer, bool alsoDeleteObject, bool refreshDisplay = true);
 

@@ -40,7 +40,6 @@ wxString wxBuildInfo(wxBuildInfoFormat format)
 				wxbuild << _T("-ANSI build");
 		#endif // wxUSE_UNICODE
     }
-
     return wxbuild;
 }
 
@@ -189,7 +188,7 @@ void MathPlotDemoFrame::CleanPlot(void)
 
 void MathPlotDemoFrame::OnbDrawClick(wxCommandEvent &WXUNUSED(event))
 {
-  CleanPlot();
+	CleanPlot();
 	// add a simple sinus series
 	mpFXYVector *series = mPlot->GetXYSeries(0);
 	for (int i = 0; i <= 100; i++)
@@ -199,12 +198,12 @@ void MathPlotDemoFrame::OnbDrawClick(wxCommandEvent &WXUNUSED(event))
 
 void MathPlotDemoFrame::OnbSampleClick(wxCommandEvent &WXUNUSED(event))
 {
-  CleanPlot();
+	CleanPlot();
   // Sample from the original wxMathPlot widget
 	mPlot->AddLayer(new MyFunction());
 	mPlot->AddLayer(new MySIN(10.0, 220.0));
 	mPlot->AddLayer(new MyCOSinverse(10.0, 100.0));
-  mPlot->AddLayer(new MyLissajoux(125.0));
+    mPlot->AddLayer(new MyLissajoux(125.0));
 	mPlot->Fit();
 }
 

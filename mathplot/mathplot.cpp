@@ -6,7 +6,7 @@
 // Contributors:    Jose Luis Blanco, Val Greene, Lionel Reynaud, Dave Nadler
 // Created:         21/07/2003
 // Last edit:       09/09/2007
-// Last edit:       07/31/2024
+// Last edit:       08/01/2024
 // Copyright:       (c) David Schalig, Davide Rondini
 // Licence:         wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -1304,7 +1304,7 @@ void mpFXY::SetViewMode(bool asBar)
 
 void mpFXY::UpdateViewBoundary(wxCoord xnew, wxCoord ynew)
 {
-  // Keep track of how many points have been drawn into  the bouding box
+  // Keep track of how many points have been drawn into the bounding box
   if (xnew > maxDrawX)
     maxDrawX = xnew;
   else
@@ -1320,10 +1320,12 @@ void mpFXY::UpdateViewBoundary(wxCoord xnew, wxCoord ynew)
 bool mpFXY::DoGetNextXY(double *x, double *y)
 {
   bool result = GetNextXY(x, y);
-  if (m_win->IsLogXaxis())
-    *x = log10(*x);
-  if (m_win->IsLogYaxis())
-    *y = log10(*y);
+  if(result) { // only log-scale result if there is actually a result...
+	  if (m_win->IsLogXaxis())
+		*x = log10(*x);
+	  if (m_win->IsLogYaxis())
+		*y = log10(*y);
+  };
   return result;
 }
 
@@ -1340,7 +1342,7 @@ void mpFXY::DoPlot(wxDC &dc, mpWindow &w)
   wxCoord ix = 0, iy = 0;
   wxCoord ixlast = 0, iylast = 0;
 
-  // Get bondaries
+  // Get boundaries
   m_plotBondaries = w.GetPlotBondaries(!m_drawOutsideMargins);
 
   if (!m_drawOutsideMargins)
