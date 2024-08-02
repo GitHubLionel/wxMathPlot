@@ -25,3 +25,4 @@ UpgradeLog.htm
 *.vcxproj.filters
 ebackup.sta
 default.tag
+*.bak
