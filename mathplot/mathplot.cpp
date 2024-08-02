@@ -1320,11 +1320,12 @@ void mpFXY::UpdateViewBoundary(wxCoord xnew, wxCoord ynew)
 bool mpFXY::DoGetNextXY(double *x, double *y)
 {
   bool result = GetNextXY(x, y);
-  if(result) { // only log-scale result if there is actually a result...
-	  if (m_win->IsLogXaxis())
-		*x = log10(*x);
-	  if (m_win->IsLogYaxis())
-		*y = log10(*y);
+  if (result)
+  { // only log-scale result if there is actually a result...
+    if (m_win->IsLogXaxis())
+      *x = log10(*x);
+    if (m_win->IsLogYaxis())
+      *y = log10(*y);
   };
   return result;
 }

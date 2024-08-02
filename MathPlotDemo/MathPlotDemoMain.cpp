@@ -203,7 +203,7 @@ void MathPlotDemoFrame::OnbSampleClick(wxCommandEvent &WXUNUSED(event))
 	mPlot->AddLayer(new MyFunction());
 	mPlot->AddLayer(new MySIN(10.0, 220.0));
 	mPlot->AddLayer(new MyCOSinverse(10.0, 100.0));
-    mPlot->AddLayer(new MyLissajoux(125.0));
+	mPlot->AddLayer(new MyLissajoux(125.0));
 	mPlot->Fit();
 }
 
