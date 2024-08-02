@@ -38,7 +38,7 @@
 
  mpWindow has built-in support for mouse-based pan and zoom through intuitive combinations of buttons and
  the mouse wheel. It also incorporates an optional double buffering mechanism to avoid flicker. Plots can be
- easily sent to printer evices or exported in bitmap formats like PNG, BMP or JPEG.
+ easily sent to printers or exported in bitmap formats like PNG, BMP or JPEG.
 
  @section coding Coding conventions
  wxMathPlot sticks to wxWindow's coding conventions. All entities defined by wxMathPlot have the prefix <i>mp</i>.
