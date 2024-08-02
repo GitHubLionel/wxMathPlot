@@ -24,6 +24,9 @@
     <ClCompile Include="MathPlotDemoApp.cpp" />
     <ClCompile Include="MathPlotDemoMain.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\mathplot\mathplot.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>

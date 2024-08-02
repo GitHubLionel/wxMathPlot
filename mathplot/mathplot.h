@@ -722,7 +722,7 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
     bool m_visible;             //!< Toggles layer visibility. Default : true
     bool m_tractable;           //!< Is the layer tractable
     int m_flags;                //!< Holds label alignment. Default : mpALIGN_NE
-    mpRect m_plotBondaries;     //!< The bondaries for plotting curve calculated by mpWindow
+    mpRect m_plotBoundaries;    //!< The boundaries for plotting curve calculated by mpWindow
     bool m_CanDelete;           //!< Is the layer can be deleted
     mpLayerZOrder m_ZIndex;     //!< The index in Z-Order to draw the layer
 
@@ -2333,10 +2333,10 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
       m_plotWidth = m_scrX - (m_margin.left + m_margin.right);
       m_plotHeight = m_scrY - (m_margin.top + m_margin.bottom);
 
-      m_plotBondaries.endPx = m_scrX;
-      m_plotBondariesMargin.endPx = m_scrX - m_margin.right;
-      m_plotBondaries.endPy = m_scrY;
-      m_plotBondariesMargin.endPy = m_scrY - m_margin.bottom;
+      m_plotBoundaries.endPx = m_scrX;
+      m_plotBoundariesMargin.endPx = m_scrX - m_margin.right;
+      m_plotBoundaries.endPy = m_scrY;
+      m_plotBoundariesMargin.endPy = m_scrY - m_margin.bottom;
 
       m_PlotArea = wxRect(m_margin.left - EXTRA_MARGIN, m_margin.top - EXTRA_MARGIN,
           m_plotWidth + 2*EXTRA_MARGIN, m_plotHeight + 2*EXTRA_MARGIN);
@@ -2670,14 +2670,14 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
       return m_plotHeight;
     }
 
-    /** Get the bondaries of the plot. */
-    mpRect GetPlotBondaries(bool with_margin) const
+    /** Get the boundaries of the plot. */
+    mpRect GetPlotBoundaries(bool with_margin) const
     {
       mpRect bond;
       if (with_margin)
-        bond = m_plotBondariesMargin;
+        bond = m_plotBoundariesMargin;
       else
-        bond = m_plotBondaries;
+        bond = m_plotBoundaries;
       bond.startPx -= EXTRA_MARGIN;
       bond.endPx += EXTRA_MARGIN;
       bond.startPy -= EXTRA_MARGIN;
@@ -2883,8 +2883,8 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     wxCoord m_plotWidth;                //!< Width of the plot = m_scrX - (m_margin.left + m_margin.right)
     wxCoord m_plotHeight;               //!< Height of the plot = m_scrY - (m_margin.top + m_margin.bottom)
 
-    mpRect m_plotBondaries;             //!< The full size of the plot. Calculated
-    mpRect m_plotBondariesMargin;       //!< The size of the plot with the margins. Calculated
+    mpRect m_plotBoundaries;            //!< The full size of the plot. Calculated
+    mpRect m_plotBoundariesMargin;      //!< The size of the plot with the margins. Calculated
     wxRect m_PlotArea;                  //!< The full size of the plot with EXTRA_MARGIN
 
     bool m_repainting;
