@@ -26,19 +26,18 @@ enum wxBuildInfoFormat { short_f, long_f };
 wxString wxBuildInfo(wxBuildInfoFormat format)
 {
     wxString wxbuild(wxVERSION_STRING);
-
-    if (format == long_f ) {
-		#if defined(__WXMSW__)
-				wxbuild << _T("-Windows");
-		#elif defined(__UNIX__)
-				wxbuild << _T("-Linux");
-		#endif
-
-		#if wxUSE_UNICODE
-				wxbuild << _T("-Unicode build");
-		#else
-				wxbuild << _T("-ANSI build");
-		#endif // wxUSE_UNICODE
+    if (sizeof(int*) == 8) wxbuild << " 64-bit ";
+    if (format == long_f) {
+    #if defined(__WXMSW__)
+        wxbuild << _T(" Windows");
+    #elif defined(__UNIX__)
+        wxbuild << _T(" Linux");
+    #endif
+    #if wxUSE_UNICODE
+        wxbuild << _T("-Unicode build");
+    #else
+        wxbuild << _T("-ANSI build");
+    #endif // wxUSE_UNICODE
     }
     return wxbuild;
 }
