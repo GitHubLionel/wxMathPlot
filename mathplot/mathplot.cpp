@@ -1528,7 +1528,8 @@ void mpFXYVector::DrawAddedPoint(double x, double y)
   {
     if (m_continuous)
     {
-      if (m_index>0) { // Do not draw continuous-mode line unless there is a prior point
+      if (m_index > 0)
+      { // Do not draw continuous-mode line unless there is a prior point
         // Last point coordinates
         size_t lastPtIdx = m_index - 1; // we assume that m_step = 1 in this context
         double xlast = m_xs[lastPtIdx];
@@ -2055,8 +2056,8 @@ mpScale::mpScale(const wxString &name, int flags, bool grids)
 
 double mpScale::GetStep(double scale)
 {
-const double DIGIT = 128.0;
-const double DIGIT_LOG = 128.0;
+  const double DIGIT = 128.0;
+  const double DIGIT_LOG = 128.0;
 
   double dig;
   if (IsLogAxis())
@@ -3547,7 +3548,7 @@ bool mpWindow::DelLayer(mpLayer *layer, bool alsoDeleteObject, bool refreshDispl
         }
         // Also delete the object?
         if (alsoDeleteObject)
-        delete *it; // delete the object pointed at by the iterator
+          delete *it; // delete the object pointed at by the iterator
         // Remove pointer to the object from m_layers.
         // WARNING: 'erase' invalidates 'it' and all m_layers iterators in existence
         m_layers.erase(it);
@@ -4422,7 +4423,7 @@ void mpWindow::SetMargins(int top, int right, int bottom, int left)
   m_plotBoundariesMargin.endPy = m_scrY - m_margin.bottom;
 
   m_PlotArea = wxRect(m_margin.left - EXTRA_MARGIN, m_margin.top - EXTRA_MARGIN,
-            m_plotWidth + 2*EXTRA_MARGIN, m_plotHeight + 2*EXTRA_MARGIN);
+      m_plotWidth + 2 * EXTRA_MARGIN, m_plotHeight + 2 * EXTRA_MARGIN);
 }
 
 wxBitmap* mpWindow::BitmapScreenshot(wxSize imageSize, bool fit)
