@@ -9,7 +9,6 @@ bin/
 *.obj
 *.user
 *.suo
-*.vcxproj.filters
 .dep/
 *.eep
 *.lss
@@ -18,11 +17,6 @@ bin/
 *.elf
 *.hex
 UpgradeLog.htm
-*.pdb
-*.obj
-*.user
-*.suo
-*.vcxproj.filters
 ebackup.sta
 default.tag
 *.bak

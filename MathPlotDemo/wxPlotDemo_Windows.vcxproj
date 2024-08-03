@@ -25,6 +25,7 @@
     <ClCompile Include="MathPlotDemoMain.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\MathPlotConfig\MathPlotConfig.h" />
     <ClInclude Include="..\mathplot\mathplot.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
