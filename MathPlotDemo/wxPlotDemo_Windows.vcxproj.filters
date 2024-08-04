@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Demo">
+      <UniqueIdentifier>{2d4c6d37-8ad2-4486-b124-263502a5c26d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MathPlot">
+      <UniqueIdentifier>{f6899dd9-49a4-403d-8365-5417a347c015}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="MathPlotDemoApp.cpp">
+      <Filter>Demo</Filter>
+    </ClCompile>
+    <ClCompile Include="MathPlotDemoMain.cpp">
+      <Filter>Demo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\MathPlotConfig\MathPlotConfig.cpp">
+      <Filter>MathPlot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mathplot\mathplot.cpp">
+      <Filter>MathPlot</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\mathplot\mathplot.h">
+      <Filter>MathPlot</Filter>
+    </ClInclude>
+    <ClInclude Include="..\MathPlotConfig\MathPlotConfig.h">
+      <Filter>MathPlot</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
