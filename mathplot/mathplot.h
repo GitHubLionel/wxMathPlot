@@ -1825,16 +1825,16 @@ class WXDLLIMPEXP_MATHPLOT mpScale: public mpLayer
       return m_gridpen;
     }
 
-    /** Set auto scaling
-     @param _auto for the scaling
+    /** Enable/Disable automatic scaling for this axis
+     @param automaticScalingIsEnabled
      */
-    void SetAuto(bool _auto)
+    void SetAuto(bool automaticScalingIsEnabled)
     {
-      m_auto = _auto;
+      m_auto = automaticScalingIsEnabled;
     }
 
-    /** Get auto property for this axis.
-     @return auto
+    /** Is automatic scaling enabled for this axis?
+     @return automaticScalingIsEnabled
      */
     bool GetAuto() const
     {
