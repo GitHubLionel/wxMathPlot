@@ -3590,14 +3590,17 @@ void mpWindow::DelAllLayers(bool alsoDeleteObject, bool refreshDisplay)
 void mpWindow::DelAllPlot(bool alsoDeleteObject, mpFunctionType func, bool refreshDisplay)
 {
   int function;
-  for (mpLayerList::reverse_iterator it = m_layers.rbegin(); it != m_layers.rend(); it++)
+  mpLayerList::iterator it = m_layers.begin();
+  do
   {
     if ((*it)->IsLayerType(mpLAYER_PLOT, &function) && ((func == mpfAllType) || (function == func)))
     {
       DelLayer((mpLayer*)(*it), alsoDeleteObject, false); // may invalidate m_layers iterators
-      it = m_layers.rbegin(); // ... so reset iterator to end of m_layers vector
+      it = m_layers.begin(); // ... so reset iterator to begin of m_layers vector
     }
-  }
+    else
+      it++;
+  } while (it != m_layers.end());
   RefreshLegend();
   if (refreshDisplay)
     UpdateAll();
