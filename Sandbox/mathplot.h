@@ -3,10 +3,10 @@
 // Purpose:         Framework for plotting in wxWindows
 // Original Author: David Schalig
 // Maintainer:      Davide Rondini
-// Contributors:    Jose Luis Blanco, Val Greene, Lionel Reynaud
+// Contributors:    Jose Luis Blanco, Val Greene, Lionel Reynaud, Dave Nadler
 // Created:         21/07/2003
 // Last edit:       22/02/2009
-// Last edit:       05/06/2024
+// Last edit:       07/31/2024
 // Copyright:       (c) David Schalig, Davide Rondini
 // Licence:         wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -38,7 +38,7 @@
 
  mpWindow has built-in support for mouse-based pan and zoom through intuitive combinations of buttons and
  the mouse wheel. It also incorporates an optional double buffering mechanism to avoid flicker. Plots can be
- easily sent to printer evices or exported in bitmap formats like PNG, BMP or JPEG.
+ easily sent to printers or exported in bitmap formats like PNG, BMP or JPEG.
 
  @section coding Coding conventions
  wxMathPlot sticks to wxWindow's coding conventions. All entities defined by wxMathPlot have the prefix <i>mp</i>.
@@ -722,13 +722,13 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
     bool m_visible;             //!< Toggles layer visibility. Default : true
     bool m_tractable;           //!< Is the layer tractable
     int m_flags;                //!< Holds label alignment. Default : mpALIGN_NE
-    mpRect m_plotBondaries;     //!< The bondaries for plotting curve calculated by mpWindow
+    mpRect m_plotBoundaries;    //!< The boundaries for plotting curve calculated by mpWindow
     bool m_CanDelete;           //!< Is the layer can be deleted
     mpLayerZOrder m_ZIndex;     //!< The index in Z-Order to draw the layer
 
     /** Initialize the context
      */
-    void UpdateContext(wxDC &dc);
+    void UpdateContext(wxDC &dc) const;
 
   private:
     bool m_busy;                //!< Test if we are busy (plot operation)
@@ -1825,16 +1825,16 @@ class WXDLLIMPEXP_MATHPLOT mpScale: public mpLayer
       return m_gridpen;
     }
 
-    /** Set auto scaling
-     @param _auto for the scaling
+    /** Enable/Disable automatic scaling for this axis
+     @param automaticScalingIsEnabled
      */
-    void SetAuto(bool _auto)
+    void SetAuto(bool automaticScalingIsEnabled)
     {
-      m_auto = _auto;
+      m_auto = automaticScalingIsEnabled;
     }
 
-    /** Get auto property for this axis.
-     @return auto
+    /** Is automatic scaling enabled for this axis?
+     @return automaticScalingIsEnabled
      */
     bool GetAuto() const
     {
@@ -2032,6 +2032,14 @@ typedef std::deque<mpLayer*> mpLayerList;
 typedef std::function<void(void *Sender, const wxString &classname, bool &cancel)> mpOnDeleteLayer;
 
 /**
+ * Define an event for when we have a mouse click
+ * Use like this :
+ *  your_plot->SetOnUserMouseAction([this](void *Sender, wxMouseEvent &event, bool &cancel)
+ {  your_event_function(Sender, event, cancel);});
+ */
+typedef std::function<void(void *Sender, wxMouseEvent &event, bool &cancel)> mpOnUserMouseAction;
+
+/**
  * Class for drawing mouse magnetization
  */
 class mpMagnet
@@ -2080,7 +2088,7 @@ class mpMagnet
     bool m_IsDrawn;            //!< Is that the cross is drawn ?
     bool m_IsWasDrawn;         //!< Is that the cross was drawn before the OnPaint event ?
     bool m_rightClick;         //!< Is the mouse right click ?
-    void DrawCross(wxClientDC &dc);
+    void DrawCross(wxClientDC &dc) const;
 };
 
 /** Canvas for plotting mpLayer implementations.
@@ -2140,7 +2148,8 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      @param refreshDisplay States whether to refresh the display (UpdateAll) after removing the layer.
      @return true if layer is deleted correctly
 
-     N.B. Only the layer reference in the mpWindow is deleted, the layer object still exists if alsoDeleteObject is false
+     N.B. If alsoDeleteObject is false, only the layer pointer in the mpWindow is removed, the layer object still exists.
+	 WARNING: Invalidates any extant m_layers iterators!
      */
     bool DelLayer(mpLayer *layer, bool alsoDeleteObject, bool refreshDisplay = true);
 
@@ -2332,10 +2341,10 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
       m_plotWidth = m_scrX - (m_margin.left + m_margin.right);
       m_plotHeight = m_scrY - (m_margin.top + m_margin.bottom);
 
-      m_plotBondaries.endPx = m_scrX;
-      m_plotBondariesMargin.endPx = m_scrX - m_margin.right;
-      m_plotBondaries.endPy = m_scrY;
-      m_plotBondariesMargin.endPy = m_scrY - m_margin.bottom;
+      m_plotBoundaries.endPx = m_scrX;
+      m_plotBoundariesMargin.endPx = m_scrX - m_margin.right;
+      m_plotBoundaries.endPy = m_scrY;
+      m_plotBoundariesMargin.endPy = m_scrY - m_margin.bottom;
 
       m_PlotArea = wxRect(m_margin.left - EXTRA_MARGIN, m_margin.top - EXTRA_MARGIN,
           m_plotWidth + 2*EXTRA_MARGIN, m_plotHeight + 2*EXTRA_MARGIN);
@@ -2557,7 +2566,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 
     /** Returns the bounding box coordinates
      @param bbox Pointer to a 6-element double array where to store bounding box coordinates. */
-    void GetBoundingBox(double *bbox);
+    void GetBoundingBox(double *bbox) const;
     mpFloatRect *GetBoundingBox(void)
     {
       return &m_bound;
@@ -2669,14 +2678,14 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
       return m_plotHeight;
     }
 
-    /** Get the bondaries of the plot. */
-    mpRect GetPlotBondaries(bool with_margin) const
+    /** Get the boundaries of the plot. */
+    mpRect GetPlotBoundaries(bool with_margin) const
     {
       mpRect bond;
       if (with_margin)
-        bond = m_plotBondariesMargin;
+        bond = m_plotBoundariesMargin;
       else
-        bond = m_plotBondaries;
+        bond = m_plotBoundaries;
       bond.startPx -= EXTRA_MARGIN;
       bond.endPx += EXTRA_MARGIN;
       bond.startPy -= EXTRA_MARGIN;
@@ -2749,6 +2758,13 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     void SetOnDeleteLayer(mpOnDeleteLayer event)
     {
       m_OnDeleteLayer = event;
+    }
+
+    /** On delete layer event
+     @return reference to event */
+    void SetOnUserMouseAction(mpOnUserMouseAction event)
+    {
+      m_OnUserMouseAction = event;
     }
 
     /**
@@ -2882,8 +2898,8 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     wxCoord m_plotWidth;                //!< Width of the plot = m_scrX - (m_margin.left + m_margin.right)
     wxCoord m_plotHeight;               //!< Height of the plot = m_scrY - (m_margin.top + m_margin.bottom)
 
-    mpRect m_plotBondaries;             //!< The full size of the plot. Calculated
-    mpRect m_plotBondariesMargin;       //!< The size of the plot with the margins. Calculated
+    mpRect m_plotBoundaries;            //!< The full size of the plot. Calculated
+    mpRect m_plotBoundariesMargin;      //!< The size of the plot with the margins. Calculated
     wxRect m_PlotArea;                  //!< The full size of the plot with EXTRA_MARGIN
 
     bool m_repainting;
@@ -2915,7 +2931,8 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 
     MathPlotConfigDialog* m_configWindow = NULL;   //!< For the config dialog
 
-    mpOnDeleteLayer m_OnDeleteLayer = NULL;        //!< Event when we delete a layer
+    mpOnDeleteLayer m_OnDeleteLayer = NULL;          //!< Event when we delete a layer
+    mpOnUserMouseAction m_OnUserMouseAction = NULL;  //!< Event when we have a mouse click
 
   private:
     int m_countY2Axis = 0;
@@ -2999,7 +3016,7 @@ class WXDLLIMPEXP_MATHPLOT mpText: public mpLayer
 
     /** Get the offset
      @return void */
-    void GetOffset(int *offX, int *offY)
+    void GetOffset(int *offX, int *offY) const
     {
       *offX = m_offsetx;
       *offY = m_offsety;
@@ -3179,7 +3196,7 @@ class WXDLLIMPEXP_MATHPLOT mpMovableObject: public mpFunction
 
     /** A method for 2D translation and rotation, using the current transformation stored in m_reference_x,m_reference_y,m_reference_phi.
      */
-    void TranslatePoint(double x, double y, double &out_x, double &out_y);
+    void TranslatePoint(double x, double y, double &out_x, double &out_y) const;
 
     /** This contains the object points, in local coordinates (to be transformed by the current transformation).
      */
