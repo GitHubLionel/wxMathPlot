@@ -1542,7 +1542,7 @@ void mpFXYVector::DrawAddedPoint(double x, double y)
         wxCoord iylast = m_win->y2p(ylast, m_UseY2Axis);
         dc.DrawLine(ixlast, iylast, ix, iy);
       };
-      m_index++;
+
       if (m_symbol != mpsNone)
         DrawSymbol(dc, ix, iy);
     }
@@ -1710,8 +1710,10 @@ bool mpFXYVector::AddData(const double x, const double y, bool updatePlot)
   {
     DrawAddedPoint(x, y);
   }
-//  else
-//    Rewind();
+
+  // In all cases, we increment the index
+  m_index++;
+
   return new_limit;
 }
 
