@@ -1,7 +1,7 @@
 ﻿/***************************************************************
  * Name:      MathPlotDemoMain.h
  * Purpose:   Defines Application Frame
- * Author:    Lionel ()
+ * Author:    Lionel Reynaud
  * Created:   2020-11-26
  * Copyright: Lionel ()
  * License:
