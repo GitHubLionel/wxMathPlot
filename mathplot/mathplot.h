@@ -189,34 +189,45 @@ typedef union
  */
 struct mpFloatRect
 {
-  struct
-  {
-      double Xmin;
-      double Xmax;
-      double Ymin;
-      double Ymax;
-      double Y2min;
-      double Y2max;
-  };
-  /// Is point inside this bounding box (ignoring Y2)?
-  bool PointIsInside(double x, double y) const {
-      if (x<Xmin || x>Xmax) return false;
-      if (y<Ymin || y>Ymax) return false;
+    struct
+    {
+        double Xmin;
+        double Xmax;
+        double Ymin;
+        double Ymax;
+        double Y2min;
+        double Y2max;
+    };
+    /// Is point inside this bounding box (ignoring Y2)?
+    bool PointIsInside(double x, double y) const
+    {
+      if (x < Xmin || x > Xmax)
+        return false;
+      if (y < Ymin || y > Ymax)
+        return false;
       return true;
-  };
-  /// Update bounding box to include this point (ignores Y2)
-  void UpdateBoundingBoxToInclude(double x, double y) {
-      if (x < Xmin) Xmin = x;
-      if (x > Xmax) Xmax = x;
-      if (y < Ymin) Ymin = y;
-      if (y > Ymax) Ymax = y;
-  };
-  /// Initialize bounding box with an initial point
-  void InitializeBoundingBox(double x, double y, double y2) {
-      Xmin  = Xmax  = x;
-      Ymin  = Ymax  = y;
+    }
+
+    /// Update bounding box to include this point (ignores Y2)
+    void UpdateBoundingBoxToInclude(double x, double y)
+    {
+      if (x < Xmin)
+        Xmin = x;
+      if (x > Xmax)
+        Xmax = x;
+      if (y < Ymin)
+        Ymin = y;
+      if (y > Ymax)
+        Ymax = y;
+    }
+
+    /// Initialize bounding box with an initial point
+    void InitializeBoundingBox(double x, double y, double y2)
+    {
+      Xmin = Xmax = x;
+      Ymin = Ymax = y;
       Y2min = Y2max = y2;
-  }
+    }
 };
 
 /** Command IDs used by mpWindow
@@ -2050,6 +2061,14 @@ typedef std::deque<mpLayer*> mpLayerList;
 typedef std::function<void(void *Sender, const wxString &classname, bool &cancel)> mpOnDeleteLayer;
 
 /**
+ * Define an event for when we have a mouse click
+ * Use like this :
+ *  your_plot->SetOnUserMouseAction([this](void *Sender, wxMouseEvent &event, bool &cancel)
+ {  your_event_function(Sender, event, cancel);});
+ */
+typedef std::function<void(void *Sender, wxMouseEvent &event, bool &cancel)> mpOnUserMouseAction;
+
+/**
  * Class for drawing mouse magnetization
  */
 class mpMagnet
@@ -2770,6 +2789,13 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
       m_OnDeleteLayer = event;
     }
 
+    /** On delete layer event
+     @return reference to event */
+    void SetOnUserMouseAction(mpOnUserMouseAction event)
+    {
+      m_OnUserMouseAction = event;
+    }
+
     /**
      * Log axis control.
      * It is an axis property but as we need to control the bound and the scale,
@@ -2836,11 +2862,12 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     void OnLockAspect(wxCommandEvent &event);             //!< Context menu handler
     void OnMouseHelp(wxCommandEvent &event);              //!< Context menu handler
     void OnMouseLeftDown(wxMouseEvent &event);            //!< Mouse left click (for rect zoom)
-    void OnMouseRightDown(wxMouseEvent &event); //!< Mouse handler, for detecting when the user drags with the right button or just "clicks" for the menu
+    void OnMouseRightDown(wxMouseEvent &event);           //!< Mouse handler, for detecting when the user drags with the right button or just "clicks" for the menu
     void OnMouseMove(wxMouseEvent &event);                //!< Mouse handler for mouse motion (for pan)
     void OnMouseLeftRelease(wxMouseEvent &event);         //!< Mouse left click (for rect zoom)
     void OnMouseWheel(wxMouseEvent &event);               //!< Mouse handler for the wheel
     void OnMouseLeave(wxMouseEvent &event);               //!< Mouse handler for mouse motion (for pan)
+    bool CheckUserMouseAction(wxMouseEvent &event);       //!< Check if a user mouse action is required
     void OnScrollThumbTrack(wxScrollWinEvent &event);     //!< Scroll thumb on scroll bar moving
     void OnScrollPageUp(wxScrollWinEvent &event);         //!< Scroll page up
     void OnScrollPageDown(wxScrollWinEvent &event);       //!< Scroll page down
@@ -2934,7 +2961,8 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 
     MathPlotConfigDialog* m_configWindow = NULL;   //!< For the config dialog
 
-    mpOnDeleteLayer m_OnDeleteLayer = NULL;        //!< Event when we delete a layer
+    mpOnDeleteLayer m_OnDeleteLayer = NULL;          //!< Event when we delete a layer
+    mpOnUserMouseAction m_OnUserMouseAction = NULL;  //!< Event when we have a mouse click
 
   private:
     int m_countY2Axis = 0;

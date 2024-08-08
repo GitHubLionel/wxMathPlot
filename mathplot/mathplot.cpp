@@ -2787,8 +2787,26 @@ void mpWindow::InitParameters()
   m_lockaspect = false;
 }
 
+bool mpWindow::CheckUserMouseAction(wxMouseEvent &event)
+{
+  if (m_OnUserMouseAction != NULL)
+  {
+    bool cancel = true;
+    m_OnUserMouseAction(this, event, cancel);
+    if (cancel)
+    {
+      event.Skip();
+      return true;
+    }
+  }
+  return false;
+}
+
 void mpWindow::OnMouseLeftDown(wxMouseEvent &event)
 {
+  if (CheckUserMouseAction(event))
+    return;
+
   m_mouseLClick = event.GetPosition();
 #ifdef MATHPLOT_DO_LOGGING
   wxLogMessage(_T("mpWindow::OnMouseLeftDown() X = %d , Y = %d"), event.GetX(), event.GetY());
@@ -2818,6 +2836,9 @@ void mpWindow::OnMouseLeftDown(wxMouseEvent &event)
 // JLB
 void mpWindow::OnMouseRightDown(wxMouseEvent &event)
 {
+  if (CheckUserMouseAction(event))
+    return;
+
   m_mouseMovedAfterRightClick = false;
   m_mouseRClick = wxPoint(event.GetX(), event.GetY());
   if (m_magnetize)
@@ -2831,6 +2852,9 @@ void mpWindow::OnMouseRightDown(wxMouseEvent &event)
 // JLB
 void mpWindow::OnMouseMove(wxMouseEvent &event)
 {
+  if (CheckUserMouseAction(event))
+    return;
+
   if (!m_enableMouseNavigation)
   {
     event.Skip();
@@ -2963,6 +2987,9 @@ void mpWindow::OnMouseMove(wxMouseEvent &event)
 
 void mpWindow::OnMouseLeftRelease(wxMouseEvent &event)
 {
+  if (CheckUserMouseAction(event))
+    return;
+
   if (m_movingInfoLayer != NULL)
   {
     m_movingInfoLayer->UpdateReference();
@@ -2985,6 +3012,9 @@ void mpWindow::OnMouseLeftRelease(wxMouseEvent &event)
 // JLB
 void mpWindow::OnMouseWheel(wxMouseEvent &event)
 {
+  if (CheckUserMouseAction(event))
+    return;
+
   if (!m_enableMouseNavigation)
   {
     event.Skip();
@@ -3029,8 +3059,11 @@ void mpWindow::OnMouseWheel(wxMouseEvent &event)
 /**
  * Mouve leave the plot area
  */
-void mpWindow::OnMouseLeave(wxMouseEvent &WXUNUSED(event))
+void mpWindow::OnMouseLeave(wxMouseEvent &event)
 {
+  if (CheckUserMouseAction(event))
+    return;
+
   wxClientDC dc(this);
   if (m_InfoCoords && m_InfoCoords->IsVisible())
   {
