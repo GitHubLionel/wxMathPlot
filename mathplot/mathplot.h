@@ -187,19 +187,37 @@ typedef union
  * Y refer to Y axis
  * Y2 refer to Y2 axis when it is defined
  */
-typedef union
+struct mpFloatRect
 {
-    struct
-    {
-        double Xmin;
-        double Xmax;
-        double Ymin;
-        double Ymax;
-        double Y2min;
-        double Y2max;
-    };
-    double tab[6];
-} mpFloatRect;
+  struct
+  {
+      double Xmin;
+      double Xmax;
+      double Ymin;
+      double Ymax;
+      double Y2min;
+      double Y2max;
+  };
+  /// Is point inside this bounding box (ignoring Y2)?
+  bool PointIsInside(double x, double y) const {
+      if (x<Xmin || x>Xmax) return false;
+      if (y<Ymin || y>Ymax) return false;
+      return true;
+  };
+  /// Update bounding box to include this point (ignores Y2)
+  void UpdateBoundingBoxToInclude(double x, double y) {
+      if (x < Xmin) Xmin = x;
+      if (x > Xmax) Xmax = x;
+      if (y < Ymin) Ymin = y;
+      if (y > Ymax) Ymax = y;
+  };
+  /// Initialize bounding box with an initial point
+  void InitializeBoundingBox(double x, double y, double y2) {
+      Xmin  = Xmax  = x;
+      Ymin  = Ymax  = y;
+      Y2min = Y2max = y2;
+  }
+};
 
 /** Command IDs used by mpWindow
  * Same order for the popup menu
@@ -2865,10 +2883,10 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     mpFloatRect m_bound;    //!< Global layer bounding box, left, right, top and bottom border incl.
     double m_scaleX;        //!< Current view's X scale
     double m_scaleY;        //!< Current view's Y scale
-    double m_scaleY2;       //!< Current view's Y scale
+    double m_scaleY2;       //!< Current view's Y2 scale
     double m_posX;          //!< Current view's X position
     double m_posY;          //!< Current view's Y position
-    double m_posY2;         //!< Current view's Y position
+    double m_posY2;         //!< Current view's Y2 position
     int m_scrX;             //!< Current view's X dimension
     int m_scrY;             //!< Current view's Y dimension
     int m_clickedX;         //!< Last mouse click X position, for centering and zooming the view
