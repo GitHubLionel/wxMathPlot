@@ -1,4 +1,7 @@
 Thumbs.db
+*.bak
+
+# Microsoft Visual Studio 
 .vs/
 vc_mswud/
 vc_mswu/
@@ -9,6 +12,9 @@ bin/
 *.obj
 *.user
 *.suo
+UpgradeLog.htm
+
+# GCC
 .dep/
 *.eep
 *.lss
@@ -16,7 +22,8 @@ bin/
 *.map
 *.elf
 *.hex
-UpgradeLog.htm
+
+# Epsilon
 ebackup.sta
 default.tag
-*.bak
+

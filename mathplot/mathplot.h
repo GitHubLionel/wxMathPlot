@@ -50,7 +50,7 @@
  Authors can be contacted via the wxMathPlot's homepage at
  https://sourceforge.net/projects/wxmathplot<br>
  Contributors:<br>
- Jose Luis Blanco, Val Greene.<br>
+ Jose Luis Blanco, Val Greene, Lionel Reynaud, Dave Nadler<br>
  */
 
 //this definition uses windows dll to export function.
@@ -154,7 +154,7 @@ class WXDLLIMPEXP_MATHPLOT mpBitmapLayer;
 
 class MathPlotConfigDialog;
 
-// a rectangle structure in several flavor
+/// A rectangle structure in several flavors
 typedef union
 {
     struct
@@ -189,45 +189,39 @@ typedef union
  */
 struct mpFloatRect
 {
+  union {
     struct
     {
-        double Xmin;
-        double Xmax;
-        double Ymin;
-        double Ymax;
-        double Y2min;
-        double Y2max;
+      double Xmin;
+      double Xmax;
+      double Ymin;
+      double Ymax;
+      double Y2min;
+      double Y2max;
     };
-    /// Is point inside this bounding box (ignoring Y2)?
-    bool PointIsInside(double x, double y) const
-    {
-      if (x < Xmin || x > Xmax)
-        return false;
-      if (y < Ymin || y > Ymax)
-        return false;
-      return true;
-    }
-
-    /// Update bounding box to include this point (ignores Y2)
-    void UpdateBoundingBoxToInclude(double x, double y)
-    {
-      if (x < Xmin)
-        Xmin = x;
-      if (x > Xmax)
-        Xmax = x;
-      if (y < Ymin)
-        Ymin = y;
-      if (y > Ymax)
-        Ymax = y;
-    }
-
-    /// Initialize bounding box with an initial point
-    void InitializeBoundingBox(double x, double y, double y2)
-    {
-      Xmin = Xmax = x;
-      Ymin = Ymax = y;
-      Y2min = Y2max = y2;
-    }
+    double tab[6];
+  };
+  /// Is point inside this bounding box (ignoring Y2)?
+  bool PointIsInside(double x, double y) const {
+    if( (x < Xmin || x > Xmax) ||
+        (y < Ymin || y > Ymax)  ) return false;
+    return true;
+  }
+  /// Update bounding box to include this point
+  void UpdateBoundingBoxToInclude(double x, double y, double y2=0) {
+         if (x  < Xmin ) Xmin = x;
+    else if (x  > Xmax ) Xmax = x;
+         if (y  < Ymin ) Ymin = y;
+    else if (y  > Ymax ) Ymax = y;
+         if (y2 < Y2min) Y2min = y2;
+    else if (y2 > Y2max) Y2max = y2;
+  }
+  /// Initialize bounding box with an initial point
+  void InitializeBoundingBox(double x, double y, double y2=0) {
+    Xmin = Xmax = x;
+    Ymin = Ymax = y;
+    Y2min = Y2max = y2;
+  }
 };
 
 /** Command IDs used by mpWindow
@@ -246,7 +240,7 @@ enum
   mpID_CONFIG,             //!< Configuration
   mpID_LOAD_FILE,          //!< Load a file
   mpID_HELP_MOUSE,         //!< Shows information about the mouse commands
-  mpID_FULLSCREEN          //!< Toggle fullscren only if parent is a frame windows
+  mpID_FULLSCREEN          //!< Toggle fullscreen only if parent is a frame windows
 };
 
 // Location for the Info layer
@@ -1338,6 +1332,7 @@ class WXDLLIMPEXP_MATHPLOT mpFXY: public mpFunction
      Override this function in your implementation.
      @param x Returns X value
      @param y Returns Y value
+     @returns false when there are no more points (normally true)
      */
     virtual bool GetNextXY(double *x, double *y) = 0;
 
@@ -1366,7 +1361,7 @@ class WXDLLIMPEXP_MATHPLOT mpFXY: public mpFunction
     }
 
     /**
-     * return true if XY serie is ploted with bar
+     * return true if XY series is plotted with bar
      */
     bool ViewAsBar(void) const
     {
@@ -1387,7 +1382,7 @@ class WXDLLIMPEXP_MATHPLOT mpFXY: public mpFunction
     // Plot data as bar graph
     bool m_ViewAsBar = false;
 
-    // Is the serie can be deleted
+    // Can the series be deleted?
     bool m_CanDelete = true;
 
     /** Update label positioning data
