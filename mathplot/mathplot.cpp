@@ -200,6 +200,8 @@ IMPLEMENT_ABSTRACT_CLASS(mpLayer, wxObject)
 mpLayer::mpLayer() :
     m_type(mpLAYER_UNDEF)
 {
+  // The wxWindow handle is not defined
+  m_win = NULL;
   // Default pen
   SetPen((wxPen const&)*wxBLACK_PEN);
   // Default font
@@ -1506,6 +1508,9 @@ bool mpFXYVector::GetNextXY(double *x, double *y)
   }
 }
 
+/**
+ * Simply draw the newly added point. The bounds are already known.
+ */
 void mpFXYVector::DrawAddedPoint(double x, double y)
 {
   // If we are here, new point is always in bound
@@ -1645,9 +1650,9 @@ void mpFXYVector::SetData(const std::vector<double> &xs, const std::vector<doubl
   Rewind();
 }
 
-/** Add data to the internal vector. This method DOES NOT refresh the mpWindow; do it manually
- * by calling UpdateAll() or just Fit() if we want to adjust plot
- * We add 2% to the limit
+/** Add data to the internal vector. This method DOES NOT refresh the mpWindow unless updatePlot = true;
+ * Do it manually by calling UpdateAll() or just Fit() if we want to adjust plot
+ * BEWARE : You can not call this function if mpFXYVector layer is not added to the mpWindow layers list.
  */
 bool mpFXYVector::AddData(const double x, const double y, bool updatePlot)
 {
