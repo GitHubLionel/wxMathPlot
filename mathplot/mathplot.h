@@ -2783,14 +2783,18 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     }
 
     /** On delete layer event
-     @return reference to event */
+     * Allows the user to perform certain actions before deleting the layer.
+     * The user can abort the deletion.
+     */
     void SetOnDeleteLayer(mpOnDeleteLayer event)
     {
       m_OnDeleteLayer = event;
     }
 
-    /** On delete layer event
-     @return reference to event */
+    /** On user mouse action event
+     * Allows the user to perform certain actions before normal event processing.
+     * The user has the possibility to interrupt or continue the normal processing of the event.
+     */
     void SetOnUserMouseAction(mpOnUserMouseAction event)
     {
       m_OnUserMouseAction = event;
