@@ -3775,7 +3775,7 @@ void mpWindow::SetBound()
 }
 
 /**
- * Get the bounding of all visible series
+ * Get the bounding boxes of all visible series
  */
 bool mpWindow::UpdateBBox()
 {
