@@ -1328,6 +1328,14 @@ class WXDLLIMPEXP_MATHPLOT mpFXY: public mpFunction
       ;
     }
 
+    /**
+     * Return the number of points in the series
+     */
+    virtual int GetSize()
+    {
+      return 0;
+    }
+
     /** Get locus value for next N.
      Override this function in your implementation.
      @param x Returns X value
@@ -1442,6 +1450,14 @@ class WXDLLIMPEXP_MATHPLOT mpFXYVector: public mpFXY
      * @sa SetData
      */
     void Clear();
+
+    /**
+     * Return the number of points in the series
+     */
+    virtual int GetSize()
+    {
+      return m_xs.size();
+    }
 
     /** Add data to the internal vector. This method DOES NOT refresh the mpWindow unless updatePlot = true
      * and the added point is in bound; do it manually by calling UpdateAll() or just Fit() if we want to adjust plot
@@ -2791,6 +2807,14 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
       m_OnDeleteLayer = event;
     }
 
+    /** On delete layer event
+     * Remove the callback
+     */
+    void UnSetOnDeleteLayer()
+    {
+      m_OnDeleteLayer = NULL;
+    }
+
     /** On user mouse action event
      * Allows the user to perform certain actions before normal event processing.
      * The user has the possibility to interrupt or continue the normal processing of the event.
@@ -2798,6 +2822,14 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     void SetOnUserMouseAction(const mpOnUserMouseAction &event)
     {
       m_OnUserMouseAction = event;
+    }
+
+    /** On user mouse action event
+     * Remove the callback
+     */
+    void UnSetOnUserMouseAction()
+    {
+      m_OnUserMouseAction = NULL;
     }
 
     /**
