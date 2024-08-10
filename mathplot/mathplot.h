@@ -209,11 +209,11 @@ struct mpFloatRect
   }
   /// Update bounding box to include this point
   void UpdateBoundingBoxToInclude(double x, double y, double y2=0) {
-         if (x  < Xmin ) Xmin = x;
+    if      (x  < Xmin ) Xmin = x;
     else if (x  > Xmax ) Xmax = x;
-         if (y  < Ymin ) Ymin = y;
+    if      (y  < Ymin ) Ymin = y;
     else if (y  > Ymax ) Ymax = y;
-         if (y2 < Y2min) Y2min = y2;
+    if      (y2 < Y2min) Y2min = y2;
     else if (y2 > Y2max) Y2max = y2;
   }
   /// Initialize bounding box with an initial point
@@ -2918,8 +2918,8 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     int m_clickedX;         //!< Last mouse click X position, for centering and zooming the view
     int m_clickedY;         //!< Last mouse click Y position, for centering and zooming the view
 
-    /** These are updated in Fit() only, and may be different from the real borders (layer coordinates)
-     * only if lock aspect ratio is true.
+    /** These are updated in Fit() only (also Zoom)
+     *  May be different from the real borders (layer coordinates) only if lock aspect ratio is true.
      */
     mpFloatRect m_desired;
 
