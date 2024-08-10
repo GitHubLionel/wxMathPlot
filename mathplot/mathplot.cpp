@@ -1509,7 +1509,8 @@ bool mpFXYVector::GetNextXY(double *x, double *y)
 }
 
 /**
- * Simply draw the newly added point. The bounds are already known.
+ * Draw the newly added point at m_index, optionally drawing the continuous-mode line.
+ * The bounds are already known.
  */
 void mpFXYVector::DrawAddedPoint(double x, double y)
 {
@@ -1586,7 +1587,7 @@ void mpFXYVector::Clear()
 
 void mpFXYVector::SetData(const std::vector<double> &xs, const std::vector<double> &ys)
 {
-  // Check if the data vectora are of the same size
+  // Check if the data vectors are of the same size
   if (xs.size() != ys.size())
   {
     wxLogError(_T("wxMathPlot error: X and Y vector are not of the same length!"));
@@ -2319,7 +2320,7 @@ void mpScaleX::DoPlot(wxDC &dc, mpWindow &w)
   wxLogMessage(_T("mpScaleX::Plot: step: %f, end: %f, n: %f"), step, end, n0);
 #endif
 
-  int labelH = 0; // Control labels heigth to decide where to put axis name (below labels or on top of axis)
+  int labelH = 0; // Control labels height to decide where to put axis name (below labels or on top of axis)
   int maxExtent = 0;
   wxCoord tx, ty;
   wxString s;
@@ -2855,7 +2856,7 @@ void mpWindow::OnMouseRightDown(wxMouseEvent &event)
     SetCursor(*wxCROSS_CURSOR);
 }
 
-// If the user "drags" with the right buttom pressed, do "pan"
+// If the user "drags" with the right button pressed, do "pan"
 // JLB
 void mpWindow::OnMouseMove(wxMouseEvent &event)
 {
@@ -3435,7 +3436,7 @@ void mpWindow::OnFullScreen(wxCommandEvent &WXUNUSED(event))
 
 /**
  * Create series from a data file.
- * The file is not formated. For example a simple txt file or csv file
+ * The file is not formatted. For example a simple txt file or csv file
  * First data is x abscissa and next is up to 9 ordinates
  * Separator is : space or ; or tab
  */
