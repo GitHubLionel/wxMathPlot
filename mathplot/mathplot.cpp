@@ -2917,7 +2917,7 @@ void mpWindow::OnMouseMove(wxMouseEvent &event)
       wxPoint moveVector = eventPoint - m_mouseLClick;
       if (m_movingInfoLayer == NULL)
       {
-        // First : restaure stored bitmap
+        // First : restore stored bitmap
         if (m_zoom_bmp)
         {
           wxMemoryDC m_coord_dc(&dc);

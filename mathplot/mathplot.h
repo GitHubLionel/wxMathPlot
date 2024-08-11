@@ -2570,8 +2570,13 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     /** Draws the mpWindow on a page for printing
      \param print the mpPrintout where to print the graph */
     //void PrintGraph(mpPrintout *print);
+
+    /// Get the 'desired' bounding box for the currently displayed view (set by Fit or Zoom operations).
+    /// @sa Fit, Zoom
+    mpFloatRect GetDesiredBoundingBox() const { return m_desired; }
+
     /** Returns the left-border layer coordinate that the user wants the mpWindow to show (it may be not exactly the actual shown coordinate in the case of locked aspect ratio).
-     * @sa Fit
+     * @sa Fit, Zoom
      */
     double GetDesiredXmin() const
     {
@@ -2579,7 +2584,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     }
 
     /** Returns the right-border layer coordinate that the user wants the mpWindow to show (it may be not exactly the actual shown coordinate in the case of locked aspect ratio).
-     * @sa Fit
+     * @sa Fit, Zoom
      */
     double GetDesiredXmax() const
     {
@@ -2588,7 +2593,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 
     /** Returns the bottom-border layer coordinate that the user wants the mpWindow to show (it may be
      * not exactly the actual shown coordinate in the case of locked aspect ratio).
-     * @sa Fit
+     * @sa Fit, Zoom
      */
     double GetDesiredYmin() const
     {
@@ -2597,7 +2602,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 
     /** Returns the top layer-border coordinate that the user wants the mpWindow to show (it may be
      * not exactly the actual shown coordinate in the case of locked aspect ratio).
-     * @sa Fit
+     * @sa Fit, Zoom
      */
     double GetDesiredYmax() const
     {
