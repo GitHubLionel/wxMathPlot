@@ -539,20 +539,6 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
      */
     void Plot(wxDC &dc, mpWindow &w);
 
-    /**
-     * Pure virtual method to plot the layer.
-     * Must be overidden and implemented by derived classes.
-     */
-    virtual void DoPlot(wxDC &dc, mpWindow &w) = 0;
-
-    /**
-     * If we need to do something before plot like reinitialize some parameters ...
-     */
-    virtual void DoBeforePlot()
-    {
-      ;
-    }
-
     /** Set layer name
      @param name Name, will be copied to internal class member
      */
@@ -753,6 +739,20 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
      */
     void UpdateContext(wxDC &dc) const;
 
+    /**
+     * Pure virtual method to plot the layer.
+     * Must be overidden and implemented by derived classes.
+     */
+    virtual void DoPlot(wxDC &dc, mpWindow &w) = 0;
+
+    /**
+     * If we need to do something before plot like reinitialize some parameters ...
+     */
+    virtual void DoBeforePlot()
+    {
+      ;
+    }
+
   private:
     bool m_busy;                //!< Test if we are busy (plot operation)
 
@@ -799,12 +799,6 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLayer: public mpLayer
     {
       return false;
     }
-
-    /** Plot method. Can be overidden by derived classes.
-     @param dc the device content where to plot
-     @param w the window to plot
-     @sa mpLayer::Plot */
-    virtual void DoPlot(wxDC &dc, mpWindow &w);
 
     /**
      * Just delete the bitmap of the info
@@ -866,6 +860,12 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLayer: public mpLayer
     int m_winX, m_winY;     //!< Holds the mpWindow size. Used to rescale position when window is resized.
     mpLocation m_location;  //!< Location of the box in the margin. Default mpMarginNone = use coordinates
 
+    /** Plot method. Can be overidden by derived classes.
+     @param dc the device content where to plot
+     @param w the window to plot
+     @sa mpLayer::Plot */
+    virtual void DoPlot(wxDC &dc, mpWindow &w);
+
     /** Compute the dimensions and position of the rectangle info
      */
     void SetInfoRectangle(mpWindow &w, int width = 0, int height = 0);
@@ -905,12 +905,6 @@ class WXDLLIMPEXP_MATHPLOT mpInfoCoords: public mpInfoLayer
 
     virtual void ErasePlot(wxDC &dc, mpWindow &w);
 
-    /** Plot method.
-     @param dc the device content where to plot
-     @param w the window to plot
-     @sa mpLayer::Plot */
-    virtual void DoPlot(wxDC &dc, mpWindow &w);
-
     /** Set X axis label view mode.
      @param mode mpX_NORMAL for normal labels, mpX_TIME for time axis in hours, minutes, seconds. */
     void SetLabelMode(unsigned int mode, unsigned int time_conv = mpX_RAWTIME)
@@ -949,6 +943,12 @@ class WXDLLIMPEXP_MATHPLOT mpInfoCoords: public mpInfoLayer
     bool m_series_coord;
     wxPen m_penSeries;
 
+    /** Plot method.
+     @param dc the device content where to plot
+     @param w the window to plot
+     @sa mpLayer::Plot */
+    virtual void DoPlot(wxDC &dc, mpWindow &w);
+
   DECLARE_DYNAMIC_CLASS(mpInfoCoords)
 };
 
@@ -974,12 +974,6 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLegend: public mpInfoLayer
     {
       ;
     }
-
-    /** Plot method.
-     @param dc the device content where to plot
-     @param w the window to plot
-     @sa mpLayer::Plot */
-    virtual void DoPlot(wxDC &dc, mpWindow &w);
 
     /** Swith item mode, which is the element on the left of text representing the plot line.
      * @param mode The item draw mode: mpLEGEND_LINE or mpLEGEND_SQUARE. */
@@ -1015,6 +1009,12 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLegend: public mpInfoLayer
   protected:
     mpLegendStyle m_item_mode;
     mpLegendDirection m_item_direction;
+
+    /** Plot method.
+     @param dc the device content where to plot
+     @param w the window to plot
+     @sa mpLayer::Plot */
+    virtual void DoPlot(wxDC &dc, mpWindow &w);
 
   private:
     bool m_need_update;
@@ -1187,8 +1187,6 @@ class WXDLLIMPEXP_MATHPLOT mpHorizontalLine: public mpLine
   public:
     mpHorizontalLine(double yvalue, const wxPen &pen = *wxGREEN_PEN, bool useY2Axis = false);
 
-    virtual void DoPlot(wxDC &dc, mpWindow &w);
-
     /** Set y
      @param yvalue
      */
@@ -1198,6 +1196,8 @@ class WXDLLIMPEXP_MATHPLOT mpHorizontalLine: public mpLine
     }
 
   protected:
+
+    virtual void DoPlot(wxDC &dc, mpWindow &w);
 
     DECLARE_DYNAMIC_CLASS(mpHorizontalLine)
 };
@@ -1209,8 +1209,6 @@ class WXDLLIMPEXP_MATHPLOT mpVerticalLine: public mpLine
   public:
     mpVerticalLine(double xvalue, const wxPen &pen = *wxGREEN_PEN);
 
-    virtual void DoPlot(wxDC &dc, mpWindow &w);
-
     /** Set x
      @param xvalue
      */
@@ -1220,6 +1218,8 @@ class WXDLLIMPEXP_MATHPLOT mpVerticalLine: public mpLine
     }
 
   protected:
+
+    virtual void DoPlot(wxDC &dc, mpWindow &w);
 
     DECLARE_DYNAMIC_CLASS(mpVerticalLine)
 };
@@ -1250,13 +1250,13 @@ class WXDLLIMPEXP_MATHPLOT mpFX: public mpFunction
      */
     double DoGetY(double x);
 
+  protected:
+
     /** Layer plot handler.
      This implementation will plot the function in the visible area and
      put a label according to the alignment specified.
      */
     virtual void DoPlot(wxDC &dc, mpWindow &w);
-
-  protected:
 
   DECLARE_DYNAMIC_CLASS(mpFX)
 };
@@ -1287,13 +1287,13 @@ class WXDLLIMPEXP_MATHPLOT mpFY: public mpFunction
      */
     double DoGetX(double y);
 
+  protected:
+
     /** Layer plot handler.
      This implementation will plot the function in the visible area and
      put a label according to the aligment specified.
      */
     virtual void DoPlot(wxDC &dc, mpWindow &w);
-
-  protected:
 
   DECLARE_DYNAMIC_CLASS(mpFY)
 };
@@ -1349,12 +1349,6 @@ class WXDLLIMPEXP_MATHPLOT mpFXY: public mpFunction
      */
     bool DoGetNextXY(double *x, double *y);
 
-    /** Layer plot handler.
-     This implementation will plot the locus in the visible area and
-     put a label according to the alignment specified.
-     */
-    virtual void DoPlot(wxDC &dc, mpWindow &w);
-
     /**
      * If true, XY series is plotted as bar
      */
@@ -1392,6 +1386,12 @@ class WXDLLIMPEXP_MATHPLOT mpFXY: public mpFunction
 
     // Can the series be deleted?
     bool m_CanDelete = true;
+
+    /** Layer plot handler.
+     This implementation will plot the locus in the visible area and
+     put a label according to the alignment specified.
+     */
+    virtual void DoPlot(wxDC &dc, mpWindow &w);
 
     /** Update label positioning data
      @param xnew New x coordinate
@@ -1453,6 +1453,7 @@ class WXDLLIMPEXP_MATHPLOT mpFXYVector: public mpFXY
 
     /**
      * Return the number of points in the series
+     * We assume that size of m_xs equals size of m_ys
      */
     virtual int GetSize()
     {
@@ -1577,13 +1578,13 @@ class WXDLLIMPEXP_MATHPLOT mpProfile: public mpFunction
      */
     virtual double GetY(double x) = 0;
 
+  protected:
+
     /** Layer plot handler.
      This implementation will plot the function in the visible area and
      put a label according to the aligment specified.
      */
     virtual void DoPlot(wxDC &dc, mpWindow &w);
-
-  protected:
 
   DECLARE_DYNAMIC_CLASS(mpProfile)
 };
@@ -1663,12 +1664,6 @@ class WXDLLIMPEXP_MATHPLOT mpBarChart: public mpChart
       Clear();
     }
 
-    /** Layer plot handler.
-     This implementation will plot the a rectangle for each point from
-     x axis and y value.
-     */
-    virtual void DoPlot(wxDC &dc, mpWindow &w);
-
     void SetBarColour(const wxColour &colour);
 
     void SetColumnWidth(const double colWidth)
@@ -1706,6 +1701,12 @@ class WXDLLIMPEXP_MATHPLOT mpBarChart: public mpChart
     int m_labelPos;
     double m_labelAngle;
 
+    /** Layer plot handler.
+     This implementation will plot the a rectangle for each point from
+     x axis and y value.
+     */
+    virtual void DoPlot(wxDC &dc, mpWindow &w);
+
     DECLARE_DYNAMIC_CLASS(mpBarChart)
 };
 
@@ -1725,12 +1726,6 @@ class WXDLLIMPEXP_MATHPLOT mpPieChart: public mpChart
       Clear();
       colours.clear();
     }
-
-    /** Layer plot handler.
-     This implementation will plot the a rectangle for each point from
-     x axis and y value.
-     */
-    virtual void DoPlot(wxDC &dc, mpWindow &w);
 
     /** Set colours for the pie.
      @param colourArray Vector of wxColour.
@@ -1773,6 +1768,12 @@ class WXDLLIMPEXP_MATHPLOT mpPieChart: public mpChart
 
     double m_radius;
     std::vector<wxColour> colours;
+
+    /** Layer plot handler.
+     This implementation will plot the a rectangle for each point from
+     x axis and y value.
+     */
+    virtual void DoPlot(wxDC &dc, mpWindow &w);
 
     const wxColour& GetColour(unsigned int id);
 
@@ -1958,10 +1959,6 @@ class WXDLLIMPEXP_MATHPLOT mpScaleX: public mpScale
       m_timeConv = mpX_RAWTIME;
     }
 
-    /** Layer plot handler.
-     This implementation will plot the ruler adjusted to the visible area. */
-    virtual void DoPlot(wxDC &dc, mpWindow &w);
-
     virtual void SetLabelFormat(const wxString &format)
     {
       mpScale::SetLabelFormat(format);
@@ -1993,6 +1990,10 @@ class WXDLLIMPEXP_MATHPLOT mpScaleX: public mpScale
     unsigned int m_labelType;  //!< Select labels mode: mpX_NORMAL for normal labels, mpX_TIME for time axis in hours, minutes, seconds
     unsigned int m_timeConv;   //!< Selects if time has to be converted to local time or not.
 
+    /** Layer plot handler.
+     This implementation will plot the ruler adjusted to the visible area. */
+    virtual void DoPlot(wxDC &dc, mpWindow &w);
+
     virtual int GetOrigin(mpWindow &w);
     virtual void DrawScaleName(wxDC &dc, mpWindow &w, int origin, int labelSize);
     wxString FormatValue(const wxString &fmt, double n);
@@ -2021,10 +2022,6 @@ class WXDLLIMPEXP_MATHPLOT mpScaleY: public mpScale
       m_isY2Axis = Y2Axis;
     }
 
-    /** Layer plot handler.
-     This implementation will plot the ruler adjusted to the visible area. */
-    virtual void DoPlot(wxDC &dc, mpWindow &w);
-
     /**
      * Logarithmic Y axis
      */
@@ -2039,6 +2036,10 @@ class WXDLLIMPEXP_MATHPLOT mpScaleY: public mpScale
 
   protected:
     bool m_isY2Axis;
+
+    /** Layer plot handler.
+     This implementation will plot the ruler adjusted to the visible area. */
+    virtual void DoPlot(wxDC &dc, mpWindow &w);
 
     virtual int GetOrigin(mpWindow &w);
     virtual void DrawScaleName(wxDC &dc, mpWindow &w, int origin, int labelSize);
@@ -3047,10 +3048,6 @@ class WXDLLIMPEXP_MATHPLOT mpText: public mpLayer
      */
     mpText(const wxString &name, mpLocation marginLocation);
 
-    /** Text Layer plot handler.
-     This implementation will plot text adjusted to the visible area. */
-    virtual void DoPlot(wxDC &dc, mpWindow &w);
-
     /** Text Layer has not bounding box. @sa mpLayer::HasBBox
      @return always \a FALSE */
     virtual bool HasBBox()
@@ -3092,6 +3089,10 @@ class WXDLLIMPEXP_MATHPLOT mpText: public mpLayer
     int m_offsetx;  //!< Holds offset for X in percentage
     int m_offsety;  //!< Holds offset for Y in percentage
     mpLocation m_location;
+
+    /** Text Layer plot handler.
+     This implementation will plot text adjusted to the visible area. */
+    virtual void DoPlot(wxDC &dc, mpWindow &w);
 
   DECLARE_DYNAMIC_CLASS(mpText)
 };
@@ -3252,13 +3253,13 @@ class WXDLLIMPEXP_MATHPLOT mpMovableObject: public mpFunction
       return m_bbox_max_y;
     }
 
-    virtual void DoPlot(wxDC &dc, mpWindow &w);
-
   protected:
 
     /** The coordinates of the object (orientation "phi" is in radians).
      */
     double m_reference_x, m_reference_y, m_reference_phi;
+
+    virtual void DoPlot(wxDC &dc, mpWindow &w);
 
     /** A method for 2D translation and rotation, using the current transformation stored in m_reference_x,m_reference_y,m_reference_phi.
      */
@@ -3482,8 +3483,6 @@ class WXDLLIMPEXP_MATHPLOT mpBitmapLayer: public mpLayer
       return m_max_y;
     }
 
-    virtual void DoPlot(wxDC &dc, mpWindow &w);
-
   protected:
 
     /** The internal copy of the Bitmap:
@@ -3497,6 +3496,8 @@ class WXDLLIMPEXP_MATHPLOT mpBitmapLayer: public mpLayer
     /** The shape of the bitmap:
      */
     double m_min_x, m_max_x, m_min_y, m_max_y;
+
+    virtual void DoPlot(wxDC &dc, mpWindow &w);
 
   DECLARE_DYNAMIC_CLASS(mpBitmapLayer)
 };

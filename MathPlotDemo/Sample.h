@@ -82,6 +82,8 @@ class MyFunction: public mpFX
 		{
 			return maxY;
 		}
+
+	protected:
 		virtual void DoBeforePlot()
 		{
 			minY = 0;
@@ -126,6 +128,8 @@ class MyPower: public mpFX
 		{
 			return maxY;
 		}
+
+	protected:
 		virtual void DoBeforePlot()
 		{
 			minY = 0;
