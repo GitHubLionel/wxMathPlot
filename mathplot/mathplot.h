@@ -927,6 +927,11 @@ class WXDLLIMPEXP_MATHPLOT mpInfoCoords: public mpInfoLayer
       return m_series_coord;
     }
 
+    /// Get string describing mouse position. Override in your derived class to customize mpInfoCoords display.
+    /// @param xVal,yVal,y2Val Position of mouse in user coordinates
+    /// @param isY2Axis Best guess as to whether closest point to mouse is a plot layer using Y2 axis
+    virtual wxString GetInfoCoordsText(double xVal, double yVal, double y2Val, bool isY2Axis = false);
+
     /** Pen series for tractable
      */
     void SetPenSeries(const wxPen &pen)

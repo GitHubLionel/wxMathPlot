@@ -509,7 +509,6 @@ void mpInfoCoords::UpdateInfo(mpWindow &w, wxEvent &event)
   {
     double xVal = 0.0, yVal = 0.0, y2Val = 0.0;
     bool isY2Axis = false;
-    struct tm timestruct;
 
     m_mouseX = ((wxMouseEvent&)event).GetX();
     m_mouseY = ((wxMouseEvent&)event).GetY();
@@ -535,61 +534,68 @@ void mpInfoCoords::UpdateInfo(mpWindow &w, wxEvent &event)
     // Log axis
     if (m_win->IsLogXaxis())
       xVal = pow(10, xVal);
-
     if (m_win->IsLogYaxis())
       yVal = pow(10, yVal);
 
-    // Format X part
-    switch (m_labelType)
-    {
-      case mpX_NORMAL:
-      case mpX_USER:
-        m_content.Printf(_T("x = %g"), xVal);
-        break;
-      case mpX_DATETIME:
-      {
-        if (DoubleToTimeStruct(xVal, m_timeConv, &timestruct))
-          m_content.Printf(_T("x = %04d-%02d-%02dT%02d:%02d:%02d"), timestruct.tm_year + 1900, timestruct.tm_mon + 1, timestruct.tm_mday,
-              timestruct.tm_hour, timestruct.tm_min, timestruct.tm_sec);
-        break;
-      }
-      case mpX_DATE:
-      {
-        if (DoubleToTimeStruct(xVal, m_timeConv, &timestruct))
-          m_content.Printf(_T("x = %04d-%02d-%02d"), timestruct.tm_year + 1900, timestruct.tm_mon + 1, timestruct.tm_mday);
-        break;
-      }
-      case mpX_TIME:
-      case mpX_HOURS:
-      {
-        double sign = (xVal < 0) ? -1.0 : 1.0;
-        double modulus = fabs(xVal);
-        double hh = floor(modulus / 3600);
-        double mm = floor((modulus - hh * 3600) / 60);
-        double ss = modulus - hh * 3600 - mm * 60;
-        m_content.Printf(_T("x = %02.0f:%02.0f:%02.0f"), sign * hh, mm, floor(ss));
-        break;
-      }
-      default:
-        ;
-    }
-
-    // Format Y part
-    if (m_win->Y2AxisExist())
-    {
-      if (m_series_coord)
-      {
-        if (isY2Axis) // The value is on y2 axis
-          m_content.Printf(_T("%s\ny2 = %g"), m_content, yVal);
-        else
-          m_content.Printf(_T("%s\ny = %g"), m_content, yVal);
-      }
-      else
-        m_content.Printf(_T("%s\ny = %g\ny2 = %g"), m_content, yVal, y2Val);
-    }
-    else
-      m_content.Printf(_T("%s\ny = %g"), m_content, yVal);
+    m_content = GetInfoCoordsText(xVal, yVal, y2Val, isY2Axis);
   }
+}
+
+wxString mpInfoCoords::GetInfoCoordsText(double xVal, double yVal, double y2Val, bool isY2Axis) {
+  wxString result;
+  struct tm timestruct;
+  // Format X part
+  switch (m_labelType)
+  {
+    case mpX_NORMAL:
+    case mpX_USER:
+      result.Printf(_T("x = %g"), xVal);
+      break;
+    case mpX_DATETIME:
+    {
+      if (DoubleToTimeStruct(xVal, m_timeConv, &timestruct))
+        result.Printf(_T("x = %04d-%02d-%02dT%02d:%02d:%02d"), timestruct.tm_year + 1900, timestruct.tm_mon + 1, timestruct.tm_mday,
+            timestruct.tm_hour, timestruct.tm_min, timestruct.tm_sec);
+      break;
+    }
+    case mpX_DATE:
+    {
+      if (DoubleToTimeStruct(xVal, m_timeConv, &timestruct))
+        result.Printf(_T("x = %04d-%02d-%02d"), timestruct.tm_year + 1900, timestruct.tm_mon + 1, timestruct.tm_mday);
+      break;
+    }
+    case mpX_TIME:
+    case mpX_HOURS:
+    {
+      double sign = (xVal < 0) ? -1.0 : 1.0;
+      double modulus = fabs(xVal);
+      double hh = floor(modulus / 3600);
+      double mm = floor((modulus - hh * 3600) / 60);
+      double ss = modulus - hh * 3600 - mm * 60;
+      result.Printf(_T("x = %02.0f:%02.0f:%02.0f"), sign * hh, mm, floor(ss));
+      break;
+    }
+    default:
+      ;
+  }
+
+  // Format Y part
+  if (m_win->Y2AxisExist())
+  {
+    if (m_series_coord)
+    {
+      if (isY2Axis) // The value is on y2 axis
+        result.Printf(_T("%s\ny2 = %g"), result, y2Val);
+      else
+        result.Printf(_T("%s\ny = %g"), result, yVal);
+    } else {
+      result.Printf(_T("%s\ny = %g\ny2 = %g"), result, yVal, y2Val);
+    }
+  } else {
+    result.Printf(_T("%s\ny = %g"), result, yVal);
+  }
+
+  return result;
 }
 
 void mpInfoCoords::ErasePlot(wxDC &dc, mpWindow &w)
