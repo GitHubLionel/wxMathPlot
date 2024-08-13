@@ -29,5 +29,11 @@
     <ClInclude Include="..\MathPlotConfig\MathPlotConfig.h">
       <Filter>MathPlot</Filter>
     </ClInclude>
+    <ClInclude Include="Sample.h">
+      <Filter>MathPlot</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mathplot\Images\Screenshot.h">
+      <Filter>MathPlot</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

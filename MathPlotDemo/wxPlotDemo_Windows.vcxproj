@@ -26,7 +26,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\MathPlotConfig\MathPlotConfig.h" />
+    <ClInclude Include="..\mathplot\Images\Screenshot.h" />
     <ClInclude Include="..\mathplot\mathplot.h" />
+    <ClInclude Include="Sample.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
