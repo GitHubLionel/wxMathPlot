@@ -189,17 +189,14 @@ typedef union
  */
 struct mpFloatRect
 {
-  union {
-    struct
-    {
-      double Xmin;
-      double Xmax;
-      double Ymin;
-      double Ymax;
-      double Y2min;
-      double Y2max;
-    };
-    double tab[6];
+  struct
+  {
+    double Xmin;
+    double Xmax;
+    double Ymin;
+    double Ymax;
+    double Y2min;
+    double Y2max;
   };
   /// Is point inside this bounding box (ignoring Y2)?
   bool PointIsInside(double x, double y) const {
@@ -222,6 +219,7 @@ struct mpFloatRect
     Ymin = Ymax = y;
     Y2min = Y2max = y2;
   }
+  bool operator==(const mpFloatRect&) const = default;
 };
 
 /** Command IDs used by mpWindow
@@ -1920,7 +1918,7 @@ class WXDLLIMPEXP_MATHPLOT mpScale: public mpLayer
     bool m_ticks;            //!< Flag to show ticks. Default true
     bool m_grids;            //!< Flag to show grids. Default false
     bool m_auto;             //!< Flag to autosize grids. Default true
-    double m_min, m_max;     //!< Min and max scale when autosize is false
+    double m_min, m_max;     //!< Min and max axis values when autosize is false
     wxString m_labelFormat;  //!< Format string used to print labels
 
     virtual int GetOrigin(mpWindow &w) = 0;
@@ -3011,9 +3009,15 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     mpOnDeleteLayer m_OnDeleteLayer = NULL;          //!< Event when we delete a layer
     mpOnUserMouseAction m_OnUserMouseAction = NULL;  //!< Event when we have a mouse click
 
+    /// To be notified of displayed bounds changes (after user zoom etc), override this callback in your derived class and look at new value of m_desired.
+    virtual void DesiredBoundsHaveChanged() {}; 
+
   private:
     int m_countY2Axis = 0;
     void FillI18NString();
+
+    bool initialDesiredBoundsRecorded = false; //!< Has lastDesiredReportedBounds been set?
+    mpFloatRect lastDesiredReportedBounds; //!< for use in DesiredBoundsHaveChanged reporting in Fit()
 
   DECLARE_DYNAMIC_CLASS(mpWindow)DECLARE_EVENT_TABLE()
 

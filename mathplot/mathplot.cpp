@@ -3172,8 +3172,17 @@ void mpWindow::Fit(const mpFloatRect &rect, wxCoord *printSizeX, wxCoord *printS
 
   // It is VERY IMPORTANT to DO NOT call Refresh if we are drawing to the printer!!
   // Otherwise, the DC dimensions will be those of the window instead of the printer device
-  if (printSizeX == NULL || printSizeY == NULL)
+  if (printSizeX == NULL || printSizeY == NULL) {
+    // We are NOT drawing to a printer...
     UpdateAll();
+    // desired display bounds change reporting to user's derived class...
+    if(!initialDesiredBoundsRecorded) {
+        initialDesiredBoundsRecorded = true;
+    } else if( !(m_desired == lastDesiredReportedBounds) ) {
+        DesiredBoundsHaveChanged();
+    }
+    lastDesiredReportedBounds = m_desired;
+  }
 }
 
 // Patch ngpaton
