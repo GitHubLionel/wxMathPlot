@@ -875,8 +875,8 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLayer: public mpLayer
 
 /** @class mpInfoCoords
  @brief Implements an overlay box which shows the mouse coordinates in plot units.
- When an mpInfoCoords layer is activated, when mouse is moved over the mpWindow,
- its coordinates (in mpWindow units, not pixels) are continuously reported inside the layer box. */
+ When mouse is moved over the mpWindow with an active mpInfoCoords layer,
+ the mouse coordinates (in mpWindow units, not pixels) are continuously reported inside the layer box. */
 class WXDLLIMPEXP_MATHPLOT mpInfoCoords: public mpInfoLayer
 {
   public:
@@ -926,6 +926,11 @@ class WXDLLIMPEXP_MATHPLOT mpInfoCoords: public mpInfoLayer
     {
       return m_series_coord;
     }
+
+    /// Get string describing mouse position. Override in your derived class to customize mpInfoCoords display.
+    /// @param xVal,yVal,y2Val Position of mouse in user coordinates
+    /// @param isY2Axis Best guess as to whether closest point to mouse is a plot layer using Y2 axis
+    virtual wxString GetInfoCoordsText(double xVal, double yVal, double y2Val, bool isY2Axis = false);
 
     /** Pen series for tractable
      */
@@ -1114,7 +1119,7 @@ class WXDLLIMPEXP_MATHPLOT mpFunction: public mpLayer
       m_UseY2Axis = _useY2;
     }
 
-    /** Get use of second Y axis
+    /** Is second Y axis selected for this layer?
      @return UseY2Axis
      */
     bool GetY2Axis() const
@@ -1254,7 +1259,7 @@ class WXDLLIMPEXP_MATHPLOT mpFX: public mpFunction
 
     /** Layer plot handler.
      This implementation will plot the function in the visible area and
-     put a label according to the aligment specified.
+     put a label according to the alignment specified.
      */
     virtual void DoPlot(wxDC &dc, mpWindow &w);
 
@@ -2059,7 +2064,7 @@ class WXDLLIMPEXP_MATHPLOT mpScaleY: public mpScale
 /** Mouse panning creates a zoom box. Mouse mode for mpWindow. */
 #define mpMOUSEMODE_ZOOMBOX 1
 
-/*@}*/
+/** @} */
 /** Define the type for the list of layers inside mpWindow */
 //WX_DECLARE_HASH_MAP( int, mpLayer*, wxIntegerHash, wxIntegerEqual, mpLayerList );
 typedef std::deque<mpLayer*> mpLayerList;
@@ -3502,7 +3507,7 @@ class WXDLLIMPEXP_MATHPLOT mpBitmapLayer: public mpLayer
   DECLARE_DYNAMIC_CLASS(mpBitmapLayer)
 };
 
-// utilitary class
+// utility class
 
 // Enumeration of classic colour
 typedef enum __mp_Colour
