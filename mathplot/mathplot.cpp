@@ -260,6 +260,16 @@ wxBitmap mpLayer::GetColourSquare(int side)
   return square;
 }
 
+void mpLayer::CheckLog(double *x, double *y)
+{
+  if (m_win == NULL)
+    return;
+  if (m_win->IsLogXaxis())
+    *x = log10(*x);
+  if (m_win->IsLogYaxis())
+    *y = log10(*y);
+}
+
 //-----------------------------------------------------------------------------
 // mpInfoLayer
 //-----------------------------------------------------------------------------
@@ -1329,11 +1339,8 @@ bool mpFXY::DoGetNextXY(double *x, double *y)
   bool result = GetNextXY(x, y);
   if (result)
   { // only log-scale result if there is actually a result...
-    if (m_win->IsLogXaxis())
-      *x = log10(*x);
-    if (m_win->IsLogYaxis())
-      *y = log10(*y);
-  };
+    CheckLog(x, y);
+  }
   return result;
 }
 
@@ -1529,10 +1536,7 @@ void mpFXYVector::DrawAddedPoint(double x, double y)
   dc.SetPen(m_pen);
   dc.SetBrush(m_brush);
 
-  if (m_win->IsLogXaxis())
-    x = log10(x);
-  if (m_win->IsLogYaxis())
-    y = log10(y);
+  CheckLog(&x, &y);
   wxCoord ix = m_win->x2p(x);
   wxCoord iy = m_win->y2p(y, m_UseY2Axis);
 
@@ -1545,12 +1549,9 @@ void mpFXYVector::DrawAddedPoint(double x, double y)
         // Last point coordinates
         size_t lastPtIdx = m_index - 1; // we assume that m_step = 1 in this context
         double xlast = m_xs[lastPtIdx];
-        if (m_win->IsLogXaxis())
-          xlast = log10(xlast);
-        wxCoord ixlast = m_win->x2p(xlast);
         double ylast = m_ys[lastPtIdx];
-        if (m_win->IsLogYaxis())
-          ylast = log10(ylast);
+        CheckLog(&xlast, &ylast);
+        wxCoord ixlast = m_win->x2p(xlast);
         wxCoord iylast = m_win->y2p(ylast, m_UseY2Axis);
         dc.DrawLine(ixlast, iylast, ix, iy);
       };

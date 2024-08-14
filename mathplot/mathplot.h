@@ -753,6 +753,11 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
       ;
     }
 
+    /**
+     * Test if we are in log axis and if true return the log of the values
+     */
+    void CheckLog(double *x, double *y);
+
   private:
     bool m_busy;                //!< Test if we are busy (plot operation)
 
