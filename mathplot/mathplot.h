@@ -2830,9 +2830,9 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      * Allows the user to perform certain actions before normal event processing.
      * The user has the possibility to interrupt or continue the normal processing of the event.
      */
-    void SetOnUserMouseAction(const mpOnUserMouseAction &event)
+    void SetOnUserMouseAction(const mpOnUserMouseAction &userMouseEventHandler)
     {
-      m_OnUserMouseAction = event;
+      m_OnUserMouseAction = userMouseEventHandler;
     }
 
     /** On user mouse action event
@@ -2954,7 +2954,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     wxColour m_axColour;    //!< Axes Colour
     bool m_drawBox;         //!< Draw box of the plot bound. Default true
 
-    mpFloatRect m_bound;    //!< Global layer bounding box, left, right, top and bottom border incl.
+    mpFloatRect m_bound;    //!< Global layer bounding box in user coordinates. Does NOT include borders.
     double m_scaleX;        //!< Current view's X scale
     double m_scaleY;        //!< Current view's Y scale
     double m_scaleY2;       //!< Current view's Y2 scale
