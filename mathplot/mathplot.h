@@ -219,9 +219,18 @@ struct mpFloatRect
     Ymin = Ymax = y;
     Y2min = Y2max = y2;
   }
-  mpFloatRect() : Xmin(0.0), Xmax(0.0), Ymin(0.0), Ymax(0.0), Y2min(0.0), Y2max(0.0) {};
+#if (defined(__cplusplus) && (__cplusplus > 201703L)) // C++ > C++17
   bool operator==(const mpFloatRect&) const = default;
-  bool IsNotSet() const { const mpFloatRect def; return *this==def; }
+#else
+  // We compare with an epsilon precision
+#define EpsilonPrec   (1.0e-8)
+  bool operator ==(const mpFloatRect &rect) const
+  {
+    return (fabs(Xmin - rect.Xmin) < EpsilonPrec) && (fabs(Xmax - rect.Xmax) < EpsilonPrec) &&
+        (fabs(Ymin - rect.Ymin) < EpsilonPrec) && (fabs(Ymax - rect.Ymax) < EpsilonPrec) &&
+        (fabs(Y2min - rect.Y2min) < EpsilonPrec) && (fabs(Y2max - rect.Y2max) < EpsilonPrec);
+  }
+#endif
 };
 
 /** Command IDs used by mpWindow
