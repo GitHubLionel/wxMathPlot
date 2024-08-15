@@ -219,7 +219,9 @@ struct mpFloatRect
     Ymin = Ymax = y;
     Y2min = Y2max = y2;
   }
+  mpFloatRect() : Xmin(0.0), Xmax(0.0), Ymin(0.0), Ymax(0.0), Y2min(0.0), Y2max(0.0) {};
   bool operator==(const mpFloatRect&) const = default;
+  bool IsNotSet() const { const mpFloatRect def; return *this==def; }
 };
 
 /** Command IDs used by mpWindow
@@ -3009,15 +3011,19 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     mpOnDeleteLayer m_OnDeleteLayer = NULL;          //!< Event when we delete a layer
     mpOnUserMouseAction m_OnUserMouseAction = NULL;  //!< Event when we have a mouse click
 
-    /// To be notified of displayed bounds changes (after user zoom etc), override this callback in your derived class and look at new value of m_desired.
+    /// To be notified of displayed bounds changes (after user zoom etc),
+    /// override this callback in your derived class and look at new value of m_desired.
+    /// Useful for keeping multiple plots in sync when user zooms.
     virtual void DesiredBoundsHaveChanged() {}; 
 
   private:
     int m_countY2Axis = 0;
     void FillI18NString();
 
-    bool initialDesiredBoundsRecorded = false; //!< Has lastDesiredReportedBounds been set?
-    mpFloatRect lastDesiredReportedBounds; //!< for use in DesiredBoundsHaveChanged reporting in Fit()
+    /// Report any change of desired display bounds to user's derived class.
+    void CheckAndReportDesiredBoundsChanges();
+    bool m_initialDesiredBoundsRecorded = false; //!< Has m_lastDesiredReportedBounds been set?
+    mpFloatRect m_lastDesiredReportedBounds; //!< for use in DesiredBoundsHaveChanged reporting in Fit()
 
   DECLARE_DYNAMIC_CLASS(mpWindow)DECLARE_EVENT_TABLE()
 
