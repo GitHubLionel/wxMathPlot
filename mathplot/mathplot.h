@@ -224,13 +224,14 @@ struct mpFloatRect
   #if (defined(__cplusplus) && (__cplusplus > 201703L)) // C++ > C++17
     bool operator==(const mpFloatRect&) const = default;
   #else
-    // We compare with an epsilon precision- NOTE: should be unnecessary as we are looking for any changes...
-    #define EpsilonPrec   (1.0e-8)
+    // We compare with an epsilon precision
+    // NOTE: should be unnecessary as we are looking for any changes; normally this will be an exact match or a real change...
     bool operator ==(const mpFloatRect &rect) const
     {
-      return (fabs(Xmin - rect.Xmin) < EpsilonPrec) && (fabs(Xmax - rect.Xmax) < EpsilonPrec) &&
-             (fabs(Ymin - rect.Ymin) < EpsilonPrec) && (fabs(Ymax - rect.Ymax) < EpsilonPrec) &&
-             (fabs(Y2min - rect.Y2min) < EpsilonPrec) && (fabs(Y2max - rect.Y2max) < EpsilonPrec);
+      auto Same = [this,rect] (double a, double b) { return fabs(a - b) < EPSILON; };
+      return Same(Xmin,  rect.Xmin)  && Same(Xmax,  rect.Xmax) &&
+             Same(Ymin,  rect.Ymin)  && Same(Ymax,  rect.Ymax) &&
+             Same(Y2min, rect.Y2min) && Same(Y2max, rect.Y2max)  ;
     }
   #endif
 };
