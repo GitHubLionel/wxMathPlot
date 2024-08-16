@@ -198,6 +198,7 @@ struct mpFloatRect
     double Y2min;
     double Y2max;
   };
+  mpFloatRect() : Xmin(0.0), Xmax(0.0), Ymin(0.0), Ymax(0.0), Y2min(0.0), Y2max(0.0) {};
   /// Is point inside this bounding box (ignoring Y2)?
   bool PointIsInside(double x, double y) const {
     if( (x < Xmin || x > Xmax) ||
@@ -219,8 +220,9 @@ struct mpFloatRect
     Ymin = Ymax = y;
     Y2min = Y2max = y2;
   }
-  mpFloatRect() : Xmin(0.0), Xmax(0.0), Ymin(0.0), Ymax(0.0), Y2min(0.0), Y2max(0.0) {};
+  /// Is mpFloatRect set ?
   bool IsNotSet() const { const mpFloatRect def; return *this==def; }
+  /// Equal operator
   #if (defined(__cplusplus) && (__cplusplus > 201703L)) // C++ > C++17
     bool operator==(const mpFloatRect&) const = default;
   #else
