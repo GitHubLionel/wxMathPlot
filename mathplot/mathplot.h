@@ -219,18 +219,21 @@ struct mpFloatRect
     Ymin = Ymax = y;
     Y2min = Y2max = y2;
   }
-#if (defined(__cplusplus) && (__cplusplus > 201703L)) // C++ > C++17
-  bool operator==(const mpFloatRect&) const = default;
-#else
-  // We compare with an epsilon precision
-#define EpsilonPrec   (1.0e-8)
-  bool operator ==(const mpFloatRect &rect) const
-  {
-    return (fabs(Xmin - rect.Xmin) < EpsilonPrec) && (fabs(Xmax - rect.Xmax) < EpsilonPrec) &&
-        (fabs(Ymin - rect.Ymin) < EpsilonPrec) && (fabs(Ymax - rect.Ymax) < EpsilonPrec) &&
-        (fabs(Y2min - rect.Y2min) < EpsilonPrec) && (fabs(Y2max - rect.Y2max) < EpsilonPrec);
-  }
-#endif
+  mpFloatRect() : Xmin(0.0), Xmax(0.0), Ymin(0.0), Ymax(0.0), Y2min(0.0), Y2max(0.0) {};
+  bool IsNotSet() const { const mpFloatRect def; return *this==def; }
+  #if (defined(__cplusplus) && (__cplusplus > 201703L)) // C++ > C++17
+    bool operator==(const mpFloatRect&) const = default;
+  #else
+    // We compare with an epsilon precision
+    // NOTE: should be unnecessary as we are looking for any changes; normally this will be an exact match or a real change...
+    bool operator ==(const mpFloatRect &rect) const
+    {
+      auto Same = [this,rect] (double a, double b) { return fabs(a - b) < EPSILON; };
+      return Same(Xmin,  rect.Xmin)  && Same(Xmax,  rect.Xmax) &&
+             Same(Ymin,  rect.Ymin)  && Same(Ymax,  rect.Ymax) &&
+             Same(Y2min, rect.Y2min) && Same(Y2max, rect.Y2max)  ;
+    }
+  #endif
 };
 
 /** Command IDs used by mpWindow
@@ -3020,15 +3023,19 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     mpOnDeleteLayer m_OnDeleteLayer = NULL;          //!< Event when we delete a layer
     mpOnUserMouseAction m_OnUserMouseAction = NULL;  //!< Event when we have a mouse click
 
-    /// To be notified of displayed bounds changes (after user zoom etc), override this callback in your derived class and look at new value of m_desired.
+    /// To be notified of displayed bounds changes (after user zoom etc),
+    /// override this callback in your derived class and look at new value of m_desired.
+    /// Useful for keeping multiple plots in sync when user zooms.
     virtual void DesiredBoundsHaveChanged() {}; 
 
   private:
     int m_countY2Axis = 0;
     void FillI18NString();
 
-    bool initialDesiredBoundsRecorded = false; //!< Has lastDesiredReportedBounds been set?
-    mpFloatRect lastDesiredReportedBounds; //!< for use in DesiredBoundsHaveChanged reporting in Fit()
+    /// Report any change of desired display bounds to user's derived class.
+    void CheckAndReportDesiredBoundsChanges();
+    bool m_initialDesiredBoundsRecorded = false; //!< Has m_lastDesiredReportedBounds been set?
+    mpFloatRect m_lastDesiredReportedBounds; //!< for use in DesiredBoundsHaveChanged reporting in Fit()
 
   DECLARE_DYNAMIC_CLASS(mpWindow)DECLARE_EVENT_TABLE()
 

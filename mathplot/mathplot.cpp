@@ -2905,6 +2905,7 @@ void mpWindow::OnMouseMove(wxMouseEvent &event)
     m_desired.Y2min += Ay2_units;
 
     UpdateAll();
+    CheckAndReportDesiredBoundsChanges();
 
 #ifdef MATHPLOT_DO_LOGGING
     wxLogMessage(_T("[mpWindow::OnMouseMove] Ax:%i Ay:%i m_posX:%f m_posY:%f"), Axy.x, Axy.y, m_posX, m_posY);
@@ -3068,6 +3069,7 @@ void mpWindow::OnMouseWheel(wxMouseEvent &event)
       }
 
     UpdateAll();
+    CheckAndReportDesiredBoundsChanges();
   }
 }
 
@@ -3175,14 +3177,18 @@ void mpWindow::Fit(const mpFloatRect &rect, wxCoord *printSizeX, wxCoord *printS
   if (printSizeX == NULL || printSizeY == NULL) {
     // We are NOT drawing to a printer...
     UpdateAll();
-    // desired display bounds change reporting to user's derived class...
-    if(!initialDesiredBoundsRecorded) {
-        initialDesiredBoundsRecorded = true;
-    } else if( !(m_desired == lastDesiredReportedBounds) ) {
-        DesiredBoundsHaveChanged();
-    }
-    lastDesiredReportedBounds = m_desired;
+    CheckAndReportDesiredBoundsChanges();
   }
+}
+
+void MathPlot::mpWindow::CheckAndReportDesiredBoundsChanges() {
+  if (m_desired.IsNotSet()) return; // nothing to do until useful info in m_desired
+  if (!m_initialDesiredBoundsRecorded) {
+    m_initialDesiredBoundsRecorded = true;
+  } else if (!m_desired.IsNotSet() && !(m_desired == m_lastDesiredReportedBounds)) {
+    DesiredBoundsHaveChanged();
+  }
+  m_lastDesiredReportedBounds = m_desired;
 }
 
 // Patch ngpaton
@@ -3197,6 +3203,7 @@ void mpWindow::DoZoomInXCalc(const int staticXpixel)
   // Adjust desired
   m_desired.Xmin = m_posX;
   m_desired.Xmax = m_posX + m_plotWidth / m_scaleX;
+  CheckAndReportDesiredBoundsChanges();
 #ifdef MATHPLOT_DO_LOGGING
   wxLogMessage(_T("mpWindow::DoZoomInXCalc() prior X coord: (%f), new X coord: (%f) SHOULD BE EQUAL!!"), staticX, p2x(staticXpixel));
 #endif
@@ -3218,6 +3225,7 @@ void mpWindow::DoZoomInYCalc(const int staticYpixel)
   m_desired.Ymin = m_posY - m_plotHeight / m_scaleY;
   m_desired.Y2max = m_posY2;
   m_desired.Y2min = m_posY2 - m_plotHeight / m_scaleY2;
+  CheckAndReportDesiredBoundsChanges();
 #ifdef MATHPLOT_DO_LOGGING
   wxLogMessage(_T("mpWindow::DoZoomInYCalc() prior Y coord: (%f), new Y coord: (%f) SHOULD BE EQUAL!!"), staticY, p2y(staticYpixel));
 #endif
@@ -3234,6 +3242,7 @@ void mpWindow::DoZoomOutXCalc(const int staticXpixel)
   // Adjust desired
   m_desired.Xmin = m_posX;
   m_desired.Xmax = m_posX + m_plotWidth / m_scaleX;
+  CheckAndReportDesiredBoundsChanges();
 #ifdef MATHPLOT_DO_LOGGING
   wxLogMessage(_T("mpWindow::DoZoomOutXCalc() prior X coord: (%f), new X coord: (%f) SHOULD BE EQUAL!!"), staticX, p2x(staticXpixel));
 #endif
@@ -3255,6 +3264,7 @@ void mpWindow::DoZoomOutYCalc(const int staticYpixel)
   m_desired.Ymin = m_posY - m_plotHeight / m_scaleY;
   m_desired.Y2max = m_posY2;
   m_desired.Y2min = m_posY2 - m_plotHeight / m_scaleY2;
+  CheckAndReportDesiredBoundsChanges();
 #ifdef MATHPLOT_DO_LOGGING
   wxLogMessage(_T("mpWindow::DoZoomOutYCalc() prior Y coord: (%f), new Y coord: (%f) SHOULD BE EQUAL!!"), staticY, p2y(staticYpixel));
 #endif
@@ -3317,18 +3327,21 @@ void mpWindow::Zoom(bool zoomIn, const wxPoint &centerPoint)
       prior_layer_x, prior_layer_y, p2x(c.x), p2y(c.y));
 #endif
   UpdateAll();
+  CheckAndReportDesiredBoundsChanges();
 }
 
 void mpWindow::ZoomInX()
 {
   m_scaleX *= m_zoomIncrementalFactor;
   UpdateAll();
+  CheckAndReportDesiredBoundsChanges();
 }
 
 void mpWindow::ZoomOutX()
 {
   m_scaleX /= m_zoomIncrementalFactor;
   UpdateAll();
+  CheckAndReportDesiredBoundsChanges();
 }
 
 void mpWindow::ZoomInY()
@@ -3336,6 +3349,7 @@ void mpWindow::ZoomInY()
   m_scaleY *= m_zoomIncrementalFactor;
   m_scaleY2 *= m_zoomIncrementalFactor;
   UpdateAll();
+  CheckAndReportDesiredBoundsChanges();
 }
 
 void mpWindow::ZoomOutY()
@@ -3343,6 +3357,7 @@ void mpWindow::ZoomOutY()
   m_scaleY /= m_zoomIncrementalFactor;
   m_scaleY2 /= m_zoomIncrementalFactor;
   UpdateAll();
+  CheckAndReportDesiredBoundsChanges();
 }
 
 void mpWindow::ZoomRect(wxPoint p0, wxPoint p1)
