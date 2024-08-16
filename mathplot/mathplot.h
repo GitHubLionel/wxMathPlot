@@ -219,7 +219,7 @@ struct mpFloatRect
     Ymin = Ymax = y;
     Y2min = Y2max = y2;
   }
-  mpFloatRect() : Xmin(0.0), Xmax(0.0), Ymin(0.0), Ymax(0.0), Y2min(0.0), Y2max(0.0) {};
+  mpFloatRect() : Xmin(0.0), Xmax(0.0), Ymin(0.0), Ymax(0.0), Y2min(0.0), Y2max(0.0) {}
   bool IsNotSet() const { const mpFloatRect def; return *this==def; }
   #if (defined(__cplusplus) && (__cplusplus > 201703L)) // C++ > C++17
     bool operator==(const mpFloatRect&) const = default;
