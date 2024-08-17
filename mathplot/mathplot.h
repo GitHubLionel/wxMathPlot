@@ -198,7 +198,7 @@ struct mpFloatRect
     double Y2min;
     double Y2max;
   };
-  mpFloatRect() : Xmin(0.0), Xmax(0.0), Ymin(0.0), Ymax(0.0), Y2min(0.0), Y2max(0.0) {};
+  mpFloatRect() : Xmin(0.0), Xmax(0.0), Ymin(0.0), Ymax(0.0), Y2min(0.0), Y2max(0.0) {}
   /// Is point inside this bounding box (ignoring Y2)?
   bool PointIsInside(double x, double y) const {
     if( (x < Xmin || x > Xmax) ||

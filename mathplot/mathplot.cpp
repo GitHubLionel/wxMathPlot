@@ -3663,15 +3663,15 @@ void mpWindow::DelAllPlot(bool alsoDeleteObject, mpFunctionType func, bool refre
 {
   int function;
   mpLayerList::iterator it = m_layers.begin();
+  if(it == m_layers.end()) return; // Don't blow up if no layers were added yet, nothing to do here.
   do
   {
     if ((*it)->IsLayerType(mpLAYER_PLOT, &function) && ((func == mpfAllType) || (function == func)))
     {
-      DelLayer((mpLayer*)(*it), alsoDeleteObject, false); // may invalidate m_layers iterators
-      it = m_layers.begin(); // ... so reset iterator to begin of m_layers vector
+      DelLayer((mpLayer*)(*it), alsoDeleteObject, false); // may invalidate all extant m_layers iterators
+      it = m_layers.begin(); // ...so reset iterator to begin of m_layers vector
     }
-    else
-      it++;
+    else it++;
   } while (it != m_layers.end());
   RefreshLegend();
   if (refreshDisplay)
