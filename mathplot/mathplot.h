@@ -2907,35 +2907,35 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     }
 
   protected:
-    void OnPaint(wxPaintEvent &event);                    //!< Paint handler, will plot all attached layers
-    void OnSize(wxSizeEvent &event);                      //!< Size handler, will update scroll bar sizes
-    void OnShowPopupMenu(wxMouseEvent &event);            //!< Mouse handler, will show context menu
-    void OnCenter(wxCommandEvent &event);                 //!< Context menu handler
-    void OnFit(wxCommandEvent &event);                    //!< Context menu handler
-    void OnToggleGrids(wxCommandEvent &event);            //!< Context menu handler
-    void OnToggleCoords(wxCommandEvent &event);           //!< Context menu handler
-    void OnScreenShot(wxCommandEvent &event);             //!< Context menu handler
-    void OnFullScreen(wxCommandEvent &event);             //!< Context menu handler
-    void OnConfiguration(wxCommandEvent &event);          //!< Context menu handler
-    void OnLoadFile(wxCommandEvent &event);               //!< Context menu handler
-    void OnZoomIn(wxCommandEvent &event);                 //!< Context menu handler
-    void OnZoomOut(wxCommandEvent &event);                //!< Context menu handler
-    void OnLockAspect(wxCommandEvent &event);             //!< Context menu handler
-    void OnMouseHelp(wxCommandEvent &event);              //!< Context menu handler
-    void OnMouseLeftDown(wxMouseEvent &event);            //!< Mouse left click (for rect zoom)
-    void OnMouseRightDown(wxMouseEvent &event);           //!< Mouse handler, for detecting when the user drags with the right button or just "clicks" for the menu
-    void OnMouseMove(wxMouseEvent &event);                //!< Mouse handler for mouse motion (for pan)
-    void OnMouseLeftRelease(wxMouseEvent &event);         //!< Mouse left click (for rect zoom)
-    void OnMouseWheel(wxMouseEvent &event);               //!< Mouse handler for the wheel
-    void OnMouseLeave(wxMouseEvent &event);               //!< Mouse handler for mouse motion (for pan)
-    bool CheckUserMouseAction(wxMouseEvent &event);       //!< Check if a user mouse action is required
-    void OnScrollThumbTrack(wxScrollWinEvent &event);     //!< Scroll thumb on scroll bar moving
-    void OnScrollPageUp(wxScrollWinEvent &event);         //!< Scroll page up
-    void OnScrollPageDown(wxScrollWinEvent &event);       //!< Scroll page down
-    void OnScrollLineUp(wxScrollWinEvent &event);         //!< Scroll line up
-    void OnScrollLineDown(wxScrollWinEvent &event);       //!< Scroll line down
-    void OnScrollTop(wxScrollWinEvent &event);            //!< Scroll to top
-    void OnScrollBottom(wxScrollWinEvent &event);         //!< Scroll to bottom
+    virtual void OnPaint(wxPaintEvent &event);                    //!< Paint handler, will plot all attached layers
+    virtual void OnSize(wxSizeEvent &event);                      //!< Size handler, will update scroll bar sizes
+    virtual void OnShowPopupMenu(wxMouseEvent &event);            //!< Mouse handler, will show context menu
+    virtual void OnCenter(wxCommandEvent &event);                 //!< Context menu handler
+    virtual void OnFit(wxCommandEvent &event);                    //!< Context menu handler
+    virtual void OnToggleGrids(wxCommandEvent &event);            //!< Context menu handler
+    virtual void OnToggleCoords(wxCommandEvent &event);           //!< Context menu handler
+    virtual void OnScreenShot(wxCommandEvent &event);             //!< Context menu handler
+    virtual void OnFullScreen(wxCommandEvent &event);             //!< Context menu handler
+    virtual void OnConfiguration(wxCommandEvent &event);          //!< Context menu handler
+    virtual void OnLoadFile(wxCommandEvent &event);               //!< Context menu handler
+    virtual void OnZoomIn(wxCommandEvent &event);                 //!< Context menu handler
+    virtual void OnZoomOut(wxCommandEvent &event);                //!< Context menu handler
+    virtual void OnLockAspect(wxCommandEvent &event);             //!< Context menu handler
+    virtual void OnMouseHelp(wxCommandEvent &event);              //!< Context menu handler
+    virtual void OnMouseLeftDown(wxMouseEvent &event);            //!< Mouse left click (for rect zoom)
+    virtual void OnMouseRightDown(wxMouseEvent &event);           //!< Mouse handler, for detecting when the user drags with the right button or just "clicks" for the menu
+    virtual void OnMouseMove(wxMouseEvent &event);                //!< Mouse handler for mouse motion (for pan)
+    virtual void OnMouseLeftRelease(wxMouseEvent &event);         //!< Mouse left click (for rect zoom)
+    virtual void OnMouseWheel(wxMouseEvent &event);               //!< Mouse handler for the wheel
+    virtual void OnMouseLeave(wxMouseEvent &event);               //!< Mouse handler for mouse motion (for pan)
+    bool CheckUserMouseAction(wxMouseEvent &event);               //!< Check if a user mouse action is required
+    virtual void OnScrollThumbTrack(wxScrollWinEvent &event);     //!< Scroll thumb on scroll bar moving
+    virtual void OnScrollPageUp(wxScrollWinEvent &event);         //!< Scroll page up
+    virtual void OnScrollPageDown(wxScrollWinEvent &event);       //!< Scroll page down
+    virtual void OnScrollLineUp(wxScrollWinEvent &event);         //!< Scroll line up
+    virtual void OnScrollLineDown(wxScrollWinEvent &event);       //!< Scroll line down
+    virtual void OnScrollTop(wxScrollWinEvent &event);            //!< Scroll to top
+    virtual void OnScrollBottom(wxScrollWinEvent &event);         //!< Scroll to bottom
 
     void DoScrollCalc(const int position, const int orientation);
 
