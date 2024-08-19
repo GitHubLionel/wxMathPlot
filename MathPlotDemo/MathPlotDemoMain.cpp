@@ -8,6 +8,7 @@
  **************************************************************/
 
 #include "MathPlotDemoMain.h"
+#include <wx/wx.h>
 #include <wx/msgdlg.h>
 
 //(*InternalHeaders(MathPlotDemoFrame)
@@ -18,6 +19,7 @@
 #include <wx/string.h>
 //*)
 
+#include <wx/overlay.h>
 #include "Sample.h"
 
 //helper functions
@@ -49,6 +51,7 @@ const long MathPlotDemoFrame::ID_BUTTON3 = wxNewId();
 const long MathPlotDemoFrame::ID_BUTTON4 = wxNewId();
 const long MathPlotDemoFrame::ID_BUTTON5 = wxNewId();
 const long MathPlotDemoFrame::ID_BUTTON6 = wxNewId();
+const long MathPlotDemoFrame::ID_CHECKBOX1 = wxNewId();
 const long MathPlotDemoFrame::ID_PANEL1 = wxNewId();
 const long MathPlotDemoFrame::ID_MATHPLOT1 = wxNewId();
 const long MathPlotDemoFrame::ID_PANEL2 = wxNewId();
@@ -67,6 +70,7 @@ MathPlotDemoFrame::MathPlotDemoFrame(wxWindow* parent,wxWindowID id)
 {
     //(*Initialize(MathPlotDemoFrame)
     wxBoxSizer* BoxSizer1;
+    wxBoxSizer* BoxSizer2;
     wxMenu* Menu1;
     wxMenu* Menu3;
     wxMenuBar* MenuBar1;
@@ -79,12 +83,26 @@ MathPlotDemoFrame::MathPlotDemoFrame(wxWindow* parent,wxWindowID id)
     AuiManager1 = new wxAuiManager(this, wxAUI_MGR_ALLOW_ACTIVE_PANE|wxAUI_MGR_DEFAULT);
     pLog = new wxPanel(this, ID_PANEL1, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL, _T("ID_PANEL1"));
     pLog->SetMinSize(wxSize(120,-1));
-    bDraw = new wxButton(pLog, ID_BUTTON1, _("Draw sinus"), wxPoint(16,24), wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON1"));
-    bSample = new wxButton(pLog, ID_BUTTON2, _("Draw Sample"), wxPoint(16,56), wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON2"));
-    bBar = new wxButton(pLog, ID_BUTTON3, _("Draw Bar"), wxPoint(16,88), wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON3"));
-    bLog = new wxButton(pLog, ID_BUTTON4, _("Log Y sample"), wxPoint(16,120), wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON4"));
-    bLogXY = new wxButton(pLog, ID_BUTTON5, _("Log XY sample"), wxPoint(16,152), wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON5"));
-    bBarChart = new wxButton(pLog, ID_BUTTON6, _("Draw BarChart"), wxPoint(16,184), wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON6"));
+    BoxSizer2 = new wxBoxSizer(wxVERTICAL);
+    bDraw = new wxButton(pLog, ID_BUTTON1, _("Draw sinus"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON1"));
+    BoxSizer2->Add(bDraw, 0, wxALL|wxEXPAND, 10);
+    bSample = new wxButton(pLog, ID_BUTTON2, _("Draw Sample"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON2"));
+    BoxSizer2->Add(bSample, 0, wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND, 10);
+    bBar = new wxButton(pLog, ID_BUTTON3, _("Draw Bar"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON3"));
+    BoxSizer2->Add(bBar, 0, wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND, 10);
+    bLog = new wxButton(pLog, ID_BUTTON4, _("Log Y sample"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON4"));
+    BoxSizer2->Add(bLog, 0, wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND, 10);
+    bLogXY = new wxButton(pLog, ID_BUTTON5, _("Log XY sample"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON5"));
+    BoxSizer2->Add(bLogXY, 0, wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND, 10);
+    bBarChart = new wxButton(pLog, ID_BUTTON6, _("Draw BarChart"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON6"));
+    BoxSizer2->Add(bBarChart, 0, wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND, 10);
+    cbFreeLine = new wxCheckBox(pLog, ID_CHECKBOX1, _("Free line"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CHECKBOX1"));
+    cbFreeLine->SetValue(false);
+    cbFreeLine->SetToolTip(_("Free drawing on the plot area. Left click and move the mouse. Illustration of OnUserMouseAction"));
+    BoxSizer2->Add(cbFreeLine, 0, wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND, 10);
+    pLog->SetSizer(BoxSizer2);
+    BoxSizer2->Fit(pLog);
+    BoxSizer2->SetSizeHints(pLog);
     AuiManager1->AddPane(pLog, wxAuiPaneInfo().Name(_T("PaneName0")).DefaultPane().Caption(_("Log")).CaptionVisible().CloseButton(false).Left().Floatable(false).MinSize(wxSize(120,-1)).Movable(false));
     pPlot = new wxPanel(this, ID_PANEL2, wxPoint(227,228), wxDefaultSize, wxTAB_TRAVERSAL, _T("ID_PANEL2"));
     BoxSizer1 = new wxBoxSizer(wxVERTICAL);
@@ -122,6 +140,7 @@ MathPlotDemoFrame::MathPlotDemoFrame(wxWindow* parent,wxWindowID id)
     Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotDemoFrame::OnbLogClick, this, ID_BUTTON4);
     Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotDemoFrame::OnbLogXYClick, this, ID_BUTTON5);
     Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotDemoFrame::OnbBarChartClick, this, ID_BUTTON6);
+    Bind(wxEVT_COMMAND_CHECKBOX_CLICKED, &MathPlotDemoFrame::OncbFreeLineClick, this, ID_CHECKBOX1);
     Bind(wxEVT_COMMAND_MENU_SELECTED, &MathPlotDemoFrame::OnmiPreviewSelected, this, idMenuPreview);
     Bind(wxEVT_COMMAND_MENU_SELECTED, &MathPlotDemoFrame::OnmiPrintSelected, this, idMenuPrint);
     Bind(wxEVT_COMMAND_MENU_SELECTED, &MathPlotDemoFrame::OnmiQuitSelected, this, idMenuExit);
@@ -299,6 +318,103 @@ void MathPlotDemoFrame::OnbBarChartClick(wxCommandEvent &WXUNUSED(event))
   mPlot->Fit();
 }
 
+void MathPlotDemoFrame::OncbFreeLineClick(wxCommandEvent &WXUNUSED(event))
+{
+  CleanPlot();
+  if (cbFreeLine->GetValue())
+  {
+    mPlot->SetOnUserMouseAction([this](void *Sender, wxMouseEvent &event, bool &cancel)
+    { OnUserMouseAction(Sender, event, cancel);});
+  }
+  else
+    mPlot->UnSetOnUserMouseAction();
+}
+
+void MathPlotDemoFrame::OnUserMouseAction(void *Sender, wxMouseEvent &event, bool &cancel)
+{
+  static wxOverlay m_overlay;
+
+  // Get the mouse position relative to the mpWindow
+  wxPoint mousePosition = event.GetPosition();
+
+  // Cast Sender to mpWindow and convert the coordinates
+  mpWindow* plotWindow = (mpWindow*)Sender;
+
+  static wxPoint currentPoint;
+  static wxPoint lastPoint;
+  double plotX, plotY;
+  int x = mousePosition.x;
+  int y = mousePosition.y;
+
+  plotX = plotWindow->p2x(mousePosition.x);
+  plotY = plotWindow->p2y(mousePosition.y);
+
+  cancel = false;
+  // Left mouse button down
+  if (event.LeftDown())
+  {
+    // Start dragging, add the initial point
+    isDragging = true;
+
+    CurrentPolyline = new mpFXYVector("New polyline");
+    wxColour random_color = wxIndexColour(rand() * 20 / RAND_MAX);
+    CurrentPolyline->SetPen(wxPen(random_color, 2));
+    CurrentPolyline->SetContinuity(true);
+
+    // Add new Polyline but not plot it
+    plotWindow->AddLayer(CurrentPolyline, false);
+    // Add point to Polyline but not plot it
+    CurrentPolyline->AddData(plotX, plotY, false);
+
+    lastPoint = wxPoint(x, y);
+    cancel = true;
+  }
+  // Mouse dragging with left button held down
+  else
+    if (event.Dragging() && event.LeftIsDown())
+    {
+      if (isDragging)
+      {
+        wxClientDC dc(plotWindow);
+        PrepareDC(dc);
+        wxDCOverlay overlay(m_overlay, &dc);
+
+        // Only draw the last segment
+        currentPoint = wxPoint(x, y);
+        dc.SetPen(wxPen(*wxLIGHT_GREY, 2));
+        dc.DrawLine(lastPoint, currentPoint);
+        lastPoint = currentPoint;
+
+        // Add point to Polyline but not plot it
+        CurrentPolyline->AddData(plotX, plotY, false);
+        cancel = true;
+      }
+    }
+    // Left mouse button released
+    else
+      if (event.LeftUp())
+      {
+        if (isDragging)
+        {
+          // Finalize the polyline by adding the last point
+          isDragging = false;
+          m_overlay.Reset();
+
+          // Prevent the simple click with no dragging
+          if (CurrentPolyline->GetSize() == 1)
+          {
+            plotWindow->DelLayer(CurrentPolyline, true, false);
+          }
+          else
+          {
+            CurrentPolyline->AddData(plotX, plotY, false); // Last point
+            plotWindow->Refresh();  // then refresh the plot
+          }
+          cancel = true;
+        }
+      }
+}
+
 void MathPlotDemoFrame::OnmiQuitSelected(wxCommandEvent &WXUNUSED(event))
 {
   Close(true);
@@ -336,4 +452,3 @@ void MathPlotDemoFrame::OnmiPrintSelected(wxCommandEvent &WXUNUSED(event))
   mpPrintout printout(mPlot, wxT("Plot print"));
   printer.Print(this, &printout, true);
 }
-

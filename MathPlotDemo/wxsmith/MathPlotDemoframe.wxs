@@ -9,35 +9,65 @@
 			<object class="AuiManagerItem">
 				<object class="wxPanel" name="ID_PANEL1" variable="pLog" member="yes">
 					<minsize>120,-1</minsize>
-					<object class="wxButton" name="ID_BUTTON1" variable="bDraw" member="yes">
-						<label>Draw sinus</label>
-						<pos>16,24</pos>
-						<handler function="OnbDrawClick" entry="EVT_BUTTON" />
-					</object>
-					<object class="wxButton" name="ID_BUTTON2" variable="bSample" member="yes">
-						<label>Draw Sample</label>
-						<pos>16,56</pos>
-						<handler function="OnbSampleClick" entry="EVT_BUTTON" />
-					</object>
-					<object class="wxButton" name="ID_BUTTON3" variable="bBar" member="yes">
-						<label>Draw Bar</label>
-						<pos>16,88</pos>
-						<handler function="OnbBarClick" entry="EVT_BUTTON" />
-					</object>
-					<object class="wxButton" name="ID_BUTTON4" variable="bLog" member="yes">
-						<label>Log Y sample</label>
-						<pos>16,120</pos>
-						<handler function="OnbLogClick" entry="EVT_BUTTON" />
-					</object>
-					<object class="wxButton" name="ID_BUTTON5" variable="bLogXY" member="yes">
-						<label>Log XY sample</label>
-						<pos>16,152</pos>
-						<handler function="OnbLogXYClick" entry="EVT_BUTTON" />
-					</object>
-					<object class="wxButton" name="ID_BUTTON6" variable="bBarChart" member="yes">
-						<label>Draw BarChart</label>
-						<pos>16,184</pos>
-						<handler function="OnbBarChartClick" entry="EVT_BUTTON" />
+					<object class="wxBoxSizer" variable="BoxSizer2" member="no">
+						<orient>wxVERTICAL</orient>
+						<object class="sizeritem">
+							<object class="wxButton" name="" variable="bDraw" member="yes">
+								<label>Draw sinus</label>
+								<handler function="OnbDrawClick" entry="EVT_BUTTON" />
+							</object>
+							<flag>wxALL|wxEXPAND</flag>
+							<border>10</border>
+						</object>
+						<object class="sizeritem">
+							<object class="wxButton" name="" variable="bSample" member="yes">
+								<label>Draw Sample</label>
+								<handler function="OnbSampleClick" entry="EVT_BUTTON" />
+							</object>
+							<flag>wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND</flag>
+							<border>10</border>
+						</object>
+						<object class="sizeritem">
+							<object class="wxButton" name="" variable="bBar" member="yes">
+								<label>Draw Bar</label>
+								<handler function="OnbBarClick" entry="EVT_BUTTON" />
+							</object>
+							<flag>wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND</flag>
+							<border>10</border>
+						</object>
+						<object class="sizeritem">
+							<object class="wxButton" name="" variable="bLog" member="yes">
+								<label>Log Y sample</label>
+								<handler function="OnbLogClick" entry="EVT_BUTTON" />
+							</object>
+							<flag>wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND</flag>
+							<border>10</border>
+						</object>
+						<object class="sizeritem">
+							<object class="wxButton" name="" variable="bLogXY" member="yes">
+								<label>Log XY sample</label>
+								<handler function="OnbLogXYClick" entry="EVT_BUTTON" />
+							</object>
+							<flag>wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND</flag>
+							<border>10</border>
+						</object>
+						<object class="sizeritem">
+							<object class="wxButton" name="" variable="bBarChart" member="yes">
+								<label>Draw BarChart</label>
+								<handler function="OnbBarChartClick" entry="EVT_BUTTON" />
+							</object>
+							<flag>wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND</flag>
+							<border>10</border>
+						</object>
+						<object class="sizeritem">
+							<object class="wxCheckBox" name="" variable="cbFreeLine" member="yes">
+								<label>Free line</label>
+								<tooltip>Free drawing on the plot area. Left click and move the mouse. Illustration of OnUserMouseAction</tooltip>
+								<handler function="OncbFreeLineClick" entry="EVT_CHECKBOX" />
+							</object>
+							<flag>wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND</flag>
+							<border>10</border>
+						</object>
 					</object>
 				</object>
 				<name>PaneName0</name>
