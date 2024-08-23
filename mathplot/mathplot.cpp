@@ -3074,7 +3074,7 @@ void mpWindow::OnMouseWheel(wxMouseEvent &event)
 }
 
 /**
- * Mouve leave the plot area
+ * Mouse leave the plot area
  */
 void mpWindow::OnMouseLeave(wxMouseEvent &event)
 {
