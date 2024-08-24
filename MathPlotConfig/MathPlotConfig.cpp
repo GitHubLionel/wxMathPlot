@@ -821,7 +821,6 @@ void MathPlotConfigDialog::OnbColorClick(wxCommandEvent &event)
   m_clrData.SetColour(colourButton->GetBackgroundColour());
 
   wxColourDialog ColourDialog(this, &m_clrData);
-
   ColourDialog.SetTitle(MESS_COLOUR);
   if (ColourDialog.ShowModal() == wxID_OK)
   {
@@ -834,7 +833,9 @@ void MathPlotConfigDialog::DoApplyColour(const wxColour &colour)
 {
   if (colour == colourButton->GetBackgroundColour())
     return;
-
+  wxString RGB;
+  RGB.Printf("%02x%02x%02x",colour.GetRed(),colour.GetGreen(),colour.GetBlue());
+  colourButton->SetLabelText(RGB);
   colourButton->SetBackgroundColour(colour);
   colourButton->ClearBackground();
   colourButton->Refresh();
