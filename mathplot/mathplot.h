@@ -257,7 +257,7 @@ enum
   mpID_FULLSCREEN          //!< Toggle fullscreen only if parent is a frame windows
 };
 
-// Location for the Info layer
+/// Location for the Info layer
 typedef enum __mp_Location_Type
 {
   mpMarginLeftCenter,
@@ -272,7 +272,7 @@ typedef enum __mp_Location_Type
   mpCursor // only for mpInfoCoords
 } mpLocation;
 
-// Alignment for X axis
+/// Alignment for X axis
 typedef enum __XAxis_Align_Type
 {
   mpALIGN_BORDER_BOTTOM = 10,
@@ -282,7 +282,7 @@ typedef enum __XAxis_Align_Type
   mpALIGN_BORDER_TOP
 } mpXAxis_Align;
 
-// Alignment for Y axis
+/// Alignment for Y axis
 typedef enum __YAxis_Align_Type
 {
   mpALIGN_BORDER_LEFT = 20,
@@ -292,6 +292,7 @@ typedef enum __YAxis_Align_Type
   mpALIGN_BORDER_RIGHT
 } mpYAxis_Align;
 
+/// Plot alignment (which corner should plot be placed)
 typedef enum __Plot_Align_Name_Type
 {
   mpALIGN_NW = 5,
@@ -309,7 +310,7 @@ typedef enum __mp_Style_Type
   mpLegendSquare
 } mpLegendStyle;
 
-// Direction for the Legend layer
+/// Direction for the Legend layer
 typedef enum __mp_Direction_Type
 {
   mpVertical,

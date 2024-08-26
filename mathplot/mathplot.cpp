@@ -891,7 +891,7 @@ IMPLEMENT_ABSTRACT_CLASS(mpFunction, mpLayer)
 
 mpFunction::mpFunction(const wxString &name/*=wxEmptyString*/, bool useY2Axis/*=false*/)
 {
-  m_type = mpLAYER_PLOT;
+  m_type = mpLAYER_PLOT; // default for mpFunction plot layer
   m_subtype = mpfAllType;
   SetName(name);
   m_symbol = mpsNone;
@@ -956,7 +956,7 @@ mpLine::mpLine(double value, const wxPen &pen) :
     mpFunction()
 {
   m_value = value;
-  m_type = mpLAYER_LINE;
+  m_type = mpLAYER_LINE; // overrides mpLAYER_PLOT set in mpFunction ctor (in mpLine ctor)
   m_subtype = mpfLine;
   m_ZIndex = mpZIndex_LINE;
   m_IsHorizontal = false;
@@ -1802,7 +1802,7 @@ IMPLEMENT_ABSTRACT_CLASS(mpChart, mpFunction)
 mpChart::mpChart(const wxString &name) :
     mpFunction(name)
 {
-  m_type = mpLAYER_CHART; // overrides mpLAYER_PLOT set in mpFunction ctor
+  m_type = mpLAYER_CHART; // overrides mpLAYER_PLOT set in mpFunction ctor (in mpChart ctor)
   m_subtype = mpcChartNone;
   m_max_value = 0;
   m_total_value = 0;
@@ -2053,7 +2053,7 @@ IMPLEMENT_ABSTRACT_CLASS(mpScale, mpLayer)
 
 mpScale::mpScale(const wxString &name, int flags, bool grids)
 {
-  m_type = mpLAYER_AXIS;
+  m_type = mpLAYER_AXIS; // mpScale; ABT for all axis scales
   m_subtype = mpsScaleNone;
   SetName(name);
   SetFont((wxFont const&)*wxSMALL_FONT);
