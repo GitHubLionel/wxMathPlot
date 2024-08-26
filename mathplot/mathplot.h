@@ -382,7 +382,7 @@ typedef enum __Chart_Type
 
 typedef enum __mp_Layer_Type
 {
-  mpLAYER_UNDEF,   //!< Layer type undefined - SHOULD NEVER BE USED
+  mpLAYER_UNDEF,   //!< Layer type undefined; used in default ctor
   mpLAYER_AXIS,    //!< Axis type layer
   mpLAYER_PLOT,    //!< Plot type layer
   mpLAYER_INFO,    //!< Info box type layer
@@ -430,7 +430,6 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
     }
 
     /** Set the wxWindow handle
-     * Usefull to acces the method of mpWindow
      */
     void SetWindow(mpWindow &w)
     {
@@ -1063,7 +1062,7 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLegend: public mpInfoLayer
 /** @name mpLayer implementations - functions
  @{*/
 
-/** Plot layer implementing an abstract function class.
+/** Plot layer implementing an abstract function plot class.
  */
 class WXDLLIMPEXP_MATHPLOT mpFunction: public mpLayer
 {
@@ -3229,7 +3228,7 @@ class WXDLLIMPEXP_MATHPLOT mpMovableObject: public mpFunction
     mpMovableObject() :
         m_reference_x(0), m_reference_y(0), m_reference_phi(0), m_shape_xs(0), m_shape_ys(0)
     {
-      m_type = mpLAYER_PLOT;
+      assert(m_type == mpLAYER_PLOT); // m_type is already set to mpLAYER_PLOT in default-arg mpFunction ctor: m_type = mpLAYER_PLOT;
       m_subtype = mpfMovable;
       m_bbox_min_x = m_bbox_max_x = 0;
       m_bbox_min_y = m_bbox_max_y = 0;
