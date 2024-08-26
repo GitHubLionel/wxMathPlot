@@ -1,5 +1,6 @@
 Thumbs.db
 *.bak
+whoops/
 
 # Microsoft Visual Studio 
 .vs/
