@@ -6,7 +6,7 @@
 // Contributors:    Jose Luis Blanco, Val Greene, Lionel Reynaud, Dave Nadler
 // Created:         21/07/2003
 // Last edit:       22/02/2009
-// Last edit:       07/31/2024
+// Last edit:       08/26/2024
 // Copyright:       (c) David Schalig, Davide Rondini
 // Licence:         wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -154,7 +154,7 @@ class WXDLLIMPEXP_MATHPLOT mpBitmapLayer;
 
 class MathPlotConfigDialog;
 
-/// A rectangle structure in several flavors
+/// A rectangle structure in several (integer) flavors
 typedef union
 {
     struct
@@ -182,7 +182,7 @@ typedef union
 } mpRect;
 
 /**
- * A structure used for the computation of bounds in real unit (not in screen pixel)
+ * A structure for computation of bounds in real units (not in screen pixel)
  * X refer to X axis
  * Y refer to Y axis
  * Y2 refer to Y2 axis when it is defined
@@ -257,7 +257,7 @@ enum
   mpID_FULLSCREEN          //!< Toggle fullscreen only if parent is a frame windows
 };
 
-// Location for the Info layer
+/// Location for the Info layer
 typedef enum __mp_Location_Type
 {
   mpMarginLeftCenter,
@@ -272,7 +272,7 @@ typedef enum __mp_Location_Type
   mpCursor // only for mpInfoCoords
 } mpLocation;
 
-// Alignment for X axis
+/// Alignment for X axis
 typedef enum __XAxis_Align_Type
 {
   mpALIGN_BORDER_BOTTOM = 10,
@@ -282,7 +282,7 @@ typedef enum __XAxis_Align_Type
   mpALIGN_BORDER_TOP
 } mpXAxis_Align;
 
-// Alignment for Y axis
+/// Alignment for Y axis
 typedef enum __YAxis_Align_Type
 {
   mpALIGN_BORDER_LEFT = 20,
@@ -292,6 +292,7 @@ typedef enum __YAxis_Align_Type
   mpALIGN_BORDER_RIGHT
 } mpYAxis_Align;
 
+/// Plot alignment (which corner should plot be placed)
 typedef enum __Plot_Align_Name_Type
 {
   mpALIGN_NW = 5,
@@ -309,7 +310,7 @@ typedef enum __mp_Style_Type
   mpLegendSquare
 } mpLegendStyle;
 
-// Direction for the Legend layer
+/// Direction for the Legend layer
 typedef enum __mp_Direction_Type
 {
   mpVertical,
@@ -327,17 +328,23 @@ typedef enum __Symbol_Type
   mpsPlus
 } mpSymbol;
 
+//-----------------------------------------------------------------------------
+// mpLayer sub_type values
+//-----------------------------------------------------------------------------
+
+/// sub_type values for mpLAYER_INFO
 typedef enum __Info_Type
 {
-  mpiNone,
+  mpiNone, // never used
   mpiInfo,
   mpiCoords,
   mpiLegend
 } mpInfoType;
 
+/// sub_type values for mpLAYER_TEXT
 typedef enum __Text_Type
 {
-  mptNone,
+  mptNone, // never used
   mptText,
   mptTitle
 } mpTextType;
@@ -376,7 +383,7 @@ typedef enum __Chart_Type
 
 typedef enum __mp_Layer_Type
 {
-  mpLAYER_UNDEF,   //!< Layer type undefined
+  mpLAYER_UNDEF,   //!< Layer type undefined; used in default ctor
   mpLAYER_AXIS,    //!< Axis type layer
   mpLAYER_PLOT,    //!< Plot type layer
   mpLAYER_INFO,    //!< Info box type layer
@@ -424,7 +431,6 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
     }
 
     /** Set the wxWindow handle
-     * Usefull to acces the method of mpWindow
      */
     void SetWindow(mpWindow &w)
     {
@@ -733,8 +739,8 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
 
   protected:
     mpWindow* m_win;            //!< The wxWindow handle
-    mpLayerType m_type;         //!< Define layer type, which is assigned by constructor
-    int m_subtype;              //!< Define layer sub type, which is assigned by constructor
+    mpLayerType m_type;         //!< Layer type mpLAYER_*, set in constructor (sometimes changed, ie CHART changes from PLOT!)
+    int m_subtype;              //!< Layer sub type, set in constructor (in ctor layers, as above)
     wxFont m_font;              //!< Layer's font
     wxColour m_fontcolour;      //!< Layer's font foreground colour
     wxPen m_pen;                //!< Layer's pen. Default Colour = Black, width = 1, style = wxPENSTYLE_SOLID
@@ -1057,7 +1063,7 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLegend: public mpInfoLayer
 /** @name mpLayer implementations - functions
  @{*/
 
-/** Plot layer implementing an abstract function class.
+/** Plot layer implementing an abstract function plot class.
  */
 class WXDLLIMPEXP_MATHPLOT mpFunction: public mpLayer
 {
@@ -1066,7 +1072,7 @@ class WXDLLIMPEXP_MATHPLOT mpFunction: public mpLayer
      */
     mpFunction(const wxString &name = wxEmptyString, bool useY2Axis = false);
 
-    /** Set the 'continuity' property of the layer (true: draws a continuous line, false: draws separate points (default)).
+    /** Set the 'continuity' property of the layer. True: draws a continuous line. False: draws separate points (default).
      * @sa GetContinuity
      */
     void SetContinuity(bool continuity)
@@ -3223,7 +3229,7 @@ class WXDLLIMPEXP_MATHPLOT mpMovableObject: public mpFunction
     mpMovableObject() :
         m_reference_x(0), m_reference_y(0), m_reference_phi(0), m_shape_xs(0), m_shape_ys(0)
     {
-      m_type = mpLAYER_PLOT;
+      assert(m_type == mpLAYER_PLOT); // m_type is already set to mpLAYER_PLOT in default-arg mpFunction ctor: m_type = mpLAYER_PLOT;
       m_subtype = mpfMovable;
       m_bbox_min_x = m_bbox_max_x = 0;
       m_bbox_min_y = m_bbox_max_y = 0;

@@ -1,5 +1,6 @@
 Thumbs.db
 *.bak
+whoops/
 
 # Microsoft Visual Studio 
 .vs/
@@ -28,3 +29,5 @@ ebackup.sta
 default.tag
 
 /mathplot/mathplot.h_save.h
+/mathplot/mathplot_refactorTypes.cpp
+/mathplot/mathplot_refactorTypes.h
