@@ -3293,18 +3293,11 @@ void mpWindow::Zoom(bool zoomIn, const wxPoint &centerPoint)
   double prior_layer_y = p2y(c.y);
   double prior_layer_y2 = p2y(c.y, true);
 
-  if (zoomIn)
-  {
-    m_scaleX *= m_zoomIncrementalFactor;
-    m_scaleY *= m_zoomIncrementalFactor;
-    m_scaleY2 *= m_zoomIncrementalFactor;
-  }
-  else
-  {
-    m_scaleX /= m_zoomIncrementalFactor;
-    m_scaleY /= m_zoomIncrementalFactor;
-    m_scaleY2 /= m_zoomIncrementalFactor;
-  }
+  double zoomFactor = zoomIn?
+      m_zoomIncrementalFactor : 1.0/m_zoomIncrementalFactor;
+  m_scaleX *= zoomFactor;
+  m_scaleY *= zoomFactor;
+  m_scaleY2 *= zoomFactor;
 
   // Adjust the new m_posx/y:
   m_posX = prior_layer_x - c.x / m_scaleX;
@@ -3773,6 +3766,7 @@ void mpWindow::SetMPScrollbars(bool status)
   UpdateAll();
 }
 
+/// Deprecated: Incomplete! Use UpdateBBox!
 void mpWindow::SetBound()
 {
   bool HaveXAxis = (m_XAxis && (!m_XAxis->GetAuto()));
@@ -3802,7 +3796,7 @@ void mpWindow::SetBound()
 }
 
 /**
- * Get the bounding boxes of all visible series
+ * Set bounding box 'm_bound' to contain all visible plots of this mpWindow.
  */
 bool mpWindow::UpdateBBox()
 {
@@ -3810,71 +3804,70 @@ bool mpWindow::UpdateBBox()
   bool firstY = true;
   bool firstY2 = true;
 
-  // To update bound of mpFX and mpFY functions
-//  SetBound();
+  // Deprecated: To update bound of mpFX and mpFY functions: SetBound();
 #ifdef MATHPLOT_DO_LOGGING
   wxLogMessage
   (_T("[mpWindow::UpdateBBox] Bounding box enter: Xmin = %f, Xmax = %f, Ymin = %f, YMax = %f"), m_bound.Xmin, m_bound.Xmax, m_bound.Ymin,
       m_bound.Ymax);
 #endif // MATHPLOT_DO_LOGGING
 
-  // Search common bound for all functions
+  // Find minimum bounding box to fit all visible layers
   mpFloatRect f_bound;
   for (mpLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
   {
     mpLayer* f = *it;
+    if (!f->HasBBox() || !f->IsVisible()) continue; // this layer isn't used for bounding box
 
-    if (f->HasBBox() && f->IsVisible())
+    f->GetBBox(&f_bound);
+    // X
+    if (first)
     {
-      f->GetBBox(&f_bound);
-      if (first)
-      {
-        first = false;
+      first = false;
+      m_bound.Xmin = f_bound.Xmin;
+      m_bound.Xmax = f_bound.Xmax;
+    }
+    else
+    {
+      if (f_bound.Xmin < m_bound.Xmin)
         m_bound.Xmin = f_bound.Xmin;
+      if (f_bound.Xmax > m_bound.Xmax)
         m_bound.Xmax = f_bound.Xmax;
+    }
+    if ((f->GetLayerType() == mpLAYER_PLOT) && (((mpFunction*)f)->GetY2Axis()))
+    {
+      // Y2
+      if (firstY2)
+      {
+        m_bound.Y2min = f_bound.Ymin;
+        m_bound.Y2max = f_bound.Ymax;
+        firstY2 = false;
       }
       else
       {
-        if (f_bound.Xmin < m_bound.Xmin)
-          m_bound.Xmin = f_bound.Xmin;
-        if (f_bound.Xmax > m_bound.Xmax)
-          m_bound.Xmax = f_bound.Xmax;
-      }
-
-      if ((f->GetLayerType() == mpLAYER_PLOT) && (((mpFunction*)f)->GetY2Axis()))
-      {
-        if (firstY2)
-        {
+        if (f_bound.Ymin < m_bound.Y2min)
           m_bound.Y2min = f_bound.Ymin;
+        if (f_bound.Ymax > m_bound.Y2max)
           m_bound.Y2max = f_bound.Ymax;
-          firstY2 = false;
-        }
-        else
-        {
-          if (f_bound.Ymin < m_bound.Y2min)
-            m_bound.Y2min = f_bound.Ymin;
-          if (f_bound.Ymax > m_bound.Y2max)
-            m_bound.Y2max = f_bound.Ymax;
-        }
-      }
-      else
-      {
-        if (firstY)
-        {
-          m_bound.Ymin = f_bound.Ymin;
-          m_bound.Ymax = f_bound.Ymax;
-          firstY = false;
-        }
-        else
-        {
-          if (f_bound.Ymin < m_bound.Ymin)
-            m_bound.Ymin = f_bound.Ymin;
-          if (f_bound.Ymax > m_bound.Ymax)
-            m_bound.Ymax = f_bound.Ymax;
-        }
       }
     }
-  }
+    else
+    {
+      // Y
+      if (firstY)
+      {
+        m_bound.Ymin = f_bound.Ymin;
+        m_bound.Ymax = f_bound.Ymax;
+        firstY = false;
+      }
+      else
+      {
+        if (f_bound.Ymin < m_bound.Ymin)
+          m_bound.Ymin = f_bound.Ymin;
+        if (f_bound.Ymax > m_bound.Ymax)
+          m_bound.Ymax = f_bound.Ymax;
+      }
+    }
+  } // end iteration over all layers
 
   // Take care of scale : restrict bound
   if (m_XAxis && (!m_XAxis->GetAuto()))

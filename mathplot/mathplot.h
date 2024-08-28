@@ -450,7 +450,7 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
     }
 
     /**
-     * Return the bounding box, ie minX, maxX, minY and maxY of the object
+     * Return the bounding box, ie minX, maxX, minY and maxY of this mpLayer
      * Here we don't use extra Y2 values
      */
     virtual void GetBBox(mpFloatRect *m_bound);
@@ -2348,14 +2348,12 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
         return m_scaleY;
     } // Schaling's method: maybe another method exists with the same name
 
-    /**
-     * Update bound for mpFX and mpFY when axis is scaled
-     */
+    [[deprecated("Incomplete, use UpdateBBox instead")]]
+    /** Update bound for mpFX and mpFY when axis is scaled.
+     * \deprecated Incomplete! Use UpdateBBox! */
     void SetBound();
 
-    /** Get plot bound.
-     @return Bound
-     */
+    /** Get bounding box encompassing all visible plots on this mpWindow. */
     mpFloatRect Get_Bound(void) const
     {
       return m_bound;
@@ -2603,7 +2601,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      \param print the mpPrintout where to print the graph */
     //void PrintGraph(mpPrintout *print);
 
-    /// Get the 'desired' bounding box for the currently displayed view (set by Fit or Zoom operations).
+    /// Get the 'desired' user-coordinate bounding box for the currently displayed view (set by Fit or Zoom operations).
     /// @sa Fit, Zoom
     mpFloatRect GetDesiredBoundingBox() const { return m_desired; }
 
@@ -2615,7 +2613,8 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
       return m_desired.Xmin;
     }
 
-    /** Returns the right-border layer coordinate that the user wants the mpWindow to show (it may be not exactly the actual shown coordinate in the case of locked aspect ratio).
+    /** Returns the right-border layer coordinate that the user wants the mpWindow to show
+     * (it may be not exactly the actual shown coordinate in the case of locked aspect ratio).
      * @sa Fit, Zoom
      */
     double GetDesiredXmax() const
@@ -2679,7 +2678,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 
     /**
      * Load a data file like a csv file
-     * Data must be formated in 2 columns X value and Y value separated by space or ; or tab character
+     * Data must be formatted in 2 columns X value and Y value separated by space or ; or tab character
      */
     bool LoadFile(const wxString &filename);
 
@@ -2839,9 +2838,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
       m_OnDeleteLayer = event;
     }
 
-    /** On delete layer event
-     * Remove the callback
-     */
+    /** Remove the 'delete layer event' callback */
     void UnSetOnDeleteLayer()
     {
       m_OnDeleteLayer = NULL;
@@ -2856,9 +2853,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
       m_OnUserMouseAction = userMouseEventHandler;
     }
 
-    /** On user mouse action event
-     * Remove the callback
-     */
+    /** Remove the 'user mouse action event' callback */
     void UnSetOnUserMouseAction()
     {
       m_OnUserMouseAction = NULL;
@@ -2953,9 +2948,8 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 
     void Zoom(bool zoomIn, const wxPoint &centerPoint);
 
-    /** Recalculate global layer bounding box, and save it in m_minX,...
-     * \return true if there is any valid BBox information.
-     */
+    /** Set bounding box 'm_bound' to contain all visible plots of this mpWindow.
+     * \return true if there is any valid BBox information. */
     virtual bool UpdateBBox();
 
     void InitParameters();
