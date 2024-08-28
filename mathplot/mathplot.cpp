@@ -6,7 +6,7 @@
 // Contributors:    Jose Luis Blanco, Val Greene, Lionel Reynaud, Dave Nadler
 // Created:         21/07/2003
 // Last edit:       09/09/2007
-// Last edit:       08/01/2024
+// Last edit:       08/26/2024
 // Copyright:       (c) David Schalig, Davide Rondini
 // Licence:         wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -197,10 +197,10 @@ bool DoubleToTimeStruct(double val, unsigned int timeConv, struct tm *timestruct
 
 IMPLEMENT_ABSTRACT_CLASS(mpLayer, wxObject)
 
-mpLayer::mpLayer() :
-    m_type(mpLAYER_UNDEF)
+mpLayer::mpLayer(mpLayerType layerType) :
+    m_type(layerType)
 {
-  // The wxWindow handle is not defined
+  // The wxWindow handle is not yet available
   m_win = NULL;
   // Default pen
   SetPen((wxPen const&)*wxBLACK_PEN);
@@ -276,9 +276,8 @@ void mpLayer::CheckLog(double *x, double *y)
 
 IMPLEMENT_ABSTRACT_CLASS(mpInfoLayer, mpLayer)
 
-mpInfoLayer::mpInfoLayer()
+mpInfoLayer::mpInfoLayer() : mpLayer(mpLAYER_INFO)
 {
-  m_type = mpLAYER_INFO;
   m_subtype = mpiInfo;
   m_dim = wxRect(0, 0, 1, 1);
   m_oldDim = m_dim;
@@ -889,9 +888,9 @@ int mpInfoLegend::GetPointed(mpWindow &w, wxPoint eventPoint)
 
 IMPLEMENT_ABSTRACT_CLASS(mpFunction, mpLayer)
 
-mpFunction::mpFunction(const wxString &name/*=wxEmptyString*/, bool useY2Axis/*=false*/)
+mpFunction::mpFunction(mpLayerType layerType /*=mpLAYER_PLOT*/, const wxString &name/*=wxEmptyString*/, bool useY2Axis/*=false*/) :
+    mpLayer(layerType)
 {
-  m_type = mpLAYER_PLOT; // default for mpFunction plot layer
   m_subtype = mpfAllType;
   SetName(name);
   m_symbol = mpsNone;
@@ -953,10 +952,9 @@ void mpFunction::DrawSymbol(wxDC &dc, wxCoord x, wxCoord y)
 IMPLEMENT_ABSTRACT_CLASS(mpLine, mpFunction)
 
 mpLine::mpLine(double value, const wxPen &pen) :
-    mpFunction()
+    mpFunction(mpLAYER_LINE)
 {
   m_value = value;
-  m_type = mpLAYER_LINE; // overrides mpLAYER_PLOT set in mpFunction ctor (in mpLine ctor)
   m_subtype = mpfLine;
   m_ZIndex = mpZIndex_LINE;
   m_IsHorizontal = false;
@@ -1082,7 +1080,7 @@ void mpVerticalLine::DoPlot(wxDC &dc, mpWindow &w)
 IMPLEMENT_ABSTRACT_CLASS(mpFX, mpFunction)
 
 mpFX::mpFX(const wxString &name, int flags, bool useY2Axis) :
-    mpFunction(name, useY2Axis)
+    mpFunction(mpLAYER_PLOT, name, useY2Axis)
 {
   m_subtype = mpfFX;
   m_flags = flags;
@@ -1191,7 +1189,7 @@ void mpFX::DoPlot(wxDC &dc, mpWindow &w)
 IMPLEMENT_ABSTRACT_CLASS(mpFY, mpFunction)
 
 mpFY::mpFY(const wxString &name, int flags, bool useY2Axis) :
-    mpFunction(name, useY2Axis)
+    mpFunction(mpLAYER_PLOT, name, useY2Axis)
 {
   m_subtype = mpfFY;
   m_flags = flags;
@@ -1300,7 +1298,7 @@ void mpFY::DoPlot(wxDC &dc, mpWindow &w)
 IMPLEMENT_ABSTRACT_CLASS(mpFXY, mpFunction)
 
 mpFXY::mpFXY(const wxString &name, int flags, bool viewAsBar, bool useY2Axis) :
-    mpFunction(name, useY2Axis)
+    mpFunction(mpLAYER_PLOT, name, useY2Axis)
 {
   m_subtype = mpfFXY;
   m_flags = flags;
@@ -1737,7 +1735,7 @@ bool mpFXYVector::AddData(const double x, const double y, bool updatePlot)
 IMPLEMENT_ABSTRACT_CLASS(mpProfile, mpFunction)
 
 mpProfile::mpProfile(const wxString &name, int flags) :
-    mpFunction(name)
+    mpFunction(mpLAYER_PLOT, name)
 {
   m_flags = flags;
 }
@@ -1800,9 +1798,8 @@ void mpProfile::DoPlot(wxDC &dc, mpWindow &w)
 IMPLEMENT_ABSTRACT_CLASS(mpChart, mpFunction)
 
 mpChart::mpChart(const wxString &name) :
-    mpFunction(name)
+    mpFunction(mpLAYER_CHART, name)
 {
-  m_type = mpLAYER_CHART; // overrides mpLAYER_PLOT set in mpFunction ctor (in mpChart ctor)
   m_subtype = mpcChartNone;
   m_max_value = 0;
   m_total_value = 0;
@@ -2051,9 +2048,8 @@ const wxColour& mpPieChart::GetColour(unsigned int id)
 
 IMPLEMENT_ABSTRACT_CLASS(mpScale, mpLayer)
 
-mpScale::mpScale(const wxString &name, int flags, bool grids)
+mpScale::mpScale(const wxString &name, int flags, bool grids) : mpLayer(mpLAYER_AXIS)
 {
-  m_type = mpLAYER_AXIS; // mpScale; ABT for all axis scales
   m_subtype = mpsScaleNone;
   SetName(name);
   SetFont((wxFont const&)*wxSMALL_FONT);
@@ -4866,27 +4862,27 @@ bool mpPrintout::HasPage(int page)
 }
 
 //-----------------------------------------------------------------------------
-// mpMovableObject - provided by Jose Luis Blanco
+// SinCos - retrieve sin/cos pair
 //-----------------------------------------------------------------------------
 //#define ASSEMBLER
-inline void SinCos(double Angle, double *sinA, double *cosA)
+inline void SinCos(double angleRadians, double *sinA, double *cosA)
 {
 #ifdef ASSEMBLER
   // https://gcc.gnu.org/onlinedocs/gcc-4.9.2/gcc/Extended-Asm.html#Extended-Asm
-  __asm__ ("fsincos" : "=t" (*cosA), "=u" (*sinA) : "0" (Angle));
+  __asm__ ("fsincos" : "=t" (*cosA), "=u" (*sinA) : "0" (angleRadians));
 #else
 #if __GNUC__
   // Use GNU extension
-  sincos(Angle, sinA, cosA);
+  sincos(angleRadians, sinA, cosA);
 #else
-    *sinA = sin(Angle);
-    *cosA = cos(Angle);
+    *sinA = sin(angleRadians);
+    *cosA = cos(angleRadians);
   #endif
 #endif
 }
 
 //-----------------------------------------------------------------------------
-// mpMovableObject
+// mpMovableObject - provided by Jose Luis Blanco
 //-----------------------------------------------------------------------------
 
 IMPLEMENT_DYNAMIC_CLASS(mpMovableObject, mpLayer)

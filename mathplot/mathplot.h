@@ -383,7 +383,7 @@ typedef enum __Chart_Type
 
 typedef enum __mp_Layer_Type
 {
-  mpLAYER_UNDEF,   //!< Layer type undefined; used in default ctor
+  mpLAYER_UNDEF,   //!< Layer type undefined; SHOULD NOT BE USED
   mpLAYER_AXIS,    //!< Axis type layer
   mpLAYER_PLOT,    //!< Plot type layer
   mpLAYER_INFO,    //!< Info box type layer
@@ -423,7 +423,7 @@ typedef enum __mp_Layer_ZOrder
 class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
 {
   public:
-    mpLayer();
+    mpLayer(mpLayerType layerType);
 
     virtual ~mpLayer()
     {
@@ -738,8 +738,8 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
     }
 
   protected:
+    const mpLayerType m_type;   //!< Layer type mpLAYER_*
     mpWindow* m_win;            //!< The wxWindow handle
-    mpLayerType m_type;         //!< Layer type mpLAYER_*, set in constructor (sometimes changed, ie CHART changes from PLOT!)
     int m_subtype;              //!< Layer sub type, set in constructor (in ctor layers, as above)
     wxFont m_font;              //!< Layer's font
     wxColour m_fontcolour;      //!< Layer's font foreground colour
@@ -780,6 +780,7 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
 
   private:
     bool m_busy;                //!< Test if we are busy (plot operation)
+    mpLayer() = delete; // default ctor not implemented/permitted
 
   DECLARE_DYNAMIC_CLASS(mpLayer)
 };
@@ -1070,7 +1071,7 @@ class WXDLLIMPEXP_MATHPLOT mpFunction: public mpLayer
   public:
     /** Full constructor.
      */
-    mpFunction(const wxString &name = wxEmptyString, bool useY2Axis = false);
+    mpFunction(mpLayerType layerType = mpLAYER_PLOT, const wxString &name = wxEmptyString, bool useY2Axis = false);
 
     /** Set the 'continuity' property of the layer. True: draws a continuous line. False: draws separate points (default).
      * @sa GetContinuity
@@ -3067,9 +3068,8 @@ class WXDLLIMPEXP_MATHPLOT mpText: public mpLayer
   public:
     /** Default constructor.
      */
-    mpText(const wxString &name = wxEmptyString)
+    mpText(const wxString &name = wxEmptyString) : mpLayer(mpLAYER_TEXT)
     {
-      m_type = mpLAYER_TEXT;
       m_subtype = mptText;
       SetName(name);
       m_offsetx = 5;
@@ -3467,9 +3467,8 @@ class WXDLLIMPEXP_MATHPLOT mpBitmapLayer: public mpLayer
   public:
     /** Default constructor.
      */
-    mpBitmapLayer()
+    mpBitmapLayer() : mpLayer(mpLAYER_BITMAP)
     {
-      m_type = mpLAYER_BITMAP;
       m_min_x = m_max_x = 0;
       m_min_y = m_max_y = 0;
       m_validImg = false;
