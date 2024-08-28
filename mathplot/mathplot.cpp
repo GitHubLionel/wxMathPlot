@@ -2767,12 +2767,10 @@ mpWindow::~mpWindow()
 void mpWindow::InitParameters()
 {
   m_scaleX = m_scaleY = m_scaleY2 = 1.0;
-  m_posX = m_posY = m_posY2 = 0;
-  m_desired.Xmin = m_desired.Ymin = m_desired.Y2min = 0;
-  m_desired.Xmax = m_desired.Ymax = m_desired.Y2max = 0;
-  m_scrX = m_scrY = 64; // Fixed from m_scrX = m_scrX = 64;
-  m_bound.Xmin = m_bound.Ymin = m_bound.Y2min = 0;
-  m_bound.Xmax = m_bound.Ymax = m_bound.Y2max = 0;
+  m_posX = m_posY = m_posY2 = 0.0;
+  m_bound = mpFloatRect();
+  m_desired = mpFloatRect();
+  m_scrX = m_scrY = 64;
   m_last_lx = m_last_ly = 0;
   m_XAxis = NULL;
   m_YAxis = NULL;
@@ -3040,7 +3038,7 @@ void mpWindow::OnMouseWheel(wxMouseEvent &event)
   }
   else
   {
-    // Scroll vertically or horizontally (this is SHIFT is hold down).
+    // Scroll vertically or horizontally (this is SHIFT held down).
     int change = -event.GetWheelRotation(); // Opposite direction (More intuitive)!
 
     if (event.m_shiftDown)
@@ -3105,9 +3103,9 @@ void mpWindow::Fit()
   Fit(m_bound);
 }
 
-// JL
 void mpWindow::Fit(const mpFloatRect &rect, wxCoord *printSizeX, wxCoord *printSizeY)
-{
+{ // JL
+  bool weArePrinting = printSizeX!=NULL && printSizeY!=NULL;
   if (m_magnetize)
   {
     // Avoid paint cross if mouse move
@@ -3117,7 +3115,7 @@ void mpWindow::Fit(const mpFloatRect &rect, wxCoord *printSizeX, wxCoord *printS
   // Save desired borders:
   m_desired = rect;
 
-  if (printSizeX != NULL && printSizeY != NULL)
+  if (weArePrinting)
   {
     // Printer:
     SetScreen(*printSizeX, *printSizeY);
@@ -3169,18 +3167,18 @@ void mpWindow::Fit(const mpFloatRect &rect, wxCoord *printSizeX, wxCoord *printS
 
   // It is VERY IMPORTANT to DO NOT call Refresh if we are drawing to the printer!!
   // Otherwise, the DC dimensions will be those of the window instead of the printer device
-  if (printSizeX == NULL || printSizeY == NULL) {
+  if (!weArePrinting) {
     // We are NOT drawing to a printer...
     UpdateAll();
     CheckAndReportDesiredBoundsChanges();
   }
 }
 
-void MathPlot::mpWindow::CheckAndReportDesiredBoundsChanges() {
+void mpWindow::CheckAndReportDesiredBoundsChanges() {
   if (m_desired.IsNotSet()) return; // nothing to do until useful info in m_desired
   if (!m_initialDesiredBoundsRecorded) {
     m_initialDesiredBoundsRecorded = true;
-  } else if (!m_desired.IsNotSet() && !(m_desired == m_lastDesiredReportedBounds)) {
+  } else if ( !(m_desired == m_lastDesiredReportedBounds) ) {
     DesiredBoundsHaveChanged();
   }
   m_lastDesiredReportedBounds = m_desired;
@@ -3796,6 +3794,7 @@ void mpWindow::SetBound()
 
 /**
  * Set bounding box 'm_bound' to contain all visible plots of this mpWindow.
+ * @returns True if valid bounding box set in m_bounds
  */
 bool mpWindow::UpdateBBox()
 {
