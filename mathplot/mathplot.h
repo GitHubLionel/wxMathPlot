@@ -5,7 +5,6 @@
 // Maintainer:      Davide Rondini
 // Contributors:    Jose Luis Blanco, Val Greene, Lionel Reynaud, Dave Nadler
 // Created:         21/07/2003
-// Last edit:       22/02/2009
 // Last edit:       08/26/2024
 // Copyright:       (c) David Schalig, Davide Rondini
 // Licence:         wxWindows licence
@@ -761,7 +760,7 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
 
     /**
      * Pure virtual method to plot the layer.
-     * Must be overidden and implemented by derived classes.
+     * Must be overriden and implemented by derived classes.
      */
     virtual void DoPlot(wxDC &dc, mpWindow &w) = 0;
 
@@ -813,7 +812,7 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLayer: public mpLayer
      @param show visibility bool. */
     virtual void SetVisible(bool show);
 
-    /** Updates the content of the info box. Should be overidden by derived classes.
+    /** Updates the content of the info box. Should be overriden by derived classes.
      Update may behave in different ways according to the type of event which called it.
      @param w parent mpWindow from which to obtain informations
      @param event The event which called the update. */
@@ -886,7 +885,7 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLayer: public mpLayer
     int m_winX, m_winY;     //!< Holds the mpWindow size. Used to rescale position when window is resized.
     mpLocation m_location;  //!< Location of the box in the margin. Default mpMarginNone = use coordinates
 
-    /** Plot method. Can be overidden by derived classes.
+    /** Plot method. Can be overriden by derived classes.
      @param dc the device content where to plot
      @param w the window to plot
      @sa mpLayer::Plot */
@@ -3035,7 +3034,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     /// To be notified of displayed bounds changes (after user zoom etc),
     /// override this callback in your derived class and look at new value of m_desired.
     /// Useful for keeping multiple plots in sync when user zooms.
-    virtual void DesiredBoundsHaveChanged() {}; 
+    virtual void DesiredBoundsHaveChanged() {};
 
   private:
     int m_countY2Axis = 0;
