@@ -707,7 +707,7 @@ void MathPlotConfigDialog::Initialize(int page)
   edMarginRight->GetValidator()->TransferToWindow();
 
   cbDrawBox->SetValue(m_plot->GetDrawBox());
-  bBGColor->SetBackgroundColour(m_plot->GetbgColour());
+  DoButtonColour(bBGColor, m_plot->GetbgColour());
   cbMagnetize->SetValue(m_plot->GetMagnetize());
 
   CurrentCoords = (mpInfoCoords*)m_plot->GetLayerByClassName(_T("mpInfoCoords"));
@@ -718,7 +718,7 @@ void MathPlotConfigDialog::Initialize(int page)
     cbCoordOutside->SetValue(CurrentCoords->GetDrawOutsideMargins());
     cbCoordinates->SetValue(CurrentCoords->IsSeriesCoord());
     // Brush config
-    bCoordBrushColor->SetBackgroundColour(CurrentCoords->GetBrush().GetColour());
+    DoButtonColour(bCoordBrushColor, CurrentCoords->GetBrush().GetColour());
     cbCoordBrushStyle->SetSelection(BrushStyleToId(CurrentCoords->GetBrush().GetStyle()));
   }
 
@@ -731,7 +731,7 @@ void MathPlotConfigDialog::Initialize(int page)
     cbLegendDirection->SetSelection(CurrentLegend->GetItemDirection());
     cbLegendVisible->SetValue(CurrentLegend->IsVisible());
     // Brush config
-    bLegendBrushColor->SetBackgroundColour(CurrentLegend->GetBrush().GetColour());
+    DoButtonColour(bLegendBrushColor, CurrentLegend->GetBrush().GetColour());
     cbLegendBrushStyle->SetSelection(BrushStyleToId(CurrentLegend->GetBrush().GetStyle()));
 
     UpdateFont(CurrentLegend, bFontLegend, true);
@@ -829,14 +829,23 @@ void MathPlotConfigDialog::OnbColorClick(wxCommandEvent &event)
   }
 }
 
+void MathPlotConfigDialog::DoButtonColour(wxButton *button, const wxColour &colour)
+{
+  wxString RGB;
+  RGB.Printf("%02X%02X%02X", colour.GetRed(), colour.GetGreen(), colour.GetBlue());
+  if (colour.GetRed() * 0.299 + colour.GetGreen() * 0.587 + colour.GetBlue() * 0.114 < 186)
+    button->SetForegroundColour(*wxWHITE);
+  else
+    button->SetForegroundColour(*wxBLACK);
+  button->SetLabelText(RGB);
+  button->SetBackgroundColour(colour);
+}
+
 void MathPlotConfigDialog::DoApplyColour(const wxColour &colour)
 {
   if (colour == colourButton->GetBackgroundColour())
     return;
-  wxString RGB;
-  RGB.Printf("%02x%02x%02x",colour.GetRed(),colour.GetGreen(),colour.GetBlue());
-  colourButton->SetLabelText(RGB);
-  colourButton->SetBackgroundColour(colour);
+  DoButtonColour(colourButton, colour);
   colourButton->ClearBackground();
   colourButton->Refresh();
 }
@@ -949,7 +958,7 @@ void MathPlotConfigDialog::UpdateAxis(void)
 
   edAxisName->SetValue(CurrentScale->GetName());
   // Pen config
-  bAxisPenColor->SetBackgroundColour(CurrentScale->GetPen().GetColour());
+  DoButtonColour(bAxisPenColor, CurrentScale->GetPen().GetColour());
   cbAxisPenWidth->SetSelection(CurrentScale->GetPen().GetWidth() - 1);
   cbAxisPenStyle->SetSelection(CurrentScale->GetPen().GetStyle() - wxPENSTYLE_SOLID);
   cbAxisVisible->SetValue(CurrentScale->IsVisible());
@@ -1080,11 +1089,11 @@ void MathPlotConfigDialog::UpdateSelectedSerie(void)
 
     edSeriesName->SetValue(CurrentSerie->GetName());
     // Pen config
-    bSeriesPenColor->SetBackgroundColour(CurrentSerie->GetPen().GetColour());
+    DoButtonColour(bSeriesPenColor, CurrentSerie->GetPen().GetColour());
     cbSeriesPenWidth->SetSelection(CurrentSerie->GetPen().GetWidth() - 1);
     cbSeriesPenStyle->SetSelection(CurrentSerie->GetPen().GetStyle() - wxPENSTYLE_SOLID);
     // Brush config
-    bSeriesBrushColor->SetBackgroundColour(CurrentSerie->GetBrush().GetColour());
+    DoButtonColour(bSeriesBrushColor, CurrentSerie->GetBrush().GetColour());
     cbSeriesBrushStyle->SetSelection(BrushStyleToId(CurrentSerie->GetBrush().GetStyle()));
     // Symbol config
     cbSeriesSymbolType->SetSelection(CurrentSerie->GetSymbol());
@@ -1152,7 +1161,7 @@ void MathPlotConfigDialog::UpdateSelectedLine(void)
     edLinesValue->GetValidator()->TransferToWindow();
 
     // Pen config
-    bLinesPenColor->SetBackgroundColour(CurrentLine->GetPen().GetColour());
+    DoButtonColour(bLinesPenColor, CurrentLine->GetPen().GetColour());
     cbLinesPenWidth->SetSelection(CurrentLine->GetPen().GetWidth() - 1);
     cbLinesPenStyle->SetSelection(CurrentLine->GetPen().GetStyle() - wxPENSTYLE_SOLID);
 
