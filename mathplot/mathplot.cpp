@@ -3798,10 +3798,6 @@ void mpWindow::SetBound()
   }
 }
 
-/**
- * Set bounding box 'm_bound' to contain all visible plots of this mpWindow.
- * @returns True if valid bounding box set in m_bounds
- */
 bool mpWindow::UpdateBBox()
 {
   bool first = true;

@@ -62,8 +62,9 @@ class MathPlotDemoFrame: public wxFrame
         //*)
 
         //(*Declarations(MathPlotDemoFrame)
+        wxAuiManager AuiManager1;
+
         mpWindow* mPlot;
-        wxAuiManager* AuiManager1;
         wxButton* bBar;
         wxButton* bBarChart;
         wxButton* bDraw;
