@@ -449,7 +449,7 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
     }
 
     /**
-     * Return the bounding box, ie minX, maxX, minY and maxY of the object
+     * Return the bounding box, ie GetMinX(), GetMaxX(), GetMinY() and GetMaxY() of this mpLayer
      * Here we don't use extra Y2 values
      */
     virtual void GetBBox(mpFloatRect *m_bound);
@@ -2347,14 +2347,12 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
         return m_scaleY;
     } // Schaling's method: maybe another method exists with the same name
 
-    /**
-     * Update bound for mpFX and mpFY when axis is scaled
-     */
+    [[deprecated("Incomplete, use UpdateBBox instead")]]
+    /** Update bound for mpFX and mpFY when axis is scaled.
+     * \deprecated Incomplete! Use UpdateBBox! */
     void SetBound();
 
-    /** Get plot bound.
-     @return Bound
-     */
+    /** Get bounding box encompassing all visible plots on this mpWindow. */
     mpFloatRect Get_Bound(void) const
     {
       return m_bound;
@@ -2534,13 +2532,13 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
       return m_repainting;
     }
 
-    /** Set view to fit global bounding box of all plot layers and refresh display.
+    /** Set view to fit global bounding box of all plot layers and refresh display with UpdateAll().
      Scale and position will be set to show all attached mpLayers.
      The X/Y scale aspect lock is taken into account.
      */
     void Fit();
 
-    /** Set view to fit a given bounding box and refresh display.
+    /** Set view to fit a given bounding box and refresh display with UpdateAll().
      The X/Y scale aspect lock is taken into account.
      If provided, the parameters printSizeX and printSizeY are taken as the DC size, and the
      pixel scales are computed accordingly. Also, in this case the passed borders are not saved
@@ -2602,7 +2600,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      \param print the mpPrintout where to print the graph */
     //void PrintGraph(mpPrintout *print);
 
-    /// Get the 'desired' bounding box for the currently displayed view (set by Fit or Zoom operations).
+    /// Get the 'desired' user-coordinate bounding box for the currently displayed view (set by Fit or Zoom operations).
     /// @sa Fit, Zoom
     mpFloatRect GetDesiredBoundingBox() const { return m_desired; }
 
@@ -2614,7 +2612,8 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
       return m_desired.Xmin;
     }
 
-    /** Returns the right-border layer coordinate that the user wants the mpWindow to show (it may be not exactly the actual shown coordinate in the case of locked aspect ratio).
+    /** Returns the right-border layer coordinate that the user wants the mpWindow to show
+     * (it may be not exactly the actual shown coordinate in the case of locked aspect ratio).
      * @sa Fit, Zoom
      */
     double GetDesiredXmax() const
@@ -2678,7 +2677,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 
     /**
      * Load a data file like a csv file
-     * Data must be formated in 2 columns X value and Y value separated by space or ; or tab character
+     * Data must be formatted in 2 columns X value and Y value separated by space or ; or tab character
      */
     bool LoadFile(const wxString &filename);
 
@@ -2838,9 +2837,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
       m_OnDeleteLayer = event;
     }
 
-    /** On delete layer event
-     * Remove the callback
-     */
+    /** Remove the 'delete layer event' callback */
     void UnSetOnDeleteLayer()
     {
       m_OnDeleteLayer = NULL;
@@ -2855,9 +2852,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
       m_OnUserMouseAction = userMouseEventHandler;
     }
 
-    /** On user mouse action event
-     * Remove the callback
-     */
+    /** Remove the 'user mouse action event' callback */
     void UnSetOnUserMouseAction()
     {
       m_OnUserMouseAction = NULL;
@@ -2952,9 +2947,8 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 
     void Zoom(bool zoomIn, const wxPoint &centerPoint);
 
-    /** Recalculate global layer bounding box, and save it in m_minX,...
-     * \return true if there is any valid BBox information.
-     */
+    /** Set bounding box 'm_bound' to contain all visible plots of this mpWindow.
+     * \return true if there valid bounding box set in m_bounds. */
     virtual bool UpdateBBox();
 
     void InitParameters();
@@ -2963,9 +2957,9 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     bool m_fullscreen;
 
     mpLayerList m_layers;   //!< List of attached plot layers
-    mpScaleX* m_XAxis;      //!< Pointer to the X axis layer
-    mpScaleY* m_YAxis;      //!< Pointer to the Y axis layer
-    mpScaleY* m_Y2Axis;     //!< Pointer to the Y2 axis layer
+    mpScaleX* m_XAxis;      //!< Pointer to the optional X axis layer of this mpWindow
+    mpScaleY* m_YAxis;      //!< Pointer to the optional Y axis layer of this mpWindow
+    mpScaleY* m_Y2Axis;     //!< Pointer to the optional Y2 axis layer of this mpWindow
 
     wxMenu m_popmenu;       //!< Canvas' context menu
     bool m_lockaspect;      //!< Scale aspect is locked or not
@@ -2989,7 +2983,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     /** These are updated in Fit() only (also Zoom)
      *  May be different from the real borders (layer coordinates) only if lock aspect ratio is true.
      */
-    mpFloatRect m_desired;
+    mpFloatRect m_desired;              //!< ToDo: Set in Zoom, Fit(mpFloatRect), used in scrolling and?
 
     mpRect m_margin;                    //!< Margin around the plot. Default 50
     wxCoord m_plotWidth;                //!< Width of the plot = m_scrX - (m_margin.left + m_margin.right)
@@ -3010,8 +3004,8 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     bool m_enableScrollBars;
     int m_scrollX, m_scrollY;
     mpInfoLayer* m_movingInfoLayer;     //!< For moving info layers over the window area
-    mpInfoCoords* m_InfoCoords;         //!< Shortcut to info coords layer
-    mpInfoLegend* m_InfoLegend;
+    mpInfoCoords* m_InfoCoords;         //!< pointer to the optional info coords layer
+    mpInfoLegend* m_InfoLegend;         //!< pointer to the optional info legend layer
     bool m_InInfoLegend;
 
     wxBitmap* m_zoom_bmp;               //!< For zoom selection

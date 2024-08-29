@@ -2767,12 +2767,10 @@ mpWindow::~mpWindow()
 void mpWindow::InitParameters()
 {
   m_scaleX = m_scaleY = m_scaleY2 = 1.0;
-  m_posX = m_posY = m_posY2 = 0;
-  m_desired.Xmin = m_desired.Ymin = m_desired.Y2min = 0;
-  m_desired.Xmax = m_desired.Ymax = m_desired.Y2max = 0;
-  m_scrX = m_scrY = 64; // Fixed from m_scrX = m_scrX = 64;
-  m_bound.Xmin = m_bound.Ymin = m_bound.Y2min = 0;
-  m_bound.Xmax = m_bound.Ymax = m_bound.Y2max = 0;
+  m_posX = m_posY = m_posY2 = 0.0;
+  m_bound = mpFloatRect();
+  m_desired = mpFloatRect();
+  m_scrX = m_scrY = 64;
   m_last_lx = m_last_ly = 0;
   m_XAxis = NULL;
   m_YAxis = NULL;
@@ -3040,7 +3038,7 @@ void mpWindow::OnMouseWheel(wxMouseEvent &event)
   }
   else
   {
-    // Scroll vertically or horizontally (this is SHIFT is hold down).
+    // Scroll vertically or horizontally (this is SHIFT held down).
     int change = -event.GetWheelRotation(); // Opposite direction (More intuitive)!
 
     if (event.m_shiftDown)
@@ -3105,9 +3103,9 @@ void mpWindow::Fit()
   Fit(m_bound);
 }
 
-// JL
 void mpWindow::Fit(const mpFloatRect &rect, wxCoord *printSizeX, wxCoord *printSizeY)
-{
+{ // JL
+  bool weArePrinting = printSizeX!=NULL && printSizeY!=NULL;
   if (m_magnetize)
   {
     // Avoid paint cross if mouse move
@@ -3117,7 +3115,7 @@ void mpWindow::Fit(const mpFloatRect &rect, wxCoord *printSizeX, wxCoord *printS
   // Save desired borders:
   m_desired = rect;
 
-  if (printSizeX != NULL && printSizeY != NULL)
+  if (weArePrinting)
   {
     // Printer:
     SetScreen(*printSizeX, *printSizeY);
@@ -3169,18 +3167,18 @@ void mpWindow::Fit(const mpFloatRect &rect, wxCoord *printSizeX, wxCoord *printS
 
   // It is VERY IMPORTANT to DO NOT call Refresh if we are drawing to the printer!!
   // Otherwise, the DC dimensions will be those of the window instead of the printer device
-  if (printSizeX == NULL || printSizeY == NULL) {
+  if (!weArePrinting) {
     // We are NOT drawing to a printer...
     UpdateAll();
     CheckAndReportDesiredBoundsChanges();
   }
 }
 
-void MathPlot::mpWindow::CheckAndReportDesiredBoundsChanges() {
+void mpWindow::CheckAndReportDesiredBoundsChanges() {
   if (m_desired.IsNotSet()) return; // nothing to do until useful info in m_desired
   if (!m_initialDesiredBoundsRecorded) {
     m_initialDesiredBoundsRecorded = true;
-  } else if (!m_desired.IsNotSet() && !(m_desired == m_lastDesiredReportedBounds)) {
+  } else if ( !(m_desired == m_lastDesiredReportedBounds) ) {
     DesiredBoundsHaveChanged();
   }
   m_lastDesiredReportedBounds = m_desired;
@@ -3292,18 +3290,11 @@ void mpWindow::Zoom(bool zoomIn, const wxPoint &centerPoint)
   double prior_layer_y = p2y(c.y);
   double prior_layer_y2 = p2y(c.y, true);
 
-  if (zoomIn)
-  {
-    m_scaleX *= m_zoomIncrementalFactor;
-    m_scaleY *= m_zoomIncrementalFactor;
-    m_scaleY2 *= m_zoomIncrementalFactor;
-  }
-  else
-  {
-    m_scaleX /= m_zoomIncrementalFactor;
-    m_scaleY /= m_zoomIncrementalFactor;
-    m_scaleY2 /= m_zoomIncrementalFactor;
-  }
+  double zoomFactor = zoomIn?
+      m_zoomIncrementalFactor : 1.0/m_zoomIncrementalFactor;
+  m_scaleX *= zoomFactor;
+  m_scaleY *= zoomFactor;
+  m_scaleY2 *= zoomFactor;
 
   // Adjust the new m_posx/y:
   m_posX = prior_layer_x - c.x / m_scaleX;
@@ -3600,6 +3591,8 @@ bool mpWindow::DelLayer(mpLayer *layer, bool alsoDeleteObject, bool refreshDispl
       {
         if (layer == m_InfoCoords)
           m_InfoCoords = NULL;
+        if (layer == m_InfoLegend)
+          m_InfoLegend = NULL;
         if (layer == m_movingInfoLayer)
           m_movingInfoLayer = NULL;
         if (layer == m_XAxis)
@@ -3613,6 +3606,8 @@ bool mpWindow::DelLayer(mpLayer *layer, bool alsoDeleteObject, bool refreshDispl
           if (((mpScaleY*)layer)->IsY2Axis())
             Update_CountY2Axis(false);
         }
+        if (layer == m_Y2Axis)
+          m_Y2Axis = NULL;
         // Also delete the object?
         if (alsoDeleteObject)
           delete *it; // delete the object pointed at by the iterator
@@ -3645,9 +3640,11 @@ void mpWindow::DelAllLayers(bool alsoDeleteObject, bool refreshDisplay)
     m_layers.erase(m_layers.begin()); // remove ptr to object from m_layers
   }
   m_InfoCoords = NULL;
+  m_InfoLegend = NULL;
   m_movingInfoLayer = NULL;
   m_XAxis = NULL;
   m_YAxis = NULL;
+  m_Y2Axis = NULL;
   m_countY2Axis = 0;
   if (refreshDisplay)
     UpdateAll();
@@ -3772,6 +3769,7 @@ void mpWindow::SetMPScrollbars(bool status)
   UpdateAll();
 }
 
+/// Deprecated: Incomplete! Use UpdateBBox!
 void mpWindow::SetBound()
 {
   bool HaveXAxis = (m_XAxis && (!m_XAxis->GetAuto()));
@@ -3801,7 +3799,8 @@ void mpWindow::SetBound()
 }
 
 /**
- * Get the bounding boxes of all visible series
+ * Set bounding box 'm_bound' to contain all visible plots of this mpWindow.
+ * @returns True if valid bounding box set in m_bounds
  */
 bool mpWindow::UpdateBBox()
 {
@@ -3809,71 +3808,70 @@ bool mpWindow::UpdateBBox()
   bool firstY = true;
   bool firstY2 = true;
 
-  // To update bound of mpFX and mpFY functions
-//  SetBound();
+  // Deprecated: To update bound of mpFX and mpFY functions: SetBound();
 #ifdef MATHPLOT_DO_LOGGING
   wxLogMessage
   (_T("[mpWindow::UpdateBBox] Bounding box enter: Xmin = %f, Xmax = %f, Ymin = %f, YMax = %f"), m_bound.Xmin, m_bound.Xmax, m_bound.Ymin,
       m_bound.Ymax);
 #endif // MATHPLOT_DO_LOGGING
 
-  // Search common bound for all functions
+  // Find minimum bounding box to fit all visible layers
   mpFloatRect f_bound;
   for (mpLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
   {
     mpLayer* f = *it;
+    if (!f->HasBBox() || !f->IsVisible()) continue; // this layer isn't used for bounding box
 
-    if (f->HasBBox() && f->IsVisible())
+    f->GetBBox(&f_bound);
+    // X
+    if (first)
     {
-      f->GetBBox(&f_bound);
-      if (first)
-      {
-        first = false;
+      first = false;
+      m_bound.Xmin = f_bound.Xmin;
+      m_bound.Xmax = f_bound.Xmax;
+    }
+    else
+    {
+      if (f_bound.Xmin < m_bound.Xmin)
         m_bound.Xmin = f_bound.Xmin;
+      if (f_bound.Xmax > m_bound.Xmax)
         m_bound.Xmax = f_bound.Xmax;
+    }
+    if ((f->GetLayerType() == mpLAYER_PLOT) && (((mpFunction*)f)->GetY2Axis()))
+    {
+      // Y2
+      if (firstY2)
+      {
+        m_bound.Y2min = f_bound.Ymin;
+        m_bound.Y2max = f_bound.Ymax;
+        firstY2 = false;
       }
       else
       {
-        if (f_bound.Xmin < m_bound.Xmin)
-          m_bound.Xmin = f_bound.Xmin;
-        if (f_bound.Xmax > m_bound.Xmax)
-          m_bound.Xmax = f_bound.Xmax;
-      }
-
-      if ((f->GetLayerType() == mpLAYER_PLOT) && (((mpFunction*)f)->GetY2Axis()))
-      {
-        if (firstY2)
-        {
+        if (f_bound.Ymin < m_bound.Y2min)
           m_bound.Y2min = f_bound.Ymin;
+        if (f_bound.Ymax > m_bound.Y2max)
           m_bound.Y2max = f_bound.Ymax;
-          firstY2 = false;
-        }
-        else
-        {
-          if (f_bound.Ymin < m_bound.Y2min)
-            m_bound.Y2min = f_bound.Ymin;
-          if (f_bound.Ymax > m_bound.Y2max)
-            m_bound.Y2max = f_bound.Ymax;
-        }
-      }
-      else
-      {
-        if (firstY)
-        {
-          m_bound.Ymin = f_bound.Ymin;
-          m_bound.Ymax = f_bound.Ymax;
-          firstY = false;
-        }
-        else
-        {
-          if (f_bound.Ymin < m_bound.Ymin)
-            m_bound.Ymin = f_bound.Ymin;
-          if (f_bound.Ymax > m_bound.Ymax)
-            m_bound.Ymax = f_bound.Ymax;
-        }
       }
     }
-  }
+    else
+    {
+      // Y
+      if (firstY)
+      {
+        m_bound.Ymin = f_bound.Ymin;
+        m_bound.Ymax = f_bound.Ymax;
+        firstY = false;
+      }
+      else
+      {
+        if (f_bound.Ymin < m_bound.Ymin)
+          m_bound.Ymin = f_bound.Ymin;
+        if (f_bound.Ymax > m_bound.Ymax)
+          m_bound.Ymax = f_bound.Ymax;
+      }
+    }
+  } // end iteration over all layers
 
   // Take care of scale : restrict bound
   if (m_XAxis && (!m_XAxis->GetAuto()))
