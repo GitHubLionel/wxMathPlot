@@ -760,7 +760,7 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
 
     /**
      * Pure virtual method to plot the layer.
-     * Must be overriden and implemented by derived classes.
+     * Must be overridden and implemented by derived classes.
      */
     virtual void DoPlot(wxDC &dc, mpWindow &w) = 0;
 
@@ -812,7 +812,7 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLayer: public mpLayer
      @param show visibility bool. */
     virtual void SetVisible(bool show);
 
-    /** Updates the content of the info box. Should be overriden by derived classes.
+    /** Updates the content of the info box. Should be overridden by derived classes.
      Update may behave in different ways according to the type of event which called it.
      @param w parent mpWindow from which to obtain informations
      @param event The event which called the update. */
@@ -885,7 +885,7 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLayer: public mpLayer
     int m_winX, m_winY;     //!< Holds the mpWindow size. Used to rescale position when window is resized.
     mpLocation m_location;  //!< Location of the box in the margin. Default mpMarginNone = use coordinates
 
-    /** Plot method. Can be overriden by derived classes.
+    /** Plot method. Can be overridden by derived classes.
      @param dc the device content where to plot
      @param w the window to plot
      @sa mpLayer::Plot */

@@ -222,6 +222,7 @@ class MathPlotConfigDialog: public wxDialog
     void UpdateSelectedLine(void);
     void UpdateAxis(void);
 
+    void DoButtonColour(wxButton *button, const wxColour &colour);
     void DoApplyColour(const wxColour &colour);
     void UpdateFont(mpLayer *layer, wxButton *button, bool get_set);
     void SetFontChildren(wxButton *p, const wxFontData &fontdata);
