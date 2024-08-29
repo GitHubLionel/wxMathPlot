@@ -3591,6 +3591,8 @@ bool mpWindow::DelLayer(mpLayer *layer, bool alsoDeleteObject, bool refreshDispl
       {
         if (layer == m_InfoCoords)
           m_InfoCoords = NULL;
+        if (layer == m_InfoLegend)
+          m_InfoLegend = NULL;
         if (layer == m_movingInfoLayer)
           m_movingInfoLayer = NULL;
         if (layer == m_XAxis)
@@ -3604,6 +3606,8 @@ bool mpWindow::DelLayer(mpLayer *layer, bool alsoDeleteObject, bool refreshDispl
           if (((mpScaleY*)layer)->IsY2Axis())
             Update_CountY2Axis(false);
         }
+        if (layer == m_Y2Axis)
+          m_Y2Axis = NULL;
         // Also delete the object?
         if (alsoDeleteObject)
           delete *it; // delete the object pointed at by the iterator
@@ -3636,9 +3640,11 @@ void mpWindow::DelAllLayers(bool alsoDeleteObject, bool refreshDisplay)
     m_layers.erase(m_layers.begin()); // remove ptr to object from m_layers
   }
   m_InfoCoords = NULL;
+  m_InfoLegend = NULL;
   m_movingInfoLayer = NULL;
   m_XAxis = NULL;
   m_YAxis = NULL;
+  m_Y2Axis = NULL;
   m_countY2Axis = 0;
   if (refreshDisplay)
     UpdateAll();
