@@ -154,6 +154,7 @@ MathPlotDemoFrame::~MathPlotDemoFrame()
 {
     //(*Destroy(MathPlotDemoFrame)
     //*)
+    AuiManager1->UnInit();
 }
 
 void MathPlotDemoFrame::InitializePlot(void)
