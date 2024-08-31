@@ -154,46 +154,46 @@ MathPlotDemoFrame::MathPlotDemoFrame(wxWindow* parent,wxWindowID id) : wxFrame(p
 
 MathPlotDemoFrame::~MathPlotDemoFrame()
 {
-    //(*Destroy(MathPlotDemoFrame)
-    AuiManager1.UnInit();
-    //*)
+  //(*Destroy(MathPlotDemoFrame)
+  //*)
+  AuiManager1->UnInit();
 }
 
 void MathPlotDemoFrame::InitializePlot(void)
 {
-	mPlot->EnableDoubleBuffer(true);
-	mPlot->SetMargins(50, 20, 80, 80);
+  mPlot->EnableDoubleBuffer(true);
+  mPlot->SetMargins(50, 20, 80, 80);
 
- 	bottomAxis = new mpScaleX(wxT("X"), mpALIGN_CENTERX, true, mpX_NORMAL);
-	bottomAxis->SetLabelFormat("%g");
-	leftAxis = new mpScaleY(wxT("Y"), mpALIGN_CENTERY, true);
-	leftAxis->SetLabelFormat("%g");
+  bottomAxis = new mpScaleX(wxT("X"), mpALIGN_CENTERX, true, mpX_NORMAL);
+  bottomAxis->SetLabelFormat("%g");
+  leftAxis = new mpScaleY(wxT("Y"), mpALIGN_CENTERY, true);
+  leftAxis->SetLabelFormat("%g");
 
-	wxFont graphFont(11, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
-	wxPen axispen(*wxRED, 2, wxPENSTYLE_SOLID);
-	bottomAxis->SetFont(graphFont);
-	leftAxis->SetFont(graphFont);
-	bottomAxis->SetPen(axispen);
-	leftAxis->SetPen(axispen);
+  wxFont graphFont(11, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+  wxPen axispen(*wxRED, 2, wxPENSTYLE_SOLID);
+  bottomAxis->SetFont(graphFont);
+  leftAxis->SetFont(graphFont);
+  bottomAxis->SetPen(axispen);
+  leftAxis->SetPen(axispen);
 
-	mPlot->AddLayer(bottomAxis);
-	mPlot->AddLayer(leftAxis);
-	mpTitle *plotTitle;
-	mPlot->AddLayer(plotTitle = new mpTitle(_("Demo MathPlot")));
+  mPlot->AddLayer(bottomAxis);
+  mPlot->AddLayer(leftAxis);
+  mpTitle* plotTitle;
+  mPlot->AddLayer(plotTitle = new mpTitle(_("Demo MathPlot")));
 
-	wxFont titleFont(12, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD);
-	plotTitle->SetFont(titleFont);
+  wxFont titleFont(12, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD);
+  plotTitle->SetFont(titleFont);
 
-	mpInfoCoords *info;
-	mPlot->AddLayer(info = new mpInfoCoords());
-	info->SetVisible(true);
+  mpInfoCoords* info;
+  mPlot->AddLayer(info = new mpInfoCoords());
+  info->SetVisible(true);
 
-	mpInfoLegend *legend;
-	mPlot->AddLayer(legend = new mpInfoLegend());
-	legend->SetItemDirection(mpHorizontal);
-	legend->SetVisible(true);
+  mpInfoLegend* legend;
+  mPlot->AddLayer(legend = new mpInfoLegend());
+  legend->SetItemDirection(mpHorizontal);
+  legend->SetVisible(true);
 
-	mPlot->Fit();
+  mPlot->Fit();
 }
 
 void MathPlotDemoFrame::CleanPlot(void)
@@ -201,7 +201,7 @@ void MathPlotDemoFrame::CleanPlot(void)
   mPlot->DelAllPlot(true);
   bottomAxis->SetAlign(mpALIGN_CENTERX);
   bottomAxis->SetLogAxis(false);
-	leftAxis->SetAlign(mpALIGN_CENTERY);
+  leftAxis->SetAlign(mpALIGN_CENTERY);
   leftAxis->SetLogAxis(false);
   bottomAxis->SetAuto(true);
   mPlot->DelLayer(mPlot->GetLayerByName(_T("BarChart")), true);
@@ -209,43 +209,43 @@ void MathPlotDemoFrame::CleanPlot(void)
 
 void MathPlotDemoFrame::OnbDrawClick(wxCommandEvent &WXUNUSED(event))
 {
-	CleanPlot();
-	// add a simple sinus series
-	mpFXYVector *series = mPlot->GetXYSeries(0);
-	for (int i = 0; i <= 100; i++)
-		series->AddData(i / 10.0, sin(i / 10.0), false);
-	mPlot->Fit();
+  CleanPlot();
+  // add a simple sinus series
+  mpFXYVector* series = mPlot->GetXYSeries(0);
+  for (int i = 0; i <= 100; i++)
+    series->AddData(i / 10.0, sin(i / 10.0), false);
+  mPlot->Fit();
 }
 
 void MathPlotDemoFrame::OnbSampleClick(wxCommandEvent &WXUNUSED(event))
 {
-	CleanPlot();
+  CleanPlot();
   // Sample from the original wxMathPlot widget
-	mPlot->AddLayer(new MyFunction());
-	mPlot->AddLayer(new MySIN(10.0, 220.0));
-	mPlot->AddLayer(new MyCOSinverse(10.0, 100.0));
-	mPlot->AddLayer(new MyLissajoux(125.0));
-	mPlot->Fit();
+  mPlot->AddLayer(new MyFunction());
+  mPlot->AddLayer(new MySIN(10.0, 220.0));
+  mPlot->AddLayer(new MyCOSinverse(10.0, 100.0));
+  mPlot->AddLayer(new MyLissajoux(125.0));
+  mPlot->Fit();
 }
 
 void MathPlotDemoFrame::OnbBarClick(wxCommandEvent &WXUNUSED(event))
 {
   CleanPlot();
 
-	mpFXYVector *vectorLayer = new mpFXYVector(_T("Bar X²"), mpALIGN_NE, true);
-	vectorLayer->SetBrush(*wxGREEN);
-	// Create two vectors for x,y and fill them with data
-	std::vector<double> vectorx, vectory;
-	double xcoord;
-	for (unsigned int p = 0; p <= 20; p++)
-	{
-		xcoord = ((double)p - 10.0) * 5.0;
-		vectorx.push_back(xcoord);
-		vectory.push_back(0.001 * pow(xcoord, 2));
-	}
-	vectorLayer->SetData(vectorx, vectory);
-	mPlot->AddLayer(vectorLayer);
-	mPlot->Fit();
+  mpFXYVector* vectorLayer = new mpFXYVector(_T("Bar X²"), mpALIGN_NE, true);
+  vectorLayer->SetBrush(*wxGREEN);
+  // Create two vectors for x,y and fill them with data
+  std::vector<double> vectorx, vectory;
+  double xcoord;
+  for (unsigned int p = 0; p <= 20; p++)
+  {
+    xcoord = ((double)p - 10.0) * 5.0;
+    vectorx.push_back(xcoord);
+    vectory.push_back(0.001 * pow(xcoord, 2));
+  }
+  vectorLayer->SetData(vectorx, vectory);
+  mPlot->AddLayer(vectorLayer);
+  mPlot->Fit();
 }
 
 void MathPlotDemoFrame::OnbLogClick(wxCommandEvent &WXUNUSED(event))
@@ -267,23 +267,23 @@ void MathPlotDemoFrame::OnbLogXYClick(wxCommandEvent &WXUNUSED(event))
 
   bottomAxis->SetAlign(mpALIGN_BOTTOM);
   bottomAxis->SetLogAxis(true);
-	leftAxis->SetAlign(mpALIGN_LEFT);
+  leftAxis->SetAlign(mpALIGN_LEFT);
   leftAxis->SetLogAxis(true);
 
-	std::vector<double> vectorX, vectorY;
-	for (int i = 2; i <= 128; i *= 2)
-	{
-		vectorX.push_back(i);
-		vectorY.push_back(i);
-	}
+  std::vector<double> vectorX, vectorY;
+  for (int i = 2; i <= 128; i *= 2)
+  {
+    vectorX.push_back(i);
+    vectorY.push_back(i);
+  }
 
-	mpFXYVector* Power2 = new mpFXYVector(_("Power of 2"), mpALIGN_NE);
-	Power2->SetData(vectorX, vectorY);
-	Power2->SetContinuity(true);
-	wxPen s1pen(*wxGREEN, 2, wxPENSTYLE_SOLID);
-	Power2->SetPen(s1pen);
-	Power2->SetBrush(*wxGREEN);
-	Power2->SetSymbol(mpsCircle);
+  mpFXYVector* Power2 = new mpFXYVector(_("Power of 2"), mpALIGN_NE);
+  Power2->SetData(vectorX, vectorY);
+  Power2->SetContinuity(true);
+  wxPen s1pen(*wxGREEN, 2, wxPENSTYLE_SOLID);
+  Power2->SetPen(s1pen);
+  Power2->SetBrush(*wxGREEN);
+  Power2->SetSymbol(mpsCircle);
 
   mPlot->AddLayer(Power2);
   mPlot->Fit();
@@ -302,7 +302,7 @@ void MathPlotDemoFrame::OnbBarChartClick(wxCommandEvent &WXUNUSED(event))
     vectory.push_back(ycoord);
   }
   barChart->SetChartValues(vectory);
-  std::vector<std::string> labels;
+  std::vector < std::string > labels;
   std::string label;
   label.assign("Red");
   labels.push_back(label);
@@ -425,25 +425,20 @@ void MathPlotDemoFrame::OnmiQuitSelected(wxCommandEvent &WXUNUSED(event))
 
 void MathPlotDemoFrame::OnmiAboutSelected(wxCommandEvent &WXUNUSED(event))
 {
-	wxMessageBox(
-		wxString::Format(
-			"Welcome to MathPlot Demo!\n"
-			"Demonstrates available plot types...\n"
-			"Build Info: %s\n"
-			"Lionel github version, running under %s.",
-			wxBuildInfo(long_f), wxGetOsDescription()
-		),
-		"About wxWidgets MathPlot demo",
-		wxOK | wxICON_INFORMATION, this);
+  wxMessageBox(wxString::Format("Welcome to MathPlot Demo!\n"
+      "Demonstrates available plot types...\n"
+      "Build Info: %s\n"
+      "Lionel github version, running under %s.", wxBuildInfo(long_f), wxGetOsDescription()), "About wxWidgets MathPlot demo",
+  wxOK | wxICON_INFORMATION, this);
 }
 
 void MathPlotDemoFrame::OnmiPreviewSelected(wxCommandEvent &WXUNUSED(event))
 {
   // Pass two printout objects: for preview, and possible printing.
-  mpPrintout *plotPrint = new mpPrintout(mPlot);
-  mpPrintout *plotPrintPreview = new mpPrintout(mPlot);
-  wxPrintPreview *preview = new wxPrintPreview(plotPrintPreview, plotPrint);
-  wxPreviewFrame *frame = new wxPreviewFrame(preview, this, wxT("Print Plot"), wxPoint(100, 100), wxSize(600, 650));
+  mpPrintout* plotPrint = new mpPrintout(mPlot);
+  mpPrintout* plotPrintPreview = new mpPrintout(mPlot);
+  wxPrintPreview* preview = new wxPrintPreview(plotPrintPreview, plotPrint);
+  wxPreviewFrame* frame = new wxPreviewFrame(preview, this, wxT("Print Plot"), wxPoint(100, 100), wxSize(600, 650));
   frame->Centre(wxBOTH);
   frame->Initialize();
   frame->Show(true);
