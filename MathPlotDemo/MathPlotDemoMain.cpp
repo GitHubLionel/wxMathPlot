@@ -66,12 +66,9 @@ BEGIN_EVENT_TABLE(MathPlotDemoFrame,wxFrame)
     //*)
 END_EVENT_TABLE()
 
-MathPlotDemoFrame::MathPlotDemoFrame(wxWindow* parent,wxWindowID id) : wxFrame(parent, id, _("MathPlot Demo"))
+MathPlotDemoFrame::MathPlotDemoFrame(wxWindow* parent,wxWindowID id)
 {
     //(*Initialize(MathPlotDemoFrame)
-	AuiManager1.SetManagedWindow(this);
-	AuiManager1.SetFlags(wxAUI_MGR_ALLOW_ACTIVE_PANE|wxAUI_MGR_DEFAULT);
-
     wxBoxSizer* BoxSizer1;
     wxBoxSizer* BoxSizer2;
     wxMenu* Menu1;
@@ -81,8 +78,9 @@ MathPlotDemoFrame::MathPlotDemoFrame(wxWindow* parent,wxWindowID id) : wxFrame(p
     wxMenuItem* miPreview;
     wxMenuItem* miQuit;
 
+    Create(parent, wxID_ANY, _("MathPlot Demo"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_FRAME_STYLE, _T("wxID_ANY"));
     SetClientSize(wxSize(800,400));
-    
+    AuiManager1 = new wxAuiManager(this, wxAUI_MGR_ALLOW_ACTIVE_PANE|wxAUI_MGR_DEFAULT);
     pLog = new wxPanel(this, ID_PANEL1, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL, _T("ID_PANEL1"));
     pLog->SetMinSize(wxSize(120,-1));
     BoxSizer2 = new wxBoxSizer(wxVERTICAL);
@@ -105,7 +103,7 @@ MathPlotDemoFrame::MathPlotDemoFrame(wxWindow* parent,wxWindowID id) : wxFrame(p
     pLog->SetSizer(BoxSizer2);
     BoxSizer2->Fit(pLog);
     BoxSizer2->SetSizeHints(pLog);
-    AuiManager1.AddPane(pLog, wxAuiPaneInfo().Name(_T("PaneName0")).DefaultPane().Caption(_("Log")).CaptionVisible().CloseButton(false).Left().Floatable(false).MinSize(wxSize(120,-1)).Movable(false));
+    AuiManager1->AddPane(pLog, wxAuiPaneInfo().Name(_T("PaneName0")).DefaultPane().Caption(_("Log")).CaptionVisible().CloseButton(false).Left().Floatable(false).MinSize(wxSize(120,-1)).Movable(false));
     pPlot = new wxPanel(this, ID_PANEL2, wxPoint(227,228), wxDefaultSize, wxTAB_TRAVERSAL, _T("ID_PANEL2"));
     BoxSizer1 = new wxBoxSizer(wxVERTICAL);
     mPlot = new mpWindow(pPlot, ID_MATHPLOT1, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL);
@@ -115,8 +113,8 @@ MathPlotDemoFrame::MathPlotDemoFrame(wxWindow* parent,wxWindowID id) : wxFrame(p
     pPlot->SetSizer(BoxSizer1);
     BoxSizer1->Fit(pPlot);
     BoxSizer1->SetSizeHints(pPlot);
-    AuiManager1.AddPane(pPlot, wxAuiPaneInfo().Name(_T("PaneName1")).DefaultPane().Caption(_("Plot")).CaptionVisible().MaximizeButton().CloseButton(false).Center());
-    AuiManager1.Update();
+    AuiManager1->AddPane(pPlot, wxAuiPaneInfo().Name(_T("PaneName1")).DefaultPane().Caption(_("Plot")).CaptionVisible().MaximizeButton().CloseButton(false).Center());
+    AuiManager1->Update();
     MenuBar1 = new wxMenuBar();
     Menu1 = new wxMenu();
     miPreview = new wxMenuItem(Menu1, idMenuPreview, _("Print Preview"), wxEmptyString, wxITEM_NORMAL);
@@ -156,7 +154,8 @@ MathPlotDemoFrame::~MathPlotDemoFrame()
 {
   //(*Destroy(MathPlotDemoFrame)
   //*)
-  AuiManager1->UnInit();
+  AuiManager1->UnInit(); // Nadler bugfix: wxSmith-generated code fails to uninitialize AUI manager and its bindings
+  delete AuiManager1;    // Nadler bugfix: wxSmith-generated code fails to delete AUI manager and leaks memory
 }
 
 void MathPlotDemoFrame::InitializePlot(void)
