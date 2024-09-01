@@ -154,7 +154,8 @@ MathPlotDemoFrame::~MathPlotDemoFrame()
 {
   //(*Destroy(MathPlotDemoFrame)
   //*)
-  AuiManager1->UnInit();
+  AuiManager1->UnInit(); // Nadler bugfix: wxSmith-generated code fails to uninitialize AUI manager and its bindings
+  delete AuiManager1;    // Nadler bugfix: wxSmith-generated code fails to delete AUI manager and leaks memory
 }
 
 void MathPlotDemoFrame::InitializePlot(void)
