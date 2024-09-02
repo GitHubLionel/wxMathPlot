@@ -768,7 +768,7 @@ void mpInfoLegend::UpdateBitmap(wxDC &dc, mpWindow &w)
       posX += LEGEND_LINEWIDTH + MARGIN_LEGEND;
       buff_dc.DrawText(label, posX, posY - (tmpY >> 1));
 
-      posX += tmpX + MARGIN_LEGEND;
+      posX += tmpX + 2*MARGIN_LEGEND;
 
       if (m_item_direction == mpVertical)
       {
@@ -777,7 +777,7 @@ void mpInfoLegend::UpdateBitmap(wxDC &dc, mpWindow &w)
         posX = MARGIN_LEGEND;
         posY += tmpY;
         height = posY;
-        posY += MARGIN_LEGEND;
+        posY += 2*MARGIN_LEGEND;
       }
       else
       {
@@ -808,7 +808,7 @@ void mpInfoLegend::UpdateBitmap(wxDC &dc, mpWindow &w)
     buff_dc.DrawRectangle(0, 0, width, height);
     SetInfoRectangle(w, width, height);
 
-    // Transfert to the legend bitmap
+    // Transfer to the legend bitmap
     m_info_bmp = new wxBitmap(width, height, dc);
     wxMemoryDC buff_dc2(&dc);
     buff_dc2.SelectObject(*m_info_bmp);
@@ -859,8 +859,11 @@ int mpInfoLegend::GetPointed(mpWindow &w, wxPoint eventPoint)
 
   int rect_click, c = -1;
 
-  // We can consider that each name of serie is in an rectangular area.
-  // So we just need to determine in whitch rectangular we have clicked
+  // The name of each series is in an rectangular area.
+  // Determine in which rectangular we have clicked
+  // ToDo: BUG Code incorrectly assumes all labels are same length.
+  // ToDo: BUG Code incorrectly assumes InfoLegend box is not clipped.
+  // ToDo: BUG Replace all this code with a vector of, for each layer/legend, the actual drawn box containing legend
   if (m_item_direction == mpVertical)
     rect_click = (eventPoint.y - m_dim.y) / (m_dim.height / m_layer_count);
   else
