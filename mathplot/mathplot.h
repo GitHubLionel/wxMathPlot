@@ -1005,8 +1005,8 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLegend: public mpInfoLayer
       ;
     }
 
-    /** Swith item mode, which is the element on the left of text representing the plot line.
-     * @param mode The item draw mode: mpLEGEND_LINE or mpLEGEND_SQUARE. */
+    /** Set item mode (the element on the left of text representing the plot line may be line or square).
+     * @param mode Item draw mode: mpLEGEND_LINE or mpLEGEND_SQUARE. */
     void SetItemMode(mpLegendStyle mode)
     {
       m_item_mode = mode;
@@ -1034,6 +1034,7 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLegend: public mpInfoLayer
       m_need_update = true;
     }
 
+    /// Return the index of visible layer whose legend is pointed at...
     int GetPointed(mpWindow &w, wxPoint eventPoint);
 
   protected:
@@ -1048,7 +1049,7 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLegend: public mpInfoLayer
 
   private:
     bool m_need_update;
-    int m_layer_count;
+    int m_layer_count; //!< number of layers legend describes
     void UpdateBitmap(wxDC &dc, mpWindow &w);
 
   DECLARE_DYNAMIC_CLASS(mpInfoLegend)
@@ -3026,7 +3027,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     mpOnUserMouseAction m_OnUserMouseAction = NULL;  //!< Event when we have a mouse click
 
     /// To be notified of displayed bounds changes (after user zoom etc),
-    /// override this callback in your derived class and look at new value of m_desired.
+    /// override this callback in your derived class and look at the new value of m_desired.
     /// Useful for keeping multiple plots in sync when user zooms.
     virtual void DesiredBoundsHaveChanged() {};
 
