@@ -222,7 +222,7 @@ struct mpFloatRect
   /// Is mpFloatRect set ?
   bool IsNotSet() const { const mpFloatRect def; return *this==def; }
   /// Equal operator
-  #if (defined(__cplusplus) && (__cplusplus > 201703L)) // C++ > C++17
+  #if (defined(__cplusplus) && (__cplusplus > 201703L)) // C++ > C++17 (MSVC requires <AdditionalOptions>/Zc:__cplusplus</AdditionalOptions>
     bool operator==(const mpFloatRect&) const = default;
   #else
     // We compare with an epsilon precision
