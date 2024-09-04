@@ -768,7 +768,7 @@ void mpInfoLegend::UpdateBitmap(wxDC &dc, mpWindow &w)
       posX += LEGEND_LINEWIDTH + MARGIN_LEGEND;
       buff_dc.DrawText(label, posX, posY - (tmpY >> 1));
 
-      posX += tmpX + MARGIN_LEGEND; // no need factor 2, only one MARGIN_LEGEND between name
+      posX += tmpX + 2*MARGIN_LEGEND;
 
       if (m_item_direction == mpVertical)
       {
@@ -777,7 +777,7 @@ void mpInfoLegend::UpdateBitmap(wxDC &dc, mpWindow &w)
         posX = MARGIN_LEGEND;
         posY += tmpY;
         height = posY;
-        posY += MARGIN_LEGEND; // no need factor 2, only one MARGIN_LEGEND between name
+        posY += 2*MARGIN_LEGEND;
       }
       else
       {
