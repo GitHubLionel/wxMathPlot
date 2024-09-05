@@ -729,65 +729,73 @@ void mpInfoLegend::UpdateBitmap(wxDC &dc, mpWindow &w)
   wxBrush sqrBrush(*wxWHITE, wxBRUSHSTYLE_SOLID);
 
   // Get series name and create new bitmap legend
+  m_boundList.clear();
+  int IDplot = 0;
   for (unsigned int p = 0; p < w.CountAllLayers(); p++)
   {
     mpLayer* ly = w.GetLayer(p);
-    if ((ly->GetLayerType() == mpLAYER_PLOT) && (ly->IsVisible()))
+    if (ly->GetLayerType() == mpLAYER_PLOT)
     {
-      wxString label = ly->GetName();
-      wxPen lpen = ly->GetPen();
-      lpen.SetWidth(2);
-
-      buff_dc.SetPen(lpen);
-      buff_dc.GetTextExtent(label, &tmpX, &tmpY);
-
-      if (first)
+      if (ly->IsVisible())
       {
-        posX = MARGIN_LEGEND;
-        posY = MARGIN_LEGEND + (tmpY >> 1);
-        first = false;
-      }
+        wxString label = ly->GetName();
+        wxPen lpen = ly->GetPen();
+        lpen.SetWidth(2);
 
-      // Draw the decoration
-      if (m_item_mode == mpLegendLine)
-      {
-        buff_dc.DrawLine(posX, posY + 1, posX + LEGEND_LINEWIDTH, posY + 1);
-      }
-      else  // m_item_mode == mpLEGEND_SQUARE
-      {
-        sqrBrush.SetColour(lpen.GetColour());
-        buff_dc.SetBrush(sqrBrush);
-        buff_dc.DrawRectangle(posX, posY - (LEGEND_LINEWIDTH >> 1) + 1,
-              LEGEND_LINEWIDTH, LEGEND_LINEWIDTH);
-      }
+        buff_dc.SetPen(lpen);
+        buff_dc.GetTextExtent(label, &tmpX, &tmpY);
 
-      // Determine the full bound of the legend and store it
-      wxRect bound = wxRect(posX, posY - MARGIN_LEGEND - (tmpY >> 1),
-            LEGEND_LINEWIDTH + 2 * MARGIN_LEGEND + tmpX, tmpY + MARGIN_LEGEND + (tmpY >> 1));
-      ((mpFunction*)ly)->SetLegendBound(bound);
+        if (first)
+        {
+          posX = MARGIN_LEGEND;
+          posY = MARGIN_LEGEND + (tmpY >> 1);
+          first = false;
+        }
 
-      // Draw the name of the function
-      posX += LEGEND_LINEWIDTH + MARGIN_LEGEND;
-      buff_dc.DrawText(label, posX, posY - (tmpY >> 1));
+        // Draw the decoration
+        if (m_item_mode == mpLegendLine)
+        {
+          buff_dc.DrawLine(posX, posY + 1, posX + LEGEND_LINEWIDTH, posY + 1);
+        }
+        else  // m_item_mode == mpLEGEND_SQUARE
+        {
+          sqrBrush.SetColour(lpen.GetColour());
+          buff_dc.SetBrush(sqrBrush);
+          buff_dc.DrawRectangle(posX, posY - (LEGEND_LINEWIDTH >> 1) + 1,
+                LEGEND_LINEWIDTH, LEGEND_LINEWIDTH);
+        }
 
-      posX += tmpX + 2 * MARGIN_LEGEND;
+        // Determine the full bound of the legend and store it
+        boundLegend b;
+        b.bound = {posX, posY - MARGIN_LEGEND - (tmpY >> 1),
+              LEGEND_LINEWIDTH + 2 * MARGIN_LEGEND + tmpX, tmpY + MARGIN_LEGEND + (tmpY >> 1)};
+        b.id = IDplot;
+        m_boundList.push_back(b);
 
-      // Determine the full size of the Legend
-      if (m_item_direction == mpVertical)
-      {
-        if (posX > width)
+        // Draw the name of the function
+        posX += LEGEND_LINEWIDTH + MARGIN_LEGEND;
+        buff_dc.DrawText(label, posX, posY - (tmpY >> 1));
+
+        posX += tmpX + 2 * MARGIN_LEGEND;
+
+        // Determine the full size of the Legend
+        if (m_item_direction == mpVertical)
+        {
+          if (posX > width)
+            width = posX;
+          posX = MARGIN_LEGEND;
+          posY += tmpY;
+          height = posY;
+          posY += 2 * MARGIN_LEGEND;
+        }
+        else
+        {
           width = posX;
-        posX = MARGIN_LEGEND;
-        posY += tmpY;
-        height = posY;
-        posY += 2 * MARGIN_LEGEND;
+          if (posY + tmpY > height)
+            height = posY + tmpY;
+        }
       }
-      else
-      {
-        width = posX;
-        if (posY + tmpY > height)
-          height = posY + tmpY;
-      }
+      IDplot++;
     }
   }
 
@@ -855,31 +863,18 @@ void mpInfoLegend::DoPlot(wxDC &dc, mpWindow &w)
   }
 }
 
-int mpInfoLegend::GetPointed(mpWindow &w, wxPoint eventPoint)
+int mpInfoLegend::GetPointed(mpWindow &WXUNUSED(w), wxPoint eventPoint)
 {
-  int c = -1;
-
   // The name of each series is in an rectangular area.
   // Determine in which rectangular we have clicked
-  for (unsigned int p = 0; p < w.CountAllLayers(); p++)
+  for (std::vector<boundLegend>::iterator it = m_boundList.begin(); it != m_boundList.end(); it++)
   {
-    mpLayer* ly = w.GetLayer(p);
-    if (ly->GetLayerType() == mpLAYER_PLOT)
-    {
-      c++;
-      if (ly->IsVisible())
-      {
-        wxRect bound = ((mpFunction*)ly)->GetLegendBound();
-        // Shift bound
-        bound.x += m_dim.x;
-        bound.y += m_dim.y;
-        // Vertical legend, we take the max width, not the real name width
-        if (m_item_direction == mpVertical)
-          bound.width = m_dim.width;
-        if (bound.Contains(eventPoint))
-          return c;
-      }
-    }
+    mpRect bb = ((boundLegend)*it).bound;
+    wxRect b = wxRect(bb.x + m_dim.x, bb.y + m_dim.y, bb.width, bb.height);
+    if (m_item_direction == mpVertical)
+      b.width = m_dim.width;
+    if (b.Contains(eventPoint))
+      return ((boundLegend)*it).id;
   }
   return -1;
 }

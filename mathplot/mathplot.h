@@ -177,6 +177,13 @@ typedef union
         wxCoord x2;
         wxCoord y2;
     };
+    struct // Similar to wxRect
+    {
+        wxCoord x;
+        wxCoord y;
+        wxCoord width;
+        wxCoord height;
+    };
     wxCoord tab[4];
 } mpRect;
 
@@ -1048,6 +1055,11 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLegend: public mpInfoLayer
     virtual void DoPlot(wxDC &dc, mpWindow &w);
 
   private:
+    struct boundLegend {
+      unsigned int id;
+      mpRect bound;
+    };
+    std::vector<boundLegend> m_boundList;
     bool m_need_update;
     void UpdateBitmap(wxDC &dc, mpWindow &w);
 
@@ -1152,16 +1164,6 @@ class WXDLLIMPEXP_MATHPLOT mpFunction: public mpLayer
       return m_UseY2Axis;
     }
 
-    void SetLegendBound(const wxRect &bound)
-    {
-      m_legendBound = bound;
-    }
-
-    wxRect GetLegendBound(void) const
-    {
-      return m_legendBound;
-    }
-
   protected:
     bool m_continuous;          //!< Specify if the layer will be plotted as a continuous line or a set of points. Default false
     mpSymbol m_symbol;          //!< A symbol for the plot in place of point. Default mpNone
@@ -1169,7 +1171,6 @@ class WXDLLIMPEXP_MATHPLOT mpFunction: public mpLayer
     int m_symbolSize2;          //!< Size of the symbol div 2.
     unsigned int m_step;        //!< Step to get point to be draw. Default : 1
     bool m_UseY2Axis;           //!< Use Y2 axis. This second axis must exist
-    wxRect m_legendBound;       //!< The bound of the legend (the area occupied by the name of the function + decoration)
 
   DECLARE_DYNAMIC_CLASS(mpFunction)
 };
