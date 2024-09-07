@@ -1025,6 +1025,8 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLegend: public mpInfoLayer
       return m_item_mode;
     }
 
+    /** Set item direction (may be vertical or horizontal)
+     * @param mode Item direction mode: mpVertical or mpHorizontal. */
     void SetItemDirection(mpLegendDirection mode)
     {
       m_item_direction = mode;
@@ -1055,12 +1057,20 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLegend: public mpInfoLayer
     virtual void DoPlot(wxDC &dc, mpWindow &w);
 
   private:
-    struct boundLegend {
-      unsigned int id;
-      mpRect bound;
+    /**
+     * A structure that contain:
+     * id: the index of the plot function in the layer list
+     * bound: a rectangle of the area occupied by the name of a function + decoration.
+     * The format used is: (x, y) the position of the rectangle on the legend bitmap and (width, height) the
+     * size of the rectangle
+     */
+    struct boundLegend
+    {
+        unsigned int id;
+        mpRect bound;
     };
-    std::vector<boundLegend> m_boundList;
-    bool m_need_update;
+    std::vector<boundLegend> m_boundLegendList; // The list of all the bound legend
+    bool m_need_update; // Shall we redraw the legend bitmap. Used when a plot function changes (name, visibility, add or remove)
     void UpdateBitmap(wxDC &dc, mpWindow &w);
 
   DECLARE_DYNAMIC_CLASS(mpInfoLegend)

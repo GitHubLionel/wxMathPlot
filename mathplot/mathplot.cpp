@@ -138,8 +138,8 @@ void mpWindow::FillI18NString()
 #endif
 
 // Legend margins
-#define MARGIN_LEGEND 5
-#define LEGEND_LINEWIDTH 10
+#define MARGIN_LEGEND 5 // The margin around the legend (the name of the function) in pixel
+#define LEGEND_LINEWIDTH 10 // The size of the decoration in front of the legend (line or square)
 
 // Minimum axis label separation
 #define MIN_X_AXIS_LABEL_SEPARATION 64
@@ -705,6 +705,16 @@ mpInfoLegend::mpInfoLegend(wxRect rect, const wxBrush &brush, mpLocation locatio
   m_need_update = true;
 }
 
+/**
+ * Function that create/update the bitmap of the legend.
+ * This operation is done when:
+ * - we change the direction of the legend
+ * - we change the decoration (line or square)
+ * - a name of a plot has changed
+ * - the visibility of a plot has changed
+ * - a plot is added or removed
+ * The call of this function is controled by the boolean m_need_update
+ */
 void mpInfoLegend::UpdateBitmap(wxDC &dc, mpWindow &w)
 {
   // Create a temporary bitmap to draw the legend
@@ -729,7 +739,7 @@ void mpInfoLegend::UpdateBitmap(wxDC &dc, mpWindow &w)
   wxBrush sqrBrush(*wxWHITE, wxBRUSHSTYLE_SOLID);
 
   // Get series name and create new bitmap legend
-  m_boundList.clear();
+  m_boundLegendList.clear();
   int IDplot = 0;
   for (unsigned int p = 0; p < w.CountAllLayers(); p++)
   {
@@ -770,7 +780,7 @@ void mpInfoLegend::UpdateBitmap(wxDC &dc, mpWindow &w)
         b.bound = {posX, posY - MARGIN_LEGEND - (tmpY >> 1),
               LEGEND_LINEWIDTH + 2 * MARGIN_LEGEND + tmpX, tmpY + MARGIN_LEGEND + (tmpY >> 1)};
         b.id = IDplot;
-        m_boundList.push_back(b);
+        m_boundLegendList.push_back(b);
 
         // Draw the name of the function
         posX += LEGEND_LINEWIDTH + MARGIN_LEGEND;
@@ -867,7 +877,7 @@ int mpInfoLegend::GetPointed(mpWindow &WXUNUSED(w), wxPoint eventPoint)
 {
   // The name of each series is in an rectangular area.
   // Determine in which rectangular we have clicked
-  for (std::vector<boundLegend>::iterator it = m_boundList.begin(); it != m_boundList.end(); it++)
+  for (std::vector<boundLegend>::iterator it = m_boundLegendList.begin(); it != m_boundLegendList.end(); it++)
   {
     mpRect bb = ((boundLegend)*it).bound;
     wxRect b = wxRect(bb.x + m_dim.x, bb.y + m_dim.y, bb.width, bb.height);
