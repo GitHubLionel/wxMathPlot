@@ -177,6 +177,13 @@ typedef union
         wxCoord x2;
         wxCoord y2;
     };
+    struct // Similar to wxRect
+    {
+        wxCoord x;
+        wxCoord y;
+        wxCoord width;
+        wxCoord height;
+    };
     wxCoord tab[4];
 } mpRect;
 
@@ -1018,6 +1025,8 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLegend: public mpInfoLayer
       return m_item_mode;
     }
 
+    /** Set item direction (may be vertical or horizontal)
+     * @param mode Item direction mode: mpVertical or mpHorizontal. */
     void SetItemDirection(mpLegendDirection mode)
     {
       m_item_direction = mode;
@@ -1048,8 +1057,20 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLegend: public mpInfoLayer
     virtual void DoPlot(wxDC &dc, mpWindow &w);
 
   private:
-    bool m_need_update;
-    int m_layer_count; //!< number of layers legend describes
+    /**
+     * A structure that contain:
+     * id: the index of the plot function in the layer list
+     * bound: a rectangle of the area occupied by the name of a function + decoration.
+     * The format used is: (x, y) the position of the rectangle on the legend bitmap and (width, height) the
+     * size of the rectangle
+     */
+    struct boundLegend
+    {
+        unsigned int id;
+        mpRect bound;
+    };
+    std::vector<boundLegend> m_boundLegendList; // The list of all the bound legend
+    bool m_need_update; // Shall we redraw the legend bitmap. Used when a plot function changes (name, visibility, add or remove)
     void UpdateBitmap(wxDC &dc, mpWindow &w);
 
   DECLARE_DYNAMIC_CLASS(mpInfoLegend)
@@ -1159,11 +1180,7 @@ class WXDLLIMPEXP_MATHPLOT mpFunction: public mpLayer
     int m_symbolSize;           //!< Size of the symbol. Default 6
     int m_symbolSize2;          //!< Size of the symbol div 2.
     unsigned int m_step;        //!< Step to get point to be draw. Default : 1
-    /**
-     * Use Y2 axis
-     * This second axis must exist
-     */
-    bool m_UseY2Axis;
+    bool m_UseY2Axis;           //!< Use Y2 axis. This second axis must exist
 
   DECLARE_DYNAMIC_CLASS(mpFunction)
 };

@@ -15,6 +15,8 @@ I have made some improvements like :
 - lot of things ...<br>
 I keep the philosophy and the structure so it was easy to update existing project (I hope !).
 
+Documentation on codedocs : <a href="https://codedocs.xyz/GitHubLionel/wxMathPlot/" target="_blank">https://codedocs.xyz/GitHubLionel/wxMathPlot/</a>
+
 ![Demo](Demo.png "Demo")  
 
 Enjoy
