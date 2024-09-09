@@ -1,6 +1,7 @@
 Thumbs.db
 *.bak
 whoops/
+tmp/
 
 # Microsoft Visual Studio 
 .vs/
@@ -28,8 +29,11 @@ UpgradeLog.htm
 ebackup.sta
 default.tag
 
+# DOxygen generated code etc.
+/Doc/index.html - Shortcut.lnk
+/Doc/html/
+
+# misc junk
 /mathplot/mathplot.h_save.h
 /mathplot/mathplot_refactorTypes.cpp
 /mathplot/mathplot_refactorTypes.h
-/Doc/index.html - Shortcut.lnk
-/Doc/html/

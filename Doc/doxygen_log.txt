@@ -1,4 +1,187 @@
+E:/wxMathPlot/mathplot/tmp/mathplot.h:22: warning: multiple use of section label 'screenshots' while adding section, (first occurrence: E:/wxMathPlot/mathplot/mathplot.h, line 22)
+E:/wxMathPlot/mathplot/tmp/mathplot.h:25: warning: multiple use of section label 'overview' while adding section, (first occurrence: E:/wxMathPlot/mathplot/mathplot.h, line 25)
+E:/wxMathPlot/mathplot/tmp/mathplot.h:42: warning: multiple use of section label 'coding' while adding section, (first occurrence: E:/wxMathPlot/mathplot/mathplot.h, line 42)
+E:/wxMathPlot/mathplot/tmp/mathplot.h:45: warning: multiple use of section label 'author' while adding section, (first occurrence: E:/wxMathPlot/mathplot/mathplot.h, line 45)
 E:/wxMathPlot/MathPlotConfig/MathPlotConfig.h:46: warning: Compound MathPlot::MathPlotConfigDialog is not documented.
+E:/wxMathPlot/mathplot/mathplot.cpp:316: warning: no uniquely matching class member found for 
+  void mpInfoLayer::UpdateInfo(MathPlot::mpWindow &w WXUNUSEDw, wxEvent &WXUNUSEDevent)
+Possible candidates:
+  'virtual void MathPlot::mpInfoLayer::UpdateInfo(mpWindow &w, wxEvent &event)' at line 819 of file E:/wxMathPlot/mathplot/mathplot.h
+  'virtual void MathPlot::mpInfoCoords::UpdateInfo(mpWindow &w, wxEvent &event)' at line 929 of file E:/wxMathPlot/mathplot/mathplot.h
+  'virtual void MathPlot::mpInfoLayer::UpdateInfo(mpWindow &w, wxEvent &event)' at line 819 of file E:/wxMathPlot/mathplot/tmp/mathplot.h
+  'virtual void MathPlot::mpInfoCoords::UpdateInfo(mpWindow &w, wxEvent &event)' at line 929 of file E:/wxMathPlot/mathplot/tmp/mathplot.h
+E:/wxMathPlot/mathplot/mathplot.cpp:454: warning: no uniquely matching class member found for 
+  void mpInfoLayer::ErasePlot(wxDC &dc, MathPlot::mpWindow &w WXUNUSEDw)
+Possible candidates:
+  'virtual void MathPlot::mpInfoLayer::ErasePlot(wxDC &dc, mpWindow &w)' at line 831 of file E:/wxMathPlot/mathplot/mathplot.h
+  'virtual void MathPlot::mpInfoCoords::ErasePlot(wxDC &dc, mpWindow &w)' at line 931 of file E:/wxMathPlot/mathplot/mathplot.h
+  'virtual void MathPlot::mpInfoLayer::ErasePlot(wxDC &dc, mpWindow &w)' at line 831 of file E:/wxMathPlot/mathplot/tmp/mathplot.h
+  'virtual void MathPlot::mpInfoCoords::ErasePlot(wxDC &dc, mpWindow &w)' at line 931 of file E:/wxMathPlot/mathplot/tmp/mathplot.h
+E:/wxMathPlot/mathplot/mathplot.cpp:867: warning: no matching class member found for 
+  int mpInfoLegend::GetPointed(MathPlot::mpWindow &w WXUNUSEDw, wxPoint eventPoint)
+Possible candidates:
+  'int MathPlot::mpInfoLegend::GetPointed(mpWindow &w, wxPoint eventPoint)' at line 1037 of file E:/wxMathPlot/mathplot/mathplot.h
+  'int MathPlot::mpInfoLegend::GetPointed(mpWindow &w, wxPoint eventPoint)' at line 1037 of file E:/wxMathPlot/mathplot/tmp/mathplot.h
+E:/wxMathPlot/mathplot/mathplot.cpp:3405: warning: no matching class member found for 
+  void mpWindow::OnLockAspect(wxCommandEvent &event WXUNUSEDevent)
+Possible candidates:
+  'virtual void MathPlot::mpWindow::OnLockAspect(wxCommandEvent &event)' at line 2936 of file E:/wxMathPlot/mathplot/mathplot.h
+  'virtual void MathPlot::mpWindow::OnLockAspect(wxCommandEvent &event)' at line 2936 of file E:/wxMathPlot/mathplot/tmp/mathplot.h
+E:/wxMathPlot/mathplot/mathplot.cpp:3410: warning: no matching class member found for 
+  void mpWindow::OnMouseHelp(wxCommandEvent &event WXUNUSEDevent)
+Possible candidates:
+  'virtual void MathPlot::mpWindow::OnMouseHelp(wxCommandEvent &event)' at line 2937 of file E:/wxMathPlot/mathplot/mathplot.h
+  'virtual void MathPlot::mpWindow::OnMouseHelp(wxCommandEvent &event)' at line 2937 of file E:/wxMathPlot/mathplot/tmp/mathplot.h
+E:/wxMathPlot/mathplot/mathplot.cpp:3417: warning: no matching class member found for 
+  void mpWindow::OnFit(wxCommandEvent &event WXUNUSEDevent)
+Possible candidates:
+  'virtual void MathPlot::mpWindow::OnFit(wxCommandEvent &event)' at line 2927 of file E:/wxMathPlot/mathplot/mathplot.h
+  'virtual void MathPlot::mpWindow::OnFit(wxCommandEvent &event)' at line 2927 of file E:/wxMathPlot/mathplot/tmp/mathplot.h
+E:/wxMathPlot/mathplot/mathplot.cpp:3422: warning: no matching class member found for 
+  void mpWindow::OnToggleGrids(wxCommandEvent &event WXUNUSEDevent)
+Possible candidates:
+  'virtual void MathPlot::mpWindow::OnToggleGrids(wxCommandEvent &event)' at line 2928 of file E:/wxMathPlot/mathplot/mathplot.h
+  'virtual void MathPlot::mpWindow::OnToggleGrids(wxCommandEvent &event)' at line 2928 of file E:/wxMathPlot/mathplot/tmp/mathplot.h
+E:/wxMathPlot/mathplot/mathplot.cpp:3437: warning: no matching class member found for 
+  void mpWindow::OnToggleCoords(wxCommandEvent &event WXUNUSEDevent)
+Possible candidates:
+  'virtual void MathPlot::mpWindow::OnToggleCoords(wxCommandEvent &event)' at line 2929 of file E:/wxMathPlot/mathplot/mathplot.h
+  'virtual void MathPlot::mpWindow::OnToggleCoords(wxCommandEvent &event)' at line 2929 of file E:/wxMathPlot/mathplot/tmp/mathplot.h
+E:/wxMathPlot/mathplot/mathplot.cpp:3447: warning: no matching class member found for 
+  void mpWindow::OnScreenShot(wxCommandEvent &event WXUNUSEDevent)
+Possible candidates:
+  'virtual void MathPlot::mpWindow::OnScreenShot(wxCommandEvent &event)' at line 2930 of file E:/wxMathPlot/mathplot/mathplot.h
+  'virtual void MathPlot::mpWindow::OnScreenShot(wxCommandEvent &event)' at line 2930 of file E:/wxMathPlot/mathplot/tmp/mathplot.h
+E:/wxMathPlot/mathplot/mathplot.cpp:3452: warning: no matching class member found for 
+  void mpWindow::OnFullScreen(wxCommandEvent &event WXUNUSEDevent)
+Possible candidates:
+  'virtual void MathPlot::mpWindow::OnFullScreen(wxCommandEvent &event)' at line 2931 of file E:/wxMathPlot/mathplot/mathplot.h
+  'virtual void MathPlot::mpWindow::OnFullScreen(wxCommandEvent &event)' at line 2931 of file E:/wxMathPlot/mathplot/tmp/mathplot.h
+E:/wxMathPlot/mathplot/mathplot.cpp:3464: warning: no matching class member found for 
+  void mpWindow::OnLoadFile(wxCommandEvent &event WXUNUSEDevent)
+Possible candidates:
+  'virtual void MathPlot::mpWindow::OnLoadFile(wxCommandEvent &event)' at line 2933 of file E:/wxMathPlot/mathplot/mathplot.h
+  'virtual void MathPlot::mpWindow::OnLoadFile(wxCommandEvent &event)' at line 2933 of file E:/wxMathPlot/mathplot/tmp/mathplot.h
+E:/wxMathPlot/mathplot/mathplot.cpp:3475: warning: no matching class member found for 
+  void mpWindow::OnConfiguration(wxCommandEvent &event WXUNUSEDevent)
+Possible candidates:
+  'virtual void MathPlot::mpWindow::OnConfiguration(wxCommandEvent &event)' at line 2932 of file E:/wxMathPlot/mathplot/mathplot.h
+  'virtual void MathPlot::mpWindow::OnConfiguration(wxCommandEvent &event)' at line 2932 of file E:/wxMathPlot/mathplot/tmp/mathplot.h
+E:/wxMathPlot/mathplot/mathplot.cpp:3484: warning: no matching class member found for 
+  void mpWindow::OnCenter(wxCommandEvent &event WXUNUSEDevent)
+Possible candidates:
+  'virtual void MathPlot::mpWindow::OnCenter(wxCommandEvent &event)' at line 2926 of file E:/wxMathPlot/mathplot/mathplot.h
+  'virtual void MathPlot::mpWindow::OnCenter(wxCommandEvent &event)' at line 2926 of file E:/wxMathPlot/mathplot/tmp/mathplot.h
+E:/wxMathPlot/mathplot/mathplot.cpp:3495: warning: no matching class member found for 
+  void mpWindow::OnZoomIn(wxCommandEvent &event WXUNUSEDevent)
+Possible candidates:
+  'virtual void MathPlot::mpWindow::OnZoomIn(wxCommandEvent &event)' at line 2934 of file E:/wxMathPlot/mathplot/mathplot.h
+  'virtual void MathPlot::mpWindow::OnZoomIn(wxCommandEvent &event)' at line 2934 of file E:/wxMathPlot/mathplot/tmp/mathplot.h
+E:/wxMathPlot/mathplot/mathplot.cpp:3500: warning: no matching class member found for 
+  void mpWindow::OnZoomOut(wxCommandEvent &event WXUNUSEDevent)
+Possible candidates:
+  'virtual void MathPlot::mpWindow::OnZoomOut(wxCommandEvent &event)' at line 2935 of file E:/wxMathPlot/mathplot/mathplot.h
+  'virtual void MathPlot::mpWindow::OnZoomOut(wxCommandEvent &event)' at line 2935 of file E:/wxMathPlot/mathplot/tmp/mathplot.h
+E:/wxMathPlot/mathplot/mathplot.cpp:3505: warning: no matching class member found for 
+  void mpWindow::OnSize(wxSizeEvent &event WXUNUSEDevent)
+Possible candidates:
+  'virtual void MathPlot::mpWindow::OnSize(wxSizeEvent &event)' at line 2924 of file E:/wxMathPlot/mathplot/mathplot.h
+  'virtual void MathPlot::mpWindow::OnSize(wxSizeEvent &event)' at line 2924 of file E:/wxMathPlot/mathplot/tmp/mathplot.h
+E:/wxMathPlot/mathplot/mathplot.cpp:3677: warning: no matching class member found for 
+  void mpWindow::OnPaint(wxPaintEvent &event WXUNUSEDevent)
+Possible candidates:
+  'virtual void MathPlot::mpWindow::OnPaint(wxPaintEvent &event)' at line 2923 of file E:/wxMathPlot/mathplot/mathplot.h
+  'virtual void MathPlot::mpWindow::OnPaint(wxPaintEvent &event)' at line 2923 of file E:/wxMathPlot/mathplot/tmp/mathplot.h
+E:/wxMathPlot/mathplot/tmp/mathplot.cpp:316: warning: no uniquely matching class member found for 
+  void mpInfoLayer::UpdateInfo(MathPlot::mpWindow &w WXUNUSEDw, wxEvent &WXUNUSEDevent)
+Possible candidates:
+  'virtual void MathPlot::mpInfoLayer::UpdateInfo(mpWindow &w, wxEvent &event)' at line 819 of file E:/wxMathPlot/mathplot/mathplot.h
+  'virtual void MathPlot::mpInfoCoords::UpdateInfo(mpWindow &w, wxEvent &event)' at line 929 of file E:/wxMathPlot/mathplot/mathplot.h
+  'virtual void MathPlot::mpInfoLayer::UpdateInfo(mpWindow &w, wxEvent &event)' at line 819 of file E:/wxMathPlot/mathplot/tmp/mathplot.h
+  'virtual void MathPlot::mpInfoCoords::UpdateInfo(mpWindow &w, wxEvent &event)' at line 929 of file E:/wxMathPlot/mathplot/tmp/mathplot.h
+E:/wxMathPlot/mathplot/tmp/mathplot.cpp:454: warning: no uniquely matching class member found for 
+  void mpInfoLayer::ErasePlot(wxDC &dc, MathPlot::mpWindow &w WXUNUSEDw)
+Possible candidates:
+  'virtual void MathPlot::mpInfoLayer::ErasePlot(wxDC &dc, mpWindow &w)' at line 831 of file E:/wxMathPlot/mathplot/mathplot.h
+  'virtual void MathPlot::mpInfoCoords::ErasePlot(wxDC &dc, mpWindow &w)' at line 931 of file E:/wxMathPlot/mathplot/mathplot.h
+  'virtual void MathPlot::mpInfoLayer::ErasePlot(wxDC &dc, mpWindow &w)' at line 831 of file E:/wxMathPlot/mathplot/tmp/mathplot.h
+  'virtual void MathPlot::mpInfoCoords::ErasePlot(wxDC &dc, mpWindow &w)' at line 931 of file E:/wxMathPlot/mathplot/tmp/mathplot.h
+E:/wxMathPlot/mathplot/tmp/mathplot.cpp:879: warning: no matching class member found for 
+  int mpInfoLegend::GetPointed(MathPlot::mpWindow &w WXUNUSEDw, wxPoint eventPoint)
+Possible candidates:
+  'int MathPlot::mpInfoLegend::GetPointed(mpWindow &w, wxPoint eventPoint)' at line 1037 of file E:/wxMathPlot/mathplot/mathplot.h
+  'int MathPlot::mpInfoLegend::GetPointed(mpWindow &w, wxPoint eventPoint)' at line 1037 of file E:/wxMathPlot/mathplot/tmp/mathplot.h
+E:/wxMathPlot/mathplot/tmp/mathplot.cpp:3412: warning: no matching class member found for 
+  void mpWindow::OnLockAspect(wxCommandEvent &event WXUNUSEDevent)
+Possible candidates:
+  'virtual void MathPlot::mpWindow::OnLockAspect(wxCommandEvent &event)' at line 2936 of file E:/wxMathPlot/mathplot/mathplot.h
+  'virtual void MathPlot::mpWindow::OnLockAspect(wxCommandEvent &event)' at line 2936 of file E:/wxMathPlot/mathplot/tmp/mathplot.h
+E:/wxMathPlot/mathplot/tmp/mathplot.cpp:3417: warning: no matching class member found for 
+  void mpWindow::OnMouseHelp(wxCommandEvent &event WXUNUSEDevent)
+Possible candidates:
+  'virtual void MathPlot::mpWindow::OnMouseHelp(wxCommandEvent &event)' at line 2937 of file E:/wxMathPlot/mathplot/mathplot.h
+  'virtual void MathPlot::mpWindow::OnMouseHelp(wxCommandEvent &event)' at line 2937 of file E:/wxMathPlot/mathplot/tmp/mathplot.h
+E:/wxMathPlot/mathplot/tmp/mathplot.cpp:3424: warning: no matching class member found for 
+  void mpWindow::OnFit(wxCommandEvent &event WXUNUSEDevent)
+Possible candidates:
+  'virtual void MathPlot::mpWindow::OnFit(wxCommandEvent &event)' at line 2927 of file E:/wxMathPlot/mathplot/mathplot.h
+  'virtual void MathPlot::mpWindow::OnFit(wxCommandEvent &event)' at line 2927 of file E:/wxMathPlot/mathplot/tmp/mathplot.h
+E:/wxMathPlot/mathplot/tmp/mathplot.cpp:3429: warning: no matching class member found for 
+  void mpWindow::OnToggleGrids(wxCommandEvent &event WXUNUSEDevent)
+Possible candidates:
+  'virtual void MathPlot::mpWindow::OnToggleGrids(wxCommandEvent &event)' at line 2928 of file E:/wxMathPlot/mathplot/mathplot.h
+  'virtual void MathPlot::mpWindow::OnToggleGrids(wxCommandEvent &event)' at line 2928 of file E:/wxMathPlot/mathplot/tmp/mathplot.h
+E:/wxMathPlot/mathplot/tmp/mathplot.cpp:3444: warning: no matching class member found for 
+  void mpWindow::OnToggleCoords(wxCommandEvent &event WXUNUSEDevent)
+Possible candidates:
+  'virtual void MathPlot::mpWindow::OnToggleCoords(wxCommandEvent &event)' at line 2929 of file E:/wxMathPlot/mathplot/mathplot.h
+  'virtual void MathPlot::mpWindow::OnToggleCoords(wxCommandEvent &event)' at line 2929 of file E:/wxMathPlot/mathplot/tmp/mathplot.h
+E:/wxMathPlot/mathplot/tmp/mathplot.cpp:3454: warning: no matching class member found for 
+  void mpWindow::OnScreenShot(wxCommandEvent &event WXUNUSEDevent)
+Possible candidates:
+  'virtual void MathPlot::mpWindow::OnScreenShot(wxCommandEvent &event)' at line 2930 of file E:/wxMathPlot/mathplot/mathplot.h
+  'virtual void MathPlot::mpWindow::OnScreenShot(wxCommandEvent &event)' at line 2930 of file E:/wxMathPlot/mathplot/tmp/mathplot.h
+E:/wxMathPlot/mathplot/tmp/mathplot.cpp:3459: warning: no matching class member found for 
+  void mpWindow::OnFullScreen(wxCommandEvent &event WXUNUSEDevent)
+Possible candidates:
+  'virtual void MathPlot::mpWindow::OnFullScreen(wxCommandEvent &event)' at line 2931 of file E:/wxMathPlot/mathplot/mathplot.h
+  'virtual void MathPlot::mpWindow::OnFullScreen(wxCommandEvent &event)' at line 2931 of file E:/wxMathPlot/mathplot/tmp/mathplot.h
+E:/wxMathPlot/mathplot/tmp/mathplot.cpp:3471: warning: no matching class member found for 
+  void mpWindow::OnLoadFile(wxCommandEvent &event WXUNUSEDevent)
+Possible candidates:
+  'virtual void MathPlot::mpWindow::OnLoadFile(wxCommandEvent &event)' at line 2933 of file E:/wxMathPlot/mathplot/mathplot.h
+  'virtual void MathPlot::mpWindow::OnLoadFile(wxCommandEvent &event)' at line 2933 of file E:/wxMathPlot/mathplot/tmp/mathplot.h
+E:/wxMathPlot/mathplot/tmp/mathplot.cpp:3482: warning: no matching class member found for 
+  void mpWindow::OnConfiguration(wxCommandEvent &event WXUNUSEDevent)
+Possible candidates:
+  'virtual void MathPlot::mpWindow::OnConfiguration(wxCommandEvent &event)' at line 2932 of file E:/wxMathPlot/mathplot/mathplot.h
+  'virtual void MathPlot::mpWindow::OnConfiguration(wxCommandEvent &event)' at line 2932 of file E:/wxMathPlot/mathplot/tmp/mathplot.h
+E:/wxMathPlot/mathplot/tmp/mathplot.cpp:3491: warning: no matching class member found for 
+  void mpWindow::OnCenter(wxCommandEvent &event WXUNUSEDevent)
+Possible candidates:
+  'virtual void MathPlot::mpWindow::OnCenter(wxCommandEvent &event)' at line 2926 of file E:/wxMathPlot/mathplot/mathplot.h
+  'virtual void MathPlot::mpWindow::OnCenter(wxCommandEvent &event)' at line 2926 of file E:/wxMathPlot/mathplot/tmp/mathplot.h
+E:/wxMathPlot/mathplot/tmp/mathplot.cpp:3502: warning: no matching class member found for 
+  void mpWindow::OnZoomIn(wxCommandEvent &event WXUNUSEDevent)
+Possible candidates:
+  'virtual void MathPlot::mpWindow::OnZoomIn(wxCommandEvent &event)' at line 2934 of file E:/wxMathPlot/mathplot/mathplot.h
+  'virtual void MathPlot::mpWindow::OnZoomIn(wxCommandEvent &event)' at line 2934 of file E:/wxMathPlot/mathplot/tmp/mathplot.h
+E:/wxMathPlot/mathplot/tmp/mathplot.cpp:3507: warning: no matching class member found for 
+  void mpWindow::OnZoomOut(wxCommandEvent &event WXUNUSEDevent)
+Possible candidates:
+  'virtual void MathPlot::mpWindow::OnZoomOut(wxCommandEvent &event)' at line 2935 of file E:/wxMathPlot/mathplot/mathplot.h
+  'virtual void MathPlot::mpWindow::OnZoomOut(wxCommandEvent &event)' at line 2935 of file E:/wxMathPlot/mathplot/tmp/mathplot.h
+E:/wxMathPlot/mathplot/tmp/mathplot.cpp:3512: warning: no matching class member found for 
+  void mpWindow::OnSize(wxSizeEvent &event WXUNUSEDevent)
+Possible candidates:
+  'virtual void MathPlot::mpWindow::OnSize(wxSizeEvent &event)' at line 2924 of file E:/wxMathPlot/mathplot/mathplot.h
+  'virtual void MathPlot::mpWindow::OnSize(wxSizeEvent &event)' at line 2924 of file E:/wxMathPlot/mathplot/tmp/mathplot.h
+E:/wxMathPlot/mathplot/tmp/mathplot.cpp:3685: warning: no matching class member found for 
+  void mpWindow::OnPaint(wxPaintEvent &event WXUNUSEDevent)
+Possible candidates:
+  'virtual void MathPlot::mpWindow::OnPaint(wxPaintEvent &event)' at line 2923 of file E:/wxMathPlot/mathplot/mathplot.h
+  'virtual void MathPlot::mpWindow::OnPaint(wxPaintEvent &event)' at line 2923 of file E:/wxMathPlot/mathplot/tmp/mathplot.h
+E:/wxMathPlot/mathplot/tmp/mathplot.h:17: warning: found more than one \mainpage comment block! (first occurrence: E:/wxMathPlot/mathplot/mathplot.h, line 17), Skipping current block!
 E:/wxMathPlot/mathplot/mathplot.h:62: warning: Member WXDLLIMPEXP_MATHPLOT (macro definition) of file mathplot.h is not documented.
 E:/wxMathPlot/mathplot/mathplot.h:63: warning: Member WXDLLIMPEXP_DATA_MATHPLOT(type) (macro definition) of file mathplot.h is not documented.
 E:/wxMathPlot/mathplot/mathplot.h:107: warning: Member X_BORDER_SEPARATION (macro definition) of file mathplot.h is not documented.
@@ -12,25 +195,45 @@ E:/wxMathPlot/mathplot/mathplot.h:361: warning: Member mpFunctionType (typedef) 
 E:/wxMathPlot/mathplot/mathplot.h:369: warning: Member mpScaleType (typedef) of namespace MathPlot is not documented.
 E:/wxMathPlot/mathplot/mathplot.h:377: warning: Member mpChartType (typedef) of namespace MathPlot is not documented.
 E:/wxMathPlot/mathplot/mathplot.h:393: warning: Member mpLayerType (typedef) of namespace MathPlot is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:3551: warning: Member mpColour (typedef) of namespace MathPlot is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:3560: warning: Member mpColour (typedef) of namespace MathPlot is not documented.
 E:/wxMathPlot/mathplot/mathplot.h:319: warning: Member __Symbol_Type (enumeration) of namespace MathPlot is not documented.
 E:/wxMathPlot/mathplot/mathplot.h:351: warning: Member __Function_Type (enumeration) of namespace MathPlot is not documented.
 E:/wxMathPlot/mathplot/mathplot.h:363: warning: Member __Scale_Type (enumeration) of namespace MathPlot is not documented.
 E:/wxMathPlot/mathplot/mathplot.h:371: warning: Member __Chart_Type (enumeration) of namespace MathPlot is not documented.
 E:/wxMathPlot/mathplot/mathplot.h:383: warning: Member __mp_Layer_Type (enumeration) of namespace MathPlot is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:3540: warning: Member __mp_Colour (enumeration) of namespace MathPlot is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:3549: warning: Member __mp_Colour (enumeration) of namespace MathPlot is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:62: warning: Member WXDLLIMPEXP_MATHPLOT (macro definition) of file mathplot.h is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:63: warning: Member WXDLLIMPEXP_DATA_MATHPLOT(type) (macro definition) of file mathplot.h is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:107: warning: Member X_BORDER_SEPARATION (macro definition) of file mathplot.h is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:108: warning: Member Y_BORDER_SEPARATION (macro definition) of file mathplot.h is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:114: warning: Member mpX_RAWTIME (macro definition) of file mathplot.h is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:117: warning: Member EPSILON (macro definition) of file mathplot.h is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:118: warning: Member ISNOTNULL(x) (macro definition) of file mathplot.h is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:121: warning: Member EXTRA_MARGIN (macro definition) of file mathplot.h is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:319: warning: Member __Symbol_Type (enumeration) of namespace MathPlot is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:351: warning: Member __Function_Type (enumeration) of namespace MathPlot is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:363: warning: Member __Scale_Type (enumeration) of namespace MathPlot is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:371: warning: Member __Chart_Type (enumeration) of namespace MathPlot is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:383: warning: Member __mp_Layer_Type (enumeration) of namespace MathPlot is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:3552: warning: Member __mp_Colour (enumeration) of namespace MathPlot is not documented.
 E:/wxMathPlot/mathplot/mathplot.h:328: warning: Member mpSymbol (typedef) of namespace MathPlot is not documented.
 E:/wxMathPlot/mathplot/mathplot.h:361: warning: Member mpFunctionType (typedef) of namespace MathPlot is not documented.
 E:/wxMathPlot/mathplot/mathplot.h:369: warning: Member mpScaleType (typedef) of namespace MathPlot is not documented.
 E:/wxMathPlot/mathplot/mathplot.h:377: warning: Member mpChartType (typedef) of namespace MathPlot is not documented.
 E:/wxMathPlot/mathplot/mathplot.h:393: warning: Member mpLayerType (typedef) of namespace MathPlot is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:3551: warning: Member mpColour (typedef) of namespace MathPlot is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:3560: warning: Member mpColour (typedef) of namespace MathPlot is not documented.
 E:/wxMathPlot/mathplot/mathplot.h:319: warning: Member __Symbol_Type (enumeration) of namespace MathPlot is not documented.
 E:/wxMathPlot/mathplot/mathplot.h:351: warning: Member __Function_Type (enumeration) of namespace MathPlot is not documented.
 E:/wxMathPlot/mathplot/mathplot.h:363: warning: Member __Scale_Type (enumeration) of namespace MathPlot is not documented.
 E:/wxMathPlot/mathplot/mathplot.h:371: warning: Member __Chart_Type (enumeration) of namespace MathPlot is not documented.
 E:/wxMathPlot/mathplot/mathplot.h:383: warning: Member __mp_Layer_Type (enumeration) of namespace MathPlot is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:3540: warning: Member __mp_Colour (enumeration) of namespace MathPlot is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:3549: warning: Member __mp_Colour (enumeration) of namespace MathPlot is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:319: warning: Member __Symbol_Type (enumeration) of namespace MathPlot is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:351: warning: Member __Function_Type (enumeration) of namespace MathPlot is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:363: warning: Member __Scale_Type (enumeration) of namespace MathPlot is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:371: warning: Member __Chart_Type (enumeration) of namespace MathPlot is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:383: warning: Member __mp_Layer_Type (enumeration) of namespace MathPlot is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:3552: warning: Member __mp_Colour (enumeration) of namespace MathPlot is not documented.
 E:/wxMathPlot/MathPlotConfig/MathPlotConfig.h:37: warning: Member mpWindow (variable) of namespace MathPlot is not documented.
 E:/wxMathPlot/MathPlotConfig/MathPlotConfig.h:38: warning: Member mpLayer (variable) of namespace MathPlot is not documented.
 E:/wxMathPlot/MathPlotConfig/MathPlotConfig.h:39: warning: Member mpFunction (variable) of namespace MathPlot is not documented.
@@ -42,96 +245,130 @@ E:/wxMathPlot/MathPlotConfig/MathPlotConfig.h:44: warning: Member mpText (variab
 E:/wxMathPlot/MathPlotConfig/MathPlotConfig.h:50: warning: Member MathPlotConfigDialog(wxWindow *parent, wxWindowID id=-1) (function) of class MathPlot::MathPlotConfigDialog is not documented.
 E:/wxMathPlot/MathPlotConfig/MathPlotConfig.h:53: warning: Member Initialize(int page=-1) (function) of class MathPlot::MathPlotConfigDialog is not documented.
 E:/wxMathPlot/MathPlotConfig/MathPlotConfig.h:54: warning: Member SelectChoiceSerie(unsigned int serie) (function) of class MathPlot::MathPlotConfigDialog is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1697: warning: Member SetBarColour(const wxColour &colour) (function) of class MathPlot::mpBarChart is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1699: warning: Member SetColumnWidth(const double colWidth) (function) of class MathPlot::mpBarChart is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1709: warning: Member SetBarColour(const wxColour &colour) (function) of class MathPlot::mpBarChart is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1711: warning: Member SetColumnWidth(const double colWidth) (function) of class MathPlot::mpBarChart is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:1709: warning: Member SetBarColour(const wxColour &colour) (function) of class MathPlot::mpBarChart is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:1711: warning: Member SetColumnWidth(const double colWidth) (function) of class MathPlot::mpBarChart is not documented.
 E:/wxMathPlot/mathplot/mathplot.h:425: warning: Member mpLayer(mpLayerType layerType) (function) of class MathPlot::mpLayer is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1729: warning: Member m_width (variable) of class MathPlot::mpBarChart is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1730: warning: Member m_barColour (variable) of class MathPlot::mpBarChart is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1731: warning: Member m_labelPos (variable) of class MathPlot::mpBarChart is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1732: warning: Member m_labelAngle (variable) of class MathPlot::mpBarChart is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1664: warning: Member values (variable) of class MathPlot::mpChart is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1665: warning: Member labels (variable) of class MathPlot::mpChart is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1667: warning: Member m_max_value (variable) of class MathPlot::mpChart is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1668: warning: Member m_total_value (variable) of class MathPlot::mpChart is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:425: warning: Member mpLayer(mpLayerType layerType) (function) of class MathPlot::mpLayer is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1741: warning: Member m_width (variable) of class MathPlot::mpBarChart is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1742: warning: Member m_barColour (variable) of class MathPlot::mpBarChart is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1743: warning: Member m_labelPos (variable) of class MathPlot::mpBarChart is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1744: warning: Member m_labelAngle (variable) of class MathPlot::mpBarChart is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1676: warning: Member values (variable) of class MathPlot::mpChart is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1677: warning: Member labels (variable) of class MathPlot::mpChart is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1679: warning: Member m_max_value (variable) of class MathPlot::mpChart is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1680: warning: Member m_total_value (variable) of class MathPlot::mpChart is not documented.
 E:/wxMathPlot/mathplot/mathplot.h:425: warning: Member mpLayer(mpLayerType layerType) (function) of class MathPlot::mpLayer is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:3523: warning: Member m_scaledBitmap (variable) of class MathPlot::mpBitmapLayer is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:3524: warning: Member m_scaledBitmap_offset_x (variable) of class MathPlot::mpBitmapLayer is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:3524: warning: Member m_scaledBitmap_offset_y (variable) of class MathPlot::mpBitmapLayer is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:3525: warning: Member m_validImg (variable) of class MathPlot::mpBitmapLayer is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:3526: warning: Member m_bitmapChanged (variable) of class MathPlot::mpBitmapLayer is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:3530: warning: Member m_max_x (variable) of class MathPlot::mpBitmapLayer is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:3530: warning: Member m_min_y (variable) of class MathPlot::mpBitmapLayer is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:3530: warning: Member m_max_y (variable) of class MathPlot::mpBitmapLayer is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:425: warning: Member mpLayer(mpLayerType layerType) (function) of class MathPlot::mpLayer is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:3532: warning: Member m_scaledBitmap (variable) of class MathPlot::mpBitmapLayer is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:3533: warning: Member m_scaledBitmap_offset_x (variable) of class MathPlot::mpBitmapLayer is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:3533: warning: Member m_scaledBitmap_offset_y (variable) of class MathPlot::mpBitmapLayer is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:3534: warning: Member m_validImg (variable) of class MathPlot::mpBitmapLayer is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:3535: warning: Member m_bitmapChanged (variable) of class MathPlot::mpBitmapLayer is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:3539: warning: Member m_max_x (variable) of class MathPlot::mpBitmapLayer is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:3539: warning: Member m_min_y (variable) of class MathPlot::mpBitmapLayer is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:3539: warning: Member m_max_y (variable) of class MathPlot::mpBitmapLayer is not documented.
 E:/wxMathPlot/mathplot/mathplot.h:425: warning: Member mpLayer(mpLayerType layerType) (function) of class MathPlot::mpLayer is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1664: warning: Member values (variable) of class MathPlot::mpChart is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1665: warning: Member labels (variable) of class MathPlot::mpChart is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1667: warning: Member m_max_value (variable) of class MathPlot::mpChart is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1668: warning: Member m_total_value (variable) of class MathPlot::mpChart is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:3357: warning: Member GetQuantiles() const (function) of class MathPlot::mpCovarianceEllipse is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:3370: warning: Member SetSegments(int segments) (function) of class MathPlot::mpCovarianceEllipse is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:3375: warning: Member GetSegments() const (function) of class MathPlot::mpCovarianceEllipse is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:425: warning: Member mpLayer(mpLayerType layerType) (function) of class MathPlot::mpLayer is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1676: warning: Member values (variable) of class MathPlot::mpChart is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1677: warning: Member labels (variable) of class MathPlot::mpChart is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1679: warning: Member m_max_value (variable) of class MathPlot::mpChart is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1680: warning: Member m_total_value (variable) of class MathPlot::mpChart is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:3366: warning: Member GetQuantiles() const (function) of class MathPlot::mpCovarianceEllipse is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:3379: warning: Member SetSegments(int segments) (function) of class MathPlot::mpCovarianceEllipse is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:3384: warning: Member GetSegments() const (function) of class MathPlot::mpCovarianceEllipse is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:3369: warning: Member GetQuantiles() const (function) of class MathPlot::mpCovarianceEllipse is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:3382: warning: Member SetSegments(int segments) (function) of class MathPlot::mpCovarianceEllipse is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:3387: warning: Member GetSegments() const (function) of class MathPlot::mpCovarianceEllipse is not documented.
 E:/wxMathPlot/mathplot/mathplot.h:425: warning: Member mpLayer(mpLayerType layerType) (function) of class MathPlot::mpLayer is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:3402: warning: Member m_cov_11 (variable) of class MathPlot::mpCovarianceEllipse is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:3402: warning: Member m_cov_01 (variable) of class MathPlot::mpCovarianceEllipse is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:3403: warning: Member m_quantiles (variable) of class MathPlot::mpCovarianceEllipse is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:3293: warning: Member m_reference_y (variable) of class MathPlot::mpMovableObject is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:3293: warning: Member m_reference_phi (variable) of class MathPlot::mpMovableObject is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:3303: warning: Member m_shape_ys (variable) of class MathPlot::mpMovableObject is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:3308: warning: Member m_trans_shape_ys (variable) of class MathPlot::mpMovableObject is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:3313: warning: Member m_bbox_max_x (variable) of class MathPlot::mpMovableObject is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:3313: warning: Member m_bbox_min_y (variable) of class MathPlot::mpMovableObject is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:3313: warning: Member m_bbox_max_y (variable) of class MathPlot::mpMovableObject is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:425: warning: Member mpLayer(mpLayerType layerType) (function) of class MathPlot::mpLayer is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:3411: warning: Member m_cov_11 (variable) of class MathPlot::mpCovarianceEllipse is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:3411: warning: Member m_cov_01 (variable) of class MathPlot::mpCovarianceEllipse is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:3412: warning: Member m_quantiles (variable) of class MathPlot::mpCovarianceEllipse is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:3302: warning: Member m_reference_y (variable) of class MathPlot::mpMovableObject is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:3302: warning: Member m_reference_phi (variable) of class MathPlot::mpMovableObject is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:3312: warning: Member m_shape_ys (variable) of class MathPlot::mpMovableObject is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:3317: warning: Member m_trans_shape_ys (variable) of class MathPlot::mpMovableObject is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:3322: warning: Member m_bbox_max_x (variable) of class MathPlot::mpMovableObject is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:3322: warning: Member m_bbox_min_y (variable) of class MathPlot::mpMovableObject is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:3322: warning: Member m_bbox_max_y (variable) of class MathPlot::mpMovableObject is not documented.
 E:/wxMathPlot/mathplot/mathplot.h:425: warning: Member mpLayer(mpLayerType layerType) (function) of class MathPlot::mpLayer is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1135: warning: found documented return type for MathPlot::mpFunction::DrawSymbol that does not return anything
+E:/wxMathPlot/mathplot/tmp/mathplot.h:425: warning: Member mpLayer(mpLayerType layerType) (function) of class MathPlot::mpLayer is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1151: warning: found documented return type for MathPlot::mpFunction::DrawSymbol that does not return anything
+E:/wxMathPlot/mathplot/tmp/mathplot.h:1151: warning: found documented return type for MathPlot::mpFunction::DrawSymbol that does not return anything
 E:/wxMathPlot/mathplot/mathplot.h:425: warning: Member mpLayer(mpLayerType layerType) (function) of class MathPlot::mpLayer is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1267: warning: explicit link request to 'mpALIGN_CENTER' could not be resolved
-E:/wxMathPlot/mathplot/mathplot.h:1266: warning: The following parameter of MathPlot::mpFX::mpFX(const wxString &name=wxEmptyString, int flags=mpALIGN_RIGHT, bool useY2Axis=false) is not documented:
+E:/wxMathPlot/mathplot/tmp/mathplot.h:425: warning: Member mpLayer(mpLayerType layerType) (function) of class MathPlot::mpLayer is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1279: warning: explicit link request to 'mpALIGN_CENTER' could not be resolved
+E:/wxMathPlot/mathplot/mathplot.h:1278: warning: The following parameter of MathPlot::mpFX::mpFX(const wxString &name=wxEmptyString, int flags=mpALIGN_RIGHT, bool useY2Axis=false) is not documented:
+  parameter 'useY2Axis'
+E:/wxMathPlot/mathplot/tmp/mathplot.h:1279: warning: explicit link request to 'mpALIGN_CENTER' could not be resolved
+E:/wxMathPlot/mathplot/tmp/mathplot.h:1278: warning: The following parameter of MathPlot::mpFX::mpFX(const wxString &name=wxEmptyString, int flags=mpALIGN_RIGHT, bool useY2Axis=false) is not documented:
   parameter 'useY2Axis'
 E:/wxMathPlot/mathplot/mathplot.h:425: warning: Member mpLayer(mpLayerType layerType) (function) of class MathPlot::mpLayer is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1406: warning: Member maxDrawX (variable) of class MathPlot::mpFXY is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1406: warning: Member minDrawX (variable) of class MathPlot::mpFXY is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1406: warning: Member maxDrawY (variable) of class MathPlot::mpFXY is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1406: warning: Member minDrawY (variable) of class MathPlot::mpFXY is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1409: warning: Member m_deltaX (variable) of class MathPlot::mpFXY is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1409: warning: Member m_deltaY (variable) of class MathPlot::mpFXY is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1412: warning: Member m_BarWidth (variable) of class MathPlot::mpFXY is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1415: warning: Member m_ViewAsBar (variable) of class MathPlot::mpFXY is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1418: warning: Member m_CanDelete (variable) of class MathPlot::mpFXY is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1343: warning: The following parameters of MathPlot::mpFXY::mpFXY(const wxString &name=wxEmptyString, int flags=mpALIGN_NE, bool viewAsBar=false, bool useY2Axis=false) are not documented:
+E:/wxMathPlot/mathplot/tmp/mathplot.h:425: warning: Member mpLayer(mpLayerType layerType) (function) of class MathPlot::mpLayer is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1418: warning: Member maxDrawX (variable) of class MathPlot::mpFXY is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1418: warning: Member minDrawX (variable) of class MathPlot::mpFXY is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1418: warning: Member maxDrawY (variable) of class MathPlot::mpFXY is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1418: warning: Member minDrawY (variable) of class MathPlot::mpFXY is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1421: warning: Member m_deltaX (variable) of class MathPlot::mpFXY is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1421: warning: Member m_deltaY (variable) of class MathPlot::mpFXY is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1424: warning: Member m_BarWidth (variable) of class MathPlot::mpFXY is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1427: warning: Member m_ViewAsBar (variable) of class MathPlot::mpFXY is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1430: warning: Member m_CanDelete (variable) of class MathPlot::mpFXY is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1355: warning: The following parameters of MathPlot::mpFXY::mpFXY(const wxString &name=wxEmptyString, int flags=mpALIGN_NE, bool viewAsBar=false, bool useY2Axis=false) are not documented:
+  parameter 'viewAsBar'
+  parameter 'useY2Axis'
+E:/wxMathPlot/mathplot/tmp/mathplot.h:1355: warning: The following parameters of MathPlot::mpFXY::mpFXY(const wxString &name=wxEmptyString, int flags=mpALIGN_NE, bool viewAsBar=false, bool useY2Axis=false) are not documented:
   parameter 'viewAsBar'
   parameter 'useY2Axis'
 E:/wxMathPlot/mathplot/mathplot.h:425: warning: Member mpLayer(mpLayerType layerType) (function) of class MathPlot::mpLayer is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1524: warning: Member m_ys (variable) of class MathPlot::mpFXYVector is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1536: warning: Member m_maxX (variable) of class MathPlot::mpFXYVector is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1536: warning: Member m_minY (variable) of class MathPlot::mpFXYVector is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1536: warning: Member m_maxY (variable) of class MathPlot::mpFXYVector is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1536: warning: Member m_lastX (variable) of class MathPlot::mpFXYVector is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1536: warning: Member m_lastY (variable) of class MathPlot::mpFXYVector is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1406: warning: Member maxDrawX (variable) of class MathPlot::mpFXY is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1406: warning: Member minDrawX (variable) of class MathPlot::mpFXY is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1406: warning: Member maxDrawY (variable) of class MathPlot::mpFXY is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1406: warning: Member minDrawY (variable) of class MathPlot::mpFXY is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1409: warning: Member m_deltaX (variable) of class MathPlot::mpFXY is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1409: warning: Member m_deltaY (variable) of class MathPlot::mpFXY is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1412: warning: Member m_BarWidth (variable) of class MathPlot::mpFXY is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1415: warning: Member m_ViewAsBar (variable) of class MathPlot::mpFXY is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1418: warning: Member m_CanDelete (variable) of class MathPlot::mpFXY is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1461: warning: The following parameters of MathPlot::mpFXYVector::mpFXYVector(const wxString &name=wxEmptyString, int flags=mpALIGN_NE, bool viewAsBar=false, bool useY2Axis=false) are not documented:
+E:/wxMathPlot/mathplot/tmp/mathplot.h:425: warning: Member mpLayer(mpLayerType layerType) (function) of class MathPlot::mpLayer is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1536: warning: Member m_ys (variable) of class MathPlot::mpFXYVector is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1548: warning: Member m_maxX (variable) of class MathPlot::mpFXYVector is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1548: warning: Member m_minY (variable) of class MathPlot::mpFXYVector is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1548: warning: Member m_maxY (variable) of class MathPlot::mpFXYVector is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1548: warning: Member m_lastX (variable) of class MathPlot::mpFXYVector is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1548: warning: Member m_lastY (variable) of class MathPlot::mpFXYVector is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1418: warning: Member maxDrawX (variable) of class MathPlot::mpFXY is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1418: warning: Member minDrawX (variable) of class MathPlot::mpFXY is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1418: warning: Member maxDrawY (variable) of class MathPlot::mpFXY is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1418: warning: Member minDrawY (variable) of class MathPlot::mpFXY is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1421: warning: Member m_deltaX (variable) of class MathPlot::mpFXY is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1421: warning: Member m_deltaY (variable) of class MathPlot::mpFXY is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1424: warning: Member m_BarWidth (variable) of class MathPlot::mpFXY is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1427: warning: Member m_ViewAsBar (variable) of class MathPlot::mpFXY is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1430: warning: Member m_CanDelete (variable) of class MathPlot::mpFXY is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1473: warning: The following parameters of MathPlot::mpFXYVector::mpFXYVector(const wxString &name=wxEmptyString, int flags=mpALIGN_NE, bool viewAsBar=false, bool useY2Axis=false) are not documented:
   parameter 'viewAsBar'
   parameter 'useY2Axis'
-E:/wxMathPlot/mathplot/mathplot.cpp:1658: warning: argument 'updatePlot.' of command @param is not found in the argument list of MathPlot::mpFXYVector::AddData(const double x, const double y, bool updatePlot)
-E:/wxMathPlot/mathplot/mathplot.cpp:1658: warning: The following parameter of MathPlot::mpFXYVector::AddData(const double x, const double y, bool updatePlot) is not documented:
+E:/wxMathPlot/mathplot/tmp/mathplot.h:1473: warning: The following parameters of MathPlot::mpFXYVector::mpFXYVector(const wxString &name=wxEmptyString, int flags=mpALIGN_NE, bool viewAsBar=false, bool useY2Axis=false) are not documented:
+  parameter 'viewAsBar'
+  parameter 'useY2Axis'
+E:/wxMathPlot/mathplot/mathplot.cpp:1662: warning: argument 'updatePlot.' of command @param is not found in the argument list of MathPlot::mpFXYVector::AddData(const double x, const double y, bool updatePlot)
+E:/wxMathPlot/mathplot/mathplot.cpp:1662: warning: The following parameter of MathPlot::mpFXYVector::AddData(const double x, const double y, bool updatePlot) is not documented:
+  parameter 'updatePlot'
+E:/wxMathPlot/mathplot/tmp/mathplot.h:1505: warning: argument 'updatePlot.' of command @param is not found in the argument list of MathPlot::mpFXYVector::AddData(const double x, const double y, bool updatePlot)
+E:/wxMathPlot/mathplot/tmp/mathplot.h:1505: warning: The following parameter of MathPlot::mpFXYVector::AddData(const double x, const double y, bool updatePlot) is not documented:
   parameter 'updatePlot'
 E:/wxMathPlot/mathplot/mathplot.h:425: warning: Member mpLayer(mpLayerType layerType) (function) of class MathPlot::mpLayer is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1304: warning: explicit link request to 'mpALIGN_CENTER' could not be resolved
-E:/wxMathPlot/mathplot/mathplot.h:1303: warning: The following parameter of MathPlot::mpFY::mpFY(const wxString &name=wxEmptyString, int flags=mpALIGN_TOP, bool useY2Axis=false) is not documented:
+E:/wxMathPlot/mathplot/tmp/mathplot.h:425: warning: Member mpLayer(mpLayerType layerType) (function) of class MathPlot::mpLayer is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1316: warning: explicit link request to 'mpALIGN_CENTER' could not be resolved
+E:/wxMathPlot/mathplot/mathplot.h:1315: warning: The following parameter of MathPlot::mpFY::mpFY(const wxString &name=wxEmptyString, int flags=mpALIGN_TOP, bool useY2Axis=false) is not documented:
   parameter 'useY2Axis'
-E:/wxMathPlot/mathplot/mathplot.h:1218: warning: Member mpHorizontalLine(double yvalue, const wxPen &pen= *wxGREEN_PEN, bool useY2Axis=false) (function) of class MathPlot::mpHorizontalLine is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1175: warning: Member mpLine(double value, const wxPen &pen= *wxGREEN_PEN) (function) of class MathPlot::mpLine is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:1316: warning: explicit link request to 'mpALIGN_CENTER' could not be resolved
+E:/wxMathPlot/mathplot/tmp/mathplot.h:1315: warning: The following parameter of MathPlot::mpFY::mpFY(const wxString &name=wxEmptyString, int flags=mpALIGN_TOP, bool useY2Axis=false) is not documented:
+  parameter 'useY2Axis'
+E:/wxMathPlot/mathplot/mathplot.h:1230: warning: Member mpHorizontalLine(double yvalue, const wxPen &pen= *wxGREEN_PEN, bool useY2Axis=false) (function) of class MathPlot::mpHorizontalLine is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:1230: warning: Member mpHorizontalLine(double yvalue, const wxPen &pen= *wxGREEN_PEN, bool useY2Axis=false) (function) of class MathPlot::mpHorizontalLine is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1187: warning: Member mpLine(double value, const wxPen &pen= *wxGREEN_PEN) (function) of class MathPlot::mpLine is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:1187: warning: Member mpLine(double value, const wxPen &pen= *wxGREEN_PEN) (function) of class MathPlot::mpLine is not documented.
 E:/wxMathPlot/mathplot/mathplot.h:425: warning: Member mpLayer(mpLayerType layerType) (function) of class MathPlot::mpLayer is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1207: warning: Member m_value (variable) of class MathPlot::mpLine is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1208: warning: Member m_IsHorizontal (variable) of class MathPlot::mpLine is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:425: warning: Member mpLayer(mpLayerType layerType) (function) of class MathPlot::mpLayer is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1219: warning: Member m_value (variable) of class MathPlot::mpLine is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1220: warning: Member m_IsHorizontal (variable) of class MathPlot::mpLine is not documented.
 E:/wxMathPlot/mathplot/mathplot.h:425: warning: Member mpLayer(mpLayerType layerType) (function) of class MathPlot::mpLayer is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:425: warning: Member mpLayer(mpLayerType layerType) (function) of class MathPlot::mpLayer is not documented.
 E:/wxMathPlot/mathplot/mathplot.h:969: warning: Member m_labelType (variable) of class MathPlot::mpInfoCoords is not documented.
 E:/wxMathPlot/mathplot/mathplot.h:970: warning: Member m_timeConv (variable) of class MathPlot::mpInfoCoords is not documented.
 E:/wxMathPlot/mathplot/mathplot.h:971: warning: Member m_mouseX (variable) of class MathPlot::mpInfoCoords is not documented.
@@ -141,164 +378,275 @@ E:/wxMathPlot/mathplot/mathplot.h:974: warning: Member m_penSeries (variable) of
 E:/wxMathPlot/mathplot/mathplot.h:885: warning: Member m_winX (variable) of class MathPlot::mpInfoLayer is not documented.
 E:/wxMathPlot/mathplot/mathplot.h:934: warning: The following parameter of MathPlot::mpInfoCoords::SetLabelMode(unsigned int mode, unsigned int time_conv=0x20) is not documented:
   parameter 'time_conv'
+E:/wxMathPlot/mathplot/tmp/mathplot.h:934: warning: The following parameter of MathPlot::mpInfoCoords::SetLabelMode(unsigned int mode, unsigned int time_conv=0x20) is not documented:
+  parameter 'time_conv'
 E:/wxMathPlot/mathplot/mathplot.h:425: warning: Member mpLayer(mpLayerType layerType) (function) of class MathPlot::mpLayer is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:425: warning: Member mpLayer(mpLayerType layerType) (function) of class MathPlot::mpLayer is not documented.
 E:/wxMathPlot/mathplot/mathplot.h:885: warning: Member m_winX (variable) of class MathPlot::mpInfoLayer is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1016: warning: Member GetItemMode() const (function) of class MathPlot::mpInfoLegend is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1021: warning: Member SetItemDirection(mpLegendDirection mode) (function) of class MathPlot::mpInfoLegend is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1027: warning: Member GetItemDirection() const (function) of class MathPlot::mpInfoLegend is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1032: warning: Member SetNeedUpdate() (function) of class MathPlot::mpInfoLegend is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1037: warning: Member GetPointed(mpWindow &w, wxPoint eventPoint) (function) of class MathPlot::mpInfoLegend is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1013: warning: Member GetItemMode() const (function) of class MathPlot::mpInfoLegend is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1026: warning: Member GetItemDirection() const (function) of class MathPlot::mpInfoLegend is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1031: warning: Member SetNeedUpdate() (function) of class MathPlot::mpInfoLegend is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:1013: warning: Member GetItemMode() const (function) of class MathPlot::mpInfoLegend is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:1026: warning: Member GetItemDirection() const (function) of class MathPlot::mpInfoLegend is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:1031: warning: Member SetNeedUpdate() (function) of class MathPlot::mpInfoLegend is not documented.
 E:/wxMathPlot/mathplot/mathplot.h:425: warning: Member mpLayer(mpLayerType layerType) (function) of class MathPlot::mpLayer is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:425: warning: Member mpLayer(mpLayerType layerType) (function) of class MathPlot::mpLayer is not documented.
 E:/wxMathPlot/mathplot/mathplot.h:1040: warning: Member m_item_mode (variable) of class MathPlot::mpInfoLegend is not documented.
 E:/wxMathPlot/mathplot/mathplot.h:1041: warning: Member m_item_direction (variable) of class MathPlot::mpInfoLegend is not documented.
 E:/wxMathPlot/mathplot/mathplot.h:885: warning: Member m_winX (variable) of class MathPlot::mpInfoLayer is not documented.
 E:/wxMathPlot/mathplot/mathplot.h:425: warning: Member mpLayer(mpLayerType layerType) (function) of class MathPlot::mpLayer is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:425: warning: Member mpLayer(mpLayerType layerType) (function) of class MathPlot::mpLayer is not documented.
 E:/wxMathPlot/mathplot/mathplot.h:475: warning: argument 'subtype' of command @param is not found in the argument list of MathPlot::mpLayer::IsLayerType(mpLayerType type, int *sub_type)
 E:/wxMathPlot/mathplot/mathplot.h:475: warning: The following parameter of MathPlot::mpLayer::IsLayerType(mpLayerType type, int *sub_type) is not documented:
+  parameter 'sub_type'
+E:/wxMathPlot/mathplot/tmp/mathplot.h:475: warning: argument 'subtype' of command @param is not found in the argument list of MathPlot::mpLayer::IsLayerType(mpLayerType type, int *sub_type)
+E:/wxMathPlot/mathplot/tmp/mathplot.h:475: warning: The following parameter of MathPlot::mpLayer::IsLayerType(mpLayerType type, int *sub_type) is not documented:
   parameter 'sub_type'
 E:/wxMathPlot/mathplot/mathplot.h:719: warning: argument 'CanDelete' of command @param is not found in the argument list of MathPlot::mpLayer::SetCanDelete(bool canDelete)
 E:/wxMathPlot/mathplot/mathplot.h:719: warning: The following parameter of MathPlot::mpLayer::SetCanDelete(bool canDelete) is not documented:
   parameter 'canDelete'
-E:/wxMathPlot/mathplot/mathplot.h:1175: warning: Member mpLine(double value, const wxPen &pen= *wxGREEN_PEN) (function) of class MathPlot::mpLine is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:719: warning: argument 'CanDelete' of command @param is not found in the argument list of MathPlot::mpLayer::SetCanDelete(bool canDelete)
+E:/wxMathPlot/mathplot/tmp/mathplot.h:719: warning: The following parameter of MathPlot::mpLayer::SetCanDelete(bool canDelete) is not documented:
+  parameter 'canDelete'
+E:/wxMathPlot/mathplot/mathplot.h:1187: warning: Member mpLine(double value, const wxPen &pen= *wxGREEN_PEN) (function) of class MathPlot::mpLine is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:1187: warning: Member mpLine(double value, const wxPen &pen= *wxGREEN_PEN) (function) of class MathPlot::mpLine is not documented.
 E:/wxMathPlot/mathplot/mathplot.h:425: warning: Member mpLayer(mpLayerType layerType) (function) of class MathPlot::mpLayer is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1207: warning: Member m_value (variable) of class MathPlot::mpLine is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1208: warning: Member m_IsHorizontal (variable) of class MathPlot::mpLine is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1184: warning: MathPlot::mpLine::GetValue has @param documentation sections but no arguments
-E:/wxMathPlot/mathplot/mathplot.h:2129: warning: Member UpdateBox(wxCoord left, wxCoord top, wxCoord width, wxCoord height) (function) of class MathPlot::mpMagnet is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:2134: warning: Member UpdateBox(const wxRect &size) (function) of class MathPlot::mpMagnet is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:2140: warning: Member Plot(wxClientDC &dc, const wxPoint &mousePos) (function) of class MathPlot::mpMagnet is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:2141: warning: Member ClearPlot(wxClientDC &dc) (function) of class MathPlot::mpMagnet is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:2142: warning: Member UpdatePlot(wxClientDC &dc, const wxPoint &mousePos) (function) of class MathPlot::mpMagnet is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:2143: warning: Member SaveDrawState(void) (function) of class MathPlot::mpMagnet is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:2150: warning: Member SetRightClick(void) (function) of class MathPlot::mpMagnet is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:425: warning: Member mpLayer(mpLayerType layerType) (function) of class MathPlot::mpLayer is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1219: warning: Member m_value (variable) of class MathPlot::mpLine is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1220: warning: Member m_IsHorizontal (variable) of class MathPlot::mpLine is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1196: warning: MathPlot::mpLine::GetValue has @param documentation sections but no arguments
+E:/wxMathPlot/mathplot/tmp/mathplot.h:1196: warning: MathPlot::mpLine::GetValue has @param documentation sections but no arguments
+E:/wxMathPlot/mathplot/mathplot.h:2141: warning: Member UpdateBox(wxCoord left, wxCoord top, wxCoord width, wxCoord height) (function) of class MathPlot::mpMagnet is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:2146: warning: Member UpdateBox(const wxRect &size) (function) of class MathPlot::mpMagnet is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:2152: warning: Member Plot(wxClientDC &dc, const wxPoint &mousePos) (function) of class MathPlot::mpMagnet is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:2153: warning: Member ClearPlot(wxClientDC &dc) (function) of class MathPlot::mpMagnet is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:2154: warning: Member UpdatePlot(wxClientDC &dc, const wxPoint &mousePos) (function) of class MathPlot::mpMagnet is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:2155: warning: Member SaveDrawState(void) (function) of class MathPlot::mpMagnet is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:2162: warning: Member SetRightClick(void) (function) of class MathPlot::mpMagnet is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:2141: warning: Member UpdateBox(wxCoord left, wxCoord top, wxCoord width, wxCoord height) (function) of class MathPlot::mpMagnet is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:2146: warning: Member UpdateBox(const wxRect &size) (function) of class MathPlot::mpMagnet is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:2152: warning: Member Plot(wxClientDC &dc, const wxPoint &mousePos) (function) of class MathPlot::mpMagnet is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:2153: warning: Member ClearPlot(wxClientDC &dc) (function) of class MathPlot::mpMagnet is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:2154: warning: Member UpdatePlot(wxClientDC &dc, const wxPoint &mousePos) (function) of class MathPlot::mpMagnet is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:2155: warning: Member SaveDrawState(void) (function) of class MathPlot::mpMagnet is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:2162: warning: Member SetRightClick(void) (function) of class MathPlot::mpMagnet is not documented.
 E:/wxMathPlot/mathplot/mathplot.h:425: warning: Member mpLayer(mpLayerType layerType) (function) of class MathPlot::mpLayer is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:3293: warning: Member m_reference_y (variable) of class MathPlot::mpMovableObject is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:3293: warning: Member m_reference_phi (variable) of class MathPlot::mpMovableObject is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:3303: warning: Member m_shape_ys (variable) of class MathPlot::mpMovableObject is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:3308: warning: Member m_trans_shape_ys (variable) of class MathPlot::mpMovableObject is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:3313: warning: Member m_bbox_max_x (variable) of class MathPlot::mpMovableObject is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:3313: warning: Member m_bbox_min_y (variable) of class MathPlot::mpMovableObject is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:3313: warning: Member m_bbox_max_y (variable) of class MathPlot::mpMovableObject is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:425: warning: Member mpLayer(mpLayerType layerType) (function) of class MathPlot::mpLayer is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:3302: warning: Member m_reference_y (variable) of class MathPlot::mpMovableObject is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:3302: warning: Member m_reference_phi (variable) of class MathPlot::mpMovableObject is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:3312: warning: Member m_shape_ys (variable) of class MathPlot::mpMovableObject is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:3317: warning: Member m_trans_shape_ys (variable) of class MathPlot::mpMovableObject is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:3322: warning: Member m_bbox_max_x (variable) of class MathPlot::mpMovableObject is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:3322: warning: Member m_bbox_min_y (variable) of class MathPlot::mpMovableObject is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:3322: warning: Member m_bbox_max_y (variable) of class MathPlot::mpMovableObject is not documented.
 E:/wxMathPlot/mathplot/mathplot.h:425: warning: Member mpLayer(mpLayerType layerType) (function) of class MathPlot::mpLayer is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1808: warning: Member GetColour(unsigned int id) (function) of class MathPlot::mpPieChart is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1799: warning: Member m_radius (variable) of class MathPlot::mpPieChart is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1800: warning: Member colours (variable) of class MathPlot::mpPieChart is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1664: warning: Member values (variable) of class MathPlot::mpChart is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1665: warning: Member labels (variable) of class MathPlot::mpChart is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1667: warning: Member m_max_value (variable) of class MathPlot::mpChart is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1668: warning: Member m_total_value (variable) of class MathPlot::mpChart is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:425: warning: Member mpLayer(mpLayerType layerType) (function) of class MathPlot::mpLayer is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1820: warning: Member GetColour(unsigned int id) (function) of class MathPlot::mpPieChart is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:1820: warning: Member GetColour(unsigned int id) (function) of class MathPlot::mpPieChart is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1811: warning: Member m_radius (variable) of class MathPlot::mpPieChart is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1812: warning: Member colours (variable) of class MathPlot::mpPieChart is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1676: warning: Member values (variable) of class MathPlot::mpChart is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1677: warning: Member labels (variable) of class MathPlot::mpChart is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1679: warning: Member m_max_value (variable) of class MathPlot::mpChart is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1680: warning: Member m_total_value (variable) of class MathPlot::mpChart is not documented.
 E:/wxMathPlot/mathplot/mathplot.h:425: warning: Member mpLayer(mpLayerType layerType) (function) of class MathPlot::mpLayer is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:3293: warning: Member m_reference_y (variable) of class MathPlot::mpMovableObject is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:3293: warning: Member m_reference_phi (variable) of class MathPlot::mpMovableObject is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:3303: warning: Member m_shape_ys (variable) of class MathPlot::mpMovableObject is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:3308: warning: Member m_trans_shape_ys (variable) of class MathPlot::mpMovableObject is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:3313: warning: Member m_bbox_max_x (variable) of class MathPlot::mpMovableObject is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:3313: warning: Member m_bbox_min_y (variable) of class MathPlot::mpMovableObject is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:3313: warning: Member m_bbox_max_y (variable) of class MathPlot::mpMovableObject is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:3176: warning: Member mpPrintout(mpWindow *drawWindow, const wxString &title=_T("wxMathPlot print output"), int factor=2) (function) of class MathPlot::mpPrintout is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:3182: warning: Member SetDrawState(bool drawState) (function) of class MathPlot::mpPrintout is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:3187: warning: Member OnPrintPage(int page) (function) of class MathPlot::mpPrintout is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:3188: warning: Member HasPage(int page) (function) of class MathPlot::mpPrintout is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:425: warning: Member mpLayer(mpLayerType layerType) (function) of class MathPlot::mpLayer is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:3302: warning: Member m_reference_y (variable) of class MathPlot::mpMovableObject is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:3302: warning: Member m_reference_phi (variable) of class MathPlot::mpMovableObject is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:3312: warning: Member m_shape_ys (variable) of class MathPlot::mpMovableObject is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:3317: warning: Member m_trans_shape_ys (variable) of class MathPlot::mpMovableObject is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:3322: warning: Member m_bbox_max_x (variable) of class MathPlot::mpMovableObject is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:3322: warning: Member m_bbox_min_y (variable) of class MathPlot::mpMovableObject is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:3322: warning: Member m_bbox_max_y (variable) of class MathPlot::mpMovableObject is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:3188: warning: Member mpPrintout(mpWindow *drawWindow, const wxString &title=_T("wxMathPlot print output"), int factor=2) (function) of class MathPlot::mpPrintout is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:3194: warning: Member SetDrawState(bool drawState) (function) of class MathPlot::mpPrintout is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:3199: warning: Member OnPrintPage(int page) (function) of class MathPlot::mpPrintout is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:3200: warning: Member HasPage(int page) (function) of class MathPlot::mpPrintout is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:3188: warning: Member mpPrintout(mpWindow *drawWindow, const wxString &title=_T("wxMathPlot print output"), int factor=2) (function) of class MathPlot::mpPrintout is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:3194: warning: Member SetDrawState(bool drawState) (function) of class MathPlot::mpPrintout is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:3199: warning: Member OnPrintPage(int page) (function) of class MathPlot::mpPrintout is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:3200: warning: Member HasPage(int page) (function) of class MathPlot::mpPrintout is not documented.
 E:/wxMathPlot/mathplot/mathplot.h:425: warning: Member mpLayer(mpLayerType layerType) (function) of class MathPlot::mpLayer is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1600: warning: explicit link request to 'mpALIGN_CENTER' could not be resolved
+E:/wxMathPlot/mathplot/tmp/mathplot.h:425: warning: Member mpLayer(mpLayerType layerType) (function) of class MathPlot::mpLayer is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1612: warning: explicit link request to 'mpALIGN_CENTER' could not be resolved
+E:/wxMathPlot/mathplot/tmp/mathplot.h:1612: warning: explicit link request to 'mpALIGN_CENTER' could not be resolved
 E:/wxMathPlot/mathplot/mathplot.h:180: warning: Member tab[4] (variable) of union MathPlot::mpRect is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1915: warning: Member SetMinScale(double min) (function) of class MathPlot::mpScale is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1920: warning: Member GetMinScale() const (function) of class MathPlot::mpScale is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1925: warning: Member SetMaxScale(double max) (function) of class MathPlot::mpScale is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1930: warning: Member GetMaxScale() const (function) of class MathPlot::mpScale is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1935: warning: Member IsLogAxis()=0 (function) of class MathPlot::mpScale is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1936: warning: Member SetLogAxis(bool log)=0 (function) of class MathPlot::mpScale is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1927: warning: Member SetMinScale(double min) (function) of class MathPlot::mpScale is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1932: warning: Member GetMinScale() const (function) of class MathPlot::mpScale is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1937: warning: Member SetMaxScale(double max) (function) of class MathPlot::mpScale is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1942: warning: Member GetMaxScale() const (function) of class MathPlot::mpScale is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1947: warning: Member IsLogAxis()=0 (function) of class MathPlot::mpScale is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1948: warning: Member SetLogAxis(bool log)=0 (function) of class MathPlot::mpScale is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:1927: warning: Member SetMinScale(double min) (function) of class MathPlot::mpScale is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:1932: warning: Member GetMinScale() const (function) of class MathPlot::mpScale is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:1937: warning: Member SetMaxScale(double max) (function) of class MathPlot::mpScale is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:1942: warning: Member GetMaxScale() const (function) of class MathPlot::mpScale is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:1947: warning: Member IsLogAxis()=0 (function) of class MathPlot::mpScale is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:1948: warning: Member SetLogAxis(bool log)=0 (function) of class MathPlot::mpScale is not documented.
 E:/wxMathPlot/mathplot/mathplot.h:425: warning: Member mpLayer(mpLayerType layerType) (function) of class MathPlot::mpLayer is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1946: warning: Member GetOrigin(mpWindow &w)=0 (function) of class MathPlot::mpScale is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1947: warning: Member GetStep(double scale) (function) of class MathPlot::mpScale is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1948: warning: Member DrawScaleName(wxDC &dc, mpWindow &w, int origin, int labelSize)=0 (function) of class MathPlot::mpScale is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1950: warning: Member FormatLogValue(double n) (function) of class MathPlot::mpScale is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1943: warning: Member m_min (variable) of class MathPlot::mpScale is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:2017: warning: Member SetLogAxis(bool log) (function) of class MathPlot::mpScaleX is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1915: warning: Member SetMinScale(double min) (function) of class MathPlot::mpScale is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1920: warning: Member GetMinScale() const (function) of class MathPlot::mpScale is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1925: warning: Member SetMaxScale(double max) (function) of class MathPlot::mpScale is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1930: warning: Member GetMaxScale() const (function) of class MathPlot::mpScale is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:425: warning: Member mpLayer(mpLayerType layerType) (function) of class MathPlot::mpLayer is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1958: warning: Member GetOrigin(mpWindow &w)=0 (function) of class MathPlot::mpScale is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1959: warning: Member GetStep(double scale) (function) of class MathPlot::mpScale is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1960: warning: Member DrawScaleName(wxDC &dc, mpWindow &w, int origin, int labelSize)=0 (function) of class MathPlot::mpScale is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1962: warning: Member FormatLogValue(double n) (function) of class MathPlot::mpScale is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:1958: warning: Member GetOrigin(mpWindow &w)=0 (function) of class MathPlot::mpScale is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:1959: warning: Member GetStep(double scale) (function) of class MathPlot::mpScale is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:1960: warning: Member DrawScaleName(wxDC &dc, mpWindow &w, int origin, int labelSize)=0 (function) of class MathPlot::mpScale is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:1962: warning: Member FormatLogValue(double n) (function) of class MathPlot::mpScale is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1955: warning: Member m_min (variable) of class MathPlot::mpScale is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:2029: warning: Member SetLogAxis(bool log) (function) of class MathPlot::mpScaleX is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:2029: warning: Member SetLogAxis(bool log) (function) of class MathPlot::mpScaleX is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1927: warning: Member SetMinScale(double min) (function) of class MathPlot::mpScale is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1932: warning: Member GetMinScale() const (function) of class MathPlot::mpScale is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1937: warning: Member SetMaxScale(double max) (function) of class MathPlot::mpScale is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1942: warning: Member GetMaxScale() const (function) of class MathPlot::mpScale is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:1927: warning: Member SetMinScale(double min) (function) of class MathPlot::mpScale is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:1932: warning: Member GetMinScale() const (function) of class MathPlot::mpScale is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:1937: warning: Member SetMaxScale(double max) (function) of class MathPlot::mpScale is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:1942: warning: Member GetMaxScale() const (function) of class MathPlot::mpScale is not documented.
 E:/wxMathPlot/mathplot/mathplot.h:425: warning: Member mpLayer(mpLayerType layerType) (function) of class MathPlot::mpLayer is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:2028: warning: Member DrawScaleName(wxDC &dc, mpWindow &w, int origin, int labelSize) (function) of class MathPlot::mpScaleX is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:2029: warning: Member FormatValue(const wxString &fmt, double n) (function) of class MathPlot::mpScaleX is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1947: warning: Member GetStep(double scale) (function) of class MathPlot::mpScale is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1950: warning: Member FormatLogValue(double n) (function) of class MathPlot::mpScale is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1943: warning: Member m_min (variable) of class MathPlot::mpScale is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:2006: warning: The following parameter of MathPlot::mpScaleX::SetLabelMode(unsigned int mode, unsigned int time_conv=0x20) is not documented:
+E:/wxMathPlot/mathplot/tmp/mathplot.h:425: warning: Member mpLayer(mpLayerType layerType) (function) of class MathPlot::mpLayer is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:2040: warning: Member DrawScaleName(wxDC &dc, mpWindow &w, int origin, int labelSize) (function) of class MathPlot::mpScaleX is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:2041: warning: Member FormatValue(const wxString &fmt, double n) (function) of class MathPlot::mpScaleX is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:2039: warning: Member GetOrigin(mpWindow &w) (function) of class MathPlot::mpScaleX is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:2040: warning: Member DrawScaleName(wxDC &dc, mpWindow &w, int origin, int labelSize) (function) of class MathPlot::mpScaleX is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:2041: warning: Member FormatValue(const wxString &fmt, double n) (function) of class MathPlot::mpScaleX is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1959: warning: Member GetStep(double scale) (function) of class MathPlot::mpScale is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1962: warning: Member FormatLogValue(double n) (function) of class MathPlot::mpScale is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:1959: warning: Member GetStep(double scale) (function) of class MathPlot::mpScale is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:1962: warning: Member FormatLogValue(double n) (function) of class MathPlot::mpScale is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1955: warning: Member m_min (variable) of class MathPlot::mpScale is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:2018: warning: The following parameter of MathPlot::mpScaleX::SetLabelMode(unsigned int mode, unsigned int time_conv=0x20) is not documented:
   parameter 'time_conv'
-E:/wxMathPlot/mathplot/mathplot.h:2059: warning: Member SetLogAxis(bool log) (function) of class MathPlot::mpScaleY is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:2061: warning: Member IsY2Axis() (function) of class MathPlot::mpScaleY is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:2065: warning: Member SetY2Axis(bool y2Axis) (function) of class MathPlot::mpScaleY is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1915: warning: Member SetMinScale(double min) (function) of class MathPlot::mpScale is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1920: warning: Member GetMinScale() const (function) of class MathPlot::mpScale is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1925: warning: Member SetMaxScale(double max) (function) of class MathPlot::mpScale is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1930: warning: Member GetMaxScale() const (function) of class MathPlot::mpScale is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:2018: warning: The following parameter of MathPlot::mpScaleX::SetLabelMode(unsigned int mode, unsigned int time_conv=0x20) is not documented:
+  parameter 'time_conv'
+E:/wxMathPlot/mathplot/mathplot.h:2071: warning: Member SetLogAxis(bool log) (function) of class MathPlot::mpScaleY is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:2073: warning: Member IsY2Axis() (function) of class MathPlot::mpScaleY is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:2077: warning: Member SetY2Axis(bool y2Axis) (function) of class MathPlot::mpScaleY is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:2071: warning: Member SetLogAxis(bool log) (function) of class MathPlot::mpScaleY is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:2073: warning: Member IsY2Axis() (function) of class MathPlot::mpScaleY is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:2077: warning: Member SetY2Axis(bool y2Axis) (function) of class MathPlot::mpScaleY is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1927: warning: Member SetMinScale(double min) (function) of class MathPlot::mpScale is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1932: warning: Member GetMinScale() const (function) of class MathPlot::mpScale is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1937: warning: Member SetMaxScale(double max) (function) of class MathPlot::mpScale is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1942: warning: Member GetMaxScale() const (function) of class MathPlot::mpScale is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:1927: warning: Member SetMinScale(double min) (function) of class MathPlot::mpScale is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:1932: warning: Member GetMinScale() const (function) of class MathPlot::mpScale is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:1937: warning: Member SetMaxScale(double max) (function) of class MathPlot::mpScale is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:1942: warning: Member GetMaxScale() const (function) of class MathPlot::mpScale is not documented.
 E:/wxMathPlot/mathplot/mathplot.h:425: warning: Member mpLayer(mpLayerType layerType) (function) of class MathPlot::mpLayer is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:2075: warning: Member DrawScaleName(wxDC &dc, mpWindow &w, int origin, int labelSize) (function) of class MathPlot::mpScaleY is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1947: warning: Member GetStep(double scale) (function) of class MathPlot::mpScale is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1950: warning: Member FormatLogValue(double n) (function) of class MathPlot::mpScale is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:2068: warning: Member m_isY2Axis (variable) of class MathPlot::mpScaleY is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1943: warning: Member m_min (variable) of class MathPlot::mpScale is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:425: warning: Member mpLayer(mpLayerType layerType) (function) of class MathPlot::mpLayer is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:2087: warning: Member DrawScaleName(wxDC &dc, mpWindow &w, int origin, int labelSize) (function) of class MathPlot::mpScaleY is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:2086: warning: Member GetOrigin(mpWindow &w) (function) of class MathPlot::mpScaleY is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:2087: warning: Member DrawScaleName(wxDC &dc, mpWindow &w, int origin, int labelSize) (function) of class MathPlot::mpScaleY is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1959: warning: Member GetStep(double scale) (function) of class MathPlot::mpScale is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1962: warning: Member FormatLogValue(double n) (function) of class MathPlot::mpScale is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:1959: warning: Member GetStep(double scale) (function) of class MathPlot::mpScale is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:1962: warning: Member FormatLogValue(double n) (function) of class MathPlot::mpScale is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:2080: warning: Member m_isY2Axis (variable) of class MathPlot::mpScaleY is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1955: warning: Member m_min (variable) of class MathPlot::mpScale is not documented.
 E:/wxMathPlot/mathplot/mathplot.h:425: warning: Member mpLayer(mpLayerType layerType) (function) of class MathPlot::mpLayer is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:3124: warning: Member m_location (variable) of class MathPlot::mpText is not documented.
-E:/wxMathPlot/mathplot/mathplot.cpp:4672: warning: argument 'name' from the argument list of MathPlot::mpText::mpText has multiple @param documentation sections
-E:/wxMathPlot/mathplot/mathplot.cpp:4672: warning: argument 'offsetx' from the argument list of MathPlot::mpText::mpText has multiple @param documentation sections
-E:/wxMathPlot/mathplot/mathplot.h:3079: warning: argument 'location' of command @param is not found in the argument list of MathPlot::mpText::mpText(const wxString &name, mpLocation marginLocation)
-E:/wxMathPlot/mathplot/mathplot.h:3079: warning: The following parameter of MathPlot::mpText::mpText(const wxString &name, mpLocation marginLocation) is not documented:
+E:/wxMathPlot/mathplot/tmp/mathplot.h:425: warning: Member mpLayer(mpLayerType layerType) (function) of class MathPlot::mpLayer is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:3136: warning: Member m_location (variable) of class MathPlot::mpText is not documented.
+E:/wxMathPlot/mathplot/mathplot.cpp:4675: warning: argument 'name' from the argument list of MathPlot::mpText::mpText has multiple @param documentation sections
+E:/wxMathPlot/mathplot/mathplot.cpp:4675: warning: argument 'offsetx' from the argument list of MathPlot::mpText::mpText has multiple @param documentation sections
+E:/wxMathPlot/mathplot/mathplot.h:3091: warning: argument 'location' of command @param is not found in the argument list of MathPlot::mpText::mpText(const wxString &name, mpLocation marginLocation)
+E:/wxMathPlot/mathplot/mathplot.h:3091: warning: The following parameter of MathPlot::mpText::mpText(const wxString &name, mpLocation marginLocation) is not documented:
   parameter 'marginLocation'
-E:/wxMathPlot/mathplot/mathplot.h:3114: warning: found documented return type for MathPlot::mpText::GetOffset that does not return anything
+E:/wxMathPlot/mathplot/tmp/mathplot.h:3091: warning: argument 'location' of command @param is not found in the argument list of MathPlot::mpText::mpText(const wxString &name, mpLocation marginLocation)
+E:/wxMathPlot/mathplot/tmp/mathplot.h:3091: warning: The following parameter of MathPlot::mpText::mpText(const wxString &name, mpLocation marginLocation) is not documented:
+  parameter 'marginLocation'
+E:/wxMathPlot/mathplot/mathplot.h:3126: warning: found documented return type for MathPlot::mpText::GetOffset that does not return anything
+E:/wxMathPlot/mathplot/tmp/mathplot.h:3126: warning: found documented return type for MathPlot::mpText::GetOffset that does not return anything
 E:/wxMathPlot/mathplot/mathplot.h:425: warning: Member mpLayer(mpLayerType layerType) (function) of class MathPlot::mpLayer is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:3124: warning: Member m_location (variable) of class MathPlot::mpText is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1240: warning: Member mpVerticalLine(double xvalue, const wxPen &pen= *wxGREEN_PEN) (function) of class MathPlot::mpVerticalLine is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1175: warning: Member mpLine(double value, const wxPen &pen= *wxGREEN_PEN) (function) of class MathPlot::mpLine is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:425: warning: Member mpLayer(mpLayerType layerType) (function) of class MathPlot::mpLayer is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:3136: warning: Member m_location (variable) of class MathPlot::mpText is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1252: warning: Member mpVerticalLine(double xvalue, const wxPen &pen= *wxGREEN_PEN) (function) of class MathPlot::mpVerticalLine is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:1252: warning: Member mpVerticalLine(double xvalue, const wxPen &pen= *wxGREEN_PEN) (function) of class MathPlot::mpVerticalLine is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1187: warning: Member mpLine(double value, const wxPen &pen= *wxGREEN_PEN) (function) of class MathPlot::mpLine is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:1187: warning: Member mpLine(double value, const wxPen &pen= *wxGREEN_PEN) (function) of class MathPlot::mpLine is not documented.
 E:/wxMathPlot/mathplot/mathplot.h:425: warning: Member mpLayer(mpLayerType layerType) (function) of class MathPlot::mpLayer is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1207: warning: Member m_value (variable) of class MathPlot::mpLine is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:1208: warning: Member m_IsHorizontal (variable) of class MathPlot::mpLine is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:2194: warning: Member mpWindow(wxWindow *parent, wxWindowID id=wxID_ANY, const wxPoint &pos=wxDefaultPosition, const wxSize &size=wxDefaultSize, long flags=0) (function) of class MathPlot::mpWindow is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:2597: warning: Member CountLayersFXYPlot() (function) of class MathPlot::mpWindow is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:2645: warning: Member GetBoundingBox(void) (function) of class MathPlot::mpWindow is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:2821: warning: Member GetbgColour() const (function) of class MathPlot::mpWindow is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:2826: warning: Member SetbgColour(const wxColour &colour) (function) of class MathPlot::mpWindow is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:2871: warning: Member IsLogYaxis() const (function) of class MathPlot::mpWindow is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:2876: warning: Member SetLogXaxis(bool log) (function) of class MathPlot::mpWindow is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:2881: warning: Member SetLogYaxis(bool log) (function) of class MathPlot::mpWindow is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:2886: warning: Member GetMagnetize() const (function) of class MathPlot::mpWindow is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:2891: warning: Member SetMagnetize(bool mag) (function) of class MathPlot::mpWindow is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:2896: warning: Member RefreshConfigWindow() (function) of class MathPlot::mpWindow is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:2903: warning: Member Update_CountY2Axis(bool Y2Axis) (function) of class MathPlot::mpWindow is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:2905: warning: Member Y2AxisExist(void) const (function) of class MathPlot::mpWindow is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:2941: warning: Member DoScrollCalc(const int position, const int orientation) (function) of class MathPlot::mpWindow is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:2943: warning: Member DoZoomInXCalc(const int staticXpixel) (function) of class MathPlot::mpWindow is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:2944: warning: Member DoZoomInYCalc(const int staticYpixel) (function) of class MathPlot::mpWindow is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:2945: warning: Member DoZoomOutXCalc(const int staticXpixel) (function) of class MathPlot::mpWindow is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:2946: warning: Member DoZoomOutYCalc(const int staticYpixel) (function) of class MathPlot::mpWindow is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:2948: warning: Member Zoom(bool zoomIn, const wxPoint &centerPoint) (function) of class MathPlot::mpWindow is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:2954: warning: Member InitParameters() (function) of class MathPlot::mpWindow is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:2956: warning: Member m_parent (variable) of class MathPlot::mpWindow is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:2957: warning: Member m_fullscreen (variable) of class MathPlot::mpWindow is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:2996: warning: Member m_repainting (variable) of class MathPlot::mpWindow is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:2997: warning: Member m_last_lx (variable) of class MathPlot::mpWindow is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:3001: warning: Member m_mouseMovedAfterRightClick (variable) of class MathPlot::mpWindow is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:3004: warning: Member m_enableScrollBars (variable) of class MathPlot::mpWindow is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:3005: warning: Member m_scrollX (variable) of class MathPlot::mpWindow is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:3005: warning: Member m_scrollY (variable) of class MathPlot::mpWindow is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:3009: warning: Member m_InInfoLegend (variable) of class MathPlot::mpWindow is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:3012: warning: Member m_zoom_dim (variable) of class MathPlot::mpWindow is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:3013: warning: Member m_zoom_oldDim (variable) of class MathPlot::mpWindow is not documented.
-E:/wxMathPlot/mathplot/mathplot.h:2899: warning: The following parameter of MathPlot::mpWindow::GetConfigWindow(bool Create=false) is not documented:
+E:/wxMathPlot/mathplot/tmp/mathplot.h:425: warning: Member mpLayer(mpLayerType layerType) (function) of class MathPlot::mpLayer is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1219: warning: Member m_value (variable) of class MathPlot::mpLine is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:1220: warning: Member m_IsHorizontal (variable) of class MathPlot::mpLine is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:2206: warning: Member mpWindow(wxWindow *parent, wxWindowID id=wxID_ANY, const wxPoint &pos=wxDefaultPosition, const wxSize &size=wxDefaultSize, long flags=0) (function) of class MathPlot::mpWindow is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:2609: warning: Member CountLayersFXYPlot() (function) of class MathPlot::mpWindow is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:2657: warning: Member GetBoundingBox(void) (function) of class MathPlot::mpWindow is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:2833: warning: Member GetbgColour() const (function) of class MathPlot::mpWindow is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:2838: warning: Member SetbgColour(const wxColour &colour) (function) of class MathPlot::mpWindow is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:2883: warning: Member IsLogYaxis() const (function) of class MathPlot::mpWindow is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:2888: warning: Member SetLogXaxis(bool log) (function) of class MathPlot::mpWindow is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:2893: warning: Member SetLogYaxis(bool log) (function) of class MathPlot::mpWindow is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:2898: warning: Member GetMagnetize() const (function) of class MathPlot::mpWindow is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:2903: warning: Member SetMagnetize(bool mag) (function) of class MathPlot::mpWindow is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:2908: warning: Member RefreshConfigWindow() (function) of class MathPlot::mpWindow is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:2915: warning: Member Update_CountY2Axis(bool Y2Axis) (function) of class MathPlot::mpWindow is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:2917: warning: Member Y2AxisExist(void) const (function) of class MathPlot::mpWindow is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:2206: warning: Member mpWindow(wxWindow *parent, wxWindowID id=wxID_ANY, const wxPoint &pos=wxDefaultPosition, const wxSize &size=wxDefaultSize, long flags=0) (function) of class MathPlot::mpWindow is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:2609: warning: Member CountLayersFXYPlot() (function) of class MathPlot::mpWindow is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:2657: warning: Member GetBoundingBox(void) (function) of class MathPlot::mpWindow is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:2833: warning: Member GetbgColour() const (function) of class MathPlot::mpWindow is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:2838: warning: Member SetbgColour(const wxColour &colour) (function) of class MathPlot::mpWindow is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:2883: warning: Member IsLogYaxis() const (function) of class MathPlot::mpWindow is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:2888: warning: Member SetLogXaxis(bool log) (function) of class MathPlot::mpWindow is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:2893: warning: Member SetLogYaxis(bool log) (function) of class MathPlot::mpWindow is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:2898: warning: Member GetMagnetize() const (function) of class MathPlot::mpWindow is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:2903: warning: Member SetMagnetize(bool mag) (function) of class MathPlot::mpWindow is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:2908: warning: Member RefreshConfigWindow() (function) of class MathPlot::mpWindow is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:2915: warning: Member Update_CountY2Axis(bool Y2Axis) (function) of class MathPlot::mpWindow is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:2917: warning: Member Y2AxisExist(void) const (function) of class MathPlot::mpWindow is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:2953: warning: Member DoScrollCalc(const int position, const int orientation) (function) of class MathPlot::mpWindow is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:2955: warning: Member DoZoomInXCalc(const int staticXpixel) (function) of class MathPlot::mpWindow is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:2956: warning: Member DoZoomInYCalc(const int staticYpixel) (function) of class MathPlot::mpWindow is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:2957: warning: Member DoZoomOutXCalc(const int staticXpixel) (function) of class MathPlot::mpWindow is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:2958: warning: Member DoZoomOutYCalc(const int staticYpixel) (function) of class MathPlot::mpWindow is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:2960: warning: Member Zoom(bool zoomIn, const wxPoint &centerPoint) (function) of class MathPlot::mpWindow is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:2966: warning: Member InitParameters() (function) of class MathPlot::mpWindow is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:2953: warning: Member DoScrollCalc(const int position, const int orientation) (function) of class MathPlot::mpWindow is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:2955: warning: Member DoZoomInXCalc(const int staticXpixel) (function) of class MathPlot::mpWindow is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:2956: warning: Member DoZoomInYCalc(const int staticYpixel) (function) of class MathPlot::mpWindow is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:2957: warning: Member DoZoomOutXCalc(const int staticXpixel) (function) of class MathPlot::mpWindow is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:2958: warning: Member DoZoomOutYCalc(const int staticYpixel) (function) of class MathPlot::mpWindow is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:2960: warning: Member Zoom(bool zoomIn, const wxPoint &centerPoint) (function) of class MathPlot::mpWindow is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:2966: warning: Member InitParameters() (function) of class MathPlot::mpWindow is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:2968: warning: Member m_parent (variable) of class MathPlot::mpWindow is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:2969: warning: Member m_fullscreen (variable) of class MathPlot::mpWindow is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:3008: warning: Member m_repainting (variable) of class MathPlot::mpWindow is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:3009: warning: Member m_last_lx (variable) of class MathPlot::mpWindow is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:3013: warning: Member m_mouseMovedAfterRightClick (variable) of class MathPlot::mpWindow is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:3016: warning: Member m_enableScrollBars (variable) of class MathPlot::mpWindow is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:3017: warning: Member m_scrollX (variable) of class MathPlot::mpWindow is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:3017: warning: Member m_scrollY (variable) of class MathPlot::mpWindow is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:3021: warning: Member m_InInfoLegend (variable) of class MathPlot::mpWindow is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:3024: warning: Member m_zoom_dim (variable) of class MathPlot::mpWindow is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:3025: warning: Member m_zoom_oldDim (variable) of class MathPlot::mpWindow is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:2911: warning: The following parameter of MathPlot::mpWindow::GetConfigWindow(bool Create=false) is not documented:
   parameter 'Create'
-E:/wxMathPlot/mathplot/mathplot.h:2603: warning: MathPlot::mpWindow::GetDesiredBoundingBox has @param documentation sections but no arguments
-E:/wxMathPlot/mathplot/mathplot.h:2255: warning: The following parameter of MathPlot::mpWindow::GetLayerPlot(int position, mpFunctionType func=mpfAllType) is not documented:
+E:/wxMathPlot/mathplot/tmp/mathplot.h:2911: warning: The following parameter of MathPlot::mpWindow::GetConfigWindow(bool Create=false) is not documented:
+  parameter 'Create'
+E:/wxMathPlot/mathplot/mathplot.h:2615: warning: MathPlot::mpWindow::GetDesiredBoundingBox has @param documentation sections but no arguments
+E:/wxMathPlot/mathplot/tmp/mathplot.h:2615: warning: MathPlot::mpWindow::GetDesiredBoundingBox has @param documentation sections but no arguments
+E:/wxMathPlot/mathplot/mathplot.h:2267: warning: The following parameter of MathPlot::mpWindow::GetLayerPlot(int position, mpFunctionType func=mpfAllType) is not documented:
   parameter 'func'
-E:/wxMathPlot/mathplot/mathplot.h:2726: warning: MathPlot::mpWindow::GetMarginBottom has @param documentation sections but no arguments
-E:/wxMathPlot/mathplot/mathplot.h:2738: warning: MathPlot::mpWindow::GetMarginLeft has @param documentation sections but no arguments
-E:/wxMathPlot/mathplot/mathplot.h:2714: warning: MathPlot::mpWindow::GetMarginRight has @param documentation sections but no arguments
-E:/wxMathPlot/mathplot/mathplot.h:2702: warning: MathPlot::mpWindow::GetMarginTop has @param documentation sections but no arguments
-E:/wxMathPlot/mathplot/mathplot.h:2447: warning: The following parameter of MathPlot::mpWindow::SetPos(const double posX, const double posY, const double posY2) is not documented:
+E:/wxMathPlot/mathplot/tmp/mathplot.h:2267: warning: The following parameter of MathPlot::mpWindow::GetLayerPlot(int position, mpFunctionType func=mpfAllType) is not documented:
+  parameter 'func'
+E:/wxMathPlot/mathplot/mathplot.h:2738: warning: MathPlot::mpWindow::GetMarginBottom has @param documentation sections but no arguments
+E:/wxMathPlot/mathplot/tmp/mathplot.h:2738: warning: MathPlot::mpWindow::GetMarginBottom has @param documentation sections but no arguments
+E:/wxMathPlot/mathplot/mathplot.h:2750: warning: MathPlot::mpWindow::GetMarginLeft has @param documentation sections but no arguments
+E:/wxMathPlot/mathplot/tmp/mathplot.h:2750: warning: MathPlot::mpWindow::GetMarginLeft has @param documentation sections but no arguments
+E:/wxMathPlot/mathplot/mathplot.h:2726: warning: MathPlot::mpWindow::GetMarginRight has @param documentation sections but no arguments
+E:/wxMathPlot/mathplot/tmp/mathplot.h:2726: warning: MathPlot::mpWindow::GetMarginRight has @param documentation sections but no arguments
+E:/wxMathPlot/mathplot/mathplot.h:2714: warning: MathPlot::mpWindow::GetMarginTop has @param documentation sections but no arguments
+E:/wxMathPlot/mathplot/tmp/mathplot.h:2714: warning: MathPlot::mpWindow::GetMarginTop has @param documentation sections but no arguments
+E:/wxMathPlot/mathplot/mathplot.h:2459: warning: The following parameter of MathPlot::mpWindow::SetPos(const double posX, const double posY, const double posY2) is not documented:
   parameter 'posY2'
-E:/wxMathPlot/mathplot/mathplot.h:2380: warning: The following parameter of MathPlot::mpWindow::SetPosY(const double posY, const double posY2) is not documented:
+E:/wxMathPlot/mathplot/tmp/mathplot.h:2459: warning: The following parameter of MathPlot::mpWindow::SetPos(const double posX, const double posY, const double posY2) is not documented:
   parameter 'posY2'
-E:/wxMathPlot/mathplot/mathplot.h:3560: warning: Member wxIndexColour(unsigned int id) (function) of class MathPlot::wxIndexColour is not documented.
+E:/wxMathPlot/mathplot/mathplot.h:2392: warning: The following parameter of MathPlot::mpWindow::SetPosY(const double posY, const double posY2) is not documented:
+  parameter 'posY2'
+E:/wxMathPlot/mathplot/tmp/mathplot.h:2392: warning: The following parameter of MathPlot::mpWindow::SetPosY(const double posY, const double posY2) is not documented:
+  parameter 'posY2'
+E:/wxMathPlot/mathplot/mathplot.h:3569: warning: Member wxIndexColour(unsigned int id) (function) of class MathPlot::wxIndexColour is not documented.
+E:/wxMathPlot/mathplot/tmp/mathplot.h:3572: warning: Member wxIndexColour(unsigned int id) (function) of class MathPlot::wxIndexColour is not documented.
 
 *** Doxygen has finished
