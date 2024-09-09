@@ -693,7 +693,7 @@ mpInfoLegend::mpInfoLegend() :
   m_item_mode = mpLegendLine;
   m_item_direction = mpVertical;
   m_location = mpMarginBottomCenter;
-  m_need_update = true;
+  m_needs_update = true;
 }
 
 mpInfoLegend::mpInfoLegend(wxRect rect, const wxBrush &brush, mpLocation location) :
@@ -702,19 +702,9 @@ mpInfoLegend::mpInfoLegend(wxRect rect, const wxBrush &brush, mpLocation locatio
   m_subtype = mpiLegend;
   m_item_mode = mpLegendLine;
   m_item_direction = mpVertical;
-  m_need_update = true;
+  m_needs_update = true;
 }
 
-/**
- * Function that create/update the bitmap of the legend.
- * This operation is done when:
- * - we change the direction of the legend
- * - we change the decoration (line or square)
- * - a name of a plot has changed
- * - the visibility of a plot has changed
- * - a plot is added or removed
- * The call of this function is controled by the boolean m_need_update
- */
 void mpInfoLegend::UpdateBitmap(wxDC &dc, mpWindow &w)
 {
   // Create a temporary bitmap to draw the legend
@@ -739,8 +729,8 @@ void mpInfoLegend::UpdateBitmap(wxDC &dc, mpWindow &w)
   wxBrush sqrBrush(*wxWHITE, wxBRUSHSTYLE_SOLID);
 
   // Get series name and create new bitmap legend
-  m_boundLegendList.clear();
-  int IDplot = 0;
+  m_LegendDetailList.clear();
+  int plotLayerIdx = 0;
   for (unsigned int p = 0; p < w.CountAllLayers(); p++)
   {
     mpLayer* ly = w.GetLayer(p);
@@ -775,12 +765,12 @@ void mpInfoLegend::UpdateBitmap(wxDC &dc, mpWindow &w)
                 LEGEND_LINEWIDTH, LEGEND_LINEWIDTH);
         }
 
-        // Determine the full bound of the legend and store it
-        boundLegend b;
-        b.bound = {posX, posY - MARGIN_LEGEND - (tmpY >> 1),
+        // Determine the full boundingBox of the legend and store it
+        LegendDetail ld;
+        ld.boundingBox = {posX, posY - MARGIN_LEGEND - (tmpY >> 1),
               LEGEND_LINEWIDTH + 2 * MARGIN_LEGEND + tmpX, tmpY + MARGIN_LEGEND + (tmpY >> 1)};
-        b.id = IDplot;
-        m_boundLegendList.push_back(b);
+        ld.layerIdx = plotLayerIdx;
+        m_LegendDetailList.push_back(ld);
 
         // Draw the name of the function
         posX += LEGEND_LINEWIDTH + MARGIN_LEGEND;
@@ -805,7 +795,7 @@ void mpInfoLegend::UpdateBitmap(wxDC &dc, mpWindow &w)
             height = posY + tmpY;
         }
       }
-      IDplot++;
+      plotLayerIdx++;
     }
   }
 
@@ -835,7 +825,7 @@ void mpInfoLegend::UpdateBitmap(wxDC &dc, mpWindow &w)
     buff_dc2.SelectObject(*m_info_bmp);
     buff_dc2.Blit(0, 0, width, height, &buff_dc, 0, 0);
     buff_dc2.SelectObject(wxNullBitmap);
-    m_need_update = false;
+    m_needs_update = false;
   }
   else
     // To avoid mouse focus on empty legend
@@ -847,7 +837,7 @@ void mpInfoLegend::UpdateBitmap(wxDC &dc, mpWindow &w)
 
 void mpInfoLegend::DoPlot(wxDC &dc, mpWindow &w)
 {
-  if (m_need_update)
+  if (m_needs_update)
     UpdateBitmap(dc, w);
   else
     // In case we have resize
@@ -875,16 +865,21 @@ void mpInfoLegend::DoPlot(wxDC &dc, mpWindow &w)
 
 int mpInfoLegend::GetPointed(mpWindow &WXUNUSED(w), wxPoint eventPoint)
 {
-  // The name of each series is in an rectangular area.
-  // Determine in which rectangular we have clicked
-  for (std::vector<boundLegend>::iterator it = m_boundLegendList.begin(); it != m_boundLegendList.end(); it++)
+  // Adjust clicked point coordinates for legend bitmap's offset within plot area
+  wxPoint clickPoint(eventPoint.x-m_dim.x, eventPoint.y-m_dim.y);
+  // The symbol and name of each series is in an rectangular area.
+  // Find which series rectangle we have clicked
+  for (std::vector<LegendDetail>::iterator it = m_LegendDetailList.begin(); it != m_LegendDetailList.end(); it++)
   {
-    mpRect bb = ((boundLegend)*it).bound;
-    wxRect b = wxRect(bb.x + m_dim.x, bb.y + m_dim.y, bb.width, bb.height);
+    LegendDetail &ld = *it; // ToDo Lionel: this should be const, after below changes are made.
+    // ToDo Lionel: 1) Document why the width is changed below.
+    // ToDo Lionel: 2) Shouldn't this be done where boundingBox is created, rather than here?
+    // ToDo Lionel: 3) Demo should have a sample with a vertical legend to check this stuff...
+    wxRect b = ld.boundingBox;
     if (m_item_direction == mpVertical)
       b.width = m_dim.width;
-    if (b.Contains(eventPoint))
-      return ((boundLegend)*it).id;
+    if (b.Contains(clickPoint))
+      return ld.layerIdx;
   }
   return -1;
 }
