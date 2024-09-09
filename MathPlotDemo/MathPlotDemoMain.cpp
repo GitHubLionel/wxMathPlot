@@ -189,7 +189,7 @@ void MathPlotDemoFrame::InitializePlot(void)
 
   mpInfoLegend* legend;
   mPlot->AddLayer(legend = new mpInfoLegend());
-  legend->SetItemDirection(mpHorizontal);
+  legend->SetItemDirection(mpHorizontal); // Note: Comment out this line to test mpVertical
   legend->SetVisible(true);
 
   mPlot->Fit();

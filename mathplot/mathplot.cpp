@@ -730,7 +730,7 @@ void mpInfoLegend::UpdateBitmap(wxDC &dc, mpWindow &w)
 
   // Get series name and create new bitmap legend
   m_LegendDetailList.clear();
-  unsigned int plotLayerIdx = 0;
+  unsigned int layerIdx = 0;
   for (unsigned int p = 0; p < w.CountAllLayers(); p++)
   {
     mpLayer* ly = w.GetLayer(p);
@@ -767,9 +767,10 @@ void mpInfoLegend::UpdateBitmap(wxDC &dc, mpWindow &w)
 
         // Determine the full boundingBox of the legend and store it
         LegendDetail ld;
+        // ToDo Lionel: The next line REPEATS calculation of bounds (above and below) - Fix this so no repetition - DRY!
         ld.boundingBox = {posX, posY - MARGIN_LEGEND - (tmpY >> 1),
-            posX + tmpX + LEGEND_LINEWIDTH + 2 * MARGIN_LEGEND, posY + tmpY};
-        ld.layerIdx = plotLayerIdx;
+              LEGEND_LINEWIDTH + 2 * MARGIN_LEGEND + tmpX, tmpY + MARGIN_LEGEND + (tmpY >> 1)};
+        ld.layerIdx = layerIdx;
         m_LegendDetailList.push_back(ld);
 
         // Draw the name of the function
@@ -795,20 +796,7 @@ void mpInfoLegend::UpdateBitmap(wxDC &dc, mpWindow &w)
             height = posY + tmpY;
         }
       }
-      plotLayerIdx++;
-    }
-  }
-
-  // In case we are in Vertical mode, we consider that the width of each boundingBox
-  // is equal to the width of the full legend box. So, no need to click exactly on the label
-  // in the GetPointed function.
-  // Note: By doing that now and not in the GetPointed function, we have lost the real width of the label.
-  if (m_item_direction == mpVertical)
-  {
-    for (std::vector<LegendDetail>::iterator it = m_LegendDetailList.begin(); it != m_LegendDetailList.end(); it++)
-    {
-      LegendDetail& ld = *it;
-      ld.boundingBox.right = ld.boundingBox.left + width;
+      layerIdx++;
     }
   }
 
@@ -884,10 +872,15 @@ int mpInfoLegend::GetPointed(mpWindow &WXUNUSED(w), wxPoint eventPoint)
   // Find which series rectangle we have clicked
   for (std::vector<LegendDetail>::iterator it = m_LegendDetailList.begin(); it != m_LegendDetailList.end(); it++)
   {
-    const LegendDetail& ld = *it;
-    const mpRect* rect = &ld.boundingBox;
-    if ((clickPoint.x > rect->left && clickPoint.x < rect->right) &&
-        (clickPoint.y > rect->top && clickPoint.y < rect->bottom)) return ld.layerIdx;
+    const LegendDetail &ld = *it;
+    // In mpVertical mode, shorter labels are shorter than legend width (set by the longest).
+    // We'd like a user click to the right of a label to be considered clicking on the label.
+    // So, set the bounding box width to the maximum (ie legend width).
+    wxRect b = ld.boundingBox;
+    if (m_item_direction == mpVertical)
+      b.width = m_dim.width;
+    if (b.Contains(clickPoint))
+      return ld.layerIdx;
   }
   return -1;
 }
@@ -1921,7 +1914,7 @@ void mpBarChart::DoPlot(wxDC &dc, mpWindow &w)
             // Default: omit labels
             break;
         }
-        dc.DrawRotatedText(currentLabel, labelX, labelY, m_labelAngle);
+        dc.DrawRotatedText(currentLabel, labelX, labelY, m_labelAngle); // bar label
       }
     }
   }
@@ -3625,8 +3618,7 @@ bool mpWindow::DelLayer(mpLayer *layer, bool alsoDeleteObject, bool refreshDispl
         // Remove pointer to the object from m_layers.
         // WARNING: 'erase' invalidates 'it' and all m_layers iterators in existence
         m_layers.erase(it);
-        it = m_layers.begin(); // ...so reset 'it' as it was invalidated by above 'erase'
-                               // but it is not necessary since we leave the loop
+        // No need to reset 'it' as we return without any further reference.
         // Refresh
         RefreshLegend();
         if (refreshDisplay)

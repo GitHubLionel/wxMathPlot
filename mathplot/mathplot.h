@@ -312,8 +312,8 @@ typedef enum __mp_Style_Type
 /// Direction for the Legend layer
 typedef enum __mp_Direction_Type
 {
-  mpVertical,
-  mpHorizontal
+  mpVertical,  //!< each visible plot is described on its own line, one above the other
+  mpHorizontal //!< legend components follow each other horizontally on a single line
 } mpLegendDirection;
 
 typedef enum __Symbol_Type
@@ -739,7 +739,7 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
   protected:
     const mpLayerType m_type;   //!< Layer type mpLAYER_*
     mpWindow* m_win;            //!< The wxWindow handle
-    int m_subtype;              //!< Layer sub type, set in constructor (in ctor layers, as above)
+    int m_subtype;              //!< Layer sub type, set in constructors
     wxFont m_font;              //!< Layer's font
     wxColour m_fontcolour;      //!< Layer's font foreground colour
     wxPen m_pen;                //!< Layer's pen. Default Colour = Black, width = 1, style = wxPENSTYLE_SOLID
@@ -1051,7 +1051,7 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLegend: public mpInfoLayer
     struct LegendDetail
     {
         unsigned int layerIdx; //!< index of the plot function in the layer list
-        mpRect boundingBox;    //!< area occupied by the function name and decoration
+        wxRect boundingBox;    //!< area occupied by the function name and decoration
     };
     std::vector<LegendDetail> m_LegendDetailList; //!< list (well, vector) of details for each individual plot's legend component
     bool m_needs_update; //!< Do we need to redraw the legend bitmap? Set when a plot function changes (name, visibility, add or remove)
@@ -3229,7 +3229,7 @@ class WXDLLIMPEXP_MATHPLOT mpPrintout: public wxPrintout
 class WXDLLIMPEXP_MATHPLOT mpMovableObject: public mpFunction
 {
   public:
-    /** Default constructor (sets location and rotation to (0,0,0))
+    /** Default constructor (sets mpMovableObject location and rotation to (0,0,0))
      */
     mpMovableObject() :
         m_reference_x(0), m_reference_y(0), m_reference_phi(0), m_shape_xs(0), m_shape_ys(0)
@@ -3240,10 +3240,7 @@ class WXDLLIMPEXP_MATHPLOT mpMovableObject: public mpFunction
       m_bbox_min_y = m_bbox_max_y = 0;
     }
 
-    virtual ~mpMovableObject()
-    {
-      ;
-    }
+    virtual ~mpMovableObject() {}
 
     /** Get the current coordinate transformation.
      */
