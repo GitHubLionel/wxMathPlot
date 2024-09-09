@@ -177,13 +177,6 @@ typedef union
         wxCoord x2;
         wxCoord y2;
     };
-    struct // Similar to wxRect
-    {
-        wxCoord x;
-        wxCoord y;
-        wxCoord width;
-        wxCoord height;
-    };
     wxCoord tab[4];
 } mpRect;
 
@@ -870,14 +863,14 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLayer: public mpLayer
       return m_dim;
     }
 
-    /** Set the location of the box
+    /** Set the location of the mpInfoLayer box
      */
     void SetLocation(mpLocation location)
     {
       m_location = location;
     }
 
-    /** Returns the location of the box
+    /** Return the location of the mpInfoLayer box
      @return location */
     mpLocation GetLocation() const
     {
@@ -885,7 +878,7 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLayer: public mpLayer
     }
 
   protected:
-    wxRect m_dim;           //!< The bounding rectangle of the box. It may be resized dynamically by the Plot method.
+    wxRect m_dim;           //!< The bounding rectangle of the mpInfoLayer box (may be resized dynamically by the Plot method).
     wxRect m_oldDim;        //!< Keep the old values of m_dim
     wxBitmap* m_info_bmp;   //!< The bitmap that contain the info
     wxPoint m_reference;    //!< Holds the reference point for movements
@@ -898,7 +891,7 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLayer: public mpLayer
      @sa mpLayer::Plot */
     virtual void DoPlot(wxDC &dc, mpWindow &w);
 
-    /** Compute the dimensions and position of the rectangle info
+    /** Compute the dimensions and position of the mpInfoLayer rectangle
      */
     void SetInfoRectangle(mpWindow &w, int width = 0, int height = 0);
 
@@ -1007,17 +1000,14 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLegend: public mpInfoLayer
     mpInfoLegend(wxRect rect, const wxBrush &brush = *wxWHITE_BRUSH, mpLocation location = mpMarginNone);
 
     /**  Default destructor */
-    ~mpInfoLegend()
-    {
-      ;
-    }
+    ~mpInfoLegend() {}
 
     /** Set item mode (the element on the left of text representing the plot line may be line or square).
      * @param mode Item draw mode: mpLEGEND_LINE or mpLEGEND_SQUARE. */
     void SetItemMode(mpLegendStyle mode)
     {
       m_item_mode = mode;
-      m_need_update = true;
+      m_needs_update = true;
     }
 
     mpLegendStyle GetItemMode() const
@@ -1030,7 +1020,7 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLegend: public mpInfoLayer
     void SetItemDirection(mpLegendDirection mode)
     {
       m_item_direction = mode;
-      m_need_update = true;
+      m_needs_update = true;
     }
 
     mpLegendDirection GetItemDirection() const
@@ -1040,7 +1030,7 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLegend: public mpInfoLayer
 
     void SetNeedUpdate()
     {
-      m_need_update = true;
+      m_needs_update = true;
     }
 
     /// Return the index of visible layer whose legend is pointed at...
@@ -1057,20 +1047,24 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLegend: public mpInfoLayer
     virtual void DoPlot(wxDC &dc, mpWindow &w);
 
   private:
-    /**
-     * A structure that contain:
-     * id: the index of the plot function in the layer list
-     * bound: a rectangle of the area occupied by the name of a function + decoration.
-     * The format used is: (x, y) the position of the rectangle on the legend bitmap and (width, height) the
-     * size of the rectangle
-     */
-    struct boundLegend
+    /// Detail of legend component for an individual plot 
+    struct LegendDetail
     {
-        unsigned int id;
-        mpRect bound;
+        unsigned int layerIdx; //!< index of the plot function in the layer list
+        wxRect boundingBox; //!< area occupied by the function name and decoration
     };
-    std::vector<boundLegend> m_boundLegendList; // The list of all the bound legend
-    bool m_need_update; // Shall we redraw the legend bitmap. Used when a plot function changes (name, visibility, add or remove)
+    std::vector<LegendDetail> m_LegendDetailList; //!< list (well, vector) of details for each individual plot's legend component
+    bool m_needs_update; //!< Do we need to redraw the legend bitmap? Set when a plot function changes (name, visibility, add or remove)
+    /**
+     * Create/update the bitmap image of this legend.
+     * This operation must be done when:
+     * - we change the direction of the legend
+     * - we change the decoration (line or square)
+     * - a name of a plot has changed
+     * - the visibility of a plot has changed
+     * - a plot is added or removed
+     * The call of this function is triggered by the boolean m_needs_update
+     */
     void UpdateBitmap(wxDC &dc, mpWindow &w);
 
   DECLARE_DYNAMIC_CLASS(mpInfoLegend)
