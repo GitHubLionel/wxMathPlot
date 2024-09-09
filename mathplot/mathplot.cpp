@@ -730,7 +730,7 @@ void mpInfoLegend::UpdateBitmap(wxDC &dc, mpWindow &w)
 
   // Get series name and create new bitmap legend
   m_LegendDetailList.clear();
-  int plotLayerIdx = 0;
+  unsigned int plotLayerIdx = 0;
   for (unsigned int p = 0; p < w.CountAllLayers(); p++)
   {
     mpLayer* ly = w.GetLayer(p);
@@ -768,7 +768,7 @@ void mpInfoLegend::UpdateBitmap(wxDC &dc, mpWindow &w)
         // Determine the full boundingBox of the legend and store it
         LegendDetail ld;
         ld.boundingBox = {posX, posY - MARGIN_LEGEND - (tmpY >> 1),
-              LEGEND_LINEWIDTH + 2 * MARGIN_LEGEND + tmpX, tmpY + MARGIN_LEGEND + (tmpY >> 1)};
+            posX + tmpX + LEGEND_LINEWIDTH + 2 * MARGIN_LEGEND, posY + tmpY};
         ld.layerIdx = plotLayerIdx;
         m_LegendDetailList.push_back(ld);
 
@@ -796,6 +796,19 @@ void mpInfoLegend::UpdateBitmap(wxDC &dc, mpWindow &w)
         }
       }
       plotLayerIdx++;
+    }
+  }
+
+  // In case we are in Vertical mode, we consider that the width of each boundingBox
+  // is equal to the width of the full legend box. So, no need to click exactly on the label
+  // in the GetPointed function.
+  // Note: By doing that now and not in the GetPointed function, we have lost the real width of the label.
+  if (m_item_direction == mpVertical)
+  {
+    for (std::vector<LegendDetail>::iterator it = m_LegendDetailList.begin(); it != m_LegendDetailList.end(); it++)
+    {
+      LegendDetail& ld = *it;
+      ld.boundingBox.right = ld.boundingBox.left + width;
     }
   }
 
@@ -866,20 +879,15 @@ void mpInfoLegend::DoPlot(wxDC &dc, mpWindow &w)
 int mpInfoLegend::GetPointed(mpWindow &WXUNUSED(w), wxPoint eventPoint)
 {
   // Adjust clicked point coordinates for legend bitmap's offset within plot area
-  wxPoint clickPoint(eventPoint.x-m_dim.x, eventPoint.y-m_dim.y);
+  wxPoint clickPoint(eventPoint.x - m_dim.x, eventPoint.y - m_dim.y);
   // The symbol and name of each series is in an rectangular area.
   // Find which series rectangle we have clicked
   for (std::vector<LegendDetail>::iterator it = m_LegendDetailList.begin(); it != m_LegendDetailList.end(); it++)
   {
-    LegendDetail &ld = *it; // ToDo Lionel: this should be const, after below changes are made.
-    // ToDo Lionel: 1) Document why the width is changed below.
-    // ToDo Lionel: 2) Shouldn't this be done where boundingBox is created, rather than here?
-    // ToDo Lionel: 3) Demo should have a sample with a vertical legend to check this stuff...
-    wxRect b = ld.boundingBox;
-    if (m_item_direction == mpVertical)
-      b.width = m_dim.width;
-    if (b.Contains(clickPoint))
-      return ld.layerIdx;
+    const LegendDetail& ld = *it;
+    const mpRect* rect = &ld.boundingBox;
+    if ((clickPoint.x > rect->left && clickPoint.x < rect->right) &&
+        (clickPoint.y > rect->top && clickPoint.y < rect->bottom)) return ld.layerIdx;
   }
   return -1;
 }

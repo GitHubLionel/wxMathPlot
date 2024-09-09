@@ -1047,11 +1047,11 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLegend: public mpInfoLayer
     virtual void DoPlot(wxDC &dc, mpWindow &w);
 
   private:
-    /// Detail of legend component for an individual plot 
+    /// Detail of legend component for an individual plot
     struct LegendDetail
     {
         unsigned int layerIdx; //!< index of the plot function in the layer list
-        wxRect boundingBox; //!< area occupied by the function name and decoration
+        mpRect boundingBox;    //!< area occupied by the function name and decoration
     };
     std::vector<LegendDetail> m_LegendDetailList; //!< list (well, vector) of details for each individual plot's legend component
     bool m_needs_update; //!< Do we need to redraw the legend bitmap? Set when a plot function changes (name, visibility, add or remove)
