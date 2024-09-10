@@ -749,6 +749,8 @@ void mpInfoLegend::UpdateBitmap(wxDC &dc, mpWindow &w)
         {
           posX = MARGIN_LEGEND;
           posY = MARGIN_LEGEND + (tmpY >> 1);
+          // Since tmpY is constant, we can initialise height (the height of the legend bitmap)
+          height = posY + tmpY;
           first = false;
         }
 
@@ -765,7 +767,7 @@ void mpInfoLegend::UpdateBitmap(wxDC &dc, mpWindow &w)
                 LEGEND_LINEWIDTH, LEGEND_LINEWIDTH);
         }
 
-        // Draw the name of the function
+        // Draw the name of the function after the decoration
         posX += LEGEND_LINEWIDTH + MARGIN_LEGEND;
         buff_dc.DrawText(label, posX, posY - (tmpY >> 1));
 
@@ -787,8 +789,6 @@ void mpInfoLegend::UpdateBitmap(wxDC &dc, mpWindow &w)
         {
           ld.sideBox = posX;
           width = posX;
-          if (posY + tmpY > height)
-            height = posY + tmpY;
         }
         ld.layerIdx = layerIdx;
         m_LegendDetailList.push_back(ld);
