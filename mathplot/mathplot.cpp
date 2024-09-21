@@ -749,6 +749,8 @@ void mpInfoLegend::UpdateBitmap(wxDC &dc, mpWindow &w)
         {
           posX = MARGIN_LEGEND;
           posY = MARGIN_LEGEND + (tmpY >> 1);
+          // Since tmpY is constant, we can initialise height (the height of the legend bitmap)
+          height = posY + tmpY;
           first = false;
         }
 
@@ -765,36 +767,31 @@ void mpInfoLegend::UpdateBitmap(wxDC &dc, mpWindow &w)
                 LEGEND_LINEWIDTH, LEGEND_LINEWIDTH);
         }
 
-        // Determine the full boundingBox of the legend and store it
-        LegendDetail ld;
-        // ToDo Lionel: The next line REPEATS calculation of bounds (above and below) - Fix this so no repetition - DRY!
-        ld.boundingBox = {posX, posY - MARGIN_LEGEND - (tmpY >> 1),
-              LEGEND_LINEWIDTH + 2 * MARGIN_LEGEND + tmpX, tmpY + MARGIN_LEGEND + (tmpY >> 1)};
-        ld.layerIdx = layerIdx;
-        m_LegendDetailList.push_back(ld);
-
-        // Draw the name of the function
+        // Draw the name of the function after the decoration
         posX += LEGEND_LINEWIDTH + MARGIN_LEGEND;
         buff_dc.DrawText(label, posX, posY - (tmpY >> 1));
 
         posX += tmpX + 2 * MARGIN_LEGEND;
 
-        // Determine the full size of the Legend
+        // Determine the full size of the Legend and the side (left or top) of the boundingBox of the legend and store it
+        LegendDetail ld;
         if (m_item_direction == mpVertical)
         {
           if (posX > width)
             width = posX;
           posX = MARGIN_LEGEND;
           posY += tmpY;
+          ld.sideBox = posY;
           height = posY;
           posY += 2 * MARGIN_LEGEND;
         }
         else
         {
+          ld.sideBox = posX;
           width = posX;
-          if (posY + tmpY > height)
-            height = posY + tmpY;
         }
+        ld.layerIdx = layerIdx;
+        m_LegendDetailList.push_back(ld);
       }
       layerIdx++;
     }
@@ -867,19 +864,20 @@ void mpInfoLegend::DoPlot(wxDC &dc, mpWindow &w)
 int mpInfoLegend::GetPointed(mpWindow &WXUNUSED(w), wxPoint eventPoint)
 {
   // Adjust clicked point coordinates for legend bitmap's offset within plot area
-  wxPoint clickPoint(eventPoint.x - m_dim.x, eventPoint.y - m_dim.y);
+  wxCoord side;
+  if (m_item_direction == mpVertical)
+    side = eventPoint.y - m_dim.y;
+  else
+    side = eventPoint.x - m_dim.x;
   // The symbol and name of each series is in an rectangular area.
   // Find which series rectangle we have clicked
+  // In fact, we only need left or top side of the rectangle (who are stored in UpdateBitmap function).
+  // Indeed, in horizontal mode, we don't need to test the vertical position of the mouse and
+  // reciprocally in vertical mode.
   for (std::vector<LegendDetail>::iterator it = m_LegendDetailList.begin(); it != m_LegendDetailList.end(); it++)
   {
-    const LegendDetail &ld = *it;
-    // In mpVertical mode, shorter labels are shorter than legend width (set by the longest).
-    // We'd like a user click to the right of a label to be considered clicking on the label.
-    // So, set the bounding box width to the maximum (ie legend width).
-    wxRect b = ld.boundingBox;
-    if (m_item_direction == mpVertical)
-      b.width = m_dim.width;
-    if (b.Contains(clickPoint))
+    const LegendDetail& ld = *it;
+    if (side < ld.sideBox)
       return ld.layerIdx;
   }
   return -1;
