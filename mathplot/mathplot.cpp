@@ -869,11 +869,8 @@ int mpInfoLegend::GetPointed(mpWindow &WXUNUSED(w), wxPoint eventPoint)
     side = eventPoint.y - m_dim.y;
   else
     side = eventPoint.x - m_dim.x;
-  // The symbol and name of each series is in an rectangular area.
-  // Find which series rectangle we have clicked
-  // In fact, we only need left or top side of the rectangle (who are stored in UpdateBitmap function).
-  // Indeed, in horizontal mode, we don't need to test the vertical position of the mouse and
-  // reciprocally in vertical mode.
+  // Find which series legend we have clicked
+  // We only need test against left or top side of the rectangle (stored in UpdateBitmap function).
   for (std::vector<LegendDetail>::iterator it = m_LegendDetailList.begin(); it != m_LegendDetailList.end(); it++)
   {
     const LegendDetail& ld = *it;
