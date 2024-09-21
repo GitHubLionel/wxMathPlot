@@ -1639,7 +1639,7 @@ class WXDLLIMPEXP_MATHPLOT mpProfile: public mpFunction
 class WXDLLIMPEXP_MATHPLOT mpChart: public mpFunction
 {
   public:
-    /** Debault constructor */
+    /** Default constructor */
     mpChart(const wxString &name = wxEmptyString);
 
     /** Destructor */
@@ -2987,7 +2987,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     double m_posX;          //!< Current view's X position
     double m_posY;          //!< Current view's Y position
     double m_posY2;         //!< Current view's Y2 position
-    int m_scrX;             //!< Current view's X dimension
+    int m_scrX;             //!< Current view's X dimension in DC units, including all scales, margins
     int m_scrY;             //!< Current view's Y dimension
     int m_clickedX;         //!< Last mouse click X position, for centering and zooming the view
     int m_clickedY;         //!< Last mouse click Y position, for centering and zooming the view
