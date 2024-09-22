@@ -1051,7 +1051,7 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLegend: public mpInfoLayer
     struct LegendDetail
     {
         unsigned int layerIdx; //!< index of the mpPlot in the layer list
-        wxCoord sideBox;       //!< left side (if horizontal) or top side (if vertical) of the
+        wxCoord legendEnd;     //!< right side (if horizontal) or bottom side (if vertical) of the
                                //!< area occupied by the function name and decoration
     };
     std::vector<LegendDetail> m_LegendDetailList; //!< list (well, vector) of details for each individual plot's legend component
