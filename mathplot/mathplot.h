@@ -5,7 +5,7 @@
 // Maintainer:      Davide Rondini
 // Contributors:    Jose Luis Blanco, Val Greene, Lionel Reynaud, Dave Nadler
 // Created:         21/07/2003
-// Last edit:       08/26/2024
+// Last edit:       23/09/2024
 // Copyright:       (c) David Schalig, Davide Rondini
 // Licence:         wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
