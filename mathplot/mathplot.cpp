@@ -749,7 +749,7 @@ void mpInfoLegend::UpdateBitmap(wxDC &dc, mpWindow &w)
         {
           posX = MARGIN_LEGEND;
           posY = MARGIN_LEGEND + (labelHeight / 2);
-          // Since tmpY is constant (all label layers use same legend font), we can initialise height of the legend bitmap
+          // Since labelHeight is constant (all label layers use same legend font), we can initialise height of the legend bitmap
           height = posY + labelHeight;
           first = false;
         }
