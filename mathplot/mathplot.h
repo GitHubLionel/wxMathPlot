@@ -1050,9 +1050,9 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLegend: public mpInfoLayer
     /// Detail of legend component for an individual plot
     struct LegendDetail
     {
-        unsigned int layerIdx; //!< index of the plot function in the layer list
-        wxCoord sideBox;       //!< left side (if horizontal) or top side (if vertical) of the
-                               //   area occupied by the function name and decoration
+        unsigned int layerIdx; //!< index of the mpPlot in the layer list
+        wxCoord legendEnd;     //!< right side (if horizontal) or bottom side (if vertical) of the
+                               //!< area occupied by the function name and decoration
     };
     std::vector<LegendDetail> m_LegendDetailList; //!< list (well, vector) of details for each individual plot's legend component
     bool m_needs_update; //!< Do we need to redraw the legend bitmap? Set when a plot function changes (name, visibility, add or remove)
@@ -1640,7 +1640,7 @@ class WXDLLIMPEXP_MATHPLOT mpProfile: public mpFunction
 class WXDLLIMPEXP_MATHPLOT mpChart: public mpFunction
 {
   public:
-    /** Debault constructor */
+    /** Default constructor */
     mpChart(const wxString &name = wxEmptyString);
 
     /** Destructor */
@@ -2988,7 +2988,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     double m_posX;          //!< Current view's X position
     double m_posY;          //!< Current view's Y position
     double m_posY2;         //!< Current view's Y2 position
-    int m_scrX;             //!< Current view's X dimension
+    int m_scrX;             //!< Current view's X dimension in DC units, including all scales, margins
     int m_scrY;             //!< Current view's Y dimension
     int m_clickedX;         //!< Last mouse click X position, for centering and zooming the view
     int m_clickedY;         //!< Last mouse click Y position, for centering and zooming the view

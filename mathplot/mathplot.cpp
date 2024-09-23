@@ -14,6 +14,8 @@
 #pragma implementation "mathplot.h"
 #endif
 
+#include <algorithm>
+
 // For compilers that support precompilation, includes "wx.h".
 #include <wx/wx.h>
 // #include <wx/window.h>
@@ -723,8 +725,9 @@ void mpInfoLegend::UpdateBitmap(wxDC &dc, mpWindow &w)
   buff_dc.DrawRectangle(0, 0, w.GetScreenX(), w.GetScreenY());
 
   int posX = 0, posY = 0;
+  // ToDo Lionel: better variable names for tmpX and tmpY
   int tmpX = 0, tmpY = 0;
-  int width = 0, height = 0;
+  int width = 0, height = 0; // accumulated dimensions of complete legend
   bool first = true;
   wxBrush sqrBrush(*wxWHITE, wxBRUSHSTYLE_SOLID);
 
@@ -748,8 +751,9 @@ void mpInfoLegend::UpdateBitmap(wxDC &dc, mpWindow &w)
         if (first)
         {
           posX = MARGIN_LEGEND;
+          // ToDo Lionel: replace all use of >>1 with /2 (junior programmer stuff!) 
           posY = MARGIN_LEGEND + (tmpY >> 1);
-          // Since tmpY is constant, we can initialise height (the height of the legend bitmap)
+          // Since tmpY is constant (all layers use same font?), we can initialise height of the legend bitmap
           height = posY + tmpY;
           first = false;
         }
@@ -773,22 +777,19 @@ void mpInfoLegend::UpdateBitmap(wxDC &dc, mpWindow &w)
 
         posX += tmpX + 2 * MARGIN_LEGEND;
 
-        // Determine the full size of the Legend and the side (left or top) of the boundingBox of the legend and store it
+        // Adjust the full size of the Legend and store the end (bottom or right) of this legend component
         LegendDetail ld;
         if (m_item_direction == mpVertical)
         {
-          if (posX > width)
-            width = posX;
+          width = std::max(width, posX);
           posX = MARGIN_LEGEND;
           posY += tmpY;
-          ld.sideBox = posY;
-          height = posY;
+          height = ld.legendEnd = posY;
           posY += 2 * MARGIN_LEGEND;
         }
         else
         {
-          ld.sideBox = posX;
-          width = posX;
+          width = ld.legendEnd = posX;
         }
         ld.layerIdx = layerIdx;
         m_LegendDetailList.push_back(ld);
@@ -806,13 +807,9 @@ void mpInfoLegend::UpdateBitmap(wxDC &dc, mpWindow &w)
     buff_dc.SetPen(*wxBLACK_PEN);
     buff_dc.SetBrush(*wxTRANSPARENT_BRUSH);
 
-    // Adjust size inside the window and trunc legend if necessary
-    int scrx = w.GetScreenX();
-    int scry = w.GetScreenY();
-    if (width > scrx)
-      width = scrx;
-    if (height > scry)
-      height = scry;
+    // If necessary, truncate legend to fit in window
+    width = std::min(width, w.GetScreenX());
+    height = std::min(height, w.GetScreenY());
 
     buff_dc.DrawRectangle(0, 0, width, height);
     SetInfoRectangle(w, width, height);
@@ -869,15 +866,12 @@ int mpInfoLegend::GetPointed(mpWindow &WXUNUSED(w), wxPoint eventPoint)
     side = eventPoint.y - m_dim.y;
   else
     side = eventPoint.x - m_dim.x;
-  // The symbol and name of each series is in an rectangular area.
-  // Find which series rectangle we have clicked
-  // In fact, we only need left or top side of the rectangle (who are stored in UpdateBitmap function).
-  // Indeed, in horizontal mode, we don't need to test the vertical position of the mouse and
-  // reciprocally in vertical mode.
+  // Find which series legend we have clicked
+  // We only need test against right or bottom side of the rectangle (stored in UpdateBitmap function).
   for (std::vector<LegendDetail>::iterator it = m_LegendDetailList.begin(); it != m_LegendDetailList.end(); it++)
   {
     const LegendDetail& ld = *it;
-    if (side < ld.sideBox)
+    if (side < ld.legendEnd)
       return ld.layerIdx;
   }
   return -1;
