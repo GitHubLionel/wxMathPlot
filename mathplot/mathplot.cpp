@@ -672,11 +672,11 @@ void mpInfoCoords::DoPlot(wxDC &dc, mpWindow &w)
   dc.DrawText(m_content, m_dim.x + MARGIN_COORD + offset, m_dim.y + MARGIN_COORD);
   if (m_series_coord)
   {
-    textY = m_dim.y + MARGIN_COORD + textY + (textY >> 1) + 2;
+    textY = m_dim.y + MARGIN_COORD + textY + (textY / 2) + 2;
     dc.SetPen(m_penSeries);
     wxBrush sqrBrush(m_penSeries.GetColour(), wxBRUSHSTYLE_SOLID);
     dc.SetBrush(sqrBrush);
-    dc.DrawRectangle(m_dim.x + 2, textY - (LEGEND_LINEWIDTH >> 1),
+    dc.DrawRectangle(m_dim.x + 2, textY - (LEGEND_LINEWIDTH / 2),
     LEGEND_LINEWIDTH, LEGEND_LINEWIDTH);
   }
 }
@@ -724,12 +724,9 @@ void mpInfoLegend::UpdateBitmap(wxDC &dc, mpWindow &w)
     buff_dc.SetBrush(m_brush);
   buff_dc.DrawRectangle(0, 0, w.GetScreenX(), w.GetScreenY());
 
-  int posX = 0, posY = 0;
-  // ToDo Lionel: better variable names for tmpX and tmpY
-  int tmpX = 0, tmpY = 0;
+  int posX = 0, posY = 0; // position of the current label
   int width = 0, height = 0; // accumulated dimensions of complete legend
   bool first = true;
-  wxBrush sqrBrush(*wxWHITE, wxBRUSHSTYLE_SOLID);
 
   // Get series name and create new bitmap legend
   m_LegendDetailList.clear();
@@ -741,20 +738,19 @@ void mpInfoLegend::UpdateBitmap(wxDC &dc, mpWindow &w)
     {
       if (ly->IsVisible())
       {
+        int labelWidth = 0, labelHeight = 0;
         wxString label = ly->GetName();
         wxPen lpen = ly->GetPen();
         lpen.SetWidth(2);
-
         buff_dc.SetPen(lpen);
-        buff_dc.GetTextExtent(label, &tmpX, &tmpY);
+        buff_dc.GetTextExtent(label, &labelWidth, &labelHeight);
 
         if (first)
         {
           posX = MARGIN_LEGEND;
-          // ToDo Lionel: replace all use of >>1 with /2 (junior programmer stuff!) 
-          posY = MARGIN_LEGEND + (tmpY >> 1);
-          // Since tmpY is constant (all layers use same font?), we can initialise height of the legend bitmap
-          height = posY + tmpY;
+          posY = MARGIN_LEGEND + (labelHeight / 2);
+          // Since tmpY is constant (all label layers use same legend font), we can initialise height of the legend bitmap
+          height = posY + labelHeight;
           first = false;
         }
 
@@ -765,17 +761,18 @@ void mpInfoLegend::UpdateBitmap(wxDC &dc, mpWindow &w)
         }
         else  // m_item_mode == mpLEGEND_SQUARE
         {
+          wxBrush sqrBrush(*wxWHITE, wxBRUSHSTYLE_SOLID);
           sqrBrush.SetColour(lpen.GetColour());
           buff_dc.SetBrush(sqrBrush);
-          buff_dc.DrawRectangle(posX, posY - (LEGEND_LINEWIDTH >> 1) + 1,
+          buff_dc.DrawRectangle(posX, posY - (LEGEND_LINEWIDTH / 2) + 1,
                 LEGEND_LINEWIDTH, LEGEND_LINEWIDTH);
         }
 
         // Draw the name of the function after the decoration
         posX += LEGEND_LINEWIDTH + MARGIN_LEGEND;
-        buff_dc.DrawText(label, posX, posY - (tmpY >> 1));
+        buff_dc.DrawText(label, posX, posY - (labelHeight / 2));
 
-        posX += tmpX + 2 * MARGIN_LEGEND;
+        posX += labelWidth + 2 * MARGIN_LEGEND;
 
         // Adjust the full size of the Legend and store the end (bottom or right) of this legend component
         LegendDetail ld;
@@ -783,7 +780,7 @@ void mpInfoLegend::UpdateBitmap(wxDC &dc, mpWindow &w)
         {
           width = std::max(width, posX);
           posX = MARGIN_LEGEND;
-          posY += tmpY;
+          posY += labelHeight;
           height = ld.legendEnd = posY;
           posY += 2 * MARGIN_LEGEND;
         }
@@ -1891,11 +1888,11 @@ void mpBarChart::DoPlot(wxDC &dc, mpWindow &w)
             labelY = w.y2p(0.0) + labelH;
             break;
           case mpBAR_AXIS_V:
-            labelX = w.x2p(((double)binIndex) + 1.0) - (labelH >> 1);
+            labelX = w.x2p(((double)binIndex) + 1.0) - (labelH / 2);
             labelY = w.y2p(-0.05 * m_max_value) + labelW;
             break;
           case mpBAR_INSIDE:
-            labelX = w.x2p(((double)binIndex) + 1.0) - (labelH >> 1);
+            labelX = w.x2p(((double)binIndex) + 1.0) - (labelH / 2);
             labelY = w.y2p(0.05 * m_max_value);
             break;
           case mpBAR_TOP:
@@ -2165,7 +2162,7 @@ void mpScaleX::DrawScaleName(wxDC &dc, mpWindow &w, int origin, int labelSize)
     {
       if ((!m_drawOutsideMargins) && (w.GetMarginBottom() > (ty + labelSize + 8)))
       {
-//        dc.DrawText(m_name, (m_plotBoundaries.endPx + m_plotBoundaries.startPx - tx) >> 1, orgy + labelH + 6);
+//        dc.DrawText(m_name, (m_plotBoundaries.endPx + m_plotBoundaries.startPx - tx) / 2, orgy + labelH + 6);
         dc.DrawText(m_name, m_plotBoundaries.endPx - tx - 4, origin + labelSize + 6);
       }
       else
@@ -2181,7 +2178,7 @@ void mpScaleX::DrawScaleName(wxDC &dc, mpWindow &w, int origin, int labelSize)
     {
       if ((!m_drawOutsideMargins) && (w.GetMarginTop() > (ty + labelSize + 8)))
       {
-//        dc.DrawText(m_name, (m_plotBoundaries.endPx + m_plotBoundaries.startPx - tx) >> 1, orgy - ty - labelH - 6);
+//        dc.DrawText(m_name, (m_plotBoundaries.endPx + m_plotBoundaries.startPx - tx) / 2, orgy - ty - labelH - 6);
         dc.DrawText(m_name, m_plotBoundaries.endPx - tx - 4, origin - ty - labelSize - 8);
       }
       else
@@ -2474,7 +2471,7 @@ void mpScaleY::DrawScaleName(wxDC &dc, mpWindow &w, int origin, int labelSize)
     {
       if ((!m_drawOutsideMargins) && (w.GetMarginLeft() > (ty + labelSize + 8)))
       {
-        dc.DrawRotatedText(m_name, origin - labelSize - ty - 6, (m_plotBoundaries.endPy + m_plotBoundaries.startPy + tx) >> 1, 90);
+        dc.DrawRotatedText(m_name, origin - labelSize - ty - 6, (m_plotBoundaries.endPy + m_plotBoundaries.startPy + tx) / 2, 90);
       }
       else
       {
@@ -2489,7 +2486,7 @@ void mpScaleY::DrawScaleName(wxDC &dc, mpWindow &w, int origin, int labelSize)
     {
       if ((!m_drawOutsideMargins) && (w.GetMarginRight() > (ty + labelSize + 8)))
       {
-        dc.DrawRotatedText(m_name, origin + labelSize + 6, (m_plotBoundaries.endPy + m_plotBoundaries.startPy + tx) >> 1, 90);
+        dc.DrawRotatedText(m_name, origin + labelSize + 6, (m_plotBoundaries.endPy + m_plotBoundaries.startPy + tx) / 2, 90);
       }
       else
       {
@@ -4999,8 +4996,8 @@ void mpMovableObject::DoPlot(wxDC &dc, mpWindow &w)
     }
     else
     {
-      const int sx = w.GetScreenX() >> 1;
-      const int sy = w.GetScreenY() >> 1;
+      const int sx = w.GetScreenX() / 2;
+      const int sy = w.GetScreenY() / 2;
 
       switch (m_flags)
       {
@@ -5312,8 +5309,8 @@ void mpBitmapLayer::DoPlot(wxDC &dc, mpWindow &w)
     }
     else
     {
-      const int sx = w.GetScreenX() >> 1;
-      const int sy = w.GetScreenY() >> 1;
+      const int sx = w.GetScreenX() / 2;
+      const int sy = w.GetScreenY() / 2;
 
       switch (m_flags)
       {
