@@ -35,6 +35,15 @@ add_executable(MathPlotConfigDemo
 	)
 target_link_libraries(MathPlotConfigDemo wxmathplot_static ${wxWidgets_LIBRARIES})
 
+if(WIN32 AND MSVC)
+	set_target_properties(MathPlotDemo PROPERTIES LINK_FLAGS "/SUBSYSTEM:WINDOWS")
+	set_target_properties(MathPlotConfigDemo PROPERTIES LINK_FLAGS "/SUBSYSTEM:WINDOWS")
+endif(WIN32 AND MSVC)
+
+set(MY_PATH "PATH=%PATH%" C:/wxWidgetsDev/wx-3.2.6/lib/vc14x_x64_dll)
+set_target_properties(MathPlotDemo PROPERTIES VS_DEBUGGER_ENVIRONMENT "${MY_PATH}")
+set_target_properties(MathPlotConfigDemo PROPERTIES VS_DEBUGGER_ENVIRONMENT "${MY_PATH}")
+
 #CPack
 
 set(CPACK_PACKAGE_DESCRIPTION "wxMathPlot")
