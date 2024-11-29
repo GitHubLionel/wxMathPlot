@@ -42,6 +42,7 @@ class MathPlotDemoFrame: public wxFrame
         void OnmiPrintSelected(wxCommandEvent& event);
         void OnbBarChartClick(wxCommandEvent& event);
         void OncbFreeLineClick(wxCommandEvent& event);
+        void OnbImageClick(wxCommandEvent& event);
         //*)
 
         //(*Identifiers(MathPlotDemoFrame)
@@ -51,6 +52,7 @@ class MathPlotDemoFrame: public wxFrame
         static const long ID_BUTTON4;
         static const long ID_BUTTON5;
         static const long ID_BUTTON6;
+        static const long ID_BUTTON7;
         static const long ID_CHECKBOX1;
         static const long ID_PANEL1;
         static const long ID_MATHPLOT1;
@@ -67,6 +69,7 @@ class MathPlotDemoFrame: public wxFrame
         wxButton* bBar;
         wxButton* bBarChart;
         wxButton* bDraw;
+        wxButton* bImage;
         wxButton* bLog;
         wxButton* bLogXY;
         wxButton* bSample;

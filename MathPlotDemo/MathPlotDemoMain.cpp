@@ -51,6 +51,7 @@ const long MathPlotDemoFrame::ID_BUTTON3 = wxNewId();
 const long MathPlotDemoFrame::ID_BUTTON4 = wxNewId();
 const long MathPlotDemoFrame::ID_BUTTON5 = wxNewId();
 const long MathPlotDemoFrame::ID_BUTTON6 = wxNewId();
+const long MathPlotDemoFrame::ID_BUTTON7 = wxNewId();
 const long MathPlotDemoFrame::ID_CHECKBOX1 = wxNewId();
 const long MathPlotDemoFrame::ID_PANEL1 = wxNewId();
 const long MathPlotDemoFrame::ID_MATHPLOT1 = wxNewId();
@@ -96,6 +97,8 @@ MathPlotDemoFrame::MathPlotDemoFrame(wxWindow* parent,wxWindowID id)
     BoxSizer2->Add(bLogXY, 0, wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND, 10);
     bBarChart = new wxButton(pLog, ID_BUTTON6, _("Draw BarChart"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON6"));
     BoxSizer2->Add(bBarChart, 0, wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND, 10);
+    bImage = new wxButton(pLog, ID_BUTTON7, _("Draw Image"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON7"));
+    BoxSizer2->Add(bImage, 0, wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND, 10);
     cbFreeLine = new wxCheckBox(pLog, ID_CHECKBOX1, _("Free line"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CHECKBOX1"));
     cbFreeLine->SetValue(false);
     cbFreeLine->SetToolTip(_("Free drawing on the plot area. Left click and move the mouse. Illustration of OnUserMouseAction"));
@@ -140,6 +143,7 @@ MathPlotDemoFrame::MathPlotDemoFrame(wxWindow* parent,wxWindowID id)
     Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotDemoFrame::OnbLogClick, this, ID_BUTTON4);
     Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotDemoFrame::OnbLogXYClick, this, ID_BUTTON5);
     Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotDemoFrame::OnbBarChartClick, this, ID_BUTTON6);
+    Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotDemoFrame::OnbImageClick, this, ID_BUTTON7);
     Bind(wxEVT_COMMAND_CHECKBOX_CLICKED, &MathPlotDemoFrame::OncbFreeLineClick, this, ID_CHECKBOX1);
     Bind(wxEVT_COMMAND_MENU_SELECTED, &MathPlotDemoFrame::OnmiPreviewSelected, this, idMenuPreview);
     Bind(wxEVT_COMMAND_MENU_SELECTED, &MathPlotDemoFrame::OnmiPrintSelected, this, idMenuPrint);
@@ -204,6 +208,7 @@ void MathPlotDemoFrame::CleanPlot(void)
   leftAxis->SetLogAxis(false);
   bottomAxis->SetAuto(true);
   mPlot->DelLayer(mPlot->GetLayerByName(_T("BarChart")), true);
+  mPlot->DelLayer(mPlot->GetLayerByClassName("mpBitmapLayer"), true);
 }
 
 void MathPlotDemoFrame::OnbDrawClick(wxCommandEvent &WXUNUSED(event))
@@ -332,6 +337,58 @@ void MathPlotDemoFrame::OncbFreeLineClick(wxCommandEvent &WXUNUSED(event))
     mPlot->UnSetOnUserMouseAction();
 }
 
+// Function to interpolate between two colors
+wxColour InterpolateColor(const wxColour& start, const wxColour& end, double factor)
+{
+  return wxColour(
+      start.Red()   + factor * (end.Red() - start.Red()),
+      start.Green() + factor * (end.Green() - start.Green()),
+      start.Blue()  + factor * (end.Blue() - start.Blue()),
+      start.Alpha() + factor * (end.Alpha() - start.Alpha())
+  );
+}
+
+// Create a wxImage with a rainbow gradient
+wxImage CreateRainbowImage(int width, int height, bool withAlpha = false)
+{
+  wxImage image(width, height);
+
+  if (withAlpha) {
+      image.InitAlpha(); // Initialize the alpha channel
+  }
+
+  // Define colors for gradient
+  wxColour startColor(255, 0, 0);   // Red
+  wxColour endColor(0, 0, 255);     // Blue
+
+  for (int x = 0; x < width; ++x) {
+      double factor = static_cast<double>(x) / (width - 1);
+      wxColour currentColor = InterpolateColor(startColor, endColor, factor);
+
+      for (int y = 0; y < height; ++y) {
+          image.SetRGB(x, y, currentColor.Red(), currentColor.Green(), currentColor.Blue());
+          if (withAlpha) {
+              image.SetAlpha(x, y, 255 - static_cast<unsigned char>(factor * 255)); // Optional transparency
+          }
+      }
+  }
+
+  return image;
+}
+
+void MathPlotDemoFrame::OnbImageClick(wxCommandEvent &WXUNUSED(event))
+{
+  CleanPlot();
+
+  // Create rainbow image
+  wxImage rainbowImage = CreateRainbowImage(512, 512, true);
+  mpBitmapLayer* bitmapLayer = new mpBitmapLayer();
+  bitmapLayer->SetBitmap(rainbowImage, 0, 0, 512, 512);
+
+  mPlot->AddLayer(bitmapLayer);
+  mPlot->Fit();
+}
+
 void MathPlotDemoFrame::OnUserMouseAction(void *Sender, wxMouseEvent &event, bool &cancel)
 {
   static wxOverlay m_overlay;
@@ -449,3 +506,4 @@ void MathPlotDemoFrame::OnmiPrintSelected(wxCommandEvent &WXUNUSED(event))
   mpPrintout printout(mPlot, wxT("Plot print"));
   printer.Print(this, &printout, true);
 }
+
