@@ -45,21 +45,13 @@ wxString wxBuildInfo(wxBuildInfoFormat format)
 }
 
 //(*IdInit(MathPlotDemoFrame)
-const long MathPlotDemoFrame::ID_BUTTON1 = wxNewId();
-const long MathPlotDemoFrame::ID_BUTTON2 = wxNewId();
-const long MathPlotDemoFrame::ID_BUTTON3 = wxNewId();
-const long MathPlotDemoFrame::ID_BUTTON4 = wxNewId();
-const long MathPlotDemoFrame::ID_BUTTON5 = wxNewId();
-const long MathPlotDemoFrame::ID_BUTTON6 = wxNewId();
-const long MathPlotDemoFrame::ID_BUTTON7 = wxNewId();
-const long MathPlotDemoFrame::ID_CHECKBOX1 = wxNewId();
-const long MathPlotDemoFrame::ID_PANEL1 = wxNewId();
-const long MathPlotDemoFrame::ID_MATHPLOT1 = wxNewId();
-const long MathPlotDemoFrame::ID_PANEL2 = wxNewId();
-const long MathPlotDemoFrame::idMenuPreview = wxNewId();
-const long MathPlotDemoFrame::idMenuPrint = wxNewId();
-const long MathPlotDemoFrame::idMenuExit = wxNewId();
-const long MathPlotDemoFrame::idMenuAbout = wxNewId();
+const wxWindowID MathPlotDemoFrame::ID_PANEL1 = wxNewId();
+const wxWindowID MathPlotDemoFrame::ID_MATHPLOT1 = wxNewId();
+const wxWindowID MathPlotDemoFrame::ID_PANEL2 = wxNewId();
+const wxWindowID MathPlotDemoFrame::idMenuPreview = wxNewId();
+const wxWindowID MathPlotDemoFrame::idMenuPrint = wxNewId();
+const wxWindowID MathPlotDemoFrame::idMenuExit = wxNewId();
+const wxWindowID MathPlotDemoFrame::idMenuAbout = wxNewId();
 //*)
 
 BEGIN_EVENT_TABLE(MathPlotDemoFrame,wxFrame)
@@ -85,27 +77,25 @@ MathPlotDemoFrame::MathPlotDemoFrame(wxWindow* parent,wxWindowID id)
     pLog = new wxPanel(this, ID_PANEL1, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL, _T("ID_PANEL1"));
     pLog->SetMinSize(wxSize(120,-1));
     BoxSizer2 = new wxBoxSizer(wxVERTICAL);
-    bDraw = new wxButton(pLog, ID_BUTTON1, _("Draw sinus"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON1"));
+    bDraw = new wxButton(pLog, wxID_ANY, _("Draw sinus"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
     BoxSizer2->Add(bDraw, 0, wxALL|wxEXPAND, 10);
-    bSample = new wxButton(pLog, ID_BUTTON2, _("Draw Sample"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON2"));
+    bSample = new wxButton(pLog, wxID_ANY, _("Draw Sample"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
     BoxSizer2->Add(bSample, 0, wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND, 10);
-    bBar = new wxButton(pLog, ID_BUTTON3, _("Draw Bar"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON3"));
+    bBar = new wxButton(pLog, wxID_ANY, _("Draw Bar"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
     BoxSizer2->Add(bBar, 0, wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND, 10);
-    bLog = new wxButton(pLog, ID_BUTTON4, _("Log Y sample"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON4"));
+    bLog = new wxButton(pLog, wxID_ANY, _("Log Y sample"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
     BoxSizer2->Add(bLog, 0, wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND, 10);
-    bLogXY = new wxButton(pLog, ID_BUTTON5, _("Log XY sample"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON5"));
+    bLogXY = new wxButton(pLog, wxID_ANY, _("Log XY sample"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
     BoxSizer2->Add(bLogXY, 0, wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND, 10);
-    bBarChart = new wxButton(pLog, ID_BUTTON6, _("Draw BarChart"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON6"));
+    bBarChart = new wxButton(pLog, wxID_ANY, _("Draw BarChart"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
     BoxSizer2->Add(bBarChart, 0, wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND, 10);
-    bImage = new wxButton(pLog, ID_BUTTON7, _("Draw Image"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON7"));
+    bImage = new wxButton(pLog, wxID_ANY, _("Draw Image"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
     BoxSizer2->Add(bImage, 0, wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND, 10);
-    cbFreeLine = new wxCheckBox(pLog, ID_CHECKBOX1, _("Free line"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CHECKBOX1"));
+    cbFreeLine = new wxCheckBox(pLog, wxID_ANY, _("Free line"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
     cbFreeLine->SetValue(false);
     cbFreeLine->SetToolTip(_("Free drawing on the plot area. Left click and move the mouse. Illustration of OnUserMouseAction"));
     BoxSizer2->Add(cbFreeLine, 0, wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND, 10);
     pLog->SetSizer(BoxSizer2);
-    BoxSizer2->Fit(pLog);
-    BoxSizer2->SetSizeHints(pLog);
     AuiManager1->AddPane(pLog, wxAuiPaneInfo().Name(_T("PaneName0")).DefaultPane().Caption(_("Log")).CaptionVisible().CloseButton(false).Left().Floatable(false).MinSize(wxSize(120,-1)).Movable(false));
     pPlot = new wxPanel(this, ID_PANEL2, wxPoint(227,228), wxDefaultSize, wxTAB_TRAVERSAL, _T("ID_PANEL2"));
     BoxSizer1 = new wxBoxSizer(wxVERTICAL);
@@ -114,8 +104,6 @@ MathPlotDemoFrame::MathPlotDemoFrame(wxWindow* parent,wxWindowID id)
     mPlot->Fit();
     BoxSizer1->Add(mPlot, 1, wxALL|wxEXPAND, 5);
     pPlot->SetSizer(BoxSizer1);
-    BoxSizer1->Fit(pPlot);
-    BoxSizer1->SetSizeHints(pPlot);
     AuiManager1->AddPane(pPlot, wxAuiPaneInfo().Name(_T("PaneName1")).DefaultPane().Caption(_("Plot")).CaptionVisible().MaximizeButton().CloseButton(false).Center());
     AuiManager1->Update();
     MenuBar1 = new wxMenuBar();
@@ -137,14 +125,14 @@ MathPlotDemoFrame::MathPlotDemoFrame(wxWindow* parent,wxWindowID id)
     MenuBar1->Append(Menu3, _("Help"));
     SetMenuBar(MenuBar1);
 
-    Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotDemoFrame::OnbDrawClick, this, ID_BUTTON1);
-    Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotDemoFrame::OnbSampleClick, this, ID_BUTTON2);
-    Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotDemoFrame::OnbBarClick, this, ID_BUTTON3);
-    Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotDemoFrame::OnbLogClick, this, ID_BUTTON4);
-    Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotDemoFrame::OnbLogXYClick, this, ID_BUTTON5);
-    Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotDemoFrame::OnbBarChartClick, this, ID_BUTTON6);
-    Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotDemoFrame::OnbImageClick, this, ID_BUTTON7);
-    Bind(wxEVT_COMMAND_CHECKBOX_CLICKED, &MathPlotDemoFrame::OncbFreeLineClick, this, ID_CHECKBOX1);
+    bDraw->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotDemoFrame::OnbDrawClick, this);
+    bSample->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotDemoFrame::OnbSampleClick, this);
+    bBar->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotDemoFrame::OnbBarClick, this);
+    bLog->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotDemoFrame::OnbLogClick, this);
+    bLogXY->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotDemoFrame::OnbLogXYClick, this);
+    bBarChart->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotDemoFrame::OnbBarChartClick, this);
+    bImage->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotDemoFrame::OnbImageClick, this);
+    cbFreeLine->Bind(wxEVT_COMMAND_CHECKBOX_CLICKED, &MathPlotDemoFrame::OncbFreeLineClick, this);
     Bind(wxEVT_COMMAND_MENU_SELECTED, &MathPlotDemoFrame::OnmiPreviewSelected, this, idMenuPreview);
     Bind(wxEVT_COMMAND_MENU_SELECTED, &MathPlotDemoFrame::OnmiPrintSelected, this, idMenuPrint);
     Bind(wxEVT_COMMAND_MENU_SELECTED, &MathPlotDemoFrame::OnmiQuitSelected, this, idMenuExit);

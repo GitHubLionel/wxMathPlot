@@ -46,21 +46,13 @@ class MathPlotDemoFrame: public wxFrame
         //*)
 
         //(*Identifiers(MathPlotDemoFrame)
-        static const long ID_BUTTON1;
-        static const long ID_BUTTON2;
-        static const long ID_BUTTON3;
-        static const long ID_BUTTON4;
-        static const long ID_BUTTON5;
-        static const long ID_BUTTON6;
-        static const long ID_BUTTON7;
-        static const long ID_CHECKBOX1;
-        static const long ID_PANEL1;
-        static const long ID_MATHPLOT1;
-        static const long ID_PANEL2;
-        static const long idMenuPreview;
-        static const long idMenuPrint;
-        static const long idMenuExit;
-        static const long idMenuAbout;
+        static const wxWindowID ID_PANEL1;
+        static const wxWindowID ID_MATHPLOT1;
+        static const wxWindowID ID_PANEL2;
+        static const wxWindowID idMenuPreview;
+        static const wxWindowID idMenuPrint;
+        static const wxWindowID idMenuExit;
+        static const wxWindowID idMenuAbout;
         //*)
 
         //(*Declarations(MathPlotDemoFrame)
