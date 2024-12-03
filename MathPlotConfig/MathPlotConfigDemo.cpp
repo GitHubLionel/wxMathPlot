@@ -29,7 +29,7 @@
 // the application icon (under Windows it is in resources and even
 // though we could still include the XPM here it would be unused)
 #ifndef wxHAS_IMAGES_IN_RESOURCES
-    #include "../sample.xpm"
+//    #include "../sample.xpm"
 #endif
 
 // ----------------------------------------------------------------------------
@@ -145,7 +145,7 @@ MyFrame::MyFrame(const wxString &title) :
 		wxFrame(NULL, wxID_ANY, title, wxDefaultPosition, wxSize(800,600))
 {
 	// set the frame icon
-	SetIcon(wxICON(sample));
+	//SetIcon(wxICON(sample));
 
 	// create a menu bar
 	wxMenu *fileMenu = new wxMenu;
