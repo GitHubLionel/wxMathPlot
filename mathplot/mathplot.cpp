@@ -1582,6 +1582,29 @@ void mpFXYVector::Clear()
   Rewind();
 }
 
+void mpFXYVector::First_Point(double x, double y)
+{
+  m_minX = m_maxX = x;
+  m_lastX = x;
+  m_deltaX = 1e+308; // Big number
+  m_minY = m_maxY = y;
+  m_lastY = y;
+  m_deltaY = 1e+308; // Big number
+}
+
+void mpFXYVector::Check_Limit(double val, double *min, double *max, double *last, double *delta)
+{
+  if (abs(val - *last) < *delta)
+    *delta = abs(val - *last);
+  *last = val;
+
+  if (val < *min)
+    *min = val - *delta;
+  else
+    if (val > *max)
+      *max = val + *delta;
+}
+
 void mpFXYVector::SetData(const std::vector<double> &xs, const std::vector<double> &ys)
 {
   // Check if the data vectors are of the same size
@@ -1597,65 +1620,40 @@ void mpFXYVector::SetData(const std::vector<double> &xs, const std::vector<doubl
   // Update internal variables for the bounding box.
   if (xs.size() > 0)
   {
-    m_minX = m_maxX = xs[0];
-    m_minY = m_maxY = ys[0];
+    First_Point(xs[0], ys[0]);
 
     std::vector<double>::const_iterator it;
 
     // X scale
     it = xs.begin();
-    m_lastX = (*it);
-    m_deltaX = 1e+308; // Big number
     it++;
     for (; it != xs.end(); it++)
     {
-      if (abs((*it) - m_lastX) < m_deltaX)
-        m_deltaX = abs((*it) - m_lastX);
-      m_lastX = (*it);
-
-      if (*it < m_minX)
-        m_minX = (*it) - m_deltaX;
-      else
-        if (*it > m_maxX)
-          m_maxX = (*it) + m_deltaX;
+      Check_Limit((*it), &m_minX, &m_maxX, &m_lastX, &m_deltaX);
     }
 
     // Y scale
     it = ys.begin();
-    m_lastY = (*it);
-    m_deltaY = 1e+308; // Big number
     it++;
     for (; it != ys.end(); it++)
     {
-      if (abs((*it) - m_lastY) < m_deltaY)
-        m_deltaY = abs((*it) - m_lastY);
-      m_lastY = (*it);
-
-      if (*it < m_minY)
-        m_minY = (*it) - m_deltaY;
-      else
-        if (*it > m_maxY)
-          m_maxY = (*it) + m_deltaY;
+      Check_Limit((*it), &m_minY, &m_maxY, &m_lastY, &m_deltaY);
     }
+    Rewind();
   }
   else
   {
-    m_minX = -1;
-    m_maxX = 1;
-    m_minY = -1;
-    m_maxY = 1;
+    Clear();
   }
-  Rewind();
 }
 
 /** Add data to the internal vector. This method DOES NOT refresh the mpWindow unless updatePlot = true;
  * Do it manually by calling UpdateAll() or just Fit() if we want to adjust plot
- * BEWARE : You can not call this function if mpFXYVector layer is not added to the mpWindow layers list.
+ * BEWARE : mpFXYVector layer must be added to the mpWindow layers list for update Plot (logic !)
  */
 bool mpFXYVector::AddData(const double x, const double y, bool updatePlot)
 {
-  bool new_limit = false;
-  const mpFloatRect* bbox = m_win->GetBoundingBox();
+  bool new_limit = true;
 
   m_xs.push_back(x);
   m_ys.push_back(y);
@@ -1663,57 +1661,27 @@ bool mpFXYVector::AddData(const double x, const double y, bool updatePlot)
   // first point
   if (m_xs.size() == 1)
   {
-    m_minX = m_maxX = x;
-    m_lastX = x;
-    m_deltaX = 1e+308; // Big number
-    m_minY = m_maxY = y;
-    m_lastY = y;
-    m_deltaY = 1e+308; // Big number
+    First_Point(x, y);
   }
   else
   {
     // X scale
-    if (abs(x - m_lastX) < m_deltaX)
-      m_deltaX = abs(x - m_lastX);
-    m_lastX = x;
-    if (x < m_minX)
-    {
-      m_minX = x - m_deltaX;
-      if (m_minX < bbox->Xmin)
-        new_limit = true;
-    }
-    else
-      if (x > m_maxX)
-      {
-        m_maxX = x + m_deltaX;
-        if (m_maxX > bbox->Xmax)
-          new_limit = true;
-      }
+    Check_Limit(x, &m_minX, &m_maxX, &m_lastX, &m_deltaX);
 
     // Y scale
-    if (abs(y - m_lastY) < m_deltaY)
-      m_deltaY = abs(y - m_lastY);
-    m_lastY = y;
-    if (y < m_minY)
-    {
-      m_minY = y - m_deltaY;
-      if (m_minY < bbox->Ymin)
-        new_limit = true;
-    }
-    else
-      if (y > m_maxY)
-      {
-        m_maxY = y + m_deltaY;
-        if (m_maxY > bbox->Ymax)
-          new_limit = true;
-      }
+    Check_Limit(y, &m_minY, &m_maxY, &m_lastY, &m_deltaY);
   }
 
-  if (updatePlot && !new_limit)
+  if (m_win)
   {
-    DrawAddedPoint(x, y);
-  }
+    const mpFloatRect* bbox = m_win->GetBoundingBox();
+    new_limit = (m_minX < bbox->Xmin) || (m_maxX > bbox->Xmax) || (m_minY < bbox->Ymin) || (m_maxY > bbox->Ymax);
 
+    if (updatePlot && !new_limit)
+    {
+      DrawAddedPoint(x, y);
+    }
+  }
   // In all cases, we increment the index
   m_index++;
 

@@ -1595,6 +1595,15 @@ class WXDLLIMPEXP_MATHPLOT mpFXYVector: public mpFXY
       return m_maxY;
     }
 
+  private:
+    /** Initialize the limits for the first point
+     */
+    void First_Point(double x, double y);
+
+    /** Compute the limits when we add new point
+     */
+    void Check_Limit(double val, double *min, double *max, double *last, double *delta);
+
   DECLARE_DYNAMIC_CLASS(mpFXYVector)
 };
 
