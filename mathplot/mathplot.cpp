@@ -3344,6 +3344,9 @@ void mpWindow::LockAspect(bool enable)
 
 void mpWindow::OnShowPopupMenu(wxMouseEvent &event)
 {
+  if (CheckUserMouseAction(event))
+    return;
+
   // Only display menu if the user has not "dragged" the figure
   if (m_enableMouseNavigation)
   {
