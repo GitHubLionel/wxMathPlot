@@ -5,7 +5,7 @@
 // Maintainer:      Davide Rondini
 // Contributors:    Jose Luis Blanco, Val Greene, Lionel Reynaud, Dave Nadler
 // Created:         21/07/2003
-// Last edit:       23/09/2024
+// Last edit:       25/12/2024
 // Copyright:       (c) David Schalig, Davide Rondini
 // Licence:         wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -3645,6 +3645,8 @@ void mpWindow::OnPaint(wxPaintEvent &WXUNUSED(event))
 #endif
   int h, w;
   dc.GetSize(&w, &h);   // This is the size of the visible area only!
+  if (w == 0 || h == 0)
+    return;
   SetScreen(w, h);
   wxMemoryDC* m_buff_dc = NULL;
 
