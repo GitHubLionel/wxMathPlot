@@ -15,7 +15,12 @@
 #endif
 
 #include <algorithm>
+#if (defined(__cplusplus) && (__cplusplus > 201703L))
 #include <numbers> // std::numbers::pi
+#define M_PI2 (2.0 * std::numbers::pi)
+#else
+#define M_PI2 (2.0 * M_PI)
+#endif
 
 // For compilers that support precompilation, includes "wx.h".
 #include <wx/wx.h>
@@ -1965,7 +1970,7 @@ void mpPieChart::DoPlot(wxDC &dc, mpWindow &w)
 
     for (size_t binIndex = 0; binIndex < values.size(); binIndex++)
     {
-      angle = values[binIndex] / m_total_value * (2.0 * std::numbers::pi);
+      angle = values[binIndex] / m_total_value * M_PI2;
       anglepie += angle;
       x2 = w.x2p(m_radius * cos(anglepie)) * scale + offset;
       y2 = w.y2p(m_radius * sin(anglepie));
