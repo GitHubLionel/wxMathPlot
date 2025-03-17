@@ -746,8 +746,7 @@ void mpInfoLegend::UpdateBitmap(wxDC &dc, mpWindow &w)
       {
         int labelWidth = 0, labelHeight = 0;
         wxString label = ly->GetName();
-        wxPen lpen = ly->GetPen();
-        lpen.SetWidth(2);
+        wxPen lpen = ly->GetPen(); // for legend line, use exact pen set for this plot layer (including width)
         buff_dc.SetPen(lpen);
         buff_dc.GetTextExtent(label, &labelWidth, &labelHeight);
 
