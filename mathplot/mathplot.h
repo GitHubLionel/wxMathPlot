@@ -300,13 +300,11 @@ typedef enum __Plot_Align_Name_Type
   mpALIGN_SW
 } mpPlot_Align;
 
-// Style for the Legend layer
-/** Show legend items with line with the same pen of referred mpLayer  */
-/** Show legend items with small square with the same color of referred mpLayer  */
+/// Style for the Legend layer
 typedef enum __mp_Style_Type
 {
-  mpLegendLine,
-  mpLegendSquare
+  mpLegendLine,  //!< Show legend items with line with the same pen of referred mpLayer
+  mpLegendSquare //!< Show legend items with small square with the same color of referred mpLayer
 } mpLegendStyle;
 
 /// Direction for the Legend layer
@@ -1149,9 +1147,9 @@ class WXDLLIMPEXP_MATHPLOT mpFunction: public mpLayer
     }
 
     /** Draw a symbol in place of point.
-     @return void
+     @return true if a symbol was drawn (false if m_symbol is mpsNone)
      */
-    virtual void DrawSymbol(wxDC &dc, wxCoord x, wxCoord y);
+    virtual bool DrawSymbol(wxDC &dc, wxCoord x, wxCoord y);
 
     /** Set use of second Y axis
      @param _useY2 for the scaling

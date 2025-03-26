@@ -147,7 +147,7 @@ void mpWindow::FillI18NString()
 
 // Legend margins
 #define MARGIN_LEGEND 5 // The margin around the legend (the name of the function) in pixel
-#define LEGEND_LINEWIDTH 10 // The size of the decoration in front of the legend (line or square)
+#define LEGEND_LINEWIDTH 12 // The size of the decoration in front of the legend (line or square)
 
 // Minimum axis label separation
 #define MIN_X_AXIS_LABEL_SEPARATION 64
@@ -748,7 +748,9 @@ void mpInfoLegend::UpdateBitmap(wxDC &dc, mpWindow &w)
         wxString label = ly->GetName();
         wxPen lpen = ly->GetPen(); // for legend line, use exact pen set for this plot layer (including width)
         buff_dc.SetPen(lpen);
+        buff_dc.SetBrush(ly->GetBrush());
         buff_dc.GetTextExtent(label, &labelWidth, &labelHeight);
+        mpFunction* pFunctionLayer = dynamic_cast<mpFunction*>(ly); // for mpFunction-subclass-specific processing
 
         if (first)
         {
@@ -762,7 +764,17 @@ void mpInfoLegend::UpdateBitmap(wxDC &dc, mpWindow &w)
         // Draw the decoration
         if (m_item_mode == mpLegendLine)
         {
-          buff_dc.DrawLine(posX, posY + 1, posX + LEGEND_LINEWIDTH, posY + 1);
+           bool drewSymbol = false;
+           // Draw optional symbol for those layer types where appropriate
+           if(pFunctionLayer) {
+             if(dynamic_cast<mpChart*>(pFunctionLayer)==0) { // doesn't make sense to use symbols for bar or pie chart
+               drewSymbol = pFunctionLayer->DrawSymbol(buff_dc, posX + LEGEND_LINEWIDTH/2, posY + 1); // Would be nicer if keyed on symbol size
+             }
+           }
+           // draw line
+           if(!drewSymbol || (pFunctionLayer && pFunctionLayer->GetContinuity())) {
+             buff_dc.DrawLine(posX, posY + 1, posX + LEGEND_LINEWIDTH, posY + 1);
+          }
         }
         else  // m_item_mode == mpLEGEND_SQUARE
         {
@@ -899,7 +911,7 @@ mpFunction::mpFunction(mpLayerType layerType /*=mpLAYER_PLOT*/, const wxString &
   m_ZIndex = mpZIndex_PLOT;
 }
 
-void mpFunction::DrawSymbol(wxDC &dc, wxCoord x, wxCoord y)
+bool mpFunction::DrawSymbol(wxDC &dc, wxCoord x, wxCoord y)
 {
   switch (m_symbol)
   {
@@ -938,8 +950,9 @@ void mpFunction::DrawSymbol(wxDC &dc, wxCoord x, wxCoord y)
       break;
 
     default:
-      ; // Do nothing
+      return false; // Do nothing, and let caller know nothing was done
   }
+  return true;
 }
 
 //-----------------------------------------------------------------------------
