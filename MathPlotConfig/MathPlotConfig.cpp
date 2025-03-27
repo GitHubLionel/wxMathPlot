@@ -209,8 +209,9 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   const wxString cbLegendStyle_choices[] = {
   _("Line"),
   _("Square"),
+  _("Symbol"),
   };
-  cbLegendStyle = new wxChoice(Panel2, wxID_ANY, wxDefaultPosition, wxDefaultSize, 2, cbLegendStyle_choices, 0, wxDefaultValidator);
+  cbLegendStyle = new wxChoice(Panel2, wxID_ANY, wxDefaultPosition, wxDefaultSize, 3, cbLegendStyle_choices, 0, wxDefaultValidator);
   cbLegendStyle->SetSelection(0);
   FlexGridSizer6->Add(cbLegendStyle, 1, wxALL|wxEXPAND, 2);
   StaticText25 = new wxStaticText(Panel2, wxID_ANY, _("Direction :"), wxDefaultPosition, wxDefaultSize, 0);

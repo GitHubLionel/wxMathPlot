@@ -5,7 +5,7 @@
 // Maintainer:      Davide Rondini
 // Contributors:    Jose Luis Blanco, Val Greene, Lionel Reynaud, Dave Nadler
 // Created:         21/07/2003
-// Last edit:       25/12/2024
+// Last edit:       27/03/2025
 // Copyright:       (c) David Schalig, Davide Rondini
 // Licence:         wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -303,8 +303,9 @@ typedef enum __Plot_Align_Name_Type
 /// Style for the Legend layer
 typedef enum __mp_Style_Type
 {
-  mpLegendLine,  //!< Show legend items with line with the same pen of referred mpLayer
-  mpLegendSquare //!< Show legend items with small square with the same color of referred mpLayer
+  mpLegendLine,   //!< Show legend items with line with the same pen of referred mpLayer
+  mpLegendSquare, //!< Show legend items with small square with the same color of referred mpLayer
+  mpLegendSymbol  //!< Show legend items with symbol used with the referred mpLayer
 } mpLegendStyle;
 
 /// Direction for the Legend layer

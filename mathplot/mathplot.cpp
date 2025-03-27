@@ -5,7 +5,7 @@
 // Maintainer:      Davide Rondini
 // Contributors:    Jose Luis Blanco, Val Greene, Lionel Reynaud, Dave Nadler
 // Created:         21/07/2003
-// Last edit:       25/12/2024
+// Last edit:       27/03/2025
 // Copyright:       (c) David Schalig, Davide Rondini
 // Licence:         wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -762,27 +762,39 @@ void mpInfoLegend::UpdateBitmap(wxDC &dc, mpWindow &w)
         }
 
         // Draw the decoration
-        if (m_item_mode == mpLegendLine)
+        switch (m_item_mode)
         {
-           bool drewSymbol = false;
-           // Draw optional symbol for those layer types where appropriate
-           if(pFunctionLayer) {
-             if(dynamic_cast<mpChart*>(pFunctionLayer)==0) { // doesn't make sense to use symbols for bar or pie chart
-               drewSymbol = pFunctionLayer->DrawSymbol(buff_dc, posX + LEGEND_LINEWIDTH/2, posY + 1); // Would be nicer if keyed on symbol size
-             }
-           }
-           // draw line
-           if(!drewSymbol || (pFunctionLayer && pFunctionLayer->GetContinuity())) {
-             buff_dc.DrawLine(posX, posY + 1, posX + LEGEND_LINEWIDTH, posY + 1);
+          case mpLegendSquare:
+          {
+            wxBrush sqrBrush(*wxWHITE, wxBRUSHSTYLE_SOLID);
+            sqrBrush.SetColour(lpen.GetColour());
+            buff_dc.SetBrush(sqrBrush);
+            buff_dc.DrawRectangle(posX, posY - (LEGEND_LINEWIDTH / 2) + 1,
+            LEGEND_LINEWIDTH, LEGEND_LINEWIDTH);
+            break;
           }
-        }
-        else  // m_item_mode == mpLEGEND_SQUARE
-        {
-          wxBrush sqrBrush(*wxWHITE, wxBRUSHSTYLE_SOLID);
-          sqrBrush.SetColour(lpen.GetColour());
-          buff_dc.SetBrush(sqrBrush);
-          buff_dc.DrawRectangle(posX, posY - (LEGEND_LINEWIDTH / 2) + 1,
-                LEGEND_LINEWIDTH, LEGEND_LINEWIDTH);
+
+          case mpLegendSymbol:
+          {
+            bool drewSymbol = false;
+            // Draw optional symbol for those layer types where appropriate
+            if (pFunctionLayer)
+            {
+              if (dynamic_cast<mpChart*>(pFunctionLayer) == 0)
+              { // doesn't make sense to use symbols for bar or pie chart
+                drewSymbol = pFunctionLayer->DrawSymbol(buff_dc, posX + LEGEND_LINEWIDTH / 2, posY + 1); // Would be nicer if keyed on symbol size
+              }
+            }
+            // draw line
+            if (!drewSymbol || (pFunctionLayer && pFunctionLayer->GetContinuity()))
+            {
+              buff_dc.DrawLine(posX, posY + 1, posX + LEGEND_LINEWIDTH, posY + 1);
+            }
+            break;
+          }
+
+          default: // mpLegendLine or unknown
+            buff_dc.DrawLine(posX, posY + 1, posX + LEGEND_LINEWIDTH, posY + 1);
         }
 
         // Draw the name of the function after the decoration

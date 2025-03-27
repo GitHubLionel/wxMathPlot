@@ -326,6 +326,7 @@
 												<content>
 													<item>Line</item>
 													<item>Square</item>
+                                                    <item>Symbol</item>
 												</content>
 												<use_items_array>1</use_items_array>
 												<selection>0</selection>
