@@ -750,7 +750,6 @@ void mpInfoLegend::UpdateBitmap(wxDC &dc, mpWindow &w)
         buff_dc.SetPen(lpen);
         buff_dc.SetBrush(ly->GetBrush());
         buff_dc.GetTextExtent(label, &labelWidth, &labelHeight);
-        mpFunction* pFunctionLayer = dynamic_cast<mpFunction*>(ly); // for mpFunction-subclass-specific processing
 
         if (first)
         {
@@ -776,6 +775,7 @@ void mpInfoLegend::UpdateBitmap(wxDC &dc, mpWindow &w)
 
           case mpLegendSymbol:
           {
+            mpFunction* pFunctionLayer = dynamic_cast<mpFunction*>(ly); // for mpFunction-subclass-specific processing
             bool drewSymbol = false;
             // Draw optional symbol for those layer types where appropriate
             if (pFunctionLayer)
