@@ -85,14 +85,20 @@
 #include <cmath>
 #include <deque>
 
+#define ENABLE_MP_CONFIG
+#ifdef ENABLE_MP_CONFIG
 #include "MathPlotConfig.h"
+#endif // ENABLE_MP_CONFIG
 
 /**
  * A simple plot component for wxWidgets
  */
+#ifdef ENABLE_MP_NAMESPACE
 namespace MathPlot
 {
+#endif // ENABLE_MP_NAMESPACE
 
+#ifdef ENABLE_MP_DEBUG
 // For memory leak debug
 #ifdef _WINDOWS
 #ifdef _DEBUG
@@ -102,6 +108,7 @@ namespace MathPlot
 #define DEBUG_NEW new
 #endif // _DEBUG
 #endif // _WINDOWS
+#endif // ENABLE_MP_DEBUG
 
 // Separation for axes when set close to border
 #define X_BORDER_SEPARATION 40
@@ -151,7 +158,9 @@ class WXDLLIMPEXP_MATHPLOT mpCovarianceEllipse;
 class WXDLLIMPEXP_MATHPLOT mpPolygon;
 class WXDLLIMPEXP_MATHPLOT mpBitmapLayer;
 
+#ifdef ENABLE_MP_CONFIG
 class MathPlotConfigDialog;
+#endif // ENABLE_MP_CONFIG
 
 /// A rectangle structure in several (integer) flavors
 typedef union
@@ -250,7 +259,9 @@ enum
   mpID_TOGGLE_GRID,        //!< Show/Hide grids
   mpID_TOGGLE_COORD,       //!< Show/Hide info coord
   mpID_SCREENSHOT,         //!< Copy a screen shot to the clipboard
+#ifdef ENABLE_MP_CONFIG
   mpID_CONFIG,             //!< Configuration
+#endif // ENABLE_MP_CONFIG
   mpID_LOAD_FILE,          //!< Load a file
   mpID_HELP_MOUSE,         //!< Shows information about the mouse commands
   mpID_FULLSCREEN          //!< Toggle fullscreen only if parent is a frame windows
@@ -2914,12 +2925,14 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
       m_magnetize = mag;
     }
 
+#ifdef ENABLE_MP_CONFIG
     void RefreshConfigWindow();
     /**
      * Give access to the config dialog window
      * @param : Create. Create the dialog if not exist (default false)
      */
     MathPlotConfigDialog* GetConfigWindow(bool Create = false);
+#endif // ENABLE_MP_CONFIG
 
     void Update_CountY2Axis(bool Y2Axis);
 
@@ -2938,7 +2951,9 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     virtual void OnToggleCoords(wxCommandEvent &event);           //!< Context menu handler
     virtual void OnScreenShot(wxCommandEvent &event);             //!< Context menu handler
     virtual void OnFullScreen(wxCommandEvent &event);             //!< Context menu handler
+#ifdef ENABLE_MP_CONFIG
     virtual void OnConfiguration(wxCommandEvent &event);          //!< Context menu handler
+#endif // ENABLE_MP_CONFIG
     virtual void OnLoadFile(wxCommandEvent &event);               //!< Context menu handler
     virtual void OnZoomIn(wxCommandEvent &event);                 //!< Context menu handler
     virtual void OnZoomOut(wxCommandEvent &event);                //!< Context menu handler
@@ -3041,7 +3056,9 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 
     wxBitmap* m_Screenshot_bmp;         //!< For clipboard, save and print
 
+#ifdef ENABLE_MP_CONFIG
     MathPlotConfigDialog* m_configWindow = NULL;   //!< For the config dialog
+#endif // ENABLE_MP_CONFIG
 
     mpOnDeleteLayer m_OnDeleteLayer = NULL;          //!< Event when we delete a layer
     mpOnUserMouseAction m_OnUserMouseAction = NULL;  //!< Event when we have a mouse click
@@ -3617,7 +3634,9 @@ class WXDLLIMPEXP_MATHPLOT wxIndexColour: public wxColour
 /*@}*/
 
 // ---------------------------------------------------------------------
+#ifdef ENABLE_MP_NAMESPACE
 }// namespace MathPlot
 using namespace MathPlot;
+#endif // ENABLE_MP_NAMESPACE
 
 #endif // _MP_MATHPLOT_H_

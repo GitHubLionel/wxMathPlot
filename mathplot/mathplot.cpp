@@ -116,6 +116,7 @@ void mpWindow::FillI18NString()
   Popup_string[6][1] = _("Show/Hide info coordinates");
   Popup_string[7][0] = _("Screen shot");
   Popup_string[7][1] = _("Copy a screen shot to the clipboard");
+#ifdef ENABLE_MP_CONFIG
   Popup_string[8][0] = _("Configuration");
   Popup_string[8][1] = _("Plot configuration");
   Popup_string[9][0] = _("Load file");
@@ -124,6 +125,14 @@ void mpWindow::FillI18NString()
   Popup_string[10][1] = _("Show help about the mouse commands.");
   Popup_string[11][0] = _("Toggle fullscreen");
   Popup_string[11][1] = _("Toggle fullscreen.");
+#else // ENABLE_MP_CONFIG
+  Popup_string[8][0] = _("Load file");
+  Popup_string[8][1] = _("Load data file");
+  Popup_string[9][0] = _("Show mouse commands...");
+  Popup_string[9][1] = _("Show help about the mouse commands.");
+  Popup_string[10][0] = _("Toggle fullscreen");
+  Popup_string[10][1] = _("Toggle fullscreen.");
+#endif // ENABLE_MP_CONFIG
 
   // List of string message used
   MESS_HELP0 = _("wxMathPlot help");
@@ -141,9 +150,11 @@ void mpWindow::FillI18NString()
 }
 
 // Memory leak debugging
+#ifdef ENABLE_MP_DEBUG
 #ifdef _DEBUG
 #define new DEBUG_NEW
-#endif
+#endif // _DEBUG
+#endif // ENABLE_MP_DEBUG
 
 // Legend margins
 #define MARGIN_LEGEND 5 // The margin around the legend (the name of the function) in pixel
@@ -2665,7 +2676,9 @@ EVT_MENU(mpID_FIT, mpWindow::OnFit)
 EVT_MENU(mpID_TOGGLE_GRID, mpWindow::OnToggleGrids)
 EVT_MENU(mpID_TOGGLE_COORD, mpWindow::OnToggleCoords)
 EVT_MENU(mpID_SCREENSHOT, mpWindow::OnScreenShot)
+#ifdef ENABLE_MP_CONFIG
 EVT_MENU(mpID_CONFIG, mpWindow::OnConfiguration)
+#endif // ENABLE_MP_CONFIG
 EVT_MENU(mpID_LOAD_FILE, mpWindow::OnLoadFile)
 EVT_MENU(mpID_ZOOM_IN, mpWindow::OnZoomIn)
 EVT_MENU(mpID_ZOOM_OUT, mpWindow::OnZoomOut)
@@ -2756,7 +2769,9 @@ mpWindow::~mpWindow()
   DeleteAndNull(m_buff_bmp);
   DeleteAndNull(m_zoom_bmp);
   DeleteAndNull(m_Screenshot_bmp);
+#ifdef ENABLE_MP_CONFIG
   DeleteAndNull(m_configWindow);
+#endif // ENABLE_MP_CONFIG
 }
 
 void mpWindow::InitParameters()
@@ -2821,6 +2836,7 @@ void mpWindow::OnMouseLeftDown(wxMouseEvent &event)
     wxLogMessage(_T("mpWindow::OnMouseLeftDown() started moving layer %p"), m_movingInfoLayer);
   }
 #endif
+#ifdef ENABLE_MP_CONFIG
   if (m_InInfoLegend)
   {
     int select = m_InfoLegend->GetPointed(*this, m_mouseLClick);
@@ -2831,6 +2847,7 @@ void mpWindow::OnMouseLeftDown(wxMouseEvent &event)
     m_configWindow->SelectChoiceSerie(select);
     m_configWindow->Show();
   }
+#endif // ENABLE_MP_CONFIG
 
   event.Skip();
 }
@@ -3466,6 +3483,7 @@ void mpWindow::OnLoadFile(wxCommandEvent &WXUNUSED(event))
   }
 }
 
+#ifdef ENABLE_MP_CONFIG
 void mpWindow::OnConfiguration(wxCommandEvent &WXUNUSED(event))
 {
   if (m_configWindow == NULL)
@@ -3474,6 +3492,7 @@ void mpWindow::OnConfiguration(wxCommandEvent &WXUNUSED(event))
   m_configWindow->Initialize();
   m_configWindow->Show();
 }
+#endif // ENABLE_MP_CONFIG
 
 void mpWindow::OnCenter(wxCommandEvent &WXUNUSED(event))
 {
@@ -3571,7 +3590,9 @@ bool mpWindow::AddLayer(mpLayer *layer, bool refreshDisplay)
 
     if (refreshDisplay)
       UpdateAll();
+#ifdef ENABLE_MP_CONFIG
     RefreshConfigWindow();
+#endif // ENABLE_MP_CONFIG
 
     return true;
   }
@@ -3619,7 +3640,9 @@ bool mpWindow::DelLayer(mpLayer *layer, bool alsoDeleteObject, bool refreshDispl
         RefreshLegend();
         if (refreshDisplay)
           UpdateAll();
+#ifdef ENABLE_MP_CONFIG
         RefreshConfigWindow();
+#endif // ENABLE_MP_CONFIG
         return true;
       }
       else
@@ -3647,7 +3670,9 @@ void mpWindow::DelAllLayers(bool alsoDeleteObject, bool refreshDisplay)
   m_countY2Axis = 0;
   if (refreshDisplay)
     UpdateAll();
+#ifdef ENABLE_MP_CONFIG
   DeleteAndNull(m_configWindow);
+#endif // ENABLE_MP_CONFIG
 }
 
 void mpWindow::DelAllPlot(bool alsoDeleteObject, mpFunctionType func, bool refreshDisplay)
@@ -3667,7 +3692,9 @@ void mpWindow::DelAllPlot(bool alsoDeleteObject, mpFunctionType func, bool refre
   RefreshLegend();
   if (refreshDisplay)
     UpdateAll();
+#ifdef ENABLE_MP_CONFIG
   RefreshConfigWindow();
+#endif // ENABLE_MP_CONFIG
 }
 
 void mpWindow::OnPaint(wxPaintEvent &WXUNUSED(event))
@@ -4650,6 +4677,7 @@ void mpWindow::SetColourTheme(const wxColour &bgColour, const wxColour &drawColo
   }
 }
 
+#ifdef ENABLE_MP_CONFIG
 void mpWindow::RefreshConfigWindow()
 {
   if (m_configWindow)
@@ -4663,6 +4691,7 @@ MathPlotConfigDialog* mpWindow::GetConfigWindow(bool Create)
 
   return m_configWindow;
 }
+#endif // ENABLE_MP_CONFIG
 
 //-----------------------------------------------------------------------------
 // mpText - provided by Val Greene
