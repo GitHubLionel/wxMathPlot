@@ -478,7 +478,7 @@ void mpInfoLayer::ErasePlot(wxDC &dc, mpWindow &WXUNUSED(w))
 // mpInfoCoords
 //-----------------------------------------------------------------------------
 
-IMPLEMENT_DYNAMIC_CLASS(mpInfoCoords, mpInfoLayer)
+wxIMPLEMENT_DYNAMIC_CLASS(mpInfoCoords, mpInfoLayer);
 
 mpInfoCoords::mpInfoCoords() :
     mpInfoLayer()
@@ -694,7 +694,7 @@ void mpInfoCoords::DoPlot(wxDC &dc, mpWindow &w)
 // mpInfoLegend
 //-----------------------------------------------------------------------------
 
-IMPLEMENT_DYNAMIC_CLASS(mpInfoLegend, mpInfoLayer)
+wxIMPLEMENT_DYNAMIC_CLASS(mpInfoLegend, mpInfoLayer);
 
 mpInfoLegend::mpInfoLegend() :
     mpInfoLayer()
@@ -1515,7 +1515,7 @@ void mpFXY::DoPlot(wxDC &dc, mpWindow &w)
 //-----------------------------------------------------------------------------
 // mpFXYVector implementation - by Jose Luis Blanco (AGO-2007)
 //-----------------------------------------------------------------------------
-IMPLEMENT_DYNAMIC_CLASS(mpFXYVector, mpFXY)
+wxIMPLEMENT_DYNAMIC_CLASS(mpFXYVector, mpFXY);
 
 // Constructor
 mpFXYVector::mpFXYVector(const wxString &name, int flags, bool viewAsBar, bool useY2Axis) :
@@ -2099,7 +2099,7 @@ wxString mpScale::FormatLogValue(double n)
 // mpScaleX
 //-----------------------------------------------------------------------------
 
-IMPLEMENT_DYNAMIC_CLASS(mpScaleX, mpScale)
+wxIMPLEMENT_DYNAMIC_CLASS(mpScaleX, mpScale);
 
 /**
  * Get the origin of axis and initialize the plot boundaries
@@ -2409,7 +2409,7 @@ void mpScaleX::SetLogAxis(bool log)
 // mpScaleY
 //-----------------------------------------------------------------------------
 
-IMPLEMENT_DYNAMIC_CLASS(mpScaleY, mpScale)
+wxIMPLEMENT_DYNAMIC_CLASS(mpScaleY, mpScale);
 
 /**
  * Get the origin of axis and initialize the plot boundaries
@@ -2638,9 +2638,9 @@ void mpScaleY::SetY2Axis(bool y2Axis)
 // mpWindow
 //-----------------------------------------------------------------------------
 
-IMPLEMENT_DYNAMIC_CLASS(mpWindow, wxWindow)
+wxIMPLEMENT_DYNAMIC_CLASS(mpWindow, wxWindow);
 
-BEGIN_EVENT_TABLE(mpWindow, wxWindow)
+wxBEGIN_EVENT_TABLE(mpWindow, wxWindow)
 EVT_PAINT(mpWindow::OnPaint)
 EVT_SIZE(mpWindow::OnSize)
 EVT_SCROLLWIN_THUMBTRACK(mpWindow::OnScrollThumbTrack)
@@ -2672,7 +2672,7 @@ EVT_MENU(mpID_ZOOM_OUT, mpWindow::OnZoomOut)
 EVT_MENU(mpID_LOCKASPECT, mpWindow::OnLockAspect)
 EVT_MENU(mpID_HELP_MOUSE, mpWindow::OnMouseHelp)
 EVT_MENU(mpID_FULLSCREEN, mpWindow::OnFullScreen)
-END_EVENT_TABLE()
+wxEND_EVENT_TABLE()
 
 mpWindow::mpWindow(wxWindow *parent, wxWindowID id, const wxPoint &pos, const wxSize &size, long flag) :
     wxWindow(parent, id, pos, size, flag, _T("Mathplot"))
@@ -4668,7 +4668,7 @@ MathPlotConfigDialog* mpWindow::GetConfigWindow(bool Create)
 // mpText - provided by Val Greene
 //-----------------------------------------------------------------------------
 
-IMPLEMENT_DYNAMIC_CLASS(mpText, mpLayer)
+wxIMPLEMENT_DYNAMIC_CLASS(mpText, mpLayer);
 
 /** @param name text to be displayed
  @param offsetx x position in percentage (0-100)
@@ -4782,7 +4782,7 @@ void mpText::DoPlot(wxDC &dc, mpWindow &w)
 // mpTitle
 //-----------------------------------------------------------------------------
 
-IMPLEMENT_DYNAMIC_CLASS(mpTitle, mpText)
+wxIMPLEMENT_DYNAMIC_CLASS(mpTitle, mpText);
 
 mpTitle::mpTitle()
 {
@@ -4796,7 +4796,7 @@ mpTitle::mpTitle()
 // mpPrintout - provided by Davide Rondini
 //-----------------------------------------------------------------------------
 
-IMPLEMENT_DYNAMIC_CLASS(mpPrintout, wxPrintout)
+wxIMPLEMENT_DYNAMIC_CLASS(mpPrintout, wxPrintout);
 
 mpPrintout::mpPrintout(mpWindow *drawWindow, const wxString &title, int factor) :
     wxPrintout(title)
@@ -4880,7 +4880,7 @@ inline void SinCos(double angleRadians, double *sinA, double *cosA)
 // mpMovableObject - provided by Jose Luis Blanco
 //-----------------------------------------------------------------------------
 
-IMPLEMENT_DYNAMIC_CLASS(mpMovableObject, mpLayer)
+wxIMPLEMENT_DYNAMIC_CLASS(mpMovableObject, mpLayer);
 
 void mpMovableObject::TranslatePoint(double x, double y, double &out_x, double &out_y) const
 {
@@ -5045,7 +5045,7 @@ void mpMovableObject::DoPlot(wxDC &dc, mpWindow &w)
 // mpCovarianceEllipse - provided by Jose Luis Blanco
 //-----------------------------------------------------------------------------
 
-IMPLEMENT_DYNAMIC_CLASS(mpCovarianceEllipse, mpMovableObject)
+wxIMPLEMENT_DYNAMIC_CLASS(mpCovarianceEllipse, mpMovableObject);
 
 // Called to update the m_shape_xs, m_shape_ys vectors, whenever a parameter changes.
 void mpCovarianceEllipse::RecalculateShape()
@@ -5160,7 +5160,7 @@ void mpCovarianceEllipse::RecalculateShape()
 // mpPolygon - provided by Jose Luis Blanco
 //-----------------------------------------------------------------------------
 
-IMPLEMENT_DYNAMIC_CLASS(mpPolygon, mpMovableObject)
+wxIMPLEMENT_DYNAMIC_CLASS(mpPolygon, mpMovableObject);
 
 void mpPolygon::setPoints(const std::vector<double> &points_xs, const std::vector<double> &points_ys, bool closedShape)
 {
@@ -5187,7 +5187,7 @@ void mpPolygon::setPoints(const std::vector<double> &points_xs, const std::vecto
 // mpBitmapLayer - provided by Jose Luis Blanco
 //-----------------------------------------------------------------------------
 
-IMPLEMENT_DYNAMIC_CLASS(mpBitmapLayer, mpLayer)
+wxIMPLEMENT_DYNAMIC_CLASS(mpBitmapLayer, mpLayer);
 
 void mpBitmapLayer::GetBitmapCopy(wxImage &outBmp) const
 {
