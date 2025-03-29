@@ -116,6 +116,7 @@ void mpWindow::FillI18NString()
   Popup_string[6][1] = _("Show/Hide info coordinates");
   Popup_string[7][0] = _("Screen shot");
   Popup_string[7][1] = _("Copy a screen shot to the clipboard");
+#ifdef ENABLE_MP_CONFIG
   Popup_string[8][0] = _("Configuration");
   Popup_string[8][1] = _("Plot configuration");
   Popup_string[9][0] = _("Load file");
@@ -124,6 +125,14 @@ void mpWindow::FillI18NString()
   Popup_string[10][1] = _("Show help about the mouse commands.");
   Popup_string[11][0] = _("Toggle fullscreen");
   Popup_string[11][1] = _("Toggle fullscreen.");
+#else // ENABLE_MP_CONFIG
+  Popup_string[8][0] = _("Load file");
+  Popup_string[8][1] = _("Load data file");
+  Popup_string[9][0] = _("Show mouse commands...");
+  Popup_string[9][1] = _("Show help about the mouse commands.");
+  Popup_string[10][0] = _("Toggle fullscreen");
+  Popup_string[10][1] = _("Toggle fullscreen.");
+#endif // ENABLE_MP_CONFIG
 
   // List of string message used
   MESS_HELP0 = _("wxMathPlot help");
@@ -141,9 +150,11 @@ void mpWindow::FillI18NString()
 }
 
 // Memory leak debugging
+#ifdef ENABLE_MP_DEBUG
 #ifdef _DEBUG
 #define new DEBUG_NEW
-#endif
+#endif // _DEBUG
+#endif // ENABLE_MP_DEBUG
 
 // Legend margins
 #define MARGIN_LEGEND 5 // The margin around the legend (the name of the function) in pixel
@@ -478,7 +489,7 @@ void mpInfoLayer::ErasePlot(wxDC &dc, mpWindow &WXUNUSED(w))
 // mpInfoCoords
 //-----------------------------------------------------------------------------
 
-IMPLEMENT_DYNAMIC_CLASS(mpInfoCoords, mpInfoLayer)
+wxIMPLEMENT_DYNAMIC_CLASS(mpInfoCoords, mpInfoLayer);
 
 mpInfoCoords::mpInfoCoords() :
     mpInfoLayer()
@@ -694,7 +705,7 @@ void mpInfoCoords::DoPlot(wxDC &dc, mpWindow &w)
 // mpInfoLegend
 //-----------------------------------------------------------------------------
 
-IMPLEMENT_DYNAMIC_CLASS(mpInfoLegend, mpInfoLayer)
+wxIMPLEMENT_DYNAMIC_CLASS(mpInfoLegend, mpInfoLayer);
 
 mpInfoLegend::mpInfoLegend() :
     mpInfoLayer()
@@ -1515,7 +1526,7 @@ void mpFXY::DoPlot(wxDC &dc, mpWindow &w)
 //-----------------------------------------------------------------------------
 // mpFXYVector implementation - by Jose Luis Blanco (AGO-2007)
 //-----------------------------------------------------------------------------
-IMPLEMENT_DYNAMIC_CLASS(mpFXYVector, mpFXY)
+wxIMPLEMENT_DYNAMIC_CLASS(mpFXYVector, mpFXY);
 
 // Constructor
 mpFXYVector::mpFXYVector(const wxString &name, int flags, bool viewAsBar, bool useY2Axis) :
@@ -2099,7 +2110,7 @@ wxString mpScale::FormatLogValue(double n)
 // mpScaleX
 //-----------------------------------------------------------------------------
 
-IMPLEMENT_DYNAMIC_CLASS(mpScaleX, mpScale)
+wxIMPLEMENT_DYNAMIC_CLASS(mpScaleX, mpScale);
 
 /**
  * Get the origin of axis and initialize the plot boundaries
@@ -2409,7 +2420,7 @@ void mpScaleX::SetLogAxis(bool log)
 // mpScaleY
 //-----------------------------------------------------------------------------
 
-IMPLEMENT_DYNAMIC_CLASS(mpScaleY, mpScale)
+wxIMPLEMENT_DYNAMIC_CLASS(mpScaleY, mpScale);
 
 /**
  * Get the origin of axis and initialize the plot boundaries
@@ -2638,9 +2649,9 @@ void mpScaleY::SetY2Axis(bool y2Axis)
 // mpWindow
 //-----------------------------------------------------------------------------
 
-IMPLEMENT_DYNAMIC_CLASS(mpWindow, wxWindow)
+wxIMPLEMENT_DYNAMIC_CLASS(mpWindow, wxWindow);
 
-BEGIN_EVENT_TABLE(mpWindow, wxWindow)
+wxBEGIN_EVENT_TABLE(mpWindow, wxWindow)
 EVT_PAINT(mpWindow::OnPaint)
 EVT_SIZE(mpWindow::OnSize)
 EVT_SCROLLWIN_THUMBTRACK(mpWindow::OnScrollThumbTrack)
@@ -2665,14 +2676,16 @@ EVT_MENU(mpID_FIT, mpWindow::OnFit)
 EVT_MENU(mpID_TOGGLE_GRID, mpWindow::OnToggleGrids)
 EVT_MENU(mpID_TOGGLE_COORD, mpWindow::OnToggleCoords)
 EVT_MENU(mpID_SCREENSHOT, mpWindow::OnScreenShot)
+#ifdef ENABLE_MP_CONFIG
 EVT_MENU(mpID_CONFIG, mpWindow::OnConfiguration)
+#endif // ENABLE_MP_CONFIG
 EVT_MENU(mpID_LOAD_FILE, mpWindow::OnLoadFile)
 EVT_MENU(mpID_ZOOM_IN, mpWindow::OnZoomIn)
 EVT_MENU(mpID_ZOOM_OUT, mpWindow::OnZoomOut)
 EVT_MENU(mpID_LOCKASPECT, mpWindow::OnLockAspect)
 EVT_MENU(mpID_HELP_MOUSE, mpWindow::OnMouseHelp)
 EVT_MENU(mpID_FULLSCREEN, mpWindow::OnFullScreen)
-END_EVENT_TABLE()
+wxEND_EVENT_TABLE()
 
 mpWindow::mpWindow(wxWindow *parent, wxWindowID id, const wxPoint &pos, const wxSize &size, long flag) :
     wxWindow(parent, id, pos, size, flag, _T("Mathplot"))
@@ -2756,7 +2769,9 @@ mpWindow::~mpWindow()
   DeleteAndNull(m_buff_bmp);
   DeleteAndNull(m_zoom_bmp);
   DeleteAndNull(m_Screenshot_bmp);
+#ifdef ENABLE_MP_CONFIG
   DeleteAndNull(m_configWindow);
+#endif // ENABLE_MP_CONFIG
 }
 
 void mpWindow::InitParameters()
@@ -2821,6 +2836,7 @@ void mpWindow::OnMouseLeftDown(wxMouseEvent &event)
     wxLogMessage(_T("mpWindow::OnMouseLeftDown() started moving layer %p"), m_movingInfoLayer);
   }
 #endif
+#ifdef ENABLE_MP_CONFIG
   if (m_InInfoLegend)
   {
     int select = m_InfoLegend->GetPointed(*this, m_mouseLClick);
@@ -2831,6 +2847,7 @@ void mpWindow::OnMouseLeftDown(wxMouseEvent &event)
     m_configWindow->SelectChoiceSerie(select);
     m_configWindow->Show();
   }
+#endif // ENABLE_MP_CONFIG
 
   event.Skip();
 }
@@ -3466,6 +3483,7 @@ void mpWindow::OnLoadFile(wxCommandEvent &WXUNUSED(event))
   }
 }
 
+#ifdef ENABLE_MP_CONFIG
 void mpWindow::OnConfiguration(wxCommandEvent &WXUNUSED(event))
 {
   if (m_configWindow == NULL)
@@ -3474,6 +3492,7 @@ void mpWindow::OnConfiguration(wxCommandEvent &WXUNUSED(event))
   m_configWindow->Initialize();
   m_configWindow->Show();
 }
+#endif // ENABLE_MP_CONFIG
 
 void mpWindow::OnCenter(wxCommandEvent &WXUNUSED(event))
 {
@@ -3571,7 +3590,9 @@ bool mpWindow::AddLayer(mpLayer *layer, bool refreshDisplay)
 
     if (refreshDisplay)
       UpdateAll();
+#ifdef ENABLE_MP_CONFIG
     RefreshConfigWindow();
+#endif // ENABLE_MP_CONFIG
 
     return true;
   }
@@ -3619,7 +3640,9 @@ bool mpWindow::DelLayer(mpLayer *layer, bool alsoDeleteObject, bool refreshDispl
         RefreshLegend();
         if (refreshDisplay)
           UpdateAll();
+#ifdef ENABLE_MP_CONFIG
         RefreshConfigWindow();
+#endif // ENABLE_MP_CONFIG
         return true;
       }
       else
@@ -3647,7 +3670,9 @@ void mpWindow::DelAllLayers(bool alsoDeleteObject, bool refreshDisplay)
   m_countY2Axis = 0;
   if (refreshDisplay)
     UpdateAll();
+#ifdef ENABLE_MP_CONFIG
   DeleteAndNull(m_configWindow);
+#endif // ENABLE_MP_CONFIG
 }
 
 void mpWindow::DelAllPlot(bool alsoDeleteObject, mpFunctionType func, bool refreshDisplay)
@@ -3667,7 +3692,9 @@ void mpWindow::DelAllPlot(bool alsoDeleteObject, mpFunctionType func, bool refre
   RefreshLegend();
   if (refreshDisplay)
     UpdateAll();
+#ifdef ENABLE_MP_CONFIG
   RefreshConfigWindow();
+#endif // ENABLE_MP_CONFIG
 }
 
 void mpWindow::OnPaint(wxPaintEvent &WXUNUSED(event))
@@ -4650,6 +4677,7 @@ void mpWindow::SetColourTheme(const wxColour &bgColour, const wxColour &drawColo
   }
 }
 
+#ifdef ENABLE_MP_CONFIG
 void mpWindow::RefreshConfigWindow()
 {
   if (m_configWindow)
@@ -4663,12 +4691,13 @@ MathPlotConfigDialog* mpWindow::GetConfigWindow(bool Create)
 
   return m_configWindow;
 }
+#endif // ENABLE_MP_CONFIG
 
 //-----------------------------------------------------------------------------
 // mpText - provided by Val Greene
 //-----------------------------------------------------------------------------
 
-IMPLEMENT_DYNAMIC_CLASS(mpText, mpLayer)
+wxIMPLEMENT_DYNAMIC_CLASS(mpText, mpLayer);
 
 /** @param name text to be displayed
  @param offsetx x position in percentage (0-100)
@@ -4782,7 +4811,7 @@ void mpText::DoPlot(wxDC &dc, mpWindow &w)
 // mpTitle
 //-----------------------------------------------------------------------------
 
-IMPLEMENT_DYNAMIC_CLASS(mpTitle, mpText)
+wxIMPLEMENT_DYNAMIC_CLASS(mpTitle, mpText);
 
 mpTitle::mpTitle()
 {
@@ -4796,7 +4825,7 @@ mpTitle::mpTitle()
 // mpPrintout - provided by Davide Rondini
 //-----------------------------------------------------------------------------
 
-IMPLEMENT_DYNAMIC_CLASS(mpPrintout, wxPrintout)
+wxIMPLEMENT_DYNAMIC_CLASS(mpPrintout, wxPrintout);
 
 mpPrintout::mpPrintout(mpWindow *drawWindow, const wxString &title, int factor) :
     wxPrintout(title)
@@ -4880,7 +4909,7 @@ inline void SinCos(double angleRadians, double *sinA, double *cosA)
 // mpMovableObject - provided by Jose Luis Blanco
 //-----------------------------------------------------------------------------
 
-IMPLEMENT_DYNAMIC_CLASS(mpMovableObject, mpLayer)
+wxIMPLEMENT_DYNAMIC_CLASS(mpMovableObject, mpLayer);
 
 void mpMovableObject::TranslatePoint(double x, double y, double &out_x, double &out_y) const
 {
@@ -5045,7 +5074,7 @@ void mpMovableObject::DoPlot(wxDC &dc, mpWindow &w)
 // mpCovarianceEllipse - provided by Jose Luis Blanco
 //-----------------------------------------------------------------------------
 
-IMPLEMENT_DYNAMIC_CLASS(mpCovarianceEllipse, mpMovableObject)
+wxIMPLEMENT_DYNAMIC_CLASS(mpCovarianceEllipse, mpMovableObject);
 
 // Called to update the m_shape_xs, m_shape_ys vectors, whenever a parameter changes.
 void mpCovarianceEllipse::RecalculateShape()
@@ -5160,7 +5189,7 @@ void mpCovarianceEllipse::RecalculateShape()
 // mpPolygon - provided by Jose Luis Blanco
 //-----------------------------------------------------------------------------
 
-IMPLEMENT_DYNAMIC_CLASS(mpPolygon, mpMovableObject)
+wxIMPLEMENT_DYNAMIC_CLASS(mpPolygon, mpMovableObject);
 
 void mpPolygon::setPoints(const std::vector<double> &points_xs, const std::vector<double> &points_ys, bool closedShape)
 {
@@ -5187,7 +5216,7 @@ void mpPolygon::setPoints(const std::vector<double> &points_xs, const std::vecto
 // mpBitmapLayer - provided by Jose Luis Blanco
 //-----------------------------------------------------------------------------
 
-IMPLEMENT_DYNAMIC_CLASS(mpBitmapLayer, mpLayer)
+wxIMPLEMENT_DYNAMIC_CLASS(mpBitmapLayer, mpLayer);
 
 void mpBitmapLayer::GetBitmapCopy(wxImage &outBmp) const
 {
