@@ -179,6 +179,7 @@ double mpWindow::m_zoomIncrementalFactor = 1.5;
 // Date time conversion
 //-----------------------------------------------------------------------------
 
+bool DoubleToTimeStruct(double    , unsigned int         , struct tm *          );
 bool DoubleToTimeStruct(double val, unsigned int timeConv, struct tm *timestruct)
 {
   time_t when = (time_t)val;
@@ -442,6 +443,8 @@ void mpInfoLayer::SetInfoRectangle(mpWindow &w, int width, int height)
         m_dim.y = w.GetScreenY() - (w.GetMarginBottom() + m_dim.height) / 2;
         break;
       }
+      case mpCursor:
+      case mpMarginNone:
       default:
         ;
     }
@@ -961,6 +964,7 @@ bool mpFunction::DrawSymbol(wxDC &dc, wxCoord x, wxCoord y)
       dc.DrawLine(x - m_symbolSize, y, x + m_symbolSize, y);
       break;
 
+    case mpsNone:
     default:
       return false; // Do nothing, and let caller know nothing was done
   }
@@ -4758,6 +4762,7 @@ void mpText::DoPlot(wxDC &dc, mpWindow &w)
       py = w.GetScreenY() - (w.GetMarginBottom() + th) / 2;
       break;
     }
+    case mpCursor:
     default:
       ;
   }
