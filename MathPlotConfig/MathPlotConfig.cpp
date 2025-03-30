@@ -786,7 +786,10 @@ void MathPlotConfigDialog::Initialize(int page)
     UpdateSelectedLine();
   }
   else
+  {
+    CurrentLine = NULL;
     pLines->Show(false);
+  }
 
   // Choice selection
   if (page != -1)
@@ -1073,6 +1076,7 @@ int MathPlotConfigDialog::BrushStyleToId(wxBrushStyle style)
 
 void MathPlotConfigDialog::SelectChoiceSerie(unsigned int serie)
 {
+  CurrentSerie = NULL;
   if ((ChoiceSeries->GetCount() > 0) && (serie < ChoiceSeries->GetCount()))
   {
     ChoiceSeries->SetSelection(serie);
