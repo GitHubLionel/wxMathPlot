@@ -12,7 +12,9 @@
 
 //(*Headers(MathPlotDemoFrame)
 #include <mathplot.h>
-using namespace MathPlot;
+#ifdef ENABLE_MP_NAMESPACE
+  using namespace MathPlot;
+#endif // ENABLE_MP_NAMESPACE
 
 #include <wx/aui/aui.h>
 #include <wx/button.h>

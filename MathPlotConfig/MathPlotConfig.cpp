@@ -7,9 +7,7 @@
  * License:
  **************************************************************/
 
-#ifndef ENABLE_MP_CONFIG
-  #error ENABLE_MP_CONFIG must be defined in build to use this module
-#endif
+#ifdef ENABLE_MP_CONFIG
 
 #include "mathplot.h" // includes MathPlotConfig.h when ENABLE_MP_CONFIG defined
 #include <wx/msgdlg.h>
@@ -1495,3 +1493,5 @@ void MathPlotConfigDialog::OnbApplyClick(wxCommandEvent &WXUNUSED(event))
 #ifdef ENABLE_MP_NAMESPACE // MathPlot namespace
   } // namespace MathPlot
 #endif // ENABLE_MP_NAMESPACE
+
+#endif // ENABLE_MP_CONFIG
