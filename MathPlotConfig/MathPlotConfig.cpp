@@ -7,7 +7,11 @@
  * License:
  **************************************************************/
 
-#include "MathPlotConfig.h"
+#ifndef ENABLE_MP_CONFIG
+  #error ENABLE_MP_CONFIG must be defined in build to use this module
+#endif
+
+#include "mathplot.h" // includes MathPlotConfig.h when ENABLE_MP_CONFIG defined
 #include <wx/msgdlg.h>
 
 //(*InternalHeaders(MathPlotConfigDialog)
@@ -17,6 +21,10 @@
 
 //(*IdInit(MathPlotConfigDialog)
 //*)
+
+#ifdef ENABLE_MP_NAMESPACE // MathPlot namespace
+  namespace MathPlot {
+#endif // ENABLE_MP_NAMESPACE
 
 // List of string message used
 const wxString MESS_TRANSPARENT = _("Transparent not work on Linux");
@@ -1483,3 +1491,7 @@ void MathPlotConfigDialog::OnbApplyClick(wxCommandEvent &WXUNUSED(event))
       ;
   }
 }
+
+#ifdef ENABLE_MP_NAMESPACE // MathPlot namespace
+  } // namespace MathPlot
+#endif // ENABLE_MP_NAMESPACE

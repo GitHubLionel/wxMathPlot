@@ -10,8 +10,8 @@
 // Licence:         wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
 
-#ifndef _MP_MATHPLOT_H_
-#define _MP_MATHPLOT_H_
+#ifndef MATHPLOT_H_INCLUDED
+#define MATHPLOT_H_INCLUDED
 
 /** @file mathplot.h */
 /** @mainpage wxMathPlot
@@ -85,18 +85,18 @@
 #include <cmath>
 #include <deque>
 
-#define ENABLE_MP_CONFIG
+// No, this is supposed to be a build parameter: #define ENABLE_MP_CONFIG
 #ifdef ENABLE_MP_CONFIG
-#include "MathPlotConfig.h"
+  #include "MathPlotConfig.h"
 #endif // ENABLE_MP_CONFIG
 
 /**
  * A simple plot component for wxWidgets
  */
-#define ENABLE_MP_NAMESPACE
+
+// No, this is supposed to be a build parameter: #define ENABLE_MP_NAMESPACE
 #ifdef ENABLE_MP_NAMESPACE
-namespace MathPlot
-{
+  namespace MathPlot {
 #endif // ENABLE_MP_NAMESPACE
 
 #ifdef ENABLE_MP_DEBUG
@@ -3636,8 +3636,8 @@ class WXDLLIMPEXP_MATHPLOT wxIndexColour: public wxColour
 
 // ---------------------------------------------------------------------
 #ifdef ENABLE_MP_NAMESPACE
-}// namespace MathPlot
-using namespace MathPlot;
+  }// namespace MathPlot
+  // No, iff build enables namespace, its up to app to use it appropriately: using namespace MathPlot;
 #endif // ENABLE_MP_NAMESPACE
 
-#endif // _MP_MATHPLOT_H_
+#endif // MATHPLOT_H_INCLUDED
