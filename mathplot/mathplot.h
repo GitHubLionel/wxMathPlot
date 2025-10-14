@@ -1014,7 +1014,7 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLegend: public mpInfoLayer
     ~mpInfoLegend() {}
 
     /** Set item mode (the element on the left of text representing the plot line may be line or square).
-     * @param mode Item draw mode: mpLEGEND_LINE or mpLEGEND_SQUARE. */
+     * @param mode Item draw mode: mpLegendLine, mpLegendSquare, or mpLegendSymbol. */
     void SetItemMode(mpLegendStyle mode)
     {
       m_item_mode = mode;
