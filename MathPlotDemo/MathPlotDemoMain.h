@@ -7,11 +7,15 @@
  * License:
  **************************************************************/
 
-#ifndef MATHPLOTDEMOMAIN_H
-#define MATHPLOTDEMOMAIN_H
+#ifndef MATHPLOTDEMOMAIN_H_INCLUDED
+#define MATHPLOTDEMOMAIN_H_INCLUDED
 
 //(*Headers(MathPlotDemoFrame)
 #include <mathplot.h>
+#ifdef ENABLE_MP_NAMESPACE
+  using namespace MathPlot;
+#endif // ENABLE_MP_NAMESPACE
+
 #include <wx/aui/aui.h>
 #include <wx/button.h>
 #include <wx/checkbox.h>
@@ -84,4 +88,4 @@ class MathPlotDemoFrame: public wxFrame
         DECLARE_EVENT_TABLE()
 };
 
-#endif // MATHPLOTDEMOMAIN_H
+#endif // MATHPLOTDEMOMAIN_H_INCLUDED

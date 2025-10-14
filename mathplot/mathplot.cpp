@@ -82,6 +82,10 @@
 #include "Images/Zoom_out.h"
 #endif
 
+#ifdef ENABLE_MP_NAMESPACE
+  namespace MathPlot {
+#endif // ENABLE_MP_NAMESPACE
+
 wxString Popup_string[mpID_FULLSCREEN - mpID_FIT + 1][2] = {_T("")};
 
 // List of string message used
@@ -5441,6 +5445,10 @@ void mpMagnet::DrawCross(wxClientDC &dc) const
   dc.DrawLine(m_plot_size.x, m_mousePosition.y, m_plot_size.width, m_mousePosition.y);
   dc.SetLogicalFunction(wxCOPY);
 }
+
+#ifdef ENABLE_MP_NAMESPACE
+  } // namespace MathPlot
+#endif // ENABLE_MP_NAMESPACE
 
 //-----------------------------------------------------------------------------
 // End of file
