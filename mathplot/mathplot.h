@@ -198,15 +198,12 @@ typedef union
  */
 struct mpFloatRect
 {
-//  struct
-//  {
-    double Xmin;
-    double Xmax;
-    double Ymin;
-    double Ymax;
-    double Y2min;
-    double Y2max;
-//  };
+  double Xmin;
+  double Xmax;
+  double Ymin;
+  double Ymax;
+  double Y2min;
+  double Y2max;
   mpFloatRect() : Xmin(0.0), Xmax(0.0), Ymin(0.0), Ymax(0.0), Y2min(0.0), Y2max(0.0) {}
   /// Is point inside this bounding box (ignoring Y2)?
   bool PointIsInside(double x, double y) const {
@@ -1013,7 +1010,7 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLegend: public mpInfoLayer
     /**  Default destructor */
     ~mpInfoLegend() {}
 
-    /** Set item mode (the element on the left of text representing the plot line may be line or square).
+    /** Set item mode (the element on the left of text representing the plot line may be line, square, or line with symbol).
      * @param mode Item draw mode: mpLegendLine, mpLegendSquare, or mpLegendSymbol. */
     void SetItemMode(mpLegendStyle mode)
     {
