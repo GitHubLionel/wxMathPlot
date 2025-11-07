@@ -70,7 +70,6 @@ class MathPlotConfigDialog: public wxDialog
     double scale_min, scale_max;
     double line_value;
     bool CheckBar;
-    bool SecondYAxisChange;
     bool SerieVisibleChange;
 
     //(*Handlers(MathPlotConfigDialog)
@@ -123,15 +122,12 @@ class MathPlotConfigDialog: public wxDialog
     wxCheckBox* cbCoordinates;
     wxCheckBox* cbDrawBox;
     wxCheckBox* cbGridVisible;
-    wxCheckBox* cbIsY2Axis;
     wxCheckBox* cbLegendVisible;
     wxCheckBox* cbLinesOutside;
-    wxCheckBox* cbLinesSecondYAxis;
     wxCheckBox* cbLinesShowName;
     wxCheckBox* cbLinesVisible;
     wxCheckBox* cbLogAxis;
     wxCheckBox* cbMagnetize;
-    wxCheckBox* cbSecondYAxis;
     wxCheckBox* cbSeriesContinuity;
     wxCheckBox* cbSeriesOutside;
     wxCheckBox* cbSeriesShowName;
@@ -140,7 +136,9 @@ class MathPlotConfigDialog: public wxDialog
     wxCheckBox* cbTractable;
     wxChoice* ChoiceAxis;
     wxChoice* ChoiceLines;
+    wxChoice* ChoiceLinesYAxis;
     wxChoice* ChoiceSeries;
+    wxChoice* ChoiceSeriesYAxis;
     wxChoice* cbAxisPenStyle;
     wxChoice* cbAxisPenWidth;
     wxChoice* cbAxisPosition;
@@ -202,6 +200,7 @@ class MathPlotConfigDialog: public wxDialog
     wxStaticText* StaticText7;
     wxStaticText* StaticText8;
     wxStaticText* StaticText9;
+    wxStaticText* stLinesYIndexLabel;
     wxTextCtrl* edAxisName;
     wxTextCtrl* edFormat;
     wxTextCtrl* edLinesName;
