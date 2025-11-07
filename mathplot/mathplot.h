@@ -2413,7 +2413,10 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     void SetScaleX(const double scaleX)
     {
       if (ISNOTNULL(scaleX))
+      {
         m_scaleX = scaleX;
+        UpdateDesiredBoundingBox();
+      }
       UpdateAll();
     }
 
@@ -2432,7 +2435,10 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     void SetScaleY(const double scaleY, int yIndex)
     {
       if (ISNOTNULL(scaleY))
+      {
         m_yAxisDataList[yIndex].m_scaleY = scaleY;
+        UpdateDesiredBoundingBox();
+      }
       UpdateAll();
     }
 
@@ -2462,6 +2468,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     void SetPosX(const double posX)
     {
       m_posX = posX;
+      UpdateDesiredBoundingBox();
       UpdateAll();
     }
 
@@ -2483,7 +2490,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
       {
         m_yAxisDataList[i].m_posY = posYList[i];
       }
-
+      UpdateDesiredBoundingBox();
       UpdateAll();
     }
 
@@ -2563,6 +2570,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
         m_yAxisDataList[i].m_posY = posYList[i];
       }
 
+      UpdateDesiredBoundingBox();
       UpdateAll();
     }
 
@@ -2707,7 +2715,26 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      \param print the mpPrintout where to print the graph */
     //void PrintGraph(mpPrintout *print);
 
-    /// Get the 'desired' user-coordinate bounding box for the currently displayed view (set by Fit or Zoom operations).
+    /** Update m_desired bounds. It stores the min and max position of the visible data
+     *  in the plot. Used primarily during frame resizing via OnSize so that the data
+     *  stays in the same place when resizing the frame. Need to be updated whenever
+     *  m_posX, m_scaleX, m_posY or m_scaleY is updated
+     */
+    void UpdateDesiredBoundingBox()
+    {
+      m_desired.Xmin = m_posX + (m_margin.left / m_scaleX);
+      m_desired.Xmax = m_posX + ((m_margin.left + m_plotWidth) / m_scaleX);
+
+      for(size_t i = 0; i < m_desired.YminList.size(); i++)
+      {
+        m_desired.YmaxList[i] = m_yAxisDataList[i].m_posY - (m_margin.top / m_yAxisDataList[i].m_scaleY);
+        m_desired.YminList[i] = m_yAxisDataList[i].m_posY - ((m_margin.top + m_plotHeight) / m_yAxisDataList[i].m_scaleY);
+      }
+
+      CheckAndReportDesiredBoundsChanges();
+    }
+
+    /// Get the 'desired' user-coordinate bounding box for the currently displayed view (set by Fit, Zoom or Pan operations).
     /// @sa Fit, Zoom
     mpFloatRect GetDesiredBoundingBox() const { return m_desired; }
 
@@ -3152,10 +3179,8 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     int m_clickedX;         //!< Last mouse click X position, for centering and zooming the view
     int m_clickedY;         //!< Last mouse click Y position, for centering and zooming the view
 
-    /** These are updated in Fit() only (also Zoom)
-     *  May be different from the real borders (layer coordinates) only if lock aspect ratio is true.
-     */
-    mpFloatRect m_desired;              //!< ToDo: Set in Zoom, Fit(mpFloatRect), used in scrolling and?
+
+    mpFloatRect m_desired;              //!< Stores current plot view min/max boundaries. Used primarily during frame resizing via OnSize
 
     mpRect m_margin;                    //!< Margin around the plot including Y-axis
     mpRect m_marginOuter;               //!< Margin around the plot exluding Y-axis. Default 50

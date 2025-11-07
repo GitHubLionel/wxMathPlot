@@ -2960,32 +2960,22 @@ void mpWindow::OnMouseMove(wxMouseEvent &event)
       // A specific Y-axis has been selected. Only pan on that
       double Ay_units = -Axy.y / m_yAxisDataList[*m_mouseYAxisIndex].m_scaleY;
       m_yAxisDataList[*m_mouseYAxisIndex].m_posY += Ay_units;
-      m_desired.YminList[*m_mouseYAxisIndex] += Ay_units;
-      m_desired.YmaxList[*m_mouseYAxisIndex] += Ay_units;
     }
     else
     {
       // No axis selected. Pan whole plot
       double Ax_units = Axy.x / m_scaleX;
       m_posX += Ax_units;
-      m_desired.Xmax += Ax_units;
-      m_desired.Xmin += Ax_units;
 
       for(size_t i = 0; i < m_yAxisDataList.size(); i++)
       {
         double Ay_units = -Axy.y / m_yAxisDataList[i].m_scaleY;
         m_yAxisDataList[i].m_posY += Ay_units;
-        m_desired.YminList[i] += Ay_units;
-        m_desired.YmaxList[i] += Ay_units;
       }
     }
 
-
-
-
-
+    UpdateDesiredBoundingBox();
     UpdateAll();
-    CheckAndReportDesiredBoundsChanges();
 
 #ifdef MATHPLOT_DO_LOGGING
     wxLogMessage(_T("[mpWindow::OnMouseMove] Ax:%i Ay:%i m_posX:%f m_posY:%f"), Axy.x, Axy.y, m_posX, m_posY);
@@ -3178,8 +3168,6 @@ void mpWindow::OnMouseWheel(wxMouseEvent &event)
     {
       double changeUnitsX = change / m_scaleX;
       m_posX += changeUnitsX;
-      m_desired.Xmax += changeUnitsX;
-      m_desired.Xmin += changeUnitsX;
     }
     else if (event.m_controlDown)
     {
@@ -3187,13 +3175,11 @@ void mpWindow::OnMouseWheel(wxMouseEvent &event)
       {
         double changeUnitsY = change / m_yAxisDataList[i].m_scaleY;
         m_yAxisDataList[i].m_posY -= changeUnitsY;
-        m_desired.YminList[i] -= changeUnitsY;
-        m_desired.YmaxList[i] -= changeUnitsY;
       }
     }
 
+    UpdateDesiredBoundingBox();
     UpdateAll();
-    CheckAndReportDesiredBoundsChanges();
   }
 }
 
@@ -3311,7 +3297,6 @@ void mpWindow::Fit(const mpFloatRect &rect, wxCoord *printSizeX, wxCoord *printS
   if (!weArePrinting) {
     // We are NOT drawing to a printer...
     UpdateAll();
-    CheckAndReportDesiredBoundsChanges();
   }
 }
 
@@ -3343,10 +3328,7 @@ void mpWindow::DoZoomXCalc(bool zoomIn, wxCoord staticXpixel)
   // Adjust the new m_posx
   m_posX = staticX - (staticXpixel / m_scaleX);
 
-  // Adjust desired
-  m_desired.Xmin = m_posX;
-  m_desired.Xmax = m_posX + m_plotWidth / m_scaleX;
-  CheckAndReportDesiredBoundsChanges();
+  UpdateDesiredBoundingBox();
 #ifdef MATHPLOT_DO_LOGGING
   wxLogMessage(_T("mpWindow::DoZoomXCalc() prior X coord: (%f), new X coord: (%f) SHOULD BE EQUAL!!"), staticX, p2x(staticXpixel));
 #endif
@@ -3373,12 +3355,9 @@ void mpWindow::DoZoomYCalc(bool zoomIn, wxCoord staticYpixel, std::optional<size
     m_yAxisDataList[i].m_scaleY *= zoomFactor;
     // Adjust the new m_posy:
     m_yAxisDataList[i].m_posY = staticY + (staticYpixel / m_yAxisDataList[i].m_scaleY);
-    // Adjust desired
-    m_desired.YmaxList[i] = m_yAxisDataList[i].m_posY;
-    m_desired.YminList[i] = m_yAxisDataList[i].m_posY - m_plotHeight / m_yAxisDataList[i].m_scaleY;
   }
 
-  CheckAndReportDesiredBoundsChanges();
+  UpdateDesiredBoundingBox();
 #ifdef MATHPLOT_DO_LOGGING
   wxLogMessage(_T("mpWindow::DoZoomYCalc() prior Y coord: (%f), new Y coord: (%f) SHOULD BE EQUAL!!"), staticY, p2y(staticYpixel));
 #endif
@@ -3398,10 +3377,7 @@ void mpWindow::SetScaleXAndCenter(double scaleX)
   // Adjust the new m_posx
   m_posX = centerXValue - (centerXPixel / m_scaleX);
 
-  // Adjust desired
-  m_desired.Xmin = m_posX;
-  m_desired.Xmax = m_posX + m_plotWidth / m_scaleX;
-  CheckAndReportDesiredBoundsChanges();
+  UpdateDesiredBoundingBox();
 }
 
 void mpWindow::SetScaleYAndCenter(double scaleY, size_t yIndex)
@@ -3418,11 +3394,7 @@ void mpWindow::SetScaleYAndCenter(double scaleY, size_t yIndex)
   // Adjust the new m_posy:
   m_yAxisDataList[yIndex].m_posY = centerYValue + (centerYpixel / m_yAxisDataList[yIndex].m_scaleY);
 
-  // Adjust desired
-  m_desired.YmaxList[yIndex] = m_yAxisDataList[yIndex].m_posY;
-  m_desired.YminList[yIndex] = m_yAxisDataList[yIndex].m_posY - m_plotHeight / m_yAxisDataList[yIndex].m_scaleY;
-
-  CheckAndReportDesiredBoundsChanges();
+  UpdateDesiredBoundingBox();
 }
 
 void mpWindow::ZoomIn(const wxPoint &centerPoint)
