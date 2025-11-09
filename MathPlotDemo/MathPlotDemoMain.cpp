@@ -394,7 +394,7 @@ void MathPlotDemoFrame::OnUserMouseAction(void *Sender, wxMouseEvent &event, boo
   int y = mousePosition.y;
 
   plotX = plotWindow->p2x(mousePosition.x);
-  plotY = plotWindow->p2y(mousePosition.y);
+  plotY = plotWindow->p2y(mousePosition.y, 0);  // Use 1st y-axis
 
   cancel = false;
   // Left mouse button down

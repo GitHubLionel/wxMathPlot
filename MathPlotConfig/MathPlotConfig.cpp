@@ -380,9 +380,6 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   cbLogAxis = new wxCheckBox(Panel3, wxID_ANY, _("Logarithmic axis"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
   cbLogAxis->SetValue(false);
   BoxSizer5->Add(cbLogAxis, 0, wxALL|wxALIGN_LEFT, 5);
-  cbIsY2Axis = new wxCheckBox(Panel3, wxID_ANY, _("Is Y2 axis"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
-  cbIsY2Axis->SetValue(false);
-  BoxSizer5->Add(cbIsY2Axis, 0, wxALL|wxALIGN_LEFT, 5);
   BoxSizer6->Add(BoxSizer5, 0, wxALL|wxALIGN_TOP, 2);
   sizerAxis->Add(BoxSizer6, 0, wxALL|wxEXPAND, 0);
   Panel3->SetSizer(sizerAxis);
@@ -398,12 +395,15 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   bDelSeries->Disable();
   FlexGridSizer13->Add(bDelSeries, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
   BoxSizer8->Add(FlexGridSizer13, 0, wxALL|wxEXPAND, 2);
-  FlexGridSizer14 = new wxFlexGridSizer(1, 2, 0, 0);
-  FlexGridSizer14->AddGrowableCol(1);
+  FlexGridSizer14 = new wxFlexGridSizer(2, 0, 0);
   StaticText2 = new wxStaticText(Panel4, wxID_ANY, _("Name :"), wxDefaultPosition, wxDefaultSize, 0);
   FlexGridSizer14->Add(StaticText2, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
   edSeriesName = new wxTextCtrl(Panel4, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
   FlexGridSizer14->Add(edSeriesName, 1, wxALL|wxEXPAND, 5);
+  wxStaticText* yIndexLabel = new wxStaticText(Panel4, wxID_ANY, _("Y axis :"), wxDefaultPosition, wxDefaultSize, 0);
+  FlexGridSizer14->Add(yIndexLabel, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
+  ChoiceSeriesYAxis = new wxChoice(Panel4, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator);
+  FlexGridSizer14->Add(ChoiceSeriesYAxis, 1, wxALL|wxEXPAND, 5);
   BoxSizer8->Add(FlexGridSizer14, 0, wxALL|wxEXPAND, 2);
   FlexGridSizer15 = new wxFlexGridSizer(1, 2, 0, 0);
   BoxSizer9 = new wxBoxSizer(wxVERTICAL);
@@ -461,9 +461,6 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   cbTractable->SetValue(false);
   cbTractable->SetToolTip(_("Allow mouse coordinates"));
   BoxSizer11->Add(cbTractable, 1, wxALL|wxALIGN_LEFT, 3);
-  cbSecondYAxis = new wxCheckBox(Panel4, wxID_ANY, _("Use second Y axis"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
-  cbSecondYAxis->SetValue(false);
-  BoxSizer11->Add(cbSecondYAxis, 1, wxALL|wxALIGN_LEFT, 3);
   BoxSizer9->Add(BoxSizer11, 0, wxALL|wxALIGN_LEFT, 5);
   FlexGridSizer15->Add(BoxSizer9, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
   BoxSizer10 = new wxBoxSizer(wxVERTICAL);
@@ -541,8 +538,7 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   sizerLines->Add(FlexGridSizer5, 0, wxALL|wxEXPAND, 2);
   pLines = new wxPanel(Panel5, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL);
   BoxSizer4 = new wxBoxSizer(wxVERTICAL);
-  FlexGridSizer9 = new wxFlexGridSizer(2, 4, 0, 0);
-  FlexGridSizer9->AddGrowableCol(1);
+  FlexGridSizer9 = new wxFlexGridSizer(4, 0, 0);
   StaticText31 = new wxStaticText(pLines, wxID_ANY, _("Name :"), wxDefaultPosition, wxDefaultSize, 0);
   FlexGridSizer9->Add(StaticText31, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
   edLinesName = new wxTextCtrl(pLines, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
@@ -557,6 +553,12 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   FlexGridSizer9->Add(StaticText30, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
   edLinesValue = new wxTextCtrl(pLines, wxID_ANY, _T("1"), wxDefaultPosition, wxSize(64,-1), wxTE_RIGHT, wxFloatingPointValidator<double> (2, &line_value));
   FlexGridSizer9->Add(edLinesValue, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
+  FlexGridSizer9->AddSpacer(0);
+  FlexGridSizer9->AddSpacer(0);
+  stLinesYIndexLabel = new wxStaticText(pLines, wxID_ANY, _("Y axis :"), wxDefaultPosition, wxDefaultSize, 0);
+  FlexGridSizer9->Add(stLinesYIndexLabel, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
+  ChoiceLinesYAxis = new wxChoice(pLines, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator);
+  FlexGridSizer9->Add(ChoiceLinesYAxis, 1, wxALL|wxEXPAND, 5);
   BoxSizer4->Add(FlexGridSizer9, 0, wxALL|wxEXPAND, 5);
   FlexGridSizer20 = new wxFlexGridSizer(1, 2, 0, 0);
   BoxSizer18 = new wxBoxSizer(wxHORIZONTAL);
@@ -607,9 +609,6 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   cbLinesShowName = new wxCheckBox(pLines, wxID_ANY, _("Show name"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
   cbLinesShowName->SetValue(false);
   BoxSizer19->Add(cbLinesShowName, 1, wxALL|wxALIGN_LEFT, 3);
-  cbLinesSecondYAxis = new wxCheckBox(pLines, wxID_ANY, _("Use second Y axis"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
-  cbLinesSecondYAxis->SetValue(false);
-  BoxSizer19->Add(cbLinesSecondYAxis, 1, wxALL|wxALIGN_LEFT, 3);
   BoxSizer18->Add(BoxSizer19, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5);
   FlexGridSizer20->Add(BoxSizer18, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
   BoxSizer4->Add(FlexGridSizer20, 0, wxALL|wxEXPAND, 5);
@@ -681,7 +680,6 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   scale_max = 1;
   line_value = 1;
   CheckBar = false;
-  SecondYAxisChange = false;
   SerieVisibleChange = false;
 //    Initialize();
 }
@@ -706,8 +704,8 @@ void MathPlotConfigDialog::Initialize(int page)
 
   int_top = m_plot->GetMarginTop();
   int_bottom = m_plot->GetMarginBottom();
-  int_left = m_plot->GetMarginLeft();
-  int_right = m_plot->GetMarginRight();
+  int_left = m_plot->GetMarginLeftOuter();
+  int_right = m_plot->GetMarginRightOuter();
   edMarginTop->GetValidator()->TransferToWindow();
   edMarginBottom->GetValidator()->TransferToWindow();
   edMarginLeft->GetValidator()->TransferToWindow();
@@ -754,16 +752,12 @@ void MathPlotConfigDialog::Initialize(int page)
     // Only mpScaleX and mpScaleY should be added to the list
     if (classname.IsSameAs(_T("mpScaleX")))
       ChoiceAxis->Append(_T("X axis - ") + axis->GetName(), axis);
-    else
-      if (classname.IsSameAs(_T("mpScaleY")))
-      {
-        if (((mpScaleY*)axis)->IsY2Axis())
-        {
-          ChoiceAxis->Append(_T("Y2 axis - ") + axis->GetName(), axis);
-        }
-        else
-          ChoiceAxis->Append(_T("Y axis - ") + axis->GetName(), axis);
-      }
+    else if (classname.IsSameAs(_T("mpScaleY")))
+    {
+      mpScaleY* yAxis = dynamic_cast<mpScaleY*>(axis);
+      wxString yAxisName = wxString::Format(_T("Y%d axis - %s"), yAxis->GetAxisIndex() + 1, yAxis->GetName());
+      ChoiceAxis->Append(yAxisName, yAxis);
+    }
   }
   ChoiceAxis->SetSelection(0);
   UpdateAxis();
@@ -776,6 +770,13 @@ void MathPlotConfigDialog::Initialize(int page)
   }
   bDelSeries->Enable(ChoiceSeries->GetCount() > 0);
 
+  ChoiceSeriesYAxis->Clear();
+  for(mpScaleY* yAxis : m_plot->GetYAxisList())
+  {
+    wxString yAxisName = wxString::Format(_T("Y%d axis - %s"), yAxis->GetAxisIndex()+1, yAxis->GetName());
+    ChoiceSeriesYAxis->Append(yAxisName, yAxis);
+  }
+
   // Select the first serie
   SelectChoiceSerie(0);
 
@@ -786,6 +787,14 @@ void MathPlotConfigDialog::Initialize(int page)
     ChoiceLines->Append(((mpLayer*)m_plot->GetLayersType(i, mpLAYER_LINE))->GetName());
   }
   bDelLines->Enable(ChoiceLines->GetCount() > 0);
+
+  ChoiceLinesYAxis->Clear();
+  for(mpScaleY* yAxis : m_plot->GetYAxisList())
+  {
+    wxString yAxisName = wxString::Format(_T("Y%d axis - %s"), yAxis->GetAxisIndex()+1, yAxis->GetName());
+    ChoiceLinesYAxis->Append(yAxisName, yAxis);
+  }
+
   if (ChoiceLines->GetCount() > 0)
   {
     ChoiceLines->SetSelection(0);
@@ -944,7 +953,6 @@ void MathPlotConfigDialog::UpdateAxis(void)
 
   if (classname.IsSameAs(_T("mpScaleX")))
   {
-    cbIsY2Axis->Show(false);
     cbAxisPosition->Clear();
     scale_offset = mpALIGN_BORDER_BOTTOM;
     for (int i = scale_offset; i <= mpALIGN_BORDER_TOP; i++)
@@ -955,8 +963,6 @@ void MathPlotConfigDialog::UpdateAxis(void)
   }
   else
   {
-    cbIsY2Axis->Show(true);
-    cbIsY2Axis->SetValue(((mpScaleY*)CurrentScale)->IsY2Axis());
     cbAxisPosition->Clear();
     scale_offset = mpALIGN_BORDER_LEFT;
     for (int i = scale_offset; i <= mpALIGN_BORDER_RIGHT; i++)
@@ -994,17 +1000,18 @@ void MathPlotConfigDialog::UpdateAxis(void)
       scale_min = BoundScale.Xmin;
       scale_max = BoundScale.Xmax;
     }
-    else
+    else if (classname.IsSameAs(_T("mpScaleY")))
     {
-      if (((mpScaleY*)CurrentScale)->IsY2Axis())
+      mpScaleY* yAxis = dynamic_cast<mpScaleY*>(CurrentScale);
+      if(yAxis->GetAxisIndex() < BoundScale.YminList.size())
       {
-        scale_min = BoundScale.Y2min;
-        scale_max = BoundScale.Y2max;
+        scale_min = BoundScale.YminList[yAxis->GetAxisIndex()];
+        scale_max = BoundScale.YmaxList[yAxis->GetAxisIndex()];
       }
       else
       {
-        scale_min = BoundScale.Ymin;
-        scale_max = BoundScale.Ymax;
+        scale_min = CurrentScale->GetMinScale();
+        scale_max = CurrentScale->GetMaxScale();
       }
     }
   }
@@ -1029,7 +1036,15 @@ void MathPlotConfigDialog::OnbAddAxisClick(wxCommandEvent &event)
   if (bt == bAddXAxis)
     newAxis = (mpScale*)new mpScaleX(wxT("New X"), mpALIGN_CENTERX, true, mpX_NORMAL);
   else
-    newAxis = (mpScale*)new mpScaleY(wxT("New Y"), mpALIGN_CENTERY, true);
+  {
+    // Chose a unique new index for this Y-axis, let it be the largest exising index + 1
+    int newIndex = 0;
+    for(mpScaleY* yAxis : m_plot->GetYAxisList())
+    {
+      newIndex = std::max(newIndex, yAxis->GetAxisIndex() + 1);
+    }
+    newAxis = (mpScale*)new mpScaleY(wxT("New Y"), mpALIGN_CENTERY, true, newIndex);
+  }
   if (m_plot->AddLayer(newAxis))
   {
     ChoiceAxis->SetSelection(ChoiceAxis->GetCount() - 1);
@@ -1099,6 +1114,18 @@ void MathPlotConfigDialog::UpdateSelectedSerie(void)
     CurrentChoice = ChoiceSeries;
 
     edSeriesName->SetValue(CurrentSerie->GetName());
+
+    ChoiceSeriesYAxis->SetSelection(wxNOT_FOUND);
+    for(int i = 0; i < ChoiceSeriesYAxis->GetCount(); i++)
+    {
+      mpScaleY* yAxis = static_cast<mpScaleY*>(ChoiceSeriesYAxis->GetClientData(i));
+      if(yAxis->GetAxisIndex() == CurrentSerie->GetYAxisIndex())
+      {
+        ChoiceSeriesYAxis->SetSelection(i);
+        break;
+      }
+    }
+
     // Pen config
     DoButtonColour(bSeriesPenColor, CurrentSerie->GetPen().GetColour());
     cbSeriesPenWidth->SetSelection(CurrentSerie->GetPen().GetWidth() - 1);
@@ -1116,9 +1143,6 @@ void MathPlotConfigDialog::UpdateSelectedSerie(void)
     cbSeriesOutside->SetValue(CurrentSerie->GetDrawOutsideMargins());
     cbSeriesShowName->SetValue(CurrentSerie->GetShowName());
     cbTractable->SetValue(CurrentSerie->IsTractable());
-    SecondYAxisChange = CurrentSerie->GetY2Axis();
-    cbSecondYAxis->SetValue(SecondYAxisChange);
-    cbSecondYAxis->Enable(m_plot->Y2AxisExist());
 
     cbSeriesStep->SetValue(CurrentSerie->GetStep());
 
@@ -1171,6 +1195,18 @@ void MathPlotConfigDialog::UpdateSelectedLine(void)
     line_value = CurrentLine->GetValue();
     edLinesValue->GetValidator()->TransferToWindow();
 
+
+    ChoiceLinesYAxis->SetSelection(wxNOT_FOUND);
+    for(int i = 0; i < ChoiceSeriesYAxis->GetCount(); i++)
+    {
+      mpScaleY* yAxis = static_cast<mpScaleY*>(ChoiceLinesYAxis->GetClientData(i));
+      if(yAxis->GetAxisIndex() == CurrentLine->GetYAxisIndex())
+      {
+        ChoiceLinesYAxis->SetSelection(i);
+        break;
+      }
+    }
+
     // Pen config
     DoButtonColour(bLinesPenColor, CurrentLine->GetPen().GetColour());
     cbLinesPenWidth->SetSelection(CurrentLine->GetPen().GetWidth() - 1);
@@ -1179,20 +1215,20 @@ void MathPlotConfigDialog::UpdateSelectedLine(void)
     cbLinesVisible->SetValue(CurrentLine->IsVisible());
     cbLinesOutside->SetValue(CurrentLine->GetDrawOutsideMargins());
     cbLinesShowName->SetValue(CurrentLine->GetShowName());
-    cbLinesSecondYAxis->SetValue(CurrentLine->GetY2Axis());
-    cbLinesSecondYAxis->Enable(m_plot->Y2AxisExist());
 
     if (CurrentLine->IsHorizontal())
     {
       rbLinesHor->SetValue(true);
       rbLinesVert->SetValue(false);
-      cbLinesSecondYAxis->Show(true);
+      stLinesYIndexLabel->Show(true);
+      ChoiceLinesYAxis->Show(true);
     }
     else
     {
       rbLinesHor->SetValue(false);
       rbLinesVert->SetValue(true);
-      cbLinesSecondYAxis->Show(false);
+      stLinesYIndexLabel->Show(false);
+      ChoiceLinesYAxis->Show(false);
     }
   }
   else
@@ -1331,13 +1367,10 @@ void MathPlotConfigDialog::OnbApplyClick(wxCommandEvent &WXUNUSED(event))
             CurrentCoords->SetLabelMode(cbFormat->GetSelection());
           }
         }
-        else
+        else if (classname.IsSameAs(_T("mpScaleY")))
         {
-          ((mpScaleY*)CurrentScale)->SetY2Axis(cbIsY2Axis->GetValue());
-          if (cbIsY2Axis->GetValue())
-            newName = _T("Y2 axis - ");
-          else
-            newName = _T("Y axis - ");
+          mpScaleY* yAxis = dynamic_cast<mpScaleY*>(CurrentScale);
+          newName.Printf(_T("Y%d axis - "), yAxis->GetAxisIndex() + 1);
         }
         // Update name in choice list
         ChoiceAxis->SetString(ChoiceAxis->GetCurrentSelection(), newName + edAxisName->GetValue());
@@ -1364,30 +1397,23 @@ void MathPlotConfigDialog::OnbApplyClick(wxCommandEvent &WXUNUSED(event))
             BoundScale.Xmax = scale_max;
 
             // Get bound of the other axis
-            mpScale* axis = (mpScale*)m_plot->GetLayerYAxis();
-            if (axis && (!axis->GetAuto()))
+            for(mpScaleY* yAxis : m_plot->GetYAxisList())
             {
-              BoundScale.Ymin = axis->GetMinScale();
-              BoundScale.Ymax = axis->GetMaxScale();
-            }
-            axis = (mpScale*)m_plot->GetLayerY2Axis();
-            if (axis && (!axis->GetAuto()))
-            {
-              BoundScale.Y2min = axis->GetMinScale();
-              BoundScale.Y2max = axis->GetMaxScale();
+              int yIdx = yAxis->GetAxisIndex();
+              if(!yAxis->GetAuto() && (yIdx < BoundScale.YminList.size()))
+              {
+                BoundScale.YminList[yIdx] = yAxis->GetMinScale();
+                BoundScale.YmaxList[yIdx] = yAxis->GetMaxScale();
+              }
             }
           }
-          else // Y or Y2 axis
+          else if (classname.IsSameAs(_T("mpScaleY")))
           {
-            if (cbIsY2Axis->GetValue())
+            mpScaleY* yAxis = dynamic_cast<mpScaleY*>(CurrentScale);
+            if(yAxis->GetAxisIndex() < BoundScale.YminList.size())
             {
-              BoundScale.Y2min = scale_min;
-              BoundScale.Y2max = scale_max;
-            }
-            else
-            {
-              BoundScale.Ymin = scale_min;
-              BoundScale.Ymax = scale_max;
+              BoundScale.YminList[yAxis->GetAxisIndex()] = scale_min;
+              BoundScale.YmaxList[yAxis->GetAxisIndex()] = scale_max;
             }
 
             // Get bound of the other axis
@@ -1405,13 +1431,6 @@ void MathPlotConfigDialog::OnbApplyClick(wxCommandEvent &WXUNUSED(event))
 
         // Refresh page
         UpdateAxis();
-        cbSecondYAxis->Enable(m_plot->Y2AxisExist());
-        cbLinesSecondYAxis->Enable(m_plot->Y2AxisExist());
-        if (!m_plot->Y2AxisExist())
-        {
-          cbSecondYAxis->SetValue(false);
-          cbLinesSecondYAxis->SetValue(false);
-        }
       }
       break;
 
@@ -1439,7 +1458,14 @@ void MathPlotConfigDialog::OnbApplyClick(wxCommandEvent &WXUNUSED(event))
         CurrentSerie->SetDrawOutsideMargins(cbSeriesOutside->GetValue());
         CurrentSerie->SetShowName(cbSeriesShowName->GetValue());
         CurrentSerie->SetTractable(cbTractable->GetValue());
-        CurrentSerie->SetY2Axis(cbSecondYAxis->GetValue());
+
+        bool yAxisChange = false;
+        if(ChoiceSeriesYAxis->GetSelection() != wxNOT_FOUND)
+        {
+          mpScaleY* yAxis = static_cast<mpScaleY*>(ChoiceSeriesYAxis->GetClientData(ChoiceSeriesYAxis->GetSelection()));
+          yAxisChange = (CurrentSerie->GetYAxisIndex() != yAxis->GetAxisIndex());
+          CurrentSerie->SetYAxisIndex(yAxis->GetAxisIndex());
+        }
 
         CurrentSerie->SetStep(cbSeriesStep->GetValue());
 
@@ -1454,9 +1480,8 @@ void MathPlotConfigDialog::OnbApplyClick(wxCommandEvent &WXUNUSED(event))
           CurrentLegend->SetNeedUpdate();
 
         // We need to fit if we change visibility or Y axis
-        if ((SecondYAxisChange != cbSecondYAxis->GetValue()) || (SerieVisibleChange != cbSeriesVisible->GetValue()))
+        if (yAxisChange || (SerieVisibleChange != cbSeriesVisible->GetValue()))
         {
-          SecondYAxisChange = cbSecondYAxis->GetValue();
           SerieVisibleChange = cbSeriesVisible->GetValue();
           m_plot->Fit();
         }
@@ -1472,6 +1497,11 @@ void MathPlotConfigDialog::OnbApplyClick(wxCommandEvent &WXUNUSED(event))
         ChoiceLines->SetString(ChoiceLines->GetSelection(), edLinesName->GetValue());
         edLinesValue->GetValidator()->TransferFromWindow();
         CurrentLine->SetValue(line_value);
+        if(ChoiceLinesYAxis->GetSelection() != wxNOT_FOUND)
+        {
+          mpScaleY* yAxis = static_cast<mpScaleY*>(ChoiceLinesYAxis->GetClientData(ChoiceLinesYAxis->GetSelection()));
+          CurrentLine->SetYAxisIndex(yAxis->GetAxisIndex());
+        }
 
         // Pen config
         wxPen pen(bLinesPenColor->GetBackgroundColour(), cbLinesPenWidth->GetSelection() + 1,
@@ -1481,7 +1511,6 @@ void MathPlotConfigDialog::OnbApplyClick(wxCommandEvent &WXUNUSED(event))
         CurrentLine->SetVisible(cbLinesVisible->GetValue());
         CurrentLine->SetDrawOutsideMargins(cbLinesOutside->GetValue());
         CurrentLine->SetShowName(cbLinesShowName->GetValue());
-        CurrentLine->SetY2Axis(cbLinesSecondYAxis->GetValue());
         m_plot->Refresh();
       }
       break;
