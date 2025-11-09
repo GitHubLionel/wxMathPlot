@@ -616,9 +616,9 @@ wxString mpInfoCoords::GetInfoCoordsText(double xVal, std::vector<double> yValLi
     }
     else
     {
-      for(int i = 0; i < yValList.size(); i++)
+      for(size_t i = 0; i < yValList.size(); i++)
       {
-        result.Printf(_T("%s\ny%d = %g"), result, i, yValList[i]);
+        result.Printf(_T("%s\ny%d = %g"), result, (int)i, yValList[i]); // need cast i
       }
     }
 
@@ -920,7 +920,7 @@ int mpInfoLegend::GetPointed(mpWindow &WXUNUSED(w), wxPoint eventPoint)
 
 IMPLEMENT_ABSTRACT_CLASS(mpFunction, mpLayer)
 
-mpFunction::mpFunction(mpLayerType layerType /*=mpLAYER_PLOT*/, const wxString &name/*=wxEmptyString*/, int yAxisIndex/* = 0*/) :
+mpFunction::mpFunction(mpLayerType layerType /*=mpLAYER_PLOT*/, const wxString &name/*=wxEmptyString*/, size_t yAxisIndex/* = 0*/) :
     mpLayer(layerType)
 {
   m_subtype = mpfAllType;
@@ -1002,7 +1002,7 @@ mpLine::mpLine(double value, const wxPen &pen) :
 
 IMPLEMENT_ABSTRACT_CLASS(mpHorizontalLine, mpFunction)
 
-mpHorizontalLine::mpHorizontalLine(double yvalue, const wxPen &pen, int yAxisIndex) :
+mpHorizontalLine::mpHorizontalLine(double yvalue, const wxPen &pen, size_t yAxisIndex) :
     mpLine(yvalue, pen)
 {
   SetName(wxT("Horizontal line"));
@@ -2795,7 +2795,7 @@ void mpWindow::InitParameters()
   m_lockaspect = false;
 }
 
-void mpWindow::UpdateNOfYAxes(int nOfYAxes)
+void mpWindow::UpdateNOfYAxes(size_t nOfYAxes)
 {
   // Only allow upsizing
   if(nOfYAxes > m_yAxisDataList.size())
@@ -2906,7 +2906,7 @@ void mpWindow::OnMouseMove(wxMouseEvent &event)
     m_desired.Xmax += Ax_units;
     m_desired.Xmin += Ax_units;
 
-    for(int i = 0; i < m_yAxisDataList.size(); i++)
+    for(size_t i = 0; i < m_yAxisDataList.size(); i++)
     {
       double Ay_units = -Axy.y / m_yAxisDataList[i].m_scaleY;
       m_yAxisDataList[i].m_posY += Ay_units;
@@ -3068,7 +3068,7 @@ void mpWindow::OnMouseWheel(wxMouseEvent &event)
     else
       if (event.m_controlDown)
       {
-        for(int i = 0; i < m_yAxisDataList.size(); i++)
+        for(size_t i = 0; i < m_yAxisDataList.size(); i++)
         {
           double changeUnitsY = change / m_yAxisDataList[i].m_scaleY;
           m_yAxisDataList[i].m_posY -= changeUnitsY;
@@ -3149,7 +3149,7 @@ void mpWindow::Fit(const mpFloatRect &rect, wxCoord *printSizeX, wxCoord *printS
   Ax = rect.Xmax - rect.Xmin;
   m_scaleX = ISNOTNULL(Ax) ? m_plotWidth / Ax : 1;
 
-  for(int i = 0; i < m_yAxisDataList.size(); i++)
+  for(size_t i = 0; i < m_yAxisDataList.size(); i++)
   {
     Ay = rect.YmaxList[i] - rect.YminList[i];
     m_yAxisDataList[i].m_scaleY = ISNOTNULL(Ay) ? m_plotHeight / Ay : 1;
@@ -3162,13 +3162,13 @@ void mpWindow::Fit(const mpFloatRect &rect, wxCoord *printSizeX, wxCoord *printS
 #endif
     // Keep the lowest "scale" to fit the whole range required by that axis (to actually "fit"!):
     double s = m_scaleX;
-    for(int i = 0; i < m_yAxisDataList.size(); i++)
+    for(size_t i = 0; i < m_yAxisDataList.size(); i++)
     {
       s = std::min(s, m_yAxisDataList[i].m_scaleY);
     }
 
     m_scaleX = s;
-    for(int i = 0; i < m_yAxisDataList.size(); i++)
+    for(size_t i = 0; i < m_yAxisDataList.size(); i++)
     {
       m_yAxisDataList[i].m_scaleY = s;
     }
@@ -3179,7 +3179,7 @@ void mpWindow::Fit(const mpFloatRect &rect, wxCoord *printSizeX, wxCoord *printS
   //   m_posY = m_maxY;
   // But account for centering if we have lock aspect:
   m_posX = (rect.Xmin + rect.Xmax) / 2 - (m_plotWidth / 2 + m_margin.left) / m_scaleX;
-  for(int i = 0; i < m_yAxisDataList.size(); i++)
+  for(size_t i = 0; i < m_yAxisDataList.size(); i++)
   {
     m_yAxisDataList[i].m_posY = (rect.YminList[i] + rect.YmaxList[i]) / 2 + (m_plotHeight / 2 + m_margin.top) / m_yAxisDataList[i].m_scaleY;
   }
@@ -3230,7 +3230,7 @@ void mpWindow::DoZoomInXCalc(const int staticXpixel)
 
 void mpWindow::DoZoomInYCalc(const int staticYpixel)
 {
-  for(int i = 0; i < m_yAxisDataList.size(); i++)
+  for(size_t i = 0; i < m_yAxisDataList.size(); i++)
   {
     // Preserve the position of the clicked point:
     double staticY = p2y(staticYpixel, i);
@@ -3267,7 +3267,7 @@ void mpWindow::DoZoomOutXCalc(const int staticXpixel)
 
 void mpWindow::DoZoomOutYCalc(const int staticYpixel)
 {
-  for(int i = 0; i < m_yAxisDataList.size(); i++)
+  for(size_t i = 0; i < m_yAxisDataList.size(); i++)
   {
     // Preserve the position of the clicked point:
     double staticY = p2y(staticYpixel, i);
@@ -3321,7 +3321,7 @@ void mpWindow::Zoom(bool zoomIn, const wxPoint &centerPoint)
   m_desired.Xmax = m_posX + m_plotWidth / m_scaleX;
 
   // Same for Y
-  for(int i = 0; i < m_yAxisDataList.size(); i++)
+  for(size_t i = 0; i < m_yAxisDataList.size(); i++)
   {
     double prior_layer_y = p2y(c.y, i);
     m_yAxisDataList[i].m_scaleY *= zoomFactor;
@@ -3354,7 +3354,7 @@ void mpWindow::ZoomOutX()
 
 void mpWindow::ZoomInY()
 {
-  for(int i = 0; i < m_yAxisDataList.size(); i++)
+  for(size_t i = 0; i < m_yAxisDataList.size(); i++)
   {
     m_yAxisDataList[i].m_scaleY *= m_zoomIncrementalFactor;
   }
@@ -3365,7 +3365,7 @@ void mpWindow::ZoomInY()
 
 void mpWindow::ZoomOutY()
 {
-  for(int i = 0; i < m_yAxisDataList.size(); i++)
+  for(size_t i = 0; i < m_yAxisDataList.size(); i++)
   {
     m_yAxisDataList[i].m_scaleY /= m_zoomIncrementalFactor;
   }
@@ -3402,7 +3402,7 @@ void mpWindow::ZoomRect(wxPoint p0, wxPoint p1)
   zoom.Xmax = p0x > p1x ? p0x : p1x;
 
   // Same for all Y-axes
-  for(int i = 0; i < m_yAxisDataList.size(); i++)
+  for(size_t i = 0; i < m_yAxisDataList.size(); i++)
   {
     double p0y = p2y(p0.y, i);
     double p1y = p2y(p1.y, i);
@@ -3541,7 +3541,7 @@ void mpWindow::OnCenter(wxCommandEvent &WXUNUSED(event))
   double posX = p2x(m_clickedX - centerX - m_margin.left);
 
   std::vector<double> posYList;
-  for(int i = 0; i < m_yAxisDataList.size(); i++)
+  for(size_t i = 0; i < m_yAxisDataList.size(); i++)
   {
     double posY = p2y(m_clickedY - centerY - m_margin.top, i);
     posYList.push_back(posY);
@@ -3680,7 +3680,7 @@ bool mpWindow::DelLayer(mpLayer *layer, bool alsoDeleteObject, bool refreshDispl
         int scale;
         if ((layer->IsLayerType(mpLAYER_AXIS, &scale)) && (scale == mpsScaleY))
         {
-          for(int i = 0; i < m_YAxisList.size(); i++)//  mpScaleY* yAxis : m_YAxisList)
+          for(size_t i = 0; i < m_YAxisList.size(); i++)//  mpScaleY* yAxis : m_YAxisList)
           {
             if (layer == m_YAxisList[i])
             {
@@ -3947,7 +3947,7 @@ bool mpWindow::UpdateBBox()
 
   for(mpScaleY* yAxis : m_YAxisList)
   {
-    int yIdx = yAxis->GetAxisIndex();
+    size_t yIdx = yAxis->GetAxisIndex();
     if (!yAxis->GetAuto() && (yIdx < m_bound.YminList.size()))
     {
       m_bound.YminList[yIdx] = yAxis->GetMinScale();
@@ -3964,7 +3964,7 @@ bool mpWindow::UpdateBBox()
       m_bound.Xmax = 0;
   }
 
-  for(int i = 0; i < m_bound.YminList.size(); i++)
+  for(size_t i = 0; i < m_bound.YminList.size(); i++)
   {
     if (m_bound.YminList[i] == m_bound.YmaxList[i])
     {
@@ -4067,7 +4067,7 @@ void mpWindow::DoScrollCalc(const int position, const int orientation)
   {
     // Y axis
     std::vector<double> posYList;
-    for(int i = 0; i < m_yAxisDataList.size(); i++)
+    for(size_t i = 0; i < m_yAxisDataList.size(); i++)
     {
       // Get top margin in coord units
       double topMargin = m_margin.top / m_yAxisDataList[i].m_scaleY;

@@ -206,7 +206,7 @@ struct mpFloatRect
 
   mpFloatRect() : Xmin(0.0), Xmax(0.0) {YminList.resize(ySize, 0.0); YmaxList.resize(ySize, 0.0);}
   /// Is point inside this bounding box?
-  bool PointIsInside(double x, double y, int yIndex = 0) const {
+  bool PointIsInside(double x, double y, size_t yIndex = 0) const {
     if(yIndex < YminList.size())
     {
       if( (x < Xmin || x > Xmax) ||
@@ -223,7 +223,7 @@ struct mpFloatRect
     return true;
   }
   /// Update bounding box to include this point
-  void UpdateBoundingBoxToInclude(double x, double y, int yIndex = 0) {
+  void UpdateBoundingBoxToInclude(double x, double y, size_t yIndex = 0) {
     if(yIndex < YminList.size())
     {
       if      (x  < Xmin ) Xmin = x;
@@ -233,7 +233,7 @@ struct mpFloatRect
     }
   }
   /// Initialize bounding box with an initial point
-  void InitializeBoundingBox(double x, double y, int yIndex = 0) {
+  void InitializeBoundingBox(double x, double y, size_t yIndex = 0) {
     if(yIndex < YminList.size())
     {
       Xmin = Xmax = x;
@@ -1122,7 +1122,7 @@ class WXDLLIMPEXP_MATHPLOT mpFunction: public mpLayer
   public:
     /** Full constructor.
      */
-    mpFunction(mpLayerType layerType = mpLAYER_PLOT, const wxString &name = wxEmptyString, int yAxisIndex = 0);
+    mpFunction(mpLayerType layerType = mpLAYER_PLOT, const wxString &name = wxEmptyString, size_t yAxisIndex = 0);
 
     /** Set the 'continuity' property of the layer. True: draws a continuous line. False: draws separate points (default).
      * @sa GetContinuity
@@ -1188,12 +1188,12 @@ class WXDLLIMPEXP_MATHPLOT mpFunction: public mpLayer
      */
     virtual bool DrawSymbol(wxDC &dc, wxCoord x, wxCoord y);
 
-    int GetYAxisIndex() const
+    size_t GetYAxisIndex() const
     {
       return m_yAxisIndex;
     }
 
-    void SetYAxisIndex(int index)
+    void SetYAxisIndex(size_t index)
     {
       m_yAxisIndex = index;
     }
@@ -1204,7 +1204,7 @@ class WXDLLIMPEXP_MATHPLOT mpFunction: public mpLayer
     int m_symbolSize;           //!< Size of the symbol. Default 6
     int m_symbolSize2;          //!< Size of the symbol div 2.
     unsigned int m_step;        //!< Step to get point to be draw. Default : 1
-    int m_yAxisIndex;           //!< The index of the Y axis, 0 is the first axis (default)
+    size_t m_yAxisIndex;           //!< The index of the Y axis, 0 is the first axis (default)
 
   wxDECLARE_DYNAMIC_CLASS(mpFunction);
 };
@@ -1257,7 +1257,7 @@ class WXDLLIMPEXP_MATHPLOT mpLine: public mpFunction
 class WXDLLIMPEXP_MATHPLOT mpHorizontalLine: public mpLine
 {
   public:
-    mpHorizontalLine(double yvalue, const wxPen &pen = *wxGREEN_PEN, int yAxisIndex = 0);
+    mpHorizontalLine(double yvalue, const wxPen &pen = *wxGREEN_PEN, size_t yAxisIndex = 0);
 
     /** Set y
      @param yvalue
@@ -2095,12 +2095,12 @@ class WXDLLIMPEXP_MATHPLOT mpScaleY: public mpScale
      @param name Label to plot by the ruler
      @param flags Set the position of the scale with respect to the window.
      @param grids Show grid or not. Give false (default) for not drawing the grid*/
-    mpScaleY(const wxString &name = _T("Y"), int flags = mpALIGN_CENTERY, bool grids = false, int axixIndex = 0) :
+    mpScaleY(const wxString &name = _T("Y"), int flags = mpALIGN_CENTERY, bool grids = false, size_t axisIndex = 0) :
         mpScale(name, flags, grids)
     {
       m_subtype = mpsScaleY;
       m_axisWidth = Y_BORDER_SEPARATION;
-      m_axisIndex = axixIndex;
+      m_axisIndex = axisIndex;
     }
 
     /**
@@ -2109,7 +2109,7 @@ class WXDLLIMPEXP_MATHPLOT mpScaleY: public mpScale
     virtual bool IsLogAxis();
     virtual void SetLogAxis(bool log);
 
-    int GetAxisIndex(void)
+    size_t GetAxisIndex(void)
     {
       return m_axisIndex;
     }
@@ -2121,7 +2121,7 @@ class WXDLLIMPEXP_MATHPLOT mpScaleY: public mpScale
 
   protected:
     int m_axisWidth;
-    int m_axisIndex;
+    size_t m_axisIndex;
 
     /** Layer plot handler.
      This implementation will plot the ruler adjusted to the visible area. */
@@ -2424,7 +2424,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      */
     void SetPosY(const std::vector<double>& posYList)
     {
-      for(int i = 0; i < m_yAxisDataList.size(); i++)
+      for(size_t i = 0; i < m_yAxisDataList.size(); i++)
       {
         m_yAxisDataList[i].m_posY = posYList[i];
       }
@@ -2503,7 +2503,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     void SetPos(const double posX, const std::vector<double>& posYList)
     {
       m_posX = posX;
-      for(int i = 0; i < m_yAxisDataList.size(); i++)
+      for(size_t i = 0; i < m_yAxisDataList.size(); i++)
       {
         m_yAxisDataList[i].m_posY = posYList[i];
       }
@@ -3036,7 +3036,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      * that depends on how many Y-axis we have. If we add plots with new Y-axes we need
      * to adjust the size of these parameters
      @param Number of Y-axis */
-    void UpdateNOfYAxes(int nOfYAxes);
+    void UpdateNOfYAxes(size_t nOfYAxes);
 
     struct m_axisData
     {

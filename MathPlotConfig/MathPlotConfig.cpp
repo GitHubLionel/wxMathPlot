@@ -760,7 +760,7 @@ void MathPlotConfigDialog::Initialize(int page)
     else if (classname.IsSameAs(_T("mpScaleY")))
     {
       mpScaleY* yAxis = dynamic_cast<mpScaleY*>(axis);
-      wxString yAxisName = wxString::Format(_T("Y%d axis - %s"), yAxis->GetAxisIndex() + 1, yAxis->GetName());
+      wxString yAxisName = wxString::Format(_T("Y%d axis - %s"), (int)yAxis->GetAxisIndex() + 1, yAxis->GetName());
       ChoiceAxis->Append(yAxisName, yAxis);
     }
   }
@@ -778,7 +778,7 @@ void MathPlotConfigDialog::Initialize(int page)
   ChoiceSeriesYAxis->Clear();
   for(mpScaleY* yAxis : m_plot->GetYAxisList())
   {
-    wxString yAxisName = wxString::Format(_T("Y%d axis - %s"), yAxis->GetAxisIndex()+1, yAxis->GetName());
+    wxString yAxisName = wxString::Format(_T("Y%d axis - %s"), (int)yAxis->GetAxisIndex()+1, yAxis->GetName());
     ChoiceSeriesYAxis->Append(yAxisName, yAxis);
   }
 
@@ -796,7 +796,7 @@ void MathPlotConfigDialog::Initialize(int page)
   ChoiceLinesYAxis->Clear();
   for(mpScaleY* yAxis : m_plot->GetYAxisList())
   {
-    wxString yAxisName = wxString::Format(_T("Y%d axis - %s"), yAxis->GetAxisIndex()+1, yAxis->GetName());
+    wxString yAxisName = wxString::Format(_T("Y%d axis - %s"), (int)yAxis->GetAxisIndex()+1, yAxis->GetName());
     ChoiceLinesYAxis->Append(yAxisName, yAxis);
   }
 
@@ -1046,7 +1046,7 @@ void MathPlotConfigDialog::OnbAddAxisClick(wxCommandEvent &event)
     int newIndex = 0;
     for(mpScaleY* yAxis : m_plot->GetYAxisList())
     {
-      newIndex = std::max(newIndex, (int)(yAxis->GetAxisIndex() + 1));
+      newIndex = std::max(newIndex, (int)yAxis->GetAxisIndex() + 1);
     }
     newAxis = (mpScale*)new mpScaleY(wxT("New Y"), mpALIGN_CENTERY, true, newIndex);
   }
@@ -1375,7 +1375,7 @@ void MathPlotConfigDialog::OnbApplyClick(wxCommandEvent &WXUNUSED(event))
         else if (classname.IsSameAs(_T("mpScaleY")))
         {
           mpScaleY* yAxis = dynamic_cast<mpScaleY*>(CurrentScale);
-          newName.Printf(_T("Y%d axis - "), yAxis->GetAxisIndex() + 1);
+          newName.Printf(_T("Y%d axis - "), (int)yAxis->GetAxisIndex() + 1);
         }
         // Update name in choice list
         ChoiceAxis->SetString(ChoiceAxis->GetCurrentSelection(), newName + edAxisName->GetValue());
