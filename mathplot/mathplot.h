@@ -3,7 +3,7 @@
 // Purpose:         Framework for plotting in wxWindows
 // Original Author: David Schalig
 // Maintainer:      Davide Rondini
-// Contributors:    Jose Luis Blanco, Val Greene, Lionel Reynaud, Dave Nadler, MortenMacFly
+// Contributors:    Jose Luis Blanco, Val Greene, Lionel Reynaud, Dave Nadler, MortenMacFly, Oskar Waldemarsson
 // Created:         21/07/2003
 // Last edit:       29/03/2025
 // Copyright:       (c) David Schalig, Davide Rondini
@@ -1204,8 +1204,7 @@ class WXDLLIMPEXP_MATHPLOT mpFunction: public mpLayer
     int m_symbolSize;           //!< Size of the symbol. Default 6
     int m_symbolSize2;          //!< Size of the symbol div 2.
     unsigned int m_step;        //!< Step to get point to be draw. Default : 1
-//    bool m_UseY2Axis;           //!< Use Y2 axis. This second axis must exist
-    int m_yAxisIndex;
+    int m_yAxisIndex;           //!< The index of the Y axis, 0 is the first axis (default)
 
   wxDECLARE_DYNAMIC_CLASS(mpFunction);
 };
@@ -2523,7 +2522,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     /** Converts mpWindow (screen) pixel coordinates into graph (floating point) coordinates,
      * using current mpWindow position and scale.
      * @sa p2x,x2p,y2p */
-    inline double p2y(const wxCoord pixelCoordY, int yIndex) const
+    inline double p2y(const wxCoord pixelCoordY, int yIndex = 0) const
     {
       return m_yAxisDataList[yIndex].m_posY - pixelCoordY / m_yAxisDataList[yIndex].m_scaleY;
     }
@@ -2539,7 +2538,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     /** Converts graph (floating point) coordinates into mpWindow (screen) pixel coordinates,
      * using current mpWindow position and scale.
      * @sa p2x,p2y,x2p */
-    inline wxCoord y2p(const double y, int yIndex) const
+    inline wxCoord y2p(const double y, int yIndex = 0) const
     {
       return (wxCoord)((m_yAxisDataList[yIndex].m_posY - y) * m_yAxisDataList[yIndex].m_scaleY);
     }
