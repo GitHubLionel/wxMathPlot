@@ -395,15 +395,16 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   bDelSeries->Disable();
   FlexGridSizer13->Add(bDelSeries, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
   BoxSizer8->Add(FlexGridSizer13, 0, wxALL|wxEXPAND, 2);
-  FlexGridSizer14 = new wxFlexGridSizer(2, 0, 0);
+  FlexGridSizer14 = new wxFlexGridSizer(2, 2, 0, 0);
+  FlexGridSizer14->AddGrowableCol(1);
   StaticText2 = new wxStaticText(Panel4, wxID_ANY, _("Name :"), wxDefaultPosition, wxDefaultSize, 0);
   FlexGridSizer14->Add(StaticText2, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
   edSeriesName = new wxTextCtrl(Panel4, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
   FlexGridSizer14->Add(edSeriesName, 1, wxALL|wxEXPAND, 5);
-  wxStaticText* yIndexLabel = new wxStaticText(Panel4, wxID_ANY, _("Y axis :"), wxDefaultPosition, wxDefaultSize, 0);
-  FlexGridSizer14->Add(yIndexLabel, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
+  StaticText35 = new wxStaticText(Panel4, wxID_ANY, _("Y axis :"), wxDefaultPosition, wxDefaultSize, 0);
+  FlexGridSizer14->Add(StaticText35, 1, wxBOTTOM|wxLEFT|wxRIGHT|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
   ChoiceSeriesYAxis = new wxChoice(Panel4, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator);
-  FlexGridSizer14->Add(ChoiceSeriesYAxis, 1, wxALL|wxEXPAND, 5);
+  FlexGridSizer14->Add(ChoiceSeriesYAxis, 1, wxBOTTOM|wxLEFT|wxRIGHT|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
   BoxSizer8->Add(FlexGridSizer14, 0, wxALL|wxEXPAND, 2);
   FlexGridSizer15 = new wxFlexGridSizer(1, 2, 0, 0);
   BoxSizer9 = new wxBoxSizer(wxVERTICAL);
@@ -538,7 +539,8 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   sizerLines->Add(FlexGridSizer5, 0, wxALL|wxEXPAND, 2);
   pLines = new wxPanel(Panel5, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL);
   BoxSizer4 = new wxBoxSizer(wxVERTICAL);
-  FlexGridSizer9 = new wxFlexGridSizer(4, 0, 0);
+  FlexGridSizer9 = new wxFlexGridSizer(3, 4, 0, 0);
+  FlexGridSizer9->AddGrowableCol(1);
   StaticText31 = new wxStaticText(pLines, wxID_ANY, _("Name :"), wxDefaultPosition, wxDefaultSize, 0);
   FlexGridSizer9->Add(StaticText31, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
   edLinesName = new wxTextCtrl(pLines, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
@@ -553,12 +555,12 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   FlexGridSizer9->Add(StaticText30, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
   edLinesValue = new wxTextCtrl(pLines, wxID_ANY, _T("1"), wxDefaultPosition, wxSize(64,-1), wxTE_RIGHT, wxFloatingPointValidator<double> (2, &line_value));
   FlexGridSizer9->Add(edLinesValue, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
-  FlexGridSizer9->AddSpacer(0);
-  FlexGridSizer9->AddSpacer(0);
+  FlexGridSizer9->Add(0,0,1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+  FlexGridSizer9->Add(0,0,1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
   stLinesYIndexLabel = new wxStaticText(pLines, wxID_ANY, _("Y axis :"), wxDefaultPosition, wxDefaultSize, 0);
-  FlexGridSizer9->Add(stLinesYIndexLabel, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
+  FlexGridSizer9->Add(stLinesYIndexLabel, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
   ChoiceLinesYAxis = new wxChoice(pLines, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator);
-  FlexGridSizer9->Add(ChoiceLinesYAxis, 1, wxALL|wxEXPAND, 5);
+  FlexGridSizer9->Add(ChoiceLinesYAxis, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
   BoxSizer4->Add(FlexGridSizer9, 0, wxALL|wxEXPAND, 5);
   FlexGridSizer20 = new wxFlexGridSizer(1, 2, 0, 0);
   BoxSizer18 = new wxBoxSizer(wxHORIZONTAL);
@@ -609,6 +611,9 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   cbLinesShowName = new wxCheckBox(pLines, wxID_ANY, _("Show name"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
   cbLinesShowName->SetValue(false);
   BoxSizer19->Add(cbLinesShowName, 1, wxALL|wxALIGN_LEFT, 3);
+  cbLinesSecondYAxis = new wxCheckBox(pLines, wxID_ANY, _("Use second Y axis"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
+  cbLinesSecondYAxis->SetValue(false);
+  BoxSizer19->Add(cbLinesSecondYAxis, 1, wxALL|wxALIGN_LEFT, 3);
   BoxSizer18->Add(BoxSizer19, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5);
   FlexGridSizer20->Add(BoxSizer18, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
   BoxSizer4->Add(FlexGridSizer20, 0, wxALL|wxEXPAND, 5);
@@ -1041,7 +1046,7 @@ void MathPlotConfigDialog::OnbAddAxisClick(wxCommandEvent &event)
     int newIndex = 0;
     for(mpScaleY* yAxis : m_plot->GetYAxisList())
     {
-      newIndex = std::max(newIndex, yAxis->GetAxisIndex() + 1);
+      newIndex = std::max(newIndex, (int)(yAxis->GetAxisIndex() + 1));
     }
     newAxis = (mpScale*)new mpScaleY(wxT("New Y"), mpALIGN_CENTERY, true, newIndex);
   }
@@ -1116,7 +1121,7 @@ void MathPlotConfigDialog::UpdateSelectedSerie(void)
     edSeriesName->SetValue(CurrentSerie->GetName());
 
     ChoiceSeriesYAxis->SetSelection(wxNOT_FOUND);
-    for(int i = 0; i < ChoiceSeriesYAxis->GetCount(); i++)
+    for (size_t i = 0; i < ChoiceSeriesYAxis->GetCount(); i++)
     {
       mpScaleY* yAxis = static_cast<mpScaleY*>(ChoiceSeriesYAxis->GetClientData(i));
       if(yAxis->GetAxisIndex() == CurrentSerie->GetYAxisIndex())
@@ -1197,7 +1202,7 @@ void MathPlotConfigDialog::UpdateSelectedLine(void)
 
 
     ChoiceLinesYAxis->SetSelection(wxNOT_FOUND);
-    for(int i = 0; i < ChoiceSeriesYAxis->GetCount(); i++)
+    for (size_t i = 0; i < ChoiceSeriesYAxis->GetCount(); i++)
     {
       mpScaleY* yAxis = static_cast<mpScaleY*>(ChoiceLinesYAxis->GetClientData(i));
       if(yAxis->GetAxisIndex() == CurrentLine->GetYAxisIndex())
@@ -1399,8 +1404,8 @@ void MathPlotConfigDialog::OnbApplyClick(wxCommandEvent &WXUNUSED(event))
             // Get bound of the other axis
             for(mpScaleY* yAxis : m_plot->GetYAxisList())
             {
-              int yIdx = yAxis->GetAxisIndex();
-              if(!yAxis->GetAuto() && (yIdx < BoundScale.YminList.size()))
+              size_t yIdx = yAxis->GetAxisIndex();
+              if (!yAxis->GetAuto() && (yIdx < BoundScale.YminList.size()))
               {
                 BoundScale.YminList[yIdx] = yAxis->GetMinScale();
                 BoundScale.YmaxList[yIdx] = yAxis->GetMaxScale();

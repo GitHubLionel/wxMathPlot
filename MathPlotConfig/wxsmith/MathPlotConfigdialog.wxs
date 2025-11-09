@@ -326,7 +326,7 @@
 												<content>
 													<item>Line</item>
 													<item>Square</item>
-                                                    <item>Symbol</item>
+													<item>Symbol</item>
 												</content>
 												<use_items_array>1</use_items_array>
 												<selection>0</selection>
@@ -781,13 +781,6 @@
 													<flag>wxALL|wxALIGN_LEFT</flag>
 													<border>5</border>
 												</object>
-												<object class="sizeritem">
-													<object class="wxCheckBox" name="" variable="cbIsY2Axis" member="yes">
-														<label>Is Y2 axis</label>
-													</object>
-													<flag>wxALL|wxALIGN_LEFT</flag>
-													<border>5</border>
-												</object>
 											</object>
 											<flag>wxALL|wxALIGN_TOP</flag>
 											<border>2</border>
@@ -841,7 +834,7 @@
 								<object class="sizeritem">
 									<object class="wxFlexGridSizer" variable="FlexGridSizer14" member="no">
 										<cols>2</cols>
-										<rows>1</rows>
+										<rows>2</rows>
 										<growablecols>1</growablecols>
 										<object class="sizeritem">
 											<object class="wxStaticText" name="" variable="StaticText2" member="yes">
@@ -854,6 +847,20 @@
 										<object class="sizeritem">
 											<object class="wxTextCtrl" name="" variable="edSeriesName" member="yes" />
 											<flag>wxALL|wxEXPAND</flag>
+											<border>5</border>
+											<option>1</option>
+										</object>
+										<object class="sizeritem">
+											<object class="wxStaticText" name="" variable="StaticText35" member="yes">
+												<label>Y axis :</label>
+											</object>
+											<flag>wxBOTTOM|wxLEFT|wxRIGHT|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+											<border>5</border>
+											<option>1</option>
+										</object>
+										<object class="sizeritem">
+											<object class="wxChoice" name="" variable="ChoiceSeriesYAxis" member="yes" />
+											<flag>wxBOTTOM|wxLEFT|wxRIGHT|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
 											<border>5</border>
 											<option>1</option>
 										</object>
@@ -990,14 +997,6 @@
 															<object class="wxCheckBox" name="" variable="cbTractable" member="yes">
 																<label>Tractable</label>
 																<tooltip>Allow mouse coordinates</tooltip>
-															</object>
-															<flag>wxALL|wxALIGN_LEFT</flag>
-															<border>3</border>
-															<option>1</option>
-														</object>
-														<object class="sizeritem">
-															<object class="wxCheckBox" name="" variable="cbSecondYAxis" member="yes">
-																<label>Use second Y axis</label>
 															</object>
 															<flag>wxALL|wxALIGN_LEFT</flag>
 															<border>3</border>
@@ -1220,7 +1219,7 @@
 											<object class="sizeritem">
 												<object class="wxFlexGridSizer" variable="FlexGridSizer9" member="no">
 													<cols>4</cols>
-													<rows>2</rows>
+													<rows>3</rows>
 													<growablecols>1</growablecols>
 													<object class="sizeritem">
 														<object class="wxStaticText" name="" variable="StaticText31" member="yes">
@@ -1267,6 +1266,30 @@
 															<validator>wxFloatingPointValidator&lt;double&gt; (2, &amp;line__value)</validator>
 															<style>wxTE_RIGHT</style>
 														</object>
+														<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+														<border>5</border>
+														<option>1</option>
+													</object>
+													<object class="spacer">
+														<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+														<border>5</border>
+														<option>1</option>
+													</object>
+													<object class="spacer">
+														<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+														<border>5</border>
+														<option>1</option>
+													</object>
+													<object class="sizeritem">
+														<object class="wxStaticText" name="" variable="stLinesYIndexLabel" member="yes">
+															<label>Y axis :</label>
+														</object>
+														<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+														<border>5</border>
+														<option>1</option>
+													</object>
+													<object class="sizeritem">
+														<object class="wxChoice" name="" variable="ChoiceLinesYAxis" member="yes" />
 														<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
 														<border>5</border>
 														<option>1</option>

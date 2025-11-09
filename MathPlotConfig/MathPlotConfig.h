@@ -124,6 +124,7 @@ class MathPlotConfigDialog: public wxDialog
     wxCheckBox* cbGridVisible;
     wxCheckBox* cbLegendVisible;
     wxCheckBox* cbLinesOutside;
+    wxCheckBox* cbLinesSecondYAxis;
     wxCheckBox* cbLinesShowName;
     wxCheckBox* cbLinesVisible;
     wxCheckBox* cbLogAxis;
@@ -193,6 +194,7 @@ class MathPlotConfigDialog: public wxDialog
     wxStaticText* StaticText32;
     wxStaticText* StaticText33;
     wxStaticText* StaticText34;
+    wxStaticText* StaticText35;
     wxStaticText* StaticText3;
     wxStaticText* StaticText4;
     wxStaticText* StaticText5;
