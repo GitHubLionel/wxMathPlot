@@ -2361,6 +2361,10 @@ void mpScaleX::DoPlot(wxDC &dc, mpWindow &w)
   // Draw grid, ticks and compute max label length
   for (n = n0; n < end; n += step)
   {
+    // To have a real zero
+    if (fabs(n) < 1e-10)
+      n = 0;
+
     const int p = w.x2p(n);
 #if defined(MATHPLOT_DO_LOGGING) && defined(MATHPLOT_LOG_SCALE)
     wxLogMessage(_T("mpScaleX::Plot: n: %f -> p = %d"), n, p);
