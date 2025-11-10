@@ -1995,7 +1995,14 @@ class WXDLLIMPEXP_MATHPLOT mpScale: public mpLayer
     wxString m_labelFormat;  //!< Format string used to print labels
 
     virtual int GetOrigin(mpWindow &w) = 0;
-    double GetStep(double scale);
+
+    /** Calculate a 'nice' label step size for the given dataset and desired pixel spacing. Label step
+     * size are considered nice if they are 1, 2, 5 or 10 raised to an appropriate power of 10.
+     @param The scale of the axis, denoted in [pixels / data value]
+     @param The minimum wanted label spacing in pixels
+     @return The 'nice' step size for the interval
+     */
+    double GetStep(double scale, int minLabelSpacing);
     virtual void DrawScaleName(wxDC &dc, mpWindow &w, int origin, int labelSize) = 0;
 
     wxString FormatLogValue(double n);
@@ -2074,6 +2081,13 @@ class WXDLLIMPEXP_MATHPLOT mpScaleX: public mpScale
     /** Layer plot handler.
      This implementation will plot the ruler adjusted to the visible area. */
     virtual void DoPlot(wxDC &dc, mpWindow &w);
+
+    /** Get label width given a value and a format string
+     @param Data value
+     @param Current dc
+     @param Format string that shall be used for this value
+     @return Label width */
+    wxCoord GetLabelWidth(double value, wxDC &dc, wxString fmt);
 
     virtual int GetOrigin(mpWindow &w);
     virtual void DrawScaleName(wxDC &dc, mpWindow &w, int origin, int labelSize);
@@ -2516,7 +2530,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      * @sa p2y,x2p,y2p */
     inline double p2x(const wxCoord pixelCoordX) const
     {
-      return m_posX + pixelCoordX / m_scaleX;
+      return m_posX + (pixelCoordX / m_scaleX);
     }
 
     /** Converts mpWindow (screen) pixel coordinates into graph (floating point) coordinates,
@@ -2524,7 +2538,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      * @sa p2x,x2p,y2p */
     inline double p2y(const wxCoord pixelCoordY, int yIndex = 0) const
     {
-      return m_yAxisDataList[yIndex].m_posY - pixelCoordY / m_yAxisDataList[yIndex].m_scaleY;
+      return m_yAxisDataList[yIndex].m_posY - (pixelCoordY / m_yAxisDataList[yIndex].m_scaleY);
     }
 
     /** Converts graph (floating point) coordinates into mpWindow (screen) pixel coordinates,

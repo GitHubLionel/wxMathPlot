@@ -165,8 +165,8 @@ void mpWindow::FillI18NString()
 #define LEGEND_LINEWIDTH 12 // The size of the decoration in front of the legend (line or square)
 
 // Minimum axis label separation
-#define MIN_X_AXIS_LABEL_SEPARATION 64
-#define MIN_Y_AXIS_LABEL_SEPARATION 32
+#define MIN_X_AXIS_LABEL_SEPARATION 50
+#define MIN_Y_AXIS_LABEL_SEPARATION 50
 
 // Number of pixels to scroll when scrolling by a line
 #define SCROLL_NUM_PIXELS_PER_LINE  10
@@ -2068,21 +2068,26 @@ mpScale::mpScale(const wxString &name, int flags, bool grids) : mpLayer(mpLAYER_
   m_ZIndex = mpZIndex_AXIS;
 }
 
-double mpScale::GetStep(double scale)
+double mpScale::GetStep(double scale, int minLabelSpacing)
 {
-  const double DIGIT = 128.0;
-  const double DIGIT_LOG = 128.0;
+  // Get the logarithmic form of the desired step spacing in graph coordinates
+  double spacing = (double)minLabelSpacing / scale;
+  double exp = floor(log10(spacing));
+  double mantissa = spacing / pow(10.0, exp);
 
-  double dig;
-  if (IsLogAxis())
-  {
-    dig = floor(log10(DIGIT_LOG / scale));
-    if (scale > DIGIT_LOG)
-      dig += 1;
-  }
+  // Find a nice step size
+  double niceStep;
+  if (mantissa <= 1.0)
+    niceStep = 1.0;
+  else if (mantissa <= 2.0)
+    niceStep = 2.0;
+  else if (mantissa <= 5.0)
+    niceStep = 5.0;
   else
-    dig = floor(log10(DIGIT / scale));
-  return pow(10, dig);
+    niceStep = 10.0;
+
+  // Convert back to proper scale
+  return niceStep * pow(10, exp);
 }
 
 wxString mpScale::FormatLogValue(double n)
@@ -2090,16 +2095,16 @@ wxString mpScale::FormatLogValue(double n)
   // Special format for log axis : 10 ^ exponent
   wxString s = _T("");
 
-  if (n - floor(n) == 0)
+  if (!ISNOTNULL(n - round(n)))
   {
-    int exp = (int)n;
+    int exp = (int)round(n);
     if (exp == 0)
       s = _T("1");
     else
       if (exp == 1)
         s = _T("10");
       else
-        s.Printf(_T("10^%d"), (int)exp);
+        s.Printf(_T("10^%d"), exp);
   }
   return s;
 }
@@ -2258,6 +2263,20 @@ wxString mpScaleX::FormatValue(const wxString &fmt, double n)
   return s;
 }
 
+wxCoord mpScaleX::GetLabelWidth(double value, wxDC &dc, wxString fmt)
+{
+  if(((m_labelType == mpX_NORMAL) || (m_labelType == mpX_USER)) && IsLogAxis())
+  {
+    // Log axis only returns a label for integers, thus we need to round. And since
+    // we're only interested in an estimated width of the label, rounding is ok
+    value = round(value);
+  }
+  wxString labelStr = FormatValue(fmt, value);
+  wxCoord tx, ty;
+  dc.GetTextExtent(labelStr, &tx, &ty);
+  return tx;
+}
+
 void mpScaleX::DoPlot(wxDC &dc, mpWindow &w)
 {
   int orgy = GetOrigin(w);
@@ -2270,8 +2289,8 @@ void mpScaleX::DoPlot(wxDC &dc, mpWindow &w)
   dc.DrawLine(m_plotBoundaries.startPx, orgy, m_plotBoundaries.endPx, orgy);
 
   const double scaleX = w.GetScaleX();
-  const double step = GetStep(scaleX);
-  const double end = w.GetPosX() + (double)w.GetScreenX() / scaleX;
+  double step = GetStep(scaleX, MIN_X_AXIS_LABEL_SEPARATION);
+  const double end = w.p2x(w.GetScreenX());
 
   // Get string format
   wxString fmt = _T("");
@@ -2320,6 +2339,15 @@ void mpScaleX::DoPlot(wxDC &dc, mpWindow &w)
       ;
   }
 
+  // Recalculate step but adjusted for max label width now that we know the format of the label.
+  // Largest label is either furthest left or furthest right
+  int leftWidth = GetLabelWidth( w.GetPosX(), dc, fmt);
+  int rightWidth = GetLabelWidth( end, dc, fmt);
+  int maxWidth = std::max(leftWidth, rightWidth);
+  // For wide labels, make sure that we have at least 20 pixels between them
+  double minLabelSeparation = std::max(maxWidth + 20, MIN_X_AXIS_LABEL_SEPARATION);
+  step = GetStep(scaleX, minLabelSeparation);
+
   double n0 = floor(w.GetPosX() / step) * step;
   double n = 0;
 #if defined(MATHPLOT_DO_LOGGING) && defined(MATHPLOT_LOG_SCALE)
@@ -2327,14 +2355,13 @@ void mpScaleX::DoPlot(wxDC &dc, mpWindow &w)
 #endif
 
   int labelH = 0; // Control labels height to decide where to put axis name (below labels or on top of axis)
-  int maxExtent = 0;
   wxCoord tx, ty;
   wxString s;
 
   // Draw grid, ticks and compute max label length
   for (n = n0; n < end; n += step)
   {
-    const int p = (int)((n - w.GetPosX()) * scaleX);
+    const int p = w.x2p(n);
 #if defined(MATHPLOT_DO_LOGGING) && defined(MATHPLOT_LOG_SCALE)
     wxLogMessage(_T("mpScaleX::Plot: n: %f -> p = %d"), n, p);
 #endif
@@ -2361,30 +2388,7 @@ void mpScaleX::DoPlot(wxDC &dc, mpWindow &w)
       s = FormatValue(fmt, n);
 
       dc.GetTextExtent(s, &tx, &ty);
-      labelH = (labelH <= ty) ? ty : labelH;
-      maxExtent = (tx > maxExtent) ? tx : maxExtent; // Keep in mind max label width
-    }
-  }
 
-  // Actually draw labels, taking care of not overlapping them, and distributing them regularly
-  double labelStep = ceil((maxExtent + MIN_X_AXIS_LABEL_SEPARATION) / (scaleX * step)) * step;
-
-  for (n = n0; n < end; n += labelStep)
-  {
-    // To have a real zero
-    if (fabs(n) < 1e-10)
-      n = 0;
-
-    const int p = (int)((n - w.GetPosX()) * scaleX);
-#if defined(MATHPLOT_DO_LOGGING) && defined(MATHPLOT_LOG_SCALE)
-    wxLogMessage(_T("mpScaleX::Plot: n_label = %f -> p_label = %d"), n, p);
-#endif
-    if ((p >= m_plotBoundaries.startPx) && (p <= m_plotBoundaries.endPx))
-    {
-      // Write ticks labels in s string
-      s = FormatValue(fmt, n);
-
-      dc.GetTextExtent(s, &tx, &ty);
       if ((m_flags == mpALIGN_BORDER_BOTTOM) || (m_flags == mpALIGN_TOP))
       {
         dc.DrawText(s, p - tx / 2, orgy - ty - 4);
@@ -2393,6 +2397,8 @@ void mpScaleX::DoPlot(wxDC &dc, mpWindow &w)
       {
         dc.DrawText(s, p - tx / 2, orgy + 4);
       }
+
+      labelH = (labelH <= ty) ? ty : labelH;
     }
   }
 
@@ -2528,7 +2534,7 @@ void mpScaleY::DoPlot(wxDC &dc, mpWindow &w)
   dc.DrawLine(orgx + 1, m_plotBoundaries.startPy, orgx + 1, m_plotBoundaries.endPy);
 
   const double scaleY = w.GetScaleY(GetAxisIndex());
-  const double step = GetStep(scaleY);
+  const double step = GetStep(scaleY, MIN_Y_AXIS_LABEL_SEPARATION);
   const double posY = w.GetPosY(GetAxisIndex());
   const double end = posY + (double)w.GetScreenY() / scaleY;
 
@@ -2548,9 +2554,9 @@ void mpScaleY::DoPlot(wxDC &dc, mpWindow &w)
     fmt = m_labelFormat;
   }
 
-  double n = floor((posY - (double)(w.GetScreenY()) / scaleY) / step) * step;
+  double yStart = w.p2y(w.GetScreenY(), GetAxisIndex());
+  double n = floor(yStart / step) * step;
 
-  wxCoord tmp = 65536;
   wxCoord labelW = 0;
   // Before staring cycle, calculate label height
   wxCoord labelHeigth = 0;
@@ -2566,11 +2572,11 @@ void mpScaleY::DoPlot(wxDC &dc, mpWindow &w)
     // To have a real zero
     if (fabs(n) < 1e-10)
       n = 0;
-    const int p = (int)((posY - n) * scaleY);
+    const wxCoord p = w.y2p(n, GetAxisIndex());
     if ((p > m_plotBoundaries.startPy + labelHeigth) && (p < m_plotBoundaries.endPy - labelHeigth))
     {
       // Draw axis grids
-      if (m_grids && (n != 0))
+      if (m_grids)
       {
         dc.SetPen(m_gridpen);
         dc.DrawLine(m_plotBoundaries.startPx + 1, p, m_plotBoundaries.endPx - 1, p);
@@ -2606,14 +2612,11 @@ void mpScaleY::DoPlot(wxDC &dc, mpWindow &w)
         wxLogMessage(_T("mpScaleY::Plot: ty(%d) and labelHeigth(%d) differ!"), ty, labelHeigth);
 #endif
       labelW = (labelW <= tx) ? tx : labelW;
-      if ((tmp - p + labelHeigth) > MIN_Y_AXIS_LABEL_SEPARATION)
-      {
-        if ((m_flags == mpALIGN_BORDER_LEFT) || (m_flags == mpALIGN_RIGHT))
-          dc.DrawText(s, orgx + 4, p - ty / 2);
-        else
-          dc.DrawText(s, orgx - tx - 4, p - ty / 2);
-        tmp = p - labelHeigth;
-      }
+
+      if ((m_flags == mpALIGN_BORDER_LEFT) || (m_flags == mpALIGN_RIGHT))
+        dc.DrawText(s, orgx + 4, p - ty / 2);
+      else
+        dc.DrawText(s, orgx - tx - 4, p - ty / 2);
     }
   }
 
@@ -4512,7 +4515,7 @@ int mpWindow::GetLeftYAxesWidth(int yAxisIndex)
   int yAxesWidth = 0;
   for(mpScaleY* yAxis : GetYAxisList())
   {
-    if(((yAxis->GetAlign() == mpALIGN_BORDER_LEFT) || (yAxis->GetAlign() == mpALIGN_LEFT)) && ((yAxisIndex == -1) || (yAxis->GetAxisIndex() < yAxisIndex)))
+    if(((yAxis->GetAlign() == mpALIGN_BORDER_LEFT) || (yAxis->GetAlign() == mpALIGN_LEFT)) && ((yAxisIndex == -1) || (yAxis->GetAxisIndex() < (size_t)yAxisIndex)))
     {
       // For every left y-axis that is left of this one (lower index), add its width
       yAxesWidth += yAxis->GetAxisWidth();
@@ -4526,7 +4529,7 @@ int mpWindow::GetRightYAxesWidth(int yAxisIndex)
   int yAxesWidth = 0;
   for(mpScaleY* yAxis : GetYAxisList())
   {
-    if(((yAxis->GetAlign() == mpALIGN_BORDER_RIGHT) || (yAxis->GetAlign() == mpALIGN_RIGHT)) && ((yAxisIndex == -1) || (yAxis->GetAxisIndex() < yAxisIndex)))
+    if(((yAxis->GetAlign() == mpALIGN_BORDER_RIGHT) || (yAxis->GetAlign() == mpALIGN_RIGHT)) && ((yAxisIndex == -1) || (yAxis->GetAxisIndex() < (size_t)yAxisIndex)))
     {
       // For every right y-axis that is right of this one (lower index), add its width
       yAxesWidth += yAxis->GetAxisWidth();
