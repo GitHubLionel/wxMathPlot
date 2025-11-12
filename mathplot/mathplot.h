@@ -419,6 +419,12 @@ typedef enum __Chart_Type
   mpcAllType
 } mpChartType;
 
+enum __mp_Mouse_Button_Command
+{
+  mpmZOOM_RECTANGLE,
+  mpmZOOM_DRAG,
+};
+
 //-----------------------------------------------------------------------------
 // mpLayer
 //-----------------------------------------------------------------------------
@@ -3020,6 +3026,11 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
       m_magnetize = mag;
     }
 
+    void SetLeftDownCommand(__mp_Mouse_Button_Command command)
+    {
+      m_leftDownCommand = command;
+    }
+
 #ifdef ENABLE_MP_CONFIG
     void RefreshConfigWindow();
     /**
@@ -3068,7 +3079,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      * @param Zoom in or zoom out boolean
      * @param Optional center position
      * */
-    void DoZoomXCalc(bool zoomIn, int staticXpixel = ZOOM_AROUND_CENTER);
+    void DoZoomXCalc(bool zoomIn, wxCoord staticXpixel = ZOOM_AROUND_CENTER);
 
     /** Zoom in or out Y around a Y position. Is the position is not set, it will zoom around center.
      * An optional Y-axis index can be passe to only zoom a specific Y-axis
@@ -3076,7 +3087,20 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      * @param Optional center position
      * @param Optional Y-axis index used to specify which Y-axis to zoom
      * */
-    void DoZoomYCalc(bool zoomIn, int staticYpixel = ZOOM_AROUND_CENTER, std::optional<size_t> = std::nullopt);
+    void DoZoomYCalc(bool zoomIn, wxCoord staticYpixel = ZOOM_AROUND_CENTER, std::optional<size_t> = std::nullopt);
+
+    /** Set the m_scaleX directly to fixed zoom level, but also adjust m_posX to to make
+     * the zoom around center
+     * @param scaleX value
+     * */
+    void SetScaleXAndCenter(double scaleX);
+
+    /** Set the m_scaleY directly to fixed zoom level, but also adjust m_posY to to make
+     * the zoom around center
+     * @param scaleY value
+     * @param Y-axis index used to specify which Y-axis to set
+     * */
+    void SetScaleYAndCenter(double scaleYList, size_t yIndex);
 
     void Zoom(bool zoomIn, const wxPoint &centerPoint);
 
@@ -3142,9 +3166,12 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     wxBitmap* m_buff_bmp;               //!< For double buffering
     bool m_enableDoubleBuffer;          //!< For double buffering. Default enabled
     bool m_enableMouseNavigation;       //!< For pan/zoom with the mouse.
+    __mp_Mouse_Button_Command m_leftDownCommand;  //!< Type of action for left mouse button
     bool m_mouseMovedAfterRightClick;
     wxPoint m_mouseRClick;              //!< For the right button "drag" feature
     wxPoint m_mouseLClick;              //!< Starting coords for rectangular zoom selection
+    double m_mouseScaleX;               //!< Store current X-scale, used as reference during drag zooming
+    std::vector<double> m_mouseScaleYList;  //!< Store current Y-scales, used as reference during drag zooming
     std::optional<size_t> m_mouseYAxisIndex; //!< Indicate which Y-axis the mouse was on during zoom/pan
     bool m_enableScrollBars;
     int m_scrollX, m_scrollY;
