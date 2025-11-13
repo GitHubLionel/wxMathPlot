@@ -2087,7 +2087,7 @@ class WXDLLIMPEXP_MATHPLOT mpScaleX: public mpScale
      @param Current dc
      @param Format string that shall be used for this value
      @return Label width */
-    wxCoord GetLabelWidth(double value, wxDC &dc, wxString fmt);
+    int GetLabelWidth(double value, wxDC &dc, wxString fmt);
 
     virtual int GetOrigin(mpWindow &w);
     virtual void DrawScaleName(wxDC &dc, mpWindow &w, int origin, int labelSize);
@@ -2123,6 +2123,10 @@ class WXDLLIMPEXP_MATHPLOT mpScaleY: public mpScale
     virtual bool IsLogAxis();
     virtual void SetLogAxis(bool log);
 
+    /** Recalculated the axis width based on the label and name text sizes
+    @param Current windows used as canvas */
+    void UpdateAxisWidth(mpWindow &w);
+
     size_t GetAxisIndex(void)
     {
       return m_axisIndex;
@@ -2142,6 +2146,8 @@ class WXDLLIMPEXP_MATHPLOT mpScaleY: public mpScale
     virtual void DoPlot(wxDC &dc, mpWindow &w);
 
     virtual int GetOrigin(mpWindow &w);
+    wxString GetLabelFormat(mpWindow &w);
+    int GetLabelWidth(double value, wxDC &dc, wxString fmt);
     virtual void DrawScaleName(wxDC &dc, mpWindow &w, int origin, int labelSize);
 
   wxDECLARE_DYNAMIC_CLASS(mpScaleY);

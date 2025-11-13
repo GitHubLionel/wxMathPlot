@@ -2263,7 +2263,7 @@ wxString mpScaleX::FormatValue(const wxString &fmt, double n)
   return s;
 }
 
-wxCoord mpScaleX::GetLabelWidth(double value, wxDC &dc, wxString fmt)
+int mpScaleX::GetLabelWidth(double value, wxDC &dc, wxString fmt)
 {
   if(((m_labelType == mpX_NORMAL) || (m_labelType == mpX_USER)) && IsLogAxis())
   {
@@ -2272,9 +2272,7 @@ wxCoord mpScaleX::GetLabelWidth(double value, wxDC &dc, wxString fmt)
     value = round(value);
   }
   wxString labelStr = FormatValue(fmt, value);
-  wxCoord tx, ty;
-  dc.GetTextExtent(labelStr, &tx, &ty);
-  return tx;
+  return dc.GetTextExtent(labelStr).x;
 }
 
 void mpScaleX::DoPlot(wxDC &dc, mpWindow &w)
@@ -2345,7 +2343,7 @@ void mpScaleX::DoPlot(wxDC &dc, mpWindow &w)
   int rightWidth = GetLabelWidth( end, dc, fmt);
   int maxWidth = std::max(leftWidth, rightWidth);
   // For wide labels, make sure that we have at least 20 pixels between them
-  double minLabelSeparation = std::max(maxWidth + 20, MIN_X_AXIS_LABEL_SEPARATION);
+  int minLabelSeparation = std::max(maxWidth + 20, MIN_X_AXIS_LABEL_SEPARATION);
   step = GetStep(scaleX, minLabelSeparation);
 
   double n0 = floor(w.GetPosX() / step) * step;
@@ -2449,7 +2447,7 @@ int mpScaleY::GetOrigin(mpWindow &w)
     }
     case mpALIGN_LEFT:
     {
-      origin = w.GetLeftYAxesWidth(GetAxisIndex()) + GetAxisWidth() - EXTRA_MARGIN - 1;
+      origin = w.GetLeftYAxesWidth(GetAxisIndex()) + GetAxisWidth() - 1;
       if (!m_drawOutsideMargins)
         origin += w.GetMarginLeftOuter();
       break;
@@ -2461,7 +2459,7 @@ int mpScaleY::GetOrigin(mpWindow &w)
       break;
     case mpALIGN_RIGHT:
     {
-      origin = w.GetScreenX() - w.GetRightYAxesWidth(GetAxisIndex()) - GetAxisWidth() + EXTRA_MARGIN - 2;
+      origin = w.GetScreenX() - w.GetRightYAxesWidth(GetAxisIndex()) - GetAxisWidth() - 2;
       if (!m_drawOutsideMargins)
         origin -= w.GetMarginRightOuter();
       break;
@@ -2478,6 +2476,40 @@ int mpScaleY::GetOrigin(mpWindow &w)
   return origin;
 }
 
+wxString mpScaleY::GetLabelFormat(mpWindow &w)
+{
+  wxString fmt;
+  if (m_labelFormat.IsEmpty())
+  {
+    double maxScaleAbs = fabs(w.GetDesiredYmax(GetAxisIndex()));
+    double minScaleAbs = fabs(w.GetDesiredYmin(GetAxisIndex()));
+    double endscale = (maxScaleAbs > minScaleAbs) ? maxScaleAbs : minScaleAbs;
+    if ((endscale < 1e4) && (endscale > 1e-3))
+      fmt = _T("%.2f");
+    else
+      fmt = _T("%.2e");
+  }
+  else
+  {
+    fmt = m_labelFormat;
+  }
+  return fmt;
+}
+
+int mpScaleY::GetLabelWidth(double value, wxDC &dc, wxString fmt)
+{
+  wxString labelStr;
+  if (IsLogAxis())
+  {
+    labelStr = FormatLogValue(round(value));
+  }
+  else
+  {
+    labelStr.Printf(fmt, value);
+  }
+  return dc.GetTextExtent(labelStr).x;
+}
+
 void mpScaleY::DrawScaleName(wxDC &dc, mpWindow &w, int origin, int labelSize)
 {
   wxCoord tx, ty;
@@ -2488,37 +2520,23 @@ void mpScaleY::DrawScaleName(wxDC &dc, mpWindow &w, int origin, int labelSize)
   {
     // Scale Y : vertical axis
     case mpALIGN_BORDER_LEFT:
-      dc.DrawText(m_name, origin + labelSize + 8, m_plotBoundaries.startPy + 4);
+      dc.DrawText(m_name, origin + labelSize + 8, m_plotBoundaries.startPy + EXTRA_MARGIN);
       break;
     case mpALIGN_LEFT:
     {
-      if ((!m_drawOutsideMargins) && (w.GetMarginLeft() > (ty + labelSize + 8)))
-      {
-        dc.DrawRotatedText(m_name, origin - labelSize - ty - 6, (m_plotBoundaries.endPy + m_plotBoundaries.startPy + tx) / 2, 90);
-      }
-      else
-      {
-        dc.DrawText(m_name, origin + 4, m_plotBoundaries.startPy + 4);
-      }
+      dc.DrawRotatedText(m_name, origin - labelSize - ty - 6, (m_plotBoundaries.endPy + m_plotBoundaries.startPy + tx) / 2, 90);
       break;
     }
     case mpALIGN_CENTERY:
-      dc.DrawText(m_name, origin + 4, m_plotBoundaries.startPy + 4);
+      dc.DrawText(m_name, origin + 4, m_plotBoundaries.startPy + EXTRA_MARGIN);
       break;
     case mpALIGN_RIGHT:
     {
-      if ((!m_drawOutsideMargins) && (w.GetMarginRight() > (ty + labelSize + 8)))
-      {
-        dc.DrawRotatedText(m_name, origin + labelSize + 6, (m_plotBoundaries.endPy + m_plotBoundaries.startPy + tx) / 2, 90);
-      }
-      else
-      {
-        dc.DrawText(m_name, origin - tx - 4, m_plotBoundaries.startPy + 4);
-      }
+      dc.DrawRotatedText(m_name, origin + labelSize + 6, (m_plotBoundaries.endPy + m_plotBoundaries.startPy + tx) / 2, 90);
       break;
     }
     case mpALIGN_BORDER_RIGHT:
-      dc.DrawText(m_name, origin - tx - labelSize - 6, m_plotBoundaries.startPy + 4);
+      dc.DrawText(m_name, origin - tx - labelSize - 6, m_plotBoundaries.startPy + EXTRA_MARGIN);
       break;
 
     default:
@@ -2537,38 +2555,21 @@ void mpScaleY::DoPlot(wxDC &dc, mpWindow &w)
   // Draw Y axis
   dc.DrawLine(orgx + 1, m_plotBoundaries.startPy, orgx + 1, m_plotBoundaries.endPy);
 
-  const double scaleY = w.GetScaleY(GetAxisIndex());
-  const double step = GetStep(scaleY, MIN_Y_AXIS_LABEL_SEPARATION);
-  const double posY = w.GetPosY(GetAxisIndex());
-  const double end = posY + (double)w.GetScreenY() / scaleY;
+  const double step = GetStep(w.GetScaleY(GetAxisIndex()), MIN_Y_AXIS_LABEL_SEPARATION);
+  const double start = w.p2y(w.GetScreenY(), GetAxisIndex());
+  const double end = w.GetPosY(GetAxisIndex());
 
-  wxString fmt;
-  if (m_labelFormat.IsEmpty())
-  {
-    double maxScaleAbs = fabs(w.GetDesiredYmax(GetAxisIndex()));
-    double minScaleAbs = fabs(w.GetDesiredYmin(GetAxisIndex()));
-    double endscale = (maxScaleAbs > minScaleAbs) ? maxScaleAbs : minScaleAbs;
-    if ((endscale < 1e4) && (endscale > 1e-3))
-      fmt = _T("%.2f");
-    else
-      fmt = _T("%.2e");
-  }
-  else
-  {
-    fmt = m_labelFormat;
-  }
+  wxString fmt = GetLabelFormat(w);
 
-  double yStart = w.p2y(w.GetScreenY(), GetAxisIndex());
-  double n = floor(yStart / step) * step;
+  double n = floor(start / step) * step;
 
   wxCoord labelW = 0;
   // Before staring cycle, calculate label height
-  wxCoord labelHeigth = 0;
-  wxString s;
+  wxCoord labelHeight = 0;
+  wxString s = wxString::Format(fmt, n);
   wxCoord tx = 0, ty = 0;
-  s.Printf(fmt, n);
-  dc.GetTextExtent(s, &tx, &labelHeigth);
-  labelHeigth /= 2;
+  dc.GetTextExtent(s, &tx, &labelHeight);
+  labelHeight /= 2;
 
   // Draw grid, ticks and label
   for (; n < end; n += step)
@@ -2577,7 +2578,7 @@ void mpScaleY::DoPlot(wxDC &dc, mpWindow &w)
     if (fabs(n) < 1e-10)
       n = 0;
     const wxCoord p = w.y2p(n, GetAxisIndex());
-    if ((p > m_plotBoundaries.startPy + labelHeigth) && (p < m_plotBoundaries.endPy - labelHeigth))
+    if ((p > m_plotBoundaries.startPy + labelHeight) && (p < m_plotBoundaries.endPy - labelHeight))
     {
       // Draw axis grids
       if (m_grids)
@@ -2612,8 +2613,8 @@ void mpScaleY::DoPlot(wxDC &dc, mpWindow &w)
       // Print ticks labels
       dc.GetTextExtent(s, &tx, &ty);
 #if defined(MATHPLOT_DO_LOGGING) && defined(MATHPLOT_LOG_SCALE)
-      if (ty != labelHeigth)
-        wxLogMessage(_T("mpScaleY::Plot: ty(%d) and labelHeigth(%d) differ!"), ty, labelHeigth);
+      if (ty != labelHeight)
+        wxLogMessage(_T("mpScaleY::Plot: ty(%d) and labelHeight(%d) differ!"), ty, labelHeight);
 #endif
       labelW = (labelW <= tx) ? tx : labelW;
 
@@ -2642,6 +2643,21 @@ void mpScaleY::SetLogAxis(bool log)
     m_win->SetLogYaxis(log);
 }
 
+void mpScaleY::UpdateAxisWidth(mpWindow &w)
+{
+  wxClientDC dc(&w);
+  dc.SetFont(m_font);
+  wxString fmt = GetLabelFormat(w);
+
+  // Widest label is either the uppermost or lowermost one
+  int lowerLabelWidth = GetLabelWidth(w.p2y(w.GetScreenY(), GetAxisIndex()), dc, fmt);
+  int upperLabelWidth = GetLabelWidth(w.GetPosY(GetAxisIndex()), dc, fmt);
+  int maxLabelWidth = std::max(lowerLabelWidth, upperLabelWidth);
+  wxSize nameSize = dc.GetTextExtent(m_name);
+
+  // Axis is as wide as the widest label plus height of name, since it is printed vertically
+  m_axisWidth = maxLabelWidth + nameSize.y + 8;
+}
 
 //-----------------------------------------------------------------------------
 // mpWindow
@@ -4019,6 +4035,13 @@ bool mpWindow::UpdateBBox()
 
 void mpWindow::UpdateAll()
 {
+  // Make sure axis width is up to date
+  for(mpScaleY* yAxis : m_YAxisList)
+  {
+    yAxis->UpdateAxisWidth(*this);
+  }
+
+  // And margins, which depends on axis width
   UpdateMargins();
 
   if (m_magnetize)
@@ -4496,9 +4519,9 @@ void mpWindow::SetMargins(int top, int right, int bottom, int left)
   // For the normal m_margin, we need to account for the width of left and right Y-axes
   // since this can differ depending on how many Y-axis are used
   m_margin.top = m_marginOuter.top;
-  m_margin.right = m_marginOuter.right + GetRightYAxesWidth();
+  m_margin.right = m_marginOuter.right + GetRightYAxesWidth() + EXTRA_MARGIN;
   m_margin.bottom = m_marginOuter.bottom;
-  m_margin.left = m_marginOuter.left + GetLeftYAxesWidth();
+  m_margin.left = m_marginOuter.left + GetLeftYAxesWidth() + EXTRA_MARGIN;
 
   m_plotBoundaries.startPx = 0;
   m_plotBoundariesMargin.startPx = m_margin.left;
