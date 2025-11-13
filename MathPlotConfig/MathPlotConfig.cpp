@@ -404,7 +404,7 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   StaticText35 = new wxStaticText(Panel4, wxID_ANY, _("Y axis :"), wxDefaultPosition, wxDefaultSize, 0);
   FlexGridSizer14->Add(StaticText35, 1, wxBOTTOM|wxLEFT|wxRIGHT|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
   ChoiceSeriesYAxis = new wxChoice(Panel4, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator);
-  FlexGridSizer14->Add(ChoiceSeriesYAxis, 1, wxBOTTOM|wxLEFT|wxRIGHT|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
+  FlexGridSizer14->Add(ChoiceSeriesYAxis, 1, wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND, 5);
   BoxSizer8->Add(FlexGridSizer14, 0, wxALL|wxEXPAND, 2);
   FlexGridSizer15 = new wxFlexGridSizer(1, 2, 0, 0);
   BoxSizer9 = new wxBoxSizer(wxVERTICAL);
@@ -555,12 +555,12 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   FlexGridSizer9->Add(StaticText30, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
   edLinesValue = new wxTextCtrl(pLines, wxID_ANY, _T("1"), wxDefaultPosition, wxSize(64,-1), wxTE_RIGHT, wxFloatingPointValidator<double> (2, &line_value));
   FlexGridSizer9->Add(edLinesValue, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
-  FlexGridSizer9->Add(0,0,1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-  FlexGridSizer9->Add(0,0,1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+  FlexGridSizer9->Add(-1,-1,1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+  FlexGridSizer9->Add(-1,-1,1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
   stLinesYIndexLabel = new wxStaticText(pLines, wxID_ANY, _("Y axis :"), wxDefaultPosition, wxDefaultSize, 0);
   FlexGridSizer9->Add(stLinesYIndexLabel, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
   ChoiceLinesYAxis = new wxChoice(pLines, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator);
-  FlexGridSizer9->Add(ChoiceLinesYAxis, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
+  FlexGridSizer9->Add(ChoiceLinesYAxis, 1, wxALL|wxEXPAND, 5);
   BoxSizer4->Add(FlexGridSizer9, 0, wxALL|wxEXPAND, 5);
   FlexGridSizer20 = new wxFlexGridSizer(1, 2, 0, 0);
   BoxSizer18 = new wxBoxSizer(wxHORIZONTAL);
