@@ -68,6 +68,7 @@
 #endif
 
 #include <vector>
+#include <optional>
 
 // #include <wx/wx.h>
 #include <wx/defs.h>
@@ -128,6 +129,8 @@
 
 // A small extra margin for the plot boundary
 #define EXTRA_MARGIN  8
+
+#define ZOOM_AROUND_CENTER  -1
 
 //-----------------------------------------------------------------------------
 // classes
@@ -2115,6 +2118,7 @@ class WXDLLIMPEXP_MATHPLOT mpScaleY: public mpScale
       m_subtype = mpsScaleY;
       m_axisWidth = Y_BORDER_SEPARATION;
       m_axisIndex = axisIndex;
+      m_xPos = 0;
     }
 
     /**
@@ -2137,9 +2141,29 @@ class WXDLLIMPEXP_MATHPLOT mpScaleY: public mpScale
       return m_axisWidth;
     }
 
+    bool IsLeftAxis()
+    {
+      return ((GetAlign() == mpALIGN_BORDER_LEFT) || (GetAlign() == mpALIGN_LEFT));
+    }
+
+    bool IsRightAxis()
+    {
+      return ((GetAlign() == mpALIGN_BORDER_RIGHT) || (GetAlign() == mpALIGN_RIGHT));
+    }
+
+    bool IsInside(wxCoord xPixel)
+    {
+      if( (IsLeftAxis() || IsRightAxis()) && (xPixel >= m_xPos) && (xPixel <= (m_xPos + m_axisWidth)) )
+      {
+        return true;
+      }
+      return false;
+    }
+
   protected:
     int m_axisWidth;
     size_t m_axisIndex;
+    int m_xPos;
 
     /** Layer plot handler.
      This implementation will plot the ruler adjusted to the visible area. */
@@ -2628,23 +2652,19 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      */
     void ZoomOut(const wxPoint &centerPoint = wxDefaultPosition);
 
-    /** Zoom in current view along X and refresh display */
+    /** Zoom in current view along X around center and refresh display */
     void ZoomInX();
 
-    /** Zoom out current view along X and refresh display */
+    /** Zoom out current view along X around center and refresh display */
     void ZoomOutX();
 
-    /** Zoom in current view along Y and refresh display */
-    void ZoomInY();
+    /** Zoom in current view along Y around center and refresh display
+    @param Optional Y-axis index used to specify which Y-axis to zoom */
+    void ZoomInY(std::optional<size_t> yIndex = std::nullopt);
 
-    /** Zoom out current view along Y and refresh display */
-    void ZoomOutY();
-
-    /** Zoom in current view along specified Y axis and refresh display */
-    void ZoomInYByIndex(int yIndex);
-
-    /** Zoom out current view along specified Y axis and refresh display */
-    void ZoomOutYByIndex(int yIndex);
+    /** Zoom out current view along Y around center and refresh display
+    @param Optional Y-axis index used to specify which Y-axis to zoom */
+    void ZoomOutY(std::optional<size_t> yIndex = std::nullopt);
 
     /** Zoom view fitting given coordinates to the window (p0 and p1 do not need to be in any specific order) */
     void ZoomRect(wxPoint p0, wxPoint p1);
@@ -2882,6 +2902,11 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
       return m_drawBox;
     }
 
+    /** Check if a given point is inside the area of a Y-axis and returns its index if so.
+     @param point The position to be checked
+     @return If the point is inside a Y-Axis, returns it index, otherwise -1 */
+    std::optional<size_t> IsInsideYAxis(const wxPoint &point);
+
     /** Check if a given point is inside the area of a mpInfoLayer and eventually returns its pointer.
      @param point The position to be checked
      @return If an info layer is found, returns its pointer, NULL otherwise */
@@ -3039,10 +3064,19 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 
     void DoScrollCalc(const int position, const int orientation);
 
-    void DoZoomInXCalc(const int staticXpixel);
-    void DoZoomInYCalc(const int staticYpixel);
-    void DoZoomOutXCalc(const int staticXpixel);
-    void DoZoomOutYCalc(const int staticYpixel);
+    /** Zoom in or out X around a X position. Is the position is not set, it will zoom around center.
+     * @param Zoom in or zoom out boolean
+     * @param Optional center position
+     * */
+    void DoZoomXCalc(bool zoomIn, int staticXpixel = ZOOM_AROUND_CENTER);
+
+    /** Zoom in or out Y around a Y position. Is the position is not set, it will zoom around center.
+     * An optional Y-axis index can be passe to only zoom a specific Y-axis
+     * @param Zoom in or zoom out boolean
+     * @param Optional center position
+     * @param Optional Y-axis index used to specify which Y-axis to zoom
+     * */
+    void DoZoomYCalc(bool zoomIn, int staticYpixel = ZOOM_AROUND_CENTER, std::optional<size_t> = std::nullopt);
 
     void Zoom(bool zoomIn, const wxPoint &centerPoint);
 
@@ -3111,6 +3145,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     bool m_mouseMovedAfterRightClick;
     wxPoint m_mouseRClick;              //!< For the right button "drag" feature
     wxPoint m_mouseLClick;              //!< Starting coords for rectangular zoom selection
+    std::optional<size_t> m_mouseYAxisIndex; //!< Indicate which Y-axis the mouse was on during zoom/pan
     bool m_enableScrollBars;
     int m_scrollX, m_scrollY;
     mpInfoLayer* m_movingInfoLayer;     //!< For moving info layers over the window area

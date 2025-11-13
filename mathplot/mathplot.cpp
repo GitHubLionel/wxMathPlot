@@ -2443,6 +2443,7 @@ int mpScaleY::GetOrigin(mpWindow &w)
     case mpALIGN_BORDER_LEFT:
     {
       origin = w.GetLeftYAxesWidth(GetAxisIndex()) + 1;
+      m_xPos = origin;
       break;
     }
     case mpALIGN_LEFT:
@@ -2450,23 +2451,27 @@ int mpScaleY::GetOrigin(mpWindow &w)
       origin = w.GetLeftYAxesWidth(GetAxisIndex()) + GetAxisWidth() - 1;
       if (!m_drawOutsideMargins)
         origin += w.GetMarginLeftOuter();
+      m_xPos = origin - GetAxisWidth();
       break;
     }
     case mpALIGN_CENTERY:
       origin = w.x2p(0);
       if (!m_drawOutsideMargins && ((origin > (w.GetScreenX() - w.GetMarginRight())) || (origin + 1 < w.GetMarginLeft())))
         origin = -1;
+      m_xPos = origin;
       break;
     case mpALIGN_RIGHT:
     {
       origin = w.GetScreenX() - w.GetRightYAxesWidth(GetAxisIndex()) - GetAxisWidth() - 2;
       if (!m_drawOutsideMargins)
         origin -= w.GetMarginRightOuter();
+      m_xPos = origin;
       break;
     }
     case mpALIGN_BORDER_RIGHT:
     {
       origin = w.GetScreenX() - w.GetRightYAxesWidth(GetAxisIndex()) - 1;
+      m_xPos = origin - GetAxisWidth();
       break;
     }
 
@@ -2804,6 +2809,7 @@ void mpWindow::InitParameters()
   m_enableDoubleBuffer = true;
   m_enableMouseNavigation = true;
   m_mouseMovedAfterRightClick = false;
+  m_mouseYAxisIndex = std::nullopt;
   m_movingInfoLayer = NULL;
   m_InfoCoords = NULL;
   m_InfoLegend = NULL;
@@ -2890,6 +2896,7 @@ void mpWindow::OnMouseRightDown(wxMouseEvent &event)
 
   m_mouseMovedAfterRightClick = false;
   m_mouseRClick = wxPoint(event.GetX(), event.GetY());
+  m_mouseYAxisIndex = IsInsideYAxis(m_mouseRClick);
   if (m_magnetize)
     m_magnet.SetRightClick();
 
@@ -2924,18 +2931,34 @@ void mpWindow::OnMouseMove(wxMouseEvent &event)
     // For the next event, use relative to this coordinates.
     m_mouseRClick = eventPoint;
 
-    double Ax_units = Axy.x / m_scaleX;
-    m_posX += Ax_units;
-    m_desired.Xmax += Ax_units;
-    m_desired.Xmin += Ax_units;
-
-    for(size_t i = 0; i < m_yAxisDataList.size(); i++)
+    if(m_mouseYAxisIndex)
     {
-      double Ay_units = -Axy.y / m_yAxisDataList[i].m_scaleY;
-      m_yAxisDataList[i].m_posY += Ay_units;
-      m_desired.YminList[i] += Ay_units;
-      m_desired.YmaxList[i] += Ay_units;
+      // A specific Y-axis has been selected. Only pan on that
+      double Ay_units = -Axy.y / m_yAxisDataList[*m_mouseYAxisIndex].m_scaleY;
+      m_yAxisDataList[*m_mouseYAxisIndex].m_posY += Ay_units;
+      m_desired.YminList[*m_mouseYAxisIndex] += Ay_units;
+      m_desired.YmaxList[*m_mouseYAxisIndex] += Ay_units;
     }
+    else
+    {
+      // No axis selected. Pan whole plot
+      double Ax_units = Axy.x / m_scaleX;
+      m_posX += Ax_units;
+      m_desired.Xmax += Ax_units;
+      m_desired.Xmin += Ax_units;
+
+      for(size_t i = 0; i < m_yAxisDataList.size(); i++)
+      {
+        double Ay_units = -Axy.y / m_yAxisDataList[i].m_scaleY;
+        m_yAxisDataList[i].m_posY += Ay_units;
+        m_desired.YminList[i] += Ay_units;
+        m_desired.YmaxList[i] += Ay_units;
+      }
+    }
+
+
+
+
 
     UpdateAll();
     CheckAndReportDesiredBoundsChanges();
@@ -3073,8 +3096,20 @@ void mpWindow::OnMouseWheel(wxMouseEvent &event)
   // Zoom in and out
   if (!event.m_controlDown && !event.m_shiftDown)
   {
-    // CTRL key hold: Zoom in/out:
-    Zoom((event.GetWheelRotation() > 0), wxPoint(event.GetX(), event.GetY()));
+    // No key hold: Zoom in/out:
+    wxPoint eventPoint = wxPoint(event.GetX(), event.GetY());
+    std::optional<size_t> yAxisIndex = IsInsideYAxis(eventPoint);
+    if(yAxisIndex)
+    {
+      // Only zoom selected Y-axis around mouse position
+      DoZoomYCalc((event.GetWheelRotation() > 0), eventPoint.y, *yAxisIndex);
+      UpdateAll();
+    }
+    else
+    {
+      // Zoom whole plot around mouse position
+      Zoom((event.GetWheelRotation() > 0), eventPoint);
+    }
   }
   else
   {
@@ -3088,17 +3123,16 @@ void mpWindow::OnMouseWheel(wxMouseEvent &event)
       m_desired.Xmax += changeUnitsX;
       m_desired.Xmin += changeUnitsX;
     }
-    else
-      if (event.m_controlDown)
+    else if (event.m_controlDown)
+    {
+      for(size_t i = 0; i < m_yAxisDataList.size(); i++)
       {
-        for(size_t i = 0; i < m_yAxisDataList.size(); i++)
-        {
-          double changeUnitsY = change / m_yAxisDataList[i].m_scaleY;
-          m_yAxisDataList[i].m_posY -= changeUnitsY;
-          m_desired.YminList[i] -= changeUnitsY;
-          m_desired.YmaxList[i] -= changeUnitsY;
-        }
+        double changeUnitsY = change / m_yAxisDataList[i].m_scaleY;
+        m_yAxisDataList[i].m_posY -= changeUnitsY;
+        m_desired.YminList[i] -= changeUnitsY;
+        m_desired.YmaxList[i] -= changeUnitsY;
       }
+    }
 
     UpdateAll();
     CheckAndReportDesiredBoundsChanges();
@@ -3234,78 +3268,61 @@ void mpWindow::CheckAndReportDesiredBoundsChanges() {
 }
 
 // Patch ngpaton
-void mpWindow::DoZoomInXCalc(const int staticXpixel)
+void mpWindow::DoZoomXCalc(bool zoomIn, int staticXpixel)
 {
+  if(staticXpixel == ZOOM_AROUND_CENTER)
+  {
+    // Zoom around center
+    staticXpixel = (m_plotWidth / 2) + m_margin.left;
+  }
+
   // Preserve the position of the clicked point:
   double staticX = p2x(staticXpixel);
-  // Zoom in:
-  m_scaleX *= m_zoomIncrementalFactor;
+  // Zoom:
+  double zoomFactor = zoomIn ? m_zoomIncrementalFactor : (1.0 / m_zoomIncrementalFactor);
+  m_scaleX *= zoomFactor;
+
   // Adjust the new m_posx
   m_posX = staticX - (staticXpixel / m_scaleX);
+
   // Adjust desired
   m_desired.Xmin = m_posX;
   m_desired.Xmax = m_posX + m_plotWidth / m_scaleX;
   CheckAndReportDesiredBoundsChanges();
 #ifdef MATHPLOT_DO_LOGGING
-  wxLogMessage(_T("mpWindow::DoZoomInXCalc() prior X coord: (%f), new X coord: (%f) SHOULD BE EQUAL!!"), staticX, p2x(staticXpixel));
+  wxLogMessage(_T("mpWindow::DoZoomXCalc() prior X coord: (%f), new X coord: (%f) SHOULD BE EQUAL!!"), staticX, p2x(staticXpixel));
 #endif
 }
 
-void mpWindow::DoZoomInYCalc(const int staticYpixel)
+void mpWindow::DoZoomYCalc(bool zoomIn, int staticYpixel, std::optional<size_t> yIndex)
 {
-  for(size_t i = 0; i < m_yAxisDataList.size(); i++)
+  if(staticYpixel == ZOOM_AROUND_CENTER)
+  {
+    // Zoom around center
+    staticYpixel = (m_plotHeight / 2) + m_margin.top;
+  }
+
+  // If yIndex is supplied, only zoom in on that specific Y-axis
+  size_t startIndex = yIndex ? (*yIndex)     : 0;
+  size_t endIndex   = yIndex ? (*yIndex + 1) : m_yAxisDataList.size();
+
+  double zoomFactor = zoomIn ? m_zoomIncrementalFactor : (1.0 / m_zoomIncrementalFactor);
+  for(size_t i = startIndex; i < endIndex; i++)
   {
     // Preserve the position of the clicked point:
     double staticY = p2y(staticYpixel, i);
-    // Zoom in:
-    m_yAxisDataList[i].m_scaleY *= m_zoomIncrementalFactor;
+    // Zoom:
+    m_yAxisDataList[i].m_scaleY *= zoomFactor;
     // Adjust the new m_posy:
     m_yAxisDataList[i].m_posY = staticY + (staticYpixel / m_yAxisDataList[i].m_scaleY);
     // Adjust desired
     m_desired.YmaxList[i] = m_yAxisDataList[i].m_posY;
     m_desired.YminList[i] = m_yAxisDataList[i].m_posY - m_plotHeight / m_yAxisDataList[i].m_scaleY;
   }
-  CheckAndReportDesiredBoundsChanges();
-#ifdef MATHPLOT_DO_LOGGING
-  wxLogMessage(_T("mpWindow::DoZoomInYCalc() prior Y coord: (%f), new Y coord: (%f) SHOULD BE EQUAL!!"), staticY, p2y(staticYpixel));
-#endif
-}
-
-void mpWindow::DoZoomOutXCalc(const int staticXpixel)
-{
-  // Preserve the position of the clicked point:
-  double staticX = p2x(staticXpixel);
-  // Zoom out:
-  m_scaleX /= m_zoomIncrementalFactor;
-  // Adjust the new m_posx/y:
-  m_posX = staticX - (staticXpixel / m_scaleX);
-  // Adjust desired
-  m_desired.Xmin = m_posX;
-  m_desired.Xmax = m_posX + m_plotWidth / m_scaleX;
-  CheckAndReportDesiredBoundsChanges();
-#ifdef MATHPLOT_DO_LOGGING
-  wxLogMessage(_T("mpWindow::DoZoomOutXCalc() prior X coord: (%f), new X coord: (%f) SHOULD BE EQUAL!!"), staticX, p2x(staticXpixel));
-#endif
-}
-
-void mpWindow::DoZoomOutYCalc(const int staticYpixel)
-{
-  for(size_t i = 0; i < m_yAxisDataList.size(); i++)
-  {
-    // Preserve the position of the clicked point:
-    double staticY = p2y(staticYpixel, i);
-    // Zoom out:
-    m_yAxisDataList[i].m_scaleY /= m_zoomIncrementalFactor;
-    // Adjust the new m_posx/y:
-    m_yAxisDataList[i].m_posY = staticY + (staticYpixel / m_yAxisDataList[i].m_scaleY);
-    // Adjust desired
-    m_desired.YmaxList[i] = m_yAxisDataList[i].m_posY;
-    m_desired.YminList[i] = m_yAxisDataList[i].m_posY - m_plotHeight / m_yAxisDataList[i].m_scaleY;
-  }
 
   CheckAndReportDesiredBoundsChanges();
 #ifdef MATHPLOT_DO_LOGGING
-  wxLogMessage(_T("mpWindow::DoZoomOutYCalc() prior Y coord: (%f), new Y coord: (%f) SHOULD BE EQUAL!!"), staticY, p2y(staticYpixel));
+  wxLogMessage(_T("mpWindow::DoZoomYCalc() prior Y coord: (%f), new Y coord: (%f) SHOULD BE EQUAL!!"), staticY, p2y(staticYpixel));
 #endif
 }
 
@@ -3321,36 +3338,17 @@ void mpWindow::ZoomOut(const wxPoint &centerPoint)
 
 void mpWindow::Zoom(bool zoomIn, const wxPoint &centerPoint)
 {
-  wxPoint c(centerPoint);
-  if (c == wxDefaultPosition)
+  if (centerPoint == wxDefaultPosition)
   {
-    int h, w;
-    GetClientSize(&w, &h);
-    SetScreen(w, h);
-    c.x = m_plotWidth / 2 + m_margin.left;
-    c.y = m_plotHeight / 2 - m_margin.top;
+    // Zoom around plot center
+    DoZoomXCalc(zoomIn);
+    DoZoomYCalc(zoomIn);
   }
-
-  // Preserve the position of the clicked point:
-  double prior_layer_x = p2x(c.x);
-
-  double zoomFactor = zoomIn?m_zoomIncrementalFactor : 1.0/m_zoomIncrementalFactor;
-  m_scaleX *= zoomFactor;
-
-  // Adjust the new m_posx:
-  m_posX = prior_layer_x - c.x / m_scaleX;
-
-  m_desired.Xmin = m_posX;
-  m_desired.Xmax = m_posX + m_plotWidth / m_scaleX;
-
-  // Same for Y
-  for(size_t i = 0; i < m_yAxisDataList.size(); i++)
+  else
   {
-    double prior_layer_y = p2y(c.y, i);
-    m_yAxisDataList[i].m_scaleY *= zoomFactor;
-    m_yAxisDataList[i].m_posY = prior_layer_y + c.y / m_yAxisDataList[i].m_scaleY;
-    m_desired.YmaxList[i] = m_yAxisDataList[i].m_posY;
-    m_desired.YminList[i] = m_yAxisDataList[i].m_posY - m_plotHeight / m_yAxisDataList[i].m_scaleY;
+    // Zoom around this point
+    DoZoomXCalc(zoomIn, centerPoint.x);
+    DoZoomYCalc(zoomIn, centerPoint.y);
   }
 
 #ifdef MATHPLOT_DO_LOGGING
@@ -3358,59 +3356,30 @@ void mpWindow::Zoom(bool zoomIn, const wxPoint &centerPoint)
       prior_layer_x, prior_layer_y, p2x(c.x), p2y(c.y));
 #endif
   UpdateAll();
-  CheckAndReportDesiredBoundsChanges();
 }
 
 void mpWindow::ZoomInX()
 {
-  m_scaleX *= m_zoomIncrementalFactor;
+  DoZoomXCalc(true);
   UpdateAll();
-  CheckAndReportDesiredBoundsChanges();
 }
 
 void mpWindow::ZoomOutX()
 {
-  m_scaleX /= m_zoomIncrementalFactor;
+  DoZoomXCalc(false);
   UpdateAll();
-  CheckAndReportDesiredBoundsChanges();
 }
 
-void mpWindow::ZoomInY()
+void mpWindow::ZoomInY(std::optional<size_t> yIndex)
 {
-  for(size_t i = 0; i < m_yAxisDataList.size(); i++)
-  {
-    m_yAxisDataList[i].m_scaleY *= m_zoomIncrementalFactor;
-  }
-
+  DoZoomYCalc(true, ZOOM_AROUND_CENTER, yIndex);
   UpdateAll();
-  CheckAndReportDesiredBoundsChanges();
 }
 
-void mpWindow::ZoomOutY()
+void mpWindow::ZoomOutY(std::optional<size_t> yIndex)
 {
-  for(size_t i = 0; i < m_yAxisDataList.size(); i++)
-  {
-    m_yAxisDataList[i].m_scaleY /= m_zoomIncrementalFactor;
-  }
-
+  DoZoomYCalc(false, ZOOM_AROUND_CENTER, yIndex);
   UpdateAll();
-  CheckAndReportDesiredBoundsChanges();
-}
-
-void mpWindow::ZoomInYByIndex(int yIndex)
-{
-  m_yAxisDataList[yIndex].m_scaleY *= m_zoomIncrementalFactor;
-
-  UpdateAll();
-  CheckAndReportDesiredBoundsChanges();
-}
-
-void mpWindow::ZoomOutYByIndex(int yIndex)
-{
-  m_yAxisDataList[yIndex].m_scaleY /= m_zoomIncrementalFactor;
-
-  UpdateAll();
-  CheckAndReportDesiredBoundsChanges();
 }
 
 void mpWindow::ZoomRect(wxPoint p0, wxPoint p1)
@@ -4448,6 +4417,18 @@ mpScaleX* mpWindow::GetLayerXAxis()
   return NULL;    // Not found
 }
 
+std::optional<size_t> mpWindow::IsInsideYAxis(const wxPoint &point)
+{
+  for(mpScaleY* yAxis : m_YAxisList)
+  {
+    if(yAxis->IsInside(point.x))
+    {
+      return yAxis->GetAxisIndex();
+    }
+  }
+  return std::nullopt;
+}
+
 mpInfoLayer* mpWindow::IsInsideInfoLayer(const wxPoint &point)
 {
   for (mpLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
@@ -4542,7 +4523,7 @@ int mpWindow::GetLeftYAxesWidth(int yAxisIndex)
   int yAxesWidth = 0;
   for(mpScaleY* yAxis : GetYAxisList())
   {
-    if(((yAxis->GetAlign() == mpALIGN_BORDER_LEFT) || (yAxis->GetAlign() == mpALIGN_LEFT)) && ((yAxisIndex == -1) || (yAxis->GetAxisIndex() < (size_t)yAxisIndex)))
+    if(yAxis->IsLeftAxis() && ((yAxisIndex == -1) || (yAxis->GetAxisIndex() < (size_t)yAxisIndex)))
     {
       // For every left y-axis that is left of this one (lower index), add its width
       yAxesWidth += yAxis->GetAxisWidth();
@@ -4556,7 +4537,7 @@ int mpWindow::GetRightYAxesWidth(int yAxisIndex)
   int yAxesWidth = 0;
   for(mpScaleY* yAxis : GetYAxisList())
   {
-    if(((yAxis->GetAlign() == mpALIGN_BORDER_RIGHT) || (yAxis->GetAlign() == mpALIGN_RIGHT)) && ((yAxisIndex == -1) || (yAxis->GetAxisIndex() < (size_t)yAxisIndex)))
+    if(yAxis->IsRightAxis() && ((yAxisIndex == -1) || (yAxis->GetAxisIndex() < (size_t)yAxisIndex)))
     {
       // For every right y-axis that is right of this one (lower index), add its width
       yAxesWidth += yAxis->GetAxisWidth();
