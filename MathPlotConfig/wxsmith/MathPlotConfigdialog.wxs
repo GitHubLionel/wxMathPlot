@@ -161,21 +161,9 @@
 														</object>
 														<object class="sizeritem">
 															<object class="wxChoice" name="" variable="cbCoord" member="yes">
-																<content>
-																	<item>Left center</item>
-																	<item>Top left</item>
-																	<item>Top center</item>
-																	<item>Top right</item>
-																	<item>Right center</item>
-																	<item>Bottom left</item>
-																	<item>Bottom center</item>
-																	<item>Bottom right</item>
-																	<item>Default position</item>
-																	<item>Cursor position</item>
-																</content>
 																<use_items_array>1</use_items_array>
 																<selection>0</selection>
-																<extra_code>cbCoord-&gt;Set(WXSIZEOF(cbCoord__choices), cbCoord__choices);&#x0A;cbCoord-&gt;SetSelection(0);</extra_code>
+																<extra_code>cbCoord-&gt;Set(WXSIZEOF(InfoPosition__choices), InfoPosition__choices);&#x0A;cbCoord-&gt;SetSelection(7);</extra_code>
 															</object>
 															<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
 															<border>5</border>
@@ -252,12 +240,9 @@
 														</object>
 														<object class="sizeritem">
 															<object class="wxChoice" name="" variable="cbCoordBrushStyle" member="yes">
-																<content>
-																	<item>Solid</item>
-																	<item>Transparent</item>
-																</content>
 																<use_items_array>1</use_items_array>
 																<selection>0</selection>
+																<extra_code>cbCoordBrushStyle-&gt;Set(WXSIZEOF(InfoBrushStyle__choices), InfoBrushStyle__choices);&#x0A;cbCoordBrushStyle-&gt;SetSelection(0);</extra_code>
 															</object>
 															<flag>wxALL|wxEXPAND</flag>
 															<border>2</border>
@@ -295,19 +280,9 @@
 										</object>
 										<object class="sizeritem">
 											<object class="wxChoice" name="" variable="cbLegendPosition" member="yes">
-												<content>
-													<item>Left center</item>
-													<item>Top left</item>
-													<item>Top center</item>
-													<item>Top right</item>
-													<item>Right center</item>
-													<item>Bottom left</item>
-													<item>Bottom center</item>
-													<item>Bottom right</item>
-													<item>Default position</item>
-												</content>
 												<use_items_array>1</use_items_array>
 												<selection>0</selection>
+												<extra_code>cbLegendPosition-&gt;Set(WXSIZEOF(InfoPosition__choices), InfoPosition__choices);\\&#x0A;cbLegendPosition-&gt;SetSelection(6);</extra_code>
 											</object>
 											<flag>wxALL|wxEXPAND</flag>
 											<border>2</border>
@@ -414,12 +389,9 @@
 														</object>
 														<object class="sizeritem">
 															<object class="wxChoice" name="" variable="cbLegendBrushStyle" member="yes">
-																<content>
-																	<item>Solid</item>
-																	<item>Transparent</item>
-																</content>
 																<use_items_array>1</use_items_array>
 																<selection>0</selection>
+																<extra_code>cbLegendBrushStyle-&gt;Set(WXSIZEOF(InfoBrushStyle__choices), InfoBrushStyle__choices);&#x0A;cbLegendBrushStyle-&gt;SetSelection(0);</extra_code>
 															</object>
 															<flag>wxALL|wxEXPAND</flag>
 															<border>2</border>
@@ -550,20 +522,9 @@
 																</object>
 																<object class="sizeritem">
 																	<object class="wxChoice" name="" variable="cbAxisPenWidth" member="yes">
-																		<content>
-																			<item>1</item>
-																			<item>2</item>
-																			<item>3</item>
-																			<item>4</item>
-																			<item>5</item>
-																			<item>6</item>
-																			<item>7</item>
-																			<item>8</item>
-																			<item>9</item>
-																			<item>10</item>
-																		</content>
 																		<use_items_array>1</use_items_array>
 																		<selection>0</selection>
+																		<extra_code>cbAxisPenWidth-&gt;Set(WXSIZEOF(PenWidth__choices), PenWidth__choices);&#x0A;cbAxisPenWidth-&gt;SetSelection(0);</extra_code>
 																	</object>
 																	<flag>wxALL|wxEXPAND</flag>
 																	<border>2</border>
@@ -579,15 +540,9 @@
 																</object>
 																<object class="sizeritem">
 																	<object class="wxChoice" name="" variable="cbAxisPenStyle" member="yes">
-																		<content>
-																			<item>Solid</item>
-																			<item>Dot</item>
-																			<item>Long Dash</item>
-																			<item>Short Dash</item>
-																			<item>Dot Dash</item>
-																		</content>
 																		<use_items_array>1</use_items_array>
 																		<selection>0</selection>
+																		<extra_code>cbAxisPenStyle-&gt;Set(WXSIZEOF(PenStyle__choices), PenStyle__choices);</extra_code>
 																	</object>
 																	<flag>wxALL|wxEXPAND</flag>
 																	<border>2</border>
@@ -908,20 +863,9 @@
 																</object>
 																<object class="sizeritem">
 																	<object class="wxChoice" name="" variable="cbSeriesPenWidth" member="yes">
-																		<content>
-																			<item>1</item>
-																			<item>2</item>
-																			<item>3</item>
-																			<item>4</item>
-																			<item>5</item>
-																			<item>6</item>
-																			<item>7</item>
-																			<item>8</item>
-																			<item>9</item>
-																			<item>10</item>
-																		</content>
 																		<use_items_array>1</use_items_array>
 																		<selection>0</selection>
+																		<extra_code>cbSeriesPenWidth-&gt;Set(WXSIZEOF(PenWidth__choices), PenWidth__choices);</extra_code>
 																	</object>
 																	<flag>wxALL|wxEXPAND</flag>
 																	<border>2</border>
@@ -937,15 +881,9 @@
 																</object>
 																<object class="sizeritem">
 																	<object class="wxChoice" name="" variable="cbSeriesPenStyle" member="yes">
-																		<content>
-																			<item>Solid</item>
-																			<item>Dot</item>
-																			<item>Long Dash</item>
-																			<item>Short Dash</item>
-																			<item>Dot Dash</item>
-																		</content>
 																		<use_items_array>1</use_items_array>
 																		<selection>0</selection>
+																		<extra_code>cbSeriesPenStyle-&gt;Set(WXSIZEOF(PenStyle__choices), PenStyle__choices);</extra_code>
 																	</object>
 																	<flag>wxALL|wxEXPAND</flag>
 																	<border>2</border>
@@ -1337,20 +1275,9 @@
 																			</object>
 																			<object class="sizeritem">
 																				<object class="wxChoice" name="" variable="cbLinesPenWidth" member="yes">
-																					<content>
-																						<item>1</item>
-																						<item>2</item>
-																						<item>3</item>
-																						<item>4</item>
-																						<item>5</item>
-																						<item>6</item>
-																						<item>7</item>
-																						<item>8</item>
-																						<item>9</item>
-																						<item>10</item>
-																					</content>
 																					<use_items_array>1</use_items_array>
 																					<selection>0</selection>
+																					<extra_code>cbLinesPenWidth-&gt;Set(WXSIZEOF(PenWidth__choices), PenWidth__choices);</extra_code>
 																				</object>
 																				<flag>wxALL|wxEXPAND</flag>
 																				<border>2</border>
@@ -1366,15 +1293,9 @@
 																			</object>
 																			<object class="sizeritem">
 																				<object class="wxChoice" name="" variable="cbLinesPenStyle" member="yes">
-																					<content>
-																						<item>Solid</item>
-																						<item>Dot</item>
-																						<item>Long Dash</item>
-																						<item>Short Dash</item>
-																						<item>Dot Dash</item>
-																					</content>
 																					<use_items_array>1</use_items_array>
 																					<selection>0</selection>
+																					<extra_code>cbLinesPenStyle-&gt;Set(WXSIZEOF(PenStyle__choices), PenStyle__choices);</extra_code>
 																				</object>
 																				<flag>wxALL|wxEXPAND</flag>
 																				<border>2</border>

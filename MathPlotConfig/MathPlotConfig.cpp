@@ -39,6 +39,46 @@ END_EVENT_TABLE()
 
 MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED(id))
 {
+  // Common choices
+  const wxString PenWidth_choices[] = {
+  _T("1"),
+  _T("2"),
+  _T("3"),
+  _T("4"),
+  _T("5"),
+  _T("6"),
+  _T("7"),
+  _T("8"),
+  _T("9"),
+  _T("10"),
+  };
+
+  const wxString PenStyle_choices[] = {
+  _("Solid"),
+  _("Dot"),
+  _("Long Dash"),
+  _("Short Dash"),
+  _("Dot Dash"),
+  };
+
+  const wxString InfoBrushStyle_choices[] = {
+  _("Solid"),
+  _("Transparent"),
+  };
+
+  const wxString InfoPosition_choices[] = {
+  _("Left center"),
+  _("Top left"),
+  _("Top center"),
+  _("Top right"),
+  _("Right center"),
+  _("Bottom left"),
+  _("Bottom center"),
+  _("Bottom right"),
+  _("Default position"),
+  _("Cursor position"),
+  };
+
   //(*Initialize(MathPlotConfigDialog)
   wxBoxSizer* BoxSizer10;
   wxBoxSizer* BoxSizer11;
@@ -139,22 +179,9 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   BoxSizer12 = new wxBoxSizer(wxHORIZONTAL);
   StaticText18 = new wxStaticText(Panel1, wxID_ANY, _("Position :"), wxDefaultPosition, wxDefaultSize, 0);
   BoxSizer12->Add(StaticText18, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-  const wxString cbCoord_choices[] = {
-  _("Left center"),
-  _("Top left"),
-  _("Top center"),
-  _("Top right"),
-  _("Right center"),
-  _("Bottom left"),
-  _("Bottom center"),
-  _("Bottom right"),
-  _("Default position"),
-  _("Cursor position"),
-  };
-  cbCoord = new wxChoice(Panel1, wxID_ANY, wxDefaultPosition, wxDefaultSize, 10, cbCoord_choices, 0, wxDefaultValidator);
-  cbCoord->SetSelection(0);
-  cbCoord->Set(WXSIZEOF(cbCoord_choices), cbCoord_choices);
-  cbCoord->SetSelection(0);
+  cbCoord = new wxChoice(Panel1, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator);
+  cbCoord->Set(WXSIZEOF(InfoPosition_choices), InfoPosition_choices);
+  cbCoord->SetSelection(7);
   BoxSizer12->Add(cbCoord, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
   BoxSizer1->Add(BoxSizer12, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
   cbCoordVisible = new wxCheckBox(Panel1, wxID_ANY, _("Visible"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
@@ -180,11 +207,8 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   FlexGridSizer4->Add(bCoordBrushColor, 1, wxALL|wxEXPAND, 2);
   StaticText23 = new wxStaticText(Panel1, wxID_ANY, _("Style :"), wxDefaultPosition, wxDefaultSize, 0);
   FlexGridSizer4->Add(StaticText23, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
-  const wxString cbCoordBrushStyle_choices[] = {
-  _("Solid"),
-  _("Transparent"),
-  };
-  cbCoordBrushStyle = new wxChoice(Panel1, wxID_ANY, wxDefaultPosition, wxDefaultSize, 2, cbCoordBrushStyle_choices, 0, wxDefaultValidator);
+  cbCoordBrushStyle = new wxChoice(Panel1, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator);
+  cbCoordBrushStyle->Set(WXSIZEOF(InfoBrushStyle_choices), InfoBrushStyle_choices);
   cbCoordBrushStyle->SetSelection(0);
   FlexGridSizer4->Add(cbCoordBrushStyle, 1, wxALL|wxEXPAND, 2);
   StaticBoxSizer4->Add(FlexGridSizer4, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
@@ -196,19 +220,9 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   FlexGridSizer6 = new wxFlexGridSizer(4, 2, 0, 0);
   StaticText16 = new wxStaticText(Panel2, wxID_ANY, _("Position :"), wxDefaultPosition, wxDefaultSize, 0);
   FlexGridSizer6->Add(StaticText16, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
-  const wxString cbLegendPosition_choices[] = {
-  _("Left center"),
-  _("Top left"),
-  _("Top center"),
-  _("Top right"),
-  _("Right center"),
-  _("Bottom left"),
-  _("Bottom center"),
-  _("Bottom right"),
-  _("Default position"),
-  };
-  cbLegendPosition = new wxChoice(Panel2, wxID_ANY, wxDefaultPosition, wxDefaultSize, 9, cbLegendPosition_choices, 0, wxDefaultValidator);
-  cbLegendPosition->SetSelection(0);
+  cbLegendPosition = new wxChoice(Panel2, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator);
+  cbLegendPosition->Set(WXSIZEOF(InfoPosition_choices), InfoPosition_choices);\
+  cbLegendPosition->SetSelection(6);
   FlexGridSizer6->Add(cbLegendPosition, 1, wxALL|wxEXPAND, 2);
   StaticText24 = new wxStaticText(Panel2, wxID_ANY, _("Style :"), wxDefaultPosition, wxDefaultSize, 0);
   FlexGridSizer6->Add(StaticText24, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
@@ -245,11 +259,8 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   FlexGridSizer7->Add(bLegendBrushColor, 1, wxALL|wxEXPAND, 2);
   StaticText21 = new wxStaticText(Panel2, wxID_ANY, _("Style :"), wxDefaultPosition, wxDefaultSize, 0);
   FlexGridSizer7->Add(StaticText21, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
-  const wxString cbLegendBrushStyle_choices[] = {
-  _("Solid"),
-  _("Transparent"),
-  };
-  cbLegendBrushStyle = new wxChoice(Panel2, wxID_ANY, wxDefaultPosition, wxDefaultSize, 2, cbLegendBrushStyle_choices, 0, wxDefaultValidator);
+  cbLegendBrushStyle = new wxChoice(Panel2, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator);
+  cbLegendBrushStyle->Set(WXSIZEOF(InfoBrushStyle_choices), InfoBrushStyle_choices);
   cbLegendBrushStyle->SetSelection(0);
   FlexGridSizer7->Add(cbLegendBrushStyle, 1, wxALL|wxEXPAND, 2);
   StaticBoxSizer5->Add(FlexGridSizer7, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
@@ -287,32 +298,14 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   FlexGridSizer10->Add(bAxisPenColor, 1, wxALL|wxEXPAND, 2);
   StaticText13 = new wxStaticText(Panel3, wxID_ANY, _("Width :"), wxDefaultPosition, wxDefaultSize, 0);
   FlexGridSizer10->Add(StaticText13, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
-  const wxString cbAxisPenWidth_choices[] = {
-  _T("1"),
-  _T("2"),
-  _T("3"),
-  _T("4"),
-  _T("5"),
-  _T("6"),
-  _T("7"),
-  _T("8"),
-  _T("9"),
-  _T("10"),
-  };
-  cbAxisPenWidth = new wxChoice(Panel3, wxID_ANY, wxDefaultPosition, wxDefaultSize, 10, cbAxisPenWidth_choices, 0, wxDefaultValidator);
+  cbAxisPenWidth = new wxChoice(Panel3, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator);
+  cbAxisPenWidth->Set(WXSIZEOF(PenWidth_choices), PenWidth_choices);
   cbAxisPenWidth->SetSelection(0);
   FlexGridSizer10->Add(cbAxisPenWidth, 1, wxALL|wxEXPAND, 2);
   StaticText14 = new wxStaticText(Panel3, wxID_ANY, _("Style :"), wxDefaultPosition, wxDefaultSize, 0);
   FlexGridSizer10->Add(StaticText14, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
-  const wxString cbAxisPenStyle_choices[] = {
-  _("Solid"),
-  _("Dot"),
-  _("Long Dash"),
-  _("Short Dash"),
-  _("Dot Dash"),
-  };
-  cbAxisPenStyle = new wxChoice(Panel3, wxID_ANY, wxDefaultPosition, wxDefaultSize, 5, cbAxisPenStyle_choices, 0, wxDefaultValidator);
-  cbAxisPenStyle->SetSelection(0);
+  cbAxisPenStyle = new wxChoice(Panel3, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator);
+  cbAxisPenStyle->Set(WXSIZEOF(PenStyle_choices), PenStyle_choices);
   FlexGridSizer10->Add(cbAxisPenStyle, 1, wxALL|wxEXPAND, 2);
   StaticBoxSizer6->Add(FlexGridSizer10, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
   BoxSizer7->Add(StaticBoxSizer6, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 2);
@@ -416,32 +409,13 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   FlexGridSizer17->Add(bSeriesPenColor, 1, wxALL|wxEXPAND, 2);
   StaticText4 = new wxStaticText(Panel4, wxID_ANY, _("Width :"), wxDefaultPosition, wxDefaultSize, 0);
   FlexGridSizer17->Add(StaticText4, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
-  const wxString cbSeriesPenWidth_choices[] = {
-  _T("1"),
-  _T("2"),
-  _T("3"),
-  _T("4"),
-  _T("5"),
-  _T("6"),
-  _T("7"),
-  _T("8"),
-  _T("9"),
-  _T("10"),
-  };
-  cbSeriesPenWidth = new wxChoice(Panel4, wxID_ANY, wxDefaultPosition, wxDefaultSize, 10, cbSeriesPenWidth_choices, 0, wxDefaultValidator);
-  cbSeriesPenWidth->SetSelection(0);
+  cbSeriesPenWidth = new wxChoice(Panel4, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator);
+  cbSeriesPenWidth->Set(WXSIZEOF(PenWidth_choices), PenWidth_choices);
   FlexGridSizer17->Add(cbSeriesPenWidth, 1, wxALL|wxEXPAND, 2);
   StaticText5 = new wxStaticText(Panel4, wxID_ANY, _("Style :"), wxDefaultPosition, wxDefaultSize, 0);
   FlexGridSizer17->Add(StaticText5, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
-  const wxString cbSeriesPenStyle_choices[] = {
-  _("Solid"),
-  _("Dot"),
-  _("Long Dash"),
-  _("Short Dash"),
-  _("Dot Dash"),
-  };
-  cbSeriesPenStyle = new wxChoice(Panel4, wxID_ANY, wxDefaultPosition, wxDefaultSize, 5, cbSeriesPenStyle_choices, 0, wxDefaultValidator);
-  cbSeriesPenStyle->SetSelection(0);
+  cbSeriesPenStyle = new wxChoice(Panel4, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator);
+  cbSeriesPenStyle->Set(WXSIZEOF(PenStyle_choices), PenStyle_choices);
   FlexGridSizer17->Add(cbSeriesPenStyle, 1, wxALL|wxEXPAND, 2);
   StaticBoxSizer8->Add(FlexGridSizer17, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
   BoxSizer9->Add(StaticBoxSizer8, 0, wxALL|wxALIGN_LEFT, 2);
@@ -572,32 +546,13 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   FlexGridSizer21->Add(bLinesPenColor, 1, wxALL|wxEXPAND, 2);
   StaticText33 = new wxStaticText(pLines, wxID_ANY, _("Width :"), wxDefaultPosition, wxDefaultSize, 0);
   FlexGridSizer21->Add(StaticText33, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
-  const wxString cbLinesPenWidth_choices[] = {
-  _T("1"),
-  _T("2"),
-  _T("3"),
-  _T("4"),
-  _T("5"),
-  _T("6"),
-  _T("7"),
-  _T("8"),
-  _T("9"),
-  _T("10"),
-  };
-  cbLinesPenWidth = new wxChoice(pLines, wxID_ANY, wxDefaultPosition, wxDefaultSize, 10, cbLinesPenWidth_choices, 0, wxDefaultValidator);
-  cbLinesPenWidth->SetSelection(0);
+  cbLinesPenWidth = new wxChoice(pLines, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator);
+  cbLinesPenWidth->Set(WXSIZEOF(PenWidth_choices), PenWidth_choices);
   FlexGridSizer21->Add(cbLinesPenWidth, 1, wxALL|wxEXPAND, 2);
   StaticText34 = new wxStaticText(pLines, wxID_ANY, _("Style :"), wxDefaultPosition, wxDefaultSize, 0);
   FlexGridSizer21->Add(StaticText34, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
-  const wxString cbLinesPenStyle_choices[] = {
-  _("Solid"),
-  _("Dot"),
-  _("Long Dash"),
-  _("Short Dash"),
-  _("Dot Dash"),
-  };
-  cbLinesPenStyle = new wxChoice(pLines, wxID_ANY, wxDefaultPosition, wxDefaultSize, 5, cbLinesPenStyle_choices, 0, wxDefaultValidator);
-  cbLinesPenStyle->SetSelection(0);
+  cbLinesPenStyle = new wxChoice(pLines, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator);
+  cbLinesPenStyle->Set(WXSIZEOF(PenStyle_choices), PenStyle_choices);
   FlexGridSizer21->Add(cbLinesPenStyle, 1, wxALL|wxEXPAND, 2);
   StaticBoxSizer11->Add(FlexGridSizer21, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
   BoxSizer18->Add(StaticBoxSizer11, 0, wxALL, 2);
