@@ -652,7 +652,7 @@ MathPlotConfigDialog::~MathPlotConfigDialog()
 
 void MathPlotConfigDialog::Initialize(int page)
 {
-  // General page
+  // ** General page **
   CurrentTitle = (mpText*)m_plot->GetLayerByClassName(_T("mpTitle"));
   if (CurrentTitle)
   {
@@ -687,7 +687,7 @@ void MathPlotConfigDialog::Initialize(int page)
     cbCoordBrushStyle->SetSelection(BrushStyleToId(CurrentCoords->GetBrush().GetStyle()));
   }
 
-  // Legend page
+  // ** Legend page **
   CurrentLegend = (mpInfoLegend*)m_plot->GetLayerByClassName(_T("mpInfoLegend"));
   if (CurrentLegend)
   {
@@ -703,26 +703,22 @@ void MathPlotConfigDialog::Initialize(int page)
     bFontLegend->Enable();
   }
 
-  // Axis page
+  // ** Axis page **
+  // Fill Axis list. Group X axis first then Y axis
   ChoiceAxis->Clear();
   for (unsigned int i = 0; i < m_plot->CountLayersType(mpLAYER_AXIS); i++)
   {
     mpScale* axis = (mpScale*)m_plot->GetLayerAxis(i);
     wxString classname = axis->GetClassInfo()->GetClassName();
-    // Only mpScaleX and mpScaleY should be added to the list
+    // Only mpScaleX should be added to the list for the moment
     if (classname.IsSameAs(_T("mpScaleX")))
       ChoiceAxis->Append(_T("X axis - ") + axis->GetName(), axis);
-    else if (classname.IsSameAs(_T("mpScaleY")))
-    {
-      mpScaleY* yAxis = dynamic_cast<mpScaleY*>(axis);
-      wxString yAxisName = wxString::Format(_T("Y%d axis - %s"), (int)yAxis->GetAxisIndex() + 1, yAxis->GetName());
-      ChoiceAxis->Append(yAxisName, yAxis);
-    }
   }
+  FillYAxisList(ChoiceAxis, false);
   ChoiceAxis->SetSelection(0);
   UpdateAxis();
 
-  // Series page
+  // ** Series page **
   ChoiceSeries->Clear();
   for (unsigned int i = 0; i < m_plot->CountLayersType(mpLAYER_PLOT); i++)
   {
@@ -730,17 +726,13 @@ void MathPlotConfigDialog::Initialize(int page)
   }
   bDelSeries->Enable(ChoiceSeries->GetCount() > 0);
 
-  ChoiceSeriesYAxis->Clear();
-  for(mpScaleY* yAxis : m_plot->GetYAxisList())
-  {
-    wxString yAxisName = wxString::Format(_T("Y%d axis - %s"), (int)yAxis->GetAxisIndex()+1, yAxis->GetName());
-    ChoiceSeriesYAxis->Append(yAxisName, yAxis);
-  }
+  // Fill Y axis
+  FillYAxisList(ChoiceSeriesYAxis);
 
   // Select the first serie
   SelectChoiceSerie(0);
 
-  // Lines page
+  // ** Lines page **
   ChoiceLines->Clear();
   for (unsigned int i = 0; i < m_plot->CountLayersType(mpLAYER_LINE); i++)
   {
@@ -748,12 +740,8 @@ void MathPlotConfigDialog::Initialize(int page)
   }
   bDelLines->Enable(ChoiceLines->GetCount() > 0);
 
-  ChoiceLinesYAxis->Clear();
-  for(mpScaleY* yAxis : m_plot->GetYAxisList())
-  {
-    wxString yAxisName = wxString::Format(_T("Y%d axis - %s"), (int)yAxis->GetAxisIndex()+1, yAxis->GetName());
-    ChoiceLinesYAxis->Append(yAxisName, yAxis);
-  }
+  // Fill Y axis
+  FillYAxisList(ChoiceLinesYAxis);
 
   if (ChoiceLines->GetCount() > 0)
   {
@@ -805,6 +793,17 @@ void MathPlotConfigDialog::OnbColorClick(wxCommandEvent &event)
   {
     m_clrData = ColourDialog.GetColourData();
     DoApplyColour(m_clrData.GetColour());
+  }
+}
+
+void MathPlotConfigDialog::FillYAxisList(wxChoice *yChoice, bool clearChoice)
+{
+  if (clearChoice)
+    yChoice->Clear();
+  for (mpScaleY* yAxis : m_plot->GetYAxisList())
+  {
+    wxString yAxisName = wxString::Format(_T("Y%d axis - %s"), (int)yAxis->GetAxisIndex()+1, yAxis->GetName());
+    yChoice->Append(yAxisName, yAxis);
   }
 }
 
@@ -992,22 +991,31 @@ void MathPlotConfigDialog::UpdateAxis(void)
 void MathPlotConfigDialog::OnbAddAxisClick(wxCommandEvent &event)
 {
   wxButton* bt = wxDynamicCast(event.GetEventObject(), wxButton);
-  mpScale* newAxis = NULL;
+  mpScale* newScale = NULL;
   if (bt == bAddXAxis)
-    newAxis = (mpScale*)new mpScaleX(wxT("New X"), mpALIGN_CENTERX, true, mpX_NORMAL);
+    newScale = (mpScale*)new mpScaleX(wxT("New X"), mpALIGN_BOTTOM, true, mpX_NORMAL);
   else
   {
     // Chose a unique new index for this Y-axis, let it be the largest exising index + 1
     int newIndex = 0;
-    for(mpScaleY* yAxis : m_plot->GetYAxisList())
+    for (mpScaleY* yAxis : m_plot->GetYAxisList())
     {
       newIndex = std::max(newIndex, (int)yAxis->GetAxisIndex() + 1);
     }
-    newAxis = (mpScale*)new mpScaleY(wxT("New Y"), mpALIGN_CENTERY, true, newIndex);
+    newScale = (mpScale*)new mpScaleY(wxT("New Y"), mpALIGN_LEFT, true, newIndex);
   }
-  if (m_plot->AddLayer(newAxis))
+
+  if (newScale && (m_plot->AddLayer(newScale)))
   {
-    ChoiceAxis->SetSelection(ChoiceAxis->GetCount() - 1);
+    // Find in the choice list the index of the new axis
+    for (unsigned int i = 0; i < ChoiceAxis->GetCount(); i++)
+    {
+      if ((mpScale*)ChoiceAxis->GetClientData(i) == newScale)
+      {
+        ChoiceAxis->SetSelection(i);
+        break;
+      }
+    }
     UpdateAxis();
   }
 }

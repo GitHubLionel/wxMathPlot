@@ -220,6 +220,7 @@ class MathPlotConfigDialog: public wxDialog
     void UpdateSelectedSerie(void);
     void UpdateSelectedLine(void);
     void UpdateAxis(void);
+    void FillYAxisList(wxChoice *yChoice, bool clearChoice = true);
 
     void DoButtonColour(wxButton *button, const wxColour &colour);
     void DoApplyColour(const wxColour &colour);
