@@ -2525,6 +2525,8 @@ void mpScaleY::DrawScaleName(wxDC &dc, mpWindow &w, int origin, int labelSize)
 {
   wxCoord tx, ty;
 
+  (void) w; // For compiler happy
+
   // Draw axis name
   dc.GetTextExtent(m_name, &tx, &ty);
   switch (m_flags)
