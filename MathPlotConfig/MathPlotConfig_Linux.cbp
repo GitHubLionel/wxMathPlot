@@ -42,9 +42,10 @@
 			<Add option="-D_UNICODE" />
 			<Add option="-D__WXGTK3__" />
 			<Add option="-D__WXGTK__" />
+            <Add option="-DENABLE_MP_CONFIG" />
 			<Add directory="$(#wx)/include" />
 			<Add directory="$(#wx)/lib/wx/include/gtk3-unicode-3.2" />
-			<Add directory="../MathPlot" />
+			<Add directory="../mathplot" />
 			<Add directory="." />
 		</Compiler>
 		<ResourceCompiler>
@@ -54,8 +55,8 @@
 		<Linker>
 			<Add directory="$(#wx)/lib" />
 		</Linker>
-		<Unit filename="../MathPlot/mathplot.cpp" />
-		<Unit filename="../MathPlot/mathplot.h" />
+		<Unit filename="../mathplot/mathplot.cpp" />
+		<Unit filename="../mathplot/mathplot.h" />
 		<Unit filename="MathPlotConfig.cpp" />
 		<Unit filename="MathPlotConfig.h" />
 		<Unit filename="MathPlotConfigDemo.cpp" />
