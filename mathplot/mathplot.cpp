@@ -181,6 +181,10 @@ void mpWindow::FillI18NString()
 #define MARGIN_COORD  5
 #define MARGIN_COORD_X2 2*MARGIN_COORD
 
+// Zoom factor during mouse drag. Equals zoom scaling when mouse has been dragged 100% of the plot area
+// E.g. dragging the mouse from left side to right side will zoom X axis 3x times
+#define ZOOM_FACTOR_DRAG 3.0
+
 // See doxygen comments.
 double mpWindow::m_zoomIncrementalFactor = 1.5;
 
@@ -2819,6 +2823,7 @@ void mpWindow::InitParameters()
   m_zoom_bmp = NULL;
   m_magnetize = false;
   m_enableScrollBars = false;
+  m_leftDownCommand = mpmZOOM_RECTANGLE;
 
   // Set all margins to 50
   SetMargins(50, 50, 50, 50);
@@ -2862,7 +2867,20 @@ void mpWindow::OnMouseLeftDown(wxMouseEvent &event)
   if (CheckUserMouseAction(event))
     return;
 
+  // Store current position
   m_mouseLClick = event.GetPosition();
+
+  // Store current X and Y scales
+  m_mouseScaleX = m_scaleX;
+  m_mouseScaleYList.clear();
+  for(m_axisData& axisdata : m_yAxisDataList)
+  {
+    m_mouseScaleYList.push_back(axisdata.m_scaleY);
+  }
+
+  // Indicate if mouse was inside a specific Y-axis
+  m_mouseYAxisIndex = IsInsideYAxis(m_mouseLClick);
+
 #ifdef MATHPLOT_DO_LOGGING
   wxLogMessage(_T("mpWindow::OnMouseLeftDown() X = %d , Y = %d"), event.GetX(), event.GetY());
 #endif
@@ -2983,43 +3001,77 @@ void mpWindow::OnMouseMove(wxMouseEvent &event)
       wxPoint moveVector = eventPoint - m_mouseLClick;
       if (m_movingInfoLayer == NULL)
       {
-        // First : restore stored bitmap
-        if (m_zoom_bmp)
+        if(m_leftDownCommand == mpmZOOM_RECTANGLE)
         {
-          wxMemoryDC m_coord_dc(&dc);
-          m_coord_dc.SelectObject(*m_zoom_bmp);
-          dc.Blit(m_zoom_oldDim.x, m_zoom_oldDim.y, m_zoom_oldDim.width, m_zoom_oldDim.height, &m_coord_dc, 0, 0);
-          m_coord_dc.SelectObject(wxNullBitmap);
-          DeleteAndNull(m_zoom_bmp);
+          // Zoom by creating a rectangle and zoom into that when button is released
+
+          // First : restore stored bitmap
+          if (m_zoom_bmp)
+          {
+            wxMemoryDC m_coord_dc(&dc);
+            m_coord_dc.SelectObject(*m_zoom_bmp);
+            dc.Blit(m_zoom_oldDim.x, m_zoom_oldDim.y, m_zoom_oldDim.width, m_zoom_oldDim.height, &m_coord_dc, 0, 0);
+            m_coord_dc.SelectObject(wxNullBitmap);
+            DeleteAndNull(m_zoom_bmp);
+          }
+
+          // Second : store new bitmap
+          m_zoom_dim = wxRect(m_mouseLClick, wxSize(moveVector.x, moveVector.y));
+          if ((m_zoom_dim.width != 0) && (m_zoom_dim.height != 0))
+          {
+            if (m_zoom_dim.width < 0)
+            {
+              m_zoom_dim.x += m_zoom_dim.width;
+              m_zoom_dim.width = abs(m_zoom_dim.width);
+            }
+            if (m_zoom_dim.height < 0)
+            {
+              m_zoom_dim.y += m_zoom_dim.height;
+              m_zoom_dim.height = abs(m_zoom_dim.height);
+            }
+
+            m_zoom_bmp = new wxBitmap(m_zoom_dim.width, m_zoom_dim.height, dc);
+            wxMemoryDC m_coord_dc(&dc);
+            m_coord_dc.SelectObject(*m_zoom_bmp);
+            m_coord_dc.Blit(0, 0, m_zoom_dim.width, m_zoom_dim.height, &dc, m_zoom_dim.x, m_zoom_dim.y);
+            m_coord_dc.SelectObject(wxNullBitmap);
+            m_zoom_oldDim = m_zoom_dim;
+
+            // Draw the rectangle that focus the selected region
+            wxPen pen(*wxBLACK, 1, wxPENSTYLE_DOT);  // wxDOT
+            dc.SetPen(pen);
+            dc.SetBrush(*wxTRANSPARENT_BRUSH);
+            dc.DrawRectangle(m_zoom_dim);
+          }
         }
-
-        // Second : store new bitmap
-        m_zoom_dim = wxRect(m_mouseLClick, wxSize(moveVector.x, moveVector.y));
-        if ((m_zoom_dim.width != 0) && (m_zoom_dim.height != 0))
+        else if(m_leftDownCommand == mpmZOOM_DRAG)
         {
-          if (m_zoom_dim.width < 0)
+          // Continously zoom in or out by dragging the mouse across the plot
+          // The amount of zoom is proportional to the moved distance and
+          // scaled in a logarithmic fashion for more natural feel
+          double xPercent = (double)moveVector.x / (double)GetPlotWidth();
+          double yPercent = -(double)moveVector.y / (double)GetPlotHeight();
+          double zoomExponentX = xPercent * std::log(ZOOM_FACTOR_DRAG);
+          double zoomExponentY = yPercent * std::log(ZOOM_FACTOR_DRAG);
+          double zoomFactorX = std::exp(zoomExponentX);
+          double zoomFactorY = std::exp(zoomExponentY);
+
+          if(m_mouseYAxisIndex)
           {
-            m_zoom_dim.x += m_zoom_dim.width;
-            m_zoom_dim.width = abs(m_zoom_dim.width);
+            // Mouse is inside a Y-axis. Only zoom on that
+            SetScaleYAndCenter(m_mouseScaleYList[*m_mouseYAxisIndex] * zoomFactorY, *m_mouseYAxisIndex);
           }
-          if (m_zoom_dim.height < 0)
+          else
           {
-            m_zoom_dim.y += m_zoom_dim.height;
-            m_zoom_dim.height = abs(m_zoom_dim.height);
+            // Zoom on all X and Y axes
+            SetScaleXAndCenter(m_mouseScaleX * zoomFactorX);
+            for(size_t i = 0; i < m_mouseScaleYList.size(); i++)
+            {
+              SetScaleYAndCenter(m_mouseScaleYList[i] * zoomFactorY, i);
+            }
           }
 
-          m_zoom_bmp = new wxBitmap(m_zoom_dim.width, m_zoom_dim.height, dc);
-          wxMemoryDC m_coord_dc(&dc);
-          m_coord_dc.SelectObject(*m_zoom_bmp);
-          m_coord_dc.Blit(0, 0, m_zoom_dim.width, m_zoom_dim.height, &dc, m_zoom_dim.x, m_zoom_dim.y);
-          m_coord_dc.SelectObject(wxNullBitmap);
-          m_zoom_oldDim = m_zoom_dim;
-
-          // Draw the rectangle that focus the selected region
-          wxPen pen(*wxBLACK, 1, wxPENSTYLE_DOT);  // wxDOT
-          dc.SetPen(pen);
-          dc.SetBrush(*wxTRANSPARENT_BRUSH);
-          dc.DrawRectangle(m_zoom_dim);
+          UpdateAll();
         }
 
         if (m_magnetize && (!m_repainting))
@@ -3069,7 +3121,7 @@ void mpWindow::OnMouseLeftRelease(wxMouseEvent &event)
     m_movingInfoLayer->UpdateReference();
     m_movingInfoLayer = NULL;
   }
-  else
+  else if(m_leftDownCommand == mpmZOOM_RECTANGLE)
   {
     DeleteAndNull(m_zoom_bmp);
     wxPoint release(event.GetX(), event.GetY());
@@ -3270,7 +3322,7 @@ void mpWindow::CheckAndReportDesiredBoundsChanges() {
 }
 
 // Patch ngpaton
-void mpWindow::DoZoomXCalc(bool zoomIn, int staticXpixel)
+void mpWindow::DoZoomXCalc(bool zoomIn, wxCoord staticXpixel)
 {
   if(staticXpixel == ZOOM_AROUND_CENTER)
   {
@@ -3296,7 +3348,7 @@ void mpWindow::DoZoomXCalc(bool zoomIn, int staticXpixel)
 #endif
 }
 
-void mpWindow::DoZoomYCalc(bool zoomIn, int staticYpixel, std::optional<size_t> yIndex)
+void mpWindow::DoZoomYCalc(bool zoomIn, wxCoord staticYpixel, std::optional<size_t> yIndex)
 {
   if(staticYpixel == ZOOM_AROUND_CENTER)
   {
@@ -3326,6 +3378,47 @@ void mpWindow::DoZoomYCalc(bool zoomIn, int staticYpixel, std::optional<size_t> 
 #ifdef MATHPLOT_DO_LOGGING
   wxLogMessage(_T("mpWindow::DoZoomYCalc() prior Y coord: (%f), new Y coord: (%f) SHOULD BE EQUAL!!"), staticY, p2y(staticYpixel));
 #endif
+}
+
+void mpWindow::SetScaleXAndCenter(double scaleX)
+{
+  // Zoom around center
+  wxCoord centerXPixel = (m_plotWidth / 2) + m_margin.left;
+
+  // Preserve the center value
+  double centerXValue = p2x(centerXPixel);
+
+  // Set scale
+  m_scaleX = scaleX;
+
+  // Adjust the new m_posx
+  m_posX = centerXValue - (centerXPixel / m_scaleX);
+
+  // Adjust desired
+  m_desired.Xmin = m_posX;
+  m_desired.Xmax = m_posX + m_plotWidth / m_scaleX;
+  CheckAndReportDesiredBoundsChanges();
+}
+
+void mpWindow::SetScaleYAndCenter(double scaleY, size_t yIndex)
+{
+  // Zoom around center
+  wxCoord centerYpixel = (m_plotHeight / 2) + m_margin.top;
+
+  // Preserve the position of the clicked point:
+  double centerYValue = p2y(centerYpixel, yIndex);
+
+  // Set scale
+  m_yAxisDataList[yIndex].m_scaleY = scaleY;
+
+  // Adjust the new m_posy:
+  m_yAxisDataList[yIndex].m_posY = centerYValue + (centerYpixel / m_yAxisDataList[yIndex].m_scaleY);
+
+  // Adjust desired
+  m_desired.YmaxList[yIndex] = m_yAxisDataList[yIndex].m_posY;
+  m_desired.YminList[yIndex] = m_yAxisDataList[yIndex].m_posY - m_plotHeight / m_yAxisDataList[yIndex].m_scaleY;
+
+  CheckAndReportDesiredBoundsChanges();
 }
 
 void mpWindow::ZoomIn(const wxPoint &centerPoint)
