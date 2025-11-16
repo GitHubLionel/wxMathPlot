@@ -63,7 +63,7 @@
 #define WXDLLIMPEXP_DATA_MATHPLOT(type) type
 #endif
 
-#if defined(__GNUG__) && !defined(__APPLE__)
+#if defined(__GNUG__) && !defined(__APPLE__) && !defined(__INTEL_CLANG_COMPILER)
 #pragma interface "mathplot.h"
 #endif
 

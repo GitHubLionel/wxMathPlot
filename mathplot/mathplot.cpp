@@ -10,7 +10,7 @@
 // Licence:         wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
 
-#ifdef __GNUG__
+#if defined(__GNUG__) && !defined(__APPLE__) && !defined(__INTEL_CLANG_COMPILER)
 #pragma implementation "mathplot.h"
 #endif
 
