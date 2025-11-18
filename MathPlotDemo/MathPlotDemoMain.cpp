@@ -20,6 +20,7 @@
 //*)
 
 #include <wx/overlay.h>
+#include <wx/tipwin.h>
 #include "Sample.h"
 
 //helper functions
@@ -91,6 +92,8 @@ MathPlotDemoFrame::MathPlotDemoFrame(wxWindow* parent,wxWindowID id)
     BoxSizer2->Add(bBarChart, 0, wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND, 10);
     bImage = new wxButton(pLog, wxID_ANY, _("Draw Image"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
     BoxSizer2->Add(bImage, 0, wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND, 10);
+    bMultiYAxis = new wxButton(pLog, wxID_ANY, _("Multi Y-Axis"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
+    BoxSizer2->Add(bMultiYAxis, 0, wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND, 10);
     cbFreeLine = new wxCheckBox(pLog, wxID_ANY, _("Free line"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
     cbFreeLine->SetValue(false);
     cbFreeLine->SetToolTip(_("Free drawing on the plot area. Left click and move the mouse. Illustration of OnUserMouseAction"));
@@ -132,6 +135,7 @@ MathPlotDemoFrame::MathPlotDemoFrame(wxWindow* parent,wxWindowID id)
     bLogXY->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotDemoFrame::OnbLogXYClick, this);
     bBarChart->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotDemoFrame::OnbBarChartClick, this);
     bImage->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotDemoFrame::OnbImageClick, this);
+    bMultiYAxis->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotDemoFrame::OnbMultiYAxisClick, this);
     cbFreeLine->Bind(wxEVT_COMMAND_CHECKBOX_CLICKED, &MathPlotDemoFrame::OncbFreeLineClick, this);
     Bind(wxEVT_COMMAND_MENU_SELECTED, &MathPlotDemoFrame::OnmiPreviewSelected, this, idMenuPreview);
     Bind(wxEVT_COMMAND_MENU_SELECTED, &MathPlotDemoFrame::OnmiPrintSelected, this, idMenuPrint);
@@ -190,13 +194,21 @@ void MathPlotDemoFrame::InitializePlot(void)
 void MathPlotDemoFrame::CleanPlot(void)
 {
   mPlot->DelAllPlot(true);
+  mPlot->SetLeftDownCommand(mpmZOOM_RECTANGLE);
+  mPlot->SetMarginLeft(50);
   bottomAxis->SetAlign(mpALIGN_CENTERX);
   bottomAxis->SetLogAxis(false);
+  bottomAxis->SetAuto(true);
+  bottomAxis->SetPen(wxPen(*wxRED, 2, wxPENSTYLE_SOLID));
   leftAxis->SetAlign(mpALIGN_CENTERY);
   leftAxis->SetLogAxis(false);
-  bottomAxis->SetAuto(true);
+  leftAxis->SetVisible(true);
   mPlot->DelLayer(mPlot->GetLayerByName(_T("BarChart")), true);
   mPlot->DelLayer(mPlot->GetLayerByClassName("mpBitmapLayer"), true);
+  mPlot->DelLayer(mPlot->GetLayerYAxis(1), true);
+  mPlot->DelLayer(mPlot->GetLayerYAxis(2), true);
+  mPlot->DelLayer(mPlot->GetLayerYAxis(3), true);
+  mPlot->DelLayer(mPlot->GetLayerYAxis(4), true);
 }
 
 void MathPlotDemoFrame::OnbDrawClick(wxCommandEvent &WXUNUSED(event))
@@ -495,3 +507,93 @@ void MathPlotDemoFrame::OnmiPrintSelected(wxCommandEvent &WXUNUSED(event))
   printer.Print(this, &printout, true);
 }
 
+void MathPlotDemoFrame::OnbMultiYAxisClick(wxCommandEvent &WXUNUSED(event))
+{
+  CleanPlot();
+
+  wxFont graphFont(11, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+  wxPen axispen(*wxBLACK, 1, wxPENSTYLE_SOLID);
+
+  // Use same color palette as Matlab
+  const std::vector<wxColour> plotColors =
+  {
+    wxColour(0, 114, 189),
+    wxColour(217, 83, 25),
+    wxColour(237, 177, 32),
+    wxColour(126, 47, 142),
+  };
+
+  mPlot->SetLeftDownCommand(mpmZOOM_DRAG);
+  mPlot->SetMarginLeft(0);
+  leftAxis->SetVisible(false);    // Easiest to disable default Y-axis temporarily
+  bottomAxis->SetAlign(mpALIGN_BOTTOM);
+  bottomAxis->SetPen(axispen);
+
+  MyLissajoux* f1 = new MyLissajoux(125.0);
+  f1->SetYAxisIndex(1);
+  f1->SetDrawOutsideMargins(false);
+  f1->SetPen(wxPen(plotColors[0], 2));
+  mPlot->AddLayer(f1);
+
+  MySIN* f2 = new MySIN(10.0, 220.0);
+  f2->SetYAxisIndex(2);
+  f2->SetDrawOutsideMargins(false);
+  f2->SetPen(wxPen(plotColors[1], 2));
+  f2->SetContinuity(true);
+  mPlot->AddLayer(f2);
+
+  MyFunction* f3 = new MyFunction();
+  f3->SetYAxisIndex(3);
+  f3->SetDrawOutsideMargins(false);
+  f3->SetPen(wxPen(plotColors[2], 2));
+  f3->SetContinuity(true);
+  mPlot->AddLayer(f3);
+
+  MyCOSinverse* f4 = new MyCOSinverse(10.0, 100.0);
+  f4->SetYAxisIndex(4);
+  f4->SetDrawOutsideMargins(false);
+  f4->SetPen(wxPen(plotColors[3], 2));
+  f4->SetContinuity(true);
+  mPlot->AddLayer(f4);
+
+  mpScaleY* axis1 = new mpScaleY(f1->GetName(), mpALIGN_LEFT, false, 1);
+  axis1->SetLabelFormat("%g");
+  axis1->SetFont(graphFont);
+  axis1->SetPen(axispen);
+  axis1->SetFontColour(plotColors[0]);
+  mPlot->AddLayer(axis1);
+
+  mpScaleY* axis2 = new mpScaleY(f2->GetName(), mpALIGN_LEFT, false, 2);
+  axis2->SetLabelFormat("%g");
+  axis2->SetFont(graphFont);
+  axis2->SetPen(axispen);
+  axis2->SetFontColour(plotColors[1]);
+  mPlot->AddLayer(axis2);
+
+  mpScaleY* axis3 = new mpScaleY(f3->GetName(), mpALIGN_LEFT, false, 3);
+  axis3->SetLabelFormat("%g");
+  axis3->SetFont(graphFont);
+  axis3->SetPen(axispen);
+  axis3->SetFontColour(plotColors[2]);
+  mPlot->AddLayer(axis3);
+
+  mpScaleY* axis4 = new mpScaleY(f4->GetName(), mpALIGN_LEFT, false, 4);
+  axis4->SetLabelFormat("%g");
+  axis4->SetFont(graphFont);
+  axis4->SetPen(axispen);
+  axis4->SetFontColour(plotColors[3]);
+  axis4->SetAuto(false);
+  axis4->SetMinScale(-300);
+  axis4->SetMaxScale(300);
+  mPlot->AddLayer(axis4);
+
+  mPlot->Fit();
+
+  new wxTipWindow(this,
+                  "Interact with individual axis by keeping mouse inside a specific axis and:\n"
+                  " - Pan by holding right mouse button and moving up/down\n"
+                  " - Zoom by holding left mouse button and moving up/down\n"
+                  " - Zoom by scrolling mouse wheel\n"
+                  "If keeping mouse inside plot area, same action applies but affect all axes",
+                  400);
+}
