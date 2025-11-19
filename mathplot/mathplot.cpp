@@ -141,7 +141,9 @@ void mpWindow::FillI18NString()
   // List of string message used
   MESS_HELP0 = _("wxMathPlot help");
   MESS_HELP1 = _("Supported Mouse commands:");
-  MESS_HELP2 = _(" - Left button down + Mark area: Rectangular zoom");
+  MESS_HELP2 = _(" - Left button down +\n"
+                 "    - Alt. 1: Mark area: Rectangular zoom\n"
+                 "    - Alt. 2: Move: Continous zoom");
   MESS_HELP3 = _(" - Right button down + Move: Pan (Move)");
   MESS_HELP4 = _(" - Wheel: Zoom in/out");
   MESS_HELP5 = _(" - Wheel + SHIFT: Horizontal scroll");
@@ -4512,6 +4514,26 @@ mpScaleX* mpWindow::GetLayerXAxis()
       return (mpScaleX*)(*it);
   }
   return NULL;    // Not found
+}
+
+/**
+ * Get the scale Y layer (Y axis) with a specific Y-index or NULL if not found
+ */
+mpScaleY* mpWindow::GetLayerYAxis(size_t yIndex)
+{
+  for(mpLayer* layer : m_layers)
+  {
+    int scale;
+    if (layer->IsLayerType(mpLAYER_AXIS, &scale) && (scale == mpsScaleY))
+    {
+      mpScaleY* scaleY = dynamic_cast<mpScaleY*>(layer);
+      if(scaleY->GetAxisIndex() == yIndex)
+      {
+        return scaleY;
+      }
+    }
+  }
+  return NULL;
 }
 
 std::optional<size_t> mpWindow::IsInsideYAxis(const wxPoint &point)

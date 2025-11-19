@@ -8,7 +8,7 @@ I have made some improvements like :
 - added a config window (that you can have access with the right click) - makes it easy to enable/disable plots, change colors, etc.
 - add "view as bar" for XY functions
 - add horizontal and vertical line
-- add second Y axis management (only 2 Y axis supported)
+- add multiple Y axis management (unlimited number of Y-axis supported), including easy mouse interaction (zoom/pan) with each Y-axis
 - add log axis
 - view fullscreen if plot is in a single frame
 - add in the demo the samples of the original project

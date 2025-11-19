@@ -68,6 +68,14 @@
 							<border>10</border>
 						</object>
 						<object class="sizeritem">
+							<object class="wxButton" name="" variable="bMultiYAxis" member="yes">
+								<label>Multi Y-Axis</label>
+								<handler function="OnbMultiYAxisClick" entry="EVT_BUTTON" />
+							</object>
+							<flag>wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND</flag>
+							<border>10</border>
+						</object>
+						<object class="sizeritem">
 							<object class="wxCheckBox" name="" variable="cbFreeLine" member="yes">
 								<label>Free line</label>
 								<tooltip>Free drawing on the plot area. Left click and move the mouse. Illustration of OnUserMouseAction</tooltip>

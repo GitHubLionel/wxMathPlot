@@ -2402,6 +2402,11 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      */
     mpScaleX* GetLayerXAxis();
 
+    /*! Get the scale Y layer (Y axis) with a specific Y-index
+     @return A pointer to the mpScaleY object, or NULL if not found.
+     */
+    mpScaleY* GetLayerYAxis(size_t yIndex);
+
     /** Set current view's X scale and refresh display.
      @param scaleX New scale, must not be 0.
      */

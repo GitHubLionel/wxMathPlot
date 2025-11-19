@@ -47,6 +47,7 @@ class MathPlotDemoFrame: public wxFrame
         void OnbBarChartClick(wxCommandEvent& event);
         void OncbFreeLineClick(wxCommandEvent& event);
         void OnbImageClick(wxCommandEvent& event);
+        void OnbMultiYAxisClick(wxCommandEvent& event);
         //*)
 
         //(*Identifiers(MathPlotDemoFrame)
@@ -68,6 +69,7 @@ class MathPlotDemoFrame: public wxFrame
         wxButton* bImage;
         wxButton* bLog;
         wxButton* bLogXY;
+        wxButton* bMultiYAxis;
         wxButton* bSample;
         wxCheckBox* cbFreeLine;
         wxMenuItem* miPrint;
