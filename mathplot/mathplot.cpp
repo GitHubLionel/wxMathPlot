@@ -86,7 +86,7 @@
   namespace MathPlot {
 #endif // ENABLE_MP_NAMESPACE
 
-wxString Popup_string[mpID_FULLSCREEN - mpID_FIT + 1][2] = {_T("")};
+wxString Popup_string[mpID_FULLSCREEN - mpID_FIT + 1][2] = {{_T("")}};
 
 // List of string message used
 wxString MESS_HELP0 = _T("");
