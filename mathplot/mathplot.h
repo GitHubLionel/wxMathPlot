@@ -3,9 +3,10 @@
 // Purpose:         Framework for plotting in wxWindows
 // Original Author: David Schalig
 // Maintainer:      Davide Rondini
-// Contributors:    Jose Luis Blanco, Val Greene, Lionel Reynaud, Dave Nadler, MortenMacFly, Oskar Waldemarsson
+// Contributors:    Jose Luis Blanco, Val Greene, Lionel Reynaud, Dave Nadler, MortenMacFly,
+//                  Oskar Waldemarsson (for multi Y axis and corrections)
 // Created:         21/07/2003
-// Last edit:       29/03/2025
+// Last edit:       23/11/2025
 // Copyright:       (c) David Schalig, Davide Rondini
 // Licence:         wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -49,7 +50,7 @@
  Authors can be contacted via the wxMathPlot's homepage at
  https://sourceforge.net/projects/wxmathplot<br>
  Contributors:<br>
- Jose Luis Blanco, Val Greene, Lionel Reynaud, Dave Nadler<br>
+ Jose Luis Blanco, Val Greene, Lionel Reynaud, Dave Nadler, MortenMacFly, Oskar Waldemarsson<br>
  */
 
 //this definition uses windows dll to export function.
