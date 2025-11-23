@@ -5,7 +5,7 @@ I have made some improvements like :
 - corrected some bugs (and probably add others lol )
 - work on Linux
 - rewrote some methods
-- added a config window (that you can have access with the right click) - makes it easy to enable/disable plots, change colors, etc. Need ENABLE_MP_CONFIG directive to active it
+- added a config window (that you can have access with the right click) - makes it easy to enable/disable plots, change colors, etc. Need **ENABLE_MP_CONFIG** directive to active it
 - add "view as bar" for XY functions
 - add horizontal and vertical line
 - add multiple Y axis management (unlimited number of Y-axis supported), including easy mouse interaction (zoom/pan) with each Y-axis. Thanks to Oskar Waldemarsson for this great work
@@ -21,8 +21,11 @@ Please note configuration (build) symbols you may want to  define:
 
 Doxygen on codedocs (missing diagrams due to codedocs problems): <a href="https://codedocs.xyz/GitHubLionel/wxMathPlot/" target="_blank">https://codedocs.xyz/GitHubLionel/wxMathPlot/</a>
 
-Example showing new advanced configuration dialog:
-![Demo](Demo.png "Demo")  
+Example showing new advanced configuration dialog:<br>
+![Demo](Demo.png "Demo")
+<br>
+![Demo2](Demo2.png "Multi axe Demo")
+
 
 Enjoy<br>
 Lionel
