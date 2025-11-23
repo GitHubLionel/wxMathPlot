@@ -1,14 +1,14 @@
 # wxMathPlot
 
-I have updated the mathplot component for wxWidgets 3.2.2.
+I have updated the mathplot component for wxWidgets 3.2.2 (also work with latest 3.3.x).
 I have made some improvements like :
 - corrected some bugs (and probably add others lol )
 - work on Linux
 - rewrote some methods
-- added a config window (that you can have access with the right click) - makes it easy to enable/disable plots, change colors, etc.
+- added a config window (that you can have access with the right click) - makes it easy to enable/disable plots, change colors, etc. Need ENABLE_MP_CONFIG directive to active it
 - add "view as bar" for XY functions
 - add horizontal and vertical line
-- add multiple Y axis management (unlimited number of Y-axis supported), including easy mouse interaction (zoom/pan) with each Y-axis
+- add multiple Y axis management (unlimited number of Y-axis supported), including easy mouse interaction (zoom/pan) with each Y-axis. Thanks to Oskar Waldemarsson for this great work
 - add log axis
 - view fullscreen if plot is in a single frame
 - add in the demo the samples of the original project
