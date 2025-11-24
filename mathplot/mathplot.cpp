@@ -579,7 +579,7 @@ void mpInfoCoords::UpdateInfo(mpWindow &w, wxEvent &event)
 }
 
 wxString mpInfoCoords::GetInfoCoordsText(mpWindow &w, double xVal, std::vector<double> yValList) {
-  wxString result;
+  wxString result = _("");
   struct tm timestruct;
   // Format X part
   switch (m_labelType)
@@ -627,7 +627,7 @@ wxString mpInfoCoords::GetInfoCoordsText(mpWindow &w, double xVal, std::vector<d
     {
       if(w.IsYAxisUsed(i))
       {
-        wxString axisName = wxString::Format("Y%d", i);
+        wxString axisName = wxString::Format("Y%d", (int)i);
         mpScaleY* yAxis = w.GetLayerYAxis(i);
         if(yAxis != nullptr)
         {
