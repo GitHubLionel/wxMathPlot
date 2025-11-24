@@ -802,7 +802,7 @@ void MathPlotConfigDialog::FillYAxisList(wxChoice *yChoice, bool clearChoice)
     yChoice->Clear();
   for (mpScaleY* yAxis : m_plot->GetYAxisList())
   {
-    wxString yAxisName = wxString::Format(_T("Y%d axis - %s"), (int)yAxis->GetAxisIndex()+1, yAxis->GetName());
+    wxString yAxisName = wxString::Format(_T("Y%d axis - %s"), (int)yAxis->GetAxisIndex(), yAxis->GetName());
     yChoice->Append(yAxisName, yAxis);
   }
 }
