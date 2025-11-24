@@ -997,10 +997,11 @@ class WXDLLIMPEXP_MATHPLOT mpInfoCoords: public mpInfoLayer
     }
 
     /** Get string describing mouse position. Override in your derived class to customize mpInfoCoords display.
+    @param w parent mpWindow from which to obtain information
     @param xVal, Value of X mouse position
     @param yValList, Values of Y. If m_series_coord is used, only one value of the closest serie is supplied,
     otherwise mouse position for each Y-axis is supplied */
-    virtual wxString GetInfoCoordsText(double xVal, std::vector<double> yValList);
+    virtual wxString GetInfoCoordsText(mpWindow &w, double xVal, std::vector<double> yValList);
 
     /** Pen series for tractable
      */
@@ -1997,6 +1998,9 @@ class WXDLLIMPEXP_MATHPLOT mpScale: public mpLayer
     virtual void SetLogAxis(bool log) = 0;
 
   protected:
+    static const wxCoord kTickSize = 4;       //!< Length of tick line
+    static const wxCoord kAxisExtraSpace = 6; //!< Extra space for axis to make it look good
+
     wxPen m_gridpen;         //!< Grid's pen. Default Colour = LIGHT_GREY, width = 1, style = wxPENSTYLE_DOT
     bool m_ticks;            //!< Flag to show ticks. Default true
     bool m_grids;            //!< Flag to show grids. Default false
@@ -2397,6 +2401,12 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      * Flag for refresh legend
      */
     void RefreshLegend(void);
+
+    /*! Check if a specific Y-axis exists or is used by any function
+     @param Y-axis index to check
+     @return True if specified Y-axis is used, false otherwise
+     */
+    bool IsYAxisUsed(size_t yIndex);
 
     /*! Get the first scale X layer (X axis).
      @return A pointer to the mpScaleX object, or NULL if not found.
