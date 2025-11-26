@@ -1312,7 +1312,9 @@ void MathPlotConfigDialog::OnbApplyClick(wxCommandEvent &WXUNUSED(event))
     case 2: // Axis page
       if ((CurrentChoice == ChoiceAxis) && (CurrentScale != NULL))
       {
-        CurrentScale->SetName(edAxisName->GetValue());
+        bool NameChanged = CurrentScale->GetName() != edAxisName->GetValue();
+        if (NameChanged)
+          CurrentScale->SetName(edAxisName->GetValue());
         // Pen config
         wxPen pen(bAxisPenColor->GetBackgroundColour(), cbAxisPenWidth->GetSelection() + 1,
             (wxPenStyle)(cbAxisPenStyle->GetSelection() + wxPENSTYLE_SOLID));
@@ -1338,7 +1340,7 @@ void MathPlotConfigDialog::OnbApplyClick(wxCommandEvent &WXUNUSED(event))
         else if (classname.IsSameAs(_T("mpScaleY")))
         {
           mpScaleY* yAxis = dynamic_cast<mpScaleY*>(CurrentScale);
-          newName.Printf(_T("Y%d axis - "), (int)yAxis->GetAxisIndex() + 1);
+          newName.Printf(_T("Y%d axis - "), (int)yAxis->GetAxisIndex());
         }
         // Update name in choice list
         ChoiceAxis->SetString(ChoiceAxis->GetCurrentSelection(), newName + edAxisName->GetValue());
@@ -1399,6 +1401,18 @@ void MathPlotConfigDialog::OnbApplyClick(wxCommandEvent &WXUNUSED(event))
 
         // Refresh page
         UpdateAxis();
+
+        if (NameChanged)
+        {
+          // Series
+          int id = ChoiceSeriesYAxis->GetSelection();
+          FillYAxisList(ChoiceSeriesYAxis);
+          ChoiceSeriesYAxis->SetSelection(id);
+          // Line
+          id = ChoiceLinesYAxis->GetSelection();
+          FillYAxisList(ChoiceLinesYAxis);
+          ChoiceLinesYAxis->SetSelection(id);
+        }
       }
       break;
 
