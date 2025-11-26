@@ -14,6 +14,8 @@
 #ifndef MATHPLOT_H_INCLUDED
 #define MATHPLOT_H_INCLUDED
 
+#define MATHPLOT_MANY_YAXIS ///< Temporary helper for A/B testing of Oskar's multi-Y version against previous (working) version
+
 /** @file mathplot.h */
 /** @mainpage wxMathPlot
  wxMathPlot is a framework for mathematical graph plotting in wxWindows.
