@@ -163,8 +163,7 @@ class MathPlotConfigDialog: public wxDialog
     wxPanel* Panel4;
     wxPanel* Panel5;
     wxPanel* pLines;
-    wxRadioButton* rbLinesHor;
-    wxRadioButton* rbLinesVert;
+    wxRadioButton* rbLinesDirection;
     wxSpinCtrl* cbSeriesStep;
     wxSpinCtrl* cbSeriesSymbolSize;
     wxStaticText* StaticText10;

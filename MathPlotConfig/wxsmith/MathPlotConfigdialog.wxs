@@ -1156,7 +1156,7 @@
 											<orient>wxVERTICAL</orient>
 											<object class="sizeritem">
 												<object class="wxFlexGridSizer" variable="FlexGridSizer9" member="no">
-													<cols>4</cols>
+													<cols>3</cols>
 													<rows>3</rows>
 													<growablecols>1</growablecols>
 													<object class="sizeritem">
@@ -1174,16 +1174,9 @@
 														<option>1</option>
 													</object>
 													<object class="sizeritem">
-														<object class="wxRadioButton" name="" variable="rbLinesHor" member="yes">
+														<object class="wxRadioButton" name="" variable="rbLinesDirection" member="yes">
 															<label>Horizontal</label>
-															<enabled>0</enabled>
-														</object>
-														<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
-														<border>5</border>
-													</object>
-													<object class="sizeritem">
-														<object class="wxRadioButton" name="" variable="rbLinesVert" member="yes">
-															<label>Vertical</label>
+															<selected>1</selected>
 															<enabled>0</enabled>
 														</object>
 														<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
@@ -1205,11 +1198,6 @@
 															<style>wxTE_RIGHT</style>
 														</object>
 														<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
-														<border>5</border>
-														<option>1</option>
-													</object>
-													<object class="spacer">
-														<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
 														<border>5</border>
 														<option>1</option>
 													</object>

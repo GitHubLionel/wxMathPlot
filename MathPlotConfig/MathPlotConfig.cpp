@@ -513,23 +513,20 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   sizerLines->Add(FlexGridSizer5, 0, wxALL|wxEXPAND, 2);
   pLines = new wxPanel(Panel5, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL);
   BoxSizer4 = new wxBoxSizer(wxVERTICAL);
-  FlexGridSizer9 = new wxFlexGridSizer(3, 4, 0, 0);
+  FlexGridSizer9 = new wxFlexGridSizer(3, 3, 0, 0);
   FlexGridSizer9->AddGrowableCol(1);
   StaticText31 = new wxStaticText(pLines, wxID_ANY, _("Name :"), wxDefaultPosition, wxDefaultSize, 0);
   FlexGridSizer9->Add(StaticText31, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
   edLinesName = new wxTextCtrl(pLines, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
   FlexGridSizer9->Add(edLinesName, 1, wxALL|wxEXPAND, 5);
-  rbLinesHor = new wxRadioButton(pLines, wxID_ANY, _("Horizontal"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
-  rbLinesHor->Disable();
-  FlexGridSizer9->Add(rbLinesHor, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-  rbLinesVert = new wxRadioButton(pLines, wxID_ANY, _("Vertical"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
-  rbLinesVert->Disable();
-  FlexGridSizer9->Add(rbLinesVert, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+  rbLinesDirection = new wxRadioButton(pLines, wxID_ANY, _("Horizontal"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
+  rbLinesDirection->SetValue(true);
+  rbLinesDirection->Disable();
+  FlexGridSizer9->Add(rbLinesDirection, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
   StaticText30 = new wxStaticText(pLines, wxID_ANY, _("Value :"), wxDefaultPosition, wxDefaultSize, 0);
   FlexGridSizer9->Add(StaticText30, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
   edLinesValue = new wxTextCtrl(pLines, wxID_ANY, _T("1"), wxDefaultPosition, wxSize(64,-1), wxTE_RIGHT, wxFloatingPointValidator<double> (2, &line_value));
   FlexGridSizer9->Add(edLinesValue, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
-  FlexGridSizer9->Add(-1,-1,1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
   FlexGridSizer9->Add(-1,-1,1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
   stLinesYIndexLabel = new wxStaticText(pLines, wxID_ANY, _("Y axis :"), wxDefaultPosition, wxDefaultSize, 0);
   FlexGridSizer9->Add(stLinesYIndexLabel, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
@@ -1186,15 +1183,13 @@ void MathPlotConfigDialog::UpdateSelectedLine(void)
 
     if (CurrentLine->IsHorizontal())
     {
-      rbLinesHor->SetValue(true);
-      rbLinesVert->SetValue(false);
+      rbLinesDirection->SetLabel(_T("Horizontal"));
       stLinesYIndexLabel->Show(true);
       ChoiceLinesYAxis->Show(true);
     }
     else
     {
-      rbLinesHor->SetValue(false);
-      rbLinesVert->SetValue(true);
+      rbLinesDirection->SetLabel(_T("Vertical"));
       stLinesYIndexLabel->Show(false);
       ChoiceLinesYAxis->Show(false);
     }
