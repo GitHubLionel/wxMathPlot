@@ -624,18 +624,32 @@ wxString mpInfoCoords::GetInfoCoordsText(mpWindow &w, double xVal, std::vector<d
   }
   else
   {
+    wxString yAxisDataWithName = _T("");
+    wxString yAxisDataWithoutName = _T("");
+    int nOfUsedYAxes = 0;
     for (size_t i = 0; i < yValList.size(); i++)
     {
       if (w.IsYAxisUsed(i))
       {
-        wxString axisName = wxString::Format(_T("Y%zu"), i);
+        nOfUsedYAxes++;
+        wxString axisName = wxString::Format(_T("y%zu"), i);
         mpScaleY* yAxis = w.GetLayerYAxis(i);
         if (yAxis != nullptr)
         {
           axisName += wxString::Format(_T(" - %s"), yAxis->GetName());
         }
-        result.Printf(_T("%s\n%s = %g"), result, axisName, yValList[i]);
+        yAxisDataWithName += wxString::Format(_T("\n%s = %g"), axisName, yValList[i]);
+        yAxisDataWithoutName.Printf(_T("\ny = %g"), yValList[i]);
       }
+    }
+
+    if (nOfUsedYAxes > 1)
+    {
+      result += yAxisDataWithName;
+    }
+    else
+    {
+      result += yAxisDataWithoutName;
     }
   }
 
@@ -3320,6 +3334,7 @@ void mpWindow::Fit(const mpFloatRect &rect, wxCoord *printSizeX, wxCoord *printS
   if (!weArePrinting) {
     // We are NOT drawing to a printer...
     UpdateAll();
+    CheckAndReportDesiredBoundsChanges();
   }
 }
 
