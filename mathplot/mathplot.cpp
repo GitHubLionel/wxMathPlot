@@ -222,6 +222,12 @@ bool DoubleToTimeStruct(double val, unsigned int timeConv, struct tm *timestruct
 }
 
 //-----------------------------------------------------------------------------
+// mpFloatRect
+//-----------------------------------------------------------------------------
+
+mpFloatRect::mpFloatRect(mpWindow& w) : x(), y(w.GetNOfYScales()){}
+
+//-----------------------------------------------------------------------------
 // mpLayer
 //-----------------------------------------------------------------------------
 
@@ -2743,7 +2749,7 @@ EVT_MENU(mpID_FULLSCREEN, mpWindow::OnFullScreen)
 wxEND_EVENT_TABLE()
 
 mpWindow::mpWindow(wxWindow *parent, wxWindowID id, const wxPoint &pos, const wxSize &size, long flag) :
-    wxWindow(parent, id, pos, size, flag, _T("Mathplot"))
+    wxWindow(parent, id, pos, size, flag, _T("Mathplot")), m_yAxisDataList(1), m_bound(*this), m_desired(*this), m_lastDesiredReportedBounds(*this)
 {
   // Fill i18n string
   FillI18NString();
@@ -2833,9 +2839,6 @@ void mpWindow::InitParameters()
 {
   m_scaleX = 1.0;
   m_posX = 0.0;
-  m_yAxisDataList.resize(1);  // Always keep one set of y-axis data
-  m_bound = mpFloatRect();
-  m_desired = mpFloatRect();
   m_scrX = m_scrY = 64;
   m_last_lx = m_last_ly = 0;
   m_XAxis = NULL;
@@ -2866,7 +2869,6 @@ void mpWindow::UpdateNOfYAxes(size_t nOfYAxes)
   // Only allow upsizing
   if(nOfYAxes > m_yAxisDataList.size())
   {
-    mpFloatRect::ySize = nOfYAxes;
     m_yAxisDataList.resize(nOfYAxes);
     m_bound.y.resize(nOfYAxes);
     m_desired.y.resize(nOfYAxes);
@@ -3325,7 +3327,7 @@ void mpWindow::Fit(const mpFloatRect &rect, wxCoord *printSizeX, wxCoord *printS
 }
 
 void mpWindow::CheckAndReportDesiredBoundsChanges() {
-  if (m_desired.IsNotSet()) return; // nothing to do until useful info in m_desired
+  if (m_desired.IsNotSet(*this)) return; // nothing to do until useful info in m_desired
   if (!m_initialDesiredBoundsRecorded) {
     m_initialDesiredBoundsRecorded = true;
   } else if ( !(m_desired == m_lastDesiredReportedBounds) ) {
@@ -3484,7 +3486,7 @@ void mpWindow::ZoomRect(wxPoint p0, wxPoint p1)
   double p1x = p2x(p1.x);
 
   // Order them:
-  mpFloatRect zoom;
+  mpFloatRect zoom(*this);
   zoom.x.min = p0x < p1x ? p0x : p1x;
   zoom.x.max = p0x > p1x ? p0x : p1x;
 

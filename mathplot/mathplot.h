@@ -224,11 +224,19 @@ struct mpRange
  */
 struct mpFloatRect
 {
-  inline static int ySize = 1;  //!< If new mpFloatRect are created, we need to match the size of existing nOf Y-axes
   mpRange x;
   std::vector<mpRange> y;
 
-  mpFloatRect() : x(), y(ySize) {}
+  /**
+   * Constructs a new mpFloatRect using it parent mpWindow to obtain
+   * the number of Y-scales to use. This makes sure that the y-size
+   * always matches the parant mpWindow y-size
+   * @param w parent mpWindow from which to obtain informations
+   */
+  mpFloatRect(mpWindow& w);
+
+  /// Only allow constructor with mpWindow supplied
+  mpFloatRect() = delete;
 
   /// Is point inside this bounding box?
   bool PointIsInside(double px, double py, size_t yIndex = 0) const {
@@ -268,7 +276,7 @@ struct mpFloatRect
     }
   }
   /// Is mpFloatRect set ?
-  bool IsNotSet() const { const mpFloatRect def; return *this==def; }
+  bool IsNotSet(mpWindow& w) const { const mpFloatRect def(w); return *this==def; }
   /// Equal operator
 #if (defined(__cplusplus) && (__cplusplus > 201703L)) // C++ > C++17 (MSVC requires <AdditionalOptions>/Zc:__cplusplus</AdditionalOptions>
   bool operator==(const mpFloatRect&) const = default;
@@ -2333,7 +2341,7 @@ class mpMagnet
 class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 {
   public:
-    mpWindow()
+    mpWindow() : m_yAxisDataList(1), m_bound(*this), m_desired(*this), m_lastDesiredReportedBounds(*this)
     {
       InitParameters();
     }
@@ -2550,8 +2558,10 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
       return m_yAxisDataList[yIndex].m_posY;
     }
 
-    size_t GetNOfYScales(void)
+    size_t GetNOfYScales(void) const
     {
+      // Should never be size 0
+      assert(m_yAxisDataList.size() != 0);
       return m_yAxisDataList.size();
     }
 
@@ -3223,8 +3233,6 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     wxColour m_axColour;    //!< Axes Colour
     bool m_drawBox;         //!< Draw box of the plot bound. Default true
 
-    mpFloatRect m_bound;    //!< Global layer bounding box in user coordinates. Does NOT include borders.
-
     double m_scaleX;        //!< Current view's X scale
     double m_posX;          //!< Current view's X position
     struct m_yAxisData      //!< Y scale and position structure
@@ -3239,7 +3247,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     int m_clickedX;         //!< Last mouse click X position, for centering and zooming the view
     int m_clickedY;         //!< Last mouse click Y position, for centering and zooming the view
 
-
+    mpFloatRect m_bound;                //!< Global layer bounding box in user coordinates. Does NOT include borders.
     mpFloatRect m_desired;              //!< Stores current plot view min/max boundaries. Used primarily during frame resizing via OnSize
 
     mpRect m_margin;                    //!< Margin around the plot including Y-axis
