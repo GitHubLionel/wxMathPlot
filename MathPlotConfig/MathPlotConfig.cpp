@@ -121,6 +121,7 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   wxFlexGridSizer* FlexGridSizer9;
   wxStaticBoxSizer* StaticBoxSizer10;
   wxStaticBoxSizer* StaticBoxSizer11;
+  wxStaticBoxSizer* StaticBoxSizer12;
   wxStaticBoxSizer* StaticBoxSizer1;
   wxStaticBoxSizer* StaticBoxSizer2;
   wxStaticBoxSizer* StaticBoxSizer3;
@@ -214,6 +215,14 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   StaticBoxSizer4->Add(FlexGridSizer4, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
   StaticBoxSizer3->Add(StaticBoxSizer4, 0, wxALL|wxALIGN_TOP, 5);
   BoxSizer3->Add(StaticBoxSizer3, 0, wxALL|wxEXPAND, 2);
+  StaticBoxSizer12 = new wxStaticBoxSizer(wxHORIZONTAL, Panel1, _("Mouse interaction"));
+  StaticText36 = new wxStaticText(Panel1, wxID_ANY, _("Left mouse action"), wxDefaultPosition, wxDefaultSize, 0);
+  StaticBoxSizer12->Add(StaticText36, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+  ChoiceLeftMouseAction = new wxChoice(Panel1, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator);
+  ChoiceLeftMouseAction->Append(_("Box zoom"));
+  ChoiceLeftMouseAction->Append(_("Drag zoom"));
+  StaticBoxSizer12->Add(ChoiceLeftMouseAction, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+  BoxSizer3->Add(StaticBoxSizer12, 1, wxALL|wxEXPAND, 5);
   Panel1->SetSizer(BoxSizer3);
   Panel2 = new wxPanel(nbConfig, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL);
   BoxSizer16 = new wxBoxSizer(wxHORIZONTAL);
@@ -563,9 +572,6 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   cbLinesShowName = new wxCheckBox(pLines, wxID_ANY, _("Show name"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
   cbLinesShowName->SetValue(false);
   BoxSizer19->Add(cbLinesShowName, 1, wxALL|wxALIGN_LEFT, 3);
-  cbLinesSecondYAxis = new wxCheckBox(pLines, wxID_ANY, _("Use second Y axis"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
-  cbLinesSecondYAxis->SetValue(false);
-  BoxSizer19->Add(cbLinesSecondYAxis, 1, wxALL|wxALIGN_LEFT, 3);
   BoxSizer18->Add(BoxSizer19, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5);
   FlexGridSizer20->Add(BoxSizer18, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
   BoxSizer4->Add(FlexGridSizer20, 0, wxALL|wxEXPAND, 5);
@@ -683,6 +689,8 @@ void MathPlotConfigDialog::Initialize(int page)
     DoButtonColour(bCoordBrushColor, CurrentCoords->GetBrush().GetColour());
     cbCoordBrushStyle->SetSelection(BrushStyleToId(CurrentCoords->GetBrush().GetStyle()));
   }
+
+  ChoiceLeftMouseAction->SetSelection((int)m_plot->GetMouseLeftDownAction());
 
   // ** Legend page **
   CurrentLegend = (mpInfoLegend*)m_plot->GetLayerByClassName(_T("mpInfoLegend"));
@@ -1278,6 +1286,8 @@ void MathPlotConfigDialog::OnbApplyClick(wxCommandEvent &WXUNUSED(event))
         wxBrush brush(bCoordBrushColor->GetBackgroundColour(), IdToBrushStyle(cbCoordBrushStyle->GetSelection()));
         CurrentCoords->SetBrush(brush);
       }
+
+      m_plot->SetMouseLeftDownAction((mpMouseButtonAction)ChoiceLeftMouseAction->GetSelection());
 
       m_plot->UpdateAll();
       break;

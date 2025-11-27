@@ -259,6 +259,31 @@
 									<flag>wxALL|wxEXPAND</flag>
 									<border>2</border>
 								</object>
+								<object class="sizeritem">
+									<object class="wxStaticBoxSizer" variable="StaticBoxSizer12" member="no">
+										<label>Mouse interaction</label>
+										<object class="sizeritem">
+											<object class="wxStaticText" name="" variable="StaticText36" member="yes">
+												<label>Left mouse action</label>
+											</object>
+											<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+											<border>5</border>
+										</object>
+										<object class="sizeritem">
+											<object class="wxChoice" name="" variable="ChoiceLeftMouseAction" member="yes">
+												<content>
+													<item>Box zoom</item>
+													<item>Drag zoom</item>
+												</content>
+											</object>
+											<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+											<border>5</border>
+										</object>
+									</object>
+									<flag>wxALL|wxEXPAND</flag>
+									<border>5</border>
+									<option>1</option>
+								</object>
 							</object>
 						</object>
 						<label>General</label>
@@ -1318,14 +1343,6 @@
 																	<object class="sizeritem">
 																		<object class="wxCheckBox" name="" variable="cbLinesShowName" member="yes">
 																			<label>Show name</label>
-																		</object>
-																		<flag>wxALL|wxALIGN_LEFT</flag>
-																		<border>3</border>
-																		<option>1</option>
-																	</object>
-																	<object class="sizeritem">
-																		<object class="wxCheckBox" name="" variable="cbLinesSecondYAxis" member="yes">
-																			<label>Use second Y axis</label>
 																		</object>
 																		<flag>wxALL|wxALIGN_LEFT</flag>
 																		<border>3</border>
