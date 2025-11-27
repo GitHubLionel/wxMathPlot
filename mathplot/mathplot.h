@@ -2164,8 +2164,14 @@ class WXDLLIMPEXP_MATHPLOT mpScaleY: public mpScale
     /**
      * Logarithmic Y axis
      */
-    virtual bool IsLogAxis();
-    virtual void SetLogAxis(bool log);
+    virtual bool IsLogAxis()
+    {
+      return m_isLog;
+    }
+    virtual void SetLogAxis(bool log)
+    {
+      m_isLog = log;
+    }
 
     /** Recalculate the axis width based on the label and name text sizes
     @param Current window used as canvas */
@@ -3078,7 +3084,11 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 
     bool IsLogYaxis(size_t id) const
     {
-      return m_LogYaxisList[id];
+      mpScaleY* yAxis = dynamic_cast<mpScaleY*>(m_YAxisList[id]);
+      if (yAxis)
+        return yAxis->IsLogAxis();
+      else
+        return false;
     }
 
     void SetLogXaxis(bool log)
@@ -3088,12 +3098,9 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 
     void SetLogYaxis(size_t id, bool log)
     {
-      m_LogYaxisList[id] = log;
-    }
-
-    bool GetMagnetize() const
-    {
-      return m_magnetize;
+      mpScaleY* yAxis = dynamic_cast<mpScaleY*>(m_YAxisList[id]);
+      if (yAxis)
+        yAxis->SetLogAxis(log);
     }
 
     /**
@@ -3101,6 +3108,11 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      * line. Useful to read the position on axis.
      * @param : mag. if true magnetize the mouse
      */
+    bool GetMagnetize() const
+    {
+      return m_magnetize;
+    }
+
     void SetMagnetize(bool mag)
     {
       m_magnetize = mag;
@@ -3266,7 +3278,6 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     mpMagnet m_magnet;                  //!< For mouse magnetization
 
     bool m_LogXaxis = false;            //!< For logarithmic X axis
-    std::vector<bool> m_LogYaxisList;   //!< For logarithmic Y axis
 
     wxBitmap* m_Screenshot_bmp;         //!< For clipboard, save and print
 

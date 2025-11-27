@@ -2672,35 +2672,6 @@ void mpScaleY::DoPlot(wxDC &dc, mpWindow &w)
   DrawScaleName(dc, w, orgx, labelW);
 }
 
-bool mpScaleY::IsLogAxis()
-{
-//  if (m_win)
-//    return m_win->IsLogYaxis(0);
-//  else
-//    return false;
-  return m_isLog;
-}
-
-void mpScaleY::SetLogAxis(bool log)
-{
-//  if (m_win)
-//    m_win->SetLogYaxis(0, log);
-  if (m_win)
-  {
-    size_t id = 0;
-    for (mpScaleY* yAxis : m_win->GetYAxisList())
-    {
-      if (yAxis == this)
-      {
-        m_win->SetLogYaxis(id, log);
-      }
-      id++;
-    }
-  }
-
-  m_isLog = log;
-}
-
 void mpScaleY::UpdateAxisWidth(mpWindow &w)
 {
   wxClientDC dc(&w);
@@ -3733,7 +3704,6 @@ bool mpWindow::AddLayer(mpLayer *layer, bool refreshDisplay)
             }
           }
           m_YAxisList.push_back((mpScaleY*)layer);
-          m_LogYaxisList.push_back(false);
           // All Y-axes scalings and positions are stored in our mpWindow object so we need
           // to make sure that the number of scalings and position is at least as many as the
           // largest Y-axis index
@@ -3801,10 +3771,7 @@ bool mpWindow::DelLayer(mpLayer *layer, bool alsoDeleteObject, bool refreshDispl
           {
             if (layer == m_YAxisList[i])
             {
-              auto id = m_YAxisList.begin() + i;
-              m_YAxisList.erase(id);
-// TODO (Lionel#1#): correct erase
-//              m_LogYaxisList.erase(id);
+              m_YAxisList.erase(m_YAxisList.begin() + i);
               break;
             }
           }
@@ -3847,7 +3814,6 @@ void mpWindow::DelAllLayers(bool alsoDeleteObject, bool refreshDisplay)
   m_movingInfoLayer = NULL;
   m_XAxis = NULL;
   m_YAxisList.clear();
-  m_LogYaxisList.clear();
   if (refreshDisplay)
     UpdateAll();
 #ifdef ENABLE_MP_CONFIG
@@ -4108,11 +4074,11 @@ bool mpWindow::UpdateBBox()
   }
 
   // Log Y axis
-  for(size_t i = 0; i < GetNOfYScales() - 1; i++)
+  for (mpScaleY* yAxis : m_YAxisList)
   {
-    if (m_LogYaxisList[i])
+    if (yAxis->IsLogAxis())
     {
-      // Only supported for 1st Y-axis
+      int i = yAxis->GetAxisIndex();
       if (m_bound.y[i].min > 0)
         m_bound.y[i].min = log10(m_bound.y[i].min);
       else
