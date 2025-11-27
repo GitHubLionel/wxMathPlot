@@ -14,6 +14,8 @@
 #ifndef MATHPLOT_H_INCLUDED
 #define MATHPLOT_H_INCLUDED
 
+#define MATHPLOT_MANY_YAXIS ///< Temporary helper for A/B testing of Oskar's multi-Y version against previous (working) version
+
 /** @file mathplot.h */
 /** @mainpage wxMathPlot
  wxMathPlot is a framework for mathematical graph plotting in wxWindows.
@@ -247,6 +249,7 @@ struct mpFloatRect
   }
   /// Update bounding box to include this point
   void UpdateBoundingBoxToInclude(double px, double py, size_t yIndex = 0) {
+    assert(yIndex < y.size());
     if(yIndex < y.size())
     {
       if      (px  < x.min ) x.min = px;
@@ -257,6 +260,7 @@ struct mpFloatRect
   }
   /// Initialize bounding box with an initial point
   void InitializeBoundingBox(double px, double py, size_t yIndex = 0) {
+    assert(yIndex < y.size());
     if(yIndex < y.size())
     {
       x.min = x.max = px;
@@ -444,7 +448,7 @@ typedef enum __Chart_Type
   mpcAllType
 } mpChartType;
 
-enum __mp_Mouse_Button_Command
+enum __mp_Mouse_Button_Command /// ToDo: Oskar please rename (do not use leading underscores and certainly not leading double-underscore)
 {
   mpmZOOM_RECTANGLE,
   mpmZOOM_DRAG,
@@ -1072,7 +1076,7 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLegend: public mpInfoLayer
     /**  Default destructor */
     ~mpInfoLegend() {}
 
-    /** Set item mode (the element on the left of text representing the plot line may be line or square).
+    /** Set item mode (the element on the left of text representing the plot line may be line, square, or line with symbol).
      * @param mode Item draw mode: mpLegendLine, mpLegendSquare, or mpLegendSymbol. */
     void SetItemMode(mpLegendStyle mode)
     {
@@ -2162,8 +2166,8 @@ class WXDLLIMPEXP_MATHPLOT mpScaleY: public mpScale
     virtual bool IsLogAxis();
     virtual void SetLogAxis(bool log);
 
-    /** Recalculated the axis width based on the label and name text sizes
-    @param Current windows used as canvas */
+    /** Recalculate the axis width based on the label and name text sizes
+    @param Current window used as canvas */
     void UpdateAxisWidth(mpWindow &w);
 
     size_t GetAxisIndex(void)
@@ -2750,9 +2754,9 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      \param print the mpPrintout where to print the graph */
     //void PrintGraph(mpPrintout *print);
 
-    /** Update m_desired bounds. It stores the min and max position of the visible data
+    /** Update m_desired bounds. Store the min and max position of the visible data
      *  in the plot. Used primarily during frame resizing via OnSize so that the data
-     *  stays in the same place when resizing the frame. Need to be updated whenever
+     *  stays in the same place when resizing the frame. Needs to be updated whenever
      *  m_posX, m_scaleX, m_posY or m_scaleY is updated
      */
     void UpdateDesiredBoundingBox()
@@ -2781,7 +2785,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
       return m_desired.x.min;
     }
 
-    /** Returns the right-border layer coordinate that the user wants the mpWindow to show
+    /** Return the right-border layer coordinate that the user wants the mpWindow to show
      * (it may be not exactly the actual shown coordinate in the case of locked aspect ratio).
      * @sa Fit, Zoom
      */
@@ -2790,7 +2794,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
       return m_desired.x.max;
     }
 
-    /** Returns the bottom-border layer coordinate that the user wants the mpWindow to show (it may be
+    /** Return the bottom-border layer coordinate that the user wants the mpWindow to show (it may be
      * not exactly the actual shown coordinate in the case of locked aspect ratio).
      * @sa Fit, Zoom
      */
@@ -2799,7 +2803,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
       return m_desired.y[yIndex].min;
     }
 
-    /** Returns the top layer-border coordinate that the user wants the mpWindow to show (it may be
+    /** Return the top layer-border coordinate that the user wants the mpWindow to show (it may be
      * not exactly the actual shown coordinate in the case of locked aspect ratio).
      * @sa Fit, Zoom
      */
@@ -2808,7 +2812,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
       return m_desired.y[yIndex].max;
     }
 
-    /** Returns the bounding box coordinates
+    /** Return the bounding box coordinates
      @param bbox Pointer to a 6-element double array where to store bounding box coordinates. */
     void GetBoundingBox(double *bbox) const;
     mpFloatRect *GetBoundingBox(void)
@@ -2862,7 +2866,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      @param left Left border */
     void SetMargins(int top, int right, int bottom, int left);
 
-    /** Update margins if e.g. more axis has been added. */
+    /** Update margins if e.g. more axis have been added. */
     void UpdateMargins()
     {
       SetMargins(m_marginOuter.top, m_marginOuter.right, m_marginOuter.bottom, m_marginOuter.left);
@@ -2955,12 +2959,12 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
       return bond;
     }
 
-    /** Calculates width of all axes to the left of this axis. If y-axis index is not specified,
+    /** Calculate width of all axes to the left of this axis. If y-axis index is not specified,
      * calculate width of all left axes
      @param index of this y-axis  */
     int GetLeftYAxesWidth(std::optional<size_t> yIndex = std::nullopt);
 
-    /** Calculates width of all axes to the right of this axis. If y-axis index is not specified,
+    /** Calculate width of all axes to the right of this axis. If y-axis index is not specified,
      * calculate width of all right axes
      @param index of this y-axis */
     int GetRightYAxesWidth(std::optional<size_t> yIndex = std::nullopt);
@@ -3090,11 +3094,13 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
       return m_magnetize;
     }
 
+/// ToDo: Lionel please document this - magnetize is never explained?
     void SetMagnetize(bool mag)
     {
       m_magnetize = mag;
     }
 
+/// ToDo: Oskar please document this
     void SetLeftDownCommand(__mp_Mouse_Button_Command command)
     {
       m_leftDownCommand = command;
