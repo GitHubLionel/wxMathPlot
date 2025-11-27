@@ -3092,9 +3092,12 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
       return m_LogXaxis;
     }
 
-    bool IsLogYaxis(size_t id) const
+    /**
+     * Get the log property (true or false) Y layer (Y axis) with a specific Y-index or false if not found
+     */
+    bool IsLogYaxis(size_t yIndex)
     {
-      mpScaleY* yAxis = dynamic_cast<mpScaleY*>(m_YAxisList[id]);
+      mpScaleY* yAxis = GetLayerYAxis(yIndex);
       if (yAxis)
         return yAxis->IsLogAxis();
       else
@@ -3106,9 +3109,12 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
       m_LogXaxis = log;
     }
 
-    void SetLogYaxis(size_t id, bool log)
+    /**
+     * Set the log property (true or false) Y layer (Y axis) with a specific Y-index
+     */
+    void SetLogYaxis(size_t yIndex, bool log)
     {
-      mpScaleY* yAxis = dynamic_cast<mpScaleY*>(m_YAxisList[id]);
+      mpScaleY* yAxis = GetLayerYAxis(yIndex);
       if (yAxis)
         yAxis->SetLogAxis(log);
     }
