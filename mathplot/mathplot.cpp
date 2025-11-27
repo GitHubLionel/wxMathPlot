@@ -282,13 +282,13 @@ wxBitmap mpLayer::GetColourSquare(int side)
   return square;
 }
 
-void mpLayer::CheckLog(double *x, double *y)
+void mpLayer::CheckLog(double *x, double *y, size_t id)
 {
   if (m_win == NULL)
     return;
   if (m_win->IsLogXaxis())
     *x = log10(*x);
-  if (m_win->IsLogYaxis())
+  if (m_win->IsLogYaxis(id))
     *y = log10(*y);
 }
 
@@ -561,7 +561,7 @@ void mpInfoCoords::UpdateInfo(mpWindow &w, wxEvent &event)
     else
     {
       xVal = w.p2x(m_mouseX);
-      for(int i = 0; i < w.GetNOfYScales(); i++)
+      for (size_t i = 0; i < w.GetNOfYScales(); i++)
       {
         yVal = w.p2y(m_mouseY, i);
         yValList.push_back(yVal);
@@ -571,8 +571,11 @@ void mpInfoCoords::UpdateInfo(mpWindow &w, wxEvent &event)
     // Log axis
     if (m_win->IsLogXaxis())
       xVal = pow(10, xVal);
-    if (m_win->IsLogYaxis())
-      yValList[0] = pow(10, yValList[0]);
+    for (size_t i = 0; i < w.GetNOfYScales(); i++)
+    {
+      if (m_win->IsLogYaxis(i))
+        yValList[i] = pow(10, yValList[i]);
+    }
 
     m_content = GetInfoCoordsText(w, xVal, yValList);
   }
@@ -1047,7 +1050,7 @@ void mpHorizontalLine::DoPlot(wxDC &dc, mpWindow &w)
   m_plotBoundaries = w.GetPlotBoundaries(!m_drawOutsideMargins);
 
   wxCoord iy;
-  if (m_win->IsLogYaxis())
+  if (m_win->IsLogYaxis(GetYAxisIndex()))
     iy = w.y2p(log10(m_value), GetYAxisIndex());
   else
     iy = w.y2p(m_value, GetYAxisIndex());
@@ -1154,7 +1157,7 @@ mpFX::mpFX(const wxString &name, int flags, size_t yAxisIndex) :
 double mpFX::DoGetY(double x)
 {
   double y = GetY(x);
-  if (m_win->IsLogYaxis())
+  if (m_win->IsLogYaxis(GetYAxisIndex()))
     y = log10(y);
   return y;
 }
@@ -1402,7 +1405,7 @@ bool mpFXY::DoGetNextXY(double *x, double *y)
   bool result = GetNextXY(x, y);
   if (result)
   { // only log-scale result if there is actually a result...
-    CheckLog(x, y);
+    CheckLog(x, y, GetYAxisIndex());
   }
   return result;
 }
@@ -1599,7 +1602,7 @@ void mpFXYVector::DrawAddedPoint(double x, double y)
   dc.SetPen(m_pen);
   dc.SetBrush(m_brush);
 
-  CheckLog(&x, &y);
+  CheckLog(&x, &y, GetYAxisIndex());
   wxCoord ix = m_win->x2p(x);
   wxCoord iy = m_win->y2p(y, GetYAxisIndex());
 
@@ -1613,7 +1616,7 @@ void mpFXYVector::DrawAddedPoint(double x, double y)
         size_t lastPtIdx = m_index - 1; // we assume that m_step = 1 in this context
         double xlast = m_xs[lastPtIdx];
         double ylast = m_ys[lastPtIdx];
-        CheckLog(&xlast, &ylast);
+        CheckLog(&xlast, &ylast, GetYAxisIndex());
         wxCoord ixlast = m_win->x2p(xlast);
         wxCoord iylast = m_win->y2p(ylast, GetYAxisIndex());
         dc.DrawLine(ixlast, iylast, ix, iy);
@@ -2671,16 +2674,31 @@ void mpScaleY::DoPlot(wxDC &dc, mpWindow &w)
 
 bool mpScaleY::IsLogAxis()
 {
-  if (m_win)
-    return m_win->IsLogYaxis();
-  else
-    return false;
+//  if (m_win)
+//    return m_win->IsLogYaxis(0);
+//  else
+//    return false;
+  return m_isLog;
 }
 
 void mpScaleY::SetLogAxis(bool log)
 {
+//  if (m_win)
+//    m_win->SetLogYaxis(0, log);
   if (m_win)
-    m_win->SetLogYaxis(log);
+  {
+    size_t id = 0;
+    for (mpScaleY* yAxis : m_win->GetYAxisList())
+    {
+      if (yAxis == this)
+      {
+        m_win->SetLogYaxis(id, log);
+      }
+      id++;
+    }
+  }
+
+  m_isLog = log;
 }
 
 void mpScaleY::UpdateAxisWidth(mpWindow &w)
@@ -3715,6 +3733,7 @@ bool mpWindow::AddLayer(mpLayer *layer, bool refreshDisplay)
             }
           }
           m_YAxisList.push_back((mpScaleY*)layer);
+          m_LogYaxisList.push_back(false);
           // All Y-axes scalings and positions are stored in our mpWindow object so we need
           // to make sure that the number of scalings and position is at least as many as the
           // largest Y-axis index
@@ -3782,12 +3801,13 @@ bool mpWindow::DelLayer(mpLayer *layer, bool alsoDeleteObject, bool refreshDispl
           {
             if (layer == m_YAxisList[i])
             {
-              m_YAxisList.erase(m_YAxisList.begin() + i);
+              auto id = m_YAxisList.begin() + i;
+              m_YAxisList.erase(id);
+// TODO (Lionel#1#): correct erase
+//              m_LogYaxisList.erase(id);
               break;
             }
           }
-
-
         }
 
         // Also delete the object?
@@ -3827,6 +3847,7 @@ void mpWindow::DelAllLayers(bool alsoDeleteObject, bool refreshDisplay)
   m_movingInfoLayer = NULL;
   m_XAxis = NULL;
   m_YAxisList.clear();
+  m_LogYaxisList.clear();
   if (refreshDisplay)
     UpdateAll();
 #ifdef ENABLE_MP_CONFIG
@@ -4087,17 +4108,20 @@ bool mpWindow::UpdateBBox()
   }
 
   // Log Y axis
-  if (m_LogYaxis)
+  for(size_t i = 0; i < GetNOfYScales() - 1; i++)
   {
-    // Only supported for 1st Y-axis
-    if (m_bound.y[0].min > 0)
-      m_bound.y[0].min = log10(m_bound.y[0].min);
-    else
-      m_bound.y[0].min = 0;
-    if (m_bound.y[0].max > 0)
-      m_bound.y[0].max = log10(m_bound.y[0].max);
-    else
-      m_bound.y[0].max = 0;
+    if (m_LogYaxisList[i])
+    {
+      // Only supported for 1st Y-axis
+      if (m_bound.y[i].min > 0)
+        m_bound.y[i].min = log10(m_bound.y[i].min);
+      else
+        m_bound.y[i].min = 0;
+      if (m_bound.y[i].max > 0)
+        m_bound.y[i].max = log10(m_bound.y[i].max);
+      else
+        m_bound.y[i].max = 0;
+    }
   }
 
 #ifdef MATHPLOT_DO_LOGGING

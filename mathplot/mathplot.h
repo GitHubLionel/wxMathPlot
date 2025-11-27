@@ -847,7 +847,7 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
     /**
      * Test if we are in log axis and if true return the log of the values
      */
-    void CheckLog(double *x, double *y);
+    void CheckLog(double *x, double *y, size_t id = 0);
 
   private:
     bool m_busy;                //!< Test if we are busy (plot operation)
@@ -2158,6 +2158,7 @@ class WXDLLIMPEXP_MATHPLOT mpScaleY: public mpScale
       m_axisWidth = Y_BORDER_SEPARATION;
       m_axisIndex = axisIndex;
       m_xPos = 0;
+      m_isLog = false;
     }
 
     /**
@@ -2203,6 +2204,7 @@ class WXDLLIMPEXP_MATHPLOT mpScaleY: public mpScale
     int m_axisWidth;
     size_t m_axisIndex;
     int m_xPos;
+    bool m_isLog;
 
     /** Layer plot handler.
      This implementation will plot the ruler adjusted to the visible area. */
@@ -2542,7 +2544,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
       return m_yAxisDataList[yIndex].m_posY;
     }
 
-    int GetNOfYScales(void)
+    size_t GetNOfYScales(void)
     {
       return m_yAxisDataList.size();
     }
@@ -3074,9 +3076,9 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
       return m_LogXaxis;
     }
 
-    bool IsLogYaxis() const
+    bool IsLogYaxis(size_t id) const
     {
-      return m_LogYaxis;
+      return m_LogYaxisList[id];
     }
 
     void SetLogXaxis(bool log)
@@ -3084,9 +3086,9 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
       m_LogXaxis = log;
     }
 
-    void SetLogYaxis(bool log)
+    void SetLogYaxis(size_t id, bool log)
     {
-      m_LogYaxis = log;
+      m_LogYaxisList[id] = log;
     }
 
     bool GetMagnetize() const
@@ -3264,7 +3266,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     mpMagnet m_magnet;                  //!< For mouse magnetization
 
     bool m_LogXaxis = false;            //!< For logarithmic X axis
-    bool m_LogYaxis = false;            //!< For logarithmic Y axis
+    std::vector<bool> m_LogYaxisList;   //!< For logarithmic Y axis
 
     wxBitmap* m_Screenshot_bmp;         //!< For clipboard, save and print
 
