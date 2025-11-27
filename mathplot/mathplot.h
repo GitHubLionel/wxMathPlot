@@ -3094,7 +3094,11 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
       return m_magnetize;
     }
 
-/// ToDo: Lionel please document this - magnetize is never explained?
+    /**
+     * Magnetize the position of the mouse in the plot ie draw a vertical and horizontal
+     * line. Useful to read the position on axis.
+     * @param : mag. if true magnetize the mouse
+     */
     void SetMagnetize(bool mag)
     {
       m_magnetize = mag;
@@ -3191,12 +3195,6 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      @param Number of Y-axis */
     void UpdateNOfYAxes(size_t nOfYAxes);
 
-    struct m_axisData
-    {
-      double m_scaleY = 1.0;
-      double m_posY = 0;
-    };
-
     wxTopLevelWindow* m_parent;
     bool m_fullscreen;
 
@@ -3215,7 +3213,12 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 
     double m_scaleX;        //!< Current view's X scale
     double m_posX;          //!< Current view's X position
-    std::vector<m_axisData> m_yAxisDataList;  //!< Current view's Y scales and Y positions
+    struct m_yAxisData      //!< Y scale and position structure
+    {
+      double m_scaleY = 1.0;
+      double m_posY = 0;
+    };
+    std::vector<m_yAxisData> m_yAxisDataList;  //!< Current view's Y scales and Y positions
 
     int m_scrX;             //!< Current view's X dimension in DC units, including all scales, margins
     int m_scrY;             //!< Current view's Y dimension

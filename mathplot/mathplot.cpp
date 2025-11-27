@@ -2911,7 +2911,7 @@ void mpWindow::OnMouseLeftDown(wxMouseEvent &event)
   // Store current X and Y scales
   m_mouseScaleX = m_scaleX;
   m_mouseScaleYList.clear();
-  for(m_axisData& axisdata : m_yAxisDataList)
+  for(m_yAxisData& axisdata : m_yAxisDataList)
   {
     m_mouseScaleYList.push_back(axisdata.m_scaleY);
   }
@@ -3001,7 +3001,7 @@ void mpWindow::OnMouseMove(wxMouseEvent &event)
       double Ax_units = Axy.x / m_scaleX;
       m_posX += Ax_units;
 
-      for(m_axisData& axisData : m_yAxisDataList)
+      for(m_yAxisData& axisData : m_yAxisDataList)
       {
         double Ay_units = -Axy.y / axisData.m_scaleY;
         axisData.m_posY += Ay_units;
@@ -3205,7 +3205,7 @@ void mpWindow::OnMouseWheel(wxMouseEvent &event)
     }
     else if (event.m_controlDown)
     {
-      for(m_axisData& axisData : m_yAxisDataList)
+      for(m_yAxisData& axisData : m_yAxisDataList)
       {
         double changeUnitsY = change / axisData.m_scaleY;
         axisData.m_posY -= changeUnitsY;
@@ -3297,13 +3297,13 @@ void mpWindow::Fit(const mpFloatRect &rect, wxCoord *printSizeX, wxCoord *printS
 #endif
     // Keep the lowest "scale" to fit the whole range required by that axis (to actually "fit"!):
     double s = m_scaleX;
-    for(m_axisData& axisData : m_yAxisDataList)
+    for(m_yAxisData& axisData : m_yAxisDataList)
     {
       s = std::min(s, axisData.m_scaleY);
     }
 
     m_scaleX = s;
-    for(m_axisData& axisData : m_yAxisDataList)
+    for(m_yAxisData& axisData : m_yAxisDataList)
     {
       axisData.m_scaleY = s;
     }
