@@ -198,6 +198,7 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   BoxSizer1->Add(cbCoordinates, 0, wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND, 5);
   cbMagnetize = new wxCheckBox(Panel1, wxID_ANY, _("Magnetize"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
   cbMagnetize->SetValue(false);
+  cbMagnetize->SetToolTip(_("Follow the mouse by drawing a horizontal and vertical line"));
   BoxSizer1->Add(cbMagnetize, 0, wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND, 5);
   StaticBoxSizer3->Add(BoxSizer1, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
   StaticBoxSizer4 = new wxStaticBoxSizer(wxHORIZONTAL, Panel1, _("Brush "));
@@ -218,11 +219,13 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   StaticBoxSizer12 = new wxStaticBoxSizer(wxHORIZONTAL, Panel1, _("Mouse interaction"));
   StaticText36 = new wxStaticText(Panel1, wxID_ANY, _("Left mouse action"), wxDefaultPosition, wxDefaultSize, 0);
   StaticBoxSizer12->Add(StaticText36, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-  ChoiceLeftMouseAction = new wxChoice(Panel1, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator);
-  ChoiceLeftMouseAction->Append(_("Box zoom"));
-  ChoiceLeftMouseAction->Append(_("Drag zoom"));
+  const wxString ChoiceLeftMouseAction_choices[] = {
+  _("Box zoom"),
+  _("Drag zoom"),
+  };
+  ChoiceLeftMouseAction = new wxChoice(Panel1, wxID_ANY, wxDefaultPosition, wxDefaultSize, 2, ChoiceLeftMouseAction_choices, 0, wxDefaultValidator);
   StaticBoxSizer12->Add(ChoiceLeftMouseAction, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-  BoxSizer3->Add(StaticBoxSizer12, 1, wxALL|wxEXPAND, 5);
+  BoxSizer3->Add(StaticBoxSizer12, 1, wxALL|wxEXPAND, 2);
   Panel1->SetSizer(BoxSizer3);
   Panel2 = new wxPanel(nbConfig, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL);
   BoxSizer16 = new wxBoxSizer(wxHORIZONTAL);
@@ -901,6 +904,7 @@ void MathPlotConfigDialog::OnnbConfigPageChanged(wxNotebookEvent &event)
     case 4:
       CurrentChoice = ChoiceLines;
       break;
+    default: ;
   }
 }
 

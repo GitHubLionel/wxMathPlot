@@ -198,6 +198,7 @@
 												<object class="sizeritem">
 													<object class="wxCheckBox" name="" variable="cbMagnetize" member="yes">
 														<label>Magnetize</label>
+														<tooltip>Follow the mouse by drawing a horizontal and vertical line</tooltip>
 													</object>
 													<flag>wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND</flag>
 													<border>5</border>
@@ -275,13 +276,14 @@
 													<item>Box zoom</item>
 													<item>Drag zoom</item>
 												</content>
+												<use_items_array>1</use_items_array>
 											</object>
 											<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
 											<border>5</border>
 										</object>
 									</object>
 									<flag>wxALL|wxEXPAND</flag>
-									<border>5</border>
+									<border>2</border>
 									<option>1</option>
 								</object>
 							</object>
