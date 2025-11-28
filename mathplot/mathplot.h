@@ -1235,11 +1235,17 @@ class WXDLLIMPEXP_MATHPLOT mpFunction: public mpLayer
      */
     virtual bool DrawSymbol(wxDC &dc, wxCoord x, wxCoord y);
 
+    /**
+     * Get the index of the Y axis associated to the function
+     */
     size_t GetYAxisIndex() const
     {
       return m_yAxisIndex;
     }
 
+    /**
+     * Set the index of the Y axis associated to the function
+     */
     void SetYAxisIndex(size_t index)
     {
       m_yAxisIndex = index;
@@ -1251,7 +1257,7 @@ class WXDLLIMPEXP_MATHPLOT mpFunction: public mpLayer
     int m_symbolSize;           //!< Size of the symbol. Default 6
     int m_symbolSize2;          //!< Size of the symbol div 2.
     unsigned int m_step;        //!< Step to get point to be draw. Default : 1
-    size_t m_yAxisIndex;           //!< The index of the Y axis, 0 is the first axis (default)
+    size_t m_yAxisIndex;        //!< The index of the Y axis, 0 is the first axis (default)
 
   wxDECLARE_DYNAMIC_CLASS(mpFunction);
 };
