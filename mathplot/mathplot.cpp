@@ -1718,15 +1718,10 @@ void mpFXYVector::First_Point(double x, double y)
 
 void mpFXYVector::Check_Limit(double val, double *min, double *max, double *last, double *delta)
 {
-  if (abs(val - *last) < *delta)
-    *delta = abs(val - *last);
+  *delta = std::min(*delta, abs(val - *last));
   *last = val;
-
-  if (val < *min)
-    *min = val - *delta;
-  else
-    if (val > *max)
-      *max = val + *delta;
+  *min = std::min(*min, val);
+  *max = std::max(*max, val);
 }
 
 void mpFXYVector::SetData(const std::vector<double> &xs, const std::vector<double> &ys)
@@ -1799,7 +1794,7 @@ bool mpFXYVector::AddData(const double x, const double y, bool updatePlot)
   if (m_win)
   {
     const mpFloatRect* bbox = m_win->GetBoundingBox();
-    new_limit = (m_minX < bbox->x.min) || (m_maxX > bbox->x.max) || (m_minY < bbox->y[m_yAxisIndex].min) || (m_maxY > bbox->y[m_yAxisIndex].max);
+    new_limit = (GetMinX() < bbox->x.min) || (GetMaxX() > bbox->x.max) || (GetMinY() < bbox->y[m_yAxisIndex].min) || (GetMaxY() > bbox->y[m_yAxisIndex].max);
 
     if (updatePlot && !new_limit)
     {

@@ -1685,7 +1685,15 @@ class WXDLLIMPEXP_MATHPLOT mpFXYVector: public mpFXY
      */
     virtual double GetMinX()
     {
-      return m_minX;
+      if(m_ViewAsBar)
+      {
+        // Make extra space for outer bars
+        return m_minX - (m_deltaX / 2);
+      }
+      else
+      {
+        return m_minX;
+      }
     }
 
     /** Returns the actual minimum Y data (loaded in SetData).
@@ -1699,7 +1707,15 @@ class WXDLLIMPEXP_MATHPLOT mpFXYVector: public mpFXY
      */
     virtual double GetMaxX()
     {
-      return m_maxX;
+      if(m_ViewAsBar)
+      {
+        // Make extra space for outer bars
+        return m_maxX + (m_deltaX / 2);
+      }
+      else
+      {
+        return m_maxX;
+      }
     }
 
     /** Returns the actual maximum Y data (loaded in SetData).
@@ -1714,7 +1730,7 @@ class WXDLLIMPEXP_MATHPLOT mpFXYVector: public mpFXY
      */
     void First_Point(double x, double y);
 
-    /** Compute the limits when we add new point
+    /** Compute the min/max values as well as the smallest distant between two neighbor points
      */
     void Check_Limit(double val, double *min, double *max, double *last, double *delta);
 
