@@ -2030,8 +2030,17 @@ class WXDLLIMPEXP_MATHPLOT mpScale: public mpLayer
       return m_max;
     }
 
-    virtual bool IsLogAxis() = 0;
-    virtual void SetLogAxis(bool log) = 0;
+    /**
+     * Logarithmic axis
+     */
+    virtual bool IsLogAxis()
+    {
+      return m_isLog;
+    }
+    virtual void SetLogAxis(bool log)
+    {
+      m_isLog = log;
+    }
 
   protected:
     static const wxCoord kTickSize = 4;       //!< Length of tick line
@@ -2043,6 +2052,7 @@ class WXDLLIMPEXP_MATHPLOT mpScale: public mpLayer
     bool m_auto;             //!< Flag to autosize grids. Default true
     double m_min, m_max;     //!< Min and max axis values when autosize is false
     wxString m_labelFormat;  //!< Format string used to print labels
+    bool m_isLog;            //!< Is the axis a log axis ?
 
     virtual int GetOrigin(mpWindow &w) = 0;
 
@@ -2118,12 +2128,6 @@ class WXDLLIMPEXP_MATHPLOT mpScaleX: public mpScale
       m_timeConv = time_conv;
     }
 
-    /**
-     * Logarithmic X axis
-     */
-    virtual bool IsLogAxis();
-    virtual void SetLogAxis(bool log);
-
   protected:
     unsigned int m_labelType;  //!< Select labels mode: mpX_NORMAL for normal labels, mpX_TIME for time axis in hours, minutes, seconds
     unsigned int m_timeConv;   //!< Selects if time has to be converted to local time or not.
@@ -2166,19 +2170,6 @@ class WXDLLIMPEXP_MATHPLOT mpScaleY: public mpScale
       m_axisWidth = Y_BORDER_SEPARATION;
       m_axisIndex = axisIndex;
       m_xPos = 0;
-      m_isLog = false;
-    }
-
-    /**
-     * Logarithmic Y axis
-     */
-    virtual bool IsLogAxis()
-    {
-      return m_isLog;
-    }
-    virtual void SetLogAxis(bool log)
-    {
-      m_isLog = log;
     }
 
     /** Recalculate the axis width based on the label and name text sizes
@@ -2218,7 +2209,6 @@ class WXDLLIMPEXP_MATHPLOT mpScaleY: public mpScale
     int m_axisWidth;
     size_t m_axisIndex;
     int m_xPos;
-    bool m_isLog;
 
     /** Layer plot handler.
      This implementation will plot the ruler adjusted to the visible area. */
@@ -3085,11 +3075,14 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     /**
      * Log axis control.
      * It is an axis property but as we need to control the bound and the scale,
-     * it is easiest to declare this property here
+     * it is easiest and faster to declare this property here
      */
-    bool IsLogXaxis() const
+    bool IsLogXaxis()
     {
-      return m_LogXaxis;
+      if (m_XAxis)
+        return m_XAxis->IsLogAxis();
+      else
+        return false;
     }
 
     /**
@@ -3106,7 +3099,8 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 
     void SetLogXaxis(bool log)
     {
-      m_LogXaxis = log;
+      if (m_XAxis)
+        m_XAxis->SetLogAxis(log);
     }
 
     /**
@@ -3302,8 +3296,6 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 
     bool m_magnetize;                   //!< For mouse magnetization
     mpMagnet m_magnet;                  //!< For mouse magnetization
-
-    bool m_LogXaxis = false;            //!< For logarithmic X axis
 
     wxBitmap* m_Screenshot_bmp;         //!< For clipboard, save and print
 

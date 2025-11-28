@@ -1711,7 +1711,7 @@ void mpFXYVector::SetData(const std::vector<double> &xs, const std::vector<doubl
     it++;
     for (; it != xs.end(); it++)
     {
-      Check_Limit((*it), &m_minX, &m_maxX, &m_lastX, &m_deltaX);
+      Check_Limit((double)(*it), &m_minX, &m_maxX, &m_lastX, &m_deltaX);
     }
 
     // Y scale
@@ -1719,7 +1719,7 @@ void mpFXYVector::SetData(const std::vector<double> &xs, const std::vector<doubl
     it++;
     for (; it != ys.end(); it++)
     {
-      Check_Limit((*it), &m_minY, &m_maxY, &m_lastY, &m_deltaY);
+      Check_Limit((double)(*it), &m_minY, &m_maxY, &m_lastY, &m_deltaY);
     }
     Rewind();
   }
@@ -2105,6 +2105,7 @@ mpScale::mpScale(const wxString &name, int flags, bool grids) : mpLayer(mpLAYER_
   m_min = -1;
   m_max = 1;
   m_labelFormat = _T("");
+  m_isLog = false;
   m_ZIndex = mpZIndex_AXIS;
 }
 
@@ -2448,20 +2449,6 @@ void mpScaleX::DoPlot(wxDC &dc, mpWindow &w)
 
   // Draw axis name
   DrawScaleName(dc, w, orgy, labelH);
-}
-
-bool mpScaleX::IsLogAxis()
-{
-  if (m_win)
-    return m_win->IsLogXaxis();
-  else
-    return false;
-}
-
-void mpScaleX::SetLogAxis(bool log)
-{
-  if (m_win)
-    m_win->SetLogXaxis(log);
 }
 
 //-----------------------------------------------------------------------------
@@ -4055,7 +4042,7 @@ bool mpWindow::UpdateBBox()
   }
 
   // Log X axis
-  if (m_LogXaxis)
+  if (IsLogXaxis())
   {
     if (m_bound.x.min > 0)
       m_bound.x.min = log10(m_bound.x.min);
@@ -5138,17 +5125,17 @@ void mpMovableObject::DoPlot(wxDC &dc, mpWindow &w)
       while (itX != m_trans_shape_xs.end())
       {
         if (m_symbol != mpsNone)
-          DrawSymbol(dc, w.x2p(*(itX++)), w.y2p(*(itY++), GetYAxisIndex()));
+          DrawSymbol(dc, w.x2p((double)(*(itX++))), w.y2p((double)(*(itY++)), GetYAxisIndex()));
         else
-          dc.DrawPoint(w.x2p(*(itX++)), w.y2p(*(itY++), GetYAxisIndex()));
+          dc.DrawPoint(w.x2p((double)(*(itX++))), w.y2p((double)(*(itY++)), GetYAxisIndex()));
       }
     }
     else
     {
       while (itX != m_trans_shape_xs.end())
       {
-        wxCoord cx = w.x2p(*(itX++));
-        wxCoord cy = w.y2p(*(itY++), GetYAxisIndex());
+        wxCoord cx = w.x2p((double)(*(itX++)));
+        wxCoord cy = w.y2p((double)(*(itY++)), GetYAxisIndex());
         if (m_symbol != mpsNone)
           DrawSymbol(dc, cx, cy);
         else
@@ -5162,8 +5149,8 @@ void mpMovableObject::DoPlot(wxDC &dc, mpWindow &w)
     bool first = true;
     while (itX != m_trans_shape_xs.end())
     {
-      wxCoord cx = w.x2p(*(itX++));
-      wxCoord cy = w.y2p(*(itY++), GetYAxisIndex());
+      wxCoord cx = w.x2p((double)(*(itX++)));
+      wxCoord cy = w.y2p((double)(*(itY++)), GetYAxisIndex());
       if (first)
       {
         first = false;
