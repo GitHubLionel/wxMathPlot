@@ -456,10 +456,10 @@ typedef enum __Chart_Type
   mpcAllType
 } mpChartType;
 
-enum __mp_Mouse_Button_Command /// ToDo: Oskar please rename (do not use leading underscores and certainly not leading double-underscore)
+enum mpMouseButtonAction
 {
-  mpmZOOM_RECTANGLE,
-  mpmZOOM_DRAG,
+  mpMouseBoxZoom,
+  mpMouseDragZoom,
 };
 
 //-----------------------------------------------------------------------------
@@ -3134,10 +3134,22 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
       m_magnetize = mag;
     }
 
-/// ToDo: Oskar please document this
-    void SetLeftDownCommand(__mp_Mouse_Button_Command command)
+    /**
+     * Set the type of action for the left mouse button
+     * @param Left mouse button action
+     */
+    void SetMouseLeftDownAction(mpMouseButtonAction action)
     {
-      m_leftDownCommand = command;
+      m_mouseLeftDownAction = action;
+    }
+
+    /**
+     * Returns the type of action for the left mouse button
+     * @return Left mouse button action
+     */
+    mpMouseButtonAction GetMouseLeftDownAction()
+    {
+      return m_mouseLeftDownAction;
     }
 
 #ifdef ENABLE_MP_CONFIG
@@ -3270,7 +3282,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     wxBitmap* m_buff_bmp;               //!< For double buffering
     bool m_enableDoubleBuffer;          //!< For double buffering. Default enabled
     bool m_enableMouseNavigation;       //!< For pan/zoom with the mouse.
-    __mp_Mouse_Button_Command m_leftDownCommand;  //!< Type of action for left mouse button
+    mpMouseButtonAction m_mouseLeftDownAction;  //!< Type of action for left mouse button
     bool m_mouseMovedAfterRightClick;
     wxPoint m_mouseRClick;              //!< For the right button "drag" feature
     wxPoint m_mouseLClick;              //!< Starting coords for rectangular zoom selection

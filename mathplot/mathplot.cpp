@@ -2856,7 +2856,7 @@ void mpWindow::InitParameters()
   m_zoom_bmp = NULL;
   m_magnetize = false;
   m_enableScrollBars = false;
-  m_leftDownCommand = mpmZOOM_RECTANGLE;
+  m_mouseLeftDownAction = mpMouseBoxZoom;
 
   // Set all margins to 50
   SetMargins(50, 50, 50, 50);
@@ -3020,7 +3020,7 @@ void mpWindow::OnMouseMove(wxMouseEvent &event)
       wxPoint moveVector = eventPoint - m_mouseLClick;
       if (m_movingInfoLayer == NULL)
       {
-        if(m_leftDownCommand == mpmZOOM_RECTANGLE)
+        if(m_mouseLeftDownAction == mpMouseBoxZoom)
         {
           // Zoom by creating a rectangle and zoom into that when button is released
 
@@ -3063,7 +3063,7 @@ void mpWindow::OnMouseMove(wxMouseEvent &event)
             dc.DrawRectangle(m_zoom_dim);
           }
         }
-        else if(m_leftDownCommand == mpmZOOM_DRAG)
+        else if(m_mouseLeftDownAction == mpMouseDragZoom)
         {
           // Continously zoom in or out by dragging the mouse across the plot
           // The amount of zoom is proportional to the moved distance and
@@ -3140,7 +3140,7 @@ void mpWindow::OnMouseLeftRelease(wxMouseEvent &event)
     m_movingInfoLayer->UpdateReference();
     m_movingInfoLayer = NULL;
   }
-  else if(m_leftDownCommand == mpmZOOM_RECTANGLE)
+  else if(m_mouseLeftDownAction == mpMouseBoxZoom)
   {
     DeleteAndNull(m_zoom_bmp);
     wxPoint release(event.GetX(), event.GetY());
@@ -3765,18 +3765,10 @@ bool mpWindow::DelLayer(mpLayer *layer, bool alsoDeleteObject, bool refreshDispl
         if (layer == m_XAxis)
           m_XAxis = NULL;
 
-        // In case we suppress an Y2 axis
-        int scale;
-        if ((layer->IsLayerType(mpLAYER_AXIS, &scale)) && (scale == mpsScaleY))
+        int subType;
+        if ((layer->IsLayerType(mpLAYER_AXIS, &subType)) && (subType == mpsScaleY))
         {
-          for(size_t i = 0; i < m_YAxisList.size(); i++)//  mpScaleY* yAxis : m_YAxisList)
-          {
-            if (layer == m_YAxisList[i])
-            {
-              m_YAxisList.erase(m_YAxisList.begin() + i);
-              break;
-            }
-          }
+          m_YAxisList.erase(std::remove(m_YAxisList.begin(), m_YAxisList.end(), static_cast<mpScaleY*>(layer)), m_YAxisList.end());
         }
 
         // Also delete the object?

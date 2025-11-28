@@ -124,7 +124,6 @@ class MathPlotConfigDialog: public wxDialog
     wxCheckBox* cbGridVisible;
     wxCheckBox* cbLegendVisible;
     wxCheckBox* cbLinesOutside;
-    wxCheckBox* cbLinesSecondYAxis;
     wxCheckBox* cbLinesShowName;
     wxCheckBox* cbLinesVisible;
     wxCheckBox* cbLogAxis;
@@ -136,6 +135,7 @@ class MathPlotConfigDialog: public wxDialog
     wxCheckBox* cbTitleVisible;
     wxCheckBox* cbTractable;
     wxChoice* ChoiceAxis;
+    wxChoice* ChoiceLeftMouseAction;
     wxChoice* ChoiceLines;
     wxChoice* ChoiceLinesYAxis;
     wxChoice* ChoiceSeries;
@@ -194,6 +194,7 @@ class MathPlotConfigDialog: public wxDialog
     wxStaticText* StaticText33;
     wxStaticText* StaticText34;
     wxStaticText* StaticText35;
+    wxStaticText* StaticText36;
     wxStaticText* StaticText3;
     wxStaticText* StaticText4;
     wxStaticText* StaticText5;

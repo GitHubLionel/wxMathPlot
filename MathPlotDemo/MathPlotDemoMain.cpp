@@ -194,7 +194,7 @@ void MathPlotDemoFrame::InitializePlot(void)
 void MathPlotDemoFrame::CleanPlot(void)
 {
   mPlot->DelAllPlot(true);
-  mPlot->SetLeftDownCommand(mpmZOOM_RECTANGLE);
+  mPlot->SetMouseLeftDownAction(mpMouseBoxZoom);
   mPlot->SetMarginLeft(50);
   bottomAxis->SetAlign(mpALIGN_CENTERX);
   bottomAxis->SetLogAxis(false);
@@ -523,7 +523,7 @@ void MathPlotDemoFrame::OnbMultiYAxisClick(wxCommandEvent &WXUNUSED(event))
     wxColour(126, 47, 142),
   };
 
-  mPlot->SetLeftDownCommand(mpmZOOM_DRAG);
+  mPlot->SetMouseLeftDownAction(mpMouseDragZoom);
   mPlot->SetMarginLeft(0);
   leftAxis->SetVisible(false);    // Easiest to disable default Y-axis temporarily
   bottomAxis->SetAlign(mpALIGN_BOTTOM);
