@@ -1365,17 +1365,33 @@ class WXDLLIMPEXP_MATHPLOT mpFX: public mpFunction
     virtual double GetY(double x) = 0;
 
     /**
-     * Get function value with log test
+     * Get function value with log if necessary
+     * Call DefineDoGetY() function if pDoGetY pointer is not defined
      */
     double DoGetY(double x);
 
+    /**
+     * Define the good DoGetY function.
+     * Should be not used since DoGetY() function call it automaticaly
+     */
+    void DefineDoGetY(void);
+
   protected:
+
+    // Pointer function to the appropriate DoGetY function
+    double (mpFX::*pDoGetY)(double x);
 
     /** Layer plot handler.
      This implementation will plot the function in the visible area and
      put a label according to the alignment specified.
      */
     virtual void DoPlot(wxDC &dc, mpWindow &w);
+
+    /**
+     * Definition of the DoGetY function with and without log
+     */
+    double NormalDoGetY(double x);
+    double LogDoGetY(double x);
 
   wxDECLARE_DYNAMIC_CLASS(mpFX);
 };
@@ -1402,17 +1418,33 @@ class WXDLLIMPEXP_MATHPLOT mpFY: public mpFunction
     virtual double GetX(double y) = 0;
 
     /**
-     * Get function value with log test
+     * Get function value with log if necessary
+     * Call DefineDoGetX() function if pDoGetX pointer is not defined
      */
     double DoGetX(double y);
 
+    /**
+     * Define the good DoGetX function.
+     * Should be not used since DoGetX() function call it automaticaly
+     */
+    void DefineDoGetX(void);
+
   protected:
+
+    // Pointer function to the appropriate DoGetX function
+    double (mpFY::*pDoGetX)(double y);
 
     /** Layer plot handler.
      This implementation will plot the function in the visible area and
      put a label according to the aligment specified.
      */
     virtual void DoPlot(wxDC &dc, mpWindow &w);
+
+    /**
+     * Definition of the DoGetX function with and without log
+     */
+    double NormalDoGetX(double y);
+    double LogDoGetX(double y);
 
   wxDECLARE_DYNAMIC_CLASS(mpFY);
 };

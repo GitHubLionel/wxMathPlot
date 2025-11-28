@@ -1056,10 +1056,11 @@ void mpHorizontalLine::DoPlot(wxDC &dc, mpWindow &w)
   m_plotBoundaries = w.GetPlotBoundaries(!m_drawOutsideMargins);
 
   wxCoord iy;
-  if (m_win->IsLogYaxis(GetYAxisIndex()))
-    iy = w.y2p(log10(m_value), GetYAxisIndex());
+  size_t yAxisIndex = GetYAxisIndex();
+  if (m_win->IsLogYaxis(yAxisIndex))
+    iy = w.y2p(log10(m_value), yAxisIndex);
   else
-    iy = w.y2p(m_value, GetYAxisIndex());
+    iy = w.y2p(m_value, yAxisIndex);
 
   // Draw nothing if we are outside margins
   if (!m_drawOutsideMargins && ((iy > (w.GetScreenY() - w.GetMarginBottom())) || (iy < w.GetMarginTop())))
@@ -1158,19 +1159,41 @@ mpFX::mpFX(const wxString &name, int flags, size_t yAxisIndex) :
 {
   m_subtype = mpfFX;
   m_flags = flags;
+  pDoGetY = NULL;
 }
 
-double mpFX::DoGetY(double x)
+double mpFX::NormalDoGetY(double x)
 {
-  double y = GetY(x);
+  return GetY(x);
+}
+
+double mpFX::LogDoGetY(double x)
+{
+  return log10(GetY(x));
+}
+
+void mpFX::DefineDoGetY(void)
+{
   if (m_win->IsLogYaxis(GetYAxisIndex()))
-    y = log10(y);
-  return y;
+    pDoGetY = &mpFX::LogDoGetY;
+  else
+    pDoGetY = &mpFX::NormalDoGetY;
+}
+
+inline double mpFX::DoGetY(double x)
+{
+  if (!pDoGetY)
+    DefineDoGetY();
+  return (this->*pDoGetY)(x);
 }
 
 void mpFX::DoPlot(wxDC &dc, mpWindow &w)
 {
   wxCoord i, iy, iylast;
+  size_t yAxisIndex = GetYAxisIndex();
+
+  // First, define the DoGetY function
+  DefineDoGetY();
 
   // Get boundaries
   m_plotBoundaries = w.GetPlotBoundaries(!m_drawOutsideMargins);
@@ -1188,11 +1211,11 @@ void mpFX::DoPlot(wxDC &dc, mpWindow &w)
     if (m_continuous)
     {
       // Get first point
-      iylast = w.y2p(DoGetY(w.p2x(m_plotBoundaries.startPx)), GetYAxisIndex());
+      iylast = w.y2p((this->*pDoGetY)(w.p2x(m_plotBoundaries.startPx)), yAxisIndex);
 
       for (i = m_plotBoundaries.startPx + m_step; i < m_plotBoundaries.endPx; i += m_step)
       {
-        iy = w.y2p(DoGetY(w.p2x(i)), GetYAxisIndex());
+        iy = w.y2p((this->*pDoGetY)(w.p2x(i)), yAxisIndex);
         dc.DrawLine(i - m_step, iylast, i, iy);
         if (m_symbol != mpsNone)
           DrawSymbol(dc, i - m_step, iylast);
@@ -1206,7 +1229,7 @@ void mpFX::DoPlot(wxDC &dc, mpWindow &w)
     {
       for (i = m_plotBoundaries.startPx; i < m_plotBoundaries.endPx; i += m_step)
       {
-        iy = w.y2p(DoGetY(w.p2x(i)), GetYAxisIndex());
+        iy = w.y2p((this->*pDoGetY)(w.p2x(i)), yAxisIndex);
         if (m_symbol == mpsNone)
           dc.DrawLine(i, iy, i, iy);
         else
@@ -1218,7 +1241,7 @@ void mpFX::DoPlot(wxDC &dc, mpWindow &w)
   {
     for (i = m_plotBoundaries.startPx; i < m_plotBoundaries.endPx; i += m_step)
     {
-      iy = w.y2p(DoGetY(w.p2x(i)), GetYAxisIndex());
+      iy = w.y2p((this->*pDoGetY)(w.p2x(i)), yAxisIndex);
       if (m_symbol == mpsNone)
         dc.DrawPoint(i, iy);
       else
@@ -1252,7 +1275,7 @@ void mpFX::DoPlot(wxDC &dc, mpWindow &w)
         tx = w.GetMarginLeft() + 8;
     }
 
-    dc.DrawText(m_name, tx, w.y2p(DoGetY(w.p2x(tx)), GetYAxisIndex()));
+    dc.DrawText(m_name, tx, w.y2p((this->*pDoGetY)(w.p2x(tx)), yAxisIndex));
   }
 }
 
@@ -1267,19 +1290,41 @@ mpFY::mpFY(const wxString &name, int flags, size_t yAxisIndex) :
 {
   m_subtype = mpfFY;
   m_flags = flags;
+  pDoGetX = NULL;
 }
 
-double mpFY::DoGetX(double y)
+double mpFY::NormalDoGetX(double y)
 {
-  double x = GetX(y);
+  return GetX(y);
+}
+
+double mpFY::LogDoGetX(double y)
+{
+  return log10(GetX(y));
+}
+
+void mpFY::DefineDoGetX(void)
+{
   if (m_win->IsLogXaxis())
-    x = log10(x);
-  return x;
+    pDoGetX = &mpFY::LogDoGetX;
+  else
+    pDoGetX = &mpFY::NormalDoGetX;
+}
+
+inline double mpFY::DoGetX(double y)
+{
+  if (!pDoGetX)
+    DefineDoGetX();
+  return (this->*pDoGetX)(y);
 }
 
 void mpFY::DoPlot(wxDC &dc, mpWindow &w)
 {
   wxCoord i, ix, ixlast;
+  size_t yAxisIndex = GetYAxisIndex();
+
+  // First, define the DoGetX function
+  DefineDoGetX();
 
   // Get boundaries
   m_plotBoundaries = w.GetPlotBoundaries(!m_drawOutsideMargins);
@@ -1297,11 +1342,11 @@ void mpFY::DoPlot(wxDC &dc, mpWindow &w)
     if (m_continuous)
     {
       // Get first point
-      ixlast = w.x2p(DoGetX(w.p2y(m_plotBoundaries.startPy, GetYAxisIndex())));
+      ixlast = w.x2p((this->*pDoGetX)(w.p2y(m_plotBoundaries.startPy, yAxisIndex)));
 
       for (i = m_plotBoundaries.startPy + m_step; i < m_plotBoundaries.endPy; i += m_step)
       {
-        ix = w.x2p(DoGetX(w.p2y(i, GetYAxisIndex())));
+        ix = w.x2p((this->*pDoGetX)(w.p2y(i, yAxisIndex)));
         dc.DrawLine(ixlast, i - m_step, ix, i);
         if (m_symbol != mpsNone)
           DrawSymbol(dc, ixlast, i - m_step);
@@ -1315,7 +1360,7 @@ void mpFY::DoPlot(wxDC &dc, mpWindow &w)
     {
       for (i = m_plotBoundaries.startPy; i < m_plotBoundaries.endPy; i += m_step)
       {
-        ix = w.x2p(DoGetX(w.p2y(i, GetYAxisIndex())));
+        ix = w.x2p((this->*pDoGetX)(w.p2y(i, yAxisIndex)));
         if (m_symbol == mpsNone)
           dc.DrawLine(ix, i, ix, i);
         else
@@ -1327,7 +1372,7 @@ void mpFY::DoPlot(wxDC &dc, mpWindow &w)
   {
     for (i = m_plotBoundaries.startPy; i < m_plotBoundaries.endPy; i += m_step)
     {
-      ix = w.x2p(DoGetX(w.p2y(i, GetYAxisIndex())));
+      ix = w.x2p((this->*pDoGetX)(w.p2y(i, yAxisIndex)));
       if (m_symbol == mpsNone)
         dc.DrawPoint(ix, i);
       else
@@ -1361,7 +1406,7 @@ void mpFY::DoPlot(wxDC &dc, mpWindow &w)
         ty = w.GetScreenY() - w.GetMarginBottom() - ty - 8;
     }
 
-    dc.DrawText(m_name, w.x2p(DoGetX(w.p2y(ty, GetYAxisIndex()))), ty);
+    dc.DrawText(m_name, w.x2p((this->*pDoGetX)(w.p2y(ty, yAxisIndex))), ty);
   }
 }
 
@@ -1419,6 +1464,7 @@ bool mpFXY::DoGetNextXY(double *x, double *y)
 void mpFXY::DoPlot(wxDC &dc, mpWindow &w)
 {
   double x, y;
+  size_t yAxisIndex = GetYAxisIndex();
   // Do this to reset the counters to evaluate bounding box for label positioning
   Rewind();
   // Get first point
@@ -1448,12 +1494,12 @@ void mpFXY::DoPlot(wxDC &dc, mpWindow &w)
       {
         // Get first point in bound
         ixlast = w.x2p(x);
-        iylast = w.y2p(y, GetYAxisIndex());
+        iylast = w.y2p(y, yAxisIndex);
 
         while (DoGetNextXY(&x, &y))
         {
           ix = w.x2p(x);
-          iy = w.y2p(y, GetYAxisIndex());
+          iy = w.y2p(y, yAxisIndex);
 
           dc.DrawLine(ixlast, iylast, ix, iy);
           UpdateViewBoundary(ix, iy);
@@ -1474,7 +1520,7 @@ void mpFXY::DoPlot(wxDC &dc, mpWindow &w)
         while (DoGetNextXY(&x, &y))
         {
           ix = w.x2p(x);
-          iy = w.y2p(y, GetYAxisIndex());
+          iy = w.y2p(y, yAxisIndex);
           if (m_symbol == mpsNone)
             dc.DrawLine(ix, iy, ix, iy);
           else
@@ -1490,7 +1536,7 @@ void mpFXY::DoPlot(wxDC &dc, mpWindow &w)
       while (DoGetNextXY(&x, &y))
       {
         ix = w.x2p(x);
-        iy = w.y2p(y, GetYAxisIndex());
+        iy = w.y2p(y, yAxisIndex);
         if (m_symbol == mpsNone)
           dc.DrawPoint(ix, iy);
         else
@@ -1507,12 +1553,12 @@ void mpFXY::DoPlot(wxDC &dc, mpWindow &w)
     m_BarWidth = (int)((delta * w.GetScaleX()) / 3.5);
     if (m_BarWidth == 0)
       m_BarWidth = 1;
-    wxCoord iybase = w.y2p(0, GetYAxisIndex());
+    wxCoord iybase = w.y2p(0, yAxisIndex);
     Rewind();
     while (DoGetNextXY(&x, &y))
     {
       ix = w.x2p(x);
-      iy = w.y2p(y, GetYAxisIndex());
+      iy = w.y2p(y, yAxisIndex);
       dc.DrawRectangle(ix - m_BarWidth, iy, 2 * m_BarWidth, iybase - iy);
       UpdateViewBoundary(ix, iy);
     }
@@ -1608,9 +1654,10 @@ void mpFXYVector::DrawAddedPoint(double x, double y)
   dc.SetPen(m_pen);
   dc.SetBrush(m_brush);
 
-  CheckLog(&x, &y, GetYAxisIndex());
+  size_t yAxisIndex = GetYAxisIndex();
+  CheckLog(&x, &y, yAxisIndex);
   wxCoord ix = m_win->x2p(x);
-  wxCoord iy = m_win->y2p(y, GetYAxisIndex());
+  wxCoord iy = m_win->y2p(y, yAxisIndex);
 
   if (!m_ViewAsBar)
   {
@@ -1622,9 +1669,9 @@ void mpFXYVector::DrawAddedPoint(double x, double y)
         size_t lastPtIdx = m_index - 1; // we assume that m_step = 1 in this context
         double xlast = m_xs[lastPtIdx];
         double ylast = m_ys[lastPtIdx];
-        CheckLog(&xlast, &ylast, GetYAxisIndex());
+        CheckLog(&xlast, &ylast, yAxisIndex);
         wxCoord ixlast = m_win->x2p(xlast);
-        wxCoord iylast = m_win->y2p(ylast, GetYAxisIndex());
+        wxCoord iylast = m_win->y2p(ylast, yAxisIndex);
         dc.DrawLine(ixlast, iylast, ix, iy);
       };
 
@@ -1646,7 +1693,7 @@ void mpFXYVector::DrawAddedPoint(double x, double y)
   }
   else
   {
-    wxCoord iybase = m_win->y2p(0, GetYAxisIndex());
+    wxCoord iybase = m_win->y2p(0, yAxisIndex);
     dc.DrawRectangle(ix - m_BarWidth, iy, 2 * m_BarWidth, iybase - iy);
   }
 }
@@ -1786,17 +1833,18 @@ mpProfile::mpProfile(const wxString &name, int flags) :
 void mpProfile::DoPlot(wxDC &dc, mpWindow &w)
 {
   wxCoord i;
+  size_t yAxisIndex = GetYAxisIndex();
 
   // Get boundaries
   m_plotBoundaries = w.GetPlotBoundaries(!m_drawOutsideMargins);
 
   // Plot profile linking subsequent point of the profile, instead of mpFY, which plots simple points.
-  wxCoord c0 = w.y2p(GetY(w.p2x(m_plotBoundaries.startPx)), GetYAxisIndex());
+  wxCoord c0 = w.y2p(GetY(w.p2x(m_plotBoundaries.startPx)), yAxisIndex);
   if (!m_drawOutsideMargins)
     c0 = (c0 <= m_plotBoundaries.endPy) ? ((c0 >= m_plotBoundaries.startPy) ? c0 : m_plotBoundaries.startPy) : m_plotBoundaries.endPy;
   for (i = m_plotBoundaries.startPx + m_step; i < m_plotBoundaries.endPx; i += m_step)
   {
-    wxCoord c1 = w.y2p(GetY(w.p2x(i)), GetYAxisIndex());
+    wxCoord c1 = w.y2p(GetY(w.p2x(i)), yAxisIndex);
 
     if (!m_drawOutsideMargins)
       c1 = (c1 <= m_plotBoundaries.endPy) ? ((c1 >= m_plotBoundaries.startPy) ? c1 : m_plotBoundaries.startPy) : m_plotBoundaries.endPy;
@@ -1830,7 +1878,7 @@ void mpProfile::DoPlot(wxDC &dc, mpWindow &w)
         tx = w.GetMarginLeft() + 8;
     }
 
-    dc.DrawText(m_name, tx, w.y2p(GetY(w.p2x(tx)), GetYAxisIndex()));
+    dc.DrawText(m_name, tx, w.y2p(GetY(w.p2x(tx)), yAxisIndex));
   }
 }
 
@@ -1918,13 +1966,14 @@ void mpBarChart::DoPlot(wxDC &dc, mpWindow &w)
   bool drawLabels = (labels.size() == values.size()) && (m_labelPos != mpBAR_NONE);
   wxCoord rect_x_tl = 0, rect_y_tl = 0, rect_width = 0, rect_height = 0;
   wxString currentLabel;
+  size_t yAxisIndex = GetYAxisIndex();
 
   if (values.size() > 0)
   {
     for (size_t binIndex = 0; binIndex < values.size(); binIndex++)
     {
       rect_x_tl = w.x2p(((double)binIndex) + 1.0 - 0.5 * m_width);
-      rect_y_tl = w.y2p(values[binIndex], GetYAxisIndex());
+      rect_y_tl = w.y2p(values[binIndex], yAxisIndex);
       rect_width = m_width * w.GetScaleX();
       rect_height = values[binIndex] * w.GetScaleY();
       dc.DrawRectangle(rect_x_tl, rect_y_tl, rect_width, rect_height);
@@ -1936,15 +1985,15 @@ void mpBarChart::DoPlot(wxDC &dc, mpWindow &w)
         {
           case mpBAR_AXIS_H:
             labelX = rect_x_tl;
-            labelY = w.y2p(0.0, GetYAxisIndex()) + labelH;
+            labelY = w.y2p(0.0, yAxisIndex) + labelH;
             break;
           case mpBAR_AXIS_V:
             labelX = w.x2p(((double)binIndex) + 1.0) - (labelH / 2);
-            labelY = w.y2p(-0.05 * m_max_value, GetYAxisIndex()) + labelW;
+            labelY = w.y2p(-0.05 * m_max_value, yAxisIndex) + labelW;
             break;
           case mpBAR_INSIDE:
             labelX = w.x2p(((double)binIndex) + 1.0) - (labelH / 2);
-            labelY = w.y2p(0.05 * m_max_value, GetYAxisIndex());
+            labelY = w.y2p(0.05 * m_max_value, yAxisIndex);
             break;
           case mpBAR_TOP:
             labelX = rect_x_tl;
@@ -2038,19 +2087,20 @@ void mpPieChart::DoPlot(wxDC &dc, mpWindow &w)
   double scale = w.GetScaleY() / w.GetScaleX();
   wxCoord offset = (scale == 1 ? 0 : (wxCoord)(w.x2p(0) / 2));
   wxString currentLabel;
+  size_t yAxisIndex = GetYAxisIndex();
 
   if (values.size() > 0)
   {
     xc = w.x2p(0) * scale + offset;
     x1 = w.x2p(m_radius) * scale + offset;
-    y1 = yc = w.y2p(0, GetYAxisIndex());
+    y1 = yc = w.y2p(0, yAxisIndex);
 
     for (size_t binIndex = 0; binIndex < values.size(); binIndex++)
     {
       angle = values[binIndex] / m_total_value * M_PI2;
       anglepie += angle;
       x2 = w.x2p(m_radius * cos(anglepie)) * scale + offset;
-      y2 = w.y2p(m_radius * sin(anglepie), GetYAxisIndex());
+      y2 = w.y2p(m_radius * sin(anglepie), yAxisIndex);
       wxBrush brush(GetColour(binIndex), wxBRUSHSTYLE_SOLID);
       dc.SetBrush(brush);
       dc.DrawArc(x1, y1, x2, y2, xc, yc);
@@ -2059,7 +2109,7 @@ void mpPieChart::DoPlot(wxDC &dc, mpWindow &w)
         currentLabel = wxConvUTF8.cMB2WX(labels[binIndex].c_str());
         dc.GetTextExtent(currentLabel, &labelW, &labelH);
         labelX = w.x2p(m_radius * cos(angletxt + angle / 2.0)) * scale + offset + 10;
-        labelY = w.y2p(m_radius * sin(angletxt + angle / 2.0), GetYAxisIndex());
+        labelY = w.y2p(m_radius * sin(angletxt + angle / 2.0), yAxisIndex);
         dc.DrawText(currentLabel, labelX, labelY);
         angletxt += angle;
       }
@@ -5115,6 +5165,7 @@ void mpMovableObject::DoPlot(wxDC &dc, mpWindow &w)
 {
   std::vector<double>::iterator itX = m_trans_shape_xs.begin();
   std::vector<double>::iterator itY = m_trans_shape_ys.begin();
+  size_t yAxisIndex = GetYAxisIndex();
 
   if (!m_continuous)
   {
@@ -5125,9 +5176,9 @@ void mpMovableObject::DoPlot(wxDC &dc, mpWindow &w)
       while (itX != m_trans_shape_xs.end())
       {
         if (m_symbol != mpsNone)
-          DrawSymbol(dc, w.x2p((double)(*(itX++))), w.y2p((double)(*(itY++)), GetYAxisIndex()));
+          DrawSymbol(dc, w.x2p((double)(*(itX++))), w.y2p((double)(*(itY++)), yAxisIndex));
         else
-          dc.DrawPoint(w.x2p((double)(*(itX++))), w.y2p((double)(*(itY++)), GetYAxisIndex()));
+          dc.DrawPoint(w.x2p((double)(*(itX++))), w.y2p((double)(*(itY++)), yAxisIndex));
       }
     }
     else
@@ -5135,7 +5186,7 @@ void mpMovableObject::DoPlot(wxDC &dc, mpWindow &w)
       while (itX != m_trans_shape_xs.end())
       {
         wxCoord cx = w.x2p((double)(*(itX++)));
-        wxCoord cy = w.y2p((double)(*(itY++)), GetYAxisIndex());
+        wxCoord cy = w.y2p((double)(*(itY++)), yAxisIndex);
         if (m_symbol != mpsNone)
           DrawSymbol(dc, cx, cy);
         else
@@ -5150,7 +5201,7 @@ void mpMovableObject::DoPlot(wxDC &dc, mpWindow &w)
     while (itX != m_trans_shape_xs.end())
     {
       wxCoord cx = w.x2p((double)(*(itX++)));
-      wxCoord cy = w.y2p((double)(*(itY++)), GetYAxisIndex());
+      wxCoord cy = w.y2p((double)(*(itY++)), yAxisIndex);
       if (first)
       {
         first = false;
