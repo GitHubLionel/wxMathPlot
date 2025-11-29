@@ -3354,6 +3354,33 @@ void mpWindow::Fit(const mpFloatRect &rect, wxCoord *printSizeX, wxCoord *printS
   }
 }
 
+void mpWindow::FitX(void)
+{
+  mpFloatRect bound = Get_Bound();
+  double Ax = bound.x.max - bound.x.min;
+  m_scaleX = ISNOTNULL(Ax) ? m_plotWidth / Ax : 1;
+
+  // Since m_posX is at the corner (not including margins) we need to take margin into account
+  m_posX = bound.x.min - (m_margin.left / m_scaleX);
+
+  UpdateDesiredBoundingBox();
+}
+
+void mpWindow::FitY(size_t yIndex)
+{
+  if(yIndex < m_yAxisDataList.size())
+  {
+    mpFloatRect bound = Get_Bound();
+    double Ay = bound.y[yIndex].max - bound.y[yIndex].min;
+    m_yAxisDataList[yIndex].m_scaleY = ISNOTNULL(Ay) ? m_plotHeight / Ay : 1;
+
+    // Since m_posY is at the corner (not including margins) we need to take margin into account
+    m_yAxisDataList[yIndex].m_posY = bound.y[yIndex].max + (m_margin.top / m_yAxisDataList[yIndex].m_scaleY);
+
+    UpdateDesiredBoundingBox();
+  }
+}
+
 void mpWindow::CheckAndReportDesiredBoundsChanges() {
   if (m_desired.IsNotSet(*this)) return; // nothing to do until useful info in m_desired
   if (!m_initialDesiredBoundsRecorded) {

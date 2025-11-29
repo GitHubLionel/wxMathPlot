@@ -2744,6 +2744,17 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      */
     void Fit(const mpFloatRect &rect, wxCoord *printSizeX = NULL, wxCoord *printSizeY = NULL);
 
+    /** Similar to Fit() but only fit in X. Intentionally don't call UpdateAll() since
+     *  you might want to perform other actions before updating plot
+     */
+    void FitX(void);
+
+    /** Similar to Fit() but only fit in Y and only one Y-axis, specified by index. Intentionally
+     *  don't call UpdateAll() since you might want to perform other actions before updating plot
+     * @param yAxis indicating which Y-axis to fit
+     */
+    void FitY(size_t yIndex);
+
     /** Zoom into current view and refresh display
      * @param centerPoint The point (pixel coordinates) that will stay in the same position on the screen after
      * the zoom (by default, the center of the mpWindow).
