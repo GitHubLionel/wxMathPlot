@@ -476,7 +476,7 @@ typedef enum __mp_Layer_Type
   mpLAYER_BITMAP,  //!< Bitmap type layer
   mpLAYER_LINE,    //!< Line (horizontal or vertical) type layer
   mpLAYER_CHART,   //!< Chart type layer (bar chart)
-} mpLayerType;
+} mpLayerType; //!< Major type of an mpLayer (detail is in subtype)
 
 /**
  * Z order for drawing layer
@@ -551,16 +551,15 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
       return m_subtype;
     }
 
-    /** Specifies that if the layer is of type "type".
-     if true then get the subtype
-     @param type
+    /** Set the layer's subtype in caller variable, and return true if the layer is of type "typeOfInterest"
+     @param typeOfInterest
      @param subtype
      @sa mpLayer::IsLayerType
      */
-    virtual bool IsLayerType(mpLayerType type, int *sub_type)
+    virtual bool IsLayerType(mpLayerType typeOfInterest, int *subtype)
     {
-      *sub_type = m_subtype;
-      return (m_type == type);
+      *subtype = m_subtype;
+      return (m_type == typeOfInterest);
     }
 
     /** Get inclusive left border of bounding box.
@@ -1359,7 +1358,7 @@ class WXDLLIMPEXP_MATHPLOT mpFX: public mpFunction
 {
   public:
     /** @param name  Label
-     @param flags Label alignment, pass one of #mpALIGN_RIGHT, #mpALIGN_CENTER, #mpALIGN_LEFT.
+     @param flags Label alignment, pass one of #mpALIGN_RIGHT, #mpALIGN_CENTERY, #mpALIGN_LEFT.
      */
     mpFX(const wxString &name = wxEmptyString, int flags = mpALIGN_RIGHT, size_t yAxisIndex = 0);
 
@@ -1412,7 +1411,7 @@ class WXDLLIMPEXP_MATHPLOT mpFY: public mpFunction
 {
   public:
     /** @param name  Label
-     @param flags Label alignment, pass one of #mpALIGN_BOTTOM, #mpALIGN_CENTER, #mpALIGN_TOP.
+     @param flags Label alignment, pass one of #mpALIGN_BOTTOM, #mpALIGN_CENTERY, #mpALIGN_TOP.
      */
     mpFY(const wxString &name = wxEmptyString, int flags = mpALIGN_TOP, size_t yAxisIndex = 0);
 
@@ -3122,8 +3121,8 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     }
 
     /**
-     * Log axis control.
-     * It is an axis property but as we need to control the bound and the scale,
+     * Is this an X axis to be displayed with log scale?
+     * It is really an axis property but as we need to control the bound and the scale,
      * it is easiest and faster to declare this property here
      */
     bool IsLogXaxis()
@@ -3137,9 +3136,9 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     /**
      * Get the log property (true or false) Y layer (Y axis) with a specific Y-index or false if not found
      */
-    bool IsLogYaxis(size_t yIndex)
+    bool IsLogYaxis(size_t yAxisIndex)
     {
-      mpScaleY* yAxis = GetLayerYAxis(yIndex);
+      mpScaleY* yAxis = GetLayerYAxis(yAxisIndex);
       if (yAxis)
         return yAxis->IsLogAxis();
       else
@@ -3358,13 +3357,12 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     /// To be notified of displayed bounds changes (after user zoom etc),
     /// override this callback in your derived class and look at the new value of m_desired.
     /// Useful for keeping multiple plots in sync when user zooms.
-    virtual void DesiredBoundsHaveChanged() {};
+    virtual void DesiredBoundsHaveChanged() {}; // called from CheckAndReportDesiredBoundsChanges()
 
   private:
     void FillI18NString();
 
-    /// Report any change of desired display bounds to user's derived class.
-    void CheckAndReportDesiredBoundsChanges();
+    void CheckAndReportDesiredBoundsChanges(); //!< Report any change of desired display bounds to user's derived class (for example during zoom).
     bool m_initialDesiredBoundsRecorded = false; //!< Has m_lastDesiredReportedBounds been set?
     mpFloatRect m_lastDesiredReportedBounds; //!< for use in DesiredBoundsHaveChanged reporting in Fit()
 
@@ -3440,8 +3438,7 @@ class WXDLLIMPEXP_MATHPLOT mpText: public mpLayer
       m_offsety = offY;
     }
 
-    /** Get the offset
-     @return void */
+    /** Get the offset */
     void GetOffset(int *offX, int *offY) const
     {
       *offX = m_offsetx;
