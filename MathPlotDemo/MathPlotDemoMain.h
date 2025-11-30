@@ -79,6 +79,11 @@ class MathPlotDemoFrame: public wxFrame
 
         mpScaleX *bottomAxis = NULL;
         mpScaleY *leftAxis = NULL;
+        // Extra Y axis
+        mpScaleY* axis1 = NULL;
+        mpScaleY* axis2 = NULL;
+        mpScaleY* axis3 = NULL;
+        mpScaleY* axis4 = NULL;
         void InitializePlot(void);
         void CleanPlot(void);
 
