@@ -214,11 +214,11 @@ void MathPlotDemoFrame::CleanPlot(void)
   mPlot->DelLayer(mPlot->GetLayerByName(_T("BarChart")), true);
   // Remove Bitmap if present
   mPlot->DelLayer(mPlot->GetLayerByClassName("mpBitmapLayer"), true);
-  // Remove all extra Y axis if present
-  mPlot->DelLayer(axis1, true);
-  mPlot->DelLayer(axis2, true);
-  mPlot->DelLayer(axis3, true);
-  mPlot->DelLayer(axis4, true);
+  // Remove all Y axis if present
+  mPlot->DelLayer(mPlot->GetLayerYAxis(1), true);
+  mPlot->DelLayer(mPlot->GetLayerYAxis(2), true);
+  mPlot->DelLayer(mPlot->GetLayerYAxis(3), true);
+  mPlot->DelLayer(mPlot->GetLayerYAxis(4), true);
 }
 
 void MathPlotDemoFrame::OnbDrawClick(wxCommandEvent &WXUNUSED(event))
@@ -544,7 +544,7 @@ void MathPlotDemoFrame::OnbMultiYAxisClick(wxCommandEvent &WXUNUSED(event))
   f1->SetPen(wxPen(plotColors[0], 2));
   mPlot->AddLayer(f1);
 
-  axis1 = new mpScaleY(f1->GetName(), mpALIGN_LEFT, false);
+  mpScaleY* axis1 = new mpScaleY(f1->GetName(), mpALIGN_LEFT, false);
   axis1->SetLabelFormat("%g");
   axis1->SetFont(graphFont);
   axis1->SetPen(axispen);
@@ -559,7 +559,7 @@ void MathPlotDemoFrame::OnbMultiYAxisClick(wxCommandEvent &WXUNUSED(event))
   f2->SetContinuity(true);
   mPlot->AddLayer(f2);
 
-  axis2 = new mpScaleY(f2->GetName(), mpALIGN_LEFT, false);
+  mpScaleY* axis2 = new mpScaleY(f2->GetName(), mpALIGN_LEFT, false);
   axis2->SetLabelFormat("%g");
   axis2->SetFont(graphFont);
   axis2->SetPen(axispen);
@@ -574,7 +574,7 @@ void MathPlotDemoFrame::OnbMultiYAxisClick(wxCommandEvent &WXUNUSED(event))
   f3->SetContinuity(true);
   mPlot->AddLayer(f3);
 
-  axis3 = new mpScaleY(f3->GetName(), mpALIGN_LEFT, false);
+  mpScaleY* axis3 = new mpScaleY(f3->GetName(), mpALIGN_LEFT, false);
   axis3->SetLabelFormat("%g");
   axis3->SetFont(graphFont);
   axis3->SetPen(axispen);
@@ -589,7 +589,7 @@ void MathPlotDemoFrame::OnbMultiYAxisClick(wxCommandEvent &WXUNUSED(event))
   f4->SetContinuity(true);
   mPlot->AddLayer(f4);
 
-  axis4 = new mpScaleY(f4->GetName(), mpALIGN_LEFT, false);
+  mpScaleY* axis4 = new mpScaleY(f4->GetName(), mpALIGN_LEFT, false);
   axis4->SetLabelFormat("%g");
   axis4->SetFont(graphFont);
   axis4->SetPen(axispen);

@@ -2216,12 +2216,12 @@ class WXDLLIMPEXP_MATHPLOT mpScaleY: public mpScale
      @param name Label to plot by the ruler
      @param flags Set the position of the scale with respect to the window.
      @param grids Show grid or not. Give false (default) for not drawing the grid*/
-    mpScaleY(const wxString &name = _T("Y"), int flags = mpALIGN_CENTERY, bool grids = false) :
+    mpScaleY(const wxString &name = _T("Y"), int flags = mpALIGN_CENTERY, bool grids = false, size_t axisIndex = 0) :
         mpScale(name, flags, grids)
     {
       m_subtype = mpsScaleY;
       m_axisWidth = Y_BORDER_SEPARATION;
-      m_axisIndex = -1;
+      m_axisIndex = axisIndex;
       m_xPos = 0;
     }
 
@@ -2229,21 +2229,9 @@ class WXDLLIMPEXP_MATHPLOT mpScaleY: public mpScale
     @param Current window used as canvas */
     void UpdateAxisWidth(mpWindow &w);
 
-    /**
-     * Return the Index of the Axis
-     */
     size_t GetAxisIndex(void)
     {
       return m_axisIndex;
-    }
-
-    /**
-     * Set an index to the axis.
-     * This function should be never call directly since index is managed by mpWindow
-     */
-    void SetAxisIndex(size_t axisIndex)
-    {
-      m_axisIndex = axisIndex;
     }
 
     int GetAxisWidth()
@@ -3307,23 +3295,12 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      @param Number of Y-axis */
     void UpdateNOfYAxes(size_t nOfYAxes);
 
-    /**
-     * Provide a new unique index for an Y axis
-     */
-    int ProvideNewYAxisIndex(void)
-    {
-      m_LastYAxisIndex++;
-      return m_LastYAxisIndex;
-    }
-
     wxTopLevelWindow* m_parent;
     bool m_fullscreen;
 
     mpLayerList m_layers;   //!< List of attached plot layers
     mpScaleX* m_XAxis;      //!< Pointer to the optional X axis layer of this mpWindow
     std::vector<mpScaleY*> m_YAxisList;  //!< Pointer to the optional Y axes layer of this mpWindow
-    int m_LastYAxisIndex;   //!< The last index of Y axis known
-    size_t m_NumberOfYAxis; //!< The number of Y axis in the Axis list
 
     wxMenu m_popmenu;       //!< Canvas' context menu
     bool m_lockaspect;      //!< Scale aspect is locked or not
