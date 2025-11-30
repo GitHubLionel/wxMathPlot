@@ -1004,15 +1004,7 @@ void MathPlotConfigDialog::OnbAddAxisClick(wxCommandEvent &event)
   if (bt == bAddXAxis)
     newScale = (mpScale*)new mpScaleX(wxT("New X"), mpALIGN_BOTTOM, true, mpX_NORMAL);
   else
-  {
-    // Chose a unique new index for this Y-axis, let it be the largest exising index + 1
-    size_t newIndex = 0;
-    for (mpScaleY* yAxis : m_plot->GetYAxisList())
-    {
-      newIndex = std::max(newIndex, yAxis->GetAxisIndex() + 1);
-    }
-    newScale = (mpScale*)new mpScaleY(wxT("New Y"), mpALIGN_LEFT, true, newIndex);
-  }
+    newScale = (mpScale*)new mpScaleY(wxT("New Y"), mpALIGN_LEFT, true);
 
   if (newScale && (m_plot->AddLayer(newScale)))
   {

@@ -159,6 +159,7 @@ void MathPlotDemoFrame::InitializePlot(void)
   mPlot->EnableDoubleBuffer(true);
   mPlot->SetMargins(50, 20, 80, 80);
 
+  // We always have a bottom axis (X axis) and a left axis (Y axis)
   bottomAxis = new mpScaleX(wxT("X"), mpALIGN_CENTERX, true, mpX_NORMAL);
   bottomAxis->SetLabelFormat("%g");
   leftAxis = new mpScaleY(wxT("Y"), mpALIGN_CENTERY, true);
@@ -173,16 +174,20 @@ void MathPlotDemoFrame::InitializePlot(void)
 
   mPlot->AddLayer(bottomAxis);
   mPlot->AddLayer(leftAxis);
+
+  // Add a title layer
   mpTitle* plotTitle;
   mPlot->AddLayer(plotTitle = new mpTitle(_("Demo MathPlot")));
 
   wxFont titleFont(12, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD);
   plotTitle->SetFont(titleFont);
 
+  // Add a coordinate info layer
   mpInfoCoords* info;
   mPlot->AddLayer(info = new mpInfoCoords());
   info->SetVisible(true);
 
+  // Add a legend info layer
   mpInfoLegend* legend;
   mPlot->AddLayer(legend = new mpInfoLegend());
   legend->SetItemDirection(mpHorizontal); // Note: Comment out this line to test mpVertical
@@ -193,9 +198,11 @@ void MathPlotDemoFrame::InitializePlot(void)
 
 void MathPlotDemoFrame::CleanPlot(void)
 {
+  // Remove all the plot (all functions mpFX, mpFY, mpFXY)
   mPlot->DelAllPlot(true);
   mPlot->SetMouseLeftDownAction(mpMouseBoxZoom);
   mPlot->SetMarginLeft(50);
+  // Restore X and Y axis
   bottomAxis->SetAlign(mpALIGN_CENTERX);
   bottomAxis->SetLogAxis(false);
   bottomAxis->SetAuto(true);
@@ -203,8 +210,11 @@ void MathPlotDemoFrame::CleanPlot(void)
   leftAxis->SetAlign(mpALIGN_CENTERY);
   leftAxis->SetLogAxis(false);
   leftAxis->SetVisible(true);
+  // Remove Bar chart if present
   mPlot->DelLayer(mPlot->GetLayerByName(_T("BarChart")), true);
+  // Remove Bitmap if present
   mPlot->DelLayer(mPlot->GetLayerByClassName("mpBitmapLayer"), true);
+  // Remove all Y axis if present
   mPlot->DelLayer(mPlot->GetLayerYAxis(1), true);
   mPlot->DelLayer(mPlot->GetLayerYAxis(2), true);
   mPlot->DelLayer(mPlot->GetLayerYAxis(3), true);
@@ -530,54 +540,56 @@ void MathPlotDemoFrame::OnbMultiYAxisClick(wxCommandEvent &WXUNUSED(event))
   bottomAxis->SetPen(axispen);
 
   MyLissajoux* f1 = new MyLissajoux(125.0);
-  f1->SetYAxisIndex(1);
   f1->SetDrawOutsideMargins(false);
   f1->SetPen(wxPen(plotColors[0], 2));
   mPlot->AddLayer(f1);
 
-  MySIN* f2 = new MySIN(10.0, 220.0);
-  f2->SetYAxisIndex(2);
-  f2->SetDrawOutsideMargins(false);
-  f2->SetPen(wxPen(plotColors[1], 2));
-  f2->SetContinuity(true);
-  mPlot->AddLayer(f2);
-
-  MyFunction* f3 = new MyFunction();
-  f3->SetYAxisIndex(3);
-  f3->SetDrawOutsideMargins(false);
-  f3->SetPen(wxPen(plotColors[2], 2));
-  f3->SetContinuity(true);
-  mPlot->AddLayer(f3);
-
-  MyCOSinverse* f4 = new MyCOSinverse(10.0, 100.0);
-  f4->SetYAxisIndex(4);
-  f4->SetDrawOutsideMargins(false);
-  f4->SetPen(wxPen(plotColors[3], 2));
-  f4->SetContinuity(true);
-  mPlot->AddLayer(f4);
-
-  mpScaleY* axis1 = new mpScaleY(f1->GetName(), mpALIGN_LEFT, false, 1);
+  mpScaleY* axis1 = new mpScaleY(f1->GetName(), mpALIGN_LEFT, false);
   axis1->SetLabelFormat("%g");
   axis1->SetFont(graphFont);
   axis1->SetPen(axispen);
   axis1->SetFontColour(plotColors[0]);
   mPlot->AddLayer(axis1);
+  // This axis is dedicated for f1
+  f1->SetYAxisIndex(axis1->GetAxisIndex());
 
-  mpScaleY* axis2 = new mpScaleY(f2->GetName(), mpALIGN_LEFT, false, 2);
+  MySIN* f2 = new MySIN(10.0, 220.0);
+  f2->SetDrawOutsideMargins(false);
+  f2->SetPen(wxPen(plotColors[1], 2));
+  f2->SetContinuity(true);
+  mPlot->AddLayer(f2);
+
+  mpScaleY* axis2 = new mpScaleY(f2->GetName(), mpALIGN_LEFT, false);
   axis2->SetLabelFormat("%g");
   axis2->SetFont(graphFont);
   axis2->SetPen(axispen);
   axis2->SetFontColour(plotColors[1]);
   mPlot->AddLayer(axis2);
+  // This axis is dedicated for f2
+  f2->SetYAxisIndex(axis2->GetAxisIndex());
 
-  mpScaleY* axis3 = new mpScaleY(f3->GetName(), mpALIGN_LEFT, false, 3);
+  MyFunction* f3 = new MyFunction();
+  f3->SetDrawOutsideMargins(false);
+  f3->SetPen(wxPen(plotColors[2], 2));
+  f3->SetContinuity(true);
+  mPlot->AddLayer(f3);
+
+  mpScaleY* axis3 = new mpScaleY(f3->GetName(), mpALIGN_LEFT, false);
   axis3->SetLabelFormat("%g");
   axis3->SetFont(graphFont);
   axis3->SetPen(axispen);
   axis3->SetFontColour(plotColors[2]);
   mPlot->AddLayer(axis3);
+  // This axis is dedicated for f3
+  f3->SetYAxisIndex(axis3->GetAxisIndex());
 
-  mpScaleY* axis4 = new mpScaleY(f4->GetName(), mpALIGN_LEFT, false, 4);
+  MyCOSinverse* f4 = new MyCOSinverse(10.0, 100.0);
+  f4->SetDrawOutsideMargins(false);
+  f4->SetPen(wxPen(plotColors[3], 2));
+  f4->SetContinuity(true);
+  mPlot->AddLayer(f4);
+
+  mpScaleY* axis4 = new mpScaleY(f4->GetName(), mpALIGN_LEFT, false);
   axis4->SetLabelFormat("%g");
   axis4->SetFont(graphFont);
   axis4->SetPen(axispen);
@@ -586,6 +598,8 @@ void MathPlotDemoFrame::OnbMultiYAxisClick(wxCommandEvent &WXUNUSED(event))
   axis4->SetMinScale(-300);
   axis4->SetMaxScale(300);
   mPlot->AddLayer(axis4);
+  // This axis is dedicated for f4
+  f4->SetYAxisIndex(axis4->GetAxisIndex());
 
   mPlot->Fit();
 

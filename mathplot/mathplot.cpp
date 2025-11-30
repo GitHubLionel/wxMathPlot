@@ -2865,6 +2865,9 @@ void mpWindow::InitParameters()
   m_scrX = m_scrY = 64;
   m_last_lx = m_last_ly = 0;
   m_XAxis = NULL;
+  m_LastYAxisIndex = -1;
+  m_NumberOfYAxis = 0;
+
   m_repainting = false;
   m_buff_bmp = NULL;
   m_Screenshot_bmp = NULL;
@@ -3747,19 +3750,15 @@ bool mpWindow::AddLayer(mpLayer *layer, bool refreshDisplay)
         mpScaleY* scaleY = dynamic_cast<mpScaleY*>(layer);
         if(scaleY)
         {
-          // Check so that this Y-axis index does not already exist in the list
-          for(mpScaleY* yAxis : m_YAxisList)
-          {
-            if(scaleY->GetAxisIndex() == yAxis->GetAxisIndex())
-            {
-              return false;
-            }
-          }
+          // We provide an index to this new Y axis
+          scaleY->SetAxisIndex(ProvideNewYAxisIndex());
           m_YAxisList.push_back((mpScaleY*)layer);
+
           // All Y-axes scalings and positions are stored in our mpWindow object so we need
           // to make sure that the number of scalings and position is at least as many as the
           // largest Y-axis index
-          UpdateNOfYAxes(scaleY->GetAxisIndex() + 1);
+          m_NumberOfYAxis++;
+          UpdateNOfYAxes(m_NumberOfYAxis);
 
           // Might need to update margins for new Y axis
           UpdateMargins();
@@ -3773,6 +3772,7 @@ bool mpWindow::AddLayer(mpLayer *layer, bool refreshDisplay)
     // We just add a function, so we need to update the legend
     if (layer->GetLayerType() == mpLAYER_PLOT)
     {
+      // todo : is necessary ?
       mpFunction* function = dynamic_cast<mpFunction*>(layer);
       if(function)
       {
@@ -3819,6 +3819,7 @@ bool mpWindow::DelLayer(mpLayer *layer, bool alsoDeleteObject, bool refreshDispl
         if ((layer->IsLayerType(mpLAYER_AXIS, &subType)) && (subType == mpsScaleY))
         {
           m_YAxisList.erase(std::remove(m_YAxisList.begin(), m_YAxisList.end(), static_cast<mpScaleY*>(layer)), m_YAxisList.end());
+          m_NumberOfYAxis--;
         }
 
         // Also delete the object?
@@ -3858,6 +3859,7 @@ void mpWindow::DelAllLayers(bool alsoDeleteObject, bool refreshDisplay)
   m_movingInfoLayer = NULL;
   m_XAxis = NULL;
   m_YAxisList.clear();
+  m_NumberOfYAxis = 0;
   if (refreshDisplay)
     UpdateAll();
 #ifdef ENABLE_MP_CONFIG
