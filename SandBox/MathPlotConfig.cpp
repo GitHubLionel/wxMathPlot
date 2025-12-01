@@ -808,10 +808,10 @@ void MathPlotConfigDialog::FillYAxisList(wxChoice *yChoice, bool clearChoice)
 {
   if (clearChoice)
     yChoice->Clear();
-  for (mpScaleY* yAxis : m_plot->GetYAxisList())
+  for (mpYAxisInfo& yAxis : m_plot->GetYAxisList())
   {
-    wxString yAxisName = wxString::Format(_T("Y%d axis - %s"), (int)yAxis->GetAxisIndex(), yAxis->GetName());
-    yChoice->Append(yAxisName, yAxis);
+    wxString yAxisName = wxString::Format(_T("Y%d axis - %s"), (int)yAxis.m_Axis->GetAxisIndex(), yAxis.m_Axis->GetName());
+    yChoice->Append(yAxisName, yAxis.m_Axis);
   }
 }
 
@@ -957,7 +957,8 @@ void MathPlotConfigDialog::UpdateAxis(void)
   bFontAxis->Enable();
 
   // Scale
-  mpFloatRect BoundScale = m_plot->Get_Bound();
+//  mpFloatRect BoundScale = m_plot->Get_Bound();
+  mpRange BoundScale;
   cbAutoScale->SetValue(CurrentScale->GetAuto());
   edScaleMin->Enable(!CurrentScale->GetAuto());
   edScaleMax->Enable(!CurrentScale->GetAuto());
@@ -965,16 +966,19 @@ void MathPlotConfigDialog::UpdateAxis(void)
   {
     if (classname.IsSameAs(_T("mpScaleX")))
     {
-      scale_min = BoundScale.x.min;
-      scale_max = BoundScale.x.max;
+      BoundScale = m_plot->Get_BoundX();
+      scale_min = BoundScale.min;
+      scale_max = BoundScale.max;
     }
     else if (classname.IsSameAs(_T("mpScaleY")))
     {
       mpScaleY* yAxis = dynamic_cast<mpScaleY*>(CurrentScale);
-      if(yAxis->GetAxisIndex() < BoundScale.y.size())
+      size_t axisIndex = yAxis->GetAxisIndex();
+      if (axisIndex < m_plot->GetYAxisList().size())
       {
-        scale_min = BoundScale.y[yAxis->GetAxisIndex()].min;
-        scale_max = BoundScale.y[yAxis->GetAxisIndex()].max;
+        BoundScale = m_plot->Get_BoundY(axisIndex);
+        scale_min = BoundScale.min;
+        scale_max = BoundScale.max;
       }
       else
       {
@@ -1361,41 +1365,49 @@ void MathPlotConfigDialog::OnbApplyClick(wxCommandEvent &WXUNUSED(event))
 
         if (!CurrentScale->GetAuto())
         {
-          mpFloatRect BoundScale = m_plot->Get_Bound();
+//          mpFloatRect BoundScale = m_plot->Get_Bound();
+          mpRange BoundScaleX;
+          std::vector<mpRange> BoundScaleY;
+          for (mpYAxisInfo& yAxis : m_plot->GetYAxisList())
+          {
+            BoundScaleY.push_back(yAxis.m_Bound);
+          }
           if (classname.IsSameAs(_T("mpScaleX"))) // X axis
           {
-            BoundScale.x.min = scale_min;
-            BoundScale.x.max = scale_max;
+
+            BoundScaleX.min = scale_min;
+            BoundScaleX.max = scale_max;
 
             // Get bound of the other axis
-            for(mpScaleY* yAxis : m_plot->GetYAxisList())
+            for (mpYAxisInfo& yAxis : m_plot->GetYAxisList())
             {
-              size_t yIdx = yAxis->GetAxisIndex();
-              if (!yAxis->GetAuto() && (yIdx < BoundScale.y.size()))
+              size_t yIdx = yAxis.m_Axis->GetAxisIndex();
+              if (!yAxis.m_Axis->GetAuto() && (yIdx < m_plot->GetYAxisList().size()))
               {
-                BoundScale.y[yIdx].min = yAxis->GetMinScale();
-                BoundScale.y[yIdx].max = yAxis->GetMaxScale();
+                BoundScaleY[yIdx].min = yAxis.m_Axis->GetMinScale();
+                BoundScaleY[yIdx].max = yAxis.m_Axis->GetMaxScale();
               }
             }
           }
           else if (classname.IsSameAs(_T("mpScaleY")))
           {
             mpScaleY* yAxis = dynamic_cast<mpScaleY*>(CurrentScale);
-            if(yAxis->GetAxisIndex() < BoundScale.y.size())
+            size_t yIdx = yAxis->GetAxisIndex();
+            if (yIdx < m_plot->GetYAxisList().size())
             {
-              BoundScale.y[yAxis->GetAxisIndex()].min = scale_min;
-              BoundScale.y[yAxis->GetAxisIndex()].max = scale_max;
+              BoundScaleY[yIdx].min = scale_min;
+              BoundScaleY[yIdx].max = scale_max;
             }
 
             // Get bound of the other axis
             mpScale* axis = (mpScale*)m_plot->GetLayerXAxis();
             if (axis && (!axis->GetAuto()))
             {
-              BoundScale.x.min = axis->GetMinScale();
-              BoundScale.x.max = axis->GetMaxScale();
+              BoundScaleX.min = axis->GetMinScale();
+              BoundScaleX.max = axis->GetMaxScale();
             }
           }
-          m_plot->Fit(BoundScale);
+          m_plot->Fit(BoundScaleX, BoundScaleY);
         }
         else
           m_plot->Fit();

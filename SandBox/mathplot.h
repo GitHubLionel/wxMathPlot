@@ -218,103 +218,123 @@ struct mpRange
 };
 
 /**
+ * @brief Represents the scale and position for an axis
+ * This struct holds the scale defined by `m_scale` and the position defined by `m_pos`. It supports
+ * equality comparison using the default `operator==`.
+ */
+struct mpAxisData      //!< Scale and position structure
+{
+  double m_scale = 1.0;
+  double m_pos = 0;
+
+#if (defined(__cplusplus) && (__cplusplus > 201703L)) // C++20 or newer
+  bool operator==(const mpAxisData&) const = default;
+#else
+  bool operator==(const mpAxisData& other) const
+  {
+    return m_scale == other.m_scale && m_pos == other.m_pos;
+  }
+#endif
+};
+
+/**
  * A structure for computation of bounds in real units (not in screen pixel)
  * X refer to X axis
  * Y refer to Y axis
  */
-struct mpFloatRect
-{
-  mpRange x;
-  std::vector<mpRange> y;
-
-  /**
-   * Constructs a new mpFloatRect using it parent mpWindow to obtain
-   * the number of Y-scales to use. This makes sure that the y-size
-   * always matches the parant mpWindow y-size
-   * @param w parent mpWindow from which to obtain informations
-   */
-  mpFloatRect(mpWindow& w);
-
-  /// Only allow constructor with mpWindow supplied
-  mpFloatRect() = delete;
-
-  /// Is point inside this bounding box?
-  bool PointIsInside(double px, double py, size_t yIndex = 0) const {
-    if(yIndex < y.size())
-    {
-      if( (px < x.min || px > x.max) ||
-          (py < y[yIndex].min || py > y[yIndex].max))
-      {
-        return false;
-      }
-    }
-    else
-    {
-      return false;
-    }
-
-    return true;
-  }
-  /// Update bounding box to include this point
-  void UpdateBoundingBoxToInclude(double px, double py, size_t yIndex = 0) {
-    assert(yIndex < y.size());
-    if(yIndex < y.size())
-    {
-      if      (px  < x.min ) x.min = px;
-      else if (px  > x.max ) x.max = px;
-      if      (py  < y[yIndex].min ) y[yIndex].min = py;
-      else if (py  > y[yIndex].max ) y[yIndex].max = py;
-    }
-  }
-  /// Initialize bounding box with an initial point
-  void InitializeBoundingBox(double px, double py, size_t yIndex = 0) {
-    assert(yIndex < y.size());
-    if(yIndex < y.size())
-    {
-      x.min = x.max = px;
-      y[yIndex].min = y[yIndex].max = py;
-    }
-  }
-  /// Is mpFloatRect set ?
-  bool IsNotSet(mpWindow& w) const { const mpFloatRect def(w); return *this==def; }
-  /// Equal operator
-#if (defined(__cplusplus) && (__cplusplus > 201703L)) // C++ > C++17 (MSVC requires <AdditionalOptions>/Zc:__cplusplus</AdditionalOptions>
-  bool operator==(const mpFloatRect&) const = default;
-#else
-  // We compare with an epsilon precision
-  // NOTE: should be unnecessary as we are looking for any changes; normally this will be an exact match or a real change...
-  bool operator==(const mpFloatRect& rect) const
-  {
-    auto Same = [](double a, double b) {
-      return std::fabs(a - b) < EPSILON;
-    };
-
-    // Compare scalar members
-    if (!Same(x.min, rect.x.min) || !Same(x.max, rect.x.max))
-    {
-      return false;
-    }
-
-    // Compare vector sizes
-    if (y.size() != rect.y.size())
-    {
-      return false;
-    }
-
-    // Compare each Y boundary
-    for (size_t i = 0; i < y.size(); ++i)
-    {
-      if (!Same(y[i].min, rect.y[i].min) ||
-          !Same(y[i].max, rect.y[i].max)  )
-      {
-        return false;
-      }
-    }
-
-    return true;
-  }
-#endif
-};
+//struct mpFloatRect
+//{
+//  mpRange x;
+//  std::vector<mpRange> y;
+//
+//  /**
+//   * Constructs a new mpFloatRect using it parent mpWindow to obtain
+//   * the number of Y-scales to use. This makes sure that the y-size
+//   * always matches the parant mpWindow y-size
+//   * @param w parent mpWindow from which to obtain informations
+//   */
+//  mpFloatRect(mpWindow& w);
+//
+//  /// Only allow constructor with mpWindow supplied
+//  mpFloatRect() = delete;
+//
+//  /// Is point inside this bounding box?
+////  bool PointIsInside(double px, double py, size_t yIndex = 0) const {
+////    if(yIndex < y.size())
+////    {
+////      if( (px < x.min || px > x.max) ||
+////          (py < y[yIndex].min || py > y[yIndex].max))
+////      {
+////        return false;
+////      }
+////    }
+////    else
+////    {
+////      return false;
+////    }
+////
+////    return true;
+////  }
+//  /// Update bounding box to include this point
+////  void UpdateBoundingBoxToInclude(double px, double py, size_t yIndex = 0) {
+////    assert(yIndex < y.size());
+////    if(yIndex < y.size())
+////    {
+////      if      (px  < x.min ) x.min = px;
+////      else if (px  > x.max ) x.max = px;
+////      if      (py  < y[yIndex].min ) y[yIndex].min = py;
+////      else if (py  > y[yIndex].max ) y[yIndex].max = py;
+////    }
+////  }
+//  /// Initialize bounding box with an initial point
+////  void InitializeBoundingBox(double px, double py, size_t yIndex = 0) {
+////    assert(yIndex < y.size());
+////    if(yIndex < y.size())
+////    {
+////      x.min = x.max = px;
+////      y[yIndex].min = y[yIndex].max = py;
+////    }
+////  }
+//  /// Is mpFloatRect set ?
+//  bool IsNotSet(mpWindow& w) const { const mpFloatRect def(w); return *this==def; }
+//  /// Equal operator
+//#if (defined(__cplusplus) && (__cplusplus > 201703L)) // C++ > C++17 (MSVC requires <AdditionalOptions>/Zc:__cplusplus</AdditionalOptions>
+//  bool operator==(const mpFloatRect&) const = default;
+//#else
+//  // We compare with an epsilon precision
+//  // NOTE: should be unnecessary as we are looking for any changes; normally this will be an exact match or a real change...
+//  bool operator==(const mpFloatRect& rect) const
+//  {
+//    auto Same = [](double a, double b) {
+//      return std::fabs(a - b) < EPSILON;
+//    };
+//
+//    // Compare scalar members
+////    if (!Same(x.min, rect.x.min) || !Same(x.max, rect.x.max))
+////    {
+////      return false;
+////    }
+//
+//    // Compare vector sizes
+//    if (y.size() != rect.y.size())
+//    {
+//      return false;
+//    }
+//
+//    // Compare each Y boundary
+//    for (size_t i = 0; i < y.size(); ++i)
+//    {
+//      if (!Same(y[i].min, rect.y[i].min) ||
+//          !Same(y[i].max, rect.y[i].max)  )
+//      {
+//        return false;
+//      }
+//    }
+//
+//    return true;
+//  }
+//#endif
+//};
 
 /** Command IDs used by mpWindow
  * Same order for the popup menu
@@ -2349,6 +2369,33 @@ class WXDLLIMPEXP_MATHPLOT mpPieChart: public mpChart
 typedef std::deque<mpLayer*> mpLayerList;
 
 /**
+ * @brief Represents all the informations needed for an Y axis
+ * This struct holds:
+ * - a pointer to the Y axis
+ * - the data structure for the scale and position
+ * - the bound
+ * - the desired bound
+ * It supports equality comparison using the default `operator==`.
+ */
+struct mpYAxisInfo
+{
+    mpScaleY* m_Axis;   //!< Pointer to the Y axes layer
+    mpAxisData m_Data;  //!< Y scale and position structure
+    mpRange m_Bound;    //!< Range min and max of Y interval
+    mpRange m_Desired;  //!< Desired range min and max of Y interval
+
+#if (defined(__cplusplus) && (__cplusplus > 201703L)) // C++20 or newer
+  bool operator==(const mpYAxisInfo&) const = default;
+#else
+  bool operator==(const mpYAxisInfo& other) const
+  {
+    return (m_Axis == other.m_Axis) && m_Data == other.m_Data &&
+        m_Bound == other.m_Bound && m_Desired == other.m_Desired;
+  }
+#endif
+};
+
+/**
  * Define an event for when we delete a layer
  * Use like this :
  *  your_plot->SetOnDeleteLayer([this](void *Sender, const wxString &classname, bool &cancel)
@@ -2440,7 +2487,7 @@ class mpMagnet
 class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 {
   public:
-    mpWindow() : m_yAxisDataList(1), m_bound(*this), m_desired(*this), m_lastDesiredReportedBounds(*this)
+    mpWindow()
     {
       InitParameters();
     }
@@ -2590,7 +2637,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     {
       if (ISNOTNULL(scaleY))
       {
-        m_yAxisDataList[yIndex].m_scaleY = scaleY;
+        m_YAxisList[yIndex].m_Data.m_scale = scaleY;
         UpdateDesiredBoundingBox();
       }
       UpdateAll();
@@ -2602,7 +2649,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      */
     double GetScaleY(size_t yIndex = 0) const
     {
-      return m_yAxisDataList[yIndex].m_scaleY;
+      return m_YAxisList[yIndex].m_Data.m_scale;
     } // Schaling's method: maybe another method exists with the same name
 
     [[deprecated("Incomplete, use UpdateBBox instead")]]
@@ -2610,10 +2657,16 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      * \deprecated Incomplete! Use UpdateBBox! */
     void SetBound();
 
-    /** Get bounding box encompassing all visible plots on this mpWindow. */
-    mpFloatRect Get_Bound(void) const
+    /** Get bounding box for X axis. */
+    mpRange Get_BoundX(void) const
     {
-      return m_bound;
+      return m_boundx;
+    }
+
+    /** Get bounding box for Y axis of index yIndex. */
+    mpRange Get_BoundY(size_t yIndex = 0) const
+    {
+      return m_YAxisList[yIndex].m_Bound;
     }
 
     /** Set current view's X position and refresh display.
@@ -2640,9 +2693,9 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      */
     void SetPosY(const std::vector<double>& posYList)
     {
-      for(size_t i = 0; i < m_yAxisDataList.size(); i++)
+      for(size_t i = 0; i < m_YAxisList.size(); i++)
       {
-        m_yAxisDataList[i].m_posY = posYList[i];
+        m_YAxisList[i].m_Data.m_pos = posYList[i];
       }
       UpdateDesiredBoundingBox();
       UpdateAll();
@@ -2654,17 +2707,17 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      */
     double GetPosY(size_t yIndex = 0) const
     {
-      return m_yAxisDataList[yIndex].m_posY;
+      return m_YAxisList[yIndex].m_Data.m_pos;
     }
 
     size_t GetNOfYScales(void) const
     {
       // Should never be size 0
-      assert(m_yAxisDataList.size() != 0);
-      return m_yAxisDataList.size();
+      assert(m_YAxisList.size() != 0);
+      return m_YAxisList.size();
     }
 
-    std::vector<mpScaleY*> GetYAxisList(void) const
+    std::vector<mpYAxisInfo> GetYAxisList(void) const
     {
       return m_YAxisList;
     }
@@ -2721,9 +2774,9 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     void SetPos(const double posX, const std::vector<double>& posYList)
     {
       m_posX = posX;
-      for(size_t i = 0; i < m_yAxisDataList.size(); i++)
+      for(size_t i = 0; i < m_YAxisList.size(); i++)
       {
-        m_yAxisDataList[i].m_posY = posYList[i];
+        m_YAxisList[i].m_Data.m_pos = posYList[i];
       }
 
       UpdateDesiredBoundingBox();
@@ -2743,7 +2796,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      * @sa p2x,x2p,y2p */
     inline double p2y(const wxCoord pixelCoordY, size_t yIndex = 0) const
     {
-      return m_yAxisDataList[yIndex].m_posY - (pixelCoordY / m_yAxisDataList[yIndex].m_scaleY);
+      return m_YAxisList[yIndex].m_Data.m_pos - (pixelCoordY / m_YAxisList[yIndex].m_Data.m_scale);
     }
 
     /** Converts graph (floating point) coordinates into mpWindow (screen) pixel coordinates,
@@ -2759,7 +2812,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      * @sa p2x,p2y,x2p */
     inline wxCoord y2p(const double y, size_t yIndex = 0) const
     {
-      return (wxCoord)((m_yAxisDataList[yIndex].m_posY - y) * m_yAxisDataList[yIndex].m_scaleY);
+      return (wxCoord)((m_YAxisList[yIndex].m_Data.m_pos - y) * m_YAxisList[yIndex].m_Data.m_scale);
     }
 
     /** Enable/disable the double-buffering of the window, eliminating the flicker (default=enabled).
@@ -2813,7 +2866,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      pixel scales are computed accordingly. Also, in this case the passed borders are not saved
      as the "desired borders", since this use will be invoked only when printing.
      */
-    void Fit(const mpFloatRect &rect, wxCoord *printSizeX = NULL, wxCoord *printSizeY = NULL);
+    void Fit(const mpRange &rangeX, const std::vector<mpRange> &rangeY, wxCoord *printSizeX = NULL, wxCoord *printSizeY = NULL);
 
     /** Similar to Fit() but only fit in X. Intentionally don't call UpdateAll() since
      *  you might want to perform other actions before updating plot
@@ -2889,13 +2942,13 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      */
     void UpdateDesiredBoundingBox()
     {
-      m_desired.x.min = m_posX + (m_margin.left / m_scaleX);
-      m_desired.x.max = m_posX + ((m_margin.left + m_plotWidth) / m_scaleX);
+      m_desiredx.min = m_posX + (m_margin.left / m_scaleX);
+      m_desiredx.max = m_posX + ((m_margin.left + m_plotWidth) / m_scaleX);
 
-      for(size_t i = 0; i < m_desired.y.size(); i++)
+      for(size_t i = 0; i < m_YAxisList.size(); i++)
       {
-        m_desired.y[i].max = m_yAxisDataList[i].m_posY - (m_margin.top / m_yAxisDataList[i].m_scaleY);
-        m_desired.y[i].min = m_yAxisDataList[i].m_posY - ((m_margin.top + m_plotHeight) / m_yAxisDataList[i].m_scaleY);
+        m_YAxisList[i].m_Desired.max = m_YAxisList[i].m_Data.m_pos - (m_margin.top / m_YAxisList[i].m_Data.m_scale);
+        m_YAxisList[i].m_Desired.min = m_YAxisList[i].m_Data.m_pos - ((m_margin.top + m_plotHeight) / m_YAxisList[i].m_Data.m_scale);
       }
 
       CheckAndReportDesiredBoundsChanges();
@@ -2903,14 +2956,14 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 
     /// Get the 'desired' user-coordinate bounding box for the currently displayed view (set by Fit, Zoom or Pan operations).
     /// @sa Fit, Zoom
-    mpFloatRect GetDesiredBoundingBox() const { return m_desired; }
+//    mpFloatRect GetDesiredBoundingBox() const { /*return m_desired; */}
 
     /** Returns the left-border layer coordinate that the user wants the mpWindow to show (it may be not exactly the actual shown coordinate in the case of locked aspect ratio).
      * @sa Fit, Zoom
      */
     double GetDesiredXmin() const
     {
-      return m_desired.x.min;
+      return m_desiredx.min;
     }
 
     /** Return the right-border layer coordinate that the user wants the mpWindow to show
@@ -2919,7 +2972,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      */
     double GetDesiredXmax() const
     {
-      return m_desired.x.max;
+      return m_desiredx.max;
     }
 
     /** Return the bottom-border layer coordinate that the user wants the mpWindow to show (it may be
@@ -2928,7 +2981,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      */
     double GetDesiredYmin(size_t yIndex) const
     {
-      return m_desired.y[yIndex].min;
+      return m_YAxisList[yIndex].m_Desired.min;  // m_desired.y[yIndex].min;
     }
 
     /** Return the top layer-border coordinate that the user wants the mpWindow to show (it may be
@@ -2937,15 +2990,14 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      */
     double GetDesiredYmax(size_t yIndex) const
     {
-      return m_desired.y[yIndex].max;
+      return m_YAxisList[yIndex].m_Desired.max; //m_desired.y[yIndex].max;
     }
 
-    /** Return the bounding box coordinates
-     @param bbox Pointer to a 6-element double array where to store bounding box coordinates. */
-    void GetBoundingBox(double *bbox) const;
-    mpFloatRect *GetBoundingBox(void)
+    /** Return the bounding box coordinates for the Y axis of index yIndex */
+    void GetBoundingBox(mpRange *boundX, mpRange *boundY, size_t yIndex)
     {
-      return &m_bound;
+      *boundX = m_boundx;
+      *boundY = m_YAxisList[yIndex].m_Bound;
     }
 
     /** Enable/disable scrollbars
@@ -3345,12 +3397,6 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 
     void InitParameters();
 
-    /** Apart from the actual Y-axis (mpScaleY), the mpWindow keeps a set of parameters
-     * that depends on how many Y-axis we have. If we add plots with new Y-axes we need
-     * to adjust the size of these parameters
-     @param Number of Y-axis */
-    void UpdateNOfYAxes(size_t nOfYAxes);
-
     /**
      * Provide a new unique index for an Y axis
      */
@@ -3365,7 +3411,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 
     mpLayerList m_layers;   //!< List of attached plot layers
     mpScaleX* m_XAxis;      //!< Pointer to the optional X axis layer of this mpWindow
-    std::vector<mpScaleY*> m_YAxisList;  //!< Pointer to the optional Y axes layer of this mpWindow
+    std::vector<mpYAxisInfo> m_YAxisList;  //!< List of Y axes layer of this mpWindow
     int m_LastYAxisIndex;   //!< The last index of Y axis known
     size_t m_NumberOfYAxis; //!< The number of Y axis in the Axis list
 
@@ -3378,20 +3424,14 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 
     double m_scaleX;        //!< Current view's X scale
     double m_posX;          //!< Current view's X position
-    struct m_yAxisData      //!< Y scale and position structure
-    {
-      double m_scaleY = 1.0;
-      double m_posY = 0;
-    };
-    std::vector<m_yAxisData> m_yAxisDataList;  //!< Current view's Y scales and Y positions
 
     int m_scrX;             //!< Current view's X dimension in DC units, including all scales, margins
     int m_scrY;             //!< Current view's Y dimension
     int m_clickedX;         //!< Last mouse click X position, for centering and zooming the view
     int m_clickedY;         //!< Last mouse click Y position, for centering and zooming the view
 
-    mpFloatRect m_bound;                //!< Global layer bounding box in user coordinates. Does NOT include borders.
-    mpFloatRect m_desired;              //!< Stores current plot view min/max boundaries. Used primarily during frame resizing via OnSize
+    mpRange m_boundx;
+    mpRange m_desiredx;
 
     mpRect m_margin;                    //!< Margin around the plot including Y-axis
     mpRect m_marginOuter;               //!< Margin around the plot exluding Y-axis. Default 50
@@ -3447,7 +3487,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 
     void CheckAndReportDesiredBoundsChanges(); //!< Report any change of desired display bounds to user's derived class (for example during zoom).
     bool m_initialDesiredBoundsRecorded = false; //!< Has m_lastDesiredReportedBounds been set?
-    mpFloatRect m_lastDesiredReportedBounds; //!< for use in DesiredBoundsHaveChanged reporting in Fit()
+//    mpFloatRect m_lastDesiredReportedBounds; //!< for use in DesiredBoundsHaveChanged reporting in Fit()
 
   wxDECLARE_DYNAMIC_CLASS(mpWindow);
   wxDECLARE_EVENT_TABLE();

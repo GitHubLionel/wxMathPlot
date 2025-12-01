@@ -248,7 +248,7 @@ void MathPlotDemoFrame::OnbBarClick(wxCommandEvent &WXUNUSED(event))
 {
   CleanPlot();
 
-  mpFXYVector* vectorLayer = new mpFXYVector(_T("Bar X²"), mpALIGN_NE, leftAxis);
+  mpFXYVector* vectorLayer = new mpFXYVector(_T("Bar X²"), mpALIGN_NE, true, leftAxis);
   vectorLayer->SetBrush(*wxGREEN);
   // Create two vectors for x,y and fill them with data
   std::vector<double> vectorx, vectory;
@@ -273,7 +273,7 @@ void MathPlotDemoFrame::OnbLogClick(wxCommandEvent &WXUNUSED(event))
   bottomAxis->SetMaxScale(10);
   leftAxis->SetLogAxis(true);
 
-  mPlot->AddLayer(new MyPower());
+  mPlot->AddLayer(new MyPower(leftAxis));
   mPlot->Fit();
 }
 
@@ -293,7 +293,7 @@ void MathPlotDemoFrame::OnbLogXYClick(wxCommandEvent &WXUNUSED(event))
     vectorY.push_back(i);
   }
 
-  mpFXYVector* Power2 = new mpFXYVector(_("Power of 2"), mpALIGN_NE, leftAxis);
+  mpFXYVector* Power2 = new mpFXYVector(_("Power of 2"), mpALIGN_NE, false, leftAxis);
   Power2->SetData(vectorX, vectorY);
   Power2->SetContinuity(true);
   wxPen s1pen(*wxGREEN, 2, wxPENSTYLE_SOLID);
@@ -309,6 +309,7 @@ void MathPlotDemoFrame::OnbBarChartClick(wxCommandEvent &WXUNUSED(event))
 {
   CleanPlot();
   mpBarChart* barChart = new mpBarChart(_T("BarChart"));
+  barChart->SetYAxisIndex(leftAxis);
   // Create vector for y and fill it with data
   std::vector<double> vectory;
   double ycoord;
@@ -434,6 +435,7 @@ void MathPlotDemoFrame::OnUserMouseAction(void *Sender, wxMouseEvent &event, boo
     wxColour random_color = wxIndexColour(rand() * 20 / RAND_MAX);
     CurrentPolyline->SetPen(wxPen(random_color, 2));
     CurrentPolyline->SetContinuity(true);
+    CurrentPolyline->SetYAxisIndex(leftAxis);
 
     // Add new Polyline but not plot it
     plotWindow->AddLayer(CurrentPolyline, false);
