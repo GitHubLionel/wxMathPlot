@@ -225,7 +225,7 @@ bool DoubleToTimeStruct(double val, unsigned int timeConv, struct tm *timestruct
 // mpFloatRect
 //-----------------------------------------------------------------------------
 
-mpFloatRect::mpFloatRect(mpWindow& w) : x(), y(w.GetNOfYScales()){}
+//mpFloatRect::mpFloatRect(mpWindow& w) : y(w.GetNOfYScales()){}
 
 //-----------------------------------------------------------------------------
 // mpLayer
@@ -261,9 +261,11 @@ void mpLayer::Plot(wxDC &dc, mpWindow &w)
     return;
 
   m_busy = true;
-  DoBeforePlot();
-  UpdateContext(dc);
-  DoPlot(dc, w);
+  if (DoBeforePlot())
+  {
+    UpdateContext(dc);
+    DoPlot(dc, w);
+  }
   m_busy = false;
 }
 
@@ -288,13 +290,13 @@ wxBitmap mpLayer::GetColourSquare(int side)
   return square;
 }
 
-void mpLayer::CheckLog(double *x, double *y, size_t id)
+void mpLayer::CheckLog(double *x, double *y, int yID)
 {
   if (m_win == NULL)
     return;
   if (m_win->IsLogXaxis())
     *x = log10(*x);
-  if (m_win->IsLogYaxis(id))
+  if (m_win->IsLogYaxis(yID))
     *y = log10(*y);
 }
 
@@ -567,9 +569,10 @@ void mpInfoCoords::UpdateInfo(mpWindow &w, wxEvent &event)
     else
     {
       xVal = w.p2x(m_mouseX);
-      for (size_t i = 0; i < w.GetNOfYScales(); i++)
+//      for (size_t i = 0; i < w.GetNOfYScales(); i++)
+      for (const auto& axisInfo : w.GetYAxisList())
       {
-        yVal = w.p2y(m_mouseY, i);
+        yVal = w.p2y(m_mouseY, axisInfo.first);
         yValList.push_back(yVal);
       }
     }
@@ -577,10 +580,13 @@ void mpInfoCoords::UpdateInfo(mpWindow &w, wxEvent &event)
     // Log axis
     if (m_win->IsLogXaxis())
       xVal = pow(10, xVal);
-    for (size_t i = 0; i < w.GetNOfYScales(); i++)
+//    for (size_t i = 0; i < w.GetNOfYScales(); i++)
+    int i = 0;
+    for (const auto& axisInfo : w.GetYAxisList())
     {
-      if (m_win->IsLogYaxis(i))
+      if (m_win->IsLogYaxis(axisInfo.first))
         yValList[i] = pow(10, yValList[i]);
+      i++;
     }
 
     m_content = GetInfoCoordsText(w, xVal, yValList);
@@ -636,13 +642,15 @@ wxString mpInfoCoords::GetInfoCoordsText(mpWindow &w, double xVal, std::vector<d
     wxString yAxisDataWithName = _T("");
     wxString yAxisDataWithoutName = _T("");
     int nOfUsedYAxes = 0;
-    for (size_t i = 0; i < yValList.size(); i++)
+//    for (size_t i = 0; i < yValList.size(); i++)
+    int i = 0;
+    for (const auto& axisInfo : w.GetYAxisList())
     {
-      if (w.IsYAxisUsed(i))
+      if (w.IsYAxisUsed(axisInfo.first))
       {
         nOfUsedYAxes++;
-        wxString axisName = wxString::Format(_T("y%zu"), i);
-        mpScaleY* yAxis = w.GetLayerYAxis(i);
+        wxString axisName = wxString::Format(_T("y%d"), axisInfo.first);
+        mpScaleY* yAxis = w.GetLayerYAxis(axisInfo.first);
         if (yAxis != nullptr)
         {
           axisName += wxString::Format(_T(" - %s"), yAxis->GetName());
@@ -650,6 +658,7 @@ wxString mpInfoCoords::GetInfoCoordsText(mpWindow &w, double xVal, std::vector<d
         yAxisDataWithName += wxString::Format(_T("\n%s = %g"), axisName, yValList[i]);
         yAxisDataWithoutName.Printf(_T("\ny = %g"), yValList[i]);
       }
+      i++;
     }
 
     if (nOfUsedYAxes > 1)
@@ -960,7 +969,7 @@ int mpInfoLegend::GetPointed(mpWindow &WXUNUSED(w), wxPoint eventPoint)
 
 IMPLEMENT_ABSTRACT_CLASS(mpFunction, mpLayer)
 
-mpFunction::mpFunction(mpLayerType layerType /*=mpLAYER_PLOT*/, const wxString &name/*=wxEmptyString*/, size_t yAxisIndex/* = 0*/) :
+mpFunction::mpFunction(mpLayerType layerType /*=mpLAYER_PLOT*/, const wxString &name/*=wxEmptyString*/, mpScaleY *yAxisUsed/* = NULL*/) :
     mpLayer(layerType)
 {
   m_subtype = mpfAllType;
@@ -970,7 +979,7 @@ mpFunction::mpFunction(mpLayerType layerType /*=mpLAYER_PLOT*/, const wxString &
   m_symbolSize2 = 3;
   m_continuous = false; // Default
   m_step = 1;
-  m_yAxisIndex = yAxisIndex;
+  SetYAxis(yAxisUsed);
   m_ZIndex = mpZIndex_PLOT;
 }
 
@@ -1042,12 +1051,12 @@ mpLine::mpLine(double value, const wxPen &pen) :
 
 IMPLEMENT_ABSTRACT_CLASS(mpHorizontalLine, mpFunction)
 
-mpHorizontalLine::mpHorizontalLine(double yvalue, const wxPen &pen, size_t yAxisIndex) :
+mpHorizontalLine::mpHorizontalLine(double yvalue, const wxPen &pen, mpScaleY *yAxisUsed) :
     mpLine(yvalue, pen)
 {
   SetName(wxT("Horizontal line"));
+  SetYAxis(yAxisUsed);
   m_IsHorizontal = true;
-  SetYAxisIndex(yAxisIndex);
 }
 
 void mpHorizontalLine::DoPlot(wxDC &dc, mpWindow &w)
@@ -1056,10 +1065,10 @@ void mpHorizontalLine::DoPlot(wxDC &dc, mpWindow &w)
   m_plotBoundaries = w.GetPlotBoundaries(!m_drawOutsideMargins);
 
   wxCoord iy;
-  if (m_win->IsLogYaxis(m_yAxisIndex))
-    iy = w.y2p(log10(m_value), m_yAxisIndex);
+  if (m_win->IsLogYaxis(m_yAxisID))
+    iy = w.y2p(log10(m_value), m_yAxisID);
   else
-    iy = w.y2p(m_value, m_yAxisIndex);
+    iy = w.y2p(m_value, m_yAxisID);
 
   // Draw nothing if we are outside margins
   if (!m_drawOutsideMargins && ((iy > (w.GetScreenY() - w.GetMarginBottom())) || (iy < w.GetMarginTop())))
@@ -1153,8 +1162,8 @@ void mpVerticalLine::DoPlot(wxDC &dc, mpWindow &w)
 
 IMPLEMENT_ABSTRACT_CLASS(mpFX, mpFunction)
 
-mpFX::mpFX(const wxString &name, int flags, size_t yAxisIndex) :
-    mpFunction(mpLAYER_PLOT, name, yAxisIndex)
+mpFX::mpFX(const wxString &name, int flags, mpScaleY *yAxisUsed) :
+    mpFunction(mpLAYER_PLOT, name, yAxisUsed)
 {
   m_subtype = mpfFX;
   m_flags = flags;
@@ -1173,7 +1182,7 @@ double mpFX::LogDoGetY(double x)
 
 void mpFX::DefineDoGetY(void)
 {
-  if (m_win->IsLogYaxis(m_yAxisIndex))
+  if (m_win->IsLogYaxis(m_yAxisID))
     pDoGetY = &mpFX::LogDoGetY;
   else
     pDoGetY = &mpFX::NormalDoGetY;
@@ -1209,11 +1218,11 @@ void mpFX::DoPlot(wxDC &dc, mpWindow &w)
     if (m_continuous)
     {
       // Get first point
-      iylast = w.y2p((this->*pDoGetY)(w.p2x(m_plotBoundaries.startPx)), m_yAxisIndex);
+      iylast = w.y2p((this->*pDoGetY)(w.p2x(m_plotBoundaries.startPx)), m_yAxisID);
 
       for (i = m_plotBoundaries.startPx + m_step; i < m_plotBoundaries.endPx; i += m_step)
       {
-        iy = w.y2p((this->*pDoGetY)(w.p2x(i)), m_yAxisIndex);
+        iy = w.y2p((this->*pDoGetY)(w.p2x(i)), m_yAxisID);
         dc.DrawLine(i - m_step, iylast, i, iy);
         if (m_symbol != mpsNone)
           DrawSymbol(dc, i - m_step, iylast);
@@ -1227,7 +1236,7 @@ void mpFX::DoPlot(wxDC &dc, mpWindow &w)
     {
       for (i = m_plotBoundaries.startPx; i < m_plotBoundaries.endPx; i += m_step)
       {
-        iy = w.y2p((this->*pDoGetY)(w.p2x(i)), m_yAxisIndex);
+        iy = w.y2p((this->*pDoGetY)(w.p2x(i)), m_yAxisID);
         if (m_symbol == mpsNone)
           dc.DrawLine(i, iy, i, iy);
         else
@@ -1239,7 +1248,7 @@ void mpFX::DoPlot(wxDC &dc, mpWindow &w)
   {
     for (i = m_plotBoundaries.startPx; i < m_plotBoundaries.endPx; i += m_step)
     {
-      iy = w.y2p((this->*pDoGetY)(w.p2x(i)), m_yAxisIndex);
+      iy = w.y2p((this->*pDoGetY)(w.p2x(i)), m_yAxisID);
       if (m_symbol == mpsNone)
         dc.DrawPoint(i, iy);
       else
@@ -1273,7 +1282,7 @@ void mpFX::DoPlot(wxDC &dc, mpWindow &w)
         tx = w.GetMarginLeft() + 8;
     }
 
-    dc.DrawText(m_name, tx, w.y2p((this->*pDoGetY)(w.p2x(tx)), m_yAxisIndex));
+    dc.DrawText(m_name, tx, w.y2p((this->*pDoGetY)(w.p2x(tx)), m_yAxisID));
   }
 }
 
@@ -1283,8 +1292,8 @@ void mpFX::DoPlot(wxDC &dc, mpWindow &w)
 
 IMPLEMENT_ABSTRACT_CLASS(mpFY, mpFunction)
 
-mpFY::mpFY(const wxString &name, int flags, size_t yAxisIndex) :
-    mpFunction(mpLAYER_PLOT, name, yAxisIndex)
+mpFY::mpFY(const wxString &name, int flags, mpScaleY *yAxisUsed) :
+    mpFunction(mpLAYER_PLOT, name, yAxisUsed)
 {
   m_subtype = mpfFY;
   m_flags = flags;
@@ -1339,11 +1348,11 @@ void mpFY::DoPlot(wxDC &dc, mpWindow &w)
     if (m_continuous)
     {
       // Get first point
-      ixlast = w.x2p((this->*pDoGetX)(w.p2y(m_plotBoundaries.startPy, m_yAxisIndex)));
+      ixlast = w.x2p((this->*pDoGetX)(w.p2y(m_plotBoundaries.startPy, m_yAxisID)));
 
       for (i = m_plotBoundaries.startPy + m_step; i < m_plotBoundaries.endPy; i += m_step)
       {
-        ix = w.x2p((this->*pDoGetX)(w.p2y(i, m_yAxisIndex)));
+        ix = w.x2p((this->*pDoGetX)(w.p2y(i, m_yAxisID)));
         dc.DrawLine(ixlast, i - m_step, ix, i);
         if (m_symbol != mpsNone)
           DrawSymbol(dc, ixlast, i - m_step);
@@ -1357,7 +1366,7 @@ void mpFY::DoPlot(wxDC &dc, mpWindow &w)
     {
       for (i = m_plotBoundaries.startPy; i < m_plotBoundaries.endPy; i += m_step)
       {
-        ix = w.x2p((this->*pDoGetX)(w.p2y(i, m_yAxisIndex)));
+        ix = w.x2p((this->*pDoGetX)(w.p2y(i, m_yAxisID)));
         if (m_symbol == mpsNone)
           dc.DrawLine(ix, i, ix, i);
         else
@@ -1369,7 +1378,7 @@ void mpFY::DoPlot(wxDC &dc, mpWindow &w)
   {
     for (i = m_plotBoundaries.startPy; i < m_plotBoundaries.endPy; i += m_step)
     {
-      ix = w.x2p((this->*pDoGetX)(w.p2y(i, m_yAxisIndex)));
+      ix = w.x2p((this->*pDoGetX)(w.p2y(i, m_yAxisID)));
       if (m_symbol == mpsNone)
         dc.DrawPoint(ix, i);
       else
@@ -1403,7 +1412,7 @@ void mpFY::DoPlot(wxDC &dc, mpWindow &w)
         ty = w.GetScreenY() - w.GetMarginBottom() - ty - 8;
     }
 
-    dc.DrawText(m_name, w.x2p((this->*pDoGetX)(w.p2y(ty, m_yAxisIndex))), ty);
+    dc.DrawText(m_name, w.x2p((this->*pDoGetX)(w.p2y(ty, m_yAxisID))), ty);
   }
 }
 
@@ -1413,8 +1422,8 @@ void mpFY::DoPlot(wxDC &dc, mpWindow &w)
 
 IMPLEMENT_ABSTRACT_CLASS(mpFXY, mpFunction)
 
-mpFXY::mpFXY(const wxString &name, int flags, bool viewAsBar, size_t yAxisIndex) :
-    mpFunction(mpLAYER_PLOT, name, yAxisIndex)
+mpFXY::mpFXY(const wxString &name, int flags, bool viewAsBar, mpScaleY *yAxisUsed) :
+    mpFunction(mpLAYER_PLOT, name, yAxisUsed)
 {
   m_subtype = mpfFXY;
   m_flags = flags;
@@ -1453,7 +1462,7 @@ bool mpFXY::DoGetNextXY(double *x, double *y)
   bool result = GetNextXY(x, y);
   if (result)
   { // only log-scale result if there is actually a result...
-    CheckLog(x, y, m_yAxisIndex);
+    CheckLog(x, y, m_yAxisID);
   }
   return result;
 }
@@ -1490,12 +1499,12 @@ void mpFXY::DoPlot(wxDC &dc, mpWindow &w)
       {
         // Get first point in bound
         ixlast = w.x2p(x);
-        iylast = w.y2p(y, m_yAxisIndex);
+        iylast = w.y2p(y, m_yAxisID);
 
         while (DoGetNextXY(&x, &y))
         {
           ix = w.x2p(x);
-          iy = w.y2p(y, m_yAxisIndex);
+          iy = w.y2p(y, m_yAxisID);
 
           dc.DrawLine(ixlast, iylast, ix, iy);
           UpdateViewBoundary(ix, iy);
@@ -1516,7 +1525,7 @@ void mpFXY::DoPlot(wxDC &dc, mpWindow &w)
         while (DoGetNextXY(&x, &y))
         {
           ix = w.x2p(x);
-          iy = w.y2p(y, m_yAxisIndex);
+          iy = w.y2p(y, m_yAxisID);
           if (m_symbol == mpsNone)
             dc.DrawLine(ix, iy, ix, iy);
           else
@@ -1532,7 +1541,7 @@ void mpFXY::DoPlot(wxDC &dc, mpWindow &w)
       while (DoGetNextXY(&x, &y))
       {
         ix = w.x2p(x);
-        iy = w.y2p(y, m_yAxisIndex);
+        iy = w.y2p(y, m_yAxisID);
         if (m_symbol == mpsNone)
           dc.DrawPoint(ix, iy);
         else
@@ -1549,12 +1558,12 @@ void mpFXY::DoPlot(wxDC &dc, mpWindow &w)
     m_BarWidth = (int)((delta * w.GetScaleX()) / 3.5);
     if (m_BarWidth == 0)
       m_BarWidth = 1;
-    wxCoord iybase = w.y2p(0, m_yAxisIndex);
+    wxCoord iybase = w.y2p(0, m_yAxisID);
     Rewind();
     while (DoGetNextXY(&x, &y))
     {
       ix = w.x2p(x);
-      iy = w.y2p(y, m_yAxisIndex);
+      iy = w.y2p(y, m_yAxisID);
       dc.DrawRectangle(ix - m_BarWidth, iy, 2 * m_BarWidth, iybase - iy);
       UpdateViewBoundary(ix, iy);
     }
@@ -1608,8 +1617,8 @@ void mpFXY::DoPlot(wxDC &dc, mpWindow &w)
 wxIMPLEMENT_DYNAMIC_CLASS(mpFXYVector, mpFXY);
 
 // Constructor
-mpFXYVector::mpFXYVector(const wxString &name, int flags, bool viewAsBar, size_t yAxisIndex) :
-    mpFXY(name, flags, viewAsBar, yAxisIndex)
+mpFXYVector::mpFXYVector(const wxString &name, int flags, bool viewAsBar, mpScaleY *yAxisUsed) :
+    mpFXY(name, flags, viewAsBar, yAxisUsed)
 {
   m_subtype = mpfFXYVector;
   m_index = 0;
@@ -1650,9 +1659,9 @@ void mpFXYVector::DrawAddedPoint(double x, double y)
   dc.SetPen(m_pen);
   dc.SetBrush(m_brush);
 
-  CheckLog(&x, &y, m_yAxisIndex);
+  CheckLog(&x, &y, m_yAxisID);
   wxCoord ix = m_win->x2p(x);
-  wxCoord iy = m_win->y2p(y, m_yAxisIndex);
+  wxCoord iy = m_win->y2p(y, m_yAxisID);
 
   if (!m_ViewAsBar)
   {
@@ -1664,9 +1673,9 @@ void mpFXYVector::DrawAddedPoint(double x, double y)
         size_t lastPtIdx = m_index - 1; // we assume that m_step = 1 in this context
         double xlast = m_xs[lastPtIdx];
         double ylast = m_ys[lastPtIdx];
-        CheckLog(&xlast, &ylast, m_yAxisIndex);
+        CheckLog(&xlast, &ylast, m_yAxisID);
         wxCoord ixlast = m_win->x2p(xlast);
-        wxCoord iylast = m_win->y2p(ylast, m_yAxisIndex);
+        wxCoord iylast = m_win->y2p(ylast, m_yAxisID);
         dc.DrawLine(ixlast, iylast, ix, iy);
       };
 
@@ -1688,7 +1697,7 @@ void mpFXYVector::DrawAddedPoint(double x, double y)
   }
   else
   {
-    wxCoord iybase = m_win->y2p(0, m_yAxisIndex);
+    wxCoord iybase = m_win->y2p(0, m_yAxisID);
     dc.DrawRectangle(ix - m_BarWidth, iy, 2 * m_BarWidth, iybase - iy);
   }
 }
@@ -1793,12 +1802,16 @@ bool mpFXYVector::AddData(const double x, const double y, bool updatePlot)
 
   if (m_win)
   {
-    const mpFloatRect* bbox = m_win->GetBoundingBox();
-    new_limit = (GetMinX() < bbox->x.min) || (GetMaxX() > bbox->x.max) || (GetMinY() < bbox->y[m_yAxisIndex].min) || (GetMaxY() > bbox->y[m_yAxisIndex].max);
-
-    if (updatePlot && !new_limit)
+    mpRange bboxX;
+    mpRange bboxY;
+    if (m_win->GetBoundingBox(&bboxX, &bboxY, m_yAxisID))
     {
-      DrawAddedPoint(x, y);
+      new_limit = (GetMinX() < bboxX.min) || (GetMaxX() > bboxX.max) || (GetMinY() < bboxY.min) || (GetMaxY() > bboxY.max);
+
+      if (updatePlot && !new_limit)
+      {
+        DrawAddedPoint(x, y);
+      }
     }
   }
   // In all cases, we increment the index
@@ -1827,12 +1840,12 @@ void mpProfile::DoPlot(wxDC &dc, mpWindow &w)
   m_plotBoundaries = w.GetPlotBoundaries(!m_drawOutsideMargins);
 
   // Plot profile linking subsequent point of the profile, instead of mpFY, which plots simple points.
-  wxCoord c0 = w.y2p(GetY(w.p2x(m_plotBoundaries.startPx)), m_yAxisIndex);
+  wxCoord c0 = w.y2p(GetY(w.p2x(m_plotBoundaries.startPx)), m_yAxisID);
   if (!m_drawOutsideMargins)
     c0 = (c0 <= m_plotBoundaries.endPy) ? ((c0 >= m_plotBoundaries.startPy) ? c0 : m_plotBoundaries.startPy) : m_plotBoundaries.endPy;
   for (i = m_plotBoundaries.startPx + m_step; i < m_plotBoundaries.endPx; i += m_step)
   {
-    wxCoord c1 = w.y2p(GetY(w.p2x(i)), m_yAxisIndex);
+    wxCoord c1 = w.y2p(GetY(w.p2x(i)), m_yAxisID);
 
     if (!m_drawOutsideMargins)
       c1 = (c1 <= m_plotBoundaries.endPy) ? ((c1 >= m_plotBoundaries.startPy) ? c1 : m_plotBoundaries.startPy) : m_plotBoundaries.endPy;
@@ -1866,7 +1879,7 @@ void mpProfile::DoPlot(wxDC &dc, mpWindow &w)
         tx = w.GetMarginLeft() + 8;
     }
 
-    dc.DrawText(m_name, tx, w.y2p(GetY(w.p2x(tx)), m_yAxisIndex));
+    dc.DrawText(m_name, tx, w.y2p(GetY(w.p2x(tx)), m_yAxisID));
   }
 }
 
@@ -1960,9 +1973,9 @@ void mpBarChart::DoPlot(wxDC &dc, mpWindow &w)
     for (size_t binIndex = 0; binIndex < values.size(); binIndex++)
     {
       rect_x_tl = w.x2p(((double)binIndex) + 1.0 - 0.5 * m_width);
-      rect_y_tl = w.y2p(values[binIndex], m_yAxisIndex);
+      rect_y_tl = w.y2p(values[binIndex], m_yAxisID);
       rect_width = m_width * w.GetScaleX();
-      rect_height = values[binIndex] * w.GetScaleY();
+      rect_height = values[binIndex] * w.GetScaleY(m_yAxisID);
       dc.DrawRectangle(rect_x_tl, rect_y_tl, rect_width, rect_height);
       if (drawLabels)
       {
@@ -1972,15 +1985,15 @@ void mpBarChart::DoPlot(wxDC &dc, mpWindow &w)
         {
           case mpBAR_AXIS_H:
             labelX = rect_x_tl;
-            labelY = w.y2p(0.0, m_yAxisIndex) + labelH;
+            labelY = w.y2p(0.0, m_yAxisID) + labelH;
             break;
           case mpBAR_AXIS_V:
             labelX = w.x2p(((double)binIndex) + 1.0) - (labelH / 2);
-            labelY = w.y2p(-0.05 * m_max_value, m_yAxisIndex) + labelW;
+            labelY = w.y2p(-0.05 * m_max_value, m_yAxisID) + labelW;
             break;
           case mpBAR_INSIDE:
             labelX = w.x2p(((double)binIndex) + 1.0) - (labelH / 2);
-            labelY = w.y2p(0.05 * m_max_value, m_yAxisIndex);
+            labelY = w.y2p(0.05 * m_max_value, m_yAxisID);
             break;
           case mpBAR_TOP:
             labelX = rect_x_tl;
@@ -2071,7 +2084,7 @@ void mpPieChart::DoPlot(wxDC &dc, mpWindow &w)
   double angle = 0;
   double anglepie = 0;
   double angletxt = 0;
-  double scale = w.GetScaleY() / w.GetScaleX();
+  double scale = w.GetScaleY(m_yAxisID) / w.GetScaleX();
   wxCoord offset = (scale == 1 ? 0 : (wxCoord)(w.x2p(0) / 2));
   wxString currentLabel;
 
@@ -2079,14 +2092,14 @@ void mpPieChart::DoPlot(wxDC &dc, mpWindow &w)
   {
     xc = w.x2p(0) * scale + offset;
     x1 = w.x2p(m_radius) * scale + offset;
-    y1 = yc = w.y2p(0, m_yAxisIndex);
+    y1 = yc = w.y2p(0, m_yAxisID);
 
     for (size_t binIndex = 0; binIndex < values.size(); binIndex++)
     {
       angle = values[binIndex] / m_total_value * M_PI2;
       anglepie += angle;
       x2 = w.x2p(m_radius * cos(anglepie)) * scale + offset;
-      y2 = w.y2p(m_radius * sin(anglepie), m_yAxisIndex);
+      y2 = w.y2p(m_radius * sin(anglepie), m_yAxisID);
       wxBrush brush(GetColour(binIndex), wxBRUSHSTYLE_SOLID);
       dc.SetBrush(brush);
       dc.DrawArc(x1, y1, x2, y2, xc, yc);
@@ -2095,7 +2108,7 @@ void mpPieChart::DoPlot(wxDC &dc, mpWindow &w)
         currentLabel = wxConvUTF8.cMB2WX(labels[binIndex].c_str());
         dc.GetTextExtent(currentLabel, &labelW, &labelH);
         labelX = w.x2p(m_radius * cos(angletxt + angle / 2.0)) * scale + offset + 10;
-        labelY = w.y2p(m_radius * sin(angletxt + angle / 2.0), m_yAxisIndex);
+        labelY = w.y2p(m_radius * sin(angletxt + angle / 2.0), m_yAxisID);
         dc.DrawText(currentLabel, labelX, labelY);
         angletxt += angle;
       }
@@ -2494,6 +2507,11 @@ void mpScaleX::DoPlot(wxDC &dc, mpWindow &w)
 wxIMPLEMENT_DYNAMIC_CLASS(mpScaleY, mpScale);
 
 /**
+ * Reference the last ID provided to the last instance of mpScaleY
+ */
+int mpScaleY::m_LastYAxisID = 0;
+
+/**
  * Get the origin of axis and initialize the plot boundaries
  */
 int mpScaleY::GetOrigin(mpWindow &w)
@@ -2507,13 +2525,13 @@ int mpScaleY::GetOrigin(mpWindow &w)
     // Scale Y : vertical axis
     case mpALIGN_BORDER_LEFT:
     {
-      origin = w.GetLeftYAxesWidth(GetAxisIndex()) + 1;
+      origin = w.GetLeftYAxesWidth(GetAxisID()) + 1;
       m_xPos = origin;
       break;
     }
     case mpALIGN_LEFT:
     {
-      origin = w.GetLeftYAxesWidth(GetAxisIndex()) + GetAxisWidth() - 1;
+      origin = w.GetLeftYAxesWidth(GetAxisID()) + GetAxisWidth() - 1;
       if (!m_drawOutsideMargins)
         origin += w.GetMarginLeftOuter();
       m_xPos = origin - GetAxisWidth();
@@ -2527,7 +2545,7 @@ int mpScaleY::GetOrigin(mpWindow &w)
       break;
     case mpALIGN_RIGHT:
     {
-      origin = w.GetScreenX() - w.GetRightYAxesWidth(GetAxisIndex()) - GetAxisWidth() - 2;
+      origin = w.GetScreenX() - w.GetRightYAxesWidth(GetAxisID()) - GetAxisWidth() - 2;
       if (!m_drawOutsideMargins)
         origin -= w.GetMarginRightOuter();
       m_xPos = origin;
@@ -2535,7 +2553,7 @@ int mpScaleY::GetOrigin(mpWindow &w)
     }
     case mpALIGN_BORDER_RIGHT:
     {
-      origin = w.GetScreenX() - w.GetRightYAxesWidth(GetAxisIndex()) - 1;
+      origin = w.GetScreenX() - w.GetRightYAxesWidth(GetAxisID()) - 1;
       m_xPos = origin - GetAxisWidth();
       break;
     }
@@ -2551,8 +2569,8 @@ wxString mpScaleY::GetLabelFormat(mpWindow &w)
   wxString fmt;
   if (m_labelFormat.IsEmpty())
   {
-    double maxScaleAbs = fabs(w.GetDesiredYmax(GetAxisIndex()));
-    double minScaleAbs = fabs(w.GetDesiredYmin(GetAxisIndex()));
+    double maxScaleAbs = fabs(w.GetDesiredYmax(GetAxisID()));
+    double minScaleAbs = fabs(w.GetDesiredYmin(GetAxisID()));
     double endscale = (maxScaleAbs > minScaleAbs) ? maxScaleAbs : minScaleAbs;
     if ((endscale < 1e4) && (endscale > 1e-3))
       fmt = _T("%.2f");
@@ -2627,9 +2645,9 @@ void mpScaleY::DoPlot(wxDC &dc, mpWindow &w)
   // Draw Y axis
   dc.DrawLine(orgx + 1, m_plotBoundaries.startPy, orgx + 1, m_plotBoundaries.endPy);
 
-  const double step = GetStep(w.GetScaleY(GetAxisIndex()), MIN_Y_AXIS_LABEL_SEPARATION);
-  const double start = w.p2y(w.GetScreenY(), GetAxisIndex());
-  const double end = w.GetPosY(GetAxisIndex());
+  const double step = GetStep(w.GetScaleY(GetAxisID()), MIN_Y_AXIS_LABEL_SEPARATION);
+  const double start = w.p2y(w.GetScreenY(), GetAxisID());
+  const double end = w.GetPosY(GetAxisID());
 
   wxString fmt = GetLabelFormat(w);
 
@@ -2649,7 +2667,7 @@ void mpScaleY::DoPlot(wxDC &dc, mpWindow &w)
     // To have a real zero
     if (fabs(n) < 1e-10)
       n = 0;
-    const wxCoord p = w.y2p(n, GetAxisIndex());
+    const wxCoord p = w.y2p(n, GetAxisID());
     if ((p > m_plotBoundaries.startPy + labelHeight) && (p < m_plotBoundaries.endPy - labelHeight))
     {
       // Draw axis grids
@@ -2709,11 +2727,11 @@ void mpScaleY::UpdateAxisWidth(mpWindow &w)
 
   // Widest label is either the uppermost or lowermost one
   mpRect plotBound = w.GetPlotBoundaries(!m_drawOutsideMargins);
-  double lowerValue = w.p2y(plotBound.endPy, GetAxisIndex());
-  double upperValue = w.p2y(plotBound.startPy, GetAxisIndex());
+  double lowerValue = w.p2y(plotBound.endPy, GetAxisID());
+  double upperValue = w.p2y(plotBound.startPy, GetAxisID());
 
   // Need to round according to step size to get correct width
-  double step = GetStep(w.GetScaleY(GetAxisIndex()), MIN_Y_AXIS_LABEL_SEPARATION);
+  double step = GetStep(w.GetScaleY(GetAxisID()), MIN_Y_AXIS_LABEL_SEPARATION);
   lowerValue = trunc(lowerValue / step) * step;
   upperValue = trunc(upperValue / step) * step;
 
@@ -2772,7 +2790,7 @@ EVT_MENU(mpID_FULLSCREEN, mpWindow::OnFullScreen)
 wxEND_EVENT_TABLE()
 
 mpWindow::mpWindow(wxWindow *parent, wxWindowID id, const wxPoint &pos, const wxSize &size, long flag) :
-    wxWindow(parent, id, pos, size, flag, _T("Mathplot")), m_yAxisDataList(1), m_bound(*this), m_desired(*this), m_lastDesiredReportedBounds(*this)
+    wxWindow(parent, id, pos, size, flag, _T("Mathplot"))
 {
   // Fill i18n string
   FillI18NString();
@@ -2842,7 +2860,7 @@ mpWindow::mpWindow(wxWindow *parent, wxWindowID id, const wxPoint &pos, const wx
 
   SetSizeHints(128, 128);
 
-  UpdateAll();
+//  UpdateAll();
 }
 
 mpWindow::~mpWindow()
@@ -2865,13 +2883,14 @@ void mpWindow::InitParameters()
   m_scrX = m_scrY = 64;
   m_last_lx = m_last_ly = 0;
   m_XAxis = NULL;
+
   m_repainting = false;
   m_buff_bmp = NULL;
   m_Screenshot_bmp = NULL;
   m_enableDoubleBuffer = true;
   m_enableMouseNavigation = true;
   m_mouseMovedAfterRightClick = false;
-  m_mouseYAxisIndex = std::nullopt;
+  m_mouseYAxisID = std::nullopt;
   m_movingInfoLayer = NULL;
   m_InfoCoords = NULL;
   m_InfoLegend = NULL;
@@ -2885,18 +2904,6 @@ void mpWindow::InitParameters()
   SetMargins(50, 50, 50, 50);
 
   m_lockaspect = false;
-}
-
-void mpWindow::UpdateNOfYAxes(size_t nOfYAxes)
-{
-  // Only allow upsizing
-  if(nOfYAxes > m_yAxisDataList.size())
-  {
-    m_yAxisDataList.resize(nOfYAxes);
-    m_bound.y.resize(nOfYAxes);
-    m_desired.y.resize(nOfYAxes);
-    m_lastDesiredReportedBounds.y.resize(nOfYAxes);
-  }
 }
 
 bool mpWindow::CheckUserMouseAction(wxMouseEvent &event)
@@ -2925,13 +2932,13 @@ void mpWindow::OnMouseLeftDown(wxMouseEvent &event)
   // Store current X and Y scales
   m_mouseScaleX = m_scaleX;
   m_mouseScaleYList.clear();
-  for(m_yAxisData& axisdata : m_yAxisDataList)
+  for (const auto& axisInfo : m_YAxisList)
   {
-    m_mouseScaleYList.push_back(axisdata.m_scaleY);
+    m_mouseScaleYList.push_back(axisInfo.second.Data.scale);
   }
 
   // Indicate if mouse was inside a specific Y-axis
-  m_mouseYAxisIndex = IsInsideYAxis(m_mouseLClick);
+  m_mouseYAxisID = IsInsideYAxis(m_mouseLClick);
 
 #ifdef MATHPLOT_DO_LOGGING
   wxLogMessage(_T("mpWindow::OnMouseLeftDown() X = %d , Y = %d"), event.GetX(), event.GetY());
@@ -2968,7 +2975,7 @@ void mpWindow::OnMouseRightDown(wxMouseEvent &event)
 
   m_mouseMovedAfterRightClick = false;
   m_mouseRClick = wxPoint(event.GetX(), event.GetY());
-  m_mouseYAxisIndex = IsInsideYAxis(m_mouseRClick);
+  m_mouseYAxisID = IsInsideYAxis(m_mouseRClick);
   if (m_magnetize)
     m_magnet.SetRightClick();
 
@@ -3003,11 +3010,11 @@ void mpWindow::OnMouseMove(wxMouseEvent &event)
     // For the next event, use relative to this coordinates.
     m_mouseRClick = eventPoint;
 
-    if(m_mouseYAxisIndex)
+    if(m_mouseYAxisID)
     {
       // A specific Y-axis has been selected. Only pan on that
-      double Ay_units = -Axy.y / m_yAxisDataList[*m_mouseYAxisIndex].m_scaleY;
-      m_yAxisDataList[*m_mouseYAxisIndex].m_posY += Ay_units;
+      double Ay_units = -Axy.y / m_YAxisList[*m_mouseYAxisID].Data.scale;
+      m_YAxisList[*m_mouseYAxisID].Data.pos += Ay_units;
     }
     else
     {
@@ -3015,10 +3022,10 @@ void mpWindow::OnMouseMove(wxMouseEvent &event)
       double Ax_units = Axy.x / m_scaleX;
       m_posX += Ax_units;
 
-      for(m_yAxisData& axisData : m_yAxisDataList)
+      for (auto& axisInfo : m_YAxisList)
       {
-        double Ay_units = -Axy.y / axisData.m_scaleY;
-        axisData.m_posY += Ay_units;
+        double Ay_units = -Axy.y / axisInfo.second.Data.scale;
+        axisInfo.second.Data.pos += Ay_units;
       }
     }
 
@@ -3098,18 +3105,32 @@ void mpWindow::OnMouseMove(wxMouseEvent &event)
           double zoomFactorX = std::exp(zoomExponentX);
           double zoomFactorY = std::exp(zoomExponentY);
 
-          if(m_mouseYAxisIndex)
+          if(m_mouseYAxisID)
           {
             // Mouse is inside a Y-axis. Only zoom on that
-            SetScaleYAndCenter(m_mouseScaleYList[*m_mouseYAxisIndex] * zoomFactorY, *m_mouseYAxisIndex);
+            SetScaleYAndCenter(m_mouseScaleYList[*m_mouseYAxisID] * zoomFactorY, *m_mouseYAxisID);
+            int i = 0;
+            for (const auto& axisInfo : m_YAxisList)
+            {
+              if (axisInfo.first == *m_mouseYAxisID)
+                break;
+              i++;
+            }
+            SetScaleYAndCenter(m_mouseScaleYList[i] * zoomFactorY, *m_mouseYAxisID);
           }
           else
           {
             // Zoom on all X and Y axes
             SetScaleXAndCenter(m_mouseScaleX * zoomFactorX);
-            for(size_t i = 0; i < m_mouseScaleYList.size(); i++)
+//            for(size_t i = 0; i < m_mouseScaleYList.size(); i++)
+//            {
+//              SetScaleYAndCenter(m_mouseScaleYList[i] * zoomFactorY, i);
+//            }
+            int i = 0;
+            for (const auto& axisInfo : m_YAxisList)
             {
-              SetScaleYAndCenter(m_mouseScaleYList[i] * zoomFactorY, i);
+              SetScaleYAndCenter(m_mouseScaleYList[i] * zoomFactorY, axisInfo.first);
+              i++;
             }
           }
 
@@ -3194,8 +3215,8 @@ void mpWindow::OnMouseWheel(wxMouseEvent &event)
   {
     // No key hold: Zoom in/out:
     wxPoint eventPoint = wxPoint(event.GetX(), event.GetY());
-    std::optional<size_t> yAxisIndex = IsInsideYAxis(eventPoint);
-    if(yAxisIndex)
+    std::optional<int> yAxisIndex = IsInsideYAxis(eventPoint);
+    if (yAxisIndex)
     {
       // Only zoom selected Y-axis around mouse position
       DoZoomYCalc((event.GetWheelRotation() > 0), eventPoint.y, *yAxisIndex);
@@ -3219,10 +3240,10 @@ void mpWindow::OnMouseWheel(wxMouseEvent &event)
     }
     else if (event.m_controlDown)
     {
-      for(m_yAxisData& axisData : m_yAxisDataList)
+      for (auto& axisInfo : m_YAxisList)
       {
-        double changeUnitsY = change / axisData.m_scaleY;
-        axisData.m_posY -= changeUnitsY;
+        double changeUnitsY = change / axisInfo.second.Data.scale;
+        axisInfo.second.Data.pos -= changeUnitsY;
       }
     }
 
@@ -3265,10 +3286,18 @@ void mpWindow::OnMouseLeave(wxMouseEvent &event)
 void mpWindow::Fit()
 {
   UpdateBBox();
-  Fit(m_bound);
+  std::vector<mpRange> yRange;
+  for (const auto& axisInfo : m_YAxisList)
+  {
+    yRange.push_back(axisInfo.second.Bound);
+  }
+  Fit(m_boundx, yRange);
 }
 
-void mpWindow::Fit(const mpFloatRect &rect, wxCoord *printSizeX, wxCoord *printSizeY)
+/**
+ * Here rangeY is a vector and he is exactly ordered like Range in m_YAxisList
+ */
+void mpWindow::Fit(const mpRange &rangeX, const std::vector<mpRange> &rangeY, wxCoord *printSizeX, wxCoord *printSizeY)
 { // JL
   bool weArePrinting = printSizeX!=NULL && printSizeY!=NULL;
   if (m_magnetize)
@@ -3278,7 +3307,15 @@ void mpWindow::Fit(const mpFloatRect &rect, wxCoord *printSizeX, wxCoord *printS
   }
 
   // Save desired borders:
-  m_desired = rect;
+  m_desiredx = rangeX;
+  int i = 0;
+  for (auto& axisInfo : m_YAxisList)
+  {
+    axisInfo.second.Desired = rangeY[i];
+    i++;
+  }
+
+//  m_desired = rect;
 
   if (weArePrinting)
   {
@@ -3295,13 +3332,20 @@ void mpWindow::Fit(const mpFloatRect &rect, wxCoord *printSizeX, wxCoord *printS
 
   double Ax, Ay;
 
-  Ax = rect.x.max - rect.x.min;
+  Ax = rangeX.max - rangeX.min;
   m_scaleX = ISNOTNULL(Ax) ? m_plotWidth / Ax : 1;
 
-  for(size_t i = 0; i < m_yAxisDataList.size(); i++)
+//  for(size_t i = 0; i < m_YAxisList.size(); i++)
+//  {
+//    Ay = rangeY[i].max - rangeY[i].min;
+//    m_YAxisList[i].Data.scale = ISNOTNULL(Ay) ? m_plotHeight / Ay : 1;
+//  }
+  i = 0;
+  for (auto& axisInfo : m_YAxisList)
   {
-    Ay = rect.y[i].max - rect.y[i].min;
-    m_yAxisDataList[i].m_scaleY = ISNOTNULL(Ay) ? m_plotHeight / Ay : 1;
+    Ay = rangeY[i].max - rangeY[i].min;
+    axisInfo.second.Data.scale = ISNOTNULL(Ay) ? m_plotHeight / Ay : 1;
+    i++;
   }
 
   if (m_lockaspect)
@@ -3311,15 +3355,15 @@ void mpWindow::Fit(const mpFloatRect &rect, wxCoord *printSizeX, wxCoord *printS
 #endif
     // Keep the lowest "scale" to fit the whole range required by that axis (to actually "fit"!):
     double s = m_scaleX;
-    for(m_yAxisData& axisData : m_yAxisDataList)
+    for (const auto& axisInfo : m_YAxisList)
     {
-      s = std::min(s, axisData.m_scaleY);
+      s = std::min(s, axisInfo.second.Data.scale);
     }
 
     m_scaleX = s;
-    for(m_yAxisData& axisData : m_yAxisDataList)
+    for (auto& axisInfo : m_YAxisList)
     {
-      axisData.m_scaleY = s;
+      axisInfo.second.Data.scale = s;
     }
   }
 
@@ -3327,10 +3371,17 @@ void mpWindow::Fit(const mpFloatRect &rect, wxCoord *printSizeX, wxCoord *printS
   //   m_posX = m_minX;
   //   m_posY = m_maxY;
   // But account for centering if we have lock aspect:
-  m_posX = (rect.x.min + rect.x.max) / 2 - (m_plotWidth / 2 + m_margin.left) / m_scaleX;
-  for(size_t i = 0; i < m_yAxisDataList.size(); i++)
+  m_posX = (rangeX.min + rangeX.max) / 2 - (m_plotWidth / 2 + m_margin.left) / m_scaleX;
+//  for(size_t i = 0; i < m_YAxisList.size(); i++)
+//  {
+//    m_YAxisList[i].Data.pos = (rangeY[i].min + rangeY[i].max) / 2 + (m_plotHeight / 2 + m_margin.top) / m_YAxisList[i].Data.scale;
+//  }
+  i = 0;
+  for (auto& axisInfo : m_YAxisList)
   {
-    m_yAxisDataList[i].m_posY = (rect.y[i].min + rect.y[i].max) / 2 + (m_plotHeight / 2 + m_margin.top) / m_yAxisDataList[i].m_scaleY;
+    axisInfo.second.Data.pos = (rangeY[i].min + rangeY[i].max) / 2 +
+        (m_plotHeight / 2 + m_margin.top) / axisInfo.second.Data.scale;
+    i++;
   }
 
 #ifdef MATHPLOT_DO_LOGGING
@@ -3351,39 +3402,41 @@ void mpWindow::Fit(const mpFloatRect &rect, wxCoord *printSizeX, wxCoord *printS
 
 void mpWindow::FitX(void)
 {
-  mpFloatRect bound = Get_Bound();
-  double Ax = bound.x.max - bound.x.min;
+  mpRange bound = Get_BoundX();
+  double Ax = bound.max - bound.min;
   m_scaleX = ISNOTNULL(Ax) ? m_plotWidth / Ax : 1;
 
   // Since m_posX is at the corner (not including margins) we need to take margin into account
-  m_posX = bound.x.min - (m_margin.left / m_scaleX);
+  m_posX = bound.min - (m_margin.left / m_scaleX);
 
   UpdateDesiredBoundingBox();
 }
 
-void mpWindow::FitY(size_t yIndex)
+void mpWindow::FitY(int yID)
 {
-  if(yIndex < m_yAxisDataList.size())
+  if (m_YAxisList.count(yID) != 0)
   {
-    mpFloatRect bound = Get_Bound();
-    double Ay = bound.y[yIndex].max - bound.y[yIndex].min;
-    m_yAxisDataList[yIndex].m_scaleY = ISNOTNULL(Ay) ? m_plotHeight / Ay : 1;
+    mpRange bound = Get_BoundY(yID);
+    double Ay = bound.max - bound.min;
+    m_YAxisList[yID].Data.scale = ISNOTNULL(Ay) ? m_plotHeight / Ay : 1;
 
     // Since m_posY is at the corner (not including margins) we need to take margin into account
-    m_yAxisDataList[yIndex].m_posY = bound.y[yIndex].max + (m_margin.top / m_yAxisDataList[yIndex].m_scaleY);
+    m_YAxisList[yID].Data.pos = bound.max + (m_margin.top / m_YAxisList[yID].Data.scale);
 
     UpdateDesiredBoundingBox();
   }
 }
 
-void mpWindow::CheckAndReportDesiredBoundsChanges() {
-  if (m_desired.IsNotSet(*this)) return; // nothing to do until useful info in m_desired
-  if (!m_initialDesiredBoundsRecorded) {
-    m_initialDesiredBoundsRecorded = true;
-  } else if ( !(m_desired == m_lastDesiredReportedBounds) ) {
-    DesiredBoundsHaveChanged();
-  }
-  m_lastDesiredReportedBounds = m_desired;
+void mpWindow::CheckAndReportDesiredBoundsChanges()
+{
+  // ToDo CheckAndReportDesiredBoundsChanges
+//  if (m_desired.IsNotSet(*this)) return; // nothing to do until useful info in m_desired
+//  if (!m_initialDesiredBoundsRecorded) {
+//    m_initialDesiredBoundsRecorded = true;
+//  } else if ( !(m_desired == m_lastDesiredReportedBounds) ) {
+//    DesiredBoundsHaveChanged();
+//  }
+//  m_lastDesiredReportedBounds = m_desired;
 }
 
 // Patch ngpaton
@@ -3410,27 +3463,53 @@ void mpWindow::DoZoomXCalc(bool zoomIn, wxCoord staticXpixel)
 #endif
 }
 
-void mpWindow::DoZoomYCalc(bool zoomIn, wxCoord staticYpixel, std::optional<size_t> yIndex)
+void mpWindow::DoZoomYCalc(bool zoomIn, wxCoord staticYpixel, std::optional<int> yIndex)
 {
   if(staticYpixel == ZOOM_AROUND_CENTER)
   {
     // Zoom around center
     staticYpixel = (m_plotHeight / 2) + m_margin.top;
   }
+//
+//  // If yIndex is supplied, only zoom in on that specific Y-axis
+//  size_t startIndex = yIndex ? (*yIndex)     : 0;
+//  size_t endIndex   = yIndex ? (*yIndex + 1) : m_YAxisList.size();
+//
+//  double zoomFactor = zoomIn ? m_zoomIncrementalFactor : (1.0 / m_zoomIncrementalFactor);
+//  for(size_t i = startIndex; i < endIndex; i++)
+//  {
+//    // Preserve the position of the clicked point:
+//    double staticY = p2y(staticYpixel, i);
+//    // Zoom:
+//    m_YAxisList[i].Data.scale *= zoomFactor;
+//    // Adjust the new m_posy:
+//    m_YAxisList[i].Data.pos = staticY + (staticYpixel / m_YAxisList[i].Data.scale);
+//  }
 
   // If yIndex is supplied, only zoom in on that specific Y-axis
-  size_t startIndex = yIndex ? (*yIndex)     : 0;
-  size_t endIndex   = yIndex ? (*yIndex + 1) : m_yAxisDataList.size();
+  std::map<int, mpYAxisInfo>::iterator startYID = m_YAxisList.begin();
+  if (yIndex)
+  {
+    for (const auto& axisInfo : m_YAxisList)
+    {
+      if (axisInfo.first == *yIndex)
+        break;
+      startYID++;
+    }
+  }
+
+  std::map<int, mpYAxisInfo>::iterator startIt = yIndex ? startYID : m_YAxisList.begin();
+  std::map<int, mpYAxisInfo>::iterator endIt   = yIndex ? ++startYID : m_YAxisList.end();
 
   double zoomFactor = zoomIn ? m_zoomIncrementalFactor : (1.0 / m_zoomIncrementalFactor);
-  for(size_t i = startIndex; i < endIndex; i++)
+  for (std::map<int, mpYAxisInfo>::iterator it = startIt; it != endIt; it++)
   {
     // Preserve the position of the clicked point:
-    double staticY = p2y(staticYpixel, i);
+    double staticY = p2y(staticYpixel, it->first);
     // Zoom:
-    m_yAxisDataList[i].m_scaleY *= zoomFactor;
+    it->second.Data.scale *= zoomFactor;
     // Adjust the new m_posy:
-    m_yAxisDataList[i].m_posY = staticY + (staticYpixel / m_yAxisDataList[i].m_scaleY);
+    it->second.Data.pos = staticY + (staticYpixel / it->second.Data.scale);
   }
 
   UpdateDesiredBoundingBox();
@@ -3456,19 +3535,22 @@ void mpWindow::SetScaleXAndCenter(double scaleX)
   UpdateDesiredBoundingBox();
 }
 
-void mpWindow::SetScaleYAndCenter(double scaleY, size_t yIndex)
+void mpWindow::SetScaleYAndCenter(double scaleY, int yID)
 {
+  if (m_YAxisList.count(yID) == 0)
+    return;
+
   // Zoom around center
   wxCoord centerYpixel = (m_plotHeight / 2) + m_margin.top;
 
   // Preserve the position of the clicked point:
-  double centerYValue = p2y(centerYpixel, yIndex);
+  double centerYValue = p2y(centerYpixel, yID);
 
   // Set scale
-  m_yAxisDataList[yIndex].m_scaleY = scaleY;
+  m_YAxisList[yID].Data.scale = scaleY;
 
   // Adjust the new m_posy:
-  m_yAxisDataList[yIndex].m_posY = centerYValue + (centerYpixel / m_yAxisDataList[yIndex].m_scaleY);
+  m_YAxisList[yID].Data.pos = centerYValue + (centerYpixel / m_YAxisList[yID].Data.scale);
 
   UpdateDesiredBoundingBox();
 }
@@ -3517,13 +3599,13 @@ void mpWindow::ZoomOutX()
   UpdateAll();
 }
 
-void mpWindow::ZoomInY(std::optional<size_t> yIndex)
+void mpWindow::ZoomInY(std::optional<int> yIndex)
 {
   DoZoomYCalc(true, ZOOM_AROUND_CENTER, yIndex);
   UpdateAll();
 }
 
-void mpWindow::ZoomOutY(std::optional<size_t> yIndex)
+void mpWindow::ZoomOutY(std::optional<int> yIndex)
 {
   DoZoomYCalc(false, ZOOM_AROUND_CENTER, yIndex);
   UpdateAll();
@@ -3536,24 +3618,37 @@ void mpWindow::ZoomRect(wxPoint p0, wxPoint p1)
   double p1x = p2x(p1.x);
 
   // Order them:
-  mpFloatRect zoom(*this);
-  zoom.x.min = p0x < p1x ? p0x : p1x;
-  zoom.x.max = p0x > p1x ? p0x : p1x;
+  mpRange zoomX;
+  zoomX.min = std::min(p0x, p1x); // p0x < p1x ? p0x : p1x;
+  zoomX.max = std::max(p0x, p1x); // p0x > p1x ? p0x : p1x;
 
   // Same for all Y-axes
-  for(size_t i = 0; i < zoom.y.size(); i++)
+  std::vector<mpRange> zoomY;
+//  zoomY.resize(m_YAxisList.size());
+//  for(size_t i = 0; i < m_YAxisList.size(); i++)
+//  {
+//    double p0y = p2y(p0.y, i);
+//    double p1y = p2y(p1.y, i);
+//    zoomY[i].min = p0y < p1y ? p0y : p1y;
+//    zoomY[i].max = p0y > p1y ? p0y : p1y;
+//  }
+//  int i = 0;
+  for (const auto& axisInfo : m_YAxisList)
   {
-    double p0y = p2y(p0.y, i);
-    double p1y = p2y(p1.y, i);
-    zoom.y[i].min = p0y < p1y ? p0y : p1y;
-    zoom.y[i].max = p0y > p1y ? p0y : p1y;
+    double p0y = p2y(p0.y, axisInfo.first);
+    double p1y = p2y(p1.y, axisInfo.first);
+    mpRange zRange = {std::min(p0y, p1y), std::max(p0y, p1y)};
+    zoomY.push_back(zRange);
+//    zoomY[i].min = std::min(p0y, p1y); //p0y < p1y ? p0y : p1y;
+//    zoomY[i].max = std::max(p0y, p1y); //p0y > p1y ? p0y : p1y;
+//    i++;
   }
 
 #ifdef MATHPLOT_DO_LOGGING
   wxLogMessage(_T("Zoom: (%f,%f)-(%f,%f)"), zoom.x.min, zoom.y[0].min, zoom.x.max, zoom.Ymax);
 #endif
 
-  Fit(zoom);
+  Fit(zoomX, zoomY);
 }
 
 void mpWindow::LockAspect(bool enable)
@@ -3562,7 +3657,13 @@ void mpWindow::LockAspect(bool enable)
   m_popmenu.Check(mpID_LOCKASPECT, enable);
 
   // Try to fit again with the new config:
-  Fit(m_desired);
+//  Fit(m_desired);
+  std::vector<mpRange> yRange;
+  for (const auto& axisInfo : m_YAxisList)
+  {
+    yRange.push_back(axisInfo.second.Desired);
+  }
+  Fit(m_desiredx, yRange);
 }
 
 void mpWindow::OnShowPopupMenu(wxMouseEvent &event)
@@ -3611,9 +3712,9 @@ void mpWindow::OnToggleGrids(wxCommandEvent &WXUNUSED(event))
     scaleX->ShowGrids(showGrid);
   }
 
-  for(mpScaleY* yAxis : m_YAxisList)
+  for (const auto& axisInfo : m_YAxisList)
   {
-    yAxis->ShowGrids(showGrid);
+    axisInfo.second.Axis->ShowGrids(showGrid);
   }
 
   showGrid = !showGrid;
@@ -3680,9 +3781,9 @@ void mpWindow::OnCenter(wxCommandEvent &WXUNUSED(event))
   double posX = p2x(m_clickedX - centerX - m_margin.left);
 
   std::vector<double> posYList;
-  for(size_t i = 0; i < m_yAxisDataList.size(); i++)
+  for (const auto& axisInfo : m_YAxisList)
   {
-    double posY = p2y(m_clickedY - centerY - m_margin.top, i);
+    double posY = p2y(m_clickedY - centerY - m_margin.top, axisInfo.first);
     posYList.push_back(posY);
   }
 
@@ -3704,7 +3805,13 @@ void mpWindow::OnSize(wxSizeEvent &WXUNUSED(event))
   // Need to redraw the legend bitmap
   RefreshLegend();
   // Try to fit again with the new window size:
-  Fit(m_desired);
+//  Fit(m_desired);
+  std::vector<mpRange> yRange;
+  for (const auto& axisInfo : m_YAxisList)
+  {
+    yRange.push_back(axisInfo.second.Desired);
+  }
+  Fit(m_desiredx, yRange);
 #ifdef MATHPLOT_DO_LOGGING
   wxLogMessage(_T("mpWindow::OnSize() m_scrX = %d, m_scrY = %d"), m_scrX, m_scrY);
 #endif // MATHPLOT_DO_LOGGING
@@ -3745,21 +3852,11 @@ bool mpWindow::AddLayer(mpLayer *layer, bool refreshDisplay)
       else if (scale == mpsScaleY)
       {
         mpScaleY* scaleY = dynamic_cast<mpScaleY*>(layer);
-        if(scaleY)
+        if (scaleY)
         {
-          // Check so that this Y-axis index does not already exist in the list
-          for(mpScaleY* yAxis : m_YAxisList)
-          {
-            if(scaleY->GetAxisIndex() == yAxis->GetAxisIndex())
-            {
-              return false;
-            }
-          }
-          m_YAxisList.push_back((mpScaleY*)layer);
-          // All Y-axes scalings and positions are stored in our mpWindow object so we need
-          // to make sure that the number of scalings and position is at least as many as the
-          // largest Y-axis index
-          UpdateNOfYAxes(scaleY->GetAxisIndex() + 1);
+          mpYAxisInfo yAxisInfo;
+          yAxisInfo.Axis = scaleY;
+          m_YAxisList.insert(std::make_pair(scaleY->GetAxisID(), yAxisInfo));
 
           // Might need to update margins for new Y axis
           UpdateMargins();
@@ -3773,12 +3870,6 @@ bool mpWindow::AddLayer(mpLayer *layer, bool refreshDisplay)
     // We just add a function, so we need to update the legend
     if (layer->GetLayerType() == mpLAYER_PLOT)
     {
-      mpFunction* function = dynamic_cast<mpFunction*>(layer);
-      if(function)
-      {
-        UpdateNOfYAxes(function->GetYAxisIndex() + 1);
-      }
-
       RefreshLegend();
     }
 
@@ -3797,6 +3888,9 @@ bool mpWindow::AddLayer(mpLayer *layer, bool refreshDisplay)
 
 bool mpWindow::DelLayer(mpLayer *layer, bool alsoDeleteObject, bool refreshDisplay)
 {
+  if (!layer)
+    return true;
+
   for (mpLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
   {
     if (*it == layer)
@@ -3818,7 +3912,29 @@ bool mpWindow::DelLayer(mpLayer *layer, bool alsoDeleteObject, bool refreshDispl
         int subType;
         if ((layer->IsLayerType(mpLAYER_AXIS, &subType)) && (subType == mpsScaleY))
         {
-          m_YAxisList.erase(std::remove(m_YAxisList.begin(), m_YAxisList.end(), static_cast<mpScaleY*>(layer)), m_YAxisList.end());
+          // We can not remove this y axis if it is used by a function
+          mpScaleY* scaleY = static_cast<mpScaleY*>(layer);
+          if (scaleY->GetUseCount() == 0)
+          {
+            // Find the good axis
+            for (std::map<int, mpYAxisInfo>::iterator it = m_YAxisList.begin(); it != m_YAxisList.end(); ++it)
+            {
+              if ((*it).second.Axis == scaleY)
+              {
+                m_YAxisList.erase(it);
+                break;
+              }
+            }
+          }
+          else
+            return false;
+        }
+
+        if (layer->IsLayerType(mpLAYER_PLOT, &subType))
+        {
+          // We must release the y axis associated to this plot
+          mpFunction* function = static_cast<mpFunction*>(layer);
+          function->SetYAxis(NULL);
         }
 
         // Also delete the object?
@@ -3846,6 +3962,9 @@ bool mpWindow::DelLayer(mpLayer *layer, bool alsoDeleteObject, bool refreshDispl
 
 void mpWindow::DelAllLayers(bool alsoDeleteObject, bool refreshDisplay)
 {
+  // First we delete all the function so we can after delete axis
+  DelAllPlot(alsoDeleteObject, mpfAllType, false);
+
   while (m_layers.size() > 0)
   {
     // Also delete the object?
@@ -3991,7 +4110,7 @@ void mpWindow::SetMPScrollbars(bool status)
 void mpWindow::SetBound()
 {
   bool HaveXAxis = (m_XAxis && (!m_XAxis->GetAuto()));
-  bool HaveYAxis = (!m_YAxisList.empty() && (!m_YAxisList[0]->GetAuto()));
+  bool HaveYAxis = (!m_YAxisList.empty() && (!m_YAxisList.begin()->second.Axis->GetAuto()));
 
   if (HaveXAxis || HaveYAxis)
   {
@@ -4002,13 +4121,13 @@ void mpWindow::SetBound()
       {
         if ((function == mpfFX) && HaveXAxis)
         {
-          m_bound.y[0].min = ((mpFX*)(*it))->GetY(m_XAxis->GetMinScale());
-          m_bound.y[0].max = ((mpFX*)(*it))->GetY(m_XAxis->GetMaxScale());
+          m_YAxisList.begin()->second.Bound.min = ((mpFX*)(*it))->GetY(m_XAxis->GetMinScale());
+          m_YAxisList.begin()->second.Bound.max = ((mpFX*)(*it))->GetY(m_XAxis->GetMaxScale());
         }
         else if ((function == mpfFY) && HaveYAxis)
         {
-          m_bound.x.min = ((mpFY*)(*it))->GetX(m_YAxisList[0]->GetMinScale());
-          m_bound.x.max = ((mpFY*)(*it))->GetX(m_YAxisList[0]->GetMaxScale());
+          m_boundx.min = ((mpFY*)(*it))->GetX(m_YAxisList.begin()->second.Axis->GetMinScale());
+          m_boundx.max = ((mpFY*)(*it))->GetX(m_YAxisList.begin()->second.Axis->GetMaxScale());
         }
       }
     }
@@ -4018,7 +4137,12 @@ void mpWindow::SetBound()
 bool mpWindow::UpdateBBox()
 {
   bool firstX = true;
-  std::vector<bool> firstY(m_bound.y.size(), true);
+//  std::vector<bool> firstY(m_YAxisList.size(), true);
+  std::map<int, bool> firstY;
+  for (const auto& axisInfo : m_YAxisList)
+  {
+    firstY[axisInfo.first] = true;
+  }
 
   // Deprecated: To update bound of mpFX and mpFY functions: SetBound();
 #ifdef MATHPLOT_DO_LOGGING
@@ -4036,101 +4160,104 @@ bool mpWindow::UpdateBBox()
     if (firstX)
     {
       firstX = false;
-      m_bound.x.min = f->GetMinX();
-      m_bound.x.max = f->GetMaxX();
+      m_boundx.min = f->GetMinX();
+      m_boundx.max = f->GetMaxX();
     }
     else
     {
-      if (f->GetMinX() < m_bound.x.min)
-        m_bound.x.min = f->GetMinX();
-      if (f->GetMaxX() > m_bound.x.max)
-        m_bound.x.max = f->GetMaxX();
+      if (f->GetMinX() < m_boundx.min)
+        m_boundx.min = f->GetMinX();
+      if (f->GetMaxX() > m_boundx.max)
+        m_boundx.max = f->GetMaxX();
     }
 
     // Y
-    size_t yIdx = 0;  // Default to 1st y-axis in case layer only support single y-axis
+    int yIdx = 0;  // Default to 1st y-axis in case layer only support single y-axis
     if (f->GetLayerType() == mpLAYER_PLOT)
     {
-      yIdx = ((mpFunction*)f)->GetYAxisIndex();
+      yIdx = ((mpFunction*)f)->GetYAxisID();
     }
 
-    if(firstY[yIdx])
+    // If mpFunction do not have an Y axis, continue
+    if (yIdx == -1)
+      continue;
+
+    if (firstY[yIdx])
     {
       firstY[yIdx] = false;
-      m_bound.y[yIdx].min = f->GetMinY();
-      m_bound.y[yIdx].max = f->GetMaxY();
+      m_YAxisList[yIdx].Bound.min = f->GetMinY();
+      m_YAxisList[yIdx].Bound.max = f->GetMaxY();
     }
     else
     {
-      m_bound.y[yIdx].min = std::min(m_bound.y[yIdx].min, f->GetMinY());
-      m_bound.y[yIdx].max = std::max(m_bound.y[yIdx].max, f->GetMaxY());
+      m_YAxisList[yIdx].Bound.min = std::min(m_YAxisList[yIdx].Bound.min, f->GetMinY());
+      m_YAxisList[yIdx].Bound.max = std::max(m_YAxisList[yIdx].Bound.max, f->GetMaxY());
     }
   } // end iteration over all layers
 
   // Take care of scale : restrict bound
   if (m_XAxis && (!m_XAxis->GetAuto()))
   {
-    m_bound.x.min = m_XAxis->GetMinScale();
-    m_bound.x.max = m_XAxis->GetMaxScale();
+    m_boundx.min = m_XAxis->GetMinScale();
+    m_boundx.max = m_XAxis->GetMaxScale();
   }
 
-  for(mpScaleY* yAxis : m_YAxisList)
+  for (const auto& axisInfo : m_YAxisList)
   {
-    size_t yIdx = yAxis->GetAxisIndex();
-    if (!yAxis->GetAuto())
+    int yID = axisInfo.second.Axis->GetAxisID();
+    if (!axisInfo.second.Axis->GetAuto())
     {
-      m_bound.y[yIdx].min = yAxis->GetMinScale();
-      m_bound.y[yIdx].max = yAxis->GetMaxScale();
+      m_YAxisList[yID].Bound.min = axisInfo.second.Axis->GetMinScale();
+      m_YAxisList[yID].Bound.max = axisInfo.second.Axis->GetMaxScale();
     }
   }
 
   // To always have a bound rectangle
-  if (m_bound.x.min == m_bound.x.max)
+  if (m_boundx.min == m_boundx.max)
   {
-    if (m_bound.x.max > 0)
-      m_bound.x.min = 0;
+    if (m_boundx.max > 0)
+      m_boundx.min = 0;
     else
-      m_bound.x.max = 0;
+      m_boundx.max = 0;
   }
 
-  for(mpRange& y : m_bound.y)
+  for (auto& axisInfo : m_YAxisList)
   {
-    if (y.min == y.max)
+    if (axisInfo.second.Bound.min == axisInfo.second.Bound.max)
     {
-      if (y.max > 0)
-        y.min = 0;
+      if (axisInfo.second.Bound.max > 0)
+        axisInfo.second.Bound.min = 0;
       else
-        y.max = 0;
+        axisInfo.second.Bound.max = 0;
     }
   }
 
   // Log X axis
   if (IsLogXaxis())
   {
-    if (m_bound.x.min > 0)
-      m_bound.x.min = log10(m_bound.x.min);
+    if (m_boundx.min > 0)
+      m_boundx.min = log10(m_boundx.min);
     else
-      m_bound.x.min = 0;
-    if (m_bound.x.max > 0)
-      m_bound.x.max = log10(m_bound.x.max);
+      m_boundx.min = 0;
+    if (m_boundx.max > 0)
+      m_boundx.max = log10(m_boundx.max);
     else
-      m_bound.x.max = 0;
+      m_boundx.max = 0;
   }
 
   // Log Y axis
-  for (mpScaleY* yAxis : m_YAxisList)
+  for (auto& axisInfo : m_YAxisList)
   {
-    if (yAxis->IsLogAxis())
+    if (axisInfo.second.Axis->IsLogAxis())
     {
-      int i = yAxis->GetAxisIndex();
-      if (m_bound.y[i].min > 0)
-        m_bound.y[i].min = log10(m_bound.y[i].min);
+      if (axisInfo.second.Bound.min > 0)
+        axisInfo.second.Bound.min = log10(axisInfo.second.Bound.min);
       else
-        m_bound.y[i].min = 0;
-      if (m_bound.y[i].max > 0)
-        m_bound.y[i].max = log10(m_bound.y[i].max);
+        axisInfo.second.Bound.min = 0;
+      if (axisInfo.second.Bound.max > 0)
+        axisInfo.second.Bound.max = log10(axisInfo.second.Bound.max);
       else
-        m_bound.y[i].max = 0;
+        axisInfo.second.Bound.max = 0;
     }
   }
 
@@ -4145,9 +4272,9 @@ bool mpWindow::UpdateBBox()
 void mpWindow::UpdateAll()
 {
   // Make sure axis width is up to date
-  for(mpScaleY* yAxis : m_YAxisList)
+  for (const auto& axisInfo : m_YAxisList)
   {
-    yAxis->UpdateAxisWidth(*this);
+    axisInfo.second.Axis->UpdateAxisWidth(*this);
   }
 
   // And margins, which depends on axis width
@@ -4171,8 +4298,8 @@ void mpWindow::UpdateAll()
         // Convert margin sizes from pixels to coordinates
         double leftMargin = m_margin.left / m_scaleX;
         // Calculate the range in coords that we want to scroll over
-        double maxX = std::max(m_desired.x.max, m_bound.x.max);
-        double minX = std::min(m_desired.x.min, m_bound.x.min);
+        double maxX = std::max(m_desiredx.max, m_boundx.max);
+        double minX = std::min(m_desiredx.min, m_boundx.min);
         if ((m_posX + leftMargin) < minX)
           minX = m_posX + leftMargin;
         // Calculate scroll bar size and thumb position
@@ -4184,14 +4311,14 @@ void mpWindow::UpdateAll()
       {
         // Convert margin sizes from pixels to coordinates
         // TODO: Only uses 1st Y-axis for now. How to handle multiple Y-axis?
-        double topMargin = m_margin.top / m_yAxisDataList[0].m_scaleY;
+        double topMargin = m_margin.top / m_YAxisList.begin()->second.Data.scale;
         // Calculate the range in coords that we want to scroll over
-        double maxY = std::max(m_desired.y[0].max, m_bound.y[0].max);
-        maxY = std::max(maxY, m_yAxisDataList[0].m_posY - topMargin);
-        double minY = std::min(m_desired.y[0].min, m_bound.y[0].min);
+        double maxY = std::max(m_YAxisList.begin()->second.Desired.max, m_YAxisList.begin()->second.Bound.max);
+        maxY = std::max(maxY, m_YAxisList.begin()->second.Data.pos - topMargin);
+        double minY = std::min(m_YAxisList.begin()->second.Desired.min, m_YAxisList.begin()->second.Bound.min);
         // Calculate scroll bar size and thumb position
-        int sizeY = (int)((maxY - minY) * m_yAxisDataList[0].m_scaleY);
-        int thumbY = (int)((maxY - (m_yAxisDataList[0].m_posY - topMargin)) * m_yAxisDataList[0].m_scaleY);
+        int sizeY = (int)((maxY - minY) * m_YAxisList.begin()->second.Data.scale);
+        int thumbY = (int)((maxY - (m_YAxisList.begin()->second.Data.pos - topMargin)) * m_YAxisList.begin()->second.Data.scale);
         SetScrollbar(wxVERTICAL, thumbY, cy - (m_margin.top + m_margin.bottom), sizeY);
       }
     }
@@ -4206,13 +4333,13 @@ void mpWindow::DoScrollCalc(const int position, const int orientation)
   {
     // Y axis
     std::vector<double> posYList;
-    for(size_t i = 0; i < m_yAxisDataList.size(); i++)
+    for (const auto& axisInfo : m_YAxisList)
     {
       // Get top margin in coord units
-      double topMargin = m_margin.top / m_yAxisDataList[i].m_scaleY;
+      double topMargin = m_margin.top / axisInfo.second.Data.scale;
       // Calculate maximum Y coord to be shown in the graph
-      double maxY = std::max(m_desired.y[i].max, m_bound.y[i].max);
-      double posY = (maxY - (position / m_yAxisDataList[i].m_scaleY)) + topMargin;
+      double maxY = std::max(axisInfo.second.Desired.max, axisInfo.second.Bound.max);
+      double posY = (maxY - (position / axisInfo.second.Data.scale)) + topMargin;
       posYList.push_back(posY);
     }
     // Set new position
@@ -4224,7 +4351,7 @@ void mpWindow::DoScrollCalc(const int position, const int orientation)
     // Get left margin in coord units
     double leftMargin = m_margin.left / m_scaleX;
     // Calculate minimum X coord to be shown in the graph
-    double minX = std::min(m_desired.x.min, m_bound.x.min);
+    double minX = std::min(m_desiredx.min, m_boundx.min);
     // Set new position
     SetPosX((minX + (position / m_scaleX)) - leftMargin);
   }
@@ -4423,7 +4550,7 @@ mpFXYVector* mpWindow::GetXYSeries(unsigned int n, const wxString &name, bool cr
     serie->SetContinuity(true);
     wxPen pen(wxIndexColour(n), 2, wxPENSTYLE_SOLID);
     serie->SetPen(pen);
-    this->AddLayer(serie);
+    this->AddLayer(serie, false);
   }
   return serie;
 }
@@ -4444,7 +4571,7 @@ mpLayer* mpWindow::GetClosestPlot(wxCoord ix, wxCoord iy, double *xnear, double 
         {
           mpFX* fx = (mpFX*)(*it);
           double fy = fx->DoGetY(this->p2x(ix));
-          if (abs(this->y2p(fy, fx->GetYAxisIndex()) - iy) < NEAR_AREA)
+          if (abs(this->y2p(fy, fx->GetYAxisID()) - iy) < NEAR_AREA)
           {
             *xnear = this->p2x(ix);
             *ynear = fy;
@@ -4455,11 +4582,11 @@ mpLayer* mpWindow::GetClosestPlot(wxCoord ix, wxCoord iy, double *xnear, double 
         case mpfFY:
         {
           mpFY* fy = (mpFY*)(*it);
-          double fx = fy->DoGetX(this->p2y(iy, fy->GetYAxisIndex()));
+          double fx = fy->DoGetX(this->p2y(iy, fy->GetYAxisID()));
           if (abs(this->x2p(fx) - ix) < NEAR_AREA)
           {
             *xnear = fx;
-            *ynear = this->p2y(iy, fy->GetYAxisIndex());
+            *ynear = this->p2y(iy, fy->GetYAxisID());
             result = (*it);
           }
           break;
@@ -4471,14 +4598,14 @@ mpLayer* mpWindow::GetClosestPlot(wxCoord ix, wxCoord iy, double *xnear, double 
           double xx, yy;
           if (fxy->ViewAsBar())
           {
-            double zero = this->y2p(0.0, fxy->GetYAxisIndex());
+            double zero = this->y2p(0.0, fxy->GetYAxisID());
             fxy->Rewind();
             while (fxy->DoGetNextXY(&xx, &yy))
             {
               // We are in the x bar range
               if (abs(this->x2p(xx) - ix) < fxy->GetBarWidth())
               {
-                wxCoord yyp = this->y2p(yy, fxy->GetYAxisIndex());
+                wxCoord yyp = this->y2p(yy, fxy->GetYAxisID());
                 // Check if we are over the bar
                 if (((yy < 0) && ((iy >= zero) && (iy < yyp + NEAR_AREA))) || ((yy > 0) && ((iy <= zero) && (iy > yyp - NEAR_AREA))))
                 {
@@ -4495,7 +4622,7 @@ mpLayer* mpWindow::GetClosestPlot(wxCoord ix, wxCoord iy, double *xnear, double 
             fxy->Rewind();
             while (fxy->DoGetNextXY(&xx, &yy))
             {
-              if ((abs(this->x2p(xx) - ix) < NEAR_AREA) && (abs(this->y2p(yy, fxy->GetYAxisIndex()) - iy) < NEAR_AREA))
+              if ((abs(this->x2p(xx) - ix) < NEAR_AREA) && (abs(this->y2p(yy, fxy->GetYAxisID()) - iy) < NEAR_AREA))
               {
                 *xnear = xx;
                 *ynear = yy;
@@ -4544,15 +4671,15 @@ void mpWindow::RefreshLegend(void)
 }
 
 
-bool mpWindow::IsYAxisUsed(size_t yIndex)
+bool mpWindow::IsYAxisUsed(int yID)
 {
-  for(mpLayer* layer : m_layers)
+  for (mpLayer* layer : m_layers)
   {
     int subType;
     if(layer->IsLayerType(mpLAYER_AXIS, &subType) && (subType == mpsScaleY))
     {
       mpScaleY* scaleY = dynamic_cast<mpScaleY*>(layer);
-      if((scaleY->GetAxisIndex() == yIndex) && scaleY->IsVisible())
+      if ((scaleY->GetAxisID() == yID) && scaleY->IsVisible())
       {
         return true;
       }
@@ -4560,12 +4687,11 @@ bool mpWindow::IsYAxisUsed(size_t yIndex)
     else if(layer->IsLayerType(mpLAYER_PLOT, &subType))
     {
       mpFunction* function = dynamic_cast<mpFunction*>(layer);
-      if(function->GetYAxisIndex() == yIndex)
+      if (function->GetYAxisID() == yID)
       {
         return true;
       }
     }
-
   }
   return false;
 }
@@ -4586,27 +4712,27 @@ mpScaleX* mpWindow::GetLayerXAxis()
 }
 
 /**
- * Get the scale Y layer (Y axis) with a specific Y-index or NULL if not found
+ * Get the scale Y layer (Y axis) with a specific yID or NULL if not found
  */
-mpScaleY* mpWindow::GetLayerYAxis(size_t yIndex)
+mpScaleY* mpWindow::GetLayerYAxis(int yID)
 {
-  for(mpScaleY* yAxis : m_YAxisList)
+  for (const auto& axisInfo : m_YAxisList)
   {
-    if(yAxis->GetAxisIndex() == yIndex)
+    if(axisInfo.second.Axis->GetAxisID() == yID)
     {
-      return yAxis;
+      return axisInfo.second.Axis;
     }
   }
   return nullptr;
 }
 
-std::optional<size_t> mpWindow::IsInsideYAxis(const wxPoint &point)
+std::optional<int> mpWindow::IsInsideYAxis(const wxPoint &point)
 {
-  for(mpScaleY* yAxis : m_YAxisList)
+  for (const auto& axisInfo : m_YAxisList)
   {
-    if(yAxis->IsInside(point.x))
+    if (axisInfo.second.Axis->IsInside(point.x))
     {
-      return yAxis->GetAxisIndex();
+      return axisInfo.second.Axis->GetAxisID();
     }
   }
   return std::nullopt;
@@ -4701,29 +4827,29 @@ void mpWindow::SetMargins(int top, int right, int bottom, int left)
       m_plotWidth + 2 * EXTRA_MARGIN, m_plotHeight + 2 * EXTRA_MARGIN);
 }
 
-int mpWindow::GetLeftYAxesWidth(std::optional<size_t> yIndex)
+int mpWindow::GetLeftYAxesWidth(std::optional<int> yID)
 {
   int yAxesWidth = 0;
-  for(mpScaleY* yAxis : GetYAxisList())
+  for (const auto& axisInfo : m_YAxisList)
   {
-    if(yAxis->IsLeftAxis() && (!yIndex || (yAxis->GetAxisIndex() < *yIndex)))
+    if(axisInfo.second.Axis->IsLeftAxis() && (!yID || (axisInfo.second.Axis->GetAxisID() < *yID)))
     {
       // For every left y-axis that is left of this one (lower index), add its width
-      yAxesWidth += yAxis->GetAxisWidth();
+      yAxesWidth += axisInfo.second.Axis->GetAxisWidth();
     }
   }
   return yAxesWidth;
 }
 
-int mpWindow::GetRightYAxesWidth(std::optional<size_t> yIndex)
+int mpWindow::GetRightYAxesWidth(std::optional<int> yID)
 {
   int yAxesWidth = 0;
-  for(mpScaleY* yAxis : GetYAxisList())
+  for (const auto& axisInfo : m_YAxisList)
   {
-    if(yAxis->IsRightAxis() && (!yIndex || (yAxis->GetAxisIndex() < *yIndex)))
+    if(axisInfo.second.Axis->IsRightAxis() && (!yID || (axisInfo.second.Axis->GetAxisID() < *yID)))
     {
       // For every right y-axis that is right of this one (lower index), add its width
-      yAxesWidth += yAxis->GetAxisWidth();
+      yAxesWidth += axisInfo.second.Axis->GetAxisWidth();
     }
   }
   return yAxesWidth;
@@ -4734,7 +4860,13 @@ wxBitmap* mpWindow::BitmapScreenshot(wxSize imageSize, bool fit)
   int sizeX, sizeY;
   int bk_scrX = m_scrX;
   int bk_scrY = m_scrY;
-  mpFloatRect bk_m_desired = m_desired;
+//  mpFloatRect bk_m_desired = m_desired;
+  mpRange bk_m_desiredx = m_desiredx;
+  std::vector<mpRange> bk_m_desiredy;
+  for (const auto& axisInfo : m_YAxisList)
+  {
+    bk_m_desiredy.push_back(axisInfo.second.Desired);
+  }
   wxMemoryDC m_Screenshot_dc;
 
   if (imageSize == wxDefaultSize)
@@ -4767,12 +4899,24 @@ wxBitmap* mpWindow::BitmapScreenshot(wxSize imageSize, bool fit)
 
   if (fit)
   {
-    Fit(m_bound, &sizeX, &sizeY);
+    std::vector<mpRange> yRange;
+    for (const auto& axisInfo : m_YAxisList)
+    {
+      yRange.push_back(axisInfo.second.Bound);
+    }
+    Fit(m_boundx, yRange, &sizeX, &sizeY);
   }
   else
   {
     if (imageSize != wxDefaultSize)
-      Fit(m_desired, &sizeX, &sizeY);
+    {
+      std::vector<mpRange> yRange;
+      for (const auto& axisInfo : m_YAxisList)
+      {
+        yRange.push_back(axisInfo.second.Desired);
+      }
+      Fit(m_desiredx, yRange, &sizeX, &sizeY);
+    }
   }
 
   // Draw all the layers in Z order
@@ -4790,7 +4934,7 @@ wxBitmap* mpWindow::BitmapScreenshot(wxSize imageSize, bool fit)
   if (fit || (imageSize != wxDefaultSize))
   {
     SetScreen(bk_scrX, bk_scrY);
-    Fit(bk_m_desired, &bk_scrX, &bk_scrY);
+    Fit(bk_m_desiredx, bk_m_desiredy, &bk_scrX, &bk_scrY);
     UpdateAll();
   }
   return m_Screenshot_bmp;
@@ -5188,9 +5332,9 @@ void mpMovableObject::DoPlot(wxDC &dc, mpWindow &w)
       while (itX != m_trans_shape_xs.end())
       {
         if (m_symbol != mpsNone)
-          DrawSymbol(dc, w.x2p((double)(*(itX++))), w.y2p((double)(*(itY++)), m_yAxisIndex));
+          DrawSymbol(dc, w.x2p((double)(*(itX++))), w.y2p((double)(*(itY++)), m_yAxisID));
         else
-          dc.DrawPoint(w.x2p((double)(*(itX++))), w.y2p((double)(*(itY++)), m_yAxisIndex));
+          dc.DrawPoint(w.x2p((double)(*(itX++))), w.y2p((double)(*(itY++)), m_yAxisID));
       }
     }
     else
@@ -5198,7 +5342,7 @@ void mpMovableObject::DoPlot(wxDC &dc, mpWindow &w)
       while (itX != m_trans_shape_xs.end())
       {
         wxCoord cx = w.x2p((double)(*(itX++)));
-        wxCoord cy = w.y2p((double)(*(itY++)), m_yAxisIndex);
+        wxCoord cy = w.y2p((double)(*(itY++)), m_yAxisID);
         if (m_symbol != mpsNone)
           DrawSymbol(dc, cx, cy);
         else
@@ -5213,7 +5357,7 @@ void mpMovableObject::DoPlot(wxDC &dc, mpWindow &w)
     while (itX != m_trans_shape_xs.end())
     {
       wxCoord cx = w.x2p((double)(*(itX++)));
-      wxCoord cy = w.y2p((double)(*(itY++)), m_yAxisIndex);
+      wxCoord cy = w.y2p((double)(*(itY++)), m_yAxisID);
       if (first)
       {
         first = false;
@@ -5239,7 +5383,7 @@ void mpMovableObject::DoPlot(wxDC &dc, mpWindow &w)
     if (HasBBox())
     {
       wxCoord sx = (wxCoord)((m_bbox_max_x - w.GetPosX()) * w.GetScaleX());
-      wxCoord sy = (wxCoord)((w.GetPosY() - m_bbox_max_y) * w.GetScaleY());
+      wxCoord sy = (wxCoord)((w.GetPosY(m_yAxisID) - m_bbox_max_y) * w.GetScaleY(m_yAxisID));
 
       tx = sx - tx - 8;
       ty = sy - 8 - ty;
@@ -5552,7 +5696,8 @@ void mpBitmapLayer::DoPlot(wxDC &dc, mpWindow &w)
     if (HasBBox())
     {
       wxCoord sx = (wxCoord)((m_max_x - w.GetPosX()) * w.GetScaleX());
-      wxCoord sy = (wxCoord)((w.GetPosY() - m_max_y) * w.GetScaleY());
+      // ToDo 0 is not the good y ID
+      wxCoord sy = (wxCoord)((w.GetPosY(0) - m_max_y) * w.GetScaleY(0));
 
       tx = sx - tx - 8;
       ty = sy - 8 - ty;
