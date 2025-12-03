@@ -1741,6 +1741,15 @@ class WXDLLIMPEXP_MATHPLOT mpVerticalLine: public mpLine
 
     virtual void DoPlot(wxDC &dc, mpWindow &w);
 
+    /**
+     * This is the only case where we don't need and Y axis
+     * So no need to test m_yAxisID
+     */
+    virtual bool DoBeforePlot()
+    {
+      return true;
+    }
+
     wxDECLARE_DYNAMIC_CLASS(mpVerticalLine);
 };
 
@@ -2623,7 +2632,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     {
       if (ISNOTNULL(scaleX))
       {
-        m_scaleX = scaleX;
+        m_DataX.scale = scaleX;
         UpdateDesiredBoundingBox();
       }
       UpdateAll();
@@ -2635,7 +2644,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      */
     double GetScaleX(void) const
     {
-      return m_scaleX;
+      return m_DataX.scale;
     }
 
     /** Set current view's Y scale and refresh display.
@@ -2689,7 +2698,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      */
     void SetPosX(const double posX)
     {
-      m_posX = posX;
+      m_DataX.pos = posX;
       UpdateDesiredBoundingBox();
       UpdateAll();
     }
@@ -2700,7 +2709,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      */
     double GetPosX(void) const
     {
-      return m_posX;
+      return m_DataX.pos;
     }
 
     /** Set current view's Y position and refresh display.
@@ -2795,7 +2804,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      */
     void SetPos(const double posX, const std::vector<double>& posYList)
     {
-      m_posX = posX;
+      m_DataX.pos = posX;
       SetPosY(posYList);
     }
 
@@ -2804,7 +2813,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      * @sa p2y,x2p,y2p */
     inline double p2x(const wxCoord pixelCoordX) const
     {
-      return m_posX + (pixelCoordX / m_scaleX);
+      return m_DataX.pos + (pixelCoordX / m_DataX.scale);
     }
 
     /** Converts mpWindow (screen) pixel coordinates into graph (floating point) coordinates,
@@ -2823,7 +2832,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      * @sa p2x,p2y,y2p */
     inline wxCoord x2p(const double x) const
     {
-      return (wxCoord)((x - m_posX) * m_scaleX);
+      return (wxCoord)((x - m_DataX.pos) * m_DataX.scale);
     }
 
     /** Converts graph (floating point) coordinates into mpWindow (screen) pixel coordinates,
@@ -2964,8 +2973,8 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      */
     void UpdateDesiredBoundingBox()
     {
-      m_desiredx.min = m_posX + (m_margin.left / m_scaleX);
-      m_desiredx.max = m_posX + ((m_margin.left + m_plotWidth) / m_scaleX);
+      m_desiredx.min = m_DataX.pos + (m_margin.left / m_DataX.scale);
+      m_desiredx.max = m_DataX.pos + ((m_margin.left + m_plotWidth) / m_DataX.scale);
 
       for (auto& axisInfo : m_YAxisList)
       {
@@ -3441,8 +3450,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     wxColour m_axColour;    //!< Axes Colour
     bool m_drawBox;         //!< Draw box of the plot bound. Default true
 
-    double m_scaleX;        //!< Current view's X scale
-    double m_posX;          //!< Current view's X position
+    mpAxisData m_DataX;     //!< Current view's X scale and position
 
     int m_scrX;             //!< Current view's X dimension in DC units, including all scales, margins
     int m_scrY;             //!< Current view's Y dimension

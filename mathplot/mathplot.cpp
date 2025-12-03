@@ -2878,8 +2878,8 @@ mpWindow::~mpWindow()
 
 void mpWindow::InitParameters()
 {
-  m_scaleX = 1.0;
-  m_posX = 0.0;
+  m_DataX.scale = 1.0;
+  m_DataX.pos = 0.0;
   m_scrX = m_scrY = 64;
   m_last_lx = m_last_ly = 0;
   m_XAxis = NULL;
@@ -2930,7 +2930,7 @@ void mpWindow::OnMouseLeftDown(wxMouseEvent &event)
   m_mouseLClick = event.GetPosition();
 
   // Store current X and Y scales
-  m_mouseScaleX = m_scaleX;
+  m_mouseScaleX = m_DataX.scale;
   m_mouseScaleYList.clear();
   for (const auto& axisInfo : m_YAxisList)
   {
@@ -3019,8 +3019,8 @@ void mpWindow::OnMouseMove(wxMouseEvent &event)
     else
     {
       // No axis selected. Pan whole plot
-      double Ax_units = Axy.x / m_scaleX;
-      m_posX += Ax_units;
+      double Ax_units = Axy.x / m_DataX.scale;
+      m_DataX.pos += Ax_units;
 
       for (auto& axisInfo : m_YAxisList)
       {
@@ -3033,7 +3033,7 @@ void mpWindow::OnMouseMove(wxMouseEvent &event)
     UpdateAll();
 
 #ifdef MATHPLOT_DO_LOGGING
-    wxLogMessage(_T("[mpWindow::OnMouseMove] Ax:%i Ay:%i m_posX:%f m_posY:%f"), Axy.x, Axy.y, m_posX, m_posY);
+    wxLogMessage(_T("[mpWindow::OnMouseMove] Ax:%i Ay:%i m_posX:%f m_posY:%f"), Axy.x, Axy.y, m_DataX.pos, m_posY);
 #endif
   }
   else
@@ -3235,8 +3235,8 @@ void mpWindow::OnMouseWheel(wxMouseEvent &event)
 
     if (event.m_shiftDown)
     {
-      double changeUnitsX = change / m_scaleX;
-      m_posX += changeUnitsX;
+      double changeUnitsX = change / m_DataX.scale;
+      m_DataX.pos += changeUnitsX;
     }
     else if (event.m_controlDown)
     {
@@ -3333,7 +3333,7 @@ void mpWindow::Fit(const mpRange &rangeX, const std::vector<mpRange> &rangeY, wx
   double Ax, Ay;
 
   Ax = rangeX.max - rangeX.min;
-  m_scaleX = ISNOTNULL(Ax) ? m_plotWidth / Ax : 1;
+  m_DataX.scale = ISNOTNULL(Ax) ? m_plotWidth / Ax : 1;
 
 //  for(size_t i = 0; i < m_YAxisList.size(); i++)
 //  {
@@ -3351,16 +3351,16 @@ void mpWindow::Fit(const mpRange &rangeX, const std::vector<mpRange> &rangeY, wx
   if (m_lockaspect)
   {
 #ifdef MATHPLOT_DO_LOGGING
-    wxLogMessage(_T("mpWindow::Fit()(lock) m_scaleX=%f,m_scaleY=%f"), m_scaleX, m_scaleY);
+    wxLogMessage(_T("mpWindow::Fit()(lock) m_scaleX=%f,m_scaleY=%f"), m_DataX.scale, m_scaleY);
 #endif
     // Keep the lowest "scale" to fit the whole range required by that axis (to actually "fit"!):
-    double s = m_scaleX;
+    double s = m_DataX.scale;
     for (const auto& axisInfo : m_YAxisList)
     {
       s = std::min(s, axisInfo.second.Data.scale);
     }
 
-    m_scaleX = s;
+    m_DataX.scale = s;
     for (auto& axisInfo : m_YAxisList)
     {
       axisInfo.second.Data.scale = s;
@@ -3371,7 +3371,7 @@ void mpWindow::Fit(const mpRange &rangeX, const std::vector<mpRange> &rangeY, wx
   //   m_posX = m_minX;
   //   m_posY = m_maxY;
   // But account for centering if we have lock aspect:
-  m_posX = (rangeX.min + rangeX.max) / 2 - (m_plotWidth / 2 + m_margin.left) / m_scaleX;
+  m_DataX.pos = (rangeX.min + rangeX.max) / 2 - (m_plotWidth / 2 + m_margin.left) / m_DataX.scale;
 //  for(size_t i = 0; i < m_YAxisList.size(); i++)
 //  {
 //    m_YAxisList[i].Data.pos = (rangeY[i].min + rangeY[i].max) / 2 + (m_plotHeight / 2 + m_margin.top) / m_YAxisList[i].Data.scale;
@@ -3388,7 +3388,7 @@ void mpWindow::Fit(const mpRange &rangeX, const std::vector<mpRange> &rangeY, wx
   wxLogMessage(_T("mpWindow::Fit() m_desired.x.min=%f m_desired.x.max=%f  m_desired.y[0].min=%f m_desired.Ymax=%f"),
       m_desired.x.min, m_desired.x.max, m_desired.y[0].min, m_desired.Ymax);
   wxLogMessage(_T("mpWindow::Fit() m_scaleX = %f , m_scrX = %d,m_scrY=%d, Ax=%f, Ay=%f, m_posX=%f, m_posY=%f"),
-      m_scaleX, m_scrX, m_scrY, Ax, Ay, m_posX, m_posY);
+      m_DataX.scale, m_scrX, m_scrY, Ax, Ay, m_DataX.pos, m_posY);
 #endif
 
   // It is VERY IMPORTANT to DO NOT call Refresh if we are drawing to the printer!!
@@ -3404,10 +3404,10 @@ void mpWindow::FitX(void)
 {
   mpRange bound = Get_BoundX();
   double Ax = bound.max - bound.min;
-  m_scaleX = ISNOTNULL(Ax) ? m_plotWidth / Ax : 1;
+  m_DataX.scale = ISNOTNULL(Ax) ? m_plotWidth / Ax : 1;
 
   // Since m_posX is at the corner (not including margins) we need to take margin into account
-  m_posX = bound.min - (m_margin.left / m_scaleX);
+  m_DataX.pos = bound.min - (m_margin.left / m_DataX.scale);
 
   UpdateDesiredBoundingBox();
 }
@@ -3452,10 +3452,10 @@ void mpWindow::DoZoomXCalc(bool zoomIn, wxCoord staticXpixel)
   double staticX = p2x(staticXpixel);
   // Zoom:
   double zoomFactor = zoomIn ? m_zoomIncrementalFactor : (1.0 / m_zoomIncrementalFactor);
-  m_scaleX *= zoomFactor;
+  m_DataX.scale *= zoomFactor;
 
   // Adjust the new m_posx
-  m_posX = staticX - (staticXpixel / m_scaleX);
+  m_DataX.pos = staticX - (staticXpixel / m_DataX.scale);
 
   UpdateDesiredBoundingBox();
 #ifdef MATHPLOT_DO_LOGGING
@@ -3527,10 +3527,10 @@ void mpWindow::SetScaleXAndCenter(double scaleX)
   double centerXValue = p2x(centerXPixel);
 
   // Set scale
-  m_scaleX = scaleX;
+  m_DataX.scale = scaleX;
 
   // Adjust the new m_posx
-  m_posX = centerXValue - (centerXPixel / m_scaleX);
+  m_DataX.pos = centerXValue - (centerXPixel / m_DataX.scale);
 
   UpdateDesiredBoundingBox();
 }
@@ -4296,15 +4296,15 @@ void mpWindow::UpdateAll()
       // Do x scroll bar
       {
         // Convert margin sizes from pixels to coordinates
-        double leftMargin = m_margin.left / m_scaleX;
+        double leftMargin = m_margin.left / m_DataX.scale;
         // Calculate the range in coords that we want to scroll over
         double maxX = std::max(m_desiredx.max, m_boundx.max);
         double minX = std::min(m_desiredx.min, m_boundx.min);
-        if ((m_posX + leftMargin) < minX)
-          minX = m_posX + leftMargin;
+        if ((m_DataX.pos + leftMargin) < minX)
+          minX = m_DataX.pos + leftMargin;
         // Calculate scroll bar size and thumb position
-        int sizeX = (int)((maxX - minX) * m_scaleX);
-        int thumbX = (int)(((m_posX + leftMargin) - minX) * m_scaleX);
+        int sizeX = (int)((maxX - minX) * m_DataX.scale);
+        int thumbX = (int)(((m_DataX.pos + leftMargin) - minX) * m_DataX.scale);
         SetScrollbar(wxHORIZONTAL, thumbX, cx - (m_margin.right + m_margin.left), sizeX);
       }
       // Do y scroll bar
@@ -4349,11 +4349,11 @@ void mpWindow::DoScrollCalc(const int position, const int orientation)
   {
     // X Axis
     // Get left margin in coord units
-    double leftMargin = m_margin.left / m_scaleX;
+    double leftMargin = m_margin.left / m_DataX.scale;
     // Calculate minimum X coord to be shown in the graph
     double minX = std::min(m_desiredx.min, m_boundx.min);
     // Set new position
-    SetPosX((minX + (position / m_scaleX)) - leftMargin);
+    SetPosX((minX + (position / m_DataX.scale)) - leftMargin);
   }
 }
 
