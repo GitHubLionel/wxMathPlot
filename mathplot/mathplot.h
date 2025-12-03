@@ -208,6 +208,12 @@ struct mpRange
   double min = 0.0f;
   double max = 0.0f;
 
+  // Return true if the point is inside the range (min and max included)
+  bool PointIsInside(double px) const
+  {
+    return ((px >= min) && (px <= max));
+  }
+
 #if (defined(__cplusplus) && (__cplusplus > 201703L)) // C++20 or newer
   bool operator==(const mpRange&) const = default;
 #else
@@ -3036,6 +3042,37 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
       *boundX = m_boundx;
       *boundY = m_YAxisList[yID].Bound;
       return true;
+    }
+
+    // Is this point inside the bounding box
+    bool PointIsInsideBound(double px, double py, int yID)
+    {
+      if (m_YAxisList.count(yID) == 0)
+        return false;
+
+      return m_boundx.PointIsInside(px) && Get_BoundY(yID).PointIsInside(py);
+    }
+
+    // Update bounding box to include this point
+    void UpdateBoundingBoxToInclude(double px, double py, int yID)
+    {
+      if (m_YAxisList.count(yID) == 0)
+        return ;
+
+      if      (px  < m_boundx.min ) m_boundx.min = px;
+      else if (px  > m_boundx.max ) m_boundx.max = px;
+      if      (py  < m_YAxisList[yID].Bound.min ) m_YAxisList[yID].Bound.min = py;
+      else if (py  > m_YAxisList[yID].Bound.max ) m_YAxisList[yID].Bound.max = py;
+    }
+
+    // Initialize bounding box with an initial point
+    void InitializeBoundingBox(double px, double py, int yID)
+    {
+      if (m_YAxisList.count(yID) == 0)
+        return ;
+
+      m_boundx.min = m_boundx.max = px;
+      m_YAxisList[yID].Bound.min = m_YAxisList[yID].Bound.max = py;
     }
 
     /** Enable/disable scrollbars
