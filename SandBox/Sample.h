@@ -84,10 +84,16 @@ class MyFunction: public mpFX
 		}
 
 	protected:
-		virtual void DoBeforePlot()
+		virtual bool DoBeforePlot()
 		{
-			minY = 0;
-			maxY = 0;
+		  if (mpFX::DoBeforePlot())
+		  {
+        minY = 0;
+        maxY = 0;
+        return true;
+		  }
+		  else
+		    return false;
 		}
 };
 
@@ -130,10 +136,16 @@ class MyPower: public mpFX
 		}
 
 	protected:
-		virtual void DoBeforePlot()
+		virtual bool DoBeforePlot()
 		{
-			minY = 0;
-			maxY = 0;
+		  if (mpFX::DoBeforePlot())
+		  {
+		    minY = 0;
+		    maxY = 0;
+		    return true;
+		  }
+		  else
+		    return false;
 		}
 };
 

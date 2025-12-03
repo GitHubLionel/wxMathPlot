@@ -62,6 +62,7 @@ END_EVENT_TABLE()
 
 MathPlotDemoFrame::MathPlotDemoFrame(wxWindow* parent,wxWindowID id)
 {
+    (void) id; // Compiler happy
     //(*Initialize(MathPlotDemoFrame)
     wxBoxSizer* BoxSizer1;
     wxBoxSizer* BoxSizer2;
@@ -227,7 +228,7 @@ void MathPlotDemoFrame::OnbDrawClick(wxCommandEvent &WXUNUSED(event))
   CleanPlot();
   // add a simple sinus series
   mpFXYVector* series = mPlot->GetXYSeries(0);
-  series->SetYAxisIndex(leftAxis);
+  series->SetYAxis(leftAxis);
   for (int i = 0; i <= 100; i++)
     series->AddData(i / 10.0, sin(i / 10.0), false);
   mPlot->Fit();
@@ -309,7 +310,7 @@ void MathPlotDemoFrame::OnbBarChartClick(wxCommandEvent &WXUNUSED(event))
 {
   CleanPlot();
   mpBarChart* barChart = new mpBarChart(_T("BarChart"));
-  barChart->SetYAxisIndex(leftAxis);
+  barChart->SetYAxis(leftAxis);
   // Create vector for y and fill it with data
   std::vector<double> vectory;
   double ycoord;
@@ -435,7 +436,7 @@ void MathPlotDemoFrame::OnUserMouseAction(void *Sender, wxMouseEvent &event, boo
     wxColour random_color = wxIndexColour(rand() * 20 / RAND_MAX);
     CurrentPolyline->SetPen(wxPen(random_color, 2));
     CurrentPolyline->SetContinuity(true);
-    CurrentPolyline->SetYAxisIndex(leftAxis);
+    CurrentPolyline->SetYAxis(leftAxis);
 
     // Add new Polyline but not plot it
     plotWindow->AddLayer(CurrentPolyline, false);
@@ -558,7 +559,7 @@ void MathPlotDemoFrame::OnbMultiYAxisClick(wxCommandEvent &WXUNUSED(event))
   axis1->SetFontColour(plotColors[0]);
   mPlot->AddLayer(axis1);
   // This axis is dedicated for f1
-  f1->SetYAxisIndex(axis1);
+  f1->SetYAxis(axis1);
 
   MySIN* f2 = new MySIN(10.0, 220.0);
   f2->SetDrawOutsideMargins(false);
@@ -573,7 +574,7 @@ void MathPlotDemoFrame::OnbMultiYAxisClick(wxCommandEvent &WXUNUSED(event))
   axis2->SetFontColour(plotColors[1]);
   mPlot->AddLayer(axis2);
   // This axis is dedicated for f2
-  f2->SetYAxisIndex(axis2);
+  f2->SetYAxis(axis2);
 
   MyFunction* f3 = new MyFunction();
   f3->SetDrawOutsideMargins(false);
@@ -588,7 +589,7 @@ void MathPlotDemoFrame::OnbMultiYAxisClick(wxCommandEvent &WXUNUSED(event))
   axis3->SetFontColour(plotColors[2]);
   mPlot->AddLayer(axis3);
   // This axis is dedicated for f3
-  f3->SetYAxisIndex(axis3);
+  f3->SetYAxis(axis3);
 
   MyCOSinverse* f4 = new MyCOSinverse(10.0, 100.0);
   f4->SetDrawOutsideMargins(false);
@@ -606,7 +607,7 @@ void MathPlotDemoFrame::OnbMultiYAxisClick(wxCommandEvent &WXUNUSED(event))
   axis4->SetMaxScale(300);
   mPlot->AddLayer(axis4);
   // This axis is dedicated for f4
-  f4->SetYAxisIndex(axis4);
+  f4->SetYAxis(axis4);
 
   mPlot->Fit();
 
