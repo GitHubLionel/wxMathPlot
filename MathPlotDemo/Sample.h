@@ -13,8 +13,8 @@ class MySIN: public mpFX
 {
 		double m_freq, m_amp;
 	public:
-		MySIN(double freq, double amp) :
-				mpFX(wxT("f(x) = SIN(x)"), mpALIGN_LEFT)
+		MySIN(double freq, double amp, mpScaleY *yAxisUsed = NULL) :
+				mpFX(wxT("f(x) = SIN(x)"), mpALIGN_LEFT, yAxisUsed)
 		{
 			m_freq = freq;
 			m_amp = amp;
@@ -44,8 +44,8 @@ class MyFunction: public mpFX
 		double minY, maxY;
 
 	public:
-		MyFunction() :
-				mpFX(wxT("f(x) = x/sqrt(sin(x)+2)"), mpALIGN_LEFT)
+		MyFunction(mpScaleY *yAxisUsed = NULL) :
+				mpFX(wxT("f(x) = x/sqrt(sin(x)+2)"), mpALIGN_LEFT, yAxisUsed)
 		{
 			minY = 0;
 			maxY = 0;
@@ -84,10 +84,16 @@ class MyFunction: public mpFX
 		}
 
 	protected:
-		virtual void DoBeforePlot()
+		virtual bool DoBeforePlot()
 		{
-			minY = 0;
-			maxY = 0;
+		  if (mpFX::DoBeforePlot())
+		  {
+        minY = 0;
+        maxY = 0;
+        return true;
+		  }
+		  else
+		    return false;
 		}
 };
 
@@ -96,8 +102,8 @@ class MyPower: public mpFX
 		double minY, maxY;
 
 	public:
-		MyPower() :
-				mpFX(wxT("f(x) = 10^x"), mpALIGN_LEFT)
+		MyPower(mpScaleY *yAxisUsed = NULL) :
+				mpFX(wxT("f(x) = 10^x"), mpALIGN_LEFT, yAxisUsed)
 		{
 			minY = 0;
 			maxY = 0;
@@ -130,10 +136,16 @@ class MyPower: public mpFX
 		}
 
 	protected:
-		virtual void DoBeforePlot()
+		virtual bool DoBeforePlot()
 		{
-			minY = 0;
-			maxY = 0;
+		  if (mpFX::DoBeforePlot())
+		  {
+		    minY = 0;
+		    maxY = 0;
+		    return true;
+		  }
+		  else
+		    return false;
 		}
 };
 
@@ -142,8 +154,8 @@ class MyCOSinverse: public mpFY
 {
 		double m_freq, m_amp;
 	public:
-		MyCOSinverse(double freq, double amp) :
-				mpFY(wxT("g(y) = COS(y)"), mpALIGN_BOTTOM)
+		MyCOSinverse(double freq, double amp, mpScaleY *yAxisUsed = NULL) :
+				mpFY(wxT("g(y) = COS(y)"), mpALIGN_BOTTOM, yAxisUsed)
 		{
 			m_freq = freq;
 			m_amp = amp;
@@ -175,8 +187,8 @@ class MyLissajoux: public mpFXY
 		double m_rad;
 		int m_idx;
 	public:
-		MyLissajoux(double rad) :
-				mpFXY(wxT("Lissajoux"))
+		MyLissajoux(double rad, mpScaleY *yAxisUsed = NULL) :
+				mpFXY(wxT("Lissajoux"), mpALIGN_NE, false, yAxisUsed)
 		{
 			m_rad = rad;
 			m_idx = 0;
@@ -226,7 +238,7 @@ class MyLissajoux: public mpFXY
 class FixedBitwidth: public mpFX {
 		int m_bitwidth;
 	public:
-		FixedBitwidth(int bitwidth) : mpFX(wxT("Feste Bitbreite"))
+		FixedBitwidth(int bitwidth, mpScaleY *yAxisUsed = NULL) : mpFX(wxT("Feste Bitbreite"), mpALIGN_RIGHT, yAxisUsed)
 		{
 			m_bitwidth = bitwidth;
 		}
@@ -247,7 +259,7 @@ double ld(const double x)
 
 class Optimum: public mpFX {
 	public:
-		Optimum() : mpFX(wxT("Optimum ld(N)"))
+		Optimum(mpScaleY *yAxisUsed = NULL) : mpFX(wxT("Optimum ld(N)"), mpALIGN_RIGHT, yAxisUsed)
 		{
 		}
 
@@ -262,7 +274,7 @@ class Optimum: public mpFX {
 
 class Elias: public mpFX {
 	public:
-		Elias() : mpFX(wxT("Elias-Kodes"))
+		Elias(mpScaleY *yAxisUsed = NULL) : mpFX(wxT("Elias-Kodes"), mpALIGN_RIGHT, yAxisUsed)
 		{
 		}
 
@@ -277,7 +289,7 @@ class Elias: public mpFX {
 
 class Fibonacci: public mpFX {
 	public:
-		Fibonacci() : mpFX(wxT("Fibonacci-Kodes"))
+		Fibonacci(mpScaleY *yAxisUsed = NULL) : mpFX(wxT("Fibonacci-Kodes"), mpALIGN_RIGHT, yAxisUsed)
 		{
 		}
 
