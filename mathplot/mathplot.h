@@ -209,9 +209,9 @@ struct mpRange
   double max = 0.0f;
 
   // Return true if the point is inside the range (min and max included)
-  bool PointIsInside(double px) const
+  bool PointIsInside(double point) const
   {
-    return ((px >= min) && (px <= max));
+    return ((point >= min) && (point <= max));
   }
 
 #if (defined(__cplusplus) && (__cplusplus > 201703L)) // C++20 or newer
@@ -2975,20 +2975,29 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     /** Update m_desired bounds. Store the min and max position of the visible data
      *  in the plot. Used primarily during frame resizing via OnSize so that the data
      *  stays in the same place when resizing the frame. Needs to be updated whenever
-     *  m_posX, m_scaleX, m_posY or m_scaleY is updated
+     *  m_posX, m_scaleX, m_posY or m_scaleY is updated.
+     *  Check if there is some changes
      */
     void UpdateDesiredBoundingBox()
     {
+      mpRange lastRange = m_desiredx;
+
       m_desiredx.min = m_DataX.pos + (m_margin.left / m_DataX.scale);
       m_desiredx.max = m_DataX.pos + ((m_margin.left + m_plotWidth) / m_DataX.scale);
+      m_desiredChanged = !(lastRange == m_desiredx);
 
+      // If there is a change no need to test either more
       for (auto& axisInfo : m_YAxisList)
       {
+        if (!m_desiredChanged)
+          lastRange = axisInfo.second.Desired;
         axisInfo.second.Desired.max = axisInfo.second.Data.pos - (m_margin.top / axisInfo.second.Data.scale);
         axisInfo.second.Desired.min = axisInfo.second.Data.pos - ((m_margin.top + m_plotHeight) / axisInfo.second.Data.scale);
+        if (!m_desiredChanged)
+          m_desiredChanged = !(lastRange == axisInfo.second.Desired);
       }
 
-      CheckAndReportDesiredBoundsChanges();
+//      CheckAndReportDesiredBoundsChanges();
     }
 
     /// Get the 'desired' user-coordinate bounding box for the currently displayed view (set by Fit, Zoom or Pan operations).
@@ -3496,6 +3505,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 
     mpRange m_boundx;
     mpRange m_desiredx;
+    bool m_desiredChanged = false;
 
     mpRect m_margin;                    //!< Margin around the plot including Y-axis
     mpRect m_marginOuter;               //!< Margin around the plot exluding Y-axis. Default 50

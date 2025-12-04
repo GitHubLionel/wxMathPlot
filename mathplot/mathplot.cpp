@@ -4325,6 +4325,10 @@ void mpWindow::UpdateAll()
   }
 
   Refresh();
+
+  // If we have some changed, then call virtual method DesiredBoundsHaveChanged
+  if (m_desiredChanged)
+    DesiredBoundsHaveChanged();
 }
 
 void mpWindow::DoScrollCalc(const int position, const int orientation)
