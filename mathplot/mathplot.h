@@ -225,19 +225,19 @@ struct mpRange
 };
 
 /**
- * @brief Represents the scale and position for an axis
+ * @brief Represents the scale and position of a view
  * This struct holds the scale defined by `m_scale` and the position defined by `m_pos`. It supports
  * equality comparison using the default `operator==`.
  */
-struct mpAxisData      //!< Scale and position structure
+struct mpViewData      //!< Scale and position structure
 {
   double scale = 1.0;
   double pos = 0;
 
 #if (defined(__cplusplus) && (__cplusplus > 201703L)) // C++20 or newer
-  bool operator==(const mpAxisData&) const = default;
+  bool operator==(const mpViewData&) const = default;
 #else
-  bool operator==(const mpAxisData& other) const
+  bool operator==(const mpViewData& other) const
   {
     return scale == other.scale && pos == other.pos;
   }
@@ -1209,6 +1209,19 @@ class WXDLLIMPEXP_MATHPLOT mpScale: public mpLayer
       return false;
     }
 
+    /**
+     * Return the ID of the Axis
+     */
+    int GetAxisID(void)
+    {
+      return m_scaleID;
+    }
+
+    void SetAxisID(int yID)
+    {
+      m_scaleID = yID;
+    }
+
     /** Set axis ticks
      @param ticks TRUE to plot axis ticks. */
     void ShowTicks(bool ticks)
@@ -1320,6 +1333,7 @@ class WXDLLIMPEXP_MATHPLOT mpScale: public mpLayer
     static const wxCoord kTickSize = 4;       //!< Length of tick line
     static const wxCoord kAxisExtraSpace = 6; //!< Extra space for axis to make it look good
 
+    int m_scaleID;           //!< Unique ID that identify this axis
     wxPen m_gridpen;         //!< Grid's pen. Default Colour = LIGHT_GREY, width = 1, style = wxPENSTYLE_DOT
     bool m_ticks;            //!< Flag to show ticks. Default true
     bool m_grids;            //!< Flag to show grids. Default false
@@ -1402,6 +1416,16 @@ class WXDLLIMPEXP_MATHPLOT mpScaleX: public mpScale
       m_timeConv = time_conv;
     }
 
+    bool IsTopAxis()
+    {
+      return ((GetAlign() == mpALIGN_BORDER_TOP) || (GetAlign() == mpALIGN_TOP));
+    }
+
+    bool IsBottomAxis()
+    {
+      return ((GetAlign() == mpALIGN_BORDER_BOTTOM) || (GetAlign() == mpALIGN_BOTTOM));
+    }
+
   protected:
     unsigned int m_labelType;  //!< Select labels mode: mpX_NORMAL for normal labels, mpX_TIME for time axis in hours, minutes, seconds
     unsigned int m_timeConv;   //!< Selects if time has to be converted to local time or not.
@@ -1442,7 +1466,6 @@ class WXDLLIMPEXP_MATHPLOT mpScaleY: public mpScale
     {
       m_subtype = mpsScaleY;
       m_axisWidth = Y_BORDER_SEPARATION;
-      m_axisID = m_LastYAxisID++;
       m_UseCount = 0;
       m_xPos = 0;
     }
@@ -1450,14 +1473,6 @@ class WXDLLIMPEXP_MATHPLOT mpScaleY: public mpScale
     /** Recalculate the axis width based on the label and name text sizes
     @param Current window used as canvas */
     void UpdateAxisWidth(mpWindow &w);
-
-    /**
-     * Return the ID of the Axis
-     */
-    int GetAxisID(void)
-    {
-      return m_axisID;
-    }
 
     /**
      * Update the number of function who use this axis.
@@ -1505,10 +1520,7 @@ class WXDLLIMPEXP_MATHPLOT mpScaleY: public mpScale
     }
 
   protected:
-    static int m_LastYAxisID; // Static ID to assign unique ID to each new instance of mpScaleY
-
     int m_axisWidth;
-    int m_axisID;     // Unique ID that identify this axis
     int m_UseCount;   // Count the number of function who use this axis. If this number is not null, you can not delete this axis.
     int m_xPos;
 
@@ -1540,7 +1552,7 @@ class WXDLLIMPEXP_MATHPLOT mpFunction: public mpLayer
   public:
     /** Full constructor.
      */
-    mpFunction(mpLayerType layerType = mpLAYER_PLOT, const wxString &name = wxEmptyString, mpScaleY *yAxisUsed = NULL);
+    mpFunction(mpLayerType layerType = mpLAYER_PLOT, const wxString &name = wxEmptyString, int YID = 0);
 
     /** Set the 'continuity' property of the layer. True: draws a continuous line. False: draws separate points (default).
      * @sa GetContinuity
@@ -1618,28 +1630,32 @@ class WXDLLIMPEXP_MATHPLOT mpFunction: public mpLayer
      * Set the Y axis associated to the function
      * If the function is already associated to another axis, we first update this axis
      */
-    void SetYAxis(mpScaleY *yAxisUsed)
+//    void SetYAxis(mpScaleY *yAxisUsed)
+//    {
+//      if (yAxisUsed == NULL)
+//      {
+//        if (m_yAxis != NULL)
+//        {
+//          m_yAxis->UpdateUseCount(false);
+//        }
+//        m_yAxis = NULL;
+//        m_yAxisID = -1;
+//      }
+//      else
+//      {
+//        if (m_yAxisID != yAxisUsed->GetAxisID())
+//        {
+//          if (m_yAxis)
+//            m_yAxis->UpdateUseCount(false);
+//          m_yAxisID = yAxisUsed->GetAxisID();
+//          yAxisUsed->UpdateUseCount(true);
+//          m_yAxis = yAxisUsed;
+//        }
+//      }
+//    }
+    void SetYAxis(int yAxisID)
     {
-      if (yAxisUsed == NULL)
-      {
-        if (m_yAxis != NULL)
-        {
-          m_yAxis->UpdateUseCount(false);
-        }
-        m_yAxis = NULL;
-        m_yAxisID = -1;
-      }
-      else
-      {
-        if (m_yAxisID != yAxisUsed->GetAxisID())
-        {
-          if (m_yAxis)
-            m_yAxis->UpdateUseCount(false);
-          m_yAxisID = yAxisUsed->GetAxisID();
-          yAxisUsed->UpdateUseCount(true);
-          m_yAxis = yAxisUsed;
-        }
-      }
+      m_yAxisID = yAxisID;
     }
 
   protected:
@@ -1650,15 +1666,6 @@ class WXDLLIMPEXP_MATHPLOT mpFunction: public mpLayer
     unsigned int m_step;        //!< Step to get point to be draw. Default : 1
     int m_yAxisID;              //!< The ID of the Y axis used by the function. Equal -1 if no axis.
     mpScaleY *m_yAxis = NULL;   //!< Pointer to the Y axis associated to this function
-
-    /**
-     * Here we verify that we have an Y axis associated to the plot
-     * We can not plot if we don't have an Y axis
-     */
-    virtual bool DoBeforePlot()
-    {
-      return (m_yAxisID != -1);
-    }
 
   wxDECLARE_DYNAMIC_CLASS(mpFunction);
 };
@@ -1711,7 +1718,7 @@ class WXDLLIMPEXP_MATHPLOT mpLine: public mpFunction
 class WXDLLIMPEXP_MATHPLOT mpHorizontalLine: public mpLine
 {
   public:
-    mpHorizontalLine(double yvalue, const wxPen &pen = *wxGREEN_PEN, mpScaleY *yAxisUsed = NULL);
+    mpHorizontalLine(double yvalue, const wxPen &pen = *wxGREEN_PEN, int YID = 0);
 
     /** Set y
      @param yvalue
@@ -1771,7 +1778,7 @@ class WXDLLIMPEXP_MATHPLOT mpFX: public mpFunction
     /** @param name  Label
      @param flags Label alignment, pass one of #mpALIGN_RIGHT, #mpALIGN_CENTERY, #mpALIGN_LEFT.
      */
-    mpFX(const wxString &name = wxEmptyString, int flags = mpALIGN_RIGHT, mpScaleY *yAxisUsed = NULL);
+    mpFX(const wxString &name = wxEmptyString, int flags = mpALIGN_RIGHT, int YID = 0);
 
     /** Get function value for argument.
      Override this function in your implementation.
@@ -1824,7 +1831,7 @@ class WXDLLIMPEXP_MATHPLOT mpFY: public mpFunction
     /** @param name  Label
      @param flags Label alignment, pass one of #mpALIGN_BOTTOM, #mpALIGN_CENTERY, #mpALIGN_TOP.
      */
-    mpFY(const wxString &name = wxEmptyString, int flags = mpALIGN_TOP, mpScaleY *yAxisUsed = NULL);
+    mpFY(const wxString &name = wxEmptyString, int flags = mpALIGN_TOP, int YID = 0);
 
     /** Get function value for argument.
      Override this function in your implementation.
@@ -1880,7 +1887,7 @@ class WXDLLIMPEXP_MATHPLOT mpFXY: public mpFunction
     /** @param name  Label
      @param flags Label alignment, pass one of #mpALIGN_NE, #mpALIGN_NW, #mpALIGN_SW, #mpALIGN_SE.
      */
-    mpFXY(const wxString &name = wxEmptyString, int flags = mpALIGN_NE, bool viewAsBar = false, mpScaleY *yAxisUsed = NULL);
+    mpFXY(const wxString &name = wxEmptyString, int flags = mpALIGN_NE, bool viewAsBar = false, int YID = 0);
 
     /** Rewind value enumeration with mpFXY::GetNextXY.
      Override this function in your implementation.
@@ -1998,7 +2005,7 @@ class WXDLLIMPEXP_MATHPLOT mpFXYVector: public mpFXY
     /** @param name  Label
      @param flags Label alignment, pass one of #mpALIGN_NE, #mpALIGN_NW, #mpALIGN_SW, #mpALIGN_SE.
      */
-    mpFXYVector(const wxString &name = wxEmptyString, int flags = mpALIGN_NE, bool viewAsBar = false, mpScaleY *yAxisUsed = NULL);
+    mpFXYVector(const wxString &name = wxEmptyString, int flags = mpALIGN_NE, bool viewAsBar = false, int YID = 0);
 
     /** destrutor
      */
@@ -2392,25 +2399,25 @@ class WXDLLIMPEXP_MATHPLOT mpPieChart: public mpChart
 typedef std::deque<mpLayer*> mpLayerList;
 
 /**
- * @brief Represents all the informations needed for an Y axis
+ * @brief Represents all the informations needed for plotting a layer in one direction
  * This struct holds:
- * - a pointer to the Y axis
+ * - a pointer to the axis associated if exist
  * - the data structure for the scale and position
  * - the bound
  * - the desired bound
  * It supports equality comparison using the default `operator==`.
  */
-struct mpYAxisInfo
+struct mpLayerBoxInfo
 {
-    mpScaleY* Axis;   //!< Pointer to the Y axes layer
-    mpAxisData Data;  //!< Y scale and position structure
+    mpScale* Axis = NULL;   //!< Pointer to the Y axes layer
+    mpViewData Data;  //!< Y scale and position structure
     mpRange Bound;    //!< Range min and max of Y interval
     mpRange Desired;  //!< Desired range min and max of Y interval
 
 #if (defined(__cplusplus) && (__cplusplus > 201703L)) // C++20 or newer
-  bool operator==(const mpYAxisInfo&) const = default;
+  bool operator==(const mpLayerBoxInfo&) const = default;
 #else
-  bool operator==(const mpYAxisInfo& other) const
+  bool operator==(const mpLayerBoxInfo& other) const
   {
     return (Axis == other.Axis) && Data == other.Data &&
         Bound == other.Bound && Desired == other.Desired;
@@ -2638,7 +2645,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     {
       if (ISNOTNULL(scaleX))
       {
-        m_DataX.scale = scaleX;
+        m_BoxInfoX.Data.scale = scaleX;
         UpdateDesiredBoundingBox();
       }
       UpdateAll();
@@ -2650,7 +2657,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      */
     double GetScaleX(void) const
     {
-      return m_DataX.scale;
+      return m_BoxInfoX.Data.scale;
     }
 
     /** Set current view's Y scale and refresh display.
@@ -2659,10 +2666,10 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      */
     void SetScaleY(const double scaleY, int yID)
     {
-      assert(m_YAxisList.count(yID) != 0);
+      assert(m_BoxInfoYList.count(yID) != 0);
       if (ISNOTNULL(scaleY))
       {
-        m_YAxisList[yID].Data.scale = scaleY;
+        m_BoxInfoYList[yID].Data.scale = scaleY;
         UpdateDesiredBoundingBox();
       }
       UpdateAll();
@@ -2675,8 +2682,8 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      */
     double GetScaleY(int yID)
     {
-      assert(m_YAxisList.count(yID) != 0);
-      return m_YAxisList[yID].Data.scale;
+      assert(m_BoxInfoYList.count(yID) != 0);
+      return m_BoxInfoYList[yID].Data.scale;
     } // Schaling's method: maybe another method exists with the same name
 
     [[deprecated("Incomplete, use UpdateBBox instead")]]
@@ -2687,7 +2694,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     /** Get bounding box for X axis. */
     mpRange Get_BoundX(void) const
     {
-      return m_boundx;
+      return m_BoxInfoX.Bound;
     }
 
     /** Get bounding box for Y axis of ID yID.
@@ -2695,8 +2702,8 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      */
     mpRange Get_BoundY(int yID)
     {
-      assert(m_YAxisList.count(yID) != 0);
-      return m_YAxisList[yID].Bound;
+      assert(m_BoxInfoYList.count(yID) != 0);
+      return m_BoxInfoYList[yID].Bound;
     }
 
     /** Set current view's X position and refresh display.
@@ -2704,7 +2711,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      */
     void SetPosX(const double posX)
     {
-      m_DataX.pos = posX;
+      m_BoxInfoX.Data.pos = posX;
       UpdateDesiredBoundingBox();
       UpdateAll();
     }
@@ -2715,7 +2722,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      */
     double GetPosX(void) const
     {
-      return m_DataX.pos;
+      return m_BoxInfoX.Data.pos;
     }
 
     /** Set current view's Y position and refresh display.
@@ -2725,9 +2732,9 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     void SetPosY(const std::vector<double>& posYList)
     {
       int i = 0;
-      for (auto& axisInfo : m_YAxisList)
+      for (auto& boxInfoY : m_BoxInfoYList)
       {
-        axisInfo.second.Data.pos = posYList[i];
+        boxInfoY.second.Data.pos = posYList[i];
         i++;
       }
       UpdateDesiredBoundingBox();
@@ -2741,21 +2748,21 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      */
     double GetPosY(int yID)
     {
-      assert(m_YAxisList.count(yID) != 0);
-      return m_YAxisList[yID].Data.pos;
+      assert(m_BoxInfoYList.count(yID) != 0);
+      return m_BoxInfoYList[yID].Data.pos;
     }
 
     /** Get the number of Y axis.
-     @return The number of Y axis in m_YAxisList
+     @return The number of Y axis in m_BoxInfoYList
      */
     int GetNOfYAxis(void) const
     {
-      return (int)m_YAxisList.size();
+      return (int)m_BoxInfoYList.size();
     }
 
-    std::map<int, mpYAxisInfo> GetYAxisList(void) const
+    std::map<int, mpLayerBoxInfo> GetBoxInfoYList(void) const
     {
-      return m_YAxisList;
+      return m_BoxInfoYList;
     }
 
     /** Set current view's dimensions in device context units.
@@ -2810,7 +2817,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      */
     void SetPos(const double posX, const std::vector<double>& posYList)
     {
-      m_DataX.pos = posX;
+      m_BoxInfoX.Data.pos = posX;
       SetPosY(posYList);
     }
 
@@ -2819,7 +2826,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      * @sa p2y,x2p,y2p */
     inline double p2x(const wxCoord pixelCoordX) const
     {
-      return m_DataX.pos + (pixelCoordX / m_DataX.scale);
+      return m_BoxInfoX.Data.pos + (pixelCoordX / m_BoxInfoX.Data.scale);
     }
 
     /** Converts mpWindow (screen) pixel coordinates into graph (floating point) coordinates,
@@ -2827,10 +2834,10 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      * @sa p2x,x2p,y2p */
     inline double p2y(const wxCoord pixelCoordY, int yID)
     {
-      assert(m_YAxisList.count(yID) != 0);
-      if (m_YAxisList.count(yID) == 0)
+      assert(m_BoxInfoYList.count(yID) != 0);
+      if (m_BoxInfoYList.count(yID) == 0)
         return 0.0;
-      return m_YAxisList[yID].Data.pos - (pixelCoordY / m_YAxisList[yID].Data.scale);
+      return m_BoxInfoYList[yID].Data.pos - (pixelCoordY / m_BoxInfoYList[yID].Data.scale);
     }
 
     /** Converts graph (floating point) coordinates into mpWindow (screen) pixel coordinates,
@@ -2838,7 +2845,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      * @sa p2x,p2y,y2p */
     inline wxCoord x2p(const double x) const
     {
-      return (wxCoord)((x - m_DataX.pos) * m_DataX.scale);
+      return (wxCoord)((x - m_BoxInfoX.Data.pos) * m_BoxInfoX.Data.scale);
     }
 
     /** Converts graph (floating point) coordinates into mpWindow (screen) pixel coordinates,
@@ -2846,10 +2853,10 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      * @sa p2x,p2y,x2p */
     inline wxCoord y2p(const double y, int yID)
     {
-      assert(m_YAxisList.count(yID) != 0);
-      if (m_YAxisList.count(yID) == 0)
+      assert(m_BoxInfoYList.count(yID) != 0);
+      if (m_BoxInfoYList.count(yID) == 0)
         return 0;
-      return (wxCoord)((m_YAxisList[yID].Data.pos - y) * m_YAxisList[yID].Data.scale);
+      return (wxCoord)((m_BoxInfoYList[yID].Data.pos - y) * m_BoxInfoYList[yID].Data.scale);
     }
 
     /** Enable/disable the double-buffering of the window, eliminating the flicker (default=enabled).
@@ -2980,21 +2987,21 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      */
     void UpdateDesiredBoundingBox()
     {
-      mpRange lastRange = m_desiredx;
+      mpRange lastRange = m_BoxInfoX.Desired;
 
-      m_desiredx.min = m_DataX.pos + (m_margin.left / m_DataX.scale);
-      m_desiredx.max = m_DataX.pos + ((m_margin.left + m_plotWidth) / m_DataX.scale);
-      m_desiredChanged = !(lastRange == m_desiredx);
+      m_BoxInfoX.Desired.min = m_BoxInfoX.Data.pos + (m_margin.left / m_BoxInfoX.Data.scale);
+      m_BoxInfoX.Desired.max = m_BoxInfoX.Data.pos + ((m_margin.left + m_plotWidth) / m_BoxInfoX.Data.scale);
+      m_desiredChanged = !(lastRange == m_BoxInfoX.Desired);
 
       // If there is a change no need to test either more
-      for (auto& axisInfo : m_YAxisList)
+      for (auto& boxInfoY : m_BoxInfoYList)
       {
         if (!m_desiredChanged)
-          lastRange = axisInfo.second.Desired;
-        axisInfo.second.Desired.max = axisInfo.second.Data.pos - (m_margin.top / axisInfo.second.Data.scale);
-        axisInfo.second.Desired.min = axisInfo.second.Data.pos - ((m_margin.top + m_plotHeight) / axisInfo.second.Data.scale);
+          lastRange = boxInfoY.second.Desired;
+        boxInfoY.second.Desired.max = boxInfoY.second.Data.pos - (m_margin.top / boxInfoY.second.Data.scale);
+        boxInfoY.second.Desired.min = boxInfoY.second.Data.pos - ((m_margin.top + m_plotHeight) / boxInfoY.second.Data.scale);
         if (!m_desiredChanged)
-          m_desiredChanged = !(lastRange == axisInfo.second.Desired);
+          m_desiredChanged = !(lastRange == boxInfoY.second.Desired);
       }
 
 //      CheckAndReportDesiredBoundsChanges();
@@ -3009,7 +3016,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      */
     double GetDesiredXmin() const
     {
-      return m_desiredx.min;
+      return m_BoxInfoX.Desired.min;
     }
 
     /** Return the right-border layer coordinate that the user wants the mpWindow to show
@@ -3018,7 +3025,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      */
     double GetDesiredXmax() const
     {
-      return m_desiredx.max;
+      return m_BoxInfoX.Desired.max;
     }
 
     /** Return the bottom-border layer coordinate that the user wants the mpWindow to show (it may be
@@ -3028,8 +3035,8 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      */
     double GetDesiredYmin(int yID)
     {
-      assert(m_YAxisList.count(yID) != 0);
-      return m_YAxisList[yID].Desired.min;
+      assert(m_BoxInfoYList.count(yID) != 0);
+      return m_BoxInfoYList[yID].Desired.min;
     }
 
     /** Return the top layer-border coordinate that the user wants the mpWindow to show (it may be
@@ -3039,49 +3046,49 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      */
     double GetDesiredYmax(int yID)
     {
-      assert(m_YAxisList.count(yID) != 0);
-      return m_YAxisList[yID].Desired.max;
+      assert(m_BoxInfoYList.count(yID) != 0);
+      return m_BoxInfoYList[yID].Desired.max;
     }
 
     /** Return the bounding box coordinates for the Y axis of ID yID */
     bool GetBoundingBox(mpRange *boundX, mpRange *boundY, int yID)
     {
-      if (m_YAxisList.count(yID) == 0)
+      if (m_BoxInfoYList.count(yID) == 0)
         return false;
-      *boundX = m_boundx;
-      *boundY = m_YAxisList[yID].Bound;
+      *boundX = m_BoxInfoX.Bound;
+      *boundY = m_BoxInfoYList[yID].Bound;
       return true;
     }
 
     // Is this point inside the bounding box
     bool PointIsInsideBound(double px, double py, int yID)
     {
-      if (m_YAxisList.count(yID) == 0)
+      if (m_BoxInfoYList.count(yID) == 0)
         return false;
 
-      return m_boundx.PointIsInside(px) && Get_BoundY(yID).PointIsInside(py);
+      return m_BoxInfoX.Bound.PointIsInside(px) && Get_BoundY(yID).PointIsInside(py);
     }
 
     // Update bounding box to include this point
     void UpdateBoundingBoxToInclude(double px, double py, int yID)
     {
-      if (m_YAxisList.count(yID) == 0)
+      if (m_BoxInfoYList.count(yID) == 0)
         return ;
 
-      if      (px  < m_boundx.min ) m_boundx.min = px;
-      else if (px  > m_boundx.max ) m_boundx.max = px;
-      if      (py  < m_YAxisList[yID].Bound.min ) m_YAxisList[yID].Bound.min = py;
-      else if (py  > m_YAxisList[yID].Bound.max ) m_YAxisList[yID].Bound.max = py;
+      if      (px  < m_BoxInfoX.Bound.min ) m_BoxInfoX.Bound.min = px;
+      else if (px  > m_BoxInfoX.Bound.max ) m_BoxInfoX.Bound.max = px;
+      if      (py  < m_BoxInfoYList[yID].Bound.min ) m_BoxInfoYList[yID].Bound.min = py;
+      else if (py  > m_BoxInfoYList[yID].Bound.max ) m_BoxInfoYList[yID].Bound.max = py;
     }
 
     // Initialize bounding box with an initial point
     void InitializeBoundingBox(double px, double py, int yID)
     {
-      if (m_YAxisList.count(yID) == 0)
+      if (m_BoxInfoYList.count(yID) == 0)
         return ;
 
-      m_boundx.min = m_boundx.max = px;
-      m_YAxisList[yID].Bound.min = m_YAxisList[yID].Bound.max = py;
+      m_BoxInfoX.Bound.min = m_BoxInfoX.Bound.max = px;
+      m_BoxInfoYList[yID].Bound.min = m_BoxInfoYList[yID].Bound.max = py;
     }
 
     /** Enable/disable scrollbars
@@ -3208,7 +3215,10 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
       return m_plotHeight;
     }
 
-    /** Get the boundaries of the plot. */
+    /** Get the boundaries of the plot.
+     * Bond is reduced by EXTRA_MARGIN constant
+     * @param with_margin: include margin if true
+     */
     mpRect GetPlotBoundaries(bool with_margin) const
     {
       mpRect bond;
@@ -3335,8 +3345,8 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      */
     bool IsLogXaxis()
     {
-      if (m_XAxis)
-        return m_XAxis->IsLogAxis();
+      if (m_BoxInfoX.Axis)
+        return ((mpScaleX *)m_BoxInfoX.Axis)->IsLogAxis();
       else
         return false;
     }
@@ -3346,7 +3356,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      */
     bool IsLogYaxis(int yID)
     {
-      assert(m_YAxisList.count(yID) != 0);
+      assert(m_BoxInfoYList.count(yID) != 0);
       mpScaleY* yAxis = GetLayerYAxis(yID);
       if (yAxis)
         return yAxis->IsLogAxis();
@@ -3356,8 +3366,8 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 
     void SetLogXaxis(bool log)
     {
-      if (m_XAxis)
-        m_XAxis->SetLogAxis(log);
+      if (m_BoxInfoX.Axis)
+        ((mpScaleX *)m_BoxInfoX.Axis)->SetLogAxis(log);
     }
 
     /**
@@ -3486,8 +3496,9 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     bool m_fullscreen;
 
     mpLayerList m_layers;   //!< List of attached plot layers
-    mpScaleX* m_XAxis;      //!< Pointer to the optional X axis layer of this mpWindow
-    std::map<int, mpYAxisInfo> m_YAxisList;  //!< List of Y axes layer of this mpWindow
+    mpLayerBoxInfo m_BoxInfoX;  //!< Box info for the X direction
+    std::map<int, mpLayerBoxInfo> m_BoxInfoYList;  //!< List of box info for the Y direction
+    bool m_desiredChanged = false;
 
     wxMenu m_popmenu;       //!< Canvas' context menu
     bool m_lockaspect;      //!< Scale aspect is locked or not
@@ -3496,16 +3507,10 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     wxColour m_axColour;    //!< Axes Colour
     bool m_drawBox;         //!< Draw box of the plot bound. Default true
 
-    mpAxisData m_DataX;     //!< Current view's X scale and position
-
     int m_scrX;             //!< Current view's X dimension in DC units, including all scales, margins
     int m_scrY;             //!< Current view's Y dimension
     int m_clickedX;         //!< Last mouse click X position, for centering and zooming the view
     int m_clickedY;         //!< Last mouse click Y position, for centering and zooming the view
-
-    mpRange m_boundx;
-    mpRange m_desiredx;
-    bool m_desiredChanged = false;
 
     mpRect m_margin;                    //!< Margin around the plot including Y-axis
     mpRect m_marginOuter;               //!< Margin around the plot exluding Y-axis. Default 50
@@ -3562,6 +3567,9 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     void CheckAndReportDesiredBoundsChanges(); //!< Report any change of desired display bounds to user's derived class (for example during zoom).
     bool m_initialDesiredBoundsRecorded = false; //!< Has m_lastDesiredReportedBounds been set?
 //    mpFloatRect m_lastDesiredReportedBounds; //!< for use in DesiredBoundsHaveChanged reporting in Fit()
+
+
+    unsigned int m_LastBoxInfoID = 0; // ID to assign unique ID to each new box info
 
   wxDECLARE_DYNAMIC_CLASS(mpWindow);
   wxDECLARE_EVENT_TABLE();
