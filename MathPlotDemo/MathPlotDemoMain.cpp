@@ -174,8 +174,8 @@ void MathPlotDemoFrame::InitializePlot(void)
   bottomAxis->SetPen(axispen);
   leftAxis->SetPen(axispen);
 
-  mPlot->AddLayer(bottomAxis);
-  mPlot->AddLayer(leftAxis);
+//  mPlot->AddLayer(bottomAxis);
+//  mPlot->AddLayer(leftAxis);
 
   // Add a title layer
   mpTitle* plotTitle;
@@ -228,7 +228,6 @@ void MathPlotDemoFrame::OnbDrawClick(wxCommandEvent &WXUNUSED(event))
   CleanPlot();
   // add a simple sinus series
   mpFXYVector* series = mPlot->GetXYSeries(0);
-  series->SetYAxis(leftAxis);
   for (int i = 0; i <= 100; i++)
     series->AddData(i / 10.0, sin(i / 10.0), false);
   mPlot->Fit();
@@ -238,10 +237,10 @@ void MathPlotDemoFrame::OnbSampleClick(wxCommandEvent &WXUNUSED(event))
 {
   CleanPlot();
   // Sample from the original wxMathPlot widget
-  mPlot->AddLayer(new MyFunction(leftAxis));
-  mPlot->AddLayer(new MySIN(10.0, 220.0, leftAxis));
-  mPlot->AddLayer(new MyCOSinverse(10.0, 100.0, leftAxis));
-  mPlot->AddLayer(new MyLissajoux(125.0, leftAxis));
+  mPlot->AddLayer(new MyFunction());
+  mPlot->AddLayer(new MySIN(10.0, 220.0));
+  mPlot->AddLayer(new MyCOSinverse(10.0, 100.0));
+  mPlot->AddLayer(new MyLissajoux(125.0));
   mPlot->Fit();
 }
 
@@ -249,7 +248,7 @@ void MathPlotDemoFrame::OnbBarClick(wxCommandEvent &WXUNUSED(event))
 {
   CleanPlot();
 
-  mpFXYVector* vectorLayer = new mpFXYVector(_T("Bar X²"), mpALIGN_NE, true, leftAxis);
+  mpFXYVector* vectorLayer = new mpFXYVector(_T("Bar X²"), mpALIGN_NE, true);
   vectorLayer->SetBrush(*wxGREEN);
   // Create two vectors for x,y and fill them with data
   std::vector<double> vectorx, vectory;
@@ -274,7 +273,7 @@ void MathPlotDemoFrame::OnbLogClick(wxCommandEvent &WXUNUSED(event))
   bottomAxis->SetMaxScale(10);
   leftAxis->SetLogAxis(true);
 
-  mPlot->AddLayer(new MyPower(leftAxis));
+  mPlot->AddLayer(new MyPower());
   mPlot->Fit();
 }
 
@@ -294,7 +293,7 @@ void MathPlotDemoFrame::OnbLogXYClick(wxCommandEvent &WXUNUSED(event))
     vectorY.push_back(i);
   }
 
-  mpFXYVector* Power2 = new mpFXYVector(_("Power of 2"), mpALIGN_NE, false, leftAxis);
+  mpFXYVector* Power2 = new mpFXYVector(_("Power of 2"), mpALIGN_NE, false);
   Power2->SetData(vectorX, vectorY);
   Power2->SetContinuity(true);
   wxPen s1pen(*wxGREEN, 2, wxPENSTYLE_SOLID);
@@ -310,7 +309,6 @@ void MathPlotDemoFrame::OnbBarChartClick(wxCommandEvent &WXUNUSED(event))
 {
   CleanPlot();
   mpBarChart* barChart = new mpBarChart(_T("BarChart"));
-  barChart->SetYAxis(leftAxis);
   // Create vector for y and fill it with data
   std::vector<double> vectory;
   double ycoord;
@@ -436,7 +434,6 @@ void MathPlotDemoFrame::OnUserMouseAction(void *Sender, wxMouseEvent &event, boo
     wxColour random_color = wxIndexColour(rand() * 20 / RAND_MAX);
     CurrentPolyline->SetPen(wxPen(random_color, 2));
     CurrentPolyline->SetContinuity(true);
-    CurrentPolyline->SetYAxis(leftAxis);
 
     // Add new Polyline but not plot it
     plotWindow->AddLayer(CurrentPolyline, false);
@@ -559,7 +556,7 @@ void MathPlotDemoFrame::OnbMultiYAxisClick(wxCommandEvent &WXUNUSED(event))
   axis1->SetFontColour(plotColors[0]);
   mPlot->AddLayer(axis1);
   // This axis is dedicated for f1
-  f1->SetYAxis(axis1);
+  f1->SetYAxis(axis1->GetAxisID());
 
   MySIN* f2 = new MySIN(10.0, 220.0);
   f2->SetDrawOutsideMargins(false);
@@ -574,7 +571,7 @@ void MathPlotDemoFrame::OnbMultiYAxisClick(wxCommandEvent &WXUNUSED(event))
   axis2->SetFontColour(plotColors[1]);
   mPlot->AddLayer(axis2);
   // This axis is dedicated for f2
-  f2->SetYAxis(axis2);
+  f2->SetYAxis(axis2->GetAxisID());
 
   MyFunction* f3 = new MyFunction();
   f3->SetDrawOutsideMargins(false);
@@ -589,7 +586,7 @@ void MathPlotDemoFrame::OnbMultiYAxisClick(wxCommandEvent &WXUNUSED(event))
   axis3->SetFontColour(plotColors[2]);
   mPlot->AddLayer(axis3);
   // This axis is dedicated for f3
-  f3->SetYAxis(axis3);
+  f3->SetYAxis(axis3->GetAxisID());
 
   MyCOSinverse* f4 = new MyCOSinverse(10.0, 100.0);
   f4->SetDrawOutsideMargins(false);
@@ -607,7 +604,7 @@ void MathPlotDemoFrame::OnbMultiYAxisClick(wxCommandEvent &WXUNUSED(event))
   axis4->SetMaxScale(300);
   mPlot->AddLayer(axis4);
   // This axis is dedicated for f4
-  f4->SetYAxis(axis4);
+  f4->SetYAxis(axis4->GetAxisID());
 
   mPlot->Fit();
 
