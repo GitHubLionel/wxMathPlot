@@ -808,10 +808,16 @@ void MathPlotConfigDialog::FillYAxisList(wxChoice *yChoice, bool clearChoice)
 {
   if (clearChoice)
     yChoice->Clear();
-  for (const auto& axisInfo : m_plot->GetYAxisList())
+  int i = 0;
+  for (const auto& boxInfoY : m_plot->GetBoxInfoYList())
   {
-    wxString yAxisName = wxString::Format(_T("Y%d axis - %s"), (int)axisInfo.second.Axis->GetAxisID(), axisInfo.second.Axis->GetName());
-    yChoice->Append(yAxisName, axisInfo.second.Axis);
+    if (boxInfoY.second.Axis)
+    {
+      // boxInfoY.second.Axis->GetAxisID() if we want ID
+      wxString yAxisName = wxString::Format(_T("Y%d axis - %s"), i, boxInfoY.second.Axis->GetName());
+      yChoice->Append(yAxisName, boxInfoY.second.Axis);
+      i++;
+    }
   }
 }
 
@@ -1368,9 +1374,9 @@ void MathPlotConfigDialog::OnbApplyClick(wxCommandEvent &WXUNUSED(event))
 //          mpFloatRect BoundScale = m_plot->Get_Bound();
           mpRange BoundScaleX;
           std::vector<mpRange> BoundScaleY;
-          for (const auto& axisInfo : m_plot->GetYAxisList())
+          for (const auto& boxInfoY : m_plot->GetBoxInfoYList())
           {
-            BoundScaleY.push_back(axisInfo.second.Bound);
+            BoundScaleY.push_back(boxInfoY.second.Bound);
           }
           if (classname.IsSameAs(_T("mpScaleX"))) // X axis
           {
@@ -1380,13 +1386,13 @@ void MathPlotConfigDialog::OnbApplyClick(wxCommandEvent &WXUNUSED(event))
 
             // Get bound of the other axis
             int i = 0;
-            for (const auto& axisInfo : m_plot->GetYAxisList())
+            for (const auto& boxInfoY : m_plot->GetBoxInfoYList())
             {
-//              int yID = axisInfo.second.Axis->GetAxisID();
-              if (!axisInfo.second.Axis->GetAuto()) //  && (yIdx < m_plot->GetYAxisList().size())
+//              int yID = boxInfoY.second.Axis->GetAxisID();
+              if (boxInfoY.second.Axis &&(!boxInfoY.second.Axis->GetAuto())) //  && (yIdx < m_plot->GetYAxisList().size())
               {
-                BoundScaleY[i].min = axisInfo.second.Axis->GetMinScale();
-                BoundScaleY[i].max = axisInfo.second.Axis->GetMaxScale();
+                BoundScaleY[i].min = boxInfoY.second.Axis->GetMinScale();
+                BoundScaleY[i].max = boxInfoY.second.Axis->GetMaxScale();
               }
               i++;
             }
@@ -1401,9 +1407,9 @@ void MathPlotConfigDialog::OnbApplyClick(wxCommandEvent &WXUNUSED(event))
 //              BoundScaleY[yIdx].max = scale_max;
 //            }
             int i = 0;
-            for (const auto& axisInfo : m_plot->GetYAxisList())
+            for (const auto& boxInfoY : m_plot->GetBoxInfoYList())
             {
-              if (axisInfo.first == yID)
+              if (boxInfoY.first == yID)
               {
                 BoundScaleY[i].min = scale_min;
                 BoundScaleY[i].max = scale_max;
@@ -1471,7 +1477,7 @@ void MathPlotConfigDialog::OnbApplyClick(wxCommandEvent &WXUNUSED(event))
         {
           mpScaleY* yAxis = static_cast<mpScaleY*>(ChoiceSeriesYAxis->GetClientData(ChoiceSeriesYAxis->GetSelection()));
           yAxisChange = (CurrentSerie->GetYAxisID() != yAxis->GetAxisID());
-          CurrentSerie->SetYAxis(yAxis);
+          CurrentSerie->SetYAxis(yAxis->GetAxisID());
         }
 
         CurrentSerie->SetStep(cbSeriesStep->GetValue());
@@ -1507,7 +1513,7 @@ void MathPlotConfigDialog::OnbApplyClick(wxCommandEvent &WXUNUSED(event))
         if(ChoiceLinesYAxis->GetSelection() != wxNOT_FOUND)
         {
           mpScaleY* yAxis = static_cast<mpScaleY*>(ChoiceLinesYAxis->GetClientData(ChoiceLinesYAxis->GetSelection()));
-          CurrentLine->SetYAxis(yAxis);
+          CurrentLine->SetYAxis(yAxis->GetAxisID());
         }
 
         // Pen config
