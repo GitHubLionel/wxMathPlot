@@ -27,6 +27,7 @@
 // List of string message used
 const wxString MESS_TRANSPARENT = _("Transparent not work on Linux");
 const wxString MESS_COLOUR = _("Please choose the background colour");
+const wxString MESS_AXIS_DELETE = _("Delete the selected axis ?");
 const wxString MESS_DELETE = _("Delete the serie ?");
 const wxString MESS_LINES_ADD = _("Add horizontal line (vertical if No) ?");
 const wxString MESS_LINES_DELETE = _("Delete the line ?");
@@ -281,14 +282,16 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   Panel2->SetSizer(BoxSizer16);
   Panel3 = new wxPanel(nbConfig, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL);
   sizerAxis = new wxBoxSizer(wxVERTICAL);
-  FlexGridSizer3 = new wxFlexGridSizer(1, 3, 0, 0);
+  FlexGridSizer3 = new wxFlexGridSizer(1, 4, 0, 0);
   FlexGridSizer3->AddGrowableCol(0);
   ChoiceAxis = new wxChoice(Panel3, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator);
   FlexGridSizer3->Add(ChoiceAxis, 1, wxALL|wxEXPAND, 5);
   bAddXAxis = new wxButton(Panel3, wxID_ANY, _("Add X axis"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
-  FlexGridSizer3->Add(bAddXAxis, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+  FlexGridSizer3->Add(bAddXAxis, 0, wxTOP|wxBOTTOM|wxLEFT|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
   bAddYAxis = new wxButton(Panel3, wxID_ANY, _("Add Y axis"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
   FlexGridSizer3->Add(bAddYAxis, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+  bDelAxis = new wxButton(Panel3, wxID_ANY, _("Delete"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
+  FlexGridSizer3->Add(bDelAxis, 1, wxTOP|wxBOTTOM|wxRIGHT|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
   sizerAxis->Add(FlexGridSizer3, 0, wxALL|wxEXPAND, 2);
   FlexGridSizer8 = new wxFlexGridSizer(1, 3, 0, 0);
   FlexGridSizer8->AddGrowableCol(1);
@@ -604,6 +607,7 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   ChoiceAxis->Bind(wxEVT_COMMAND_CHOICE_SELECTED, &MathPlotConfigDialog::OnAxisSelect, this);
   bAddXAxis->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotConfigDialog::OnbAddAxisClick, this);
   bAddYAxis->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotConfigDialog::OnbAddAxisClick, this);
+  bDelAxis->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotConfigDialog::OnbDelAxisClick, this);
   bFontAxis->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotConfigDialog::OnbFontClick, this);
   bAxisPenColor->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotConfigDialog::OnbColorClick, this);
   cbAutoScale->Bind(wxEVT_COMMAND_CHECKBOX_CLICKED, &MathPlotConfigDialog::OncbAutoScaleClick, this);
@@ -809,13 +813,13 @@ void MathPlotConfigDialog::FillYAxisList(wxChoice *yChoice, bool clearChoice)
   if (clearChoice)
     yChoice->Clear();
   int i = 0;
-  for (const auto& boxInfoY : m_plot->GetBoxInfoYList())
+  for (const auto& axisDataY : m_plot->GetAxisDataYList())
   {
-    if (boxInfoY.second.Axis)
+    if (axisDataY.second.axis)
     {
-      // boxInfoY.second.Axis->GetAxisID() if we want ID
-      wxString yAxisName = wxString::Format(_T("Y%d axis - %s"), i, boxInfoY.second.Axis->GetName());
-      yChoice->Append(yAxisName, boxInfoY.second.Axis);
+      // axisDataY.second.Axis->GetAxisID() if we want ID
+      wxString yAxisName = wxString::Format(_T("Y%d axis - %s"), i, axisDataY.second.axis->GetName());
+      yChoice->Append(yAxisName, axisDataY.second.axis);
       i++;
     }
   }
@@ -963,7 +967,6 @@ void MathPlotConfigDialog::UpdateAxis(void)
   bFontAxis->Enable();
 
   // Scale
-//  mpFloatRect BoundScale = m_plot->Get_Bound();
   mpRange BoundScale;
   cbAutoScale->SetValue(CurrentScale->GetAuto());
   edScaleMin->Enable(!CurrentScale->GetAuto());
@@ -980,17 +983,17 @@ void MathPlotConfigDialog::UpdateAxis(void)
     {
       mpScaleY* yAxis = dynamic_cast<mpScaleY*>(CurrentScale);
       int yID = yAxis->GetAxisID();
-//      if (yID < m_plot->GetYAxisList().size())
+      if (m_plot->GetAxisDataYList().count(yID) != 0)
       {
         BoundScale = m_plot->Get_BoundY(yID);
         scale_min = BoundScale.min;
         scale_max = BoundScale.max;
       }
-//      else
-//      {
-//        scale_min = CurrentScale->GetMinScale();
-//        scale_max = CurrentScale->GetMaxScale();
-//      }
+      else
+      {
+        scale_min = CurrentScale->GetMinScale();
+        scale_max = CurrentScale->GetMaxScale();
+      }
     }
   }
   else
@@ -1028,6 +1031,20 @@ void MathPlotConfigDialog::OnbAddAxisClick(wxCommandEvent &event)
       }
     }
     UpdateAxis();
+  }
+}
+
+void MathPlotConfigDialog::OnbDelAxisClick(wxCommandEvent &WXUNUSED(event))
+{
+  if (CurrentScale)
+  {
+    if (wxMessageDialog(this, MESS_AXIS_DELETE, MESS_CONFIRM, wxYES_NO | wxCENTRE).ShowModal() == wxID_YES)
+    {
+      m_plot->DelLayer(CurrentScale, mpYesDelete, true); // Should we also delete the object ?
+      m_plot->Fit();
+      CurrentScale = NULL;
+      Initialize(2);
+    }
   }
 }
 
@@ -1152,7 +1169,7 @@ void MathPlotConfigDialog::OnbDelSeriesClick(wxCommandEvent &WXUNUSED(event))
   {
     if (wxMessageDialog(this, MESS_DELETE, MESS_CONFIRM, wxYES_NO | wxCENTRE).ShowModal() == wxID_YES)
     {
-      m_plot->DelLayer(CurrentSerie, true, true);
+      m_plot->DelLayer(CurrentSerie, mpYesDelete, true);
       if (CurrentLegend)
         CurrentLegend->SetNeedUpdate();
       m_plot->Fit();
@@ -1247,10 +1264,10 @@ void MathPlotConfigDialog::OnbDelLinesClick(wxCommandEvent &WXUNUSED(event))
   {
     if (wxMessageDialog(this, MESS_LINES_DELETE, MESS_CONFIRM, wxYES_NO | wxCENTRE).ShowModal() == wxID_YES)
     {
-      m_plot->DelLayer(CurrentLine, true, true);
+      m_plot->DelLayer(CurrentLine, mpYesDelete, true);
       m_plot->Fit();
       CurrentLine = NULL;
-      Initialize();
+      Initialize(4);
     }
   }
 }
@@ -1371,28 +1388,23 @@ void MathPlotConfigDialog::OnbApplyClick(wxCommandEvent &WXUNUSED(event))
 
         if (!CurrentScale->GetAuto())
         {
-//          mpFloatRect BoundScale = m_plot->Get_Bound();
           mpRange BoundScaleX;
           std::vector<mpRange> BoundScaleY;
-          for (const auto& boxInfoY : m_plot->GetBoxInfoYList())
+          for (const auto& axisDataY : m_plot->GetAxisDataYList())
           {
-            BoundScaleY.push_back(boxInfoY.second.Bound);
+            BoundScaleY.push_back(axisDataY.second.bound);
           }
           if (classname.IsSameAs(_T("mpScaleX"))) // X axis
           {
-
-            BoundScaleX.min = scale_min;
-            BoundScaleX.max = scale_max;
+            BoundScaleX.Set(scale_min, scale_max);
 
             // Get bound of the other axis
             int i = 0;
-            for (const auto& boxInfoY : m_plot->GetBoxInfoYList())
+            for (const auto& axisDataY : m_plot->GetAxisDataYList())
             {
-//              int yID = boxInfoY.second.Axis->GetAxisID();
-              if (boxInfoY.second.Axis &&(!boxInfoY.second.Axis->GetAuto())) //  && (yIdx < m_plot->GetYAxisList().size())
+              if (axisDataY.second.axis &&(!axisDataY.second.axis->GetAuto()))
               {
-                BoundScaleY[i].min = boxInfoY.second.Axis->GetMinScale();
-                BoundScaleY[i].max = boxInfoY.second.Axis->GetMaxScale();
+                BoundScaleY[i] = axisDataY.second.axis->GetScale();
               }
               i++;
             }
@@ -1401,18 +1413,12 @@ void MathPlotConfigDialog::OnbApplyClick(wxCommandEvent &WXUNUSED(event))
           {
             mpScaleY* yAxis = dynamic_cast<mpScaleY*>(CurrentScale);
             int yID = yAxis->GetAxisID();
-//            if (yIdx < m_plot->GetYAxisList().size())
-//            {
-//              BoundScaleY[yIdx].min = scale_min;
-//              BoundScaleY[yIdx].max = scale_max;
-//            }
             int i = 0;
-            for (const auto& boxInfoY : m_plot->GetBoxInfoYList())
+            for (const auto& axisDataY : m_plot->GetAxisDataYList())
             {
-              if (boxInfoY.first == yID)
+              if (axisDataY.first == yID)
               {
-                BoundScaleY[i].min = scale_min;
-                BoundScaleY[i].max = scale_max;
+                BoundScaleY[i].Set(scale_min, scale_max);
               }
               i++;
             }
@@ -1421,8 +1427,7 @@ void MathPlotConfigDialog::OnbApplyClick(wxCommandEvent &WXUNUSED(event))
             mpScale* axis = (mpScale*)m_plot->GetLayerXAxis();
             if (axis && (!axis->GetAuto()))
             {
-              BoundScaleX.min = axis->GetMinScale();
-              BoundScaleX.max = axis->GetMaxScale();
+              BoundScaleX = axis->GetScale();
             }
           }
           m_plot->Fit(BoundScaleX, BoundScaleY);
@@ -1477,7 +1482,7 @@ void MathPlotConfigDialog::OnbApplyClick(wxCommandEvent &WXUNUSED(event))
         {
           mpScaleY* yAxis = static_cast<mpScaleY*>(ChoiceSeriesYAxis->GetClientData(ChoiceSeriesYAxis->GetSelection()));
           yAxisChange = (CurrentSerie->GetYAxisID() != yAxis->GetAxisID());
-          CurrentSerie->SetYAxis(yAxis->GetAxisID());
+          CurrentSerie->SetYAxisID(yAxis->GetAxisID());
         }
 
         CurrentSerie->SetStep(cbSeriesStep->GetValue());
@@ -1513,7 +1518,7 @@ void MathPlotConfigDialog::OnbApplyClick(wxCommandEvent &WXUNUSED(event))
         if(ChoiceLinesYAxis->GetSelection() != wxNOT_FOUND)
         {
           mpScaleY* yAxis = static_cast<mpScaleY*>(ChoiceLinesYAxis->GetClientData(ChoiceLinesYAxis->GetSelection()));
-          CurrentLine->SetYAxis(yAxis->GetAxisID());
+          CurrentLine->SetYAxisID(yAxis->GetAxisID());
         }
 
         // Pen config
