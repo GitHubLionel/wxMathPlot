@@ -151,7 +151,7 @@ MathPlotDemoFrame::~MathPlotDemoFrame()
 {
   //(*Destroy(MathPlotDemoFrame)
   //*)
-  mPlot->DelAllLayers(true, false);
+  mPlot->DelAllLayers(mpForceDelete, false);
   AuiManager1->UnInit(); // Nadler bugfix: wxSmith-generated code fails to uninitialize AUI manager and its bindings
   delete AuiManager1;    // Nadler bugfix: wxSmith-generated code fails to delete AUI manager and leaks memory
 }
@@ -163,8 +163,10 @@ void MathPlotDemoFrame::InitializePlot(void)
 
   // We always have a bottom axis (X axis) and a left axis (Y axis)
   bottomAxis = new mpScaleX(wxT("X"), mpALIGN_CENTERX, true, mpX_NORMAL);
+  bottomAxis->SetCanDelete(false); // We can not delete this axis in IHM
   bottomAxis->SetLabelFormat("%g");
   leftAxis = new mpScaleY(wxT("Y"), mpALIGN_CENTERY, true);
+  leftAxis->SetCanDelete(false); // We can not delete this axis in IHM
   leftAxis->SetLabelFormat("%g");
 
   wxFont graphFont(11, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
@@ -174,8 +176,8 @@ void MathPlotDemoFrame::InitializePlot(void)
   bottomAxis->SetPen(axispen);
   leftAxis->SetPen(axispen);
 
-//  mPlot->AddLayer(bottomAxis);
-//  mPlot->AddLayer(leftAxis);
+  mPlot->AddLayer(bottomAxis);
+  mPlot->AddLayer(leftAxis);
 
   // Add a title layer
   mpTitle* plotTitle;
@@ -201,7 +203,7 @@ void MathPlotDemoFrame::InitializePlot(void)
 void MathPlotDemoFrame::CleanPlot(void)
 {
   // Remove all the plot (all functions mpFX, mpFY, mpFXY)
-  mPlot->DelAllPlot(true);
+  mPlot->DelAllPlot(mpForceDelete);
   mPlot->SetMouseLeftDownAction(mpMouseBoxZoom);
   mPlot->SetMarginLeft(50);
   // Restore X and Y axis
@@ -213,14 +215,18 @@ void MathPlotDemoFrame::CleanPlot(void)
   leftAxis->SetLogAxis(false);
   leftAxis->SetVisible(true);
   // Remove Bar chart if present
-  mPlot->DelLayer(mPlot->GetLayerByName(_T("BarChart")), true);
+  mPlot->DelLayer(mPlot->GetLayerByName(_T("BarChart")), mpForceDelete);
   // Remove Bitmap if present
-  mPlot->DelLayer(mPlot->GetLayerByClassName("mpBitmapLayer"), true);
+  mPlot->DelLayer(mPlot->GetLayerByClassName("mpBitmapLayer"), mpForceDelete);
   // Remove all extra Y axis if present
-  mPlot->DelLayer(axis1, true);
-  mPlot->DelLayer(axis2, true);
-  mPlot->DelLayer(axis3, true);
-  mPlot->DelLayer(axis4, true);
+  mPlot->DelLayer(axis1, mpForceDelete);
+  axis1 = NULL;
+  mPlot->DelLayer(axis2, mpForceDelete);
+  axis2 = NULL;
+  mPlot->DelLayer(axis3, mpForceDelete);
+  axis3 = NULL;
+  mPlot->DelLayer(axis4, mpForceDelete);
+  axis4 = NULL;
 }
 
 void MathPlotDemoFrame::OnbDrawClick(wxCommandEvent &WXUNUSED(event))
@@ -237,10 +243,10 @@ void MathPlotDemoFrame::OnbSampleClick(wxCommandEvent &WXUNUSED(event))
 {
   CleanPlot();
   // Sample from the original wxMathPlot widget
-  mPlot->AddLayer(new MyFunction());
-  mPlot->AddLayer(new MySIN(10.0, 220.0));
-  mPlot->AddLayer(new MyCOSinverse(10.0, 100.0));
-  mPlot->AddLayer(new MyLissajoux(125.0));
+  mPlot->AddLayer(new MyFunction(), false);
+  mPlot->AddLayer(new MySIN(10.0, 220.0), false);
+  mPlot->AddLayer(new MyCOSinverse(10.0, 100.0), false);
+  mPlot->AddLayer(new MyLissajoux(125.0), false);
   mPlot->Fit();
 }
 
@@ -477,7 +483,7 @@ void MathPlotDemoFrame::OnUserMouseAction(void *Sender, wxMouseEvent &event, boo
           // Prevent the simple click with no dragging
           if (CurrentPolyline->GetSize() == 1)
           {
-            plotWindow->DelLayer(CurrentPolyline, true, false);
+            plotWindow->DelLayer(CurrentPolyline, mpYesDelete, false);
           }
           else
           {
@@ -550,13 +556,14 @@ void MathPlotDemoFrame::OnbMultiYAxisClick(wxCommandEvent &WXUNUSED(event))
   mPlot->AddLayer(f1);
 
   axis1 = new mpScaleY(f1->GetName(), mpALIGN_LEFT, false);
+  axis1->SetCanDelete(false); // We can not delete this axis in IHM
   axis1->SetLabelFormat("%g");
   axis1->SetFont(graphFont);
   axis1->SetPen(axispen);
   axis1->SetFontColour(plotColors[0]);
   mPlot->AddLayer(axis1);
   // This axis is dedicated for f1
-  f1->SetYAxis(axis1->GetAxisID());
+  f1->SetYAxisID(axis1->GetAxisID());
 
   MySIN* f2 = new MySIN(10.0, 220.0);
   f2->SetDrawOutsideMargins(false);
@@ -565,13 +572,14 @@ void MathPlotDemoFrame::OnbMultiYAxisClick(wxCommandEvent &WXUNUSED(event))
   mPlot->AddLayer(f2);
 
   axis2 = new mpScaleY(f2->GetName(), mpALIGN_LEFT, false);
+  axis2->SetCanDelete(false); // We can not delete this axis in IHM
   axis2->SetLabelFormat("%g");
   axis2->SetFont(graphFont);
   axis2->SetPen(axispen);
   axis2->SetFontColour(plotColors[1]);
   mPlot->AddLayer(axis2);
   // This axis is dedicated for f2
-  f2->SetYAxis(axis2->GetAxisID());
+  f2->SetYAxisID(axis2->GetAxisID());
 
   MyFunction* f3 = new MyFunction();
   f3->SetDrawOutsideMargins(false);
@@ -580,13 +588,14 @@ void MathPlotDemoFrame::OnbMultiYAxisClick(wxCommandEvent &WXUNUSED(event))
   mPlot->AddLayer(f3);
 
   axis3 = new mpScaleY(f3->GetName(), mpALIGN_LEFT, false);
+  axis3->SetCanDelete(false); // We can not delete this axis in IHM
   axis3->SetLabelFormat("%g");
   axis3->SetFont(graphFont);
   axis3->SetPen(axispen);
   axis3->SetFontColour(plotColors[2]);
   mPlot->AddLayer(axis3);
   // This axis is dedicated for f3
-  f3->SetYAxis(axis3->GetAxisID());
+  f3->SetYAxisID(axis3->GetAxisID());
 
   MyCOSinverse* f4 = new MyCOSinverse(10.0, 100.0);
   f4->SetDrawOutsideMargins(false);
@@ -595,6 +604,7 @@ void MathPlotDemoFrame::OnbMultiYAxisClick(wxCommandEvent &WXUNUSED(event))
   mPlot->AddLayer(f4);
 
   axis4 = new mpScaleY(f4->GetName(), mpALIGN_LEFT, false);
+  axis4->SetCanDelete(false); // We can not delete this axis in IHM
   axis4->SetLabelFormat("%g");
   axis4->SetFont(graphFont);
   axis4->SetPen(axispen);
@@ -604,7 +614,7 @@ void MathPlotDemoFrame::OnbMultiYAxisClick(wxCommandEvent &WXUNUSED(event))
   axis4->SetMaxScale(300);
   mPlot->AddLayer(axis4);
   // This axis is dedicated for f4
-  f4->SetYAxis(axis4->GetAxisID());
+  f4->SetYAxisID(axis4->GetAxisID());
 
   mPlot->Fit();
 

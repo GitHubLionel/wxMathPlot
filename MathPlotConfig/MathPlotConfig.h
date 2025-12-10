@@ -87,6 +87,7 @@ class MathPlotConfigDialog: public wxDialog
     void OnChoiceLinesSelect(wxCommandEvent& event);
     void OnbAddLinesClick(wxCommandEvent& event);
     void OnbDelLinesClick(wxCommandEvent& event);
+    void OnbDelAxisClick(wxCommandEvent& event);
     //*)
 
     //(*Identifiers(MathPlotConfigDialog)
@@ -104,6 +105,7 @@ class MathPlotConfigDialog: public wxDialog
     wxButton* bBGColor;
     wxButton* bClose;
     wxButton* bCoordBrushColor;
+    wxButton* bDelAxis;
     wxButton* bDelLines;
     wxButton* bDelSeries;
     wxButton* bFontAxis;
