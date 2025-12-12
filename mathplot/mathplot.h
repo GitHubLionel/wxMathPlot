@@ -2082,7 +2082,7 @@ class WXDLLIMPEXP_MATHPLOT mpScale: public mpLayer
      @param name Label to plot by the ruler
      @param flags Set the position of the scale with respect to the window.
      @param grids Show grid or not. Give false (default) for not drawing the grid. */
-    mpScale(const wxString &name, int flags, bool grids);
+    mpScale(const wxString &name, int flags, bool grids, std::optional<unsigned int> axisID = std::nullopt);
 
     /** Check whether this layer has a bounding box.
      This implementation returns \a FALSE thus making the ruler invisible
@@ -2093,7 +2093,7 @@ class WXDLLIMPEXP_MATHPLOT mpScale: public mpLayer
     }
 
     /**
-     * Return the ID of the Axis
+     * Return the ID of the Axis. Return int because m_axisID should be equal to -1 if not defined
      */
     int GetAxisID(void)
     {
@@ -2356,8 +2356,8 @@ class WXDLLIMPEXP_MATHPLOT mpScaleY: public mpScale
      @param name Label to plot by the ruler
      @param flags Set the position of the scale with respect to the window.
      @param grids Show grid or not. Give false (default) for not drawing the grid*/
-    mpScaleY(const wxString &name = _T("Y"), int flags = mpALIGN_CENTERY, bool grids = false) :
-        mpScale(name, flags, grids)
+    mpScaleY(const wxString &name = _T("Y"), int flags = mpALIGN_CENTERY, bool grids = false, std::optional<unsigned int> yAxisID = std::nullopt) :
+        mpScale(name, flags, grids, yAxisID)
     {
       m_subtype = mpsScaleY;
       m_axisWidth = Y_BORDER_SEPARATION;
@@ -2442,16 +2442,16 @@ struct mpAxisData
     mpRange bound;            //!< Range min and max
     mpRange desired;          //!< Desired range min and max
 
-//#if (defined(__cplusplus) && (__cplusplus > 201703L)) // C++20 or newer
-//  bool operator==(const mpAxisData&) const = default;
-//#else
-  bool operator==(const mpAxisData& other) const
-  {
-    return /*(axis == other.axis) && */ (scale == other.scale) && (pos == other.pos) &&
-        (bound == other.bound) && (desired == other.desired);
-  }
-//#endif
+    // Note: we don't use the default operator since we don't want to compare axis pointers
+    bool operator==(const mpAxisData& other) const
+    {
+      return /*(axis == other.axis) && */ (scale == other.scale) && (pos == other.pos) &&
+          (bound == other.bound) && (desired == other.desired);
+    }
 };
+
+/** Define the type for the list of axis */
+typedef std::map<int, mpAxisData> mpAxisList;
 
 /**
  * Define an event for when we delete a layer
@@ -2471,6 +2471,7 @@ typedef std::function<void(void *Sender, wxMouseEvent &event, bool &cancel)> mpO
 
 /**
  * Class for drawing mouse magnetization
+ * Draw an horizontal and a vertical line at the mouse position
  */
 class mpMagnet
 {
@@ -3515,9 +3516,9 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     wxTopLevelWindow* m_parent;
     bool m_fullscreen;
 
-    mpLayerList m_layers;   //!< List of attached plot layers
-    mpAxisData m_AxisDataX;  //!< Axis data for the X direction
-    std::map<int, mpAxisData> m_AxisDataYList;  //!< List of axis data for the Y direction
+    mpLayerList m_layers;        //!< List of attached plot layers
+    mpAxisData m_AxisDataX;      //!< Axis data for the X direction
+    mpAxisList m_AxisDataYList;  //!< List of axis data for the Y direction
     bool m_desiredChanged = false;
 
     wxMenu m_popmenu;       //!< Canvas' context menu
@@ -3592,7 +3593,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
       return m_LastAxisDataID;
     }
 
-    unsigned int m_LastAxisDataID = 0; // Last known ID to assign to each new axis
+    unsigned int m_LastAxisDataID = 0; // Last known ID to assign to each new y-axis
     bool m_initialDesiredBoundsRecorded = false; //!< Has m_lastDesiredReportedBounds been set?
 
   wxDECLARE_DYNAMIC_CLASS(mpWindow);

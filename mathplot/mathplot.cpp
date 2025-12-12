@@ -2136,11 +2136,14 @@ const wxColour& mpPieChart::GetColour(unsigned int id)
 
 IMPLEMENT_ABSTRACT_CLASS(mpScale, mpLayer)
 
-mpScale::mpScale(const wxString &name, int flags, bool grids) :
+mpScale::mpScale(const wxString &name, int flags, bool grids, std::optional<unsigned int> axisID) :
     mpLayer(mpLAYER_AXIS)
 {
   m_subtype = mpsScaleNone;
-  m_axisID = -1;
+  if (axisID)
+    m_axisID = *axisID;
+  else
+    m_axisID = -1;
   SetName(name);
   SetFont((wxFont const&)*wxSMALL_FONT);
   SetPen((wxPen const&)*wxGREY_PEN);
@@ -2851,8 +2854,6 @@ mpWindow::mpWindow(wxWindow *parent, wxWindowID id, const wxPoint &pos, const wx
   m_drawBox = true;
 
   SetSizeHints(128, 128);
-
-//  UpdateAll();
 }
 
 mpWindow::~mpWindow()
@@ -3079,7 +3080,7 @@ void mpWindow::OnMouseMove(wxMouseEvent &event)
             m_zoom_oldDim = m_zoom_dim;
 
             // Draw the rectangle that focus the selected region
-            wxPen pen(*wxBLACK, 1, wxPENSTYLE_DOT);  // wxDOT
+            wxPen pen(*wxBLACK, 1, wxPENSTYLE_DOT);
             dc.SetPen(pen);
             dc.SetBrush(*wxTRANSPARENT_BRUSH);
             dc.DrawRectangle(m_zoom_dim);
@@ -3436,7 +3437,7 @@ void mpWindow::DoZoomYCalc(bool zoomIn, wxCoord staticYpixel, std::optional<int>
   }
 
   // If yAxisID is supplied, only zoom in on that specific Y-axis
-  std::map<int, mpAxisData>::iterator startYID = m_AxisDataYList.begin();
+  mpAxisList::iterator startYID = m_AxisDataYList.begin();
   if (yAxisID)
   {
     for (const auto& axisDataY : m_AxisDataYList)
@@ -3447,11 +3448,11 @@ void mpWindow::DoZoomYCalc(bool zoomIn, wxCoord staticYpixel, std::optional<int>
     }
   }
 
-  std::map<int, mpAxisData>::iterator startIt = yAxisID ? startYID : m_AxisDataYList.begin();
-  std::map<int, mpAxisData>::iterator endIt = yAxisID ? ++startYID : m_AxisDataYList.end();
+  mpAxisList::iterator startIt = yAxisID ? startYID : m_AxisDataYList.begin();
+  mpAxisList::iterator endIt = yAxisID ? ++startYID : m_AxisDataYList.end();
 
   double zoomFactor = zoomIn ? m_zoomIncrementalFactor : (1.0 / m_zoomIncrementalFactor);
-  for (std::map<int, mpAxisData>::iterator it = startIt; it != endIt; it++)
+  for (mpAxisList::iterator it = startIt; it != endIt; it++)
   {
     // Preserve the position of the clicked point:
     double staticY = p2y(staticYpixel, it->first);
@@ -5670,7 +5671,6 @@ void mpBitmapLayer::DoPlot(wxDC &dc, mpWindow &w)
     if (HasBBox())
     {
       wxCoord sx = (wxCoord)((m_max_x - w.GetPosX()) * w.GetScaleX());
-      // ToDo 0 is not the good y ID
       wxCoord sy = (wxCoord)((w.GetPosY(0) - m_max_y) * w.GetScaleY(0));
 
       tx = sx - tx - 8;
