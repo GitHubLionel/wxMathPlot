@@ -53,6 +53,7 @@ const wxWindowID MathPlotDemoFrame::idMenuPreview = wxNewId();
 const wxWindowID MathPlotDemoFrame::idMenuPrint = wxNewId();
 const wxWindowID MathPlotDemoFrame::idMenuExit = wxNewId();
 const wxWindowID MathPlotDemoFrame::idMenuAbout = wxNewId();
+const wxWindowID MathPlotDemoFrame::ID_TIMER = wxNewId();
 //*)
 
 BEGIN_EVENT_TABLE(MathPlotDemoFrame,wxFrame)
@@ -95,6 +96,8 @@ MathPlotDemoFrame::MathPlotDemoFrame(wxWindow* parent,wxWindowID id)
     BoxSizer2->Add(bImage, 0, wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND, 10);
     bMultiYAxis = new wxButton(pLog, wxID_ANY, _("Multi Y-Axis"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
     BoxSizer2->Add(bMultiYAxis, 0, wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND, 10);
+    bMovingObject = new wxButton(pLog, wxID_ANY, _("Moving object"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
+    BoxSizer2->Add(bMovingObject, 0, wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND, 10);
     cbFreeLine = new wxCheckBox(pLog, wxID_ANY, _("Free line"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
     cbFreeLine->SetValue(false);
     cbFreeLine->SetToolTip(_("Free drawing on the plot area. Left click and move the mouse. Illustration of OnUserMouseAction"));
@@ -128,6 +131,8 @@ MathPlotDemoFrame::MathPlotDemoFrame(wxWindow* parent,wxWindowID id)
     Menu3->Append(miAbout);
     MenuBar1->Append(Menu3, _("Help"));
     SetMenuBar(MenuBar1);
+    Timer.SetOwner(this, ID_TIMER);
+    Timer.Start(25, false);
 
     bDraw->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotDemoFrame::OnbDrawClick, this);
     bSample->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotDemoFrame::OnbSampleClick, this);
@@ -137,11 +142,13 @@ MathPlotDemoFrame::MathPlotDemoFrame(wxWindow* parent,wxWindowID id)
     bBarChart->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotDemoFrame::OnbBarChartClick, this);
     bImage->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotDemoFrame::OnbImageClick, this);
     bMultiYAxis->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotDemoFrame::OnbMultiYAxisClick, this);
+    bMovingObject->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotDemoFrame::OnbMovingObjectClick, this);
     cbFreeLine->Bind(wxEVT_COMMAND_CHECKBOX_CLICKED, &MathPlotDemoFrame::OncbFreeLineClick, this);
     Bind(wxEVT_COMMAND_MENU_SELECTED, &MathPlotDemoFrame::OnmiPreviewSelected, this, idMenuPreview);
     Bind(wxEVT_COMMAND_MENU_SELECTED, &MathPlotDemoFrame::OnmiPrintSelected, this, idMenuPrint);
     Bind(wxEVT_COMMAND_MENU_SELECTED, &MathPlotDemoFrame::OnmiQuitSelected, this, idMenuExit);
     Bind(wxEVT_COMMAND_MENU_SELECTED, &MathPlotDemoFrame::OnmiAboutSelected, this, idMenuAbout);
+    Bind(wxEVT_TIMER, &MathPlotDemoFrame::OnTimerTrigger, this, ID_TIMER);
     //*)
 
     InitializePlot();
@@ -202,6 +209,8 @@ void MathPlotDemoFrame::InitializePlot(void)
 
 void MathPlotDemoFrame::CleanPlot(void)
 {
+  // Stop timer for moving object
+  Timer.Stop();
   // Remove all the plot (all functions mpFX, mpFY, mpFXY)
   mPlot->DelAllPlot(mpForceDelete);
   mPlot->SetMouseLeftDownAction(mpMouseBoxZoom);
@@ -626,3 +635,109 @@ void MathPlotDemoFrame::OnbMultiYAxisClick(wxCommandEvent &WXUNUSED(event))
                   "If keeping mouse inside plot area, same action applies but affect all axes",
                   400);
 }
+
+void MathPlotDemoFrame::OnbMovingObjectClick(wxCommandEvent &WXUNUSED(event))
+{
+  CleanPlot();
+
+  mpBitmapLayer* bmpLayer;
+  mPlot->AddLayer(bmpLayer = new mpBitmapLayer());
+
+  wxImage bmp;
+  ::wxInitAllImageHandlers();
+  bmp.LoadFile(wxT("./gridmap.png"), wxBITMAP_TYPE_PNG);
+  bmp.SetMaskColour(0, 0, 0);
+  bmpLayer->SetBitmap(bmp, -40, -40, 120, 120);
+
+  mPlot->AddLayer(new mpCovarianceEllipse(0.4, 0.4, 0.2, 2, 32, wxT("Cov1")));
+  mPlot->AddLayer(new mpCovarianceEllipse(0.2, 0.2, -0.1, 2, 32, wxT("Cov2")));
+
+  // Car shape:
+  std::vector<double> car_xs(20), car_ys(20);
+  int i = 0;
+  car_xs[i] = -0.5;
+  car_ys[i++] = -0.5;
+  car_xs[i] = -0.2;
+  car_ys[i++] = -0.5;
+  car_xs[i] = -0.2;
+  car_ys[i++] = -0.6;
+  car_xs[i] = 0;
+  car_ys[i++] = -0.6;
+  car_xs[i] = 0;
+  car_ys[i++] = -0.5;
+  car_xs[i] = 0.6;
+  car_ys[i++] = -0.5;
+  car_xs[i] = 0.6;
+  car_ys[i++] = -0.6;
+  car_xs[i] = 0.8;
+  car_ys[i++] = -0.6;
+  car_xs[i] = 0.8;
+  car_ys[i++] = -0.5;
+  car_xs[i] = 1.0;
+  car_ys[i++] = -0.5;
+  car_xs[i] = 1.0;
+  car_ys[i++] = 0.5;
+  car_xs[i] = 0.8;
+  car_ys[i++] = 0.5;
+  car_xs[i] = 0.8;
+  car_ys[i++] = 0.6;
+  car_xs[i] = 0.6;
+  car_ys[i++] = 0.6;
+  car_xs[i] = 0.6;
+  car_ys[i++] = 0.5;
+  car_xs[i] = 0;
+  car_ys[i++] = 0.5;
+  car_xs[i] = 0;
+  car_ys[i++] = 0.6;
+  car_xs[i] = -0.2;
+  car_ys[i++] = 0.6;
+  car_xs[i] = -0.2;
+  car_ys[i++] = 0.5;
+  car_xs[i] = -0.5;
+  car_ys[i++] = 0.5;
+
+  mpPolygon* lCar;
+  mPlot->AddLayer(lCar = new mpPolygon(wxT("car")));
+  lCar->SetPen(wxPen(*wxBLACK, 3, wxPENSTYLE_SOLID));
+  lCar->setPoints(car_xs, car_ys, true);
+
+  mPlot->GetLayerByName(wxT("Cov1"))->SetPen(wxPen(*wxRED, 2, wxPENSTYLE_SOLID));
+  mPlot->GetLayerByName(wxT("Cov2"))->SetPen(wxPen(*wxBLUE, 2, wxPENSTYLE_SOLID));
+
+  mpMovableObject* obj;
+  obj = (mpMovableObject*)mPlot->GetLayerByName(wxT("Cov1"));
+  obj->SetCoordinateBase(-4, -4, 1);
+  obj = (mpMovableObject*)mPlot->GetLayerByName(wxT("Cov2"));
+  obj->SetCoordinateBase(12, 7, 0);
+
+  Timer.Start(25);
+}
+
+void MathPlotDemoFrame::OnTimerTrigger(wxTimerEvent &WXUNUSED(event))
+{
+  mpMovableObject* obj = (mpMovableObject*)mPlot->GetLayerByName(wxT("car"));
+  if (obj)
+  {
+    double x, y, phi, v, w, At = Timer.GetInterval() * 0.001;
+    obj->GetCoordinateBase(x, y, phi);
+
+    if (x <= 5 && x >= 0)
+    {
+      v = 5;
+      w = 0;
+    }
+    else
+    {
+      v = 4;
+      w = 1;
+    }
+
+    x += cos(phi) * v * At;
+    y += sin(phi) * v * At;
+    phi += w * At;
+
+    obj->SetCoordinateBase(x, y, phi);
+    mPlot->UpdateAll();
+  }
+}
+

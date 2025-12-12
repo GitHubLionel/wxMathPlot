@@ -23,6 +23,7 @@
 #include <wx/menu.h>
 #include <wx/panel.h>
 #include <wx/sizer.h>
+#include <wx/timer.h>
 //*)
 
 class MathPlotDemoFrame: public wxFrame
@@ -48,6 +49,8 @@ class MathPlotDemoFrame: public wxFrame
         void OncbFreeLineClick(wxCommandEvent& event);
         void OnbImageClick(wxCommandEvent& event);
         void OnbMultiYAxisClick(wxCommandEvent& event);
+        void OnTimerTrigger(wxTimerEvent& event);
+        void OnbMovingObjectClick(wxCommandEvent& event);
         //*)
 
         //(*Identifiers(MathPlotDemoFrame)
@@ -58,6 +61,7 @@ class MathPlotDemoFrame: public wxFrame
         static const wxWindowID idMenuPrint;
         static const wxWindowID idMenuExit;
         static const wxWindowID idMenuAbout;
+        static const wxWindowID ID_TIMER;
         //*)
 
         //(*Declarations(MathPlotDemoFrame)
@@ -69,12 +73,14 @@ class MathPlotDemoFrame: public wxFrame
         wxButton* bImage;
         wxButton* bLog;
         wxButton* bLogXY;
+        wxButton* bMovingObject;
         wxButton* bMultiYAxis;
         wxButton* bSample;
         wxCheckBox* cbFreeLine;
         wxMenuItem* miPrint;
         wxPanel* pLog;
         wxPanel* pPlot;
+        wxTimer Timer;
         //*)
 
         mpScaleX *bottomAxis = NULL;
