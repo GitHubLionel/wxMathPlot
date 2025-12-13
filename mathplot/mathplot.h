@@ -273,6 +273,18 @@ struct mpRange
       }
     }
 
+    // Length of the range
+    double Length(void) const
+    {
+      return max - min;
+    }
+
+    // Center of the range
+    double GetCenter(void) const
+    {
+      return (min + max) / 2;
+    }
+
     // Convert to log range
     void ToLog(void)
     {
@@ -2454,6 +2466,18 @@ struct mpAxisData
 typedef std::map<int, mpAxisData> mpAxisList;
 
 /**
+ * Define the axis we want to update. Could be:
+ * - x axis
+ * - y axis
+ * - x and y axis
+ */
+typedef enum {
+  uXAxis,
+  uYAxis,
+  uXYAxis
+} mpAxisUpdate;
+
+/**
  * Define an event for when we delete a layer
  * Use like this :
  *  your_plot->SetOnDeleteLayer([this](void *Sender, const wxString &classname, bool &cancel)
@@ -2676,7 +2700,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
       if (ISNOTNULL(scaleX))
       {
         m_AxisDataX.scale = scaleX;
-        UpdateDesiredBoundingBox();
+        UpdateDesiredBoundingBox(uXAxis);
       }
       UpdateAll();
     }
@@ -2700,7 +2724,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
       if (ISNOTNULL(scaleY))
       {
         m_AxisDataYList[yAxisID].scale = scaleY;
-        UpdateDesiredBoundingBox();
+        UpdateDesiredBoundingBox(uYAxis, yAxisID);
       }
       UpdateAll();
     }
@@ -2742,7 +2766,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     void SetPosX(const double posX)
     {
       m_AxisDataX.pos = posX;
-      UpdateDesiredBoundingBox();
+      UpdateDesiredBoundingBox(uXAxis);
       UpdateAll();
     }
 
@@ -2767,7 +2791,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
         axisDataY.second.pos = posYList[i];
         i++;
       }
-      UpdateDesiredBoundingBox();
+      UpdateDesiredBoundingBox(uYAxis);
       UpdateAll();
     }
 
@@ -3015,22 +3039,42 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      *  m_posX, m_scaleX, m_posY or m_scaleY is updated.
      *  Check if there is some changes
      */
-    void UpdateDesiredBoundingBox()
+    void UpdateDesiredBoundingBox(mpAxisUpdate update, std::optional<unsigned int> yAxisID = std::nullopt)
     {
-      mpRange lastRange = m_AxisDataX.desired;
-      m_AxisDataX.desired.Set(m_AxisDataX.pos + (m_margin.left / m_AxisDataX.scale),
-          m_AxisDataX.pos + ((m_margin.left + m_plotWidth) / m_AxisDataX.scale));
-      m_desiredChanged = !(lastRange == m_AxisDataX.desired);
-
-      // If there is a change no need to test either more
-      for (auto& axisDataY : m_AxisDataYList)
+      mpRange lastRange;
+      if ((update == uXAxis) || (update == uXYAxis))
       {
-        if (!m_desiredChanged)
-          lastRange = axisDataY.second.desired;
-        axisDataY.second.desired.Set(axisDataY.second.pos - (m_margin.top / axisDataY.second.scale),
-            axisDataY.second.pos - ((m_margin.top + m_plotHeight) / axisDataY.second.scale));
-        if (!m_desiredChanged)
-          m_desiredChanged = !(lastRange == axisDataY.second.desired);
+        lastRange = m_AxisDataX.desired;
+        m_AxisDataX.desired.Set(m_AxisDataX.pos + (m_margin.left / m_AxisDataX.scale),
+            m_AxisDataX.pos + ((m_margin.left + m_plotWidth) / m_AxisDataX.scale));
+        m_desiredChanged = !(lastRange == m_AxisDataX.desired);
+      }
+
+      // If there is a change no need to test either more for m_desiredChanged
+      if ((update == uYAxis) || (update == uXYAxis))
+      {
+        if ((yAxisID) && (m_AxisDataYList.count(*yAxisID) != 0))
+        {
+          mpAxisData *yAxis = &m_AxisDataYList[*yAxisID];
+          if (!m_desiredChanged)
+            lastRange = yAxis->desired;
+          yAxis->desired.Set(yAxis->pos + (m_margin.left / yAxis->scale),
+              yAxis->pos + ((m_margin.left + m_plotWidth) / yAxis->scale));
+          m_desiredChanged = !(lastRange == yAxis->desired);
+        }
+        else
+        {
+          for (auto& axisDataY : m_AxisDataYList)
+          {
+            mpAxisData *yAxis = &axisDataY.second;
+            if (!m_desiredChanged)
+              lastRange = yAxis->desired;
+            yAxis->desired.Set(yAxis->pos - (m_margin.top / yAxis->scale),
+                yAxis->pos - ((m_margin.top + m_plotHeight) / yAxis->scale));
+            if (!m_desiredChanged)
+              m_desiredChanged = !(lastRange == yAxis->desired);
+          }
+        }
       }
     }
 
@@ -3108,8 +3152,8 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
       if (m_AxisDataYList.count(yAxisID) == 0)
         return ;
 
-      m_AxisDataX.bound.min = m_AxisDataX.bound.max = px;
-      m_AxisDataYList[yAxisID].bound.min = m_AxisDataYList[yAxisID].bound.max = py;
+      m_AxisDataX.bound.Set(px, px);
+      m_AxisDataYList[yAxisID].bound.Set(py, py);
     }
 
     /** Enable/disable scrollbars

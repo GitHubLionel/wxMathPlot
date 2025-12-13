@@ -3022,7 +3022,7 @@ void mpWindow::OnMouseMove(wxMouseEvent &event)
       }
     }
 
-    UpdateDesiredBoundingBox();
+    UpdateDesiredBoundingBox(uXYAxis);
     UpdateAll();
 
 #ifdef MATHPLOT_DO_LOGGING
@@ -3236,7 +3236,7 @@ void mpWindow::OnMouseWheel(wxMouseEvent &event)
       }
     }
 
-    UpdateDesiredBoundingBox();
+    UpdateDesiredBoundingBox(uXYAxis);
     UpdateAll();
   }
 }
@@ -3319,13 +3319,13 @@ void mpWindow::Fit(const mpRange &rangeX, const std::vector<mpRange> &rangeY, wx
 
   double Ax, Ay;
 
-  Ax = rangeX.max - rangeX.min;
+  Ax = rangeX.Length();
   m_AxisDataX.scale = ISNOTNULL(Ax) ? m_plotWidth / Ax : 1;
 
   i = 0;
   for (auto& axisDataY : m_AxisDataYList)
   {
-    Ay = rangeY[i].max - rangeY[i].min;
+    Ay = rangeY[i].Length();
     axisDataY.second.scale = ISNOTNULL(Ay) ? m_plotHeight / Ay : 1;
     i++;
   }
@@ -3353,11 +3353,11 @@ void mpWindow::Fit(const mpRange &rangeX, const std::vector<mpRange> &rangeY, wx
   //   m_posX = m_minX;
   //   m_posY = m_maxY;
   // But account for centering if we have lock aspect:
-  m_AxisDataX.pos = (rangeX.min + rangeX.max) / 2 - (m_plotWidth / 2 + m_margin.left) / m_AxisDataX.scale;
+  m_AxisDataX.pos = rangeX.GetCenter() - (m_plotWidth / 2 + m_margin.left) / m_AxisDataX.scale;
   i = 0;
   for (auto& axisDataY : m_AxisDataYList)
   {
-    axisDataY.second.pos = (rangeY[i].min + rangeY[i].max) / 2 + (m_plotHeight / 2 + m_margin.top) / axisDataY.second.scale;
+    axisDataY.second.pos = rangeY[i].GetCenter() + (m_plotHeight / 2 + m_margin.top) / axisDataY.second.scale;
     i++;
   }
 
@@ -3380,13 +3380,13 @@ void mpWindow::Fit(const mpRange &rangeX, const std::vector<mpRange> &rangeY, wx
 void mpWindow::FitX(void)
 {
   mpRange bound = Get_BoundX();
-  double Ax = bound.max - bound.min;
+  double Ax = bound.Length();
   m_AxisDataX.scale = ISNOTNULL(Ax) ? m_plotWidth / Ax : 1;
 
   // Since m_posX is at the corner (not including margins) we need to take margin into account
   m_AxisDataX.pos = bound.min - (m_margin.left / m_AxisDataX.scale);
 
-  UpdateDesiredBoundingBox();
+  UpdateDesiredBoundingBox(uXAxis);
 }
 
 void mpWindow::FitY(int yAxisID)
@@ -3394,13 +3394,13 @@ void mpWindow::FitY(int yAxisID)
   if (m_AxisDataYList.count(yAxisID) != 0)
   {
     mpRange bound = Get_BoundY(yAxisID);
-    double Ay = bound.max - bound.min;
+    double Ay = bound.Length();
     m_AxisDataYList[yAxisID].scale = ISNOTNULL(Ay) ? m_plotHeight / Ay : 1;
 
     // Since m_posY is at the corner (not including margins) we need to take margin into account
     m_AxisDataYList[yAxisID].pos = bound.max + (m_margin.top / m_AxisDataYList[yAxisID].scale);
 
-    UpdateDesiredBoundingBox();
+    UpdateDesiredBoundingBox(uYAxis, yAxisID);
   }
 }
 
@@ -3422,7 +3422,7 @@ void mpWindow::DoZoomXCalc(bool zoomIn, wxCoord staticXpixel)
   // Adjust the new m_posx
   m_AxisDataX.pos = staticX - (staticXpixel / m_AxisDataX.scale);
 
-  UpdateDesiredBoundingBox();
+  UpdateDesiredBoundingBox(uXAxis);
 #ifdef MATHPLOT_DO_LOGGING
   wxLogMessage(_T("mpWindow::DoZoomXCalc() prior X coord: (%f), new X coord: (%f) SHOULD BE EQUAL!!"), staticX, p2x(staticXpixel));
 #endif
@@ -3462,7 +3462,7 @@ void mpWindow::DoZoomYCalc(bool zoomIn, wxCoord staticYpixel, std::optional<int>
     it->second.pos = staticY + (staticYpixel / it->second.scale);
   }
 
-  UpdateDesiredBoundingBox();
+  UpdateDesiredBoundingBox(uYAxis);
 #ifdef MATHPLOT_DO_LOGGING
   wxLogMessage(_T("mpWindow::DoZoomYCalc() prior Y coord: (%f), new Y coord: (%f) SHOULD BE EQUAL!!"), staticY, p2y(staticYpixel));
 #endif
@@ -3482,7 +3482,7 @@ void mpWindow::SetScaleXAndCenter(double scaleX)
   // Adjust the new m_posx
   m_AxisDataX.pos = centerXValue - (centerXPixel / m_AxisDataX.scale);
 
-  UpdateDesiredBoundingBox();
+  UpdateDesiredBoundingBox(uXAxis);
 }
 
 void mpWindow::SetScaleYAndCenter(double scaleY, int yAxisID)
@@ -3502,7 +3502,7 @@ void mpWindow::SetScaleYAndCenter(double scaleY, int yAxisID)
   // Adjust the new m_posy:
   m_AxisDataYList[yAxisID].pos = centerYValue + (centerYpixel / m_AxisDataYList[yAxisID].scale);
 
-  UpdateDesiredBoundingBox();
+  UpdateDesiredBoundingBox(uYAxis, yAxisID);
 }
 
 void mpWindow::ZoomIn(const wxPoint &centerPoint)
