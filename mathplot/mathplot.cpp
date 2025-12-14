@@ -3404,7 +3404,6 @@ void mpWindow::FitY(int yAxisID)
   }
 }
 
-// Patch ngpaton
 void mpWindow::DoZoomXCalc(bool zoomIn, wxCoord staticXpixel)
 {
   if (staticXpixel == ZOOM_AROUND_CENTER)
@@ -3594,7 +3593,6 @@ void mpWindow::LockAspect(bool enable)
   m_popmenu.Check(mpID_LOCKASPECT, enable);
 
   // Try to fit again with the new config:
-//  Fit(m_desired);
   std::vector<mpRange> yRange;
   for (const auto& axisDataY : m_AxisDataYList)
   {
@@ -4128,7 +4126,6 @@ void mpWindow::SetBound()
 bool mpWindow::UpdateBBox()
 {
   bool firstX = true;
-//  std::vector<bool> firstY(m_AxisDataYList.size(), true);
   std::map<int, bool> firstY;
   for (const auto& axisDataY : m_AxisDataYList)
   {
@@ -4187,14 +4184,13 @@ bool mpWindow::UpdateBBox()
     m_AxisDataX.bound = m_AxisDataX.axis->GetRangeScale();
   }
 
-  for (const auto& axisDataY : m_AxisDataYList)
+  for (auto& axisDataY : m_AxisDataYList)
   {
     if (axisDataY.second.axis)
     {
-      int yAxisID = axisDataY.second.axis->GetAxisID();
       if (!axisDataY.second.axis->GetAuto())
       {
-        m_AxisDataYList[yAxisID].bound = axisDataY.second.axis->GetRangeScale();
+        axisDataY.second.bound = axisDataY.second.axis->GetRangeScale();
       }
     }
   }

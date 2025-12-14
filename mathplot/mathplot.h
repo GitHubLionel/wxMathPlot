@@ -242,7 +242,8 @@ struct mpRange
       }
     }
 
-    // Update range according new value
+    // Update range according new value:
+    // If value < min then min = value and if value > max then max = value
     void Update(double value)
     {
       if (value < min)
@@ -253,6 +254,7 @@ struct mpRange
     }
 
     // Update min, max function
+    // If _min < min then min = _min and if _max > max then max = _max
     void Update(double _min, double _max)
     {
       if (_min < min)
@@ -2814,7 +2816,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
       return (int)m_AxisDataYList.size();
     }
 
-    std::map<int, mpAxisData> GetAxisDataYList(void) const
+    mpAxisList GetAxisDataYList(void) const
     {
       return m_AxisDataYList;
     }
@@ -3044,8 +3046,9 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
       mpRange lastRange;
       if ((update == uXAxis) || (update == uXYAxis))
       {
-        lastRange = m_AxisDataX.desired;
-        m_AxisDataX.desired.Set(m_AxisDataX.pos + (m_margin.left / m_AxisDataX.scale),
+        if (!m_desiredChanged)
+          lastRange = m_AxisDataX.desired;
+        m_AxisDataX.desired.Assign(m_AxisDataX.pos + (m_margin.left / m_AxisDataX.scale),
             m_AxisDataX.pos + ((m_margin.left + m_plotWidth) / m_AxisDataX.scale));
         m_desiredChanged = !(lastRange == m_AxisDataX.desired);
       }
@@ -3058,7 +3061,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
           mpAxisData *yAxis = &m_AxisDataYList[*yAxisID];
           if (!m_desiredChanged)
             lastRange = yAxis->desired;
-          yAxis->desired.Set(yAxis->pos + (m_margin.left / yAxis->scale),
+          yAxis->desired.Assign(yAxis->pos + (m_margin.left / yAxis->scale),
               yAxis->pos + ((m_margin.left + m_plotWidth) / yAxis->scale));
           m_desiredChanged = !(lastRange == yAxis->desired);
         }
@@ -3069,7 +3072,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
             mpAxisData *yAxis = &axisDataY.second;
             if (!m_desiredChanged)
               lastRange = yAxis->desired;
-            yAxis->desired.Set(yAxis->pos - (m_margin.top / yAxis->scale),
+            yAxis->desired.Assign(yAxis->pos - (m_margin.top / yAxis->scale),
                 yAxis->pos - ((m_margin.top + m_plotHeight) / yAxis->scale));
             if (!m_desiredChanged)
               m_desiredChanged = !(lastRange == yAxis->desired);
@@ -3563,7 +3566,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     mpLayerList m_layers;        //!< List of attached plot layers
     mpAxisData m_AxisDataX;      //!< Axis data for the X direction
     mpAxisList m_AxisDataYList;  //!< List of axis data for the Y direction
-    bool m_desiredChanged = false;
+    bool m_desiredChanged = false; //!< Is the desired bounds have changed ? Used to call DesiredBoundsHaveChanged()
 
     wxMenu m_popmenu;       //!< Canvas' context menu
     bool m_lockaspect;      //!< Scale aspect is locked or not
@@ -3638,7 +3641,6 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     }
 
     unsigned int m_LastAxisDataID = 0; // Last known ID to assign to each new y-axis
-    bool m_initialDesiredBoundsRecorded = false; //!< Has m_lastDesiredReportedBounds been set?
 
   wxDECLARE_DYNAMIC_CLASS(mpWindow);
   wxDECLARE_EVENT_TABLE();
