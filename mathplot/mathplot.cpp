@@ -3400,7 +3400,7 @@ void mpWindow::FitY(int yAxisID)
     // Since m_posY is at the corner (not including margins) we need to take margin into account
     m_AxisDataYList[yAxisID].pos = bound.max + (m_margin.top / m_AxisDataYList[yAxisID].scale);
 
-    UpdateDesiredBoundingBox(uYAxis, yAxisID);
+    UpdateDesiredBoundingBox(uYAxis);
   }
 }
 
@@ -3501,7 +3501,7 @@ void mpWindow::SetScaleYAndCenter(double scaleY, int yAxisID)
   // Adjust the new m_posy:
   m_AxisDataYList[yAxisID].pos = centerYValue + (centerYpixel / m_AxisDataYList[yAxisID].scale);
 
-  UpdateDesiredBoundingBox(uYAxis, yAxisID);
+  UpdateDesiredBoundingBox(uYAxis);
 }
 
 void mpWindow::ZoomIn(const wxPoint &centerPoint)
@@ -4139,58 +4139,62 @@ bool mpWindow::UpdateBBox()
       m_bound.y[0].max);
 #endif // MATHPLOT_DO_LOGGING
 
-  // Find minimum bounding box to fit all visible layers
-  for (mpLayer* f : m_layers)
-  {
-    if (!f->HasBBox() || !f->IsVisible())
-      continue; // this layer isn't used for bounding box
-
-    // X
-    if (firstX)
-    {
-      firstX = false;
-      m_AxisDataX.bound.Set(f->GetMinX(), f->GetMaxX());
-    }
-    else
-    {
-      m_AxisDataX.bound.Update(f->GetMinX(), f->GetMaxX());
-    }
-
-    // Y
-    int yAxisID = 0;  // Default to 1st y-axis in case layer only support single y-axis
-    if (f->GetLayerType() == mpLAYER_PLOT)
-    {
-      yAxisID = ((mpFunction*)f)->GetYAxisID();
-    }
-
-    // If mpFunction do not have an Y axis, continue
-    if (yAxisID == -1)
-      continue;
-
-    if (firstY[yAxisID])
-    {
-      firstY[yAxisID] = false;
-      m_AxisDataYList[yAxisID].bound.Set(f->GetMinY(), f->GetMaxY());
-    }
-    else
-    {
-      m_AxisDataYList[yAxisID].bound.Update(f->GetMinY(), f->GetMaxY());
-    }
-  } // end iteration over all layers
-
+  // X axis
   // Take care of scale : restrict bound
   if (m_AxisDataX.axis && (!m_AxisDataX.axis->GetAuto()))
   {
     m_AxisDataX.bound = m_AxisDataX.axis->GetRangeScale();
   }
+  else
+  {
+    // Find minimum bounding box to fit all visible layers
+    for (mpLayer* f : m_layers)
+    {
+      if (!f->HasBBox() || !f->IsVisible())
+        continue; // this layer isn't used for bounding box
 
+      if (firstX)
+      {
+        firstX = false;
+        m_AxisDataX.bound.Set(f->GetMinX(), f->GetMaxX());
+      }
+      else
+      {
+        m_AxisDataX.bound.Update(f->GetMinX(), f->GetMaxX());
+      }
+    }
+  }
+
+  // Y axis
   for (auto& axisDataY : m_AxisDataYList)
   {
-    if (axisDataY.second.axis)
+    mpAxisData* yAxis = &axisDataY.second;
+
+    // Take care of scale : restrict bound
+    if (yAxis->axis && (!(yAxis->axis)->GetAuto()))
     {
-      if (!axisDataY.second.axis->GetAuto())
+      yAxis->bound = (yAxis->axis)->GetRangeScale();
+    }
+    else
+    {
+      // Find minimum bounding box to fit all visible layers
+      for (mpLayer* f : m_layers)
       {
-        axisDataY.second.bound = axisDataY.second.axis->GetRangeScale();
+        if (!f->HasBBox() || !f->IsVisible())
+          continue; // this layer isn't used for bounding box
+
+        if ((f->GetLayerType() == mpLAYER_PLOT) && (((mpFunction*)f)->GetYAxisID() != axisDataY.first))
+          continue; // This function is not associated to this axis
+
+        if (firstY[axisDataY.first])
+        {
+          firstY[axisDataY.first] = false;
+          yAxis->bound.Set(f->GetMinY(), f->GetMaxY());
+        }
+        else
+        {
+          yAxis->bound.Update(f->GetMinY(), f->GetMaxY());
+        }
       }
     }
   }
@@ -4491,10 +4495,10 @@ mpLayer* mpWindow::GetLayerPlot(int position, mpFunctionType func)
 
 mpLayer* mpWindow::GetLayerAxis(int position, mpScaleType scale)
 {
-  int layerNo = -1;
-  int thescale;
   if (position < 0)
     return NULL;
+  int layerNo = -1;
+  int thescale;
   for (mpLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
   {
     if ((*it)->IsLayerType(mpLAYER_AXIS, &thescale) && ((scale == mpsAllType) || (thescale == scale)))

@@ -2474,9 +2474,9 @@ typedef std::map<int, mpAxisData> mpAxisList;
  * - x and y axis
  */
 typedef enum {
-  uXAxis,
-  uYAxis,
-  uXYAxis
+  uXAxis = 1,
+  uYAxis = 2,
+  uXYAxis = 3
 } mpAxisUpdate;
 
 /**
@@ -2726,7 +2726,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
       if (ISNOTNULL(scaleY))
       {
         m_AxisDataYList[yAxisID].scale = scaleY;
-        UpdateDesiredBoundingBox(uYAxis, yAxisID);
+        UpdateDesiredBoundingBox(uYAxis);
       }
       UpdateAll();
     }
@@ -3041,10 +3041,11 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      *  m_posX, m_scaleX, m_posY or m_scaleY is updated.
      *  Check if there is some changes
      */
-    void UpdateDesiredBoundingBox(mpAxisUpdate update, std::optional<unsigned int> yAxisID = std::nullopt)
+    void UpdateDesiredBoundingBox(mpAxisUpdate update)
     {
       mpRange lastRange;
-      if ((update == uXAxis) || (update == uXYAxis))
+      // Change on X axis
+      if ((update & uXAxis) == uXAxis)
       {
         if (!m_desiredChanged)
           lastRange = m_AxisDataX.desired;
@@ -3053,30 +3054,18 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
         m_desiredChanged = !(lastRange == m_AxisDataX.desired);
       }
 
-      // If there is a change no need to test either more for m_desiredChanged
-      if ((update == uYAxis) || (update == uXYAxis))
+      // Change on Y axis
+      if ((update & uYAxis) == uYAxis)
       {
-        if ((yAxisID) && (m_AxisDataYList.count(*yAxisID) != 0))
+        for (auto& axisDataY : m_AxisDataYList)
         {
-          mpAxisData *yAxis = &m_AxisDataYList[*yAxisID];
+          mpAxisData *yAxis = &axisDataY.second;
           if (!m_desiredChanged)
             lastRange = yAxis->desired;
-          yAxis->desired.Assign(yAxis->pos + (m_margin.left / yAxis->scale),
-              yAxis->pos + ((m_margin.left + m_plotWidth) / yAxis->scale));
-          m_desiredChanged = !(lastRange == yAxis->desired);
-        }
-        else
-        {
-          for (auto& axisDataY : m_AxisDataYList)
-          {
-            mpAxisData *yAxis = &axisDataY.second;
-            if (!m_desiredChanged)
-              lastRange = yAxis->desired;
-            yAxis->desired.Assign(yAxis->pos - (m_margin.top / yAxis->scale),
-                yAxis->pos - ((m_margin.top + m_plotHeight) / yAxis->scale));
-            if (!m_desiredChanged)
-              m_desiredChanged = !(lastRange == yAxis->desired);
-          }
+          yAxis->desired.Assign(yAxis->pos - (m_margin.top / yAxis->scale),
+              yAxis->pos - ((m_margin.top + m_plotHeight) / yAxis->scale));
+          if (!m_desiredChanged)
+            m_desiredChanged = !(lastRange == yAxis->desired);
         }
       }
     }
