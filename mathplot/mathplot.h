@@ -242,8 +242,10 @@ struct mpRange
       }
     }
 
-    // Update range according new value:
-    // If value < min then min = value and if value > max then max = value
+    /* Update range according new value:
+     * Expand the range to include the value.
+     * If value < min then min = value and if value > max then max = value
+     */
     void Update(double value)
     {
       if (value < min)
@@ -253,8 +255,9 @@ struct mpRange
           max = value;
     }
 
-    // Update min, max function
-    // If _min < min then min = _min and if _max > max then max = _max
+    /* Update range with new min and max values if this expand the range
+     * If _min < min then min = _min and if _max > max then max = _max
+     */
     void Update(double _min, double _max)
     {
       if (_min < min)
@@ -408,6 +411,45 @@ struct mpFloatRect
     return true;
   }
 #endif
+};
+
+/**
+ * Define a simple rectangular box
+ * X refer to X axis
+ * Y refer to Y axis
+ */
+struct mpFloatRectSimple
+{
+  mpRange x;
+  mpRange y;
+
+  mpFloatRectSimple(mpRange _x, mpRange _y) : x(_x), y(_y) { };
+
+  /// Is point inside this bounding box?
+  bool PointIsInside(double px, double py) const {
+    return x.PointIsInside(px) && y.PointIsInside(py);
+  }
+
+  /* Update bounding box (X and Y axis) to include this point.
+   * Expand the range to include the point.
+   * @param px: point on x-axis
+   * @param py: point on y-axis
+   */
+  void UpdateBoundingBoxToInclude(double px, double py)
+  {
+    x.Update(px);
+    y.Update(py);
+  }
+
+  /* Initialize bounding box with an initial point
+   * @param px: point on x-axis
+   * @param py: point on y-axis
+   */
+  void InitializeBoundingBox(double px, double py)
+  {
+    x.Set(px, px);
+    y.Set(py, py);
+  }
 };
 
 /** Command IDs used by mpWindow
@@ -3070,6 +3112,20 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
       }
     }
 
+    /**
+     * Return a bounding box for an y-axis ID
+     * @param desired: if true return desired bound else return bound
+     * desired yAxisID: the y-axis ID (default 0)
+     */
+    mpFloatRectSimple GetBoundingBox(bool desired, unsigned int yAxisID = 0)
+    {
+      assert(m_AxisDataYList.count(yAxisID) != 0);
+      if (desired)
+        return mpFloatRectSimple(m_AxisDataX.desired, m_AxisDataYList[yAxisID].desired);
+      else
+        return mpFloatRectSimple(m_AxisDataX.bound, m_AxisDataYList[yAxisID].bound);
+    }
+
     /** Returns the left-border layer coordinate that the user wants the mpWindow to show (it may be not exactly the actual shown coordinate in the case of locked aspect ratio).
      * @sa Fit, Zoom
      */
@@ -3128,7 +3184,12 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
       return m_AxisDataX.bound.PointIsInside(px) && Get_BoundY(yAxisID).PointIsInside(py);
     }
 
-    // Update bounding box to include this point
+    /* Update bounding box (X and Y axis) to include this point.
+     * Expand the range to include the point.
+     * @param px: point on x-axis
+     * @param py: point on y-axis
+     * @param yAxisID: the y-axis ID
+     */
     void UpdateBoundingBoxToInclude(double px, double py, int yAxisID)
     {
       if (m_AxisDataYList.count(yAxisID) == 0)
@@ -3138,7 +3199,11 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
       m_AxisDataYList[yAxisID].bound.Update(py);
     }
 
-    // Initialize bounding box with an initial point
+    /* Initialize bounding box with an initial point
+     * @param px: point on x-axis
+     * @param py: point on y-axis
+     * @param yAxisID: the y-axis ID
+     */
     void InitializeBoundingBox(double px, double py, int yAxisID)
     {
       if (m_AxisDataYList.count(yAxisID) == 0)

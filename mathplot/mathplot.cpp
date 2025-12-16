@@ -3026,7 +3026,7 @@ void mpWindow::OnMouseMove(wxMouseEvent &event)
     UpdateAll();
 
 #ifdef MATHPLOT_DO_LOGGING
-    wxLogMessage(_T("[mpWindow::OnMouseMove] Ax:%i Ay:%i m_posX:%f m_posY:%f"), Axy.x, Axy.y, m_AxisDataX.pos, m_posY);
+    wxLogMessage(_T("[mpWindow::OnMouseMove] Ax:%i Ay:%i m_posX:%f m_posY:%f"), Axy.x, Axy.y, m_AxisDataX.pos, m_AxisDataYList[0].pos);
 #endif
   }
   else
@@ -3333,7 +3333,7 @@ void mpWindow::Fit(const mpRange &rangeX, const std::vector<mpRange> &rangeY, wx
   if (m_lockaspect)
   {
 #ifdef MATHPLOT_DO_LOGGING
-    wxLogMessage(_T("mpWindow::Fit()(lock) m_scaleX=%f,m_scaleY=%f"), m_AxisDataX.scale, m_scaleY);
+    wxLogMessage(_T("mpWindow::Fit()(lock) m_scaleX=%f,m_scaleY=%f"), m_AxisDataX.scale, m_AxisDataYList[0].scale);
 #endif
     // Keep the lowest "scale" to fit the whole range required by that axis (to actually "fit"!):
     double s = m_AxisDataX.scale;
@@ -3363,9 +3363,9 @@ void mpWindow::Fit(const mpRange &rangeX, const std::vector<mpRange> &rangeY, wx
 
 #ifdef MATHPLOT_DO_LOGGING
   wxLogMessage(_T("mpWindow::Fit() m_desired.x.min=%f m_desired.x.max=%f  m_desired.y[0].min=%f m_desired.Ymax=%f"),
-      m_desired.x.min, m_desired.x.max, m_desired.y[0].min, m_desired.Ymax);
+      m_AxisDataX.desired.min, m_AxisDataX.desired.max, m_AxisDataYList[0].desired.min, m_AxisDataYList[0].desired.max);
   wxLogMessage(_T("mpWindow::Fit() m_scaleX = %f , m_scrX = %d,m_scrY=%d, Ax=%f, Ay=%f, m_posX=%f, m_posY=%f"),
-      m_AxisDataX.scale, m_scrX, m_scrY, Ax, Ay, m_AxisDataX.pos, m_posY);
+      m_AxisDataX.scale, m_scrX, m_scrY, Ax, Ay, m_AxisDataX.pos, m_AxisDataYList[0].pos);
 #endif
 
   // It is VERY IMPORTANT to DO NOT call Refresh if we are drawing to the printer!!
@@ -3459,12 +3459,12 @@ void mpWindow::DoZoomYCalc(bool zoomIn, wxCoord staticYpixel, std::optional<int>
     it->second.scale *= zoomFactor;
     // Adjust the new m_posy:
     it->second.pos = staticY + (staticYpixel / it->second.scale);
+#ifdef MATHPLOT_DO_LOGGING
+    wxLogMessage(_T("mpWindow::DoZoomYCalc() prior Y coord: (%f), new Y coord: (%f) SHOULD BE EQUAL!!"), staticY, p2y(staticYpixel, it->first));
+#endif
   }
 
   UpdateDesiredBoundingBox(uYAxis);
-#ifdef MATHPLOT_DO_LOGGING
-  wxLogMessage(_T("mpWindow::DoZoomYCalc() prior Y coord: (%f), new Y coord: (%f) SHOULD BE EQUAL!!"), staticY, p2y(staticYpixel));
-#endif
 }
 
 void mpWindow::SetScaleXAndCenter(double scaleX)
@@ -3529,10 +3529,6 @@ void mpWindow::Zoom(bool zoomIn, const wxPoint &centerPoint)
     DoZoomYCalc(zoomIn, centerPoint.y);
   }
 
-#ifdef MATHPLOT_DO_LOGGING
-  wxLogMessage(_T("mpWindow::Zoom() prior coords: (%f,%f), new coords: (%f,%f) SHOULD BE EQUAL!!"),
-      prior_layer_x, prior_layer_y, p2x(c.x), p2y(c.y));
-#endif
   UpdateAll();
 }
 
@@ -3581,7 +3577,7 @@ void mpWindow::ZoomRect(wxPoint p0, wxPoint p1)
   }
 
 #ifdef MATHPLOT_DO_LOGGING
-  wxLogMessage(_T("Zoom: (%f,%f)-(%f,%f)"), zoom.x.min, zoom.y[0].min, zoom.x.max, zoom.Ymax);
+  wxLogMessage(_T("Zoom: (%f,%f)-(%f,%f)"), zoomX.min, zoomY[0].min, zoomX.max, zoomY[0].max);
 #endif
 
   Fit(zoomX, zoomY);
@@ -4095,7 +4091,7 @@ void mpWindow::SetMPScrollbars(bool status)
   UpdateAll();
 }
 
-/// Deprecated: Incomplete! Use UpdateBBox!
+/// Deprecated: Incomplete, set bound only for mpFX and mpFY! Use UpdateBBox for complete set!
 void mpWindow::SetBound()
 {
   bool HaveXAxis = (m_AxisDataX.axis && (!m_AxisDataX.axis->GetAuto()));
@@ -4110,12 +4106,12 @@ void mpWindow::SetBound()
       {
         if ((function == mpfFX) && HaveXAxis)
         {
-          m_AxisDataYList.begin()->second.bound.Set(((mpFX*)(*it))->GetY(m_AxisDataX.axis->GetMinScale()),
+          m_AxisDataYList.begin()->second.bound.Assign(((mpFX*)(*it))->GetY(m_AxisDataX.axis->GetMinScale()),
               ((mpFX*)(*it))->GetY(m_AxisDataX.axis->GetMaxScale()));
         }
         else if ((function == mpfFY) && HaveYAxis)
         {
-          m_AxisDataX.bound.Set(((mpFY*)(*it))->GetX(m_AxisDataYList.begin()->second.axis->GetMinScale()),
+          m_AxisDataX.bound.Assign(((mpFY*)(*it))->GetX(m_AxisDataYList.begin()->second.axis->GetMinScale()),
               ((mpFY*)(*it))->GetX(m_AxisDataYList.begin()->second.axis->GetMaxScale()));
         }
       }
@@ -4135,8 +4131,8 @@ bool mpWindow::UpdateBBox()
   // Deprecated: To update bound of mpFX and mpFY functions: SetBound();
 #ifdef MATHPLOT_DO_LOGGING
   wxLogMessage
-  (_T("[mpWindow::UpdateBBox] Bounding box enter: Xmin = %f, Xmax = %f, Ymin = %f, YMax = %f"), m_bound.x.min, m_bound.x.max, m_bound.y[0].min,
-      m_bound.y[0].max);
+  (_T("[mpWindow::UpdateBBox] Bounding box enter: Xmin = %f, Xmax = %f, Ymin = %f, YMax = %f"),
+      m_AxisDataX.bound.min, m_AxisDataX.bound.max, m_AxisDataYList[0].bound.min, m_AxisDataYList[0].bound.max);
 #endif // MATHPLOT_DO_LOGGING
 
   // X axis
@@ -4224,8 +4220,8 @@ bool mpWindow::UpdateBBox()
 
 #ifdef MATHPLOT_DO_LOGGING
   wxLogMessage
-  (_T("[mpWindow::UpdateBBox] Bounding box exit: Xmin = %f, Xmax = %f, Ymin = %f, YMax = %f"), m_bound.Xmin, m_bound.x.max, m_bound.y[0].min,
-      m_bound.y[0].max);
+  (_T("[mpWindow::UpdateBBox] Bounding box exit: Xmin = %f, Xmax = %f, Ymin = %f, YMax = %f"),
+      m_AxisDataX.bound.min, m_AxisDataX.bound.max, m_AxisDataYList[0].bound.min, m_AxisDataYList[0].bound.max);
 #endif // MATHPLOT_DO_LOGGING
   return firstX == false;
 }
