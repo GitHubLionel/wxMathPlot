@@ -3213,8 +3213,11 @@ void mpWindow::OnMouseWheel(wxMouseEvent &event)
     }
     else
     {
-      // Zoom whole plot around mouse position
-      Zoom((event.GetWheelRotation() > 0), eventPoint);
+      // Zoom whole plot around mouse position in plot area
+      mpRect plot = GetPlotBoundaries(true);
+      if ((eventPoint.x >= plot.startPx) && (eventPoint.x <= plot.endPx) &&
+          (eventPoint.y >= plot.startPy) && (eventPoint.y <= plot.endPy))
+        Zoom((event.GetWheelRotation() > 0), eventPoint);
     }
   }
   else
@@ -3226,6 +3229,7 @@ void mpWindow::OnMouseWheel(wxMouseEvent &event)
     {
       double changeUnitsX = change / m_AxisDataX.scale;
       m_AxisDataX.pos += changeUnitsX;
+      UpdateDesiredBoundingBox(uXAxis);
     }
     else if (event.m_controlDown)
     {
@@ -3234,9 +3238,9 @@ void mpWindow::OnMouseWheel(wxMouseEvent &event)
         double changeUnitsY = change / axisDataY.second.scale;
         axisDataY.second.pos -= changeUnitsY;
       }
+      UpdateDesiredBoundingBox(uYAxis);
     }
 
-    UpdateDesiredBoundingBox(uXYAxis);
     UpdateAll();
   }
 }
