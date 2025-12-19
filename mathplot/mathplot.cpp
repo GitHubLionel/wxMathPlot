@@ -3754,118 +3754,120 @@ void mpWindow::OnSize(wxSizeEvent &WXUNUSED(event))
 
 bool mpWindow::AddLayer(mpLayer *layer, bool refreshDisplay)
 {
-  if (layer != NULL)
+  // Exit if layer is null or already exist
+  if ((layer == NULL) || (GetLayerPosition(layer) != -1))
+    return false;
+
+  int info;
+  int scale;
+
+  if (layer->IsLayerType(mpLAYER_INFO, &info))
   {
-    int info;
-    int scale;
-
-    if (layer->IsLayerType(mpLAYER_INFO, &info))
+    if (info == mpiCoords)
     {
-      if (info == mpiCoords)
-      {
-        // Only one info coords is allowed
-        if (m_InfoCoords)
-          return false;
-        m_InfoCoords = (mpInfoCoords*)layer;
-      }
-
-      if (info == mpiLegend)
-      {
-        // Only one info legend is allowed
-        if (m_InfoLegend)
-          return false;
-        m_InfoLegend = (mpInfoLegend*)layer;
-      }
+      // Only one info coords is allowed
+      if (m_InfoCoords)
+        return false;
+      m_InfoCoords = (mpInfoCoords*)layer;
     }
-    else if (layer->IsLayerType(mpLAYER_AXIS, &scale))
+
+    if (info == mpiLegend)
     {
-      if ((scale == mpsScaleX) && (m_AxisDataX.axis == NULL))
+      // Only one info legend is allowed
+      if (m_InfoLegend)
+        return false;
+      m_InfoLegend = (mpInfoLegend*)layer;
+    }
+  }
+  else if (layer->IsLayerType(mpLAYER_AXIS, &scale))
+  {
+    if ((scale == mpsScaleX) && (m_AxisDataX.axis == NULL))
+    {
+      // Only the first X axis
+      m_AxisDataX.axis = dynamic_cast<mpScaleX*>(layer);
+    }
+    else if (scale == mpsScaleY)
+    {
+      mpScaleY* scaleY = dynamic_cast<mpScaleY*>(layer);
+      if (scaleY)
       {
-        // Only the first X axis
-        m_AxisDataX.axis = dynamic_cast<mpScaleX*>(layer);
-      }
-      else if (scale == mpsScaleY)
-      {
-        mpScaleY* scaleY = dynamic_cast<mpScaleY*>(layer);
-        if (scaleY)
+        int yAxisID = scaleY->GetAxisID();
+        mpAxisData yAxisData;
+        yAxisData.axis = scaleY;
+        if (yAxisID != -1)
         {
-          int yAxisID = scaleY->GetAxisID();
-          mpAxisData yAxisData;
-          yAxisData.axis = scaleY;
-          if (yAxisID != -1)
+          if (yAxisID == 0)
           {
-            if (yAxisID == 0)
-            {
-              // This is the first axis in the list
-              m_AxisDataYList.begin()->second.axis = scaleY;
-            }
-            else
-            {
-              // An ID has been assigned to this axis, we try to insert it
-              m_AxisDataYList.try_emplace(yAxisID, yAxisData);
-              // We update m_LastAxisDataID to be always the max
-              m_LastAxisDataID = std::max((int)m_LastAxisDataID, yAxisID);
-              GetNewAxisDataID();
-            }
+            // This is the first axis in the list
+            m_AxisDataYList.begin()->second.axis = scaleY;
           }
           else
           {
-            // If it is the first Y axis, we associated it with the first Info List
-            if (!m_AxisDataYList.begin()->second.axis)
-            {
-              scaleY->SetAxisID(0);
-              m_AxisDataYList.begin()->second.axis = scaleY;
-            }
-            else
-            {
-              m_AxisDataYList.insert(std::make_pair(GetNewAxisDataID(), yAxisData));
-              scaleY->SetAxisID(m_LastAxisDataID);
-            }
+            // An ID has been assigned to this axis, we try to insert it
+            m_AxisDataYList.try_emplace(yAxisID, yAxisData);
+            // We update m_LastAxisDataID to be always the max
+            m_LastAxisDataID = std::max((int)m_LastAxisDataID, yAxisID);
+            GetNewAxisDataID();
           }
-
-          // Might need to update margins for new Y axis
-          UpdateMargins();
         }
+        else
+        {
+          // If it is the first Y axis, we associated it with the first Info List
+          if (!m_AxisDataYList.begin()->second.axis)
+          {
+            scaleY->SetAxisID(0);
+            m_AxisDataYList.begin()->second.axis = scaleY;
+          }
+          else
+          {
+            m_AxisDataYList.insert(std::make_pair(GetNewAxisDataID(), yAxisData));
+            scaleY->SetAxisID(m_LastAxisDataID);
+          }
+        }
+
+        // Might need to update margins for new Y axis
+        UpdateMargins();
       }
     }
+  }
 
-    // add the layer to the layer list
-    m_layers.push_back(layer);
+  // add the layer to the layer list
+  m_layers.push_back(layer);
 
-    // We just add a function, so we need to update the legend and verify the axis
-    if (layer->GetLayerType() == mpLAYER_PLOT)
+  // We just add a function, so we need to update the legend and verify the axis
+  if (layer->GetLayerType() == mpLAYER_PLOT)
+  {
+    // Make sure we have Y-axis data for this function
+    mpFunction* function = dynamic_cast<mpFunction*>(layer);
+    int yAxisID = function->GetYAxisID();
+    if (m_AxisDataYList.count(yAxisID) == 0)
     {
-      // Make sure we have Y-axis data for this function
-      mpFunction* function = dynamic_cast<mpFunction*>(layer);
-      int yAxisID = function->GetYAxisID();
-      if (m_AxisDataYList.count(yAxisID) == 0)
-      {
-        // The axis associated to this function doesn't exist. We add it
-        mpAxisData yAxisData;
-        yAxisData.axis = NULL;
-        m_AxisDataYList.insert(std::make_pair(yAxisID, yAxisData));
-        m_LastAxisDataID = std::max((int)m_LastAxisDataID, yAxisID);
-      }
-      RefreshLegend();
+      // The axis associated to this function doesn't exist. We add it
+      mpAxisData yAxisData;
+      yAxisData.axis = NULL;
+      m_AxisDataYList.insert(std::make_pair(yAxisID, yAxisData));
+      m_LastAxisDataID = std::max((int)m_LastAxisDataID, yAxisID);
     }
+    RefreshLegend();
+  }
 
-    layer->SetWindow(*this);
+  // Connect the layer with the handle of mpWindow
+  layer->SetWindow(*this);
 
-    if (refreshDisplay)
-      UpdateAll();
+  // Fit and refresh display
+  if (refreshDisplay)
+    Fit();
 #ifdef ENABLE_MP_CONFIG
-    RefreshConfigWindow();
+  RefreshConfigWindow();
 #endif // ENABLE_MP_CONFIG
 
-    return true;
-  }
-  return false;
+  return true;
 }
 
 bool mpWindow::DelLayer(mpLayer *layer, mpDeleteAction alsoDeleteObject, bool refreshDisplay)
 {
-  if (!layer)
-    return true;
+  if (layer == NULL)
+    return true; // Nothing to do
 
   // In case we delete an y axis
   int yAxisID = -1;
@@ -3873,84 +3875,91 @@ bool mpWindow::DelLayer(mpLayer *layer, mpDeleteAction alsoDeleteObject, bool re
 
   for (mpLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
   {
-    if (*it == layer)
+    // Search the good layer
+    if (*it != layer)
+      continue;
+
+    // Layer found, check the callback to confirm delete
+    if (m_OnDeleteLayer != nullptr)
     {
       bool cancel = false;
-      if (m_OnDeleteLayer != nullptr)
-        m_OnDeleteLayer(this, (*it)->GetClassInfo()->GetClassName(), cancel);
-      if (!cancel)
-      {
-        if (layer == m_InfoCoords)
-          m_InfoCoords = nullptr;
-        if (layer == m_InfoLegend)
-          m_InfoLegend = nullptr;
-        if (layer == m_movingInfoLayer)
-          m_movingInfoLayer = nullptr;
-        if (layer == m_AxisDataX.axis)
-          m_AxisDataX.axis = nullptr;
-
-        if ((layer->IsLayerType(mpLAYER_AXIS, &subType)) && (subType == mpsScaleY))
-        {
-          mpScaleY* scaleY = static_cast<mpScaleY*>(layer);
-          yAxisID = scaleY->GetAxisID();
-
-          // If the axis we want to delete is the axis associated to the default scale we just deassociate it
-          if (yAxisID == 0)
-            m_AxisDataYList.begin()->second.axis = nullptr;
-          else
-            m_AxisDataYList.erase(yAxisID);
-        }
-
-        if (layer->IsLayerType(mpLAYER_PLOT, &subType))
-        {
-          // We must release the y axis associated to this plot. We do that in case the object is not deleted.
-          mpFunction* function = static_cast<mpFunction*>(layer);
-          function->SetYAxisID(0);
-        }
-
-        // Also delete the object?
-        if ((alsoDeleteObject == mpForceDelete) || ((alsoDeleteObject == mpYesDelete) && (*it)->GetCanDelete()))
-          delete *it; // delete the object pointed at by the iterator
-        // Remove pointer to the object from m_layers.
-        // WARNING: 'erase' invalidates 'it' and all m_layers iterators in existence
-        m_layers.erase(it);
-        // No need to reset 'it' as we return without any further reference.
-
-        // If we have deleted an y Axis, we need to verify that none function used it.
-        // If a function used it then change to default scale ID = 0
-        if (yAxisID > 0)
-        {
-          for (mpLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
-          {
-            if ((*it)->IsLayerType(mpLAYER_PLOT, &subType))
-            {
-              mpFunction* function = static_cast<mpFunction*>(*it);
-              if (function->GetYAxisID() == yAxisID)
-                function->SetYAxisID(0);
-            }
-          }
-        }
-
-        // Refresh
-        RefreshLegend();
-        if (refreshDisplay)
-          UpdateAll();
-#ifdef ENABLE_MP_CONFIG
-        RefreshConfigWindow();
-#endif // ENABLE_MP_CONFIG
-        return true;
-      }
-      else
+      m_OnDeleteLayer(this, (*it)->GetClassInfo()->GetClassName(), cancel);
+      if (cancel)
         return false;
     }
-  }
-  return false;
+
+    if (layer == m_InfoCoords)
+      m_InfoCoords = nullptr;
+    if (layer == m_InfoLegend)
+      m_InfoLegend = nullptr;
+    if (layer == m_movingInfoLayer)
+      m_movingInfoLayer = nullptr;
+    if (layer == m_AxisDataX.axis)
+      m_AxisDataX.axis = nullptr;
+
+    if ((layer->IsLayerType(mpLAYER_AXIS, &subType)) && (subType == mpsScaleY))
+    {
+      mpScaleY* scaleY = static_cast<mpScaleY*>(layer);
+      yAxisID = scaleY->GetAxisID();
+
+      // If the axis we want to delete is the axis associated to the default scale we just deassociate it
+      if (yAxisID == 0)
+        m_AxisDataYList.begin()->second.axis = nullptr;
+      else
+        m_AxisDataYList.erase(yAxisID);
+    }
+
+    if (layer->IsLayerType(mpLAYER_PLOT, &subType))
+    {
+      // We must release the y axis associated to this plot. We do that in case the object is not deleted.
+      mpFunction* function = static_cast<mpFunction*>(layer);
+      function->SetYAxisID(0);
+    }
+
+    // Also delete the object?
+    if ((alsoDeleteObject == mpForceDelete) || ((alsoDeleteObject == mpYesDelete) && (*it)->GetCanDelete()))
+      delete *it; // delete the object pointed at by the iterator
+    // Remove pointer to the object from m_layers.
+    // WARNING: 'erase' invalidates 'it' and all m_layers iterators in existence
+    m_layers.erase(it);
+    // No need to reset 'it' as we return without any further reference.
+
+    // If we have deleted an y Axis, we need to verify that none function used it.
+    // If a function used it then change to default scale ID = 0
+    if (yAxisID > 0)
+    {
+      for (mpLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
+      {
+        if ((*it)->IsLayerType(mpLAYER_PLOT, &subType))
+        {
+          mpFunction* function = static_cast<mpFunction*>(*it);
+          if (function->GetYAxisID() == yAxisID)
+            function->SetYAxisID(0);
+        }
+      }
+    }
+
+    // Refresh
+    RefreshLegend();
+    if (refreshDisplay)
+      UpdateAll();
+#ifdef ENABLE_MP_CONFIG
+    RefreshConfigWindow();
+#endif // ENABLE_MP_CONFIG
+    break;
+  } // end for mpLayerList
+
+  return true;
 }
 
 void mpWindow::DelAllLayers(mpDeleteAction alsoDeleteObject, bool refreshDisplay)
 {
   // First we delete all the function so we can after delete axis
   DelAllPlot(alsoDeleteObject, mpfAllType, false);
+
+#ifdef ENABLE_MP_CONFIG
+  doRefresh = false; // Do not refresh configWindow every time
+#endif // ENABLE_MP_CONFIG
 
   while (m_layers.size() > 0)
   {
@@ -3967,6 +3976,7 @@ void mpWindow::DelAllLayers(mpDeleteAction alsoDeleteObject, bool refreshDisplay
   if (refreshDisplay)
     UpdateAll();
 #ifdef ENABLE_MP_CONFIG
+  doRefresh = true;
   DeleteAndNull(m_configWindow);
 #endif // ENABLE_MP_CONFIG
 }
@@ -3977,6 +3987,11 @@ void mpWindow::DelAllPlot(mpDeleteAction alsoDeleteObject, mpFunctionType func, 
   mpLayerList::iterator it = m_layers.begin();
   if (it == m_layers.end())
     return; // Don't blow up if no layers were added yet, nothing to do here.
+
+#ifdef ENABLE_MP_CONFIG
+  doRefresh = false; // Do not refresh configWindow every time
+#endif // ENABLE_MP_CONFIG
+
   do
   {
     if ((*it)->IsLayerType(mpLAYER_PLOT, &function) && ((func == mpfAllType) || (function == func)))
@@ -3987,10 +4002,41 @@ void mpWindow::DelAllPlot(mpDeleteAction alsoDeleteObject, mpFunctionType func, 
     else
       it++;
   } while (it != m_layers.end());
+
   RefreshLegend();
   if (refreshDisplay)
     UpdateAll();
 #ifdef ENABLE_MP_CONFIG
+  doRefresh = true;
+  RefreshConfigWindow();
+#endif // ENABLE_MP_CONFIG
+}
+
+void mpWindow::DelYAxis(mpDeleteAction alsoDeleteObject, unsigned int yAxisID, bool refreshDisplay)
+{
+  mpAxisList::iterator it = m_AxisDataYList.begin();
+  if (it == m_AxisDataYList.end())
+    return; // Nothing to do
+
+#ifdef ENABLE_MP_CONFIG
+  doRefresh = false; // Do not refresh configWindow every time
+#endif // ENABLE_MP_CONFIG
+
+  do
+  {
+    if (it->first > (int)yAxisID)
+    {
+      DelLayer((mpLayer*)(it->second.axis), alsoDeleteObject, false); // may invalidate all extant m_AxisDataYList iterators
+      it = m_AxisDataYList.begin(); // ...so reset iterator to begin of m_AxisDataYList list
+    }
+    else
+      it++;
+  } while (it != m_AxisDataYList.end());
+
+  if (refreshDisplay)
+    UpdateAll();
+#ifdef ENABLE_MP_CONFIG
+  doRefresh = true;
   RefreshConfigWindow();
 #endif // ENABLE_MP_CONFIG
 }
@@ -4443,9 +4489,10 @@ unsigned int mpWindow::CountLayersType(mpLayerType type)
 
 mpLayer* mpWindow::GetLayersType(int position, mpLayerType type)
 {
-  int layerNo = -1;
   if (position < 0)
     return NULL;
+
+  int layerNo = -1;
   for (mpLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
   {
     if ((*it)->GetLayerType() == type)
@@ -4476,12 +4523,28 @@ mpLayer* mpWindow::GetLayer(int position)
   return m_layers[position];
 }
 
+int mpWindow::GetLayerPosition(mpLayer* layer)
+{
+  if (layer == NULL)
+    return -1;
+
+  int i = 0;
+  for (mpLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
+  {
+    if ((*it) == layer)
+      return i;
+    i++;
+  }
+  return -1;
+}
+
 mpLayer* mpWindow::GetLayerPlot(int position, mpFunctionType func)
 {
-  int layerNo = -1;
-  int function;
   if (position < 0)
     return NULL;
+
+  int layerNo = -1;
+  int function;
   for (mpLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
   {
     if ((*it)->IsLayerType(mpLAYER_PLOT, &function) && ((func == mpfAllType) || (function == func)))
@@ -4497,6 +4560,7 @@ mpLayer* mpWindow::GetLayerAxis(int position, mpScaleType scale)
 {
   if (position < 0)
     return NULL;
+
   int layerNo = -1;
   int thescale;
   for (mpLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
@@ -5010,7 +5074,7 @@ void mpWindow::SetColourTheme(const wxColour &bgColour, const wxColour &drawColo
 #ifdef ENABLE_MP_CONFIG
 void mpWindow::RefreshConfigWindow()
 {
-  if (m_configWindow)
+  if (m_configWindow && doRefresh)
     m_configWindow->Initialize();
 }
 

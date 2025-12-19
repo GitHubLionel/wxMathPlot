@@ -1402,7 +1402,7 @@ void MathPlotConfigDialog::OnbApplyClick(wxCommandEvent &WXUNUSED(event))
             int i = 0;
             for (const auto& axisDataY : m_plot->GetAxisDataYList())
             {
-              if (axisDataY.second.axis &&(!axisDataY.second.axis->GetAuto()))
+              if (axisDataY.second.axis && (!axisDataY.second.axis->GetAuto()))
               {
                 BoundScaleY[i] = axisDataY.second.axis->GetRangeScale();
               }

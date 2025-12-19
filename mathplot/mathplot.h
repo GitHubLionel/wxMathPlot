@@ -2635,9 +2635,9 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     /** Add a plot layer to the canvas.
      @param layer Pointer to layer. The mpLayer object will get under control of mpWindow,
      i.e. it will be delete'd on mpWindow destruction
-     @param refreshDisplay States whether to refresh the display (UpdateAll) after adding the layer.
+     @param refreshDisplay States whether to fit and refresh the display (UpdateAll) after adding the layer.
      @retval TRUE Success
-     @retval FALSE Failure due to out of memory.
+     @retval FALSE Failure. layer = NULL or layer already exist (Coords or Legend).
      */
     bool AddLayer(mpLayer *layer, bool refreshDisplay = true);
 
@@ -2649,13 +2649,15 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      @return true if layer is deleted correctly
 
      N.B. If alsoDeleteObject is false, only the layer pointer in the mpWindow is removed, the layer object still exists.
-	 WARNING: Invalidates any extant m_layers iterators!
+	   WARNING: Invalidates any extant m_layers iterators!
+	   WARNING: If alsoDeleteObject is true, the layer object object is deleted but his reference (pointer) is not set to NULL.
      */
     bool DelLayer(mpLayer *layer, mpDeleteAction alsoDeleteObject, bool refreshDisplay = true);
 
     /** Remove all layers from the plot.
      @param alsoDeleteObject If set to true, the mpLayer objects will be also "deleted", not just removed from the internal list.
      @param refreshDisplay States whether to refresh the display (UpdateAll) after removing the layers.
+     See DelLayer() for more infos
      */
     void DelAllLayers(mpDeleteAction alsoDeleteObject, bool refreshDisplay = true);
 
@@ -2663,8 +2665,17 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      @param alsoDeleteObject If set to true, the mpLayer objects will be also "deleted", not just removed from the internal list.
      @param func Select type of plot
      @param refreshDisplay States whether to refresh the display (UpdateAll) after removing the layers.
+     See DelLayer() for more infos
      */
     void DelAllPlot(mpDeleteAction alsoDeleteObject, mpFunctionType func = mpfAllType, bool refreshDisplay = true);
+
+    /** Remove all extra y axis after the selected y axis.
+     @param alsoDeleteObject If set to true, the mpLayer objects will be also "deleted", not just removed from the internal list.
+     @param yAxisID the ID of the axis to keep (Default 0). Remove all y axis after this ID
+     @param refreshDisplay States whether to refresh the display (UpdateAll) after removing the layers.
+     See DelLayer() for more infos
+     */
+    void DelYAxis(mpDeleteAction alsoDeleteObject, unsigned int yAxisID = 0, bool refreshDisplay = true);
 
     /*! Get the layer in list position indicated.
      N.B. You <i>must</i> know the index of the layer inside the list!
@@ -2672,6 +2683,12 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      @return pointer to mpLayer
      */
     mpLayer* GetLayer(int position);
+
+    /*! Get the position of the layer in the list.
+     @param layer the layer to find
+     @return the position of the layer or -1 if not found
+     */
+    int GetLayerPosition(mpLayer* layer);
 
     /*! Get the layer of a certain type in list position indicated.
      N.B. You <i>must</i> know the index of the layer inside the list!
@@ -3672,7 +3689,8 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     wxBitmap* m_Screenshot_bmp;         //!< For clipboard, save and print
 
 #ifdef ENABLE_MP_CONFIG
-    MathPlotConfigDialog* m_configWindow = NULL;   //!< For the config dialog
+    MathPlotConfigDialog* m_configWindow = NULL;  //!< For the config dialog
+    bool doRefresh = true;                        //!< Can we do the refresh, usefull when delete several layers
 #endif // ENABLE_MP_CONFIG
 
     mpOnDeleteLayer m_OnDeleteLayer = NULL;          //!< Event when we delete a layer
