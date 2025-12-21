@@ -2950,7 +2950,7 @@ void mpWindow::OnMouseLeftDown(wxMouseEvent &event)
     if (m_configWindow == NULL)
       m_configWindow = new MathPlotConfigDialog(this);
 
-    m_configWindow->Initialize(3);
+    m_configWindow->Initialize(mpcpiSeries);
     m_configWindow->SelectChoiceSerie(select);
     m_configWindow->Show();
   }
@@ -3752,7 +3752,7 @@ void mpWindow::OnSize(wxSizeEvent &WXUNUSED(event))
 #endif // MATHPLOT_DO_LOGGING
 }
 
-bool mpWindow::AddLayer(mpLayer *layer, bool refreshDisplay)
+bool mpWindow::AddLayer(mpLayer *layer, bool refreshDisplay, bool refreshConfig)
 {
   // Exit if layer is null or already exist
   if ((layer == NULL) || (GetLayerPosition(layer) != -1))
@@ -3858,13 +3858,16 @@ bool mpWindow::AddLayer(mpLayer *layer, bool refreshDisplay)
   if (refreshDisplay)
     Fit();
 #ifdef ENABLE_MP_CONFIG
-  RefreshConfigWindow();
+  if (refreshConfig)
+    RefreshConfigWindow();
+#else
+  (void) refreshConfig; // For compiler happy
 #endif // ENABLE_MP_CONFIG
 
   return true;
 }
 
-bool mpWindow::DelLayer(mpLayer *layer, mpDeleteAction alsoDeleteObject, bool refreshDisplay)
+bool mpWindow::DelLayer(mpLayer *layer, mpDeleteAction alsoDeleteObject, bool refreshDisplay, bool refreshConfig)
 {
   if (layer == NULL)
     return true; // Nothing to do
@@ -3944,7 +3947,10 @@ bool mpWindow::DelLayer(mpLayer *layer, mpDeleteAction alsoDeleteObject, bool re
     if (refreshDisplay)
       UpdateAll();
 #ifdef ENABLE_MP_CONFIG
-    RefreshConfigWindow();
+    if (refreshConfig)
+      RefreshConfigWindow();
+#else
+    (void) refreshConfig; // For compiler happy
 #endif // ENABLE_MP_CONFIG
     break;
   } // end for mpLayerList
@@ -3956,10 +3962,6 @@ void mpWindow::DelAllLayers(mpDeleteAction alsoDeleteObject, bool refreshDisplay
 {
   // First we delete all the function so we can after delete axis
   DelAllPlot(alsoDeleteObject, mpfAllType, false);
-
-#ifdef ENABLE_MP_CONFIG
-  doRefresh = false; // Do not refresh configWindow every time
-#endif // ENABLE_MP_CONFIG
 
   while (m_layers.size() > 0)
   {
@@ -3976,7 +3978,6 @@ void mpWindow::DelAllLayers(mpDeleteAction alsoDeleteObject, bool refreshDisplay
   if (refreshDisplay)
     UpdateAll();
 #ifdef ENABLE_MP_CONFIG
-  doRefresh = true;
   DeleteAndNull(m_configWindow);
 #endif // ENABLE_MP_CONFIG
 }
@@ -3988,15 +3989,11 @@ void mpWindow::DelAllPlot(mpDeleteAction alsoDeleteObject, mpFunctionType func, 
   if (it == m_layers.end())
     return; // Don't blow up if no layers were added yet, nothing to do here.
 
-#ifdef ENABLE_MP_CONFIG
-  doRefresh = false; // Do not refresh configWindow every time
-#endif // ENABLE_MP_CONFIG
-
   do
   {
     if ((*it)->IsLayerType(mpLAYER_PLOT, &function) && ((func == mpfAllType) || (function == func)))
     {
-      DelLayer((mpLayer*)(*it), alsoDeleteObject, false); // may invalidate all extant m_layers iterators
+      DelLayer((mpLayer*)(*it), alsoDeleteObject, false, false); // may invalidate all extant m_layers iterators
       it = m_layers.begin(); // ...so reset iterator to begin of m_layers vector
     }
     else
@@ -4007,26 +4004,24 @@ void mpWindow::DelAllPlot(mpDeleteAction alsoDeleteObject, mpFunctionType func, 
   if (refreshDisplay)
     UpdateAll();
 #ifdef ENABLE_MP_CONFIG
-  doRefresh = true;
   RefreshConfigWindow();
 #endif // ENABLE_MP_CONFIG
 }
 
-void mpWindow::DelYAxis(mpDeleteAction alsoDeleteObject, unsigned int yAxisID, bool refreshDisplay)
+void mpWindow::DelAllYAxisAfterID(mpDeleteAction alsoDeleteObject, int yAxisID, bool refreshDisplay)
 {
   mpAxisList::iterator it = m_AxisDataYList.begin();
   if (it == m_AxisDataYList.end())
     return; // Nothing to do
 
-#ifdef ENABLE_MP_CONFIG
-  doRefresh = false; // Do not refresh configWindow every time
-#endif // ENABLE_MP_CONFIG
-
+  // Remove all y-axis
+  if (yAxisID < 0)
+    yAxisID = 0;
   do
   {
     if (it->first > (int)yAxisID)
     {
-      DelLayer((mpLayer*)(it->second.axis), alsoDeleteObject, false); // may invalidate all extant m_AxisDataYList iterators
+      DelLayer((mpLayer*)(it->second.axis), alsoDeleteObject, false, false); // may invalidate all extant m_AxisDataYList iterators
       it = m_AxisDataYList.begin(); // ...so reset iterator to begin of m_AxisDataYList list
     }
     else
@@ -4036,7 +4031,6 @@ void mpWindow::DelYAxis(mpDeleteAction alsoDeleteObject, unsigned int yAxisID, b
   if (refreshDisplay)
     UpdateAll();
 #ifdef ENABLE_MP_CONFIG
-  doRefresh = true;
   RefreshConfigWindow();
 #endif // ENABLE_MP_CONFIG
 }
@@ -4141,7 +4135,7 @@ void mpWindow::SetMPScrollbars(bool status)
   UpdateAll();
 }
 
-/// Deprecated: Incomplete, set bound only for mpFX and mpFY! Use UpdateBBox for complete set!
+/// Deprecated: Incomplete, set bound only for mpFX and mpFY with one y-axis! Use UpdateBBox for complete set!
 void mpWindow::SetBound()
 {
   bool HaveXAxis = (m_AxisDataX.axis && (!m_AxisDataX.axis->GetAuto()));
@@ -4185,11 +4179,14 @@ bool mpWindow::UpdateBBox()
       m_AxisDataX.bound.min, m_AxisDataX.bound.max, m_AxisDataYList[0].bound.min, m_AxisDataYList[0].bound.max);
 #endif // MATHPLOT_DO_LOGGING
 
+  int function;
+  mpRange bound;
+
   // X axis
   // Take care of scale : restrict bound
   if (m_AxisDataX.axis && (!m_AxisDataX.axis->GetAuto()))
   {
-    m_AxisDataX.bound = m_AxisDataX.axis->GetRangeScale();
+    m_AxisDataX.bound = m_AxisDataX.axis->GetScale();
   }
   else
   {
@@ -4199,14 +4196,23 @@ bool mpWindow::UpdateBBox()
       if (!f->HasBBox() || !f->IsVisible())
         continue; // this layer isn't used for bounding box
 
+      bound.Set(f->GetMinX(), f->GetMaxX());
+      if ((f->IsLayerType(mpLAYER_PLOT, &function)) && (function == mpfFY))
+      {
+        mpFY* fy = (mpFY*)(f);
+        int yAxisID = fy->GetYAxisID();
+        bound.Update(fy->GetX(m_AxisDataYList[yAxisID].axis->GetMinScale()),
+            fy->GetX(m_AxisDataYList[yAxisID].axis->GetMaxScale()));
+      }
+
       if (firstX)
       {
         firstX = false;
-        m_AxisDataX.bound.Set(f->GetMinX(), f->GetMaxX());
+        m_AxisDataX.bound = bound;
       }
       else
       {
-        m_AxisDataX.bound.Update(f->GetMinX(), f->GetMaxX());
+        m_AxisDataX.bound.Update(bound);
       }
     }
   }
@@ -4219,7 +4225,7 @@ bool mpWindow::UpdateBBox()
     // Take care of scale : restrict bound
     if (yAxis->axis && (!(yAxis->axis)->GetAuto()))
     {
-      yAxis->bound = (yAxis->axis)->GetRangeScale();
+      yAxis->bound = (yAxis->axis)->GetScale();
     }
     else
     {
@@ -4229,17 +4235,34 @@ bool mpWindow::UpdateBBox()
         if (!f->HasBBox() || !f->IsVisible())
           continue; // this layer isn't used for bounding box
 
-        if ((f->GetLayerType() == mpLAYER_PLOT) && (((mpFunction*)f)->GetYAxisID() != axisDataY.first))
-          continue; // This function is not associated to this axis
+        bound.Set(f->GetMinY(), f->GetMaxY());
+        if (f->IsLayerType(mpLAYER_PLOT, &function))
+        {
+          if (((mpFunction*)(f))->GetYAxisID() != axisDataY.first)
+            continue; // This function is not associated to this axis
+          else
+          {
+            // If function is mpFX, we compute the bound according x-axis bound
+            // Note that it is not perfect since function could have other min and max values
+            if (function == mpfFX)
+            {
+              mpFX* fx = (mpFX*)(f);
+              mpRange boundFx(fx->GetY(m_AxisDataX.axis->GetMinScale()),
+                  fx->GetY(m_AxisDataX.axis->GetMaxScale()));
+              boundFx.Assign(fx->GetY(m_AxisDataX.bound.min), fx->GetY(m_AxisDataX.bound.max));
+              bound.Update(boundFx);
+            }
+          }
+        }
 
         if (firstY[axisDataY.first])
         {
           firstY[axisDataY.first] = false;
-          yAxis->bound.Set(f->GetMinY(), f->GetMaxY());
+          yAxis->bound = bound;
         }
         else
         {
-          yAxis->bound.Update(f->GetMinY(), f->GetMaxY());
+          yAxis->bound.Update(bound);
         }
       }
     }
@@ -5074,8 +5097,8 @@ void mpWindow::SetColourTheme(const wxColour &bgColour, const wxColour &drawColo
 #ifdef ENABLE_MP_CONFIG
 void mpWindow::RefreshConfigWindow()
 {
-  if (m_configWindow && doRefresh)
-    m_configWindow->Initialize();
+  if (m_configWindow)
+    m_configWindow->Initialize(mpcpiGeneral);
 }
 
 MathPlotConfigDialog* mpWindow::GetConfigWindow(bool Create)

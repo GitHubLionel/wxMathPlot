@@ -117,8 +117,7 @@ class MyPower: public mpFX
 		}
 		virtual double GetY(double x)
 		{
-			double y = 0;
-				y = pow(10, x);
+			double y = pow(10, x);
 			if (y < minY)
 				minY = y;
 			else

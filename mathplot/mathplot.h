@@ -208,16 +208,26 @@ struct mpRange
     double min = 0.0f;
     double max = 0.0f;
 
+    // Default constructor
     mpRange()
     {
       min = 0.0f;
       max = 0.0f;
     }
 
-    mpRange(double _min, double _max)
+    // Create range with the 2 values
+    mpRange(double value1, double value2)
     {
-      min = _min;
-      max = _max;
+      if (value1 < value2)
+      {
+        min = value1;
+        max = value2;
+      }
+      else
+      {
+        min = value2;
+        max = value1;
+      }
     }
 
     // Set min, max function
@@ -264,6 +274,16 @@ struct mpRange
         min = _min;
       if (_max > max)
         max = _max;
+    }
+
+    /* Update range with new range values if this expand the range
+     */
+    void Update(mpRange range)
+    {
+      if (range.min < min)
+        min = range.min;
+      if (range.max > max)
+        max = range.max;
     }
 
     // Check to always have a range. If min = max then introduce the 0 to make a range.
@@ -2259,10 +2279,28 @@ class WXDLLIMPEXP_MATHPLOT mpScale: public mpLayer
       return m_max;
     }
 
+    void SetScale(double min, double max)
+    {
+      m_min = min;
+      m_max = max;
+    }
+
+    void GetScale(double *min, double *max) const
+    {
+      *min = m_min;
+      *max = m_max;
+    }
+
+    void SetScale(mpRange range)
+    {
+      m_min = range.min;
+      m_max = range.max;
+    }
+
     /**
      * Return m_min and m_max scale as a mpRange
      */
-    mpRange GetRangeScale() const
+    mpRange GetScale() const
     {
       return mpRange(m_min, m_max);
     }
@@ -2636,23 +2674,25 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      @param layer Pointer to layer. The mpLayer object will get under control of mpWindow,
      i.e. it will be delete'd on mpWindow destruction
      @param refreshDisplay States whether to fit and refresh the display (UpdateAll) after adding the layer.
+     @param refreshConfig States whether to refresh the config window (if exist)
      @retval TRUE Success
      @retval FALSE Failure. layer = NULL or layer already exist (Coords or Legend).
      */
-    bool AddLayer(mpLayer *layer, bool refreshDisplay = true);
+    bool AddLayer(mpLayer *layer, bool refreshDisplay = true, bool refreshConfig = true);
 
     /** Remove a plot layer from the canvas.
      @param layer Pointer to layer. The mpLayer object will be destructed using delete.
      @param alsoDeleteObject If set to mpYesDelete, the mpLayer object will be also "deleted", not just removed from the internal list.
      In case mpForceDelete, the mpLayer object is deleted even if m_CanDelete is false
      @param refreshDisplay States whether to refresh the display (UpdateAll) after removing the layer.
+     @param refreshConfig States whether to refresh the config window (if exist)
      @return true if layer is deleted correctly
 
      N.B. If alsoDeleteObject is false, only the layer pointer in the mpWindow is removed, the layer object still exists.
 	   WARNING: Invalidates any extant m_layers iterators!
 	   WARNING: If alsoDeleteObject is true, the layer object object is deleted but his reference (pointer) is not set to NULL.
      */
-    bool DelLayer(mpLayer *layer, mpDeleteAction alsoDeleteObject, bool refreshDisplay = true);
+    bool DelLayer(mpLayer *layer, mpDeleteAction alsoDeleteObject, bool refreshDisplay = true, bool refreshConfig = true);
 
     /** Remove all layers from the plot.
      @param alsoDeleteObject If set to true, the mpLayer objects will be also "deleted", not just removed from the internal list.
@@ -2671,11 +2711,11 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 
     /** Remove all extra y axis after the selected y axis.
      @param alsoDeleteObject If set to true, the mpLayer objects will be also "deleted", not just removed from the internal list.
-     @param yAxisID the ID of the axis to keep (Default 0). Remove all y axis after this ID
+     @param yAxisID the ID of the axis to keep (Default 0). Remove all y axis after this ID. If y-axis ID < 0, remove all y axis.
      @param refreshDisplay States whether to refresh the display (UpdateAll) after removing the layers.
      See DelLayer() for more infos
      */
-    void DelYAxis(mpDeleteAction alsoDeleteObject, unsigned int yAxisID = 0, bool refreshDisplay = true);
+    void DelAllYAxisAfterID(mpDeleteAction alsoDeleteObject, int yAxisID = 0, bool refreshDisplay = true);
 
     /*! Get the layer in list position indicated.
      N.B. You <i>must</i> know the index of the layer inside the list!
@@ -3690,7 +3730,6 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 
 #ifdef ENABLE_MP_CONFIG
     MathPlotConfigDialog* m_configWindow = NULL;  //!< For the config dialog
-    bool doRefresh = true;                        //!< Can we do the refresh, usefull when delete several layers
 #endif // ENABLE_MP_CONFIG
 
     mpOnDeleteLayer m_OnDeleteLayer = NULL;          //!< Event when we delete a layer
