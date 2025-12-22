@@ -338,8 +338,7 @@ struct mpRange
  * X refer to X axis
  * Y refer to Y axis
  */
-[[deprecated("No more used, X and Y are now separated")]]
-struct mpFloatRect
+struct [[deprecated("No more used, X and Y are now separated")]] mpFloatRect
 {
   mpRange x;
   std::vector<mpRange> y;
