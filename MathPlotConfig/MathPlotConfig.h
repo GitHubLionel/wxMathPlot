@@ -41,6 +41,19 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLegend;
 class WXDLLIMPEXP_MATHPLOT mpScale;
 class WXDLLIMPEXP_MATHPLOT mpText;
 
+/**
+ * The list of index of the page of the config window
+ */
+typedef enum __ConfigPageIndex
+{
+  mpcpiNone = -1,
+  mpcpiGeneral = 0,
+  mpcpiLegend,
+  mpcpiAxis,
+  mpcpiSeries,
+  mpcpiLines
+} mpConfigPageId;
+
 class MathPlotConfigDialog: public wxDialog
 {
   public:
@@ -48,7 +61,7 @@ class MathPlotConfigDialog: public wxDialog
     MathPlotConfigDialog(wxWindow *parent, wxWindowID id = -1);
     virtual ~MathPlotConfigDialog();
 
-    void Initialize(int page = -1);
+    void Initialize(mpConfigPageId id = mpcpiNone);
     void SelectChoiceSerie(unsigned int serie);
 
   private:
@@ -87,6 +100,7 @@ class MathPlotConfigDialog: public wxDialog
     void OnChoiceLinesSelect(wxCommandEvent& event);
     void OnbAddLinesClick(wxCommandEvent& event);
     void OnbDelLinesClick(wxCommandEvent& event);
+    void OnbDelAxisClick(wxCommandEvent& event);
     //*)
 
     //(*Identifiers(MathPlotConfigDialog)
@@ -104,6 +118,7 @@ class MathPlotConfigDialog: public wxDialog
     wxButton* bBGColor;
     wxButton* bClose;
     wxButton* bCoordBrushColor;
+    wxButton* bDelAxis;
     wxButton* bDelLines;
     wxButton* bDelSeries;
     wxButton* bFontAxis;

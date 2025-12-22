@@ -6,7 +6,7 @@
 // Contributors:    Jose Luis Blanco, Val Greene, Lionel Reynaud, Dave Nadler, MortenMacFly,
 //                  Oskar Waldemarsson (for multi Y axis and corrections)
 // Created:         21/07/2003
-// Last edit:       23/11/2025
+// Last edit:       10/12/2025
 // Copyright:       (c) David Schalig, Davide Rondini
 // Licence:         wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -71,6 +71,7 @@
 #endif
 
 #include <vector>
+#include <map>
 #include <optional>
 
 // #include <wx/wx.h>
@@ -199,21 +200,136 @@ typedef union
 
 /**
  * @brief Represents a numeric range with minimum and maximum values.
- * This struct holds a range defined by `min` and `max` values. It supports
- * equality comparison using the default `operator==`.
+ * This struct holds a range defined by `min` and `max` values.
+ * It supports equality comparison using the default `operator==`.
  */
 struct mpRange
 {
-  double min = 0.0f;
-  double max = 0.0f;
+    double min = 0.0f;
+    double max = 0.0f;
+
+    // Default constructor
+    mpRange()
+    {
+      min = 0.0f;
+      max = 0.0f;
+    }
+
+    // Create range with the 2 values
+    mpRange(double value1, double value2)
+    {
+      if (value1 < value2)
+      {
+        min = value1;
+        max = value2;
+      }
+      else
+      {
+        min = value2;
+        max = value1;
+      }
+    }
+
+    // Set min, max function
+    void Set(double _min, double _max)
+    {
+      min = _min;
+      max = _max;
+    }
+
+    // Assign values to min and max
+    void Assign(double value1, double value2)
+    {
+      if (value1 < value2)
+      {
+        min = value1;
+        max = value2;
+      }
+      else
+      {
+        min = value2;
+        max = value1;
+      }
+    }
+
+    /* Update range according new value:
+     * Expand the range to include the value.
+     * If value < min then min = value and if value > max then max = value
+     */
+    void Update(double value)
+    {
+      if (value < min)
+        min = value;
+      else
+        if (value > max)
+          max = value;
+    }
+
+    /* Update range with new min and max values if this expand the range
+     * If _min < min then min = _min and if _max > max then max = _max
+     */
+    void Update(double _min, double _max)
+    {
+      if (_min < min)
+        min = _min;
+      if (_max > max)
+        max = _max;
+    }
+
+    /* Update range with new range values if this expand the range
+     */
+    void Update(mpRange range)
+    {
+      if (range.min < min)
+        min = range.min;
+      if (range.max > max)
+        max = range.max;
+    }
+
+    // Check to always have a range. If min = max then introduce the 0 to make a range.
+    void Check(void)
+    {
+      if (min == max)
+      {
+        if (max > 0)
+          min = 0;
+        else
+          max = 0;
+      }
+    }
+
+    // Length of the range
+    double Length(void) const
+    {
+      return max - min;
+    }
+
+    // Center of the range
+    double GetCenter(void) const
+    {
+      return (min + max) / 2;
+    }
+
+    // Convert to log range
+    void ToLog(void)
+    {
+      min = (min > 0) ? log10(min) : 0;
+      max = (max > 0) ? log10(max) : 0;
+    }
+
+    // Return true if the point is inside the range (min and max included)
+    bool PointIsInside(double point) const
+    {
+      return ((point >= min) && (point <= max));
+    }
 
 #if (defined(__cplusplus) && (__cplusplus > 201703L)) // C++20 or newer
   bool operator==(const mpRange&) const = default;
 #else
-  bool operator==(const mpRange& other) const
-  {
-    return min == other.min && max == other.max;
-  }
+    bool operator==(const mpRange &other) const
+    {
+      return (min == other.min) && (max == other.max);
+    }
 #endif
 };
 
@@ -222,6 +338,7 @@ struct mpRange
  * X refer to X axis
  * Y refer to Y axis
  */
+[[deprecated("No more used, X and Y are now separated")]]
 struct mpFloatRect
 {
   mpRange x;
@@ -239,11 +356,11 @@ struct mpFloatRect
   mpFloatRect() = delete;
 
   /// Is point inside this bounding box?
-  bool PointIsInside(double px, double py, size_t yIndex = 0) const {
-    if(yIndex < y.size())
+  bool PointIsInside(double px, double py, size_t yAxisID = 0) const {
+    if (yAxisID < y.size())
     {
       if( (px < x.min || px > x.max) ||
-          (py < y[yIndex].min || py > y[yIndex].max))
+          (py < y[yAxisID].min || py > y[yAxisID].max))
       {
         return false;
       }
@@ -256,23 +373,23 @@ struct mpFloatRect
     return true;
   }
   /// Update bounding box to include this point
-  void UpdateBoundingBoxToInclude(double px, double py, size_t yIndex = 0) {
-    assert(yIndex < y.size());
-    if(yIndex < y.size())
+  void UpdateBoundingBoxToInclude(double px, double py, size_t yAxisID = 0) {
+    assert(yAxisID < y.size());
+    if (yAxisID < y.size())
     {
       if      (px  < x.min ) x.min = px;
       else if (px  > x.max ) x.max = px;
-      if      (py  < y[yIndex].min ) y[yIndex].min = py;
-      else if (py  > y[yIndex].max ) y[yIndex].max = py;
+      if      (py  < y[yAxisID].min ) y[yAxisID].min = py;
+      else if (py  > y[yAxisID].max ) y[yAxisID].max = py;
     }
   }
   /// Initialize bounding box with an initial point
-  void InitializeBoundingBox(double px, double py, size_t yIndex = 0) {
-    assert(yIndex < y.size());
-    if(yIndex < y.size())
+  void InitializeBoundingBox(double px, double py, size_t yAxisID = 0) {
+    assert(yAxisID < y.size());
+    if (yAxisID < y.size())
     {
       x.min = x.max = px;
-      y[yIndex].min = y[yIndex].max = py;
+      y[yAxisID].min = y[yAxisID].max = py;
     }
   }
   /// Is mpFloatRect set ?
@@ -314,6 +431,45 @@ struct mpFloatRect
     return true;
   }
 #endif
+};
+
+/**
+ * Define a simple rectangular box
+ * X refer to X axis
+ * Y refer to Y axis
+ */
+struct mpFloatRectSimple
+{
+  mpRange x;
+  mpRange y;
+
+  mpFloatRectSimple(mpRange _x, mpRange _y) : x(_x), y(_y) { };
+
+  /// Is point inside this bounding box?
+  bool PointIsInside(double px, double py) const {
+    return x.PointIsInside(px) && y.PointIsInside(py);
+  }
+
+  /* Update bounding box (X and Y axis) to include this point.
+   * Expand the range to include the point.
+   * @param px: point on x-axis
+   * @param py: point on y-axis
+   */
+  void UpdateBoundingBoxToInclude(double px, double py)
+  {
+    x.Update(px);
+    y.Update(py);
+  }
+
+  /* Initialize bounding box with an initial point
+   * @param px: point on x-axis
+   * @param py: point on y-axis
+   */
+  void InitializeBoundingBox(double px, double py)
+  {
+    x.Set(px, px);
+    y.Set(py, py);
+  }
 };
 
 /** Command IDs used by mpWindow
@@ -494,6 +650,19 @@ typedef enum __mp_Layer_ZOrder
   mpZIndex_TEXT,         //!< Text box type layer
   mpZIndex_END           //!< Just the end of ZOrder
 } mpLayerZOrder;
+
+/**
+ * Action to do with the object associated to the layer when we delete it. We can:
+ * - mpNoDelete: keep the object
+ * - mpYesDelete: delete the object if CanDelete is true
+ * - mpForceDelete: delete the object in any cases
+ */
+typedef enum __mp_Delete_Action
+{
+  mpNoDelete,
+  mpYesDelete,
+  mpForceDelete
+} mpDeleteAction;
 
 /** Plot layer, abstract base class.
  Any number of mpLayer implementations can be attached to mpWindow.
@@ -845,16 +1014,20 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
 
     /**
      * If we need to do something before plot like reinitialize some parameters ...
+     * Return true by default that mean that we can continue next operation
      */
-    virtual void DoBeforePlot()
+    virtual bool DoBeforePlot()
     {
-      ;
+      return true;
     }
 
     /**
      * Test if we are in log axis and if true return the log of the values
+     * @param x
+     * @param y
+     * @param yAxisID Y axis ID
      */
-    void CheckLog(double *x, double *y, size_t id = 0);
+    void CheckLog(double *x, double *y, int yAxisID);
 
   private:
     bool m_busy;                //!< Test if we are busy (plot operation)
@@ -1168,7 +1341,7 @@ class WXDLLIMPEXP_MATHPLOT mpFunction: public mpLayer
   public:
     /** Full constructor.
      */
-    mpFunction(mpLayerType layerType = mpLAYER_PLOT, const wxString &name = wxEmptyString, size_t yAxisIndex = 0);
+    mpFunction(mpLayerType layerType = mpLAYER_PLOT, const wxString &name = wxEmptyString, unsigned int yAxisID = 0);
 
     /** Set the 'continuity' property of the layer. True: draws a continuous line. False: draws separate points (default).
      * @sa GetContinuity
@@ -1235,19 +1408,19 @@ class WXDLLIMPEXP_MATHPLOT mpFunction: public mpLayer
     virtual bool DrawSymbol(wxDC &dc, wxCoord x, wxCoord y);
 
     /**
-     * Get the index of the Y axis associated to the function
+     * Get the ID of the Y axis used by the function
      */
-    size_t GetYAxisIndex() const
+    int GetYAxisID() const
     {
-      return m_yAxisIndex;
+      return m_yAxisID;
     }
 
     /**
-     * Set the index of the Y axis associated to the function
+     * Set the ID of the Y axis used by the function
      */
-    void SetYAxisIndex(size_t index)
+    void SetYAxisID(unsigned int yAxisID)
     {
-      m_yAxisIndex = index;
+      m_yAxisID = yAxisID;
     }
 
   protected:
@@ -1256,7 +1429,7 @@ class WXDLLIMPEXP_MATHPLOT mpFunction: public mpLayer
     int m_symbolSize;           //!< Size of the symbol. Default 6
     int m_symbolSize2;          //!< Size of the symbol div 2.
     unsigned int m_step;        //!< Step to get point to be draw. Default : 1
-    size_t m_yAxisIndex;        //!< The index of the Y axis, 0 is the first axis (default)
+    int m_yAxisID;              //!< The ID of the Y axis used by the function. Equal 0 if no axis.
 
   wxDECLARE_DYNAMIC_CLASS(mpFunction);
 };
@@ -1309,7 +1482,7 @@ class WXDLLIMPEXP_MATHPLOT mpLine: public mpFunction
 class WXDLLIMPEXP_MATHPLOT mpHorizontalLine: public mpLine
 {
   public:
-    mpHorizontalLine(double yvalue, const wxPen &pen = *wxGREEN_PEN, size_t yAxisIndex = 0);
+    mpHorizontalLine(double yvalue, const wxPen &pen = *wxGREEN_PEN, unsigned int yAxisID = 0);
 
     /** Set y
      @param yvalue
@@ -1345,6 +1518,15 @@ class WXDLLIMPEXP_MATHPLOT mpVerticalLine: public mpLine
 
     virtual void DoPlot(wxDC &dc, mpWindow &w);
 
+    /**
+     * This is the only case where we don't need and Y axis
+     * So no need to test m_yAxisID
+     */
+    virtual bool DoBeforePlot()
+    {
+      return true;
+    }
+
     wxDECLARE_DYNAMIC_CLASS(mpVerticalLine);
 };
 
@@ -1360,7 +1542,7 @@ class WXDLLIMPEXP_MATHPLOT mpFX: public mpFunction
     /** @param name  Label
      @param flags Label alignment, pass one of #mpALIGN_RIGHT, #mpALIGN_CENTERY, #mpALIGN_LEFT.
      */
-    mpFX(const wxString &name = wxEmptyString, int flags = mpALIGN_RIGHT, size_t yAxisIndex = 0);
+    mpFX(const wxString &name = wxEmptyString, int flags = mpALIGN_RIGHT, unsigned int yAxisID = 0);
 
     /** Get function value for argument.
      Override this function in your implementation.
@@ -1413,7 +1595,7 @@ class WXDLLIMPEXP_MATHPLOT mpFY: public mpFunction
     /** @param name  Label
      @param flags Label alignment, pass one of #mpALIGN_BOTTOM, #mpALIGN_CENTERY, #mpALIGN_TOP.
      */
-    mpFY(const wxString &name = wxEmptyString, int flags = mpALIGN_TOP, size_t yAxisIndex = 0);
+    mpFY(const wxString &name = wxEmptyString, int flags = mpALIGN_TOP, unsigned int yAxisID = 0);
 
     /** Get function value for argument.
      Override this function in your implementation.
@@ -1469,7 +1651,7 @@ class WXDLLIMPEXP_MATHPLOT mpFXY: public mpFunction
     /** @param name  Label
      @param flags Label alignment, pass one of #mpALIGN_NE, #mpALIGN_NW, #mpALIGN_SW, #mpALIGN_SE.
      */
-    mpFXY(const wxString &name = wxEmptyString, int flags = mpALIGN_NE, bool viewAsBar = false, size_t yAxisIndex = 0);
+    mpFXY(const wxString &name = wxEmptyString, int flags = mpALIGN_NE, bool viewAsBar = false, unsigned int yAxisID = 0);
 
     /** Rewind value enumeration with mpFXY::GetNextXY.
      Override this function in your implementation.
@@ -1540,9 +1722,6 @@ class WXDLLIMPEXP_MATHPLOT mpFXY: public mpFunction
     // Plot data as bar graph
     bool m_ViewAsBar = false;
 
-    // Can the series be deleted?
-    bool m_CanDelete = true;
-
     /** Layer plot handler.
      This implementation will plot the locus in the visible area and
      put a label according to the alignment specified.
@@ -1587,7 +1766,7 @@ class WXDLLIMPEXP_MATHPLOT mpFXYVector: public mpFXY
     /** @param name  Label
      @param flags Label alignment, pass one of #mpALIGN_NE, #mpALIGN_NW, #mpALIGN_SW, #mpALIGN_SE.
      */
-    mpFXYVector(const wxString &name = wxEmptyString, int flags = mpALIGN_NE, bool viewAsBar = false, size_t yAxisIndex = 0);
+    mpFXYVector(const wxString &name = wxEmptyString, int flags = mpALIGN_NE, bool viewAsBar = false, unsigned int yAxisID = 0);
 
     /** destrutor
      */
@@ -1979,7 +2158,7 @@ class WXDLLIMPEXP_MATHPLOT mpScale: public mpLayer
      @param name Label to plot by the ruler
      @param flags Set the position of the scale with respect to the window.
      @param grids Show grid or not. Give false (default) for not drawing the grid. */
-    mpScale(const wxString &name, int flags, bool grids);
+    mpScale(const wxString &name, int flags, bool grids, std::optional<unsigned int> axisID = std::nullopt);
 
     /** Check whether this layer has a bounding box.
      This implementation returns \a FALSE thus making the ruler invisible
@@ -1987,6 +2166,23 @@ class WXDLLIMPEXP_MATHPLOT mpScale: public mpLayer
     virtual bool HasBBox()
     {
       return false;
+    }
+
+    /**
+     * Return the ID of the Axis. Return int because m_axisID should be equal to -1 if not defined
+     */
+    int GetAxisID(void)
+    {
+      return m_axisID;
+    }
+
+    /**
+     * Set an ID to the axis.
+     * This method should be not used since ID is initialised when we add the axis to the window
+     */
+    void SetAxisID(unsigned int yAxisID)
+    {
+      m_axisID = yAxisID;
     }
 
     /** Set axis ticks
@@ -2083,6 +2279,32 @@ class WXDLLIMPEXP_MATHPLOT mpScale: public mpLayer
       return m_max;
     }
 
+    void SetScale(double min, double max)
+    {
+      m_min = min;
+      m_max = max;
+    }
+
+    void GetScale(double *min, double *max) const
+    {
+      *min = m_min;
+      *max = m_max;
+    }
+
+    void SetScale(mpRange range)
+    {
+      m_min = range.min;
+      m_max = range.max;
+    }
+
+    /**
+     * Return m_min and m_max scale as a mpRange
+     */
+    mpRange GetScale() const
+    {
+      return mpRange(m_min, m_max);
+    }
+
     /**
      * Logarithmic axis
      */
@@ -2090,6 +2312,7 @@ class WXDLLIMPEXP_MATHPLOT mpScale: public mpLayer
     {
       return m_isLog;
     }
+
     virtual void SetLogAxis(bool log)
     {
       m_isLog = log;
@@ -2099,6 +2322,7 @@ class WXDLLIMPEXP_MATHPLOT mpScale: public mpLayer
     static const wxCoord kTickSize = 4;       //!< Length of tick line
     static const wxCoord kAxisExtraSpace = 6; //!< Extra space for axis to make it look good
 
+    int m_axisID;            //!< Unique ID that identify this axis. Default -1 mean that axis is not used.
     wxPen m_gridpen;         //!< Grid's pen. Default Colour = LIGHT_GREY, width = 1, style = wxPENSTYLE_DOT
     bool m_ticks;            //!< Flag to show ticks. Default true
     bool m_grids;            //!< Flag to show grids. Default false
@@ -2181,6 +2405,16 @@ class WXDLLIMPEXP_MATHPLOT mpScaleX: public mpScale
       m_timeConv = time_conv;
     }
 
+    bool IsTopAxis()
+    {
+      return ((GetAlign() == mpALIGN_BORDER_TOP) || (GetAlign() == mpALIGN_TOP));
+    }
+
+    bool IsBottomAxis()
+    {
+      return ((GetAlign() == mpALIGN_BORDER_BOTTOM) || (GetAlign() == mpALIGN_BOTTOM));
+    }
+
   protected:
     unsigned int m_labelType;  //!< Select labels mode: mpX_NORMAL for normal labels, mpX_TIME for time axis in hours, minutes, seconds
     unsigned int m_timeConv;   //!< Selects if time has to be converted to local time or not.
@@ -2216,23 +2450,17 @@ class WXDLLIMPEXP_MATHPLOT mpScaleY: public mpScale
      @param name Label to plot by the ruler
      @param flags Set the position of the scale with respect to the window.
      @param grids Show grid or not. Give false (default) for not drawing the grid*/
-    mpScaleY(const wxString &name = _T("Y"), int flags = mpALIGN_CENTERY, bool grids = false, size_t axisIndex = 0) :
-        mpScale(name, flags, grids)
+    mpScaleY(const wxString &name = _T("Y"), int flags = mpALIGN_CENTERY, bool grids = false, std::optional<unsigned int> yAxisID = std::nullopt) :
+        mpScale(name, flags, grids, yAxisID)
     {
       m_subtype = mpsScaleY;
       m_axisWidth = Y_BORDER_SEPARATION;
-      m_axisIndex = axisIndex;
       m_xPos = 0;
     }
 
     /** Recalculate the axis width based on the label and name text sizes
     @param Current window used as canvas */
     void UpdateAxisWidth(mpWindow &w);
-
-    size_t GetAxisIndex(void)
-    {
-      return m_axisIndex;
-    }
 
     int GetAxisWidth()
     {
@@ -2251,7 +2479,7 @@ class WXDLLIMPEXP_MATHPLOT mpScaleY: public mpScale
 
     bool IsInside(wxCoord xPixel)
     {
-      if( (IsLeftAxis() || IsRightAxis()) && (xPixel >= m_xPos) && (xPixel <= (m_xPos + m_axisWidth)) )
+      if ( (IsLeftAxis() || IsRightAxis()) && (xPixel >= m_xPos) && (xPixel <= (m_xPos + m_axisWidth)) )
       {
         return true;
       }
@@ -2260,7 +2488,6 @@ class WXDLLIMPEXP_MATHPLOT mpScaleY: public mpScale
 
   protected:
     int m_axisWidth;
-    size_t m_axisIndex;
     int m_xPos;
 
     /** Layer plot handler.
@@ -2293,6 +2520,46 @@ class WXDLLIMPEXP_MATHPLOT mpScaleY: public mpScale
 typedef std::deque<mpLayer*> mpLayerList;
 
 /**
+ * @brief Represents all the informations needed for plotting a layer in one direction (X or Y)
+ * This struct holds:
+ * - a pointer to the axis associated if exist
+ * - the scale and position
+ * - the bound
+ * - the desired bound
+ * It supports equality comparison using the default `operator==` (axis is excluded in the comparaison).
+ */
+struct mpAxisData
+{
+    mpScale* axis = nullptr;  //!< Pointer to the axis layer (X or Y)
+    double scale = 1.0;       //!< Scale
+    double pos = 0;           //!< Position
+    mpRange bound;            //!< Range min and max
+    mpRange desired;          //!< Desired range min and max
+
+    // Note: we don't use the default operator since we don't want to compare axis pointers
+    bool operator==(const mpAxisData& other) const
+    {
+      return /*(axis == other.axis) && */ (scale == other.scale) && (pos == other.pos) &&
+          (bound == other.bound) && (desired == other.desired);
+    }
+};
+
+/** Define the type for the list of axis */
+typedef std::map<int, mpAxisData> mpAxisList;
+
+/**
+ * Define the axis we want to update. Could be:
+ * - x axis
+ * - y axis
+ * - x and y axis
+ */
+typedef enum {
+  uXAxis = 1,
+  uYAxis = 2,
+  uXYAxis = 3
+} mpAxisUpdate;
+
+/**
  * Define an event for when we delete a layer
  * Use like this :
  *  your_plot->SetOnDeleteLayer([this](void *Sender, const wxString &classname, bool &cancel)
@@ -2310,6 +2577,7 @@ typedef std::function<void(void *Sender, wxMouseEvent &event, bool &cancel)> mpO
 
 /**
  * Class for drawing mouse magnetization
+ * Draw an horizontal and a vertical line at the mouse position
  */
 class mpMagnet
 {
@@ -2384,7 +2652,7 @@ class mpMagnet
 class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 {
   public:
-    mpWindow() : m_yAxisDataList(1), m_bound(*this), m_desired(*this), m_lastDesiredReportedBounds(*this)
+    mpWindow()
     {
       InitParameters();
     }
@@ -2405,35 +2673,49 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     /** Add a plot layer to the canvas.
      @param layer Pointer to layer. The mpLayer object will get under control of mpWindow,
      i.e. it will be delete'd on mpWindow destruction
-     @param refreshDisplay States whether to refresh the display (UpdateAll) after adding the layer.
+     @param refreshDisplay States whether to fit and refresh the display (UpdateAll) after adding the layer.
+     @param refreshConfig States whether to refresh the config window (if exist)
      @retval TRUE Success
-     @retval FALSE Failure due to out of memory.
+     @retval FALSE Failure. layer = NULL or layer already exist (Coords or Legend).
      */
-    bool AddLayer(mpLayer *layer, bool refreshDisplay = true);
+    bool AddLayer(mpLayer *layer, bool refreshDisplay = true, bool refreshConfig = true);
 
     /** Remove a plot layer from the canvas.
      @param layer Pointer to layer. The mpLayer object will be destructed using delete.
-     @param alsoDeleteObject If set to true, the mpLayer object will be also "deleted", not just removed from the internal list.
+     @param alsoDeleteObject If set to mpYesDelete, the mpLayer object will be also "deleted", not just removed from the internal list.
+     In case mpForceDelete, the mpLayer object is deleted even if m_CanDelete is false
      @param refreshDisplay States whether to refresh the display (UpdateAll) after removing the layer.
+     @param refreshConfig States whether to refresh the config window (if exist)
      @return true if layer is deleted correctly
 
      N.B. If alsoDeleteObject is false, only the layer pointer in the mpWindow is removed, the layer object still exists.
-	 WARNING: Invalidates any extant m_layers iterators!
+	   WARNING: Invalidates any extant m_layers iterators!
+	   WARNING: If alsoDeleteObject is true, the layer object object is deleted but his reference (pointer) is not set to NULL.
      */
-    bool DelLayer(mpLayer *layer, bool alsoDeleteObject, bool refreshDisplay = true);
+    bool DelLayer(mpLayer *layer, mpDeleteAction alsoDeleteObject, bool refreshDisplay = true, bool refreshConfig = true);
 
     /** Remove all layers from the plot.
      @param alsoDeleteObject If set to true, the mpLayer objects will be also "deleted", not just removed from the internal list.
      @param refreshDisplay States whether to refresh the display (UpdateAll) after removing the layers.
+     See DelLayer() for more infos
      */
-    void DelAllLayers(bool alsoDeleteObject, bool refreshDisplay = true);
+    void DelAllLayers(mpDeleteAction alsoDeleteObject, bool refreshDisplay = true);
 
     /** Remove all plot layers.
      @param alsoDeleteObject If set to true, the mpLayer objects will be also "deleted", not just removed from the internal list.
      @param func Select type of plot
      @param refreshDisplay States whether to refresh the display (UpdateAll) after removing the layers.
+     See DelLayer() for more infos
      */
-    void DelAllPlot(bool alsoDeleteObject, mpFunctionType func = mpfAllType, bool refreshDisplay = true);
+    void DelAllPlot(mpDeleteAction alsoDeleteObject, mpFunctionType func = mpfAllType, bool refreshDisplay = true);
+
+    /** Remove all extra y axis after the selected y axis.
+     @param alsoDeleteObject If set to true, the mpLayer objects will be also "deleted", not just removed from the internal list.
+     @param yAxisID the ID of the axis to keep (Default 0). Remove all y axis after this ID. If y-axis ID < 0, remove all y axis.
+     @param refreshDisplay States whether to refresh the display (UpdateAll) after removing the layers.
+     See DelLayer() for more infos
+     */
+    void DelAllYAxisAfterID(mpDeleteAction alsoDeleteObject, int yAxisID = 0, bool refreshDisplay = true);
 
     /*! Get the layer in list position indicated.
      N.B. You <i>must</i> know the index of the layer inside the list!
@@ -2441,6 +2723,12 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      @return pointer to mpLayer
      */
     mpLayer* GetLayer(int position);
+
+    /*! Get the position of the layer in the list.
+     @param layer the layer to find
+     @return the position of the layer or -1 if not found
+     */
+    int GetLayerPosition(mpLayer* layer);
 
     /*! Get the layer of a certain type in list position indicated.
      N.B. You <i>must</i> know the index of the layer inside the list!
@@ -2490,20 +2778,20 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     void RefreshLegend(void);
 
     /*! Check if a specific Y-axis exists or is used by any function
-     @param Y-axis index to check
+     @param yAxisID ID of Y axis to check
      @return True if specified Y-axis is used, false otherwise
      */
-    bool IsYAxisUsed(size_t yIndex);
+    bool IsYAxisUsed(int yAxisID);
 
     /*! Get the first scale X layer (X axis).
      @return A pointer to the mpScaleX object, or NULL if not found.
      */
     mpScaleX* GetLayerXAxis();
 
-    /*! Get the scale Y layer (Y axis) with a specific Y-index
+    /*! Get the scale Y layer (Y axis) with a specific yAxisID
      @return A pointer to the mpScaleY object, or NULL if not found.
      */
-    mpScaleY* GetLayerYAxis(size_t yIndex);
+    mpScaleY* GetLayerYAxis(int yAxisID);
 
     /** Set current view's X scale and refresh display.
      @param scaleX New scale, must not be 0.
@@ -2512,8 +2800,8 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     {
       if (ISNOTNULL(scaleX))
       {
-        m_scaleX = scaleX;
-        UpdateDesiredBoundingBox();
+        m_AxisDataX.scale = scaleX;
+        UpdateDesiredBoundingBox(uXAxis);
       }
       UpdateAll();
     }
@@ -2524,29 +2812,33 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      */
     double GetScaleX(void) const
     {
-      return m_scaleX;
+      return m_AxisDataX.scale;
     }
 
     /** Set current view's Y scale and refresh display.
      @param scaleY New scale, must not be 0.
+     @param yAxisID Y axis ID to set scale
      */
-    void SetScaleY(const double scaleY, size_t yIndex)
+    void SetScaleY(const double scaleY, int yAxisID)
     {
+      assert(m_AxisDataYList.count(yAxisID) != 0);
       if (ISNOTNULL(scaleY))
       {
-        m_yAxisDataList[yIndex].m_scaleY = scaleY;
-        UpdateDesiredBoundingBox();
+        m_AxisDataYList[yAxisID].scale = scaleY;
+        UpdateDesiredBoundingBox(uYAxis);
       }
       UpdateAll();
     }
 
     /** Get current view's Y scale.
      See @ref mpLayer::Plot "rules for coordinate transformation"
+     @param yAxisID Y axis ID to get scale
      @return Scale
      */
-    double GetScaleY(size_t yIndex = 0) const
+    double GetScaleY(int yAxisID)
     {
-      return m_yAxisDataList[yIndex].m_scaleY;
+      assert(m_AxisDataYList.count(yAxisID) != 0);
+      return m_AxisDataYList[yAxisID].scale;
     } // Schaling's method: maybe another method exists with the same name
 
     [[deprecated("Incomplete, use UpdateBBox instead")]]
@@ -2554,10 +2846,19 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      * \deprecated Incomplete! Use UpdateBBox! */
     void SetBound();
 
-    /** Get bounding box encompassing all visible plots on this mpWindow. */
-    mpFloatRect Get_Bound(void) const
+    /** Get bounding box for X axis. */
+    mpRange Get_BoundX(void) const
     {
-      return m_bound;
+      return m_AxisDataX.bound;
+    }
+
+    /** Get bounding box for Y axis of ID yAxisID.
+     @param yAxisID Y axis ID to get bound
+     */
+    mpRange Get_BoundY(int yAxisID)
+    {
+      assert(m_AxisDataYList.count(yAxisID) != 0);
+      return m_AxisDataYList[yAxisID].bound;
     }
 
     /** Set current view's X position and refresh display.
@@ -2565,8 +2866,8 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      */
     void SetPosX(const double posX)
     {
-      m_posX = posX;
-      UpdateDesiredBoundingBox();
+      m_AxisDataX.pos = posX;
+      UpdateDesiredBoundingBox(uXAxis);
       UpdateAll();
     }
 
@@ -2576,41 +2877,47 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      */
     double GetPosX(void) const
     {
-      return m_posX;
+      return m_AxisDataX.pos;
     }
 
     /** Set current view's Y position and refresh display.
-     @param posY New position that corresponds to the center point of the view.
+     @param posYList New position that corresponds to the center point of the view.
+     IMPORTANT: posYList items must be in the same order of Y axis list
      */
     void SetPosY(const std::vector<double>& posYList)
     {
-      for(size_t i = 0; i < m_yAxisDataList.size(); i++)
+      int i = 0;
+      for (auto& axisDataY : m_AxisDataYList)
       {
-        m_yAxisDataList[i].m_posY = posYList[i];
+        axisDataY.second.pos = posYList[i];
+        i++;
       }
-      UpdateDesiredBoundingBox();
+      UpdateDesiredBoundingBox(uYAxis);
       UpdateAll();
     }
 
     /** Get current view's Y position.
      See @ref mpLayer::Plot "rules for coordinate transformation"
+     @param yAxisID Y axis ID to get Pos
      @return Y Position in layer coordinate system, that corresponds to the center point of the view.
      */
-    double GetPosY(size_t yIndex = 0) const
+    double GetPosY(int yAxisID)
     {
-      return m_yAxisDataList[yIndex].m_posY;
+      assert(m_AxisDataYList.count(yAxisID) != 0);
+      return m_AxisDataYList[yAxisID].pos;
     }
 
-    size_t GetNOfYScales(void) const
+    /** Get the number of Y axis.
+     @return The number of Y axis in m_AxisDataYList
+     */
+    int GetNOfYAxis(void) const
     {
-      // Should never be size 0
-      assert(m_yAxisDataList.size() != 0);
-      return m_yAxisDataList.size();
+      return (int)m_AxisDataYList.size();
     }
 
-    std::vector<mpScaleY*> GetYAxisList(void) const
+    mpAxisList GetAxisDataYList(void) const
     {
-      return m_YAxisList;
+      return m_AxisDataYList;
     }
 
     /** Set current view's dimensions in device context units.
@@ -2661,17 +2968,12 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     /** Set current view's X and Y position and refresh display.
      @param posX New position that corresponds to the center point of the view.
      @param posYList New positions that corresponds to the center point of the view.
+     IMPORTANT: posYList items must be in the same order of Y axis list
      */
     void SetPos(const double posX, const std::vector<double>& posYList)
     {
-      m_posX = posX;
-      for(size_t i = 0; i < m_yAxisDataList.size(); i++)
-      {
-        m_yAxisDataList[i].m_posY = posYList[i];
-      }
-
-      UpdateDesiredBoundingBox();
-      UpdateAll();
+      m_AxisDataX.pos = posX;
+      SetPosY(posYList);
     }
 
     /** Converts mpWindow (screen) pixel coordinates into graph (floating point) coordinates,
@@ -2679,15 +2981,18 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      * @sa p2y,x2p,y2p */
     inline double p2x(const wxCoord pixelCoordX) const
     {
-      return m_posX + (pixelCoordX / m_scaleX);
+      return m_AxisDataX.pos + (pixelCoordX / m_AxisDataX.scale);
     }
 
     /** Converts mpWindow (screen) pixel coordinates into graph (floating point) coordinates,
      * using current mpWindow position and scale.
      * @sa p2x,x2p,y2p */
-    inline double p2y(const wxCoord pixelCoordY, size_t yIndex = 0) const
+    inline double p2y(const wxCoord pixelCoordY, int yAxisID)
     {
-      return m_yAxisDataList[yIndex].m_posY - (pixelCoordY / m_yAxisDataList[yIndex].m_scaleY);
+      assert(m_AxisDataYList.count(yAxisID) != 0);
+      if (m_AxisDataYList.count(yAxisID) == 0)
+        return 0.0;
+      return m_AxisDataYList[yAxisID].pos - (pixelCoordY / m_AxisDataYList[yAxisID].scale);
     }
 
     /** Converts graph (floating point) coordinates into mpWindow (screen) pixel coordinates,
@@ -2695,15 +3000,18 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      * @sa p2x,p2y,y2p */
     inline wxCoord x2p(const double x) const
     {
-      return (wxCoord)((x - m_posX) * m_scaleX);
+      return (wxCoord)((x - m_AxisDataX.pos) * m_AxisDataX.scale);
     }
 
     /** Converts graph (floating point) coordinates into mpWindow (screen) pixel coordinates,
      * using current mpWindow position and scale.
      * @sa p2x,p2y,x2p */
-    inline wxCoord y2p(const double y, size_t yIndex = 0) const
+    inline wxCoord y2p(const double y, int yAxisID)
     {
-      return (wxCoord)((m_yAxisDataList[yIndex].m_posY - y) * m_yAxisDataList[yIndex].m_scaleY);
+      assert(m_AxisDataYList.count(yAxisID) != 0);
+      if (m_AxisDataYList.count(yAxisID) == 0)
+        return 0;
+      return (wxCoord)((m_AxisDataYList[yAxisID].pos - y) * m_AxisDataYList[yAxisID].scale);
     }
 
     /** Enable/disable the double-buffering of the window, eliminating the flicker (default=enabled).
@@ -2757,18 +3065,18 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      pixel scales are computed accordingly. Also, in this case the passed borders are not saved
      as the "desired borders", since this use will be invoked only when printing.
      */
-    void Fit(const mpFloatRect &rect, wxCoord *printSizeX = NULL, wxCoord *printSizeY = NULL);
+    void Fit(const mpRange &rangeX, const std::vector<mpRange> &rangeY, wxCoord *printSizeX = NULL, wxCoord *printSizeY = NULL);
 
     /** Similar to Fit() but only fit in X. Intentionally don't call UpdateAll() since
      *  you might want to perform other actions before updating plot
      */
     void FitX(void);
 
-    /** Similar to Fit() but only fit in Y and only one Y-axis, specified by index. Intentionally
+    /** Similar to Fit() but only fit in Y and only one Y-axis, specified by ID. Intentionally
      *  don't call UpdateAll() since you might want to perform other actions before updating plot
-     * @param yAxis indicating which Y-axis to fit
+     * @param yAxisID indicating which Y-axis to fit
      */
-    void FitY(size_t yIndex);
+    void FitY(int yAxisID);
 
     /** Zoom into current view and refresh display
      * @param centerPoint The point (pixel coordinates) that will stay in the same position on the screen after
@@ -2789,12 +3097,12 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     void ZoomOutX();
 
     /** Zoom in current view along Y around center and refresh display
-    @param Optional Y-axis index used to specify which Y-axis to zoom */
-    void ZoomInY(std::optional<size_t> yIndex = std::nullopt);
+    @param Optional Y-axis ID used to specify which Y-axis to zoom */
+    void ZoomInY(std::optional<int> yAxisID = std::nullopt);
 
     /** Zoom out current view along Y around center and refresh display
-    @param Optional Y-axis index used to specify which Y-axis to zoom */
-    void ZoomOutY(std::optional<size_t> yIndex = std::nullopt);
+    @param Optional Y-axis ID used to specify which Y-axis to zoom */
+    void ZoomOutY(std::optional<int> yAxisID = std::nullopt);
 
     /** Zoom view fitting given coordinates to the window (p0 and p1 do not need to be in any specific order) */
     void ZoomRect(wxPoint p0, wxPoint p1);
@@ -2829,32 +3137,58 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     /** Update m_desired bounds. Store the min and max position of the visible data
      *  in the plot. Used primarily during frame resizing via OnSize so that the data
      *  stays in the same place when resizing the frame. Needs to be updated whenever
-     *  m_posX, m_scaleX, m_posY or m_scaleY is updated
+     *  m_posX, m_scaleX, m_posY or m_scaleY is updated.
+     *  Check if there is some changes
      */
-    void UpdateDesiredBoundingBox()
+    void UpdateDesiredBoundingBox(mpAxisUpdate update)
     {
-      m_desired.x.min = m_posX + (m_margin.left / m_scaleX);
-      m_desired.x.max = m_posX + ((m_margin.left + m_plotWidth) / m_scaleX);
-
-      for(size_t i = 0; i < m_desired.y.size(); i++)
+      mpRange lastRange;
+      // Change on X axis
+      if ((update & uXAxis) == uXAxis)
       {
-        m_desired.y[i].max = m_yAxisDataList[i].m_posY - (m_margin.top / m_yAxisDataList[i].m_scaleY);
-        m_desired.y[i].min = m_yAxisDataList[i].m_posY - ((m_margin.top + m_plotHeight) / m_yAxisDataList[i].m_scaleY);
+        if (!m_desiredChanged)
+          lastRange = m_AxisDataX.desired;
+        m_AxisDataX.desired.Assign(m_AxisDataX.pos + (m_margin.left / m_AxisDataX.scale),
+            m_AxisDataX.pos + ((m_margin.left + m_plotWidth) / m_AxisDataX.scale));
+        m_desiredChanged = !(lastRange == m_AxisDataX.desired);
       }
 
-      CheckAndReportDesiredBoundsChanges();
+      // Change on Y axis
+      if ((update & uYAxis) == uYAxis)
+      {
+        for (auto& axisDataY : m_AxisDataYList)
+        {
+          mpAxisData *yAxis = &axisDataY.second;
+          if (!m_desiredChanged)
+            lastRange = yAxis->desired;
+          yAxis->desired.Assign(yAxis->pos - (m_margin.top / yAxis->scale),
+              yAxis->pos - ((m_margin.top + m_plotHeight) / yAxis->scale));
+          if (!m_desiredChanged)
+            m_desiredChanged = !(lastRange == yAxis->desired);
+        }
+      }
     }
 
-    /// Get the 'desired' user-coordinate bounding box for the currently displayed view (set by Fit, Zoom or Pan operations).
-    /// @sa Fit, Zoom
-    mpFloatRect GetDesiredBoundingBox() const { return m_desired; }
+    /**
+     * Return a bounding box for an y-axis ID
+     * @param desired: if true return desired bound else return bound
+     * desired yAxisID: the y-axis ID (default 0)
+     */
+    mpFloatRectSimple GetBoundingBox(bool desired, unsigned int yAxisID = 0)
+    {
+      assert(m_AxisDataYList.count(yAxisID) != 0);
+      if (desired)
+        return mpFloatRectSimple(m_AxisDataX.desired, m_AxisDataYList[yAxisID].desired);
+      else
+        return mpFloatRectSimple(m_AxisDataX.bound, m_AxisDataYList[yAxisID].bound);
+    }
 
     /** Returns the left-border layer coordinate that the user wants the mpWindow to show (it may be not exactly the actual shown coordinate in the case of locked aspect ratio).
      * @sa Fit, Zoom
      */
     double GetDesiredXmin() const
     {
-      return m_desired.x.min;
+      return m_AxisDataX.desired.min;
     }
 
     /** Return the right-border layer coordinate that the user wants the mpWindow to show
@@ -2863,33 +3197,77 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      */
     double GetDesiredXmax() const
     {
-      return m_desired.x.max;
+      return m_AxisDataX.desired.max;
     }
 
     /** Return the bottom-border layer coordinate that the user wants the mpWindow to show (it may be
      * not exactly the actual shown coordinate in the case of locked aspect ratio).
+     * @param yAxisID Y axis ID to get desired min
      * @sa Fit, Zoom
      */
-    double GetDesiredYmin(size_t yIndex) const
+    double GetDesiredYmin(int yAxisID)
     {
-      return m_desired.y[yIndex].min;
+      assert(m_AxisDataYList.count(yAxisID) != 0);
+      return m_AxisDataYList[yAxisID].desired.min;
     }
 
     /** Return the top layer-border coordinate that the user wants the mpWindow to show (it may be
      * not exactly the actual shown coordinate in the case of locked aspect ratio).
+     * @param yAxisID Y axis ID to get desired max
      * @sa Fit, Zoom
      */
-    double GetDesiredYmax(size_t yIndex) const
+    double GetDesiredYmax(int yAxisID)
     {
-      return m_desired.y[yIndex].max;
+      assert(m_AxisDataYList.count(yAxisID) != 0);
+      return m_AxisDataYList[yAxisID].desired.max;
     }
 
-    /** Return the bounding box coordinates
-     @param bbox Pointer to a 6-element double array where to store bounding box coordinates. */
-    void GetBoundingBox(double *bbox) const;
-    mpFloatRect *GetBoundingBox(void)
+    /** Return the bounding box coordinates for the Y axis of ID yAxisID */
+    bool GetBoundingBox(mpRange *boundX, mpRange *boundY, int yAxisID)
     {
-      return &m_bound;
+      if (m_AxisDataYList.count(yAxisID) == 0)
+        return false;
+      *boundX = m_AxisDataX.bound;
+      *boundY = m_AxisDataYList[yAxisID].bound;
+      return true;
+    }
+
+    // Is this point inside the bounding box
+    bool PointIsInsideBound(double px, double py, int yAxisID)
+    {
+      if (m_AxisDataYList.count(yAxisID) == 0)
+        return false;
+
+      return m_AxisDataX.bound.PointIsInside(px) && Get_BoundY(yAxisID).PointIsInside(py);
+    }
+
+    /* Update bounding box (X and Y axis) to include this point.
+     * Expand the range to include the point.
+     * @param px: point on x-axis
+     * @param py: point on y-axis
+     * @param yAxisID: the y-axis ID
+     */
+    void UpdateBoundingBoxToInclude(double px, double py, int yAxisID)
+    {
+      if (m_AxisDataYList.count(yAxisID) == 0)
+        return ;
+
+      m_AxisDataX.bound.Update(px);
+      m_AxisDataYList[yAxisID].bound.Update(py);
+    }
+
+    /* Initialize bounding box with an initial point
+     * @param px: point on x-axis
+     * @param py: point on y-axis
+     * @param yAxisID: the y-axis ID
+     */
+    void InitializeBoundingBox(double px, double py, int yAxisID)
+    {
+      if (m_AxisDataYList.count(yAxisID) == 0)
+        return ;
+
+      m_AxisDataX.bound.Set(px, px);
+      m_AxisDataYList[yAxisID].bound.Set(py, py);
     }
 
     /** Enable/disable scrollbars
@@ -3016,7 +3394,10 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
       return m_plotHeight;
     }
 
-    /** Get the boundaries of the plot. */
+    /** Get the boundaries of the plot.
+     * Bond is reduced by EXTRA_MARGIN constant
+     * @param with_margin: include margin if true
+     */
     mpRect GetPlotBoundaries(bool with_margin) const
     {
       mpRect bond;
@@ -3031,15 +3412,15 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
       return bond;
     }
 
-    /** Calculate width of all axes to the left of this axis. If y-axis index is not specified,
+    /** Calculate width of all axes to the left of this axis. If y-axis ID is not specified,
      * calculate width of all left axes
      @param index of this y-axis  */
-    int GetLeftYAxesWidth(std::optional<size_t> yIndex = std::nullopt);
+    int GetLeftYAxesWidth(std::optional<int> yAxisID = std::nullopt);
 
-    /** Calculate width of all axes to the right of this axis. If y-axis index is not specified,
+    /** Calculate width of all axes to the right of this axis. If y-axis ID is not specified,
      * calculate width of all right axes
      @param index of this y-axis */
-    int GetRightYAxesWidth(std::optional<size_t> yIndex = std::nullopt);
+    int GetRightYAxesWidth(std::optional<int> yAxisID = std::nullopt);
 
     /** Set the draw of the box around the plot. */
     void SetDrawBox(bool drawbox)
@@ -3053,10 +3434,10 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
       return m_drawBox;
     }
 
-    /** Check if a given point is inside the area of a Y-axis and returns its index if so.
+    /** Check if a given point is inside the area of a visible Y-axis and returns its ID if so.
      @param point The position to be checked
-     @return If the point is inside a Y-Axis, returns it index, otherwise -1 */
-    std::optional<size_t> IsInsideYAxis(const wxPoint &point);
+     @return If the point is inside a Y-Axis, returns its ID, otherwise -1 */
+    std::optional<int> IsInsideYAxis(const wxPoint &point);
 
     /** Check if a given point is inside the area of a mpInfoLayer and eventually returns its pointer.
      @param point The position to be checked
@@ -3143,18 +3524,19 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      */
     bool IsLogXaxis()
     {
-      if (m_XAxis)
-        return m_XAxis->IsLogAxis();
+      if (m_AxisDataX.axis)
+        return ((mpScaleX *)m_AxisDataX.axis)->IsLogAxis();
       else
         return false;
     }
 
     /**
-     * Get the log property (true or false) Y layer (Y axis) with a specific Y-index or false if not found
+     * Get the log property (true or false) Y layer (Y axis) with a specific Y ID or false if not found
      */
-    bool IsLogYaxis(size_t yAxisIndex)
+    bool IsLogYaxis(int yAxisID)
     {
-      mpScaleY* yAxis = GetLayerYAxis(yAxisIndex);
+      assert(m_AxisDataYList.count(yAxisID) != 0);
+      mpScaleY* yAxis = GetLayerYAxis(yAxisID);
       if (yAxis)
         return yAxis->IsLogAxis();
       else
@@ -3163,16 +3545,16 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 
     void SetLogXaxis(bool log)
     {
-      if (m_XAxis)
-        m_XAxis->SetLogAxis(log);
+      if (m_AxisDataX.axis)
+        ((mpScaleX *)m_AxisDataX.axis)->SetLogAxis(log);
     }
 
     /**
-     * Set the log property (true or false) Y layer (Y axis) with a specific Y-index
+     * Set the log property (true or false) for a Y layer (Y axis) given by is ID
      */
-    void SetLogYaxis(size_t yIndex, bool log)
+    void SetLogYaxis(int yAxisID, bool log)
     {
-      mpScaleY* yAxis = GetLayerYAxis(yIndex);
+      mpScaleY* yAxis = GetLayerYAxis(yAxisID);
       if (yAxis)
         yAxis->SetLogAxis(log);
     }
@@ -3261,12 +3643,12 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     void DoZoomXCalc(bool zoomIn, wxCoord staticXpixel = ZOOM_AROUND_CENTER);
 
     /** Zoom in or out Y around a Y position. Is the position is not set, it will zoom around center.
-     * An optional Y-axis index can be passe to only zoom a specific Y-axis
+     * An optional Y-axis ID can be passe to only zoom a specific Y-axis
      * @param Zoom in or zoom out boolean
      * @param Optional center position
-     * @param Optional Y-axis index used to specify which Y-axis to zoom
+     * @param Optional Y-axis ID used to specify which Y-axis to zoom
      * */
-    void DoZoomYCalc(bool zoomIn, wxCoord staticYpixel = ZOOM_AROUND_CENTER, std::optional<size_t> = std::nullopt);
+    void DoZoomYCalc(bool zoomIn, wxCoord staticYpixel = ZOOM_AROUND_CENTER, std::optional<int> = std::nullopt);
 
     /** Set the m_scaleX directly to fixed zoom level, but also adjust m_posX to to make
      * the zoom around center
@@ -3277,9 +3659,9 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     /** Set the m_scaleY directly to fixed zoom level, but also adjust m_posY to to make
      * the zoom around center
      * @param scaleY value
-     * @param Y-axis index used to specify which Y-axis to set
+     * @param yAxisID ID used to specify which Y-axis to set
      * */
-    void SetScaleYAndCenter(double scaleYList, size_t yIndex);
+    void SetScaleYAndCenter(double scaleY, int yAxisID);
 
     void Zoom(bool zoomIn, const wxPoint &centerPoint);
 
@@ -3289,18 +3671,13 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 
     void InitParameters();
 
-    /** Apart from the actual Y-axis (mpScaleY), the mpWindow keeps a set of parameters
-     * that depends on how many Y-axis we have. If we add plots with new Y-axes we need
-     * to adjust the size of these parameters
-     @param Number of Y-axis */
-    void UpdateNOfYAxes(size_t nOfYAxes);
-
     wxTopLevelWindow* m_parent;
     bool m_fullscreen;
 
-    mpLayerList m_layers;   //!< List of attached plot layers
-    mpScaleX* m_XAxis;      //!< Pointer to the optional X axis layer of this mpWindow
-    std::vector<mpScaleY*> m_YAxisList;  //!< Pointer to the optional Y axes layer of this mpWindow
+    mpLayerList m_layers;        //!< List of attached plot layers
+    mpAxisData m_AxisDataX;      //!< Axis data for the X direction
+    mpAxisList m_AxisDataYList;  //!< List of axis data for the Y direction
+    bool m_desiredChanged = false; //!< Is the desired bounds have changed ? Used to call DesiredBoundsHaveChanged()
 
     wxMenu m_popmenu;       //!< Canvas' context menu
     bool m_lockaspect;      //!< Scale aspect is locked or not
@@ -3309,22 +3686,10 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     wxColour m_axColour;    //!< Axes Colour
     bool m_drawBox;         //!< Draw box of the plot bound. Default true
 
-    double m_scaleX;        //!< Current view's X scale
-    double m_posX;          //!< Current view's X position
-    struct m_yAxisData      //!< Y scale and position structure
-    {
-      double m_scaleY = 1.0;
-      double m_posY = 0;
-    };
-    std::vector<m_yAxisData> m_yAxisDataList;  //!< Current view's Y scales and Y positions
-
     int m_scrX;             //!< Current view's X dimension in DC units, including all scales, margins
     int m_scrY;             //!< Current view's Y dimension
     int m_clickedX;         //!< Last mouse click X position, for centering and zooming the view
     int m_clickedY;         //!< Last mouse click Y position, for centering and zooming the view
-
-    mpFloatRect m_bound;                //!< Global layer bounding box in user coordinates. Does NOT include borders.
-    mpFloatRect m_desired;              //!< Stores current plot view min/max boundaries. Used primarily during frame resizing via OnSize
 
     mpRect m_margin;                    //!< Margin around the plot including Y-axis
     mpRect m_marginOuter;               //!< Margin around the plot exluding Y-axis. Default 50
@@ -3346,7 +3711,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     wxPoint m_mouseLClick;              //!< Starting coords for rectangular zoom selection
     double m_mouseScaleX;               //!< Store current X-scale, used as reference during drag zooming
     std::vector<double> m_mouseScaleYList;  //!< Store current Y-scales, used as reference during drag zooming
-    std::optional<size_t> m_mouseYAxisIndex; //!< Indicate which Y-axis the mouse was on during zoom/pan
+    std::optional<int> m_mouseYAxisID;  //!< Indicate which ID of Y-axis the mouse was on during zoom/pan
     bool m_enableScrollBars;
     int m_scrollX, m_scrollY;
     mpInfoLayer* m_movingInfoLayer;     //!< For moving info layers over the window area
@@ -3364,7 +3729,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     wxBitmap* m_Screenshot_bmp;         //!< For clipboard, save and print
 
 #ifdef ENABLE_MP_CONFIG
-    MathPlotConfigDialog* m_configWindow = NULL;   //!< For the config dialog
+    MathPlotConfigDialog* m_configWindow = NULL;  //!< For the config dialog
 #endif // ENABLE_MP_CONFIG
 
     mpOnDeleteLayer m_OnDeleteLayer = NULL;          //!< Event when we delete a layer
@@ -3373,14 +3738,20 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     /// To be notified of displayed bounds changes (after user zoom etc),
     /// override this callback in your derived class and look at the new value of m_desired.
     /// Useful for keeping multiple plots in sync when user zooms.
-    virtual void DesiredBoundsHaveChanged() {}; // called from CheckAndReportDesiredBoundsChanges()
+    virtual void DesiredBoundsHaveChanged() {};
 
   private:
     void FillI18NString();
+    unsigned int GetNewAxisDataID(void)
+    {
+      while (m_AxisDataYList.count(m_LastAxisDataID) != 0)
+      {
+        m_LastAxisDataID++;
+      }
+      return m_LastAxisDataID;
+    }
 
-    void CheckAndReportDesiredBoundsChanges(); //!< Report any change of desired display bounds to user's derived class (for example during zoom).
-    bool m_initialDesiredBoundsRecorded = false; //!< Has m_lastDesiredReportedBounds been set?
-    mpFloatRect m_lastDesiredReportedBounds; //!< for use in DesiredBoundsHaveChanged reporting in Fit()
+    unsigned int m_LastAxisDataID = 0; // Last known ID to assign to each new y-axis
 
   wxDECLARE_DYNAMIC_CLASS(mpWindow);
   wxDECLARE_EVENT_TABLE();

@@ -84,10 +84,16 @@ class MyFunction: public mpFX
 		}
 
 	protected:
-		virtual void DoBeforePlot()
+		virtual bool DoBeforePlot()
 		{
-			minY = 0;
-			maxY = 0;
+		  if (mpFX::DoBeforePlot())
+		  {
+        minY = 0;
+        maxY = 0;
+        return true;
+		  }
+		  else
+		    return false;
 		}
 };
 
@@ -111,8 +117,7 @@ class MyPower: public mpFX
 		}
 		virtual double GetY(double x)
 		{
-			double y = 0;
-				y = pow(10, x);
+			double y = pow(10, x);
 			if (y < minY)
 				minY = y;
 			else
@@ -130,10 +135,16 @@ class MyPower: public mpFX
 		}
 
 	protected:
-		virtual void DoBeforePlot()
+		virtual bool DoBeforePlot()
 		{
-			minY = 0;
-			maxY = 0;
+		  if (mpFX::DoBeforePlot())
+		  {
+		    minY = 0;
+		    maxY = 0;
+		    return true;
+		  }
+		  else
+		    return false;
 		}
 };
 

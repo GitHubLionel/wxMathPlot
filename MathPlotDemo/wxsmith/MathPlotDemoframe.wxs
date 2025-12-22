@@ -76,6 +76,14 @@
 							<border>10</border>
 						</object>
 						<object class="sizeritem">
+							<object class="wxButton" name="" variable="bMovingObject" member="yes">
+								<label>Moving object</label>
+								<handler function="OnbMovingObjectClick" entry="EVT_BUTTON" />
+							</object>
+							<flag>wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND</flag>
+							<border>10</border>
+						</object>
+						<object class="sizeritem">
 							<object class="wxCheckBox" name="" variable="cbFreeLine" member="yes">
 								<label>Free line</label>
 								<tooltip>Free drawing on the plot area. Left click and move the mouse. Illustration of OnUserMouseAction</tooltip>
@@ -154,6 +162,10 @@
 					<handler function="OnmiAboutSelected" entry="EVT_MENU" />
 				</object>
 			</object>
+		</object>
+		<object class="wxTimer" name="ID_TIMER" variable="Timer" member="yes">
+			<interval>25</interval>
+			<handler function="OnTimerTrigger" entry="EVT_TIMER" />
 		</object>
 	</object>
 </wxsmith>

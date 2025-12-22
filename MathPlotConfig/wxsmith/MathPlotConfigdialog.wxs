@@ -446,7 +446,7 @@
 								<orient>wxVERTICAL</orient>
 								<object class="sizeritem">
 									<object class="wxFlexGridSizer" variable="FlexGridSizer3" member="no">
-										<cols>3</cols>
+										<cols>4</cols>
 										<rows>1</rows>
 										<growablecols>0</growablecols>
 										<object class="sizeritem">
@@ -463,7 +463,7 @@
 												<label>Add X axis</label>
 												<handler function="OnbAddAxisClick" entry="EVT_BUTTON" />
 											</object>
-											<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+											<flag>wxTOP|wxBOTTOM|wxLEFT|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
 											<border>5</border>
 										</object>
 										<object class="sizeritem">
@@ -473,6 +473,15 @@
 											</object>
 											<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
 											<border>5</border>
+										</object>
+										<object class="sizeritem">
+											<object class="wxButton" name="" variable="bDelAxis" member="yes">
+												<label>Delete</label>
+												<handler function="OnbDelAxisClick" entry="EVT_BUTTON" />
+											</object>
+											<flag>wxTOP|wxBOTTOM|wxRIGHT|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+											<border>5</border>
+											<option>1</option>
 										</object>
 									</object>
 									<flag>wxALL|wxEXPAND</flag>
