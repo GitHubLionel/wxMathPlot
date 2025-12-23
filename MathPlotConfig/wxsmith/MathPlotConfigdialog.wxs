@@ -66,79 +66,133 @@
 										<label>Margins </label>
 										<orient>wxVERTICAL</orient>
 										<object class="sizeritem">
-											<object class="wxFlexGridSizer" variable="FlexGridSizer2" member="no">
-												<cols>6</cols>
-												<rows>2</rows>
+											<object class="wxBoxSizer" variable="BoxSizer17" member="no">
+												<orient>wxVERTICAL</orient>
 												<object class="sizeritem">
-													<object class="wxStaticText" name="" variable="StaticText15" member="yes">
-														<label>Margins :</label>
+													<object class="wxBoxSizer" variable="BoxSizer20" member="no">
+														<object class="sizeritem">
+															<object class="wxStaticText" name="" variable="StaticText41" member="yes">
+																<label>Top :</label>
+															</object>
+															<flag>wxTOP|wxBOTTOM|wxLEFT|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+															<border>5</border>
+														</object>
+														<object class="sizeritem">
+															<object class="wxTextCtrl" name="" variable="edMarginTop" member="yes">
+																<value>50</value>
+																<size>30,-1</size>
+																<validator>wxIntegerValidator&lt;unsigned int&gt; (&amp;int__top)</validator>
+																<tooltip>Top</tooltip>
+																<style>wxTE_RIGHT</style>
+															</object>
+															<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+															<border>5</border>
+														</object>
+														<object class="sizeritem">
+															<object class="wxStaticText" name="" variable="StaticText38" member="yes">
+																<label>Bottom :</label>
+															</object>
+															<flag>wxTOP|wxBOTTOM|wxLEFT|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+															<border>5</border>
+														</object>
+														<object class="sizeritem">
+															<object class="wxTextCtrl" name="" variable="edMarginBottom" member="yes">
+																<value>50</value>
+																<size>30,-1</size>
+																<validator>wxIntegerValidator&lt;unsigned int&gt; (&amp;int__bottom)</validator>
+																<tooltip>Bottom</tooltip>
+																<style>wxTE_RIGHT</style>
+															</object>
+															<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+															<border>5</border>
+														</object>
+														<object class="sizeritem">
+															<object class="wxStaticText" name="" variable="StaticText39" member="yes">
+																<label>Left :</label>
+															</object>
+															<flag>wxTOP|wxBOTTOM|wxLEFT|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+															<border>5</border>
+														</object>
+														<object class="sizeritem">
+															<object class="wxTextCtrl" name="" variable="edMarginLeft" member="yes">
+																<value>50</value>
+																<size>30,-1</size>
+																<validator>wxIntegerValidator&lt;unsigned int&gt; (&amp;int__left)</validator>
+																<tooltip>Left</tooltip>
+																<style>wxTE_RIGHT</style>
+															</object>
+															<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+															<border>5</border>
+														</object>
+														<object class="sizeritem">
+															<object class="wxStaticText" name="" variable="StaticText40" member="yes">
+																<label>Right :</label>
+															</object>
+															<flag>wxTOP|wxBOTTOM|wxLEFT|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+															<border>5</border>
+														</object>
+														<object class="sizeritem">
+															<object class="wxTextCtrl" name="" variable="edMarginRight" member="yes">
+																<value>50</value>
+																<size>30,-1</size>
+																<validator>wxIntegerValidator&lt;unsigned int&gt; (&amp;int__right)</validator>
+																<tooltip>Right</tooltip>
+																<style>wxTE_RIGHT</style>
+															</object>
+															<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+															<border>5</border>
+														</object>
+														<object class="sizeritem">
+															<object class="wxButton" name="" variable="bBGColor" member="yes">
+																<label>bg color</label>
+																<tooltip>Color of the background of the plot area</tooltip>
+																<handler function="OnbColorClick" entry="EVT_BUTTON" />
+															</object>
+															<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+															<border>5</border>
+															<option>1</option>
+														</object>
 													</object>
-													<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
-													<border>5</border>
-												</object>
-												<object class="sizeritem">
-													<object class="wxTextCtrl" name="" variable="edMarginTop" member="yes">
-														<value>50</value>
-														<size>40,-1</size>
-														<validator>wxIntegerValidator&lt;unsigned int&gt; (&amp;int__top)</validator>
-														<tooltip>Top</tooltip>
-														<style>wxTE_RIGHT</style>
-													</object>
-													<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
-													<border>2</border>
-												</object>
-												<object class="sizeritem">
-													<object class="wxTextCtrl" name="" variable="edMarginBottom" member="yes">
-														<value>50</value>
-														<size>40,-1</size>
-														<validator>wxIntegerValidator&lt;unsigned int&gt; (&amp;int__bottom)</validator>
-														<tooltip>Bottom</tooltip>
-														<style>wxTE_RIGHT</style>
-													</object>
-													<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
-													<border>2</border>
-												</object>
-												<object class="sizeritem">
-													<object class="wxTextCtrl" name="" variable="edMarginLeft" member="yes">
-														<value>50</value>
-														<size>40,-1</size>
-														<validator>wxIntegerValidator&lt;unsigned int&gt; (&amp;int__left)</validator>
-														<tooltip>Left</tooltip>
-														<style>wxTE_RIGHT</style>
-													</object>
-													<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
-													<border>2</border>
-												</object>
-												<object class="sizeritem">
-													<object class="wxTextCtrl" name="" variable="edMarginRight" member="yes">
-														<value>50</value>
-														<size>40,-1</size>
-														<validator>wxIntegerValidator&lt;unsigned int&gt; (&amp;int__right)</validator>
-														<tooltip>Right</tooltip>
-														<style>wxTE_RIGHT</style>
-													</object>
-													<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
-													<border>2</border>
-												</object>
-												<object class="sizeritem">
-													<object class="wxButton" name="" variable="bBGColor" member="yes">
-														<label>bg color</label>
-														<handler function="OnbColorClick" entry="EVT_BUTTON" />
-													</object>
-													<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
-													<border>5</border>
-												</object>
-												<object class="sizeritem">
-													<object class="wxCheckBox" name="" variable="cbDrawBox" member="yes">
-														<label>Draw box</label>
-													</object>
-													<flag>wxALL|wxEXPAND</flag>
+													<flag>wxLEFT|wxRIGHT|wxEXPAND</flag>
 													<border>5</border>
 													<option>1</option>
 												</object>
+												<object class="sizeritem">
+													<object class="wxBoxSizer" variable="BoxSizer21" member="no">
+														<object class="sizeritem">
+															<object class="wxCheckBox" name="" variable="cbDrawBox" member="yes">
+																<label>Draw box</label>
+															</object>
+															<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+															<border>5</border>
+															<option>1</option>
+														</object>
+														<object class="sizeritem">
+															<object class="wxStaticText" name="" variable="StaticText37" member="yes">
+																<label>Extra margin :</label>
+															</object>
+															<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+															<border>5</border>
+															<option>1</option>
+														</object>
+														<object class="sizeritem">
+															<object class="wxTextCtrl" name="" variable="edExtraMargin" member="yes">
+																<value>8</value>
+																<size>30,-1</size>
+																<validator>wxIntegerValidator&lt;unsigned int&gt; (&amp;int__extra)</validator>
+																<tooltip>Extra margin for plot area</tooltip>
+																<style>wxTE_RIGHT</style>
+															</object>
+															<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+															<border>5</border>
+														</object>
+													</object>
+													<flag>wxLEFT|wxRIGHT</flag>
+													<border>5</border>
+												</object>
 											</object>
-											<flag>wxLEFT|wxRIGHT|wxEXPAND</flag>
-											<border>5</border>
+											<flag>wxALL|wxEXPAND</flag>
+											<option>1</option>
 										</object>
 									</object>
 									<flag>wxALL|wxEXPAND</flag>

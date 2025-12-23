@@ -30,6 +30,7 @@
 						<object class="sizeritem">
 							<object class="wxButton" name="" variable="bBar" member="yes">
 								<label>Draw Bar</label>
+								<tooltip>A function view as bar chart</tooltip>
 								<handler function="OnbBarClick" entry="EVT_BUTTON" />
 							</object>
 							<flag>wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND</flag>
@@ -54,9 +55,17 @@
 						<object class="sizeritem">
 							<object class="wxButton" name="" variable="bBarChart" member="yes">
 								<label>Draw BarChart</label>
-								<handler function="OnbBarChartClick" entry="EVT_BUTTON" />
+								<handler function="OnbChartClick" entry="EVT_BUTTON" />
 							</object>
 							<flag>wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND</flag>
+							<border>10</border>
+						</object>
+						<object class="sizeritem">
+							<object class="wxButton" name="" variable="bPieChart" member="yes">
+								<label>Draw PieChart</label>
+								<handler function="OnbChartClick" entry="EVT_BUTTON" />
+							</object>
+							<flag>wxBOTTOM|wxLEFT|wxRIGHT|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
 							<border>10</border>
 						</object>
 						<object class="sizeritem">

@@ -78,7 +78,7 @@ class MathPlotConfigDialog: public wxDialog
     bool fontTitleChanged;
     bool fontLegendChanged;
     bool fontAxisChanged;
-    unsigned int int_top, int_bottom, int_left, int_right;
+    unsigned int int_top, int_bottom, int_left, int_right, int_extra;
     int scale_offset;
     double scale_min, scale_max;
     double line_value;
@@ -186,7 +186,6 @@ class MathPlotConfigDialog: public wxDialog
     wxStaticText* StaticText12;
     wxStaticText* StaticText13;
     wxStaticText* StaticText14;
-    wxStaticText* StaticText15;
     wxStaticText* StaticText16;
     wxStaticText* StaticText17;
     wxStaticText* StaticText18;
@@ -210,7 +209,12 @@ class MathPlotConfigDialog: public wxDialog
     wxStaticText* StaticText34;
     wxStaticText* StaticText35;
     wxStaticText* StaticText36;
+    wxStaticText* StaticText37;
+    wxStaticText* StaticText38;
+    wxStaticText* StaticText39;
     wxStaticText* StaticText3;
+    wxStaticText* StaticText40;
+    wxStaticText* StaticText41;
     wxStaticText* StaticText4;
     wxStaticText* StaticText5;
     wxStaticText* StaticText6;
@@ -219,6 +223,7 @@ class MathPlotConfigDialog: public wxDialog
     wxStaticText* StaticText9;
     wxStaticText* stLinesYIndexLabel;
     wxTextCtrl* edAxisName;
+    wxTextCtrl* edExtraMargin;
     wxTextCtrl* edFormat;
     wxTextCtrl* edLinesName;
     wxTextCtrl* edLinesValue;

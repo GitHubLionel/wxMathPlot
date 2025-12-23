@@ -85,6 +85,7 @@ MathPlotDemoFrame::MathPlotDemoFrame(wxWindow* parent,wxWindowID id)
     bSample = new wxButton(pLog, wxID_ANY, _("Draw Sample"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
     BoxSizer2->Add(bSample, 0, wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND, 10);
     bBar = new wxButton(pLog, wxID_ANY, _("Draw Bar"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
+    bBar->SetToolTip(_("A function view as bar chart"));
     BoxSizer2->Add(bBar, 0, wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND, 10);
     bLog = new wxButton(pLog, wxID_ANY, _("Log Y sample"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
     BoxSizer2->Add(bLog, 0, wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND, 10);
@@ -92,6 +93,8 @@ MathPlotDemoFrame::MathPlotDemoFrame(wxWindow* parent,wxWindowID id)
     BoxSizer2->Add(bLogXY, 0, wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND, 10);
     bBarChart = new wxButton(pLog, wxID_ANY, _("Draw BarChart"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
     BoxSizer2->Add(bBarChart, 0, wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND, 10);
+    bPieChart = new wxButton(pLog, wxID_ANY, _("Draw PieChart"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
+    BoxSizer2->Add(bPieChart, 0, wxBOTTOM|wxLEFT|wxRIGHT|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 10);
     bImage = new wxButton(pLog, wxID_ANY, _("Draw Image"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
     BoxSizer2->Add(bImage, 0, wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND, 10);
     bMultiYAxis = new wxButton(pLog, wxID_ANY, _("Multi Y-Axis"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
@@ -139,7 +142,8 @@ MathPlotDemoFrame::MathPlotDemoFrame(wxWindow* parent,wxWindowID id)
     bBar->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotDemoFrame::OnbBarClick, this);
     bLog->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotDemoFrame::OnbLogClick, this);
     bLogXY->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotDemoFrame::OnbLogXYClick, this);
-    bBarChart->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotDemoFrame::OnbBarChartClick, this);
+    bBarChart->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotDemoFrame::OnbChartClick, this);
+    bPieChart->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotDemoFrame::OnbChartClick, this);
     bImage->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotDemoFrame::OnbImageClick, this);
     bMultiYAxis->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotDemoFrame::OnbMultiYAxisClick, this);
     bMovingObject->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotDemoFrame::OnbMovingObjectClick, this);
@@ -224,8 +228,9 @@ void MathPlotDemoFrame::CleanPlot(void)
   leftAxis->SetLogAxis(false);
   leftAxis->SetAuto(true);
   leftAxis->SetVisible(true);
-  // Remove Bar chart if present
+  // Remove Bar and Pie chart if present
   mPlot->DelLayer(mPlot->GetLayerByName(_T("BarChart")), mpForceDelete);
+  mPlot->DelLayer(mPlot->GetLayerByName(_T("PieChart")), mpForceDelete);
   // Remove Bitmap if present
   mPlot->DelLayer(mPlot->GetLayerByClassName("mpBitmapLayer"), mpForceDelete);
   // Remove all extra Y axis if present
@@ -312,10 +317,15 @@ void MathPlotDemoFrame::OnbLogXYClick(wxCommandEvent &WXUNUSED(event))
   //  There is no need to call Fit() here since AddLayer() does it.
 }
 
-void MathPlotDemoFrame::OnbBarChartClick(wxCommandEvent &WXUNUSED(event))
+void MathPlotDemoFrame::OnbChartClick(wxCommandEvent &event)
 {
   CleanPlot();
-  mpBarChart* barChart = new mpBarChart(_T("BarChart"));
+  wxButton* bt = wxDynamicCast(event.GetEventObject(), wxButton);
+  mpChart* Chart;
+  if (bt == bBarChart)
+    Chart = new mpBarChart(_T("BarChart"));
+  else
+    Chart = new mpPieChart(_T("PieChart"));
   // Create vector for y and fill it with data
   std::vector<double> vectory;
   double ycoord;
@@ -324,23 +334,39 @@ void MathPlotDemoFrame::OnbBarChartClick(wxCommandEvent &WXUNUSED(event))
     ycoord = 1.5 * ((double)p) + 1.0;
     vectory.push_back(ycoord);
   }
-  barChart->SetChartValues(vectory);
+  Chart->SetChartValues(vectory);
   std::vector < std::string > labels;
   std::string label;
+  label.assign("Blue");
+  labels.push_back(label);
   label.assign("Red");
   labels.push_back(label);
   label.assign("Green");
   labels.push_back(label);
-  label.assign("Blue");
-  labels.push_back(label);
-  label.assign("Black");
+  label.assign("Purple");
   labels.push_back(label);
   label.assign("Yellow");
   labels.push_back(label);
-  barChart->SetChartLabels(labels);
-  barChart->SetBarColour(wxColour(125, 200, 255));
-  barChart->SetBarLabelPosition(mpBAR_TOP);
-  mPlot->AddLayer(barChart);
+  Chart->SetChartLabels(labels);
+  if (bt == bBarChart)
+  {
+    ((mpBarChart*)Chart)->SetBarColour(wxColour(125, 200, 255));
+    ((mpBarChart*)Chart)->SetBarLabelPosition(mpBAR_TOP);
+  }
+  else
+  {
+    /*
+    // We can pass our colors or pie use default colors
+    std::vector < wxColour > colors;
+    colors.push_back(*wxBLUE);
+    colors.push_back(*wxRED);
+    colors.push_back(*wxGREEN);
+    colors.push_back(*wxCYAN);
+    colors.push_back(*wxYELLOW);
+    ((mpPieChart*)Chart)->SetPieColours(colors);
+    */
+  }
+  mPlot->AddLayer(Chart);
   //  There is no need to call Fit() here since AddLayer() does it.
 }
 

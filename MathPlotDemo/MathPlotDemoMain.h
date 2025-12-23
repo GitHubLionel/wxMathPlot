@@ -12,10 +12,6 @@
 
 //(*Headers(MathPlotDemoFrame)
 #include <mathplot.h>
-#ifdef ENABLE_MP_NAMESPACE
-  using namespace MathPlot;
-#endif // ENABLE_MP_NAMESPACE
-
 #include <wx/aui/aui.h>
 #include <wx/button.h>
 #include <wx/checkbox.h>
@@ -25,6 +21,10 @@
 #include <wx/sizer.h>
 #include <wx/timer.h>
 //*)
+
+#ifdef ENABLE_MP_NAMESPACE
+  using namespace MathPlot;
+#endif // ENABLE_MP_NAMESPACE
 
 class MathPlotDemoFrame: public wxFrame
 {
@@ -45,7 +45,7 @@ class MathPlotDemoFrame: public wxFrame
         void OnmiAboutSelected(wxCommandEvent& event);
         void OnmiPreviewSelected(wxCommandEvent& event);
         void OnmiPrintSelected(wxCommandEvent& event);
-        void OnbBarChartClick(wxCommandEvent& event);
+        void OnbChartClick(wxCommandEvent& event);
         void OncbFreeLineClick(wxCommandEvent& event);
         void OnbImageClick(wxCommandEvent& event);
         void OnbMultiYAxisClick(wxCommandEvent& event);
@@ -75,6 +75,7 @@ class MathPlotDemoFrame: public wxFrame
         wxButton* bLogXY;
         wxButton* bMovingObject;
         wxButton* bMultiYAxis;
+        wxButton* bPieChart;
         wxButton* bSample;
         wxCheckBox* cbFreeLine;
         wxMenuItem* miPrint;

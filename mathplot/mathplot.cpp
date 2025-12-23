@@ -2081,21 +2081,21 @@ void mpPieChart::DoPlot(wxDC &dc, mpWindow &w)
   double anglepie = 0;
   double angletxt = 0;
   double scale = w.GetScaleY(m_yAxisID) / w.GetScaleX();
-  wxCoord offset = (scale == 1 ? 0 : (wxCoord)(w.x2p(0) / 2));
+  wxCoord offset = (scale == 1 ? m_center.x : (wxCoord)(w.x2p(m_center.x) * (1.0 - scale)));
   wxString currentLabel;
 
   if (values.size() > 0)
   {
-    xc = w.x2p(0) * scale + offset;
-    x1 = w.x2p(m_radius) * scale + offset;
-    y1 = yc = w.y2p(0, m_yAxisID);
+    xc = w.x2p(m_center.x) * scale + offset;
+    x1 = w.x2p(m_radius + m_center.x) * scale + offset;
+    y1 = yc = w.y2p(m_center.y, m_yAxisID);
 
     for (size_t binIndex = 0; binIndex < values.size(); binIndex++)
     {
       angle = values[binIndex] / m_total_value * M_PI2;
       anglepie += angle;
-      x2 = w.x2p(m_radius * cos(anglepie)) * scale + offset;
-      y2 = w.y2p(m_radius * sin(anglepie), m_yAxisID);
+      x2 = w.x2p(m_radius * cos(anglepie) + m_center.x) * scale + offset;
+      y2 = w.y2p(m_radius * sin(anglepie) + m_center.y, m_yAxisID);
       wxBrush brush(GetColour(binIndex), wxBRUSHSTYLE_SOLID);
       dc.SetBrush(brush);
       dc.DrawArc(x1, y1, x2, y2, xc, yc);
@@ -2103,8 +2103,17 @@ void mpPieChart::DoPlot(wxDC &dc, mpWindow &w)
       {
         currentLabel = wxConvUTF8.cMB2WX(labels[binIndex].c_str());
         dc.GetTextExtent(currentLabel, &labelW, &labelH);
-        labelX = w.x2p(m_radius * cos(angletxt + angle / 2.0)) * scale + offset + 10;
-        labelY = w.y2p(m_radius * sin(angletxt + angle / 2.0), m_yAxisID);
+        labelX = w.x2p(m_radius * cos(angletxt + angle / 2.0) + m_center.x) * scale + offset + 10;
+        labelY = w.y2p(m_radius * sin(angletxt + angle / 2.0) + m_center.y, m_yAxisID);
+        // Print label at left of pie
+        if ((angletxt > 1.5) && (angletxt < 4.5)) // [Pi/2, 3Pi/2]
+          labelX -= labelW + 20;
+        // Print label at top of pie
+        if ((angletxt > 0.75) && (angletxt < 2.25)) // [Pi/4, 3Pi/4]
+          labelY -= labelH;
+        // Print label at bottom of pie
+        if ((angletxt > 3.75) && (angletxt < 5.25)) // [5Pi/4, 7Pi/4]
+          labelY += labelH;
         dc.DrawText(currentLabel, labelX, labelY);
         angletxt += angle;
       }
@@ -2225,7 +2234,7 @@ int mpScaleX::GetOrigin(mpWindow &w)
       if (m_drawOutsideMargins)
         origin = X_BORDER_SEPARATION;
       else
-        origin = w.GetMarginTop() - EXTRA_MARGIN;
+        origin = w.GetMarginTop() - w.GetExtraMargin();
       break;
     }
     case mpALIGN_CENTERX:
@@ -2239,7 +2248,7 @@ int mpScaleX::GetOrigin(mpWindow &w)
       if (m_drawOutsideMargins)
         origin = w.GetScreenY() - X_BORDER_SEPARATION;
       else
-        origin = w.GetScreenY() - w.GetMarginBottom() + EXTRA_MARGIN - 1;
+        origin = w.GetScreenY() - w.GetMarginBottom() + w.GetExtraMargin() - 1;
       break;
     }
     case mpALIGN_BORDER_BOTTOM:
@@ -2605,7 +2614,7 @@ void mpScaleY::DrawScaleName(wxDC &dc, mpWindow &w, int origin, int labelSize)
   {
     // Scale Y : vertical axis
     case mpALIGN_BORDER_LEFT:
-      dc.DrawText(m_name, origin + labelSize + 8, m_plotBoundaries.startPy + EXTRA_MARGIN);
+      dc.DrawText(m_name, origin + labelSize + 8, m_plotBoundaries.startPy + w.GetExtraMargin());
       break;
     case mpALIGN_LEFT:
     {
@@ -2613,7 +2622,7 @@ void mpScaleY::DrawScaleName(wxDC &dc, mpWindow &w, int origin, int labelSize)
       break;
     }
     case mpALIGN_CENTERY:
-      dc.DrawText(m_name, origin + kTickSize, m_plotBoundaries.startPy + EXTRA_MARGIN);
+      dc.DrawText(m_name, origin + kTickSize, m_plotBoundaries.startPy + w.GetExtraMargin());
       break;
     case mpALIGN_RIGHT:
     {
@@ -2621,7 +2630,7 @@ void mpScaleY::DrawScaleName(wxDC &dc, mpWindow &w, int origin, int labelSize)
       break;
     }
     case mpALIGN_BORDER_RIGHT:
-      dc.DrawText(m_name, origin - tx - labelSize - kTickSize - 2, m_plotBoundaries.startPy + EXTRA_MARGIN);
+      dc.DrawText(m_name, origin - tx - labelSize - kTickSize - 2, m_plotBoundaries.startPy + w.GetExtraMargin());
       break;
 
     default:
@@ -2893,6 +2902,7 @@ void mpWindow::InitParameters()
   m_enableScrollBars = false;
   m_mouseLeftDownAction = mpMouseBoxZoom;
 
+  m_extraMargin = EXTRA_MARGIN;
   // Set all margins to 50
   SetMargins(50, 50, 50, 50);
 
@@ -4864,9 +4874,9 @@ void mpWindow::SetMargins(int top, int right, int bottom, int left)
   // For the normal m_margin, we need to account for the width of left and right Y-axes
   // since this can differ depending on how many Y-axis are used
   m_margin.top = m_marginOuter.top;
-  m_margin.right = m_marginOuter.right + GetRightYAxesWidth() + EXTRA_MARGIN;
+  m_margin.right = m_marginOuter.right + GetRightYAxesWidth() + m_extraMargin;
   m_margin.bottom = m_marginOuter.bottom;
-  m_margin.left = m_marginOuter.left + GetLeftYAxesWidth() + EXTRA_MARGIN;
+  m_margin.left = m_marginOuter.left + GetLeftYAxesWidth() + m_extraMargin;
 
   m_plotBoundaries.startPx = 0;
   m_plotBoundariesMargin.startPx = m_margin.left;
@@ -4878,8 +4888,8 @@ void mpWindow::SetMargins(int top, int right, int bottom, int left)
   m_plotBoundaries.endPy = m_scrY;
   m_plotBoundariesMargin.endPy = m_scrY - m_margin.bottom;
 
-  m_PlotArea = wxRect(m_margin.left - EXTRA_MARGIN, m_margin.top - EXTRA_MARGIN, m_plotWidth + 2 * EXTRA_MARGIN,
-      m_plotHeight + 2 * EXTRA_MARGIN);
+  m_PlotArea = wxRect(m_margin.left - m_extraMargin, m_margin.top - m_extraMargin, m_plotWidth + 2 * m_extraMargin,
+      m_plotHeight + 2 * m_extraMargin);
 }
 
 int mpWindow::GetLeftYAxesWidth(std::optional<int> yAxisID)

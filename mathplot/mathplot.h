@@ -2071,7 +2071,6 @@ class WXDLLIMPEXP_MATHPLOT mpBarChart: public mpChart
 
 /** \brief Layer for pie chart.
  * Create a very basic Pie Chart.
- * You must "Lock Aspect" if you want a centered pie.
  */
 class WXDLLIMPEXP_MATHPLOT mpPieChart: public mpChart
 {
@@ -2086,6 +2085,21 @@ class WXDLLIMPEXP_MATHPLOT mpPieChart: public mpChart
       colours.clear();
     }
 
+    /** Set the center of the pie chart
+     * @param center.
+     */
+    void SetCenter(const wxPoint center)
+    {
+      m_center = center;
+    }
+
+    /** Get the center of the pie chart
+     */
+    wxPoint GetCenter(void) const
+    {
+      return m_center;
+    }
+
     /** Set colours for the pie.
      @param colourArray Vector of wxColour.
      If colours is not provided then colours is created by the program. */
@@ -2096,7 +2110,7 @@ class WXDLLIMPEXP_MATHPLOT mpPieChart: public mpChart
      */
     virtual double GetMinX()
     {
-      return -m_radius;
+      return m_center.x - m_radius;
     }
 
     /** Get inclusive right border of bounding box.
@@ -2104,7 +2118,7 @@ class WXDLLIMPEXP_MATHPLOT mpPieChart: public mpChart
      */
     virtual double GetMaxX()
     {
-      return m_radius;
+      return m_center.x + m_radius;
     }
 
     /** Get inclusive bottom border of bounding box.
@@ -2112,7 +2126,7 @@ class WXDLLIMPEXP_MATHPLOT mpPieChart: public mpChart
      */
     virtual double GetMinY()
     {
-      return -m_radius;
+      return m_center.y - m_radius;
     }
 
     /** Get inclusive top border of bounding box.
@@ -2120,12 +2134,13 @@ class WXDLLIMPEXP_MATHPLOT mpPieChart: public mpChart
      */
     virtual double GetMaxY()
     {
-      return m_radius;
+      return m_center.y + m_radius;
     }
 
   protected:
 
     double m_radius;
+    wxPoint m_center;
     std::vector<wxColour> colours;
 
     /** Layer plot handler.
@@ -2936,8 +2951,8 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
       m_plotBoundaries.endPy = m_scrY;
       m_plotBoundariesMargin.endPy = m_scrY - m_margin.bottom;
 
-      m_PlotArea = wxRect(m_margin.left - EXTRA_MARGIN, m_margin.top - EXTRA_MARGIN,
-          m_plotWidth + 2*EXTRA_MARGIN, m_plotHeight + 2*EXTRA_MARGIN);
+      m_PlotArea = wxRect(m_margin.left - m_extraMargin, m_margin.top - m_extraMargin,
+          m_plotWidth + 2*m_extraMargin, m_plotHeight + 2*m_extraMargin);
 
       m_magnet.UpdateBox(m_PlotArea);
     }
@@ -3327,7 +3342,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
       SetMargins(top, m_marginOuter.right, m_marginOuter.bottom, m_marginOuter.left);
     }
 
-    /** Get the top margin. @param top Top Margin */
+    /** Get the top margin. */
     int GetMarginTop() const
     {
       return m_margin.top;
@@ -3339,7 +3354,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
       SetMargins(m_marginOuter.top, right, m_marginOuter.bottom, m_marginOuter.left);
     }
 
-    /** Get the right margin. @param right Right Margin */
+    /** Get the right margin. */
     int GetMarginRight() const
     {
       return m_margin.right;
@@ -3357,7 +3372,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
       SetMargins(m_marginOuter.top, m_marginOuter.right, bottom, m_marginOuter.left);
     }
 
-    /** Get the bottom margin. @param bottom Bottom Margin */
+    /** Get the bottom margin. */
     int GetMarginBottom() const
     {
       return m_margin.bottom;
@@ -3369,10 +3384,23 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
       SetMargins(m_marginOuter.top, m_marginOuter.right, m_marginOuter.bottom, left);
     }
 
-    /** Get the left margin. @param left Left Margin */
+    /** Get the left margin. */
     int GetMarginLeft() const
     {
       return m_margin.left;
+    }
+
+    /** Set the extra margin. @param extra Extra Margin */
+    void SetExtraMargin(int extra)
+    {
+      m_extraMargin = extra;
+      SetMargins(m_marginOuter.top, m_marginOuter.right, m_marginOuter.bottom, m_marginOuter.left);
+    }
+
+    /** Get the extra margin. */
+    int GetExtraMargin() const
+    {
+      return m_extraMargin;
     }
 
     /** Get the left outer margin, exluding Y-axis. @param left Left outer Margin */
@@ -3394,7 +3422,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     }
 
     /** Get the boundaries of the plot.
-     * Bond is reduced by EXTRA_MARGIN constant
+     * Bond is reduced by m_extraMargin constant
      * @param with_margin: include margin if true
      */
     mpRect GetPlotBoundaries(bool with_margin) const
@@ -3404,10 +3432,10 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
         bond = m_plotBoundariesMargin;
       else
         bond = m_plotBoundaries;
-      bond.startPx -= EXTRA_MARGIN;
-      bond.endPx += EXTRA_MARGIN;
-      bond.startPy -= EXTRA_MARGIN;
-      bond.endPy += EXTRA_MARGIN;
+      bond.startPx -= m_extraMargin;
+      bond.endPx += m_extraMargin;
+      bond.startPy -= m_extraMargin;
+      bond.endPy += m_extraMargin;
       return bond;
     }
 
@@ -3692,12 +3720,13 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 
     mpRect m_margin;                    //!< Margin around the plot including Y-axis
     mpRect m_marginOuter;               //!< Margin around the plot exluding Y-axis. Default 50
+    int m_extraMargin;                  //!< Extra margin around the plot. Default 8
     wxCoord m_plotWidth;                //!< Width of the plot = m_scrX - (m_margin.left + m_margin.right)
     wxCoord m_plotHeight;               //!< Height of the plot = m_scrY - (m_margin.top + m_margin.bottom)
 
     mpRect m_plotBoundaries;            //!< The full size of the plot. Calculated
     mpRect m_plotBoundariesMargin;      //!< The size of the plot with the margins. Calculated
-    wxRect m_PlotArea;                  //!< The full size of the plot with EXTRA_MARGIN
+    wxRect m_PlotArea;                  //!< The full size of the plot with m_extraMargin
 
     bool m_repainting;
     int m_last_lx, m_last_ly;           //!< For double buffering
