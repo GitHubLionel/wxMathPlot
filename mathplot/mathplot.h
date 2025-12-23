@@ -2986,7 +2986,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     /** Converts mpWindow (screen) pixel coordinates into graph (floating point) coordinates,
      * using current mpWindow position and scale.
      * @sa p2x,x2p,y2p */
-    inline double p2y(const wxCoord pixelCoordY, int yAxisID)
+    inline double p2y(const wxCoord pixelCoordY, int yAxisID = 0)
     {
       assert(m_AxisDataYList.count(yAxisID) != 0);
       if (m_AxisDataYList.count(yAxisID) == 0)
@@ -3005,7 +3005,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     /** Converts graph (floating point) coordinates into mpWindow (screen) pixel coordinates,
      * using current mpWindow position and scale.
      * @sa p2x,p2y,x2p */
-    inline wxCoord y2p(const double y, int yAxisID)
+    inline wxCoord y2p(const double y, int yAxisID = 0)
     {
       assert(m_AxisDataYList.count(yAxisID) != 0);
       if (m_AxisDataYList.count(yAxisID) == 0)
