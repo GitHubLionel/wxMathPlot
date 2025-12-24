@@ -3342,10 +3342,15 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
       SetMargins(top, m_marginOuter.right, m_marginOuter.bottom, m_marginOuter.left);
     }
 
-    /** Get the top margin. */
-    int GetMarginTop() const
+    /** Get the top margin.
+     * @param minusExtra (default false): return top margin minus extra margin
+     */
+    int GetMarginTop(bool minusExtra = false) const
     {
-      return m_margin.top;
+      if (minusExtra)
+        return m_margin.top - m_extraMargin;
+      else
+        return m_margin.top;
     }
 
     /** Set the right margin. @param right Right Margin */
@@ -3354,13 +3359,18 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
       SetMargins(m_marginOuter.top, right, m_marginOuter.bottom, m_marginOuter.left);
     }
 
-    /** Get the right margin. */
-    int GetMarginRight() const
+    /** Get the right margin.
+     * @param minusExtra (default false): return right margin minus extra margin
+     */
+    int GetMarginRight(bool minusExtra = false) const
     {
-      return m_margin.right;
+      if (minusExtra)
+        return m_margin.right - m_extraMargin;
+      else
+        return m_margin.right;
     }
 
-    /** Get the right outer margin, exluding Y-axis. @param right Right outer Margin */
+    /** Get the right outer margin, exluding Y-axis. */
     int GetMarginRightOuter() const
     {
       return m_marginOuter.right;
@@ -3372,10 +3382,15 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
       SetMargins(m_marginOuter.top, m_marginOuter.right, bottom, m_marginOuter.left);
     }
 
-    /** Get the bottom margin. */
-    int GetMarginBottom() const
+    /** Get the bottom margin.
+     * @param minusExtra (default false): return bottom margin minus extra margin
+     */
+    int GetMarginBottom(bool minusExtra = false) const
     {
-      return m_margin.bottom;
+      if (minusExtra)
+        return m_margin.bottom - m_extraMargin;
+      else
+        return m_margin.bottom;
     }
 
     /** Set the left margin. @param left Left Margin */
@@ -3384,10 +3399,15 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
       SetMargins(m_marginOuter.top, m_marginOuter.right, m_marginOuter.bottom, left);
     }
 
-    /** Get the left margin. */
-    int GetMarginLeft() const
+    /** Get the left margin
+     * @param minusExtra (default false): return left margin minus extra margin
+     */
+    int GetMarginLeft(bool minusExtra = false) const
     {
-      return m_margin.left;
+      if (minusExtra)
+        return m_margin.left - m_extraMargin;
+      else
+        return m_margin.left;
     }
 
     /** Set the extra margin. @param extra Extra Margin */
@@ -3403,7 +3423,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
       return m_extraMargin;
     }
 
-    /** Get the left outer margin, exluding Y-axis. @param left Left outer Margin */
+    /** Get the left outer margin, exluding Y-axis. */
     int GetMarginLeftOuter() const
     {
       return m_marginOuter.left;

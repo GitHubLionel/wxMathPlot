@@ -420,7 +420,7 @@ void mpInfoLayer::SetInfoRectangle(mpWindow &w, int width, int height)
     {
       case mpMarginLeftCenter:
       {
-        m_dim.x = (w.GetMarginLeft() - m_dim.width) / 2;
+        m_dim.x = (w.GetMarginLeft(true) - m_dim.width) / 2;
         m_dim.y = (w.GetScreenY() - m_dim.height) / 2;
         if (m_dim.x < MARGIN_LEFT_OFFSET)
           m_dim.x = MARGIN_LEFT_OFFSET;
@@ -429,24 +429,24 @@ void mpInfoLayer::SetInfoRectangle(mpWindow &w, int width, int height)
       case mpMarginTopLeft:
       {
         m_dim.x = MARGIN_LEFT_OFFSET;
-        m_dim.y = (w.GetMarginTop() - m_dim.height) / 2;
+        m_dim.y = (w.GetMarginTop(true) - m_dim.height) / 2;
         break;
       }
       case mpMarginTopCenter:
       {
         m_dim.x = (w.GetScreenX() - m_dim.width) / 2;
-        m_dim.y = (w.GetMarginTop() - m_dim.height) / 2;
+        m_dim.y = (w.GetMarginTop(true) - m_dim.height) / 2;
         break;
       }
       case mpMarginTopRight:
       {
         m_dim.x = w.GetScreenX() - m_dim.width - MARGIN_BOTTOM_OFFSET;
-        m_dim.y = (w.GetMarginTop() - m_dim.height) / 2;
+        m_dim.y = (w.GetMarginTop(true) - m_dim.height) / 2;
         break;
       }
       case mpMarginRightCenter:
       {
-        m_dim.x = w.GetScreenX() - (w.GetMarginRight() + m_dim.width) / 2;
+        m_dim.x = w.GetScreenX() - (w.GetMarginRight(true) + m_dim.width) / 2;
         m_dim.y = (w.GetScreenY() - m_dim.height) / 2;
         if ((m_dim.x + m_dim.width) > w.GetScreenX())
           m_dim.x = w.GetScreenX() - m_dim.width - MARGIN_RIGHT_OFFSET;
@@ -455,19 +455,19 @@ void mpInfoLayer::SetInfoRectangle(mpWindow &w, int width, int height)
       case mpMarginBottomLeft:
       {
         m_dim.x = MARGIN_LEFT_OFFSET;
-        m_dim.y = w.GetScreenY() - (w.GetMarginBottom() + m_dim.height) / 2;
+        m_dim.y = w.GetScreenY() - (w.GetMarginBottom(true) + m_dim.height) / 2;
         break;
       }
       case mpMarginBottomCenter:
       {
         m_dim.x = (w.GetScreenX() - m_dim.width) / 2;
-        m_dim.y = w.GetScreenY() - (w.GetMarginBottom() + m_dim.height) / 2;
+        m_dim.y = w.GetScreenY() - (w.GetMarginBottom(true) + m_dim.height) / 2;
         break;
       }
       case mpMarginBottomRight:
       {
         m_dim.x = w.GetScreenX() - m_dim.width - MARGIN_BOTTOM_OFFSET;
-        m_dim.y = w.GetScreenY() - (w.GetMarginBottom() + m_dim.height) / 2;
+        m_dim.y = w.GetScreenY() - (w.GetMarginBottom(true) + m_dim.height) / 2;
         break;
       }
       case mpCursor:
@@ -5172,50 +5172,50 @@ void mpText::DoPlot(wxDC &dc, mpWindow &w)
     }
     case mpMarginLeftCenter:
     {
-      px = (w.GetMarginLeft() - tw) / 2;
+      px = (w.GetMarginLeft(true) - tw) / 2;
       py = (w.GetScreenY() - th) / 2;
       break;
     }
     case mpMarginTopLeft:
     {
       px = MARGIN_LEFT_OFFSET;
-      py = (w.GetMarginTop() - th) / 2;
+      py = (w.GetMarginTop(true) - th) / 2;
       break;
     }
     case mpMarginTopCenter:
     {
       px = (w.GetScreenX() - tw) / 2;
-      py = (w.GetMarginTop() - th) / 2;
+      py = (w.GetMarginTop(true) - th) / 2;
       break;
     }
     case mpMarginTopRight:
     {
       px = w.GetScreenX() - tw - MARGIN_BOTTOM_OFFSET;
-      py = (w.GetMarginTop() - th) / 2;
+      py = (w.GetMarginTop(true) - th) / 2;
       break;
     }
     case mpMarginRightCenter:
     {
-      px = w.GetScreenX() - (w.GetMarginRight() + tw) / 2;
+      px = w.GetScreenX() - (w.GetMarginRight(true) + tw) / 2;
       py = (w.GetScreenY() - th) / 2;
       break;
     }
     case mpMarginBottomLeft:
     {
       px = MARGIN_LEFT_OFFSET;
-      py = w.GetScreenY() - (w.GetMarginBottom() + th) / 2;
+      py = w.GetScreenY() - (w.GetMarginBottom(true) + th) / 2;
       break;
     }
     case mpMarginBottomCenter:
     {
       px = (w.GetScreenX() - tw) / 2;
-      py = w.GetScreenY() - (w.GetMarginBottom() + th) / 2;
+      py = w.GetScreenY() - (w.GetMarginBottom(true) + th) / 2;
       break;
     }
     case mpMarginBottomRight:
     {
       px = w.GetScreenX() - tw - MARGIN_BOTTOM_OFFSET;
-      py = w.GetScreenY() - (w.GetMarginBottom() + th) / 2;
+      py = w.GetScreenY() - (w.GetMarginBottom(true) + th) / 2;
       break;
     }
     case mpCursor:
