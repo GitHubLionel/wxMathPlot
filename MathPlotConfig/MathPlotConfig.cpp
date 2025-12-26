@@ -11,6 +11,8 @@
 
 #include "mathplot.h" // includes MathPlotConfig.h when ENABLE_MP_CONFIG defined
 #include <wx/msgdlg.h>
+#include <wx/stdpaths.h>
+#include <wx/filename.h>
 
 //(*InternalHeaders(MathPlotConfigDialog)
 #include <wx/intl.h>
@@ -23,6 +25,205 @@
 #ifdef ENABLE_MP_NAMESPACE // MathPlot namespace
   namespace MathPlot {
 #endif // ENABLE_MP_NAMESPACE
+
+/***************************************************
+ * Helper class to save/restore configuration
+ ***************************************************/
+
+void mpSettings::SetSettings(wxWindow* win)
+{
+  if (!win)
+    return;
+
+  DoPosition(true, win);
+
+  // Go directly to the notebook
+  win = win->FindWindow(_("notebook"));
+  if (win)
+    DoRecursiveSearch(true, win);
+}
+
+void mpSettings::GetSettings(wxWindow* win)
+{
+  if (!win)
+    return;
+
+  DoPosition(false, win);
+
+  // Go directly to the notebook
+  win = win->FindWindow(_("notebook"));
+  if (win)
+    DoRecursiveSearch(false, win);
+}
+
+/**
+ * Get/set the position of the config window in the screen
+ * @param set : set if true else get
+ * @param win : the config window
+ */
+void mpSettings::DoPosition(bool set, wxWindow* win)
+{
+  SetPath(_("/Position"));
+  if (set)
+  {
+    int posX, posY;
+    if (Read(_("PosX"), &posX) && Read(_("PosY"), &posY))
+      win->Move(wxPoint(posX, posY), wxSIZE_FORCE);
+  }
+  else // get
+  {
+    wxPoint pos = win->GetScreenPosition();
+    Write(_("PosX"), pos.x);
+    Write(_("PosY"), pos.y);
+  }
+}
+
+/**
+ * Search recursively all the widgets then get/set parameters
+ * @param set : set if true else get
+ * @param win : the window (container)
+ * @param path : the complete path (created with the name (class) of each window) to reach the window
+ * @param level : the depth in the window (container) hierarchy
+ */
+void mpSettings::DoRecursiveSearch(bool set, wxWindow* win, const wxString& path, int level)
+{
+  // We save only General (panel 1) and Legend (panel 2)
+  if ((win->GetName()).IsSameAs(_("panel")))
+  {
+    if (level > 2)
+      return;
+  }
+
+  // wxTextCtrl: edit widget
+  if (win->IsKindOf(wxCLASSINFO(wxTextCtrl)))
+  {
+    wxTextCtrl* text = (wxTextCtrl*)win;
+    SetPath(path);
+    wxString key = _T("Text") + wxString::Format("%d", level);
+    if (set)
+    {
+      wxString value;
+      if (Read(key, &value))
+        text->SetValue(value);
+    }
+    else // get
+    {
+      Write(key, text->GetValue());
+    }
+    return;
+  }
+
+  // wxChoice: choice list widget
+  if (win->IsKindOf(wxCLASSINFO(wxChoice)))
+  {
+    wxChoice* choice = (wxChoice*)win;
+    SetPath(path);
+    wxString key = _T("Choice") + wxString::Format("%d", level);
+    if (set)
+    {
+      int value;
+      if (Read(key, &value))
+        choice->SetSelection(value);
+    }
+    else // get
+    {
+      Write(key, choice->GetSelection());
+    }
+    return;
+  }
+
+  // wxCheckBox: check box widget
+  if (win->IsKindOf(wxCLASSINFO(wxCheckBox)))
+  {
+    wxCheckBox* check = (wxCheckBox*)win;
+    SetPath(path);
+    wxString key = _T("Check") + wxString::Format("%d", level);
+    if (set)
+    {
+      bool value;
+      if (Read(key, &value))
+        check->SetValue(value);
+    }
+    else // get
+    {
+      Write(key, check->GetValue());
+    }
+    return;
+  }
+
+  // wxButton: button widget
+  if (win->IsKindOf(wxCLASSINFO(wxButton)))
+  {
+    wxButton* button = (wxButton*)win;
+    SetPath(path);
+    // It is a button for font configuration
+    if ((button->GetLabel()).IsSameAs(_("Font")))
+    {
+      wxString key1 = _T("ButtonFont") + wxString::Format("%d", level);
+      wxString key2 = _T("ButtonForeground") + wxString::Format("%d", level);
+      if (set)
+      {
+        wxFont font;
+        if (Read(key1, &font))
+          button->SetFont(font);
+        wxColour value;
+        if (Read(key2, &value))
+          button->SetForegroundColour(value);
+      }
+      else // get
+      {
+        Write(key1, button->GetFont());
+        Write(key2, button->GetForegroundColour());
+      }
+    }
+    else // It is a button for background colour configuration
+    {
+      wxString key = _T("ButtonBackground") + wxString::Format("%d", level);
+      if (set)
+      {
+        wxColour value;
+        if (Read(key, &value))
+          button->SetBackgroundColour(value);
+      }
+      else // get
+      {
+        Write(key, button->GetBackgroundColour());
+      }
+    }
+    return;
+  }
+
+  wxWindowList& children = win->GetChildren();
+  wxString winPath = path + "/" + win->GetName();
+  if (level != 0)
+    winPath += wxString::Format("%d", level);
+  int i = 1;
+#if wxCHECK_VERSION(3, 0, 0)
+  for (wxWindow* child : children)
+  {
+    wxWindow* current = child;
+    if (!current->IsKindOf(wxCLASSINFO(wxStaticText))) // Skip static text
+    {
+      DoRecursiveSearch(set, current, winPath, i);
+      i++;
+    }
+  }
+#else
+  for (wxWindowList::Node* node = children.GetFirst(); node; node = node->GetNext())
+  {
+    wxWindow* current = (wxWindow*)node->GetData();
+    if (!current->IsKindOf(wxCLASSINFO(wxStaticText))) // Skip static text
+    {
+      DoRecursiveSearch(set, current, winPath, i);
+      i++;
+    }
+  }
+#endif
+}
+
+/***************************************************
+ * MathPlotConfigDialog class
+ ***************************************************/
 
 // List of string message used
 const wxString MESS_TRANSPARENT = _("Transparent not work on Linux");
@@ -649,16 +850,19 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   cbLegendBrushStyle->SetToolTip(MESS_TRANSPARENT);
 #endif // _WIN32
 
-  colourButton = NULL;
-  CurrentTitle = NULL;
-  CurrentChoice = NULL;
-  CurrentSerie = NULL;
-  CurrentLine = NULL;
-  CurrentLegend = NULL;
-  CurrentCoords = NULL;
   // The plot window
   m_plot = wxDynamicCast(parent, mpWindow);
+  // The settings for the config window
+  m_settings = NULL;
+
+  colourButton = NULL;
+  CurrentTitle = NULL;
+  CurrentLegend = NULL;
+  CurrentCoords = NULL;
   CurrentScale = NULL;
+  CurrentSerie = NULL;
+  CurrentLine = NULL;
+  CurrentChoice = NULL;
   fontTitleChanged = false;
   fontLegendChanged = false;
   fontAxisChanged = false;
@@ -676,6 +880,13 @@ MathPlotConfigDialog::~MathPlotConfigDialog()
 {
   //(*Destroy(MathPlotConfigDialog)
   //*)
+  if (m_settings)
+  {
+    m_settings->GetSettings(this);
+    m_settings->Flush();
+    delete m_settings;
+    m_settings = NULL;
+  }
 }
 
 void MathPlotConfigDialog::Initialize(mpConfigPageId id)
@@ -801,16 +1012,59 @@ void MathPlotConfigDialog::Initialize(mpConfigPageId id)
     case mpcpiLines:
       CurrentChoice = ChoiceLines;
       break;
-    default:;
+    default:
+      ;
   }
 }
 
-void MathPlotConfigDialog::OnQuit(wxCommandEvent &WXUNUSED(event))
+void MathPlotConfigDialog::CreateSettingsFile(const wxString& filename, const wxString& path, bool apply)
 {
+  if (m_settings)
+    delete m_settings;
+
+  // Create wxFileName Class and assign complete exe path
+  wxFileName f(wxStandardPaths::Get().GetExecutablePath());
+  wxString filePath;
+
+  if (path.IsEmpty()) // Default, save settings in exe directory
+  {
+    // Obtain only folder path of exe and add filename
+    filePath = f.GetPath() + f.GetPathSeparators() + filename;
+  }
+  else
+  {
+    filePath = path + f.GetPathSeparators() + filename;
+  }
+
+  m_settings = new mpSettings(filePath);
+
+  // If settings file exist, apply it
+  if (wxFileExists(filePath) && apply)
+  {
+    ApplySettings();
+  }
+}
+
+void MathPlotConfigDialog::ApplySettings(void)
+{
+  // Load and set Settings
+  m_settings->SetSettings(this);
+  // Apply new parameters to plot
+  Apply(mpcpiGeneral, true);
+  Apply(mpcpiLegend, true);
+}
+
+void MathPlotConfigDialog::OnQuit(wxCommandEvent& WXUNUSED(event))
+{
+  if (m_settings)
+  {
+    m_settings->GetSettings(this);
+    m_settings->Flush();
+  }
   Close();
 }
 
-void MathPlotConfigDialog::OnbColorClick(wxCommandEvent &event)
+void MathPlotConfigDialog::OnbColorClick(wxCommandEvent& event)
 {
   // Get the sender
   colourButton = wxDynamicCast(event.GetEventObject(), wxButton);
@@ -827,7 +1081,7 @@ void MathPlotConfigDialog::OnbColorClick(wxCommandEvent &event)
   }
 }
 
-void MathPlotConfigDialog::FillYAxisList(wxChoice *yChoice, bool clearChoice)
+void MathPlotConfigDialog::FillYAxisList(wxChoice* yChoice, bool clearChoice)
 {
   if (clearChoice)
     yChoice->Clear();
@@ -844,7 +1098,7 @@ void MathPlotConfigDialog::FillYAxisList(wxChoice *yChoice, bool clearChoice)
   }
 }
 
-void MathPlotConfigDialog::DoButtonColour(wxButton *button, const wxColour &colour)
+void MathPlotConfigDialog::DoButtonColour(wxButton* button, const wxColour& colour)
 {
   wxString RGB;
   RGB.Printf("%02X%02X%02X", colour.GetRed(), colour.GetGreen(), colour.GetBlue());
@@ -856,7 +1110,7 @@ void MathPlotConfigDialog::DoButtonColour(wxButton *button, const wxColour &colo
   button->SetBackgroundColour(colour);
 }
 
-void MathPlotConfigDialog::DoApplyColour(const wxColour &colour)
+void MathPlotConfigDialog::DoApplyColour(const wxColour& colour)
 {
   if (colour == colourButton->GetBackgroundColour())
     return;
@@ -865,7 +1119,7 @@ void MathPlotConfigDialog::DoApplyColour(const wxColour &colour)
   colourButton->Refresh();
 }
 
-void MathPlotConfigDialog::OnbFontClick(wxCommandEvent &event)
+void MathPlotConfigDialog::OnbFontClick(wxCommandEvent& event)
 {
   wxButton* fontButton = wxDynamicCast(event.GetEventObject(), wxButton);
 
@@ -893,7 +1147,7 @@ void MathPlotConfigDialog::OnbFontClick(wxCommandEvent &event)
  * if get_set then get font from layer and set to button
  * else get font from button and set to layer
  */
-void MathPlotConfigDialog::UpdateFont(mpLayer *layer, wxButton *button, bool get_set)
+void MathPlotConfigDialog::UpdateFont(mpLayer* layer, wxButton* button, bool get_set)
 {
   if (get_set)
   {
@@ -907,7 +1161,7 @@ void MathPlotConfigDialog::UpdateFont(mpLayer *layer, wxButton *button, bool get
   }
 }
 
-void MathPlotConfigDialog::SetFontChildren(wxButton *p, const wxFontData &fontdata)
+void MathPlotConfigDialog::SetFontChildren(wxButton* p, const wxFontData& fontdata)
 {
   wxFont font(fontdata.GetChosenFont());
 
@@ -915,7 +1169,7 @@ void MathPlotConfigDialog::SetFontChildren(wxButton *p, const wxFontData &fontda
   p->SetForegroundColour(fontdata.GetColour());
 }
 
-void MathPlotConfigDialog::OnnbConfigPageChanged(wxNotebookEvent &event)
+void MathPlotConfigDialog::OnnbConfigPageChanged(wxNotebookEvent& event)
 {
   const int idx = event.GetSelection();
   CurrentChoice = NULL;
@@ -1019,7 +1273,7 @@ void MathPlotConfigDialog::UpdateAxis(void)
 #endif
 }
 
-void MathPlotConfigDialog::OnbAddAxisClick(wxCommandEvent &event)
+void MathPlotConfigDialog::OnbAddAxisClick(wxCommandEvent& event)
 {
   wxButton* bt = wxDynamicCast(event.GetEventObject(), wxButton);
   mpScale* newScale = NULL;
@@ -1044,7 +1298,7 @@ void MathPlotConfigDialog::OnbAddAxisClick(wxCommandEvent &event)
   }
 }
 
-void MathPlotConfigDialog::OnbDelAxisClick(wxCommandEvent &WXUNUSED(event))
+void MathPlotConfigDialog::OnbDelAxisClick(wxCommandEvent& WXUNUSED(event))
 {
   if (CurrentScale)
   {
@@ -1058,18 +1312,18 @@ void MathPlotConfigDialog::OnbDelAxisClick(wxCommandEvent &WXUNUSED(event))
   }
 }
 
-void MathPlotConfigDialog::OnAxisSelect(wxCommandEvent &WXUNUSED(event))
+void MathPlotConfigDialog::OnAxisSelect(wxCommandEvent& WXUNUSED(event))
 {
   UpdateAxis();
   CurrentChoice = ChoiceAxis;
 }
 
-void MathPlotConfigDialog::OncbFormatSelect(wxCommandEvent &WXUNUSED(event))
+void MathPlotConfigDialog::OncbFormatSelect(wxCommandEvent& WXUNUSED(event))
 {
   edFormat->Enable(cbFormat->GetSelection() == 5);
 }
 
-void MathPlotConfigDialog::OncbAutoScaleClick(wxCommandEvent &WXUNUSED(event))
+void MathPlotConfigDialog::OncbAutoScaleClick(wxCommandEvent& WXUNUSED(event))
 {
   edScaleMin->Enable(!cbAutoScale->GetValue());
   edScaleMax->Enable(!cbAutoScale->GetValue());
@@ -1163,12 +1417,12 @@ void MathPlotConfigDialog::UpdateSelectedSerie(void)
   }
 }
 
-void MathPlotConfigDialog::OnChoiceSeries(wxCommandEvent &WXUNUSED(event))
+void MathPlotConfigDialog::OnChoiceSeries(wxCommandEvent& WXUNUSED(event))
 {
   UpdateSelectedSerie();
 }
 
-void MathPlotConfigDialog::OnbDelSeriesClick(wxCommandEvent &WXUNUSED(event))
+void MathPlotConfigDialog::OnbDelSeriesClick(wxCommandEvent& WXUNUSED(event))
 {
   if (CurrentSerie && CurrentSerie->GetCanDelete())
   {
@@ -1235,12 +1489,12 @@ void MathPlotConfigDialog::UpdateSelectedLine(void)
   }
 }
 
-void MathPlotConfigDialog::OnChoiceLinesSelect(wxCommandEvent &WXUNUSED(event))
+void MathPlotConfigDialog::OnChoiceLinesSelect(wxCommandEvent& WXUNUSED(event))
 {
   UpdateSelectedLine();
 }
 
-void MathPlotConfigDialog::OnbAddLinesClick(wxCommandEvent &WXUNUSED(event))
+void MathPlotConfigDialog::OnbAddLinesClick(wxCommandEvent& WXUNUSED(event))
 {
   int answer = wxMessageDialog(this, MESS_LINES_ADD, MESS_CONFIRM, wxYES_NO | wxCANCEL | wxCENTRE).ShowModal();
 
@@ -1265,7 +1519,7 @@ void MathPlotConfigDialog::OnbAddLinesClick(wxCommandEvent &WXUNUSED(event))
   }
 }
 
-void MathPlotConfigDialog::OnbDelLinesClick(wxCommandEvent &WXUNUSED(event))
+void MathPlotConfigDialog::OnbDelLinesClick(wxCommandEvent& WXUNUSED(event))
 {
   if (CurrentLine)
   {
@@ -1280,9 +1534,14 @@ void MathPlotConfigDialog::OnbDelLinesClick(wxCommandEvent &WXUNUSED(event))
   }
 }
 
-void MathPlotConfigDialog::OnbApplyClick(wxCommandEvent &WXUNUSED(event))
+void MathPlotConfigDialog::OnbApplyClick(wxCommandEvent& WXUNUSED(event))
 {
-  switch (nbConfig->GetSelection())
+  Apply(nbConfig->GetSelection());
+}
+
+void MathPlotConfigDialog::Apply(int pageIndex, bool updateFont)
+{
+  switch (pageIndex)
   {
     case mpcpiGeneral: // General
     {
@@ -1290,7 +1549,7 @@ void MathPlotConfigDialog::OnbApplyClick(wxCommandEvent &WXUNUSED(event))
       {
         CurrentTitle->SetName(edTitle->GetValue());
         CurrentTitle->SetVisible(cbTitleVisible->GetValue());
-        if (fontTitleChanged)
+        if (fontTitleChanged || updateFont)
         {
           UpdateFont(CurrentTitle, bFontTitle, false);
           fontTitleChanged = false;
@@ -1336,7 +1595,7 @@ void MathPlotConfigDialog::OnbApplyClick(wxCommandEvent &WXUNUSED(event))
         wxBrush brush(bLegendBrushColor->GetBackgroundColour(), IdToBrushStyle(cbLegendBrushStyle->GetSelection()));
         CurrentLegend->SetBrush(brush);
 
-        if (fontLegendChanged)
+        if (fontLegendChanged || updateFont)
         {
           UpdateFont(CurrentLegend, bFontLegend, false);
           fontLegendChanged = false;

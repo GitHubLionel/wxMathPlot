@@ -27,6 +27,7 @@
 #include <wx/colordlg.h>
 #include <wx/fontdlg.h>
 #include <wx/valnum.h>
+#include <wx/fileconf.h>
 
 #ifdef ENABLE_MP_NAMESPACE
   namespace MathPlot {
@@ -40,6 +41,23 @@ class WXDLLIMPEXP_MATHPLOT mpInfoCoords;
 class WXDLLIMPEXP_MATHPLOT mpInfoLegend;
 class WXDLLIMPEXP_MATHPLOT mpScale;
 class WXDLLIMPEXP_MATHPLOT mpText;
+
+/**
+ * Helper class to save/restore configuration
+ */
+class mpSettings : public wxFileConfig
+{
+  public:
+    mpSettings(const wxString& localFilename) :
+        wxFileConfig(wxEmptyString, wxEmptyString, localFilename) {}
+    virtual ~mpSettings() {}
+
+    void SetSettings(wxWindow* win);
+    void GetSettings(wxWindow* win);
+  protected:
+    void DoPosition(bool set, wxWindow *win);
+    void DoRecursiveSearch(bool set, wxWindow *win, const wxString &path = _(""), int level = 0);
+};
 
 /**
  * The list of index of the page of the config window
@@ -63,17 +81,27 @@ class MathPlotConfigDialog: public wxDialog
 
     void Initialize(mpConfigPageId id = mpcpiNone);
     void SelectChoiceSerie(unsigned int serie);
+    void CreateSettingsFile(const wxString& filename, const wxString& path = wxEmptyString, bool apply = false);
+    void ApplySettings(void);
+    /**
+     * Give access to m_settings if we want to save some others parameters
+     */
+    mpSettings* GetSettingsHandle(void)
+    {
+      return m_settings;
+    }
 
   private:
 
     mpWindow* m_plot;
+    mpSettings* m_settings;
+    wxButton* colourButton;
     mpText* CurrentTitle;
     mpInfoLegend* CurrentLegend;
     mpInfoCoords* CurrentCoords;
     mpScale* CurrentScale;
     mpFunction* CurrentSerie;
     mpLine* CurrentLine;
-    wxButton* colourButton;
     wxChoice* CurrentChoice;
     bool fontTitleChanged;
     bool fontLegendChanged;
@@ -86,17 +114,17 @@ class MathPlotConfigDialog: public wxDialog
     bool SerieVisibleChange;
 
     //(*Handlers(MathPlotConfigDialog)
-    void OnQuit(wxCommandEvent &event);
-    void OnnbConfigPageChanged(wxNotebookEvent &event);
-    void OnbColorClick(wxCommandEvent &event);
-    void OnChoiceSeries(wxCommandEvent &event);
-    void OnAxisSelect(wxCommandEvent &event);
-    void OncbFormatSelect(wxCommandEvent &event);
-    void OncbAutoScaleClick(wxCommandEvent &event);
-    void OnbApplyClick(wxCommandEvent &event);
-    void OnbFontClick(wxCommandEvent &event);
-    void OnbDelSeriesClick(wxCommandEvent &event);
-    void OnbAddAxisClick(wxCommandEvent &event);
+    void OnQuit(wxCommandEvent& event);
+    void OnnbConfigPageChanged(wxNotebookEvent& event);
+    void OnbColorClick(wxCommandEvent& event);
+    void OnChoiceSeries(wxCommandEvent& event);
+    void OnAxisSelect(wxCommandEvent& event);
+    void OncbFormatSelect(wxCommandEvent& event);
+    void OncbAutoScaleClick(wxCommandEvent& event);
+    void OnbApplyClick(wxCommandEvent& event);
+    void OnbFontClick(wxCommandEvent& event);
+    void OnbDelSeriesClick(wxCommandEvent& event);
+    void OnbAddAxisClick(wxCommandEvent& event);
     void OnChoiceLinesSelect(wxCommandEvent& event);
     void OnbAddLinesClick(wxCommandEvent& event);
     void OnbDelLinesClick(wxCommandEvent& event);
@@ -237,15 +265,16 @@ class MathPlotConfigDialog: public wxDialog
     wxTextCtrl* edTitle;
     //*)
 
+    void Apply(int pageIndex, bool updateFont = false);
     void UpdateSelectedSerie(void);
     void UpdateSelectedLine(void);
     void UpdateAxis(void);
-    void FillYAxisList(wxChoice *yChoice, bool clearChoice = true);
+    void FillYAxisList(wxChoice* yChoice, bool clearChoice = true);
 
-    void DoButtonColour(wxButton *button, const wxColour &colour);
-    void DoApplyColour(const wxColour &colour);
-    void UpdateFont(mpLayer *layer, wxButton *button, bool get_set);
-    void SetFontChildren(wxButton *p, const wxFontData &fontdata);
+    void DoButtonColour(wxButton* button, const wxColour& colour);
+    void DoApplyColour(const wxColour& colour);
+    void UpdateFont(mpLayer* layer, wxButton* button, bool get_set);
+    void SetFontChildren(wxButton* p, const wxFontData& fontdata);
 
     wxBrushStyle IdToBrushStyle(int id);
     int BrushStyleToId(wxBrushStyle style);

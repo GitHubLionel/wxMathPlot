@@ -169,6 +169,9 @@ MathPlotDemoFrame::~MathPlotDemoFrame()
 
 void MathPlotDemoFrame::InitializePlot(void)
 {
+  // Create config file
+  mPlot->GetConfigWindow(true)->CreateSettingsFile("config.ini");
+
   mPlot->EnableDoubleBuffer(true);
   mPlot->SetMargins(50, 20, 80, 80);
 
@@ -209,6 +212,9 @@ void MathPlotDemoFrame::InitializePlot(void)
   legend->SetVisible(true);
 
   mPlot->Fit();
+
+  // Apply settings now we have created our layer
+  mPlot->GetConfigWindow(false)->ApplySettings();
 }
 
 void MathPlotDemoFrame::CleanPlot(void)
