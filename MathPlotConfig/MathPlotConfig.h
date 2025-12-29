@@ -56,7 +56,7 @@ class mpSettings : public wxFileConfig
     void GetSettings(wxWindow* win);
   protected:
     void DoPosition(bool set, wxWindow *win);
-    void DoRecursiveSearch(bool set, wxWindow *win, const wxString &path = _(""), int level = 0);
+    void DoRecursiveSearch(bool set, wxWindow *win, const wxString &path = wxEmptyString, int level = 0);
 };
 
 /**

@@ -38,7 +38,7 @@ void mpSettings::SetSettings(wxWindow* win)
   DoPosition(true, win);
 
   // Go directly to the notebook
-  win = win->FindWindow(_("notebook"));
+  win = win->FindWindow("notebook");
   if (win)
     DoRecursiveSearch(true, win);
 }
@@ -51,7 +51,7 @@ void mpSettings::GetSettings(wxWindow* win)
   DoPosition(false, win);
 
   // Go directly to the notebook
-  win = win->FindWindow(_("notebook"));
+  win = win->FindWindow("notebook");
   if (win)
     DoRecursiveSearch(false, win);
 }
@@ -63,18 +63,18 @@ void mpSettings::GetSettings(wxWindow* win)
  */
 void mpSettings::DoPosition(bool set, wxWindow* win)
 {
-  SetPath(_("/Position"));
+  SetPath("/Position");
   if (set)
   {
     int posX, posY;
-    if (Read(_("PosX"), &posX) && Read(_("PosY"), &posY))
+    if (Read("PosX", &posX) && Read("PosY", &posY))
       win->Move(wxPoint(posX, posY), wxSIZE_FORCE);
   }
   else // get
   {
     wxPoint pos = win->GetScreenPosition();
-    Write(_("PosX"), pos.x);
-    Write(_("PosY"), pos.y);
+    Write("PosX", pos.x);
+    Write("PosY", pos.y);
   }
 }
 
@@ -88,7 +88,7 @@ void mpSettings::DoPosition(bool set, wxWindow* win)
 void mpSettings::DoRecursiveSearch(bool set, wxWindow* win, const wxString& path, int level)
 {
   // We save only General (panel 1) and Legend (panel 2)
-  if ((win->GetName()).IsSameAs(_("panel")))
+  if ((win->GetName()).IsSameAs("panel"))
   {
     if (level > 2)
       return;
@@ -99,7 +99,7 @@ void mpSettings::DoRecursiveSearch(bool set, wxWindow* win, const wxString& path
   {
     wxTextCtrl* text = (wxTextCtrl*)win;
     SetPath(path);
-    wxString key = _T("Text") + wxString::Format("%d", level);
+    wxString key = "Text" + wxString::Format("%d", level);
     if (set)
     {
       wxString value;
@@ -118,7 +118,7 @@ void mpSettings::DoRecursiveSearch(bool set, wxWindow* win, const wxString& path
   {
     wxChoice* choice = (wxChoice*)win;
     SetPath(path);
-    wxString key = _T("Choice") + wxString::Format("%d", level);
+    wxString key = "Choice" + wxString::Format("%d", level);
     if (set)
     {
       int value;
@@ -137,7 +137,7 @@ void mpSettings::DoRecursiveSearch(bool set, wxWindow* win, const wxString& path
   {
     wxCheckBox* check = (wxCheckBox*)win;
     SetPath(path);
-    wxString key = _T("Check") + wxString::Format("%d", level);
+    wxString key = "Check" + wxString::Format("%d", level);
     if (set)
     {
       bool value;
@@ -157,10 +157,10 @@ void mpSettings::DoRecursiveSearch(bool set, wxWindow* win, const wxString& path
     wxButton* button = (wxButton*)win;
     SetPath(path);
     // It is a button for font configuration
-    if ((button->GetLabel()).IsSameAs(_("Font")))
+    if ((button->GetLabel()).IsSameAs("Font"))
     {
-      wxString key1 = _T("ButtonFont") + wxString::Format("%d", level);
-      wxString key2 = _T("ButtonForeground") + wxString::Format("%d", level);
+      wxString key1 = "ButtonFont" + wxString::Format("%d", level);
+      wxString key2 = "ButtonForeground" + wxString::Format("%d", level);
       if (set)
       {
         wxFont font;
@@ -178,7 +178,7 @@ void mpSettings::DoRecursiveSearch(bool set, wxWindow* win, const wxString& path
     }
     else // It is a button for background colour configuration
     {
-      wxString key = _T("ButtonBackground") + wxString::Format("%d", level);
+      wxString key = "ButtonBackground" + wxString::Format("%d", level);
       if (set)
       {
         wxColour value;
