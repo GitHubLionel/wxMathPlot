@@ -45,12 +45,12 @@ class WXDLLIMPEXP_MATHPLOT mpText;
 /**
  * Helper class to save/restore configuration
  */
-class mpSettings : public wxFileConfig
+class MathPlotConfigSettings : public wxFileConfig
 {
   public:
-    mpSettings(const wxString& localFilename) :
+    MathPlotConfigSettings(const wxString& localFilename) :
         wxFileConfig(wxEmptyString, wxEmptyString, localFilename) {}
-    virtual ~mpSettings() {}
+    virtual ~MathPlotConfigSettings() {}
 
     void SetSettings(wxWindow* win);
     void GetSettings(wxWindow* win);
@@ -86,7 +86,7 @@ class MathPlotConfigDialog: public wxDialog
     /**
      * Give access to m_settings if we want to save some others parameters
      */
-    mpSettings* GetSettingsHandle(void)
+    MathPlotConfigSettings* GetSettingsHandle(void)
     {
       return m_settings;
     }
@@ -94,7 +94,7 @@ class MathPlotConfigDialog: public wxDialog
   private:
 
     mpWindow* m_plot;
-    mpSettings* m_settings;
+    MathPlotConfigSettings* m_settings;
     wxButton* colourButton;
     mpText* CurrentTitle;
     mpInfoLegend* CurrentLegend;

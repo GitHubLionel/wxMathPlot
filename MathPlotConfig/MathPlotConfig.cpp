@@ -30,7 +30,7 @@
  * Helper class to save/restore configuration
  ***************************************************/
 
-void mpSettings::SetSettings(wxWindow* win)
+void MathPlotConfigSettings::SetSettings(wxWindow* win)
 {
   if (!win)
     return;
@@ -43,7 +43,7 @@ void mpSettings::SetSettings(wxWindow* win)
     DoRecursiveSearch(true, win);
 }
 
-void mpSettings::GetSettings(wxWindow* win)
+void MathPlotConfigSettings::GetSettings(wxWindow* win)
 {
   if (!win)
     return;
@@ -61,7 +61,7 @@ void mpSettings::GetSettings(wxWindow* win)
  * @param set : set if true else get
  * @param win : the config window
  */
-void mpSettings::DoPosition(bool set, wxWindow* win)
+void MathPlotConfigSettings::DoPosition(bool set, wxWindow* win)
 {
   SetPath("/Position");
   if (set)
@@ -85,7 +85,7 @@ void mpSettings::DoPosition(bool set, wxWindow* win)
  * @param path : the complete path (created with the name (class) of each window) to reach the window
  * @param level : the depth in the window (container) hierarchy
  */
-void mpSettings::DoRecursiveSearch(bool set, wxWindow* win, const wxString& path, int level)
+void MathPlotConfigSettings::DoRecursiveSearch(bool set, wxWindow* win, const wxString& path, int level)
 {
   // We save only General (panel 1) and Legend (panel 2)
   if ((win->GetName()).IsSameAs("panel"))
@@ -1036,7 +1036,7 @@ void MathPlotConfigDialog::CreateSettingsFile(const wxString& filename, const wx
     filePath = path + f.GetPathSeparators() + filename;
   }
 
-  m_settings = new mpSettings(filePath);
+  m_settings = new MathPlotConfigSettings(filePath);
 
   // If settings file exist, apply it
   if (wxFileExists(filePath) && apply)
