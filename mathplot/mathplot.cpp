@@ -2818,7 +2818,9 @@ mpWindow::mpWindow(wxWindow *parent, wxWindowID id, const wxPoint &pos, const wx
   // For unix screenshoot
 #ifdef _WIN32
 #else
+#ifndef USE_ICON
   wxImage::AddHandler(new wxPNGHandler);
+#endif
 #endif
 
   int nbItem = mpID_HELP_MOUSE - mpID_FIT + 1;

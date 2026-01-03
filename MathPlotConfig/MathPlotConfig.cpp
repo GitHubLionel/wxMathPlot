@@ -295,6 +295,7 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   wxBoxSizer* BoxSizer1;
   wxBoxSizer* BoxSizer20;
   wxBoxSizer* BoxSizer21;
+  wxBoxSizer* BoxSizer22;
   wxBoxSizer* BoxSizer2;
   wxBoxSizer* BoxSizer3;
   wxBoxSizer* BoxSizer4;
@@ -354,34 +355,31 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   cbTitleVisible = new wxCheckBox(Panel1, wxID_ANY, _("Visible"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
   cbTitleVisible->SetValue(false);
   FlexGridSizer1->Add(cbTitleVisible, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
-  StaticBoxSizer1->Add(FlexGridSizer1, 0, wxLEFT|wxRIGHT|wxEXPAND, 5);
+  StaticBoxSizer1->Add(FlexGridSizer1, 1, wxLEFT|wxRIGHT|wxEXPAND, 5);
   BoxSizer3->Add(StaticBoxSizer1, 0, wxALL|wxEXPAND, 2);
   StaticBoxSizer2 = new wxStaticBoxSizer(wxVERTICAL, Panel1, _("Margins "));
   BoxSizer17 = new wxBoxSizer(wxVERTICAL);
   BoxSizer20 = new wxBoxSizer(wxHORIZONTAL);
   StaticText41 = new wxStaticText(Panel1, wxID_ANY, _("Top :"), wxDefaultPosition, wxDefaultSize, 0);
   BoxSizer20->Add(StaticText41, 0, wxTOP|wxBOTTOM|wxLEFT|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-  edMarginTop = new wxTextCtrl(Panel1, wxID_ANY, _T("50"), wxDefaultPosition, wxSize(30,-1), wxTE_RIGHT, wxIntegerValidator<unsigned int> (&int_top));
+  edMarginTop = new wxTextCtrl(Panel1, wxID_ANY, _T("50"), wxDefaultPosition, wxSize(40,-1), wxTE_RIGHT, wxIntegerValidator<unsigned int> (&int_top));
   edMarginTop->SetToolTip(_("Top"));
   BoxSizer20->Add(edMarginTop, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
   StaticText38 = new wxStaticText(Panel1, wxID_ANY, _("Bottom :"), wxDefaultPosition, wxDefaultSize, 0);
   BoxSizer20->Add(StaticText38, 0, wxTOP|wxBOTTOM|wxLEFT|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-  edMarginBottom = new wxTextCtrl(Panel1, wxID_ANY, _T("50"), wxDefaultPosition, wxSize(30,-1), wxTE_RIGHT, wxIntegerValidator<unsigned int> (&int_bottom));
+  edMarginBottom = new wxTextCtrl(Panel1, wxID_ANY, _T("50"), wxDefaultPosition, wxSize(40,-1), wxTE_RIGHT, wxIntegerValidator<unsigned int> (&int_bottom));
   edMarginBottom->SetToolTip(_("Bottom"));
   BoxSizer20->Add(edMarginBottom, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
   StaticText39 = new wxStaticText(Panel1, wxID_ANY, _("Left :"), wxDefaultPosition, wxDefaultSize, 0);
   BoxSizer20->Add(StaticText39, 0, wxTOP|wxBOTTOM|wxLEFT|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-  edMarginLeft = new wxTextCtrl(Panel1, wxID_ANY, _T("50"), wxDefaultPosition, wxSize(30,-1), wxTE_RIGHT, wxIntegerValidator<unsigned int> (&int_left));
+  edMarginLeft = new wxTextCtrl(Panel1, wxID_ANY, _T("50"), wxDefaultPosition, wxSize(40,-1), wxTE_RIGHT, wxIntegerValidator<unsigned int> (&int_left));
   edMarginLeft->SetToolTip(_("Left"));
   BoxSizer20->Add(edMarginLeft, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
   StaticText40 = new wxStaticText(Panel1, wxID_ANY, _("Right :"), wxDefaultPosition, wxDefaultSize, 0);
   BoxSizer20->Add(StaticText40, 0, wxTOP|wxBOTTOM|wxLEFT|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-  edMarginRight = new wxTextCtrl(Panel1, wxID_ANY, _T("50"), wxDefaultPosition, wxSize(30,-1), wxTE_RIGHT, wxIntegerValidator<unsigned int> (&int_right));
+  edMarginRight = new wxTextCtrl(Panel1, wxID_ANY, _T("50"), wxDefaultPosition, wxSize(40,-1), wxTE_RIGHT, wxIntegerValidator<unsigned int> (&int_right));
   edMarginRight->SetToolTip(_("Right"));
   BoxSizer20->Add(edMarginRight, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-  bBGColor = new wxButton(Panel1, wxID_ANY, _("bg color"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
-  bBGColor->SetToolTip(_("Color of the background of the plot area"));
-  BoxSizer20->Add(bBGColor, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
   BoxSizer17->Add(BoxSizer20, 1, wxLEFT|wxRIGHT|wxEXPAND, 5);
   BoxSizer21 = new wxBoxSizer(wxHORIZONTAL);
   cbDrawBox = new wxCheckBox(Panel1, wxID_ANY, _("Draw box"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
@@ -392,7 +390,11 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   edExtraMargin = new wxTextCtrl(Panel1, wxID_ANY, _T("8"), wxDefaultPosition, wxSize(30,-1), wxTE_RIGHT, wxIntegerValidator<unsigned int> (&int_extra));
   edExtraMargin->SetToolTip(_("Extra margin for plot area"));
   BoxSizer21->Add(edExtraMargin, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-  BoxSizer17->Add(BoxSizer21, 0, wxLEFT|wxRIGHT, 5);
+  BoxSizer21->Add(0,0,1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+  bBGColor = new wxButton(Panel1, wxID_ANY, _("bg color"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
+  bBGColor->SetToolTip(_("Color of the background of the plot area"));
+  BoxSizer21->Add(bBGColor, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+  BoxSizer17->Add(BoxSizer21, 1, wxLEFT|wxRIGHT|wxEXPAND, 5);
   StaticBoxSizer2->Add(BoxSizer17, 1, wxALL|wxEXPAND, 0);
   BoxSizer3->Add(StaticBoxSizer2, 0, wxALL|wxEXPAND, 2);
   StaticBoxSizer3 = new wxStaticBoxSizer(wxHORIZONTAL, Panel1, _("Mouse coordinates "));
@@ -404,7 +406,7 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   cbCoord->Set(WXSIZEOF(InfoPosition_choices), InfoPosition_choices);
   cbCoord->SetSelection(7);
   BoxSizer12->Add(cbCoord, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-  BoxSizer1->Add(BoxSizer12, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
+  BoxSizer1->Add(BoxSizer12, 0, wxALL|wxALIGN_LEFT, 0);
   cbCoordVisible = new wxCheckBox(Panel1, wxID_ANY, _("Visible"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
   cbCoordVisible->SetValue(false);
   BoxSizer1->Add(cbCoordVisible, 0, wxALL|wxEXPAND, 5);
@@ -437,14 +439,16 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   StaticBoxSizer3->Add(StaticBoxSizer4, 0, wxALL|wxALIGN_TOP, 5);
   BoxSizer3->Add(StaticBoxSizer3, 0, wxALL|wxEXPAND, 2);
   StaticBoxSizer12 = new wxStaticBoxSizer(wxHORIZONTAL, Panel1, _("Mouse interaction"));
+  BoxSizer22 = new wxBoxSizer(wxHORIZONTAL);
   StaticText36 = new wxStaticText(Panel1, wxID_ANY, _("Left mouse action"), wxDefaultPosition, wxDefaultSize, 0);
-  StaticBoxSizer12->Add(StaticText36, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+  BoxSizer22->Add(StaticText36, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
   const wxString ChoiceLeftMouseAction_choices[] = {
   _("Box zoom"),
   _("Drag zoom"),
   };
   ChoiceLeftMouseAction = new wxChoice(Panel1, wxID_ANY, wxDefaultPosition, wxDefaultSize, 2, ChoiceLeftMouseAction_choices, 0, wxDefaultValidator);
-  StaticBoxSizer12->Add(ChoiceLeftMouseAction, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+  BoxSizer22->Add(ChoiceLeftMouseAction, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+  StaticBoxSizer12->Add(BoxSizer22, 1, wxLEFT|wxRIGHT|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
   BoxSizer3->Add(StaticBoxSizer12, 1, wxALL|wxEXPAND, 2);
   Panel1->SetSizer(BoxSizer3);
   Panel2 = new wxPanel(nbConfig, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL);
@@ -495,7 +499,7 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   cbLegendBrushStyle->Set(WXSIZEOF(InfoBrushStyle_choices), InfoBrushStyle_choices);
   cbLegendBrushStyle->SetSelection(0);
   FlexGridSizer7->Add(cbLegendBrushStyle, 1, wxALL|wxEXPAND, 2);
-  StaticBoxSizer5->Add(FlexGridSizer7, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
+  StaticBoxSizer5->Add(FlexGridSizer7, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
   BoxSizer15->Add(StaticBoxSizer5, 0, wxALL|wxEXPAND, 0);
   BoxSizer16->Add(BoxSizer15, 1, wxALL|wxALIGN_TOP, 5);
   Panel2->SetSizer(BoxSizer16);
@@ -798,7 +802,7 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   cbLinesShowName->SetValue(false);
   BoxSizer19->Add(cbLinesShowName, 1, wxALL|wxALIGN_LEFT, 3);
   BoxSizer18->Add(BoxSizer19, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5);
-  FlexGridSizer20->Add(BoxSizer18, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+  FlexGridSizer20->Add(BoxSizer18, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
   BoxSizer4->Add(FlexGridSizer20, 0, wxALL|wxEXPAND, 5);
   pLines->SetSizer(BoxSizer4);
   sizerLines->Add(pLines, 1, wxEXPAND, 5);
