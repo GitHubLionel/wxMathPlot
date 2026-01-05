@@ -3688,7 +3688,8 @@ void mpWindow::OnScreenShot(wxCommandEvent &WXUNUSED(event))
 void mpWindow::OnFullScreen(wxCommandEvent &WXUNUSED(event))
 {
   m_fullscreen = !m_fullscreen;
-  m_parent->ShowFullScreen(m_fullscreen);
+  if (m_parent)
+    m_parent->ShowFullScreen(m_fullscreen);
 }
 
 /**
