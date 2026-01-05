@@ -390,7 +390,7 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   edExtraMargin = new wxTextCtrl(Panel1, wxID_ANY, _T("8"), wxDefaultPosition, wxSize(30,-1), wxTE_RIGHT, wxIntegerValidator<unsigned int> (&int_extra));
   edExtraMargin->SetToolTip(_("Extra margin for plot area"));
   BoxSizer21->Add(edExtraMargin, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-  BoxSizer21->Add(0,0,1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+  BoxSizer21->Add(-1,-1,1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
   bBGColor = new wxButton(Panel1, wxID_ANY, _("bg color"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
   bBGColor->SetToolTip(_("Color of the background of the plot area"));
   BoxSizer21->Add(bBGColor, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
@@ -440,7 +440,7 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   BoxSizer3->Add(StaticBoxSizer3, 0, wxALL|wxEXPAND, 2);
   StaticBoxSizer12 = new wxStaticBoxSizer(wxHORIZONTAL, Panel1, _("Mouse interaction"));
   BoxSizer22 = new wxBoxSizer(wxHORIZONTAL);
-  StaticText36 = new wxStaticText(Panel1, wxID_ANY, _("Left mouse action"), wxDefaultPosition, wxDefaultSize, 0);
+  StaticText36 = new wxStaticText(Panel1, wxID_ANY, _("Left mouse action :"), wxDefaultPosition, wxDefaultSize, 0);
   BoxSizer22->Add(StaticText36, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
   const wxString ChoiceLeftMouseAction_choices[] = {
   _("Box zoom"),
@@ -1106,10 +1106,14 @@ void MathPlotConfigDialog::DoButtonColour(wxButton* button, const wxColour& colo
 {
   wxString RGB;
   RGB.Printf("%02X%02X%02X", colour.GetRed(), colour.GetGreen(), colour.GetBlue());
+#ifdef _WIN32
   if (colour.GetRed() * 0.299 + colour.GetGreen() * 0.587 + colour.GetBlue() * 0.114 < 186)
     button->SetForegroundColour(*wxWHITE);
   else
     button->SetForegroundColour(*wxBLACK);
+#else
+  // On Linux, we have GTK warning with this.
+#endif
   button->SetLabelText(RGB);
   button->SetBackgroundColour(colour);
 }
@@ -1270,11 +1274,6 @@ void MathPlotConfigDialog::UpdateAxis(void)
   }
   edScaleMin->GetValidator()->TransferToWindow();
   edScaleMax->GetValidator()->TransferToWindow();
-  // For unix GTK problem with the visibility of cbIsY2Axis
-#ifdef _WIN32
-#else
-  sizerAxis->Layout();
-#endif
 }
 
 void MathPlotConfigDialog::OnbAddAxisClick(wxCommandEvent& event)

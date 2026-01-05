@@ -106,9 +106,12 @@ class MathPlotConfigDialog: public wxDialog
     bool fontTitleChanged;
     bool fontLegendChanged;
     bool fontAxisChanged;
+    // Margin validator
     unsigned int int_top, int_bottom, int_left, int_right, int_extra;
     int scale_offset;
+    // Scale validator
     double scale_min, scale_max;
+    // Line position validator
     double line_value;
     bool CheckBar;
     bool SerieVisibleChange;
