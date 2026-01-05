@@ -2869,15 +2869,16 @@ mpWindow::mpWindow(wxWindow *parent, wxWindowID id, const wxPoint &pos, const wx
 
 mpWindow::~mpWindow()
 {
+#ifdef ENABLE_MP_CONFIG
+  DeleteAndNull(m_configWindow);
+#endif // ENABLE_MP_CONFIG
+
   // Free all the layers:
   DelAllLayers(mpForceDelete, false);
 
   DeleteAndNull(m_buff_bmp);
   DeleteAndNull(m_zoom_bmp);
   DeleteAndNull(m_Screenshot_bmp);
-#ifdef ENABLE_MP_CONFIG
-  DeleteAndNull(m_configWindow);
-#endif // ENABLE_MP_CONFIG
 }
 
 void mpWindow::InitParameters()
