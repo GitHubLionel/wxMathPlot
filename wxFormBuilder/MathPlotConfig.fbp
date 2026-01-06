@@ -8993,6 +8993,54 @@
           </object>
         </object>
       </object>
+      <object class="CustomCode" expanded="true">
+        <property name="code_cpp"> &#x0A; // Common choices&#x0A;   const wxString PenWidth_choices[] = {&#x0A;   _T(&quot;1&quot;),&#x0A;   _T(&quot;2&quot;),&#x0A;   _T(&quot;3&quot;),&#x0A;   _T(&quot;4&quot;),&#x0A;   _T(&quot;5&quot;),&#x0A;   _T(&quot;6&quot;),&#x0A;   _T(&quot;7&quot;),&#x0A;   _T(&quot;8&quot;),&#x0A;   _T(&quot;9&quot;),&#x0A;   _T(&quot;10&quot;),&#x0A;   };&#x0A;&#x0A;   const wxString PenStyle_choices[] = {&#x0A;   _(&quot;Solid&quot;),&#x0A;   _(&quot;Dot&quot;),&#x0A;   _(&quot;Long Dash&quot;),&#x0A;   _(&quot;Short Dash&quot;),&#x0A;   _(&quot;Dot Dash&quot;),&#x0A;   };&#x0A;&#x0A;   const wxString InfoBrushStyle_choices[] = {&#x0A;   _(&quot;Solid&quot;),&#x0A;   _(&quot;Transparent&quot;),&#x0A;   };&#x0A;&#x0A;   const wxString InfoPosition_choices[] = {&#x0A;   _(&quot;Left center&quot;),&#x0A;   _(&quot;Top left&quot;),&#x0A;   _(&quot;Top center&quot;),&#x0A;   _(&quot;Top right&quot;),&#x0A;   _(&quot;Right center&quot;),&#x0A;   _(&quot;Bottom left&quot;),&#x0A;   _(&quot;Bottom center&quot;),&#x0A;   _(&quot;Bottom right&quot;),&#x0A;   _(&quot;Default position&quot;),&#x0A;   _(&quot;Cursor position&quot;),&#x0A;   };</property>
+        <property name="code_lua"></property>
+        <property name="code_php"></property>
+        <property name="code_python"></property>
+        <property name="import_python"></property>
+        <property name="include_cpp"></property>
+        <property name="name">Choice_List</property>
+        <property name="permission">protected</property>
+        <property name="require_lua"></property>
+        <property name="require_php"></property>
+      </object>
+      <object class="CustomCode" expanded="true">
+        <property name="code_cpp">&#x0A;   // Choices&#x0A;   cbAxisPenWidth-&gt;Set(WXSIZEOF(PenWidth_choices), PenWidth_choices);&#x0A;   cbAxisPenWidth-&gt;SetSelection(0);&#x0A;   cbSeriesPenWidth-&gt;Set(WXSIZEOF(PenWidth_choices), PenWidth_choices);&#x0A;   cbLinesPenWidth-&gt;Set(WXSIZEOF(PenWidth_choices), PenWidth_choices);&#x0A;   cbAxisPenStyle-&gt;Set(WXSIZEOF(PenStyle_choices), PenStyle_choices);&#x0A;   cbSeriesPenStyle-&gt;Set(WXSIZEOF(PenStyle_choices), PenStyle_choices);&#x0A;   cbLinesPenStyle-&gt;Set(WXSIZEOF(PenStyle_choices), PenStyle_choices);&#x0A;   cbCoordBrushStyle-&gt;Set(WXSIZEOF(InfoBrushStyle_choices), InfoBrushStyle_choices);&#x0A;   cbCoordBrushStyle-&gt;SetSelection(0);&#x0A;   cbLegendBrushStyle-&gt;Set(WXSIZEOF(InfoBrushStyle_choices), InfoBrushStyle_choices);&#x0A;   cbLegendBrushStyle-&gt;SetSelection(0);&#x0A;   cbCoord-&gt;Set(WXSIZEOF(InfoPosition_choices), InfoPosition_choices);&#x0A;   cbCoord-&gt;SetSelection(7);&#x0A;   cbLegendPosition-&gt;Set(WXSIZEOF(InfoPosition_choices), InfoPosition_choices);\&#x0A;   cbLegendPosition-&gt;SetSelection(6);&#x0A;&#x0A;   // Validators&#x0A;   edMarginTop-&gt;SetValidator(wxIntegerValidator&lt;unsigned int&gt; (&amp;int_top));&#x0A;   edMarginBottom-&gt;SetValidator(wxIntegerValidator&lt;unsigned int&gt; (&amp;int_bottom));&#x0A;   edMarginLeft-&gt;SetValidator(wxIntegerValidator&lt;unsigned int&gt; (&amp;int_left));&#x0A;   edMarginRight-&gt;SetValidator(wxIntegerValidator&lt;unsigned int&gt; (&amp;int_right));&#x0A;   edExtraMargin-&gt;SetValidator(wxIntegerValidator&lt;unsigned int&gt; (&amp;int_extra));&#x0A;   edScaleMin-&gt;SetValidator(wxFloatingPointValidator&lt;double&gt; (2, &amp;scale_min));&#x0A;   edScaleMax-&gt;SetValidator(wxFloatingPointValidator&lt;double&gt; (2, &amp;scale_max));&#x0A;   edLinesValue-&gt;SetValidator(wxFloatingPointValidator&lt;double&gt; (2, &amp;line_value));</property>
+        <property name="code_lua"></property>
+        <property name="code_php"></property>
+        <property name="code_python"></property>
+        <property name="import_python"></property>
+        <property name="include_cpp">    &#x0A;#include &lt;wx/valnum.h&gt;&#x0A;&#x0A;// YOU MUST MOVED THIS DECLARATION IN PRTOTECTED FIELD OF MathPlotConfigDialogBuilder CLASS&#x0A;// Margin validator&#x0A;    unsigned int int_top, int_bottom, int_left, int_right, int_extra;&#x0A;    // Scale validator&#x0A;    double scale_min, scale_max;&#x0A;    // Line position validator&#x0A;    double line_value;</property>
+        <property name="name">SetChoiceAndValidator</property>
+        <property name="permission">protected</property>
+        <property name="require_lua"></property>
+        <property name="require_php"></property>
+      </object>
+      <object class="CustomCode" expanded="true">
+        <property name="code_cpp"></property>
+        <property name="code_lua"></property>
+        <property name="code_php"></property>
+        <property name="code_python"></property>
+        <property name="import_python"></property>
+        <property name="include_cpp">&#x0A;// List of string message used&#x0A;const wxString MESS_TRANSPARENT = _(&quot;Transparent not work on Linux&quot;);&#x0A;const wxString MESS_COLOUR = _(&quot;Please choose the background colour&quot;);&#x0A;const wxString MESS_AXIS_DELETE = _(&quot;Delete the selected axis ?&quot;);&#x0A;const wxString MESS_DELETE = _(&quot;Delete the serie ?&quot;);&#x0A;const wxString MESS_LINES_ADD = _(&quot;Add horizontal line (vertical if No) ?&quot;);&#x0A;const wxString MESS_LINES_DELETE = _(&quot;Delete the line ?&quot;);&#x0A;const wxString MESS_CONFIRM = _(&quot;Confirmation&quot;);&#x0A;</property>
+        <property name="name">MessageList</property>
+        <property name="permission">protected</property>
+        <property name="require_lua"></property>
+        <property name="require_php"></property>
+      </object>
+      <object class="CustomCode" expanded="true">
+        <property name="code_cpp">#ifdef _WIN32&#x0A;#else&#x0A;  cbMagnetize-&gt;Show(false); // wxINVERT not work on Linux GTK&#x0A;  cbLegendBrushStyle-&gt;SetToolTip(MESS_TRANSPARENT);&#x0A;#endif // _WIN32</property>
+        <property name="code_lua"></property>
+        <property name="code_php"></property>
+        <property name="code_python"></property>
+        <property name="import_python"></property>
+        <property name="include_cpp"></property>
+        <property name="name">LinuxCode</property>
+        <property name="permission">protected</property>
+        <property name="require_lua"></property>
+        <property name="require_php"></property>
+      </object>
     </object>
   </object>
 </wxFormBuilder_Project>

@@ -29,6 +29,17 @@
 #include <wx/spinctrl.h>
 #include <wx/radiobut.h>
 #include <wx/notebook.h>
+
+#include <wx/valnum.h>
+
+// List of string message used
+const wxString MESS_TRANSPARENT = _("Transparent not work on Linux");
+const wxString MESS_COLOUR = _("Please choose the background colour");
+const wxString MESS_AXIS_DELETE = _("Delete the selected axis ?");
+const wxString MESS_DELETE = _("Delete the serie ?");
+const wxString MESS_LINES_ADD = _("Add horizontal line (vertical if No) ?");
+const wxString MESS_LINES_DELETE = _("Delete the line ?");
+const wxString MESS_CONFIRM = _("Confirmation");
 #include <wx/dialog.h>
 
 ///////////////////////////////////////////////////////////////////////////
@@ -166,6 +177,13 @@ class MathPlotConfigDialogBuilder : public wxDialog
 		wxCheckBox* cbLinesShowName;
 		wxButton* bApply;
 		wxButton* bClose;
+
+		// Margin validator
+		unsigned int int_top, int_bottom, int_left, int_right, int_extra;
+		// Scale validator
+		double scale_min, scale_max;
+		// Line position validator
+		double line_value;
 
 		// Virtual event handlers, override them in your derived class
 		virtual void OnnbConfigPageChanged( wxNotebookEvent& event ) { event.Skip(); }
