@@ -612,14 +612,14 @@ void MathPlotConfigDialog::UpdateAxis(void)
   {
     if (classname.IsSameAs(_T("mpScaleX")))
     {
-      BoundScale = m_plot->Get_BoundX();
+      BoundScale = m_plot->GetBoundX();
       scale_min = BoundScale.min;
       scale_max = BoundScale.max;
     }
     else if (classname.IsSameAs(_T("mpScaleY")))
     {
       mpScaleY* yAxis = static_cast<mpScaleY*>(CurrentScale);
-      BoundScale = m_plot->Get_BoundY(yAxis->GetAxisID());
+      BoundScale = m_plot->GetBoundY(yAxis->GetAxisID());
       scale_min = BoundScale.min;
       scale_max = BoundScale.max;
     }
