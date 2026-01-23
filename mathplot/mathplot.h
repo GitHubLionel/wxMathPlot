@@ -72,6 +72,7 @@
 
 #include <vector>
 #include <map>
+#include <unordered_map>
 #include <optional>
 
 // #include <wx/wx.h>
@@ -324,11 +325,15 @@ struct mpRange
     }
 
 #if (defined(__cplusplus) && (__cplusplus > 201703L)) // C++20 or newer
-  bool operator==(const mpRange&) const = default;
+    bool operator==(const mpRange&) const = default;
 #else
     bool operator==(const mpRange &other) const
     {
       return (min == other.min) && (max == other.max);
+    }
+    bool operator!=(const mpRange& other) const
+    {
+      return !(*this == other);
     }
 #endif
 };
@@ -1208,7 +1213,7 @@ class WXDLLIMPEXP_MATHPLOT mpInfoCoords: public mpInfoLayer
     @param xVal, Value of X mouse position
     @param yValList, Values of Y. If m_series_coord is used, only one value of the closest serie is supplied,
     otherwise mouse position for each Y-axis is supplied */
-    virtual wxString GetInfoCoordsText(mpWindow &w, double xVal, std::vector<double> yValList);
+    virtual wxString GetInfoCoordsText(mpWindow &w, double xVal, std::unordered_map<int, double> yValList);
 
     /** Pen series for tractable
      */
@@ -2559,7 +2564,7 @@ struct mpAxisData
 };
 
 /** Define the type for the list of axis */
-typedef std::map<int, mpAxisData> mpAxisList;
+typedef std::unordered_map<int, mpAxisData> mpAxisList;
 
 /**
  * Define the axis we want to update. Could be:
@@ -2861,7 +2866,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     void SetBound();
 
     /** Get bounding box for X axis. */
-    mpRange Get_BoundX(void) const
+    mpRange GetBoundX(void) const
     {
       return m_AxisDataX.bound;
     }
@@ -2869,10 +2874,38 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     /** Get bounding box for Y axis of ID yAxisID.
      @param yAxisID Y axis ID to get bound
      */
-    mpRange Get_BoundY(int yAxisID)
+    mpRange GetBoundY(int yAxisID)
     {
       assert(m_AxisDataYList.count(yAxisID) != 0);
       return m_AxisDataYList[yAxisID].bound;
+    }
+
+    /**
+     * Returns the bounds for all Y-axes.
+     * @return A map from Y-axis ID to its bound.
+     */
+    std::unordered_map<int, mpRange> GetAllBoundY()
+    {
+      std::unordered_map<int, mpRange> yRange;
+      for (auto& [yID, yData] : m_AxisDataYList)
+      {
+        yRange[yID] = yData.bound;
+      }
+      return yRange;
+    }
+
+    /**
+     * Returns the desired bounds for all Y-axes.
+     * @return A map from Y-axis ID to its desired bound.
+     */
+    std::unordered_map<int, mpRange> GetAllDesiredY()
+    {
+      std::unordered_map<int, mpRange> yRange;
+      for (auto& [yID, yData] : m_AxisDataYList)
+      {
+        yRange[yID] = yData.desired;
+      }
+      return yRange;
     }
 
     /** Set current view's X position and refresh display.
@@ -2898,13 +2931,11 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      @param posYList New position that corresponds to the center point of the view.
      IMPORTANT: posYList items must be in the same order of Y axis list
      */
-    void SetPosY(const std::vector<double>& posYList)
+    void SetPosY(std::unordered_map<int, double>& posYList)
     {
-      int i = 0;
-      for (auto& axisDataY : m_AxisDataYList)
+      for (auto& [yID, yData] : m_AxisDataYList)
       {
-        axisDataY.second.pos = posYList[i];
-        i++;
+        yData.pos = posYList[yID];
       }
       UpdateDesiredBoundingBox(uYAxis);
       UpdateAll();
@@ -2929,9 +2960,20 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
       return (int)m_AxisDataYList.size();
     }
 
+    /** Get the Y-axis data map
+     @return The Y-axis data map
+     */
     mpAxisList GetAxisDataYList(void) const
     {
       return m_AxisDataYList;
+    }
+
+    /** Get a sorted version of the Y-axis data map
+     @return A sorted Y-axis data map
+     */
+    std::map<int, mpAxisData> GetSortedAxisDataYList(void) const
+    {
+      return std::map<int, mpAxisData>(m_AxisDataYList.begin(), m_AxisDataYList.end());
     }
 
     /** Set current view's dimensions in device context units.
@@ -2984,7 +3026,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      @param posYList New positions that corresponds to the center point of the view.
      IMPORTANT: posYList items must be in the same order of Y axis list
      */
-    void SetPos(const double posX, const std::vector<double>& posYList)
+    void SetPos(const double posX, std::unordered_map<int, double>& posYList)
     {
       m_AxisDataX.pos = posX;
       SetPosY(posYList);
@@ -3079,7 +3121,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      pixel scales are computed accordingly. Also, in this case the passed borders are not saved
      as the "desired borders", since this use will be invoked only when printing.
      */
-    void Fit(const mpRange &rangeX, const std::vector<mpRange> &rangeY, wxCoord *printSizeX = NULL, wxCoord *printSizeY = NULL);
+    void Fit(const mpRange &rangeX, std::unordered_map<int, mpRange> rangeY, wxCoord *printSizeX = NULL, wxCoord *printSizeY = NULL);
 
     /** Similar to Fit() but only fit in X. Intentionally don't call UpdateAll() since
      *  you might want to perform other actions before updating plot
@@ -3158,27 +3200,23 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     {
       mpRange lastRange;
       // Change on X axis
-      if ((update & uXAxis) == uXAxis)
+      if (update & uXAxis)
       {
-        if (!m_desiredChanged)
-          lastRange = m_AxisDataX.desired;
-        m_AxisDataX.desired.Assign(m_AxisDataX.pos + (m_margin.left / m_AxisDataX.scale),
+        lastRange = m_AxisDataX.desired;
+        m_AxisDataX.desired.Set(m_AxisDataX.pos + (m_margin.left / m_AxisDataX.scale),
             m_AxisDataX.pos + ((m_margin.left + m_plotWidth) / m_AxisDataX.scale));
-        m_desiredChanged = !(lastRange == m_AxisDataX.desired);
+        m_desiredChanged |= (lastRange != m_AxisDataX.desired);
       }
 
       // Change on Y axis
-      if ((update & uYAxis) == uYAxis)
+      if (update & uYAxis)
       {
-        for (auto& axisDataY : m_AxisDataYList)
+        for (auto& [yID, yData] : m_AxisDataYList)
         {
-          mpAxisData *yAxis = &axisDataY.second;
-          if (!m_desiredChanged)
-            lastRange = yAxis->desired;
-          yAxis->desired.Assign(yAxis->pos - (m_margin.top / yAxis->scale),
-              yAxis->pos - ((m_margin.top + m_plotHeight) / yAxis->scale));
-          if (!m_desiredChanged)
-            m_desiredChanged = !(lastRange == yAxis->desired);
+          lastRange = yData.desired;
+          yData.desired.Set(yData.pos - ((m_margin.top + m_plotHeight) / yData.scale),
+              yData.pos - (m_margin.top / yData.scale));
+          m_desiredChanged |= (lastRange != yData.desired);
         }
       }
     }
@@ -3252,7 +3290,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
       if (m_AxisDataYList.count(yAxisID) == 0)
         return false;
 
-      return m_AxisDataX.bound.PointIsInside(px) && Get_BoundY(yAxisID).PointIsInside(py);
+      return m_AxisDataX.bound.PointIsInside(px) && GetBoundY(yAxisID).PointIsInside(py);
     }
 
     /* Update bounding box (X and Y axis) to include this point.
@@ -3758,7 +3796,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     wxPoint m_mouseRClick;              //!< For the right button "drag" feature
     wxPoint m_mouseLClick;              //!< Starting coords for rectangular zoom selection
     double m_mouseScaleX;               //!< Store current X-scale, used as reference during drag zooming
-    std::vector<double> m_mouseScaleYList;  //!< Store current Y-scales, used as reference during drag zooming
+    std::unordered_map<int, double> m_mouseScaleYList;  //!< Store current Y-scales, used as reference during drag zooming
     std::optional<int> m_mouseYAxisID;  //!< Indicate which ID of Y-axis the mouse was on during zoom/pan
     bool m_enableScrollBars;
     int m_scrollX, m_scrollY;
@@ -3790,16 +3828,24 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 
   private:
     void FillI18NString();
+
+    /*! Generates a new unique Y-axis ID by finding the largest
+     * used ID and incrementing by 1
+     @return New generated Y-axis ID
+     */
     unsigned int GetNewAxisDataID(void)
     {
-      while (m_AxisDataYList.count(m_LastAxisDataID) != 0)
+      int newID = 0;
+      for (auto& [yID, yData] : m_AxisDataYList)
       {
-        m_LastAxisDataID++;
+        if(yData.axis)
+        {
+          // This ID is used by an axis. Make sure the new ID is larger
+          newID = std::max(newID, yID + 1);
+        }
       }
-      return m_LastAxisDataID;
+      return newID;
     }
-
-    unsigned int m_LastAxisDataID = 0; // Last known ID to assign to each new y-axis
 
   wxDECLARE_DYNAMIC_CLASS(mpWindow);
   wxDECLARE_EVENT_TABLE();
