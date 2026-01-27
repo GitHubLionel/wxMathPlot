@@ -3564,6 +3564,25 @@ void mpWindow::ZoomRect(wxPoint p0, wxPoint p1)
   Fit(zoomX, zoomY);
 }
 
+void mpWindow::CheckAndReportDesiredBoundsChanges()
+{
+  // The desired bounds need to be set before counted as changed
+  bool desiredChanged = (m_AxisDataX.lastDesired.IsSet() && (m_AxisDataX.desired != m_AxisDataX.lastDesired));
+  m_AxisDataX.lastDesired = m_AxisDataX.desired;
+
+  // Same for Y
+  for (auto& [yID, yData] : m_AxisDataYList)
+  {
+    desiredChanged |= (yData.lastDesired.IsSet() && (yData.desired != yData.lastDesired));
+    yData.lastDesired = yData.desired;
+  }
+
+  if(desiredChanged)
+  {
+    DesiredBoundsHaveChanged();
+  }
+}
+
 void mpWindow::LockAspect(bool enable)
 {
   m_lockaspect = enable;
@@ -4271,12 +4290,7 @@ void mpWindow::UpdateAll()
 
   Refresh();
 
-  // If we have some changed, then call virtual method DesiredBoundsHaveChanged
-  if (m_desiredChanged)
-  {
-    m_desiredChanged = false;
-    DesiredBoundsHaveChanged();
-  }
+  CheckAndReportDesiredBoundsChanges();
 }
 
 void mpWindow::DoScrollCalc(const int position, const int orientation)
