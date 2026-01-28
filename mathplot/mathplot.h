@@ -209,14 +209,14 @@ struct mpRange
     double min = 0.0f;
     double max = 0.0f;
 
-    // Default constructor
+    /// Default constructor
     mpRange()
     {
       min = 0.0f;
       max = 0.0f;
     }
 
-    // Create range with the 2 values
+    /// Create range with the 2 values
     mpRange(double value1, double value2)
     {
       if (value1 < value2)
@@ -231,14 +231,14 @@ struct mpRange
       }
     }
 
-    // Set min, max function
+    /// Set min, max function
     void Set(double _min, double _max)
     {
       min = _min;
       max = _max;
     }
 
-    // Assign values to min and max
+    /// Assign values to min and max
     void Assign(double value1, double value2)
     {
       if (value1 < value2)
@@ -253,7 +253,13 @@ struct mpRange
       }
     }
 
-    /* Update range according new value:
+    /// Check if this mpRange has been assigned any values
+    bool IsSet()
+    {
+      return ((min != 0.0f) || (max != 0.0f));
+    }
+
+    /** Update range according new value:
      * Expand the range to include the value.
      * If value < min then min = value and if value > max then max = value
      */
@@ -266,7 +272,7 @@ struct mpRange
           max = value;
     }
 
-    /* Update range with new min and max values if this expand the range
+    /** Update range with new min and max values if this expand the range
      * If _min < min then min = _min and if _max > max then max = _max
      */
     void Update(double _min, double _max)
@@ -277,7 +283,7 @@ struct mpRange
         max = _max;
     }
 
-    /* Update range with new range values if this expand the range
+    /** Update range with new range values if this expand the range
      */
     void Update(mpRange range)
     {
@@ -287,7 +293,7 @@ struct mpRange
         max = range.max;
     }
 
-    // Check to always have a range. If min = max then introduce the 0 to make a range.
+    /// Check to always have a range. If min = max then introduce the 0 to make a range.
     void Check(void)
     {
       if (min == max)
@@ -299,26 +305,26 @@ struct mpRange
       }
     }
 
-    // Length of the range
+    /// Length of the range
     double Length(void) const
     {
       return max - min;
     }
 
-    // Center of the range
+    /// Center of the range
     double GetCenter(void) const
     {
       return (min + max) / 2;
     }
 
-    // Convert to log range
+    /// Convert to log range
     void ToLog(void)
     {
       min = (min > 0) ? log10(min) : 0;
       max = (max > 0) ? log10(max) : 0;
     }
 
-    // Return true if the point is inside the range (min and max included)
+    /// Return true if the point is inside the range (min and max included)
     bool PointIsInside(double point) const
     {
       return ((point >= min) && (point <= max));
@@ -2554,6 +2560,7 @@ struct mpAxisData
     double pos = 0;           //!< Position
     mpRange bound;            //!< Range min and max
     mpRange desired;          //!< Desired range min and max
+    mpRange lastDesired;      //!< Last desired ranged, used for check if desired has changed
 
     // Note: we don't use the default operator since we don't want to compare axis pointers
     bool operator==(const mpAxisData& other) const
@@ -3198,14 +3205,11 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      */
     void UpdateDesiredBoundingBox(mpAxisUpdate update)
     {
-      mpRange lastRange;
       // Change on X axis
       if (update & uXAxis)
       {
-        lastRange = m_AxisDataX.desired;
         m_AxisDataX.desired.Set(m_AxisDataX.pos + (m_margin.left / m_AxisDataX.scale),
             m_AxisDataX.pos + ((m_margin.left + m_plotWidth) / m_AxisDataX.scale));
-        m_desiredChanged |= (lastRange != m_AxisDataX.desired);
       }
 
       // Change on Y axis
@@ -3213,10 +3217,8 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
       {
         for (auto& [yID, yData] : m_AxisDataYList)
         {
-          lastRange = yData.desired;
           yData.desired.Set(yData.pos - ((m_margin.top + m_plotHeight) / yData.scale),
               yData.pos - (m_margin.top / yData.scale));
-          m_desiredChanged |= (lastRange != yData.desired);
         }
       }
     }
@@ -3762,7 +3764,6 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     mpLayerList m_layers;        //!< List of attached plot layers
     mpAxisData m_AxisDataX;      //!< Axis data for the X direction
     mpAxisList m_AxisDataYList;  //!< List of axis data for the Y direction
-    bool m_desiredChanged = false; //!< Is the desired bounds have changed ? Used to call DesiredBoundsHaveChanged()
 
     wxMenu m_popmenu;       //!< Canvas' context menu
     bool m_lockaspect;      //!< Scale aspect is locked or not
@@ -3828,6 +3829,10 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 
   private:
     void FillI18NString();
+
+    /// Report any change of desired display bounds to user's derived class (for example during zoom).
+    void CheckAndReportDesiredBoundsChanges();
+
 
     /*! Generates a new unique Y-axis ID by finding the largest
      * used ID and incrementing by 1
