@@ -38,7 +38,7 @@ void MathPlotConfigSettings::SetSettings(wxWindow* win)
   DoPosition(true, win);
 
   // Go directly to the notebook
-  win = win->FindWindow("notebook");
+  win = win->FindWindow(_T("notebook"));
   if (win)
     DoRecursiveSearch(true, win);
 }
@@ -51,7 +51,7 @@ void MathPlotConfigSettings::GetSettings(wxWindow* win)
   DoPosition(false, win);
 
   // Go directly to the notebook
-  win = win->FindWindow("notebook");
+  win = win->FindWindow(_T("notebook"));
   if (win)
     DoRecursiveSearch(false, win);
 }
@@ -63,18 +63,18 @@ void MathPlotConfigSettings::GetSettings(wxWindow* win)
  */
 void MathPlotConfigSettings::DoPosition(bool set, wxWindow* win)
 {
-  SetPath("/Position");
+  SetPath(_T("/Position"));
   if (set)
   {
     int posX, posY;
-    if (Read("PosX", &posX) && Read("PosY", &posY))
+    if (Read(_T("PosX"), &posX) && Read(_T("PosY"), &posY))
       win->Move(wxPoint(posX, posY), wxSIZE_FORCE);
   }
   else // get
   {
     wxPoint pos = win->GetScreenPosition();
-    Write("PosX", pos.x);
-    Write("PosY", pos.y);
+    Write(_T("PosX"), pos.x);
+    Write(_T("PosY"), pos.y);
   }
 }
 
@@ -88,7 +88,7 @@ void MathPlotConfigSettings::DoPosition(bool set, wxWindow* win)
 void MathPlotConfigSettings::DoRecursiveSearch(bool set, wxWindow* win, const wxString& path, int level)
 {
   // We save only General (panel 1) and Legend (panel 2)
-  if ((win->GetName()).IsSameAs("panel"))
+  if ((win->GetName()).IsSameAs(_T("panel")))
   {
     if (level > 2)
       return;
@@ -99,7 +99,7 @@ void MathPlotConfigSettings::DoRecursiveSearch(bool set, wxWindow* win, const wx
   {
     wxTextCtrl* text = (wxTextCtrl*)win;
     SetPath(path);
-    wxString key = "Text" + wxString::Format("%d", level);
+    wxString key = _T("Text") + wxString::Format(_T("%d"), level);
     if (set)
     {
       wxString value;
@@ -118,7 +118,7 @@ void MathPlotConfigSettings::DoRecursiveSearch(bool set, wxWindow* win, const wx
   {
     wxChoice* choice = (wxChoice*)win;
     SetPath(path);
-    wxString key = "Choice" + wxString::Format("%d", level);
+    wxString key = _T("Choice") + wxString::Format(_T("%d"), level);
     if (set)
     {
       int value;
@@ -137,7 +137,7 @@ void MathPlotConfigSettings::DoRecursiveSearch(bool set, wxWindow* win, const wx
   {
     wxCheckBox* check = (wxCheckBox*)win;
     SetPath(path);
-    wxString key = "Check" + wxString::Format("%d", level);
+    wxString key = _T("Check") + wxString::Format(_T("%d"), level);
     if (set)
     {
       bool value;
@@ -157,10 +157,10 @@ void MathPlotConfigSettings::DoRecursiveSearch(bool set, wxWindow* win, const wx
     wxButton* button = (wxButton*)win;
     SetPath(path);
     // It is a button for font configuration
-    if ((button->GetLabel()).IsSameAs("Font"))
+    if ((button->GetLabel()).IsSameAs(_T("Font")))
     {
-      wxString key1 = "ButtonFont" + wxString::Format("%d", level);
-      wxString key2 = "ButtonForeground" + wxString::Format("%d", level);
+      wxString key1 = _T("ButtonFont") + wxString::Format(_T("%d"), level);
+      wxString key2 = _T("ButtonForeground") + wxString::Format(_T("%d"), level);
       if (set)
       {
         wxFont font;
@@ -178,7 +178,7 @@ void MathPlotConfigSettings::DoRecursiveSearch(bool set, wxWindow* win, const wx
     }
     else // It is a button for background colour configuration
     {
-      wxString key = "ButtonBackground" + wxString::Format("%d", level);
+      wxString key = _T("ButtonBackground") + wxString::Format(_T("%d"), level);
       if (set)
       {
         wxColour value;
@@ -194,17 +194,16 @@ void MathPlotConfigSettings::DoRecursiveSearch(bool set, wxWindow* win, const wx
   }
 
   wxWindowList& children = win->GetChildren();
-  wxString winPath = path + "/" + win->GetName();
+  wxString winPath = path + _T("/") + win->GetName();
   if (level != 0)
-    winPath += wxString::Format("%d", level);
+    winPath += wxString::Format(_T("%d"), level);
   int i = 1;
 #if wxCHECK_VERSION(3, 0, 0)
   for (wxWindow* child : children)
   {
-    wxWindow* current = child;
-    if (!current->IsKindOf(wxCLASSINFO(wxStaticText))) // Skip static text
+    if (!child->IsKindOf(wxCLASSINFO(wxStaticText))) // Skip static text
     {
-      DoRecursiveSearch(set, current, winPath, i);
+      DoRecursiveSearch(set, child, winPath, i);
       i++;
     }
   }
