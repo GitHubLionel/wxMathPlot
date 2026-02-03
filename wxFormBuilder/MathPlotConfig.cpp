@@ -637,7 +637,7 @@ void MathPlotConfigDialog::OnbAddAxisClick(wxCommandEvent& event)
   wxButton* bt = wxDynamicCast(event.GetEventObject(), wxButton);
   mpScale* newScale = NULL;
   if (bt == bAddXAxis)
-    newScale = (mpScale*)new mpScaleX(wxT("New X"), mpALIGN_BOTTOM, true, mpX_NORMAL);
+    newScale = (mpScale*)new mpScaleX(wxT("New X"), mpALIGN_BOTTOM, true, mpLabel_AUTO);
   else
     newScale = (mpScale*)new mpScaleY(wxT("New Y"), mpALIGN_LEFT, true);
 

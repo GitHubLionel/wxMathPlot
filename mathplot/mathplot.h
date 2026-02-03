@@ -317,6 +317,12 @@ struct mpRange
       return (min + max) / 2;
     }
 
+    /// Returns max absolute value of the range
+    double GetMaxAbs(void) const
+    {
+      return std::max(fabs(min), fabs(max));
+    }
+
     /// Convert to log range
     void ToLog(void)
     {
@@ -626,6 +632,29 @@ enum mpMouseButtonAction
 {
   mpMouseBoxZoom,
   mpMouseDragZoom,
+};
+
+enum mpLabelType
+{
+  /** Set label for axis in auto mode, automatically switch between decimal and scientific notation */
+  mpLabel_AUTO,
+  /** Set label for axis in decimal notation, with number of decimals automatically calculated based on zoom level */
+  mpLabel_DECIMAL,
+  /** Set label for axis in scientific notation */
+  mpLabel_SCIENTIFIC,
+  /** Set label for axis in time mode: the value is represented as minutes:seconds.milliseconds if time
+   * is less than 2 minutes, hours:minutes:seconds otherwise. */
+  mpLabel_TIME,
+  /** Set label for axis in hours mode: the value is always represented as hours:minutes:seconds. */
+  mpLabel_HOURS,
+  /** Set label for axis in date mode: the value is always represented as yyyy-mm-dd. */
+  mpLabel_DATE,
+  /** Set label for axis in datetime mode: the value is always represented as yyyy-mm-ddThh:mm:ss. */
+  mpLabel_DATETIME,
+  /** Set label user defined */
+  mpLabel_USER,
+  /** Set no label for axis (useful for bar) */
+  mpLabel_NONE,
 };
 
 //-----------------------------------------------------------------------------
@@ -1193,8 +1222,8 @@ class WXDLLIMPEXP_MATHPLOT mpInfoCoords: public mpInfoLayer
     virtual void ErasePlot(wxDC &dc, mpWindow &w);
 
     /** Set X axis label view mode.
-     @param mode mpX_NORMAL for normal labels, mpX_TIME for time axis in hours, minutes, seconds. */
-    void SetLabelMode(unsigned int mode, unsigned int time_conv = mpX_RAWTIME)
+     @param mode mpLabel_AUTO for normal labels, mpLabel_TIME for time axis in hours, minutes, seconds. */
+    void SetLabelMode(mpLabelType mode, unsigned int time_conv = mpX_RAWTIME)
     {
       m_labelType = mode;
       m_timeConv = time_conv;
@@ -1230,7 +1259,7 @@ class WXDLLIMPEXP_MATHPLOT mpInfoCoords: public mpInfoLayer
 
   protected:
     wxString m_content;  //!< string holding the coordinates to be drawn.
-    unsigned int m_labelType;
+    mpLabelType m_labelType;
     unsigned int m_timeConv;
     wxCoord m_mouseX;
     wxCoord m_mouseY;
@@ -2183,7 +2212,7 @@ class WXDLLIMPEXP_MATHPLOT mpScale: public mpLayer
      @param name Label to plot by the ruler
      @param flags Set the position of the scale with respect to the window.
      @param grids Show grid or not. Give false (default) for not drawing the grid. */
-    mpScale(const wxString &name, int flags, bool grids, std::optional<unsigned int> axisID = std::nullopt);
+    mpScale(const wxString &name, int flags, bool grids, mpLabelType labelType = mpLabel_AUTO, std::optional<unsigned int> axisID = std::nullopt);
 
     /** Check whether this layer has a bounding box.
      This implementation returns \a FALSE thus making the ruler invisible
@@ -2238,14 +2267,30 @@ class WXDLLIMPEXP_MATHPLOT mpScale: public mpLayer
       return m_grids;
     }
 
-    /** Set axis Label format (used for mpX_NORMAL draw mode).
+    /** Set axis Label format (used for mpLabel_AUTO draw mode).
      @param format The format string */
-    virtual void SetLabelFormat(const wxString &format)
+    void SetLabelFormat(const wxString &format)
     {
       m_labelFormat = format;
+      m_labelType = mpLabel_USER;
     }
 
-    /** Get axis Label format (used for mpX_NORMAL draw mode).
+    /** Get axis label view mode.
+     @return mpLabel_AUTO for normal labels, mpLabel_TIME for time axis in hours, minutes, seconds. */
+    mpLabelType GetLabelMode() const
+    {
+      return m_labelType;
+    }
+
+    /** Set axis label view mode.
+     @param mode mpLabel_AUTO for normal labels, mpLabel_TIME for time axis in hours, minutes, seconds. */
+    void SetLabelMode(mpLabelType mode, unsigned int time_conv = mpX_RAWTIME)
+    {
+      m_labelType = mode;
+      m_timeConv = time_conv;
+    }
+
+    /** Get axis Label format (used for mpLabel_AUTO draw mode).
      @return The format string */
     const wxString& GetLabelFormat() const
     {
@@ -2353,6 +2398,8 @@ class WXDLLIMPEXP_MATHPLOT mpScale: public mpLayer
     bool m_grids;            //!< Flag to show grids. Default false
     bool m_auto;             //!< Flag to autosize grids. Default true
     double m_min, m_max;     //!< Min and max axis values when autosize is false
+    mpLabelType m_labelType;  //!< Select labels mode: mpLabel_AUTO for normal labels, mpLabel_TIME for time axis in hours, minutes, seconds
+    unsigned int m_timeConv;   //!< Selects if time has to be converted to local time or not.
     wxString m_labelFormat;  //!< Format string used to print labels
     bool m_isLog;            //!< Is the axis a log axis ?
 
@@ -2367,26 +2414,34 @@ class WXDLLIMPEXP_MATHPLOT mpScale: public mpLayer
     double GetStep(double scale, int minLabelSpacing);
     virtual void DrawScaleName(wxDC &dc, mpWindow &w, int origin, int labelSize) = 0;
 
+    /** Formats a value to a string used on a log axis
+     @param The value to be formated
+     @return Label name for log axis
+     */
     wxString FormatLogValue(double n);
+
+    /** Checks if scientific notation shall be used on the labels
+     @param Maximum absolute value of the visible axis
+     @return True if scientific notation shall be used
+     */
+    bool UseScientific(double maxAxisValue);
+
+    /** Get number of significant digits to be used in scientific notation
+     @param Step size of the axis ticks
+     @param Maximum absolute value of the visible axis
+     @return Number of significant digits
+     */
+    int GetSignificantDigits(double step, double maxAxisValue);
+
+    /** Get number of decimal digits to be used in decimal notation
+     @param Step size of the axis ticks
+     @return Number of decimal digits
+     */
+    int GetDecimalDigits(double step);
 
   wxDECLARE_DYNAMIC_CLASS(mpScale);
 };
 
-/** Set label for X axis in normal mode */
-#define mpX_NORMAL  0x00
-/** Set label for X axis in time mode: the value is represented as minutes:seconds.milliseconds if time
- * is less than 2 minutes, hours:minutes:seconds otherwise. */
-#define mpX_TIME  0x01
-/** Set label for X axis in hours mode: the value is always represented as hours:minutes:seconds. */
-#define mpX_HOURS 0x02
-/** Set label for X axis in date mode: the value is always represented as yyyy-mm-dd. */
-#define mpX_DATE 0x03
-/** Set label for X axis in datetime mode: the value is always represented as yyyy-mm-ddThh:mm:ss. */
-#define mpX_DATETIME 0x04
-/** Set label user defined */
-#define mpX_USER 0x05
-/** Set no label for X axis (useful for bar) */
-#define mpX_NONE 0x06
 
 /** Plot layer implementing a x-scale ruler.
  The ruler is fixed at Y=0 in the coordinate system. A label is plotted at
@@ -2400,34 +2455,11 @@ class WXDLLIMPEXP_MATHPLOT mpScaleX: public mpScale
      @param name Label to plot by the ruler
      @param flags Set the position of the scale with respect to the window.
      @param grids Show grid or not. Give false (default) for not drawing the grid.
-     @param type mpX_NORMAL for normal labels, mpX_TIME for time axis in hours, minutes, seconds. */
-    mpScaleX(const wxString &name = _T("X"), int flags = mpALIGN_CENTERX, bool grids = false, unsigned int type = mpX_NORMAL) :
-        mpScale(name, flags, grids)
+     @param type mpLabel_AUTO for normal labels, mpLabel_TIME for time axis in hours, minutes, seconds. */
+    mpScaleX(const wxString &name = _T("X"), int flags = mpALIGN_CENTERX, bool grids = false, mpLabelType type = mpLabel_AUTO) :
+        mpScale(name, flags, grids, type)
     {
       m_subtype = mpsScaleX;
-      m_labelType = type;
-      m_timeConv = mpX_RAWTIME;
-    }
-
-    virtual void SetLabelFormat(const wxString &format)
-    {
-      mpScale::SetLabelFormat(format);
-      m_labelType = mpX_USER;
-    }
-
-    /** Get X axis label view mode.
-     @return mpX_NORMAL for normal labels, mpX_TIME for time axis in hours, minutes, seconds. */
-    unsigned int GetLabelMode() const
-    {
-      return m_labelType;
-    }
-
-    /** Set X axis label view mode.
-     @param mode mpX_NORMAL for normal labels, mpX_TIME for time axis in hours, minutes, seconds. */
-    void SetLabelMode(unsigned int mode, unsigned int time_conv = mpX_RAWTIME)
-    {
-      m_labelType = mode;
-      m_timeConv = time_conv;
     }
 
     bool IsTopAxis()
@@ -2441,8 +2473,6 @@ class WXDLLIMPEXP_MATHPLOT mpScaleX: public mpScale
     }
 
   protected:
-    unsigned int m_labelType;  //!< Select labels mode: mpX_NORMAL for normal labels, mpX_TIME for time axis in hours, minutes, seconds
-    unsigned int m_timeConv;   //!< Selects if time has to be converted to local time or not.
 
     /** Layer plot handler.
      This implementation will plot the ruler adjusted to the visible area. */
@@ -2475,8 +2505,8 @@ class WXDLLIMPEXP_MATHPLOT mpScaleY: public mpScale
      @param name Label to plot by the ruler
      @param flags Set the position of the scale with respect to the window.
      @param grids Show grid or not. Give false (default) for not drawing the grid*/
-    mpScaleY(const wxString &name = _T("Y"), int flags = mpALIGN_CENTERY, bool grids = false, std::optional<unsigned int> yAxisID = std::nullopt) :
-        mpScale(name, flags, grids, yAxisID)
+    mpScaleY(const wxString &name = _T("Y"), int flags = mpALIGN_CENTERY, bool grids = false, std::optional<unsigned int> yAxisID = std::nullopt, mpLabelType labelType = mpLabel_AUTO) :
+        mpScale(name, flags, grids, labelType, yAxisID)
     {
       m_subtype = mpsScaleY;
       m_axisWidth = Y_BORDER_SEPARATION;
@@ -2520,7 +2550,7 @@ class WXDLLIMPEXP_MATHPLOT mpScaleY: public mpScale
     virtual void DoPlot(wxDC &dc, mpWindow &w);
 
     virtual int GetOrigin(mpWindow &w);
-    wxString GetLabelFormat(mpWindow &w);
+    wxString GetLabelFormat(mpWindow &w, double step);
     int GetLabelWidth(double value, wxDC &dc, wxString fmt);
     virtual void DrawScaleName(wxDC &dc, mpWindow &w, int origin, int labelSize);
 
@@ -2878,6 +2908,12 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
       return m_AxisDataX.bound;
     }
 
+    /** Get desired bounding box for X axis. */
+    mpRange GetDesiredBoundX(void) const
+    {
+      return m_AxisDataX.desired;
+    }
+
     /** Get bounding box for Y axis of ID yAxisID.
      @param yAxisID Y axis ID to get bound
      */
@@ -2885,6 +2921,15 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     {
       assert(m_AxisDataYList.count(yAxisID) != 0);
       return m_AxisDataYList[yAxisID].bound;
+    }
+
+    /** Get desired bounding box for Y axis of ID yAxisID.
+     @param yAxisID Y axis ID to get bound
+     */
+    mpRange GetDesiredBoundY(int yAxisID)
+    {
+      assert(m_AxisDataYList.count(yAxisID) != 0);
+      return m_AxisDataYList[yAxisID].desired;
     }
 
     /**

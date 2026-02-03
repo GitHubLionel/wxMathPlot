@@ -585,7 +585,9 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   StaticText29 = new wxStaticText(Panel3, wxID_ANY, _("Format :"), wxDefaultPosition, wxDefaultSize, 0);
   BoxSizer14->Add(StaticText29, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
   const wxString cbFormat_choices[] = {
-  _("Normal"),
+  _("Auto"),
+  _("Decimal"),
+  _("Scientific"),
   _("Time"),
   _("Hours"),
   _("Date"),
@@ -593,7 +595,7 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   _("User"),
   _("None"),
   };
-  cbFormat = new wxChoice(Panel3, wxID_ANY, wxDefaultPosition, wxDefaultSize, 7, cbFormat_choices, 0, wxDefaultValidator);
+  cbFormat = new wxChoice(Panel3, wxID_ANY, wxDefaultPosition, wxDefaultSize, 9, cbFormat_choices, 0, wxDefaultValidator);
   cbFormat->SetSelection(0);
   cbFormat->Set(WXSIZEOF(cbFormat_choices), cbFormat_choices);
   cbFormat->SetSelection(0);
@@ -1206,26 +1208,21 @@ void MathPlotConfigDialog::UpdateAxis(void)
   if (!CurrentScale)
     return;
   wxString classname = CurrentScale->GetClassInfo()->GetClassName();
+  cbAxisPosition->Clear();
+  cbFormat->SetSelection((CurrentScale)->GetLabelMode());
+  edFormat->Enable(cbFormat->GetSelection() == 7);
 
   if (classname.IsSameAs(_T("mpScaleX")))
   {
-    cbAxisPosition->Clear();
     scale_offset = mpALIGN_BORDER_BOTTOM;
     for (int i = scale_offset; i <= mpALIGN_BORDER_TOP; i++)
       cbAxisPosition->Append(XAxis_Align[i - scale_offset]);
-    cbFormat->Enable();
-    cbFormat->SetSelection(((mpScaleX*)CurrentScale)->GetLabelMode());
-    edFormat->Enable(cbFormat->GetSelection() == 5);
   }
   else
   {
-    cbAxisPosition->Clear();
     scale_offset = mpALIGN_BORDER_LEFT;
     for (int i = scale_offset; i <= mpALIGN_BORDER_RIGHT; i++)
       cbAxisPosition->Append(YAxis_Align[i - scale_offset]);
-    cbFormat->SetSelection(0);
-    cbFormat->Enable(false);
-    edFormat->Enable();
   }
 
   edAxisName->SetValue(CurrentScale->GetName());
@@ -1278,7 +1275,7 @@ void MathPlotConfigDialog::OnbAddAxisClick(wxCommandEvent& event)
   wxButton* bt = wxDynamicCast(event.GetEventObject(), wxButton);
   mpScale* newScale = NULL;
   if (bt == bAddXAxis)
-    newScale = (mpScale*)new mpScaleX(wxT("New X"), mpALIGN_BOTTOM, true, mpX_NORMAL);
+    newScale = (mpScale*)new mpScaleX(wxT("New X"), mpALIGN_BOTTOM, true, mpLabel_AUTO);
   else
     newScale = (mpScale*)new mpScaleY(wxT("New Y"), mpALIGN_LEFT, true);
 
@@ -1320,7 +1317,7 @@ void MathPlotConfigDialog::OnAxisSelect(wxCommandEvent& WXUNUSED(event))
 
 void MathPlotConfigDialog::OncbFormatSelect(wxCommandEvent& WXUNUSED(event))
 {
-  edFormat->Enable(cbFormat->GetSelection() == 5);
+  edFormat->Enable(cbFormat->GetSelection() == 7);
 }
 
 void MathPlotConfigDialog::OncbAutoScaleClick(wxCommandEvent& WXUNUSED(event))
@@ -1621,17 +1618,17 @@ void MathPlotConfigDialog::Apply(int pageIndex, bool updateFont)
         CurrentScale->SetAlign(scale_offset + cbAxisPosition->GetSelection());
         CurrentScale->SetDrawOutsideMargins(cbAxisOutside->GetValue());
         CurrentScale->SetLabelFormat(edFormat->GetValue());
+        CurrentScale->SetLabelMode((mpLabelType)cbFormat->GetSelection());
 
         wxString newName = _T("");
         wxString classname = CurrentScale->GetClassInfo()->GetClassName();
         if (classname.IsSameAs(_T("mpScaleX")))
         {
           newName = _T("X axis - ");
-          ((mpScaleX*)CurrentScale)->SetLabelMode(cbFormat->GetSelection());
           // Update InfoCoords if present
           if (CurrentCoords)
           {
-            CurrentCoords->SetLabelMode(cbFormat->GetSelection());
+            CurrentCoords->SetLabelMode((mpLabelType)cbFormat->GetSelection());
           }
         }
         else if (classname.IsSameAs(_T("mpScaleY")))
