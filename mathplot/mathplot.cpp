@@ -2191,6 +2191,97 @@ double mpScale::GetStep(double scale, int minLabelSpacing)
   return niceStep * pow(10, exp);
 }
 
+wxString mpScale::FormatLabelValue(double value, double maxAxisValue, double step)
+{
+  wxString s = _T("");
+
+  switch (m_labelType)
+  {
+    case mpLabel_AUTO:
+      if (IsLogAxis())
+      {
+        s = FormatLogValue(value);
+      }
+      else if(UseScientific(maxAxisValue))
+      {
+        s.Printf(_T("%.*e"), GetSignificantDigits(step, maxAxisValue), value);
+      }
+      else
+      {
+        s.Printf(_T("%.*f"), GetDecimalDigits(step), value);
+      }
+      break;
+    case mpLabel_DECIMAL:
+      if (IsLogAxis())
+      {
+        s = FormatLogValue(value);
+      }
+      else
+      {
+        s.Printf(_T("%.*f"), GetDecimalDigits(step), value);
+      }
+      break;
+    case mpLabel_SCIENTIFIC:
+      if (IsLogAxis())
+      {
+        s = FormatLogValue(value);
+      }
+      else
+      {
+        s.Printf(_T("%.*e"), GetSignificantDigits(step, maxAxisValue), value);
+      }
+      break;
+    case mpLabel_USER:
+      if (IsLogAxis())
+      {
+        s = FormatLogValue(value);
+      }
+      else if (!m_labelFormat.IsEmpty())
+      {
+        s.Printf(m_labelFormat, value);
+      }
+      else
+      {
+        s.Printf(_T("%g"), value);
+      }
+      break;
+    case mpLabel_DATETIME:
+    {
+      struct tm timestruct;
+      if (DoubleToTimeStruct(value, m_timeConv, &timestruct))
+        s.Printf(_T("%04d-%02d-%02dT%02d:%02d:%02d"), timestruct.tm_year + 1900, timestruct.tm_mon + 1, timestruct.tm_mday,
+            timestruct.tm_hour, timestruct.tm_min, timestruct.tm_sec);
+      break;
+    }
+    case mpLabel_DATE:
+    {
+      struct tm timestruct;
+      if (DoubleToTimeStruct(value, m_timeConv, &timestruct))
+        s.Printf(_T("%04d-%02d-%02d"), timestruct.tm_year + 1900, timestruct.tm_mon + 1, timestruct.tm_mday);
+      break;
+    }
+    case mpLabel_TIME:
+    case mpLabel_HOURS:
+    {
+      double sign = (value < 0) ? -1.0 : 1.0;
+      double modulus = fabs(value);
+      double hh = floor(modulus / 3600);
+      double mm = floor((modulus - hh * 3600) / 60);
+      double ss = modulus - hh * 3600 - mm * 60;
+      if ((maxAxisValue / 60 > 2) || (m_labelType == mpLabel_HOURS))
+        // Show hour:minute:second if axis is larger than 2 minutes
+        s.Printf(_T("%02.0f:%02.0f:%02.0f"), sign * hh, mm, floor(ss));
+      else
+        // If less than 2 minutes show m:s.ms
+        s.Printf(_T("%02.0f:%02.3f"), sign * mm, ss);
+      break;
+    }
+    default:
+      ;
+  }
+  return s;
+}
+
 wxString mpScale::FormatLogValue(double n)
 {
   // Special format for log axis : 10 ^ exponent
@@ -2207,6 +2298,29 @@ wxString mpScale::FormatLogValue(double n)
       s.Printf(_T("10^%d"), exp);
   }
   return s;
+}
+
+int mpScale::GetLabelWidth(double value, wxDC &dc, double maxAxisValue, double step)
+{
+  if ( IsLogAxis() &&
+      ((m_labelType == mpLabel_AUTO)       ||
+       (m_labelType == mpLabel_DECIMAL)    ||
+       (m_labelType == mpLabel_SCIENTIFIC) ||
+       (m_labelType == mpLabel_USER))       )
+  {
+    // Log axis only returns a label for integers, thus we need to round. And since
+    // we're only interested in an estimated width of the label, rounding is ok
+    value = round(value);
+  }
+  else
+  {
+    // For other formats we Need to round according to step size to get correct width
+    // Finally +0.0 to mitigate negative zero (-0)
+    value = trunc(value / step) * step + 0.0f;
+  }
+
+  wxString labelStr = FormatLabelValue(value, maxAxisValue, step);
+  return dc.GetTextExtent(labelStr).GetWidth();
 }
 
 bool mpScale::UseScientific(double maxAxisValue)
@@ -2341,71 +2455,6 @@ void mpScaleX::DrawScaleName(wxDC &dc, mpWindow &w, int origin, int labelSize)
   }
 }
 
-wxString mpScaleX::FormatValue(const wxString &fmt, double n)
-{
-  wxString s = _T("");
-  struct tm timestruct;
-
-  switch (m_labelType)
-  {
-    case mpLabel_AUTO:
-    case mpLabel_DECIMAL:
-    case mpLabel_SCIENTIFIC:
-    case mpLabel_USER:
-      if (IsLogAxis())
-        s = FormatLogValue(n);
-      else
-        s.Printf(fmt, n);
-      break;
-    case mpLabel_DATETIME:
-    {
-      if (DoubleToTimeStruct(n, m_timeConv, &timestruct))
-        s.Printf(fmt, timestruct.tm_year + 1900, timestruct.tm_mon + 1, timestruct.tm_mday, timestruct.tm_hour, timestruct.tm_min,
-            timestruct.tm_sec);
-
-      break;
-    }
-    case mpLabel_DATE:
-    {
-      if (DoubleToTimeStruct(n, m_timeConv, &timestruct))
-        s.Printf(fmt, timestruct.tm_year + 1900, timestruct.tm_mon + 1, timestruct.tm_mday);
-      break;
-    }
-    case mpLabel_TIME:
-    case mpLabel_HOURS:
-    {
-      double sign = (n < 0) ? -1.0 : 1.0;
-      double modulus = fabs(n);
-      double hh = floor(modulus / 3600);
-      double mm = floor((modulus - hh * 3600) / 60);
-      double ss = modulus - hh * 3600 - mm * 60;
-#if defined(MATHPLOT_DO_LOGGING) && defined(MATHPLOT_LOG_SCALE)
-      wxLogMessage(_T("%02.0f Hours, %02.0f minutes, %02.0f seconds"), sign * hh, mm, ss);
-#endif // MATHPLOT_DO_LOGGING
-      if (fmt.Len() == 20) // Format with hours has 11 chars
-        s.Printf(fmt, sign * hh, mm, floor(ss));
-      else
-        s.Printf(fmt, sign * mm, ss);
-      break;
-    }
-    default:
-      ;
-  }
-  return s;
-}
-
-int mpScaleX::GetLabelWidth(double value, wxDC &dc, wxString fmt)
-{
-  if (((m_labelType == mpLabel_AUTO) || (m_labelType == mpLabel_USER)) && IsLogAxis())
-  {
-    // Log axis only returns a label for integers, thus we need to round. And since
-    // we're only interested in an estimated width of the label, rounding is ok
-    value = round(value);
-  }
-  wxString labelStr = FormatValue(fmt, value);
-  return dc.GetTextExtent(labelStr).x;
-}
-
 void mpScaleX::DoPlot(wxDC &dc, mpWindow &w)
 {
   int orgy = GetOrigin(w);
@@ -2420,70 +2469,12 @@ void mpScaleX::DoPlot(wxDC &dc, mpWindow &w)
   const double scaleX = w.GetScaleX();
   double step = GetStep(scaleX, MIN_X_AXIS_LABEL_SEPARATION);
   const double end = w.p2x(w.GetScreenX());
-
-  // Get string format
-  wxString fmt = _T("");
-  switch (m_labelType)
-  {
-    case mpLabel_USER:
-      if (!m_labelFormat.IsEmpty())
-      {
-        fmt = m_labelFormat;
-      }
-      else
-      {
-        fmt = (_T("%g"));
-      }
-      break;
-    case mpLabel_AUTO:
-    {
-      double maxAxisValue = w.GetDesiredBoundX().GetMaxAbs();
-      if(UseScientific(maxAxisValue))
-      {
-        fmt.Printf(_T("%%.%de"), GetSignificantDigits(step, maxAxisValue));
-      }
-      else
-      {
-        fmt.Printf(_T("%%.%df"), GetDecimalDigits(step));
-      }
-      break;
-    }
-    case mpLabel_DECIMAL:
-    {
-      fmt.Printf(_T("%%.%df"), GetDecimalDigits(step));
-      break;
-    }
-    case mpLabel_SCIENTIFIC:
-    {
-      double maxAxisValue = w.GetDesiredBoundX().GetMaxAbs();
-      fmt.Printf(_T("%%.%de"), GetSignificantDigits(step, maxAxisValue));
-      break;
-    }
-    case mpLabel_DATETIME:
-      fmt = (_T("%04d-%02d-%02dT%02d:%02d:%02d"));
-      break;
-    case mpLabel_DATE:
-      fmt = (_T("%04d-%02d-%02d"));
-      break;
-    case mpLabel_TIME:
-    {
-      if (end / 60 < 2)
-        fmt = (_T("%02.0f:%02.3f"));
-      else
-        fmt = (_T("%02.0f:%02.0f:%02.0f"));
-      break;
-    }
-    case mpLabel_HOURS:
-      fmt = (_T("%02.0f:%02.0f:%02.0f"));
-      break;
-    default:
-      ;
-  }
+  double maxAxisValue = w.GetDesiredBoundX().GetMaxAbs();
 
   // Recalculate step but adjusted for max label width now that we know the format of the label.
   // Largest label is either furthest left or furthest right
-  int leftWidth = GetLabelWidth(w.GetPosX(), dc, fmt);
-  int rightWidth = GetLabelWidth(end, dc, fmt);
+  int leftWidth = GetLabelWidth(w.GetPosX(), dc, maxAxisValue, step);
+  int rightWidth = GetLabelWidth(end, dc, maxAxisValue, step);
   int maxWidth = std::max(leftWidth, rightWidth);
   // For wide labels, make sure that we have at least 20 pixels between them
   int minLabelSeparation = std::max(maxWidth + 20, MIN_X_AXIS_LABEL_SEPARATION);
@@ -2530,7 +2521,7 @@ void mpScaleX::DoPlot(wxDC &dc, mpWindow &w)
       }
 
       // Write ticks labels in s string : compute size
-      s = FormatValue(fmt, n);
+      s = FormatLabelValue(n, maxAxisValue, step);
 
       dc.GetTextExtent(s, &tx, &ty);
 
@@ -2610,69 +2601,6 @@ int mpScaleY::GetOrigin(mpWindow &w)
   return origin;
 }
 
-wxString mpScaleY::GetLabelFormat(mpWindow &w, double step)
-{
-  wxString fmt;
-
-  switch (m_labelType)
-  {
-    case mpLabel_AUTO:
-    {
-      double maxAxisValue = w.GetDesiredBoundY(GetAxisID()).GetMaxAbs();
-      if(UseScientific(maxAxisValue))
-      {
-        fmt.Printf(_T("%%.%de"), GetSignificantDigits(step, maxAxisValue));
-      }
-      else
-      {
-        fmt.Printf(_T("%%.%df"), GetDecimalDigits(step));
-      }
-      break;
-    }
-    case mpLabel_DECIMAL:
-    {
-      fmt.Printf(_T("%%.%df"), GetDecimalDigits(step));
-      break;
-    }
-    case mpLabel_SCIENTIFIC:
-    {
-      double maxAxisValue = w.GetDesiredBoundY(GetAxisID()).GetMaxAbs();
-      fmt.Printf(_T("%%.%de"), GetSignificantDigits(step, maxAxisValue));
-      break;
-    }
-    case mpLabel_USER:
-      if (!m_labelFormat.IsEmpty())
-      {
-        fmt = m_labelFormat;
-      }
-      else
-      {
-        fmt = (_T("%g"));
-      }
-      break;
-    default:
-      // Time and date not supported yet...
-      fmt = (_T("%g"));
-      break;
-  }
-
-  return fmt;
-}
-
-int mpScaleY::GetLabelWidth(double value, wxDC &dc, wxString fmt)
-{
-  wxString labelStr;
-  if (IsLogAxis())
-  {
-    labelStr = FormatLogValue(round(value));
-  }
-  else
-  {
-    labelStr.Printf(fmt, value);
-  }
-  return dc.GetTextExtent(labelStr).x;
-}
-
 void mpScaleY::DrawScaleName(wxDC &dc, mpWindow &w, int origin, int labelSize)
 {
   wxCoord tx, ty;
@@ -2723,18 +2651,16 @@ void mpScaleY::DoPlot(wxDC &dc, mpWindow &w)
   const double step = GetStep(w.GetScaleY(GetAxisID()), MIN_Y_AXIS_LABEL_SEPARATION);
   const double start = w.p2y(w.GetScreenY(), GetAxisID());
   const double end = w.GetPosY(GetAxisID());
-
-  wxString fmt = GetLabelFormat(w, step);
+  double maxAxisValue = w.GetDesiredBoundY(GetAxisID()).GetMaxAbs();
 
   double n = floor(start / step) * step;
 
-  wxCoord labelW = 0;
-  // Before staring cycle, calculate label height
-  wxCoord labelHeight = 0;
-  wxString s = wxString::Format(fmt, n);
+  wxCoord labelWidth = 0;
+  // Before starting cycle, calculate label height
+  wxString s = FormatLabelValue(n, maxAxisValue, step);
+  wxCoord labelHeight = dc.GetTextExtent(s).GetHeight() / 2;
+
   wxCoord tx = 0, ty = 0;
-  dc.GetTextExtent(s, &tx, &labelHeight);
-  labelHeight /= 2;
 
   // Draw grid, ticks and label
   for (; n < end; n += step)
@@ -2766,14 +2692,7 @@ void mpScaleY::DoPlot(wxDC &dc, mpWindow &w)
         }
       }
 
-      if (IsLogAxis())
-      {
-        s = FormatLogValue(n);
-        if (s.IsEmpty())
-          continue;
-      }
-      else
-        s.Printf(fmt, n);
+      s = FormatLabelValue(n, maxAxisValue, step);
 
       // Print ticks labels
       dc.GetTextExtent(s, &tx, &ty);
@@ -2781,7 +2700,7 @@ void mpScaleY::DoPlot(wxDC &dc, mpWindow &w)
       if (ty != labelHeight)
         wxLogMessage(_T("mpScaleY::Plot: ty(%d) and labelHeight(%d) differ!"), ty, labelHeight);
 #endif
-      labelW = (labelW <= tx) ? tx : labelW;
+      labelWidth = (labelWidth <= tx) ? tx : labelWidth;
 
       if ((m_flags == mpALIGN_BORDER_LEFT) || (m_flags == mpALIGN_RIGHT))
         dc.DrawText(s, orgx + kTickSize, p - ty / 2);
@@ -2791,7 +2710,7 @@ void mpScaleY::DoPlot(wxDC &dc, mpWindow &w)
   }
 
   // Draw axis name
-  DrawScaleName(dc, w, orgx, labelW);
+  DrawScaleName(dc, w, orgx, labelWidth);
 }
 
 void mpScaleY::UpdateAxisWidth(mpWindow &w)
@@ -2799,20 +2718,11 @@ void mpScaleY::UpdateAxisWidth(mpWindow &w)
   wxClientDC dc(&w);
   dc.SetFont(m_font);
   double step = GetStep(w.GetScaleY(GetAxisID()), MIN_Y_AXIS_LABEL_SEPARATION);
-  wxString fmt = GetLabelFormat(w, step);
+  double maxAxisValue = w.GetDesiredBoundY(GetAxisID()).GetMaxAbs();
 
   // Widest label is either the uppermost or lowermost one
-  mpRect plotBound = w.GetPlotBoundaries(!m_drawOutsideMargins);
-  double lowerValue = w.p2y(plotBound.endPy, GetAxisID());
-  double upperValue = w.p2y(plotBound.startPy, GetAxisID());
-
-  // Need to round according to step size to get correct width
-  lowerValue = trunc(lowerValue / step) * step;
-  upperValue = trunc(upperValue / step) * step;
-
-  // Get max textwidth of the two values
-  int lowerLabelWidth = GetLabelWidth(lowerValue, dc, fmt);
-  int upperLabelWidth = GetLabelWidth(upperValue, dc, fmt);
+  int lowerLabelWidth = GetLabelWidth(w.GetDesiredBoundY(GetAxisID()).min, dc, maxAxisValue, step);
+  int upperLabelWidth = GetLabelWidth(w.GetDesiredBoundY(GetAxisID()).max, dc, maxAxisValue, step);
   int maxLabelWidth = std::max(lowerLabelWidth, upperLabelWidth);
 
   // Also need to consider size of axis name
