@@ -787,7 +787,9 @@
 														<object class="sizeritem">
 															<object class="wxChoice" name="" variable="cbFormat" member="yes">
 																<content>
-																	<item>Normal</item>
+																	<item>Auto</item>
+																	<item>Decimal</item>
+																	<item>Scientific</item>
 																	<item>Time</item>
 																	<item>Hours</item>
 																	<item>Date</item>

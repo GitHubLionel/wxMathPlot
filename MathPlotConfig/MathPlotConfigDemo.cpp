@@ -185,7 +185,7 @@ void MyFrame::CreatePlot(void)
 	m_plot->EnableDoubleBuffer(true);
 	m_plot->SetMargins(50, 20, 50, 50);
 
-	mpScaleX *bottomAxis = new mpScaleX(wxT("X"), mpALIGN_CENTERX, true, mpX_NORMAL);
+	mpScaleX *bottomAxis = new mpScaleX(wxT("X"), mpALIGN_CENTERX, true, mpLabel_AUTO);
 	bottomAxis->SetLabelFormat("%g");
 	mpScaleY *leftAxis = new mpScaleY(wxT("Y"), mpALIGN_CENTERY, true);
 	leftAxis->SetLabelFormat("%g");

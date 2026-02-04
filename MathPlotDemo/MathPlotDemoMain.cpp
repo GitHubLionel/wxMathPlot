@@ -178,7 +178,7 @@ void MathPlotDemoFrame::InitializePlot(void)
   mPlot->SetMargins(50, 20, 80, 80);
 
   // We always have a bottom axis (X axis) and a left axis (Y axis)
-  bottomAxis = new mpScaleX(wxT("X"), mpALIGN_CENTERX, true, mpX_NORMAL);
+  bottomAxis = new mpScaleX(wxT("X"), mpALIGN_CENTERX, true, mpLabel_AUTO);
   bottomAxis->SetCanDelete(false); // We can not delete this axis in IHM
   bottomAxis->SetLabelFormat("%g");
   leftAxis = new mpScaleY(wxT("Y"), mpALIGN_CENTERY, true);
