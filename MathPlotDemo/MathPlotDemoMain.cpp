@@ -448,7 +448,7 @@ void MathPlotDemoFrame::OnUserMouseAction(void *Sender, wxMouseEvent &event, boo
 {
   static wxOverlay m_overlay;
   #if wxCHECK_VERSION(3, 3, 0)
-  m_overlay.setOpacity(-1);
+  m_overlay.SetOpacity(-1);
   #endif
 
   // Get the mouse position relative to the mpWindow
