@@ -5635,6 +5635,7 @@ void mpBitmapLayer::SetBitmap(const wxImage &inBmp, double x, double y, double l
   else
   {
     m_bitmap = inBmp; //.GetSubBitmap( wxRect(0, 0, inBmp.GetWidth(), inBmp.GetHeight()));
+    m_scaledBitmap = wxBitmap(wxBitmap(m_bitmap)); // Needed for Linux
     m_min_x = x;
     m_min_y = y;
     m_max_x = x + lx;
