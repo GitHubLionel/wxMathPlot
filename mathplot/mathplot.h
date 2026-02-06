@@ -2414,11 +2414,28 @@ class WXDLLIMPEXP_MATHPLOT mpScale: public mpLayer
     double GetStep(double scale, int minLabelSpacing);
     virtual void DrawScaleName(wxDC &dc, mpWindow &w, int origin, int labelSize) = 0;
 
+    /** Formats a label value to a string
+     @param The value to be formated
+     @param Maximum absolute value of the visible axis
+     @param Step size of the axis ticks
+     @return Label name
+     */
+    wxString FormatLabelValue(double value, double maxAxisValue, double step);
+
     /** Formats a value to a string used on a log axis
      @param The value to be formated
      @return Label name for log axis
      */
     wxString FormatLogValue(double n);
+
+    /** Get label text width for a given value
+     @param Data value
+     @param Current dc
+     @param Maximum absolute value of the visible axis
+     @param Step size of the axis ticks
+     @return Label width
+     */
+    int GetLabelWidth(double value, wxDC &dc, double maxAxisValue, double step);
 
     /** Checks if scientific notation shall be used on the labels
      @param Maximum absolute value of the visible axis
@@ -2478,16 +2495,8 @@ class WXDLLIMPEXP_MATHPLOT mpScaleX: public mpScale
      This implementation will plot the ruler adjusted to the visible area. */
     virtual void DoPlot(wxDC &dc, mpWindow &w);
 
-    /** Get label width given a value and a format string
-     @param Data value
-     @param Current dc
-     @param Format string that shall be used for this value
-     @return Label width */
-    int GetLabelWidth(double value, wxDC &dc, wxString fmt);
-
     virtual int GetOrigin(mpWindow &w);
     virtual void DrawScaleName(wxDC &dc, mpWindow &w, int origin, int labelSize);
-    wxString FormatValue(const wxString &fmt, double n);
 
   wxDECLARE_DYNAMIC_CLASS(mpScaleX);
 };
@@ -2550,8 +2559,6 @@ class WXDLLIMPEXP_MATHPLOT mpScaleY: public mpScale
     virtual void DoPlot(wxDC &dc, mpWindow &w);
 
     virtual int GetOrigin(mpWindow &w);
-    wxString GetLabelFormat(mpWindow &w, double step);
-    int GetLabelWidth(double value, wxDC &dc, wxString fmt);
     virtual void DrawScaleName(wxDC &dc, mpWindow &w, int origin, int labelSize);
 
   wxDECLARE_DYNAMIC_CLASS(mpScaleY);
