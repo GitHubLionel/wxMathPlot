@@ -6,7 +6,7 @@
 // Contributors:    Jose Luis Blanco, Val Greene, Lionel Reynaud, Dave Nadler, MortenMacFly,
 //                  Oskar Waldemarsson (for multi Y axis and corrections)
 // Created:         21/07/2003
-// Last edit:       10/12/2025
+// Last edit:       07/02/2026
 // Copyright:       (c) David Schalig, Davide Rondini
 // Licence:         wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -88,72 +88,62 @@ namespace MathPlot
 {
 #endif // ENABLE_MP_NAMESPACE
 
+// Strings for the context (popup) menu
 wxString Popup_string[mpID_FULLSCREEN - mpID_FIT + 1][2] = {{_T("")}};
 
-// List of string message used
-wxString MESS_HELP0 = _T("");
-wxString MESS_HELP1 = _T("");
-wxString MESS_HELP2 = _T("");
-wxString MESS_HELP3 = _T("");
-wxString MESS_HELP4 = _T("");
-wxString MESS_HELP5 = _T("");
-wxString MESS_HELP6 = _T("");
+// Strings for the help message (mouse commands)
+wxString Help_string[7] = {_T("")};
 
+// Strings for load file
 wxString MESS_LOAD = _T("");
 wxString MESS_WILDCARD = _T("");
 
+// String for clipboard fail
 wxString MESS_CLIPFAIL = _T("");
 
-void mpWindow::FillI18NString()
+// Fill all wxString variables with I18N strings
+static void FillI18NString()
 {
-  Popup_string[0][0] = _("Fit");
-  Popup_string[0][1] = _("Set plot view to show all items");
-  Popup_string[1][0] = _("Zoom in");
-  Popup_string[1][1] = _("Zoom in plot view.");
-  Popup_string[2][0] = _("Zoom out");
-  Popup_string[2][1] = _("Zoom out plot view.");
-  Popup_string[3][0] = _("Center to this position");
-  Popup_string[3][1] = _("Center plot view to this position");
-  Popup_string[4][0] = _("Lock aspect");
-  Popup_string[4][1] = _("Lock horizontal and vertical zoom aspect.");
-  Popup_string[5][0] = _("Toggle grids");
-  Popup_string[5][1] = _("Show/Hide grids");
-  Popup_string[6][0] = _("Toggle info coords");
-  Popup_string[6][1] = _("Show/Hide info coordinates");
-  Popup_string[7][0] = _("Screen shot");
-  Popup_string[7][1] = _("Copy a screen shot to the clipboard");
+  unsigned int index = 0;
+  Popup_string[index][0]   = _("Fit");
+  Popup_string[index++][1] = _("Set plot view to show all items");
+  Popup_string[index][0]   = _("Zoom in");
+  Popup_string[index++][1] = _("Zoom in plot view.");
+  Popup_string[index][0]   = _("Zoom out");
+  Popup_string[index++][1] = _("Zoom out plot view.");
+  Popup_string[index][0]   = _("Center to this position");
+  Popup_string[index++][1] = _("Center plot view to this position");
+  Popup_string[index][0]   = _("Lock aspect");
+  Popup_string[index++][1] = _("Lock horizontal and vertical zoom aspect.");
+  Popup_string[index][0]   = _("Toggle grids");
+  Popup_string[index++][1] = _("Show/Hide grids");
+  Popup_string[index][0]   = _("Toggle info coords");
+  Popup_string[index++][1] = _("Show/Hide info coordinates");
+  Popup_string[index][0]   = _("Screen shot");
+  Popup_string[index++][1] = _("Copy a screen shot to the clipboard");
 #ifdef ENABLE_MP_CONFIG
-  Popup_string[8][0] = _("Configuration");
-  Popup_string[8][1] = _("Plot configuration");
-  Popup_string[9][0] = _("Load file");
-  Popup_string[9][1] = _("Load data file");
-  Popup_string[10][0] = _("Show mouse commands...");
-  Popup_string[10][1] = _("Show help about the mouse commands.");
-  Popup_string[11][0] = _("Toggle fullscreen");
-  Popup_string[11][1] = _("Toggle fullscreen.");
-#else // ENABLE_MP_CONFIG
-  Popup_string[8][0] = _("Load file");
-  Popup_string[8][1] = _("Load data file");
-  Popup_string[9][0] = _("Show mouse commands...");
-  Popup_string[9][1] = _("Show help about the mouse commands.");
-  Popup_string[10][0] = _("Toggle fullscreen");
-  Popup_string[10][1] = _("Toggle fullscreen.");
+  Popup_string[index][0]   = _("Configuration");
+  Popup_string[index++][1] = _("Plot configuration");
 #endif // ENABLE_MP_CONFIG
+  Popup_string[index][0]   = _("Load file");
+  Popup_string[index++][1] = _("Load data file");
+  Popup_string[index][0]   = _("Show mouse commands...");
+  Popup_string[index++][1] = _("Show help about the mouse commands.");
+  Popup_string[index][0]   = _("Toggle fullscreen");
+  Popup_string[index++][1] = _("Toggle fullscreen.");
 
-  // List of string message used
-  MESS_HELP0 = _("wxMathPlot help");
-  MESS_HELP1 = _("Supported Mouse commands:");
-  MESS_HELP2 = _(" - Left button down +\n"
-                 "    - Alt. 1: Mark area: Rectangular zoom\n"
-                 "    - Alt. 2: Move: Continous zoom");
-  MESS_HELP3 = _(" - Right button down + Move: Pan (Move)");
-  MESS_HELP4 = _(" - Wheel: Zoom in/out");
-  MESS_HELP5 = _(" - Wheel + SHIFT: Horizontal scroll");
-  MESS_HELP6 = _(" - Wheel + CTRL: Vertical scroll");
+  Help_string[0] = _("wxMathPlot help");
+  Help_string[1] = _("Supported Mouse commands:");
+  Help_string[2] = _(" - Left button down +\n"
+                     "    - Alt. 1: Mark area: Rectangular zoom\n"
+                     "    - Alt. 2: Move: Continous zoom");
+  Help_string[3] = _(" - Right button down + Move: Pan (Move)");
+  Help_string[4] = _(" - Wheel: Zoom in/out");
+  Help_string[5] = _(" - Wheel + SHIFT: Horizontal scroll");
+  Help_string[6] = _(" - Wheel + CTRL: Vertical scroll");
 
   MESS_LOAD = _("Select file");
   MESS_WILDCARD = _("Data files (*.dat)|*.dat|Csv files (csv.*)|csv.*|All files (*.*)|*.*");
-
   MESS_CLIPFAIL = _("Failed to copy image to clipboard");
 }
 
@@ -2738,42 +2728,6 @@ void mpScaleY::UpdateAxisWidth(mpWindow &w)
 
 wxIMPLEMENT_DYNAMIC_CLASS(mpWindow, wxWindow);
 
-wxBEGIN_EVENT_TABLE(mpWindow, wxWindow)
-EVT_PAINT(mpWindow::OnPaint)
-EVT_SIZE(mpWindow::OnSize)
-EVT_SCROLLWIN_THUMBTRACK(mpWindow::OnScrollThumbTrack)
-EVT_SCROLLWIN_PAGEUP(mpWindow::OnScrollPageUp)
-EVT_SCROLLWIN_PAGEDOWN(mpWindow::OnScrollPageDown)
-EVT_SCROLLWIN_LINEUP(mpWindow::OnScrollLineUp)
-EVT_SCROLLWIN_LINEDOWN(mpWindow::OnScrollLineDown)
-EVT_SCROLLWIN_TOP(mpWindow::OnScrollTop)
-EVT_SCROLLWIN_BOTTOM(mpWindow::OnScrollBottom)
-
-EVT_MIDDLE_UP(mpWindow::OnShowPopupMenu)
-EVT_RIGHT_DOWN(mpWindow::OnMouseRightDown) // JLB
-EVT_RIGHT_UP (mpWindow::OnShowPopupMenu)
-EVT_MOUSEWHEEL(mpWindow::OnMouseWheel )// JLB
-EVT_MOTION(mpWindow::OnMouseMove)// JLB
-EVT_LEAVE_WINDOW(mpWindow::OnMouseLeave)
-EVT_LEFT_DOWN(mpWindow::OnMouseLeftDown)
-EVT_LEFT_UP(mpWindow::OnMouseLeftRelease)
-
-EVT_MENU(mpID_CENTER, mpWindow::OnCenter)
-EVT_MENU(mpID_FIT, mpWindow::OnFit)
-EVT_MENU(mpID_TOGGLE_GRID, mpWindow::OnToggleGrids)
-EVT_MENU(mpID_TOGGLE_COORD, mpWindow::OnToggleCoords)
-EVT_MENU(mpID_SCREENSHOT, mpWindow::OnScreenShot)
-#ifdef ENABLE_MP_CONFIG
-EVT_MENU(mpID_CONFIG, mpWindow::OnConfiguration)
-#endif // ENABLE_MP_CONFIG
-EVT_MENU(mpID_LOAD_FILE, mpWindow::OnLoadFile)
-EVT_MENU(mpID_ZOOM_IN, mpWindow::OnZoomIn)
-EVT_MENU(mpID_ZOOM_OUT, mpWindow::OnZoomOut)
-EVT_MENU(mpID_LOCKASPECT, mpWindow::OnLockAspect)
-EVT_MENU(mpID_HELP_MOUSE, mpWindow::OnMouseHelp)
-EVT_MENU(mpID_FULLSCREEN, mpWindow::OnFullScreen)
-wxEND_EVENT_TABLE()
-
 mpWindow::mpWindow(wxWindow *parent, wxWindowID id, const wxPoint &pos, const wxSize &size, long flag) :
     wxWindow(parent, id, pos, size, flag, _T("Mathplot"))
 {
@@ -2797,8 +2751,7 @@ mpWindow::mpWindow(wxWindow *parent, wxWindowID id, const wxPoint &pos, const wx
   InitParameters();
 
   // For unix screenshoot
-#ifdef _WIN32
-#else
+#ifndef _WIN32
 #ifndef USE_ICON
   wxImage::AddHandler(new wxPNGHandler);
 #endif
@@ -2846,6 +2799,9 @@ mpWindow::mpWindow(wxWindow *parent, wxWindowID id, const wxPoint &pos, const wx
   m_drawBox = true;
 
   SetSizeHints(128, 128);
+
+  // Connect all events
+  BindEvents();
 }
 
 mpWindow::~mpWindow()
@@ -2860,6 +2816,46 @@ mpWindow::~mpWindow()
   DeleteAndNull(m_buff_bmp);
   DeleteAndNull(m_zoom_bmp);
   DeleteAndNull(m_Screenshot_bmp);
+}
+
+void mpWindow::BindEvents(void)
+{
+  // General events
+  Bind(wxEVT_PAINT, &mpWindow::OnPaint, this);
+  Bind(wxEVT_SIZE, &mpWindow::OnSize, this);
+  Bind(wxEVT_SCROLLWIN_THUMBTRACK, &mpWindow::OnScrollThumbTrack, this);
+  Bind(wxEVT_SCROLLWIN_PAGEUP, &mpWindow::OnScrollPageUp, this);
+  Bind(wxEVT_SCROLLWIN_PAGEDOWN, &mpWindow::OnScrollPageDown, this);
+  Bind(wxEVT_SCROLLWIN_LINEUP, &mpWindow::OnScrollLineUp, this);
+  Bind(wxEVT_SCROLLWIN_LINEDOWN, &mpWindow::OnScrollLineDown, this);
+  Bind(wxEVT_SCROLLWIN_TOP, &mpWindow::OnScrollTop, this);
+  Bind(wxEVT_SCROLLWIN_BOTTOM, &mpWindow::OnScrollBottom, this);
+
+  // Mouse events
+  Bind(wxEVT_MIDDLE_UP, &mpWindow::OnShowPopupMenu, this);
+  Bind(wxEVT_RIGHT_DOWN, &mpWindow::OnMouseRightDown, this); // JLB
+  Bind(wxEVT_RIGHT_UP, &mpWindow::OnShowPopupMenu, this);
+  Bind(wxEVT_MOUSEWHEEL, &mpWindow::OnMouseWheel, this); // JLB
+  Bind(wxEVT_MOTION, &mpWindow::OnMouseMove, this); // JLB
+  Bind(wxEVT_LEAVE_WINDOW, &mpWindow::OnMouseLeave, this);
+  Bind(wxEVT_LEFT_DOWN, &mpWindow::OnMouseLeftDown, this);
+  Bind(wxEVT_LEFT_UP, &mpWindow::OnMouseLeftRelease, this);
+
+  // Popup menu events
+  Bind(wxEVT_MENU, &mpWindow::OnCenter, this, mpID_CENTER);
+  Bind(wxEVT_MENU, &mpWindow::OnFit, this, mpID_FIT);
+  Bind(wxEVT_MENU, &mpWindow::OnToggleGrids, this, mpID_TOGGLE_GRID);
+  Bind(wxEVT_MENU, &mpWindow::OnToggleCoords, this, mpID_TOGGLE_COORD);
+  Bind(wxEVT_MENU, &mpWindow::OnScreenShot, this, mpID_SCREENSHOT);
+#ifdef ENABLE_MP_CONFIG
+  Bind(wxEVT_MENU, &mpWindow::OnConfiguration, this, mpID_CONFIG);
+#endif // ENABLE_MP_CONFIG
+  Bind(wxEVT_MENU, &mpWindow::OnLoadFile, this, mpID_LOAD_FILE);
+  Bind(wxEVT_MENU, &mpWindow::OnZoomIn, this, mpID_ZOOM_IN);
+  Bind(wxEVT_MENU, &mpWindow::OnZoomOut, this, mpID_ZOOM_OUT);
+  Bind(wxEVT_MENU, &mpWindow::OnLockAspect, this, mpID_LOCKASPECT);
+  Bind(wxEVT_MENU, &mpWindow::OnMouseHelp, this, mpID_HELP_MOUSE);
+  Bind(wxEVT_MENU, &mpWindow::OnFullScreen, this, mpID_FULLSCREEN);
 }
 
 void mpWindow::InitParameters()
@@ -3603,9 +3599,10 @@ void mpWindow::OnLockAspect(wxCommandEvent &WXUNUSED(event))
 
 void mpWindow::OnMouseHelp(wxCommandEvent &WXUNUSED(event))
 {
-  wxMessageBox(
-      MESS_HELP1 + _T("\n") + MESS_HELP2 + _T("\n") + MESS_HELP3 + _T("\n") + MESS_HELP4 + _T("\n") + MESS_HELP5 + _T("\n") + MESS_HELP6,
-      MESS_HELP0, wxOK, this);
+  wxString message = Help_string[1];
+  for (unsigned int i = 2; i < WXSIZEOF(Help_string); i++)
+    message += _T("\n") + Help_string[i];
+  wxMessageBox(message, Help_string[0], wxOK, this);
 }
 
 void mpWindow::OnFit(wxCommandEvent &WXUNUSED(event))

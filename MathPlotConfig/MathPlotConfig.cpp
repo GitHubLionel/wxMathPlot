@@ -225,13 +225,17 @@ void MathPlotConfigSettings::DoRecursiveSearch(bool set, wxWindow* win, const wx
  ***************************************************/
 
 // List of string message used
-const wxString MESS_TRANSPARENT = _("Transparent not work on Linux");
-const wxString MESS_COLOUR = _("Please choose the background colour");
-const wxString MESS_AXIS_DELETE = _("Delete the selected axis ?");
-const wxString MESS_DELETE = _("Delete the serie ?");
-const wxString MESS_LINES_ADD = _("Add horizontal line (vertical if No) ?");
-const wxString MESS_LINES_DELETE = _("Delete the line ?");
-const wxString MESS_CONFIRM = _("Confirmation");
+wxString MESS_TRANSPARENT = _T("");
+wxString MESS_COLOUR = _T("");
+wxString MESS_AXIS_DELETE = _T("");
+wxString MESS_DELETE = _T("");
+wxString MESS_LINES_ADD = _T("");
+wxString MESS_LINES_DELETE = _T("");
+wxString MESS_CONFIRM = _T("");
+
+// Axis position
+wxString XAxis_Align[5] = {_T("")};
+wxString YAxis_Align[5] = {_T("")};
 
 BEGIN_EVENT_TABLE(MathPlotConfigDialog,wxDialog)
 //(*EventTable(MathPlotConfigDialog)
@@ -240,6 +244,25 @@ END_EVENT_TABLE()
 
 MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED(id))
 {
+  // Defined here for I18N translation
+  MESS_TRANSPARENT  = _("Transparent not work on Linux");
+  MESS_COLOUR       = _("Please choose the background colour");
+  MESS_AXIS_DELETE  = _("Delete the selected axis ?");
+  MESS_DELETE       = _("Delete the serie ?");
+  MESS_LINES_ADD    = _("Add horizontal line (vertical if No) ?");
+  MESS_LINES_DELETE = _("Delete the line ?");
+  MESS_CONFIRM      = _("Confirmation");
+  XAxis_Align[0] = _("Bottom border");
+  XAxis_Align[1] = _("Bottom");
+  XAxis_Align[2] = _("Center");
+  XAxis_Align[3] = _("Top");
+  XAxis_Align[4] = _("Top border");
+  YAxis_Align[0] = _("Left border");
+  YAxis_Align[1] = _("Left");
+  YAxis_Align[2] = _("Center");
+  YAxis_Align[3] = _("Right");
+  YAxis_Align[4] = _("Right border");
+
   // Common choices
   const wxString PenWidth_choices[] = {
   _T("1"),
@@ -1201,9 +1224,6 @@ void MathPlotConfigDialog::OnnbConfigPageChanged(wxNotebookEvent& event)
 
 void MathPlotConfigDialog::UpdateAxis(void)
 {
-  const wxString XAxis_Align[] = {_("Bottom border"), _("Bottom"), _("Center"), _("Top"), _("Top border")};
-  const wxString YAxis_Align[] = {_("Left border"), _("Left"), _("Center"), _("Right"), _("Right border")};
-
   CurrentScale = (mpScale*)ChoiceAxis->GetClientData(ChoiceAxis->GetSelection());
   if (!CurrentScale)
     return;

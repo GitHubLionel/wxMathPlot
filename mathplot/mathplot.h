@@ -6,7 +6,7 @@
 // Contributors:    Jose Luis Blanco, Val Greene, Lionel Reynaud, Dave Nadler, MortenMacFly,
 //                  Oskar Waldemarsson (for multi Y axis and corrections)
 // Created:         21/07/2003
-// Last edit:       10/12/2025
+// Last edit:       07/02/2026
 // Copyright:       (c) David Schalig, Davide Rondini
 // Licence:         wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -91,6 +91,18 @@
 #include <cmath>
 #include <deque>
 #include <algorithm>
+
+/**
+ * This directive allow the user to add a custom include.
+ * For example, this can be useful if you have your own I18N management system
+ * MP_USER_INCLUDE simply needs to contain the name of the include file without the .h extension.
+ */
+#if defined(MP_USER_INCLUDE)
+#define header MP_USER_INCLUDE.h
+#define xstr(x) #x
+#define str(x) xstr(x)
+#include str(header)
+#endif
 
 // No, this is supposed to be a build parameter: #define ENABLE_MP_CONFIG
 #ifdef ENABLE_MP_CONFIG
@@ -3741,6 +3753,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 #endif // ENABLE_MP_CONFIG
 
   protected:
+    virtual void BindEvents(void);                                //!< Connect all events
     virtual void OnPaint(wxPaintEvent &event);                    //!< Paint handler, will plot all attached layers
     virtual void OnSize(wxSizeEvent &event);                      //!< Size handler, will update scroll bar sizes
     virtual void OnShowPopupMenu(wxMouseEvent &event);            //!< Mouse handler, will show context menu
@@ -3880,11 +3893,8 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     virtual void DesiredBoundsHaveChanged() {};
 
   private:
-    void FillI18NString();
-
     /// Report any change of desired display bounds to user's derived class (for example during zoom).
     void CheckAndReportDesiredBoundsChanges();
-
 
     /*! Generates a new unique Y-axis ID by finding the largest
      * used ID and incrementing by 1
@@ -3905,7 +3915,6 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     }
 
   wxDECLARE_DYNAMIC_CLASS(mpWindow);
-  wxDECLARE_EVENT_TABLE();
 
     // To have direct access to m_Screenshot_dc
     friend mpPrintout;
