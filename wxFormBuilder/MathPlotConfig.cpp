@@ -23,7 +23,7 @@ void MathPlotConfigSettings::SetSettings(wxWindow* win)
   DoPosition(true, win);
 
   // Go directly to the notebook
-  win = win->FindWindow("notebook");
+  win = win->FindWindow(_T("notebook"));
   if (win)
     DoRecursiveSearch(true, win);
 }
@@ -36,7 +36,7 @@ void MathPlotConfigSettings::GetSettings(wxWindow* win)
   DoPosition(false, win);
 
   // Go directly to the notebook
-  win = win->FindWindow("notebook");
+  win = win->FindWindow(_T("notebook"));
   if (win)
     DoRecursiveSearch(false, win);
 }
@@ -48,18 +48,18 @@ void MathPlotConfigSettings::GetSettings(wxWindow* win)
  */
 void MathPlotConfigSettings::DoPosition(bool set, wxWindow* win)
 {
-  SetPath("/Position");
+  SetPath(_T("/Position"));
   if (set)
   {
     int posX, posY;
-    if (Read("PosX", &posX) && Read("PosY", &posY))
+    if (Read(_T("PosX"), &posX) && Read(_T("PosY"), &posY))
       win->Move(wxPoint(posX, posY), wxSIZE_FORCE);
   }
   else // get
   {
     wxPoint pos = win->GetScreenPosition();
-    Write("PosX", pos.x);
-    Write("PosY", pos.y);
+    Write(_T("PosX"), pos.x);
+    Write(_T("PosY"), pos.y);
   }
 }
 
@@ -73,7 +73,7 @@ void MathPlotConfigSettings::DoPosition(bool set, wxWindow* win)
 void MathPlotConfigSettings::DoRecursiveSearch(bool set, wxWindow* win, const wxString& path, int level)
 {
   // We save only General (panel 1) and Legend (panel 2)
-  if ((win->GetName()).IsSameAs("panel"))
+  if ((win->GetName()).IsSameAs(_T("panel")))
   {
     if (level > 2)
       return;
@@ -84,7 +84,7 @@ void MathPlotConfigSettings::DoRecursiveSearch(bool set, wxWindow* win, const wx
   {
     wxTextCtrl* text = (wxTextCtrl*)win;
     SetPath(path);
-    wxString key = "Text" + wxString::Format("%d", level);
+    wxString key = _T("Text") + wxString::Format(_T("%d"), level);
     if (set)
     {
       wxString value;
@@ -103,7 +103,7 @@ void MathPlotConfigSettings::DoRecursiveSearch(bool set, wxWindow* win, const wx
   {
     wxChoice* choice = (wxChoice*)win;
     SetPath(path);
-    wxString key = "Choice" + wxString::Format("%d", level);
+    wxString key = _T("Choice") + wxString::Format(_T("%d"), level);
     if (set)
     {
       int value;
@@ -122,7 +122,7 @@ void MathPlotConfigSettings::DoRecursiveSearch(bool set, wxWindow* win, const wx
   {
     wxCheckBox* check = (wxCheckBox*)win;
     SetPath(path);
-    wxString key = "Check" + wxString::Format("%d", level);
+    wxString key = _T("Check") + wxString::Format(_T("%d"), level);
     if (set)
     {
       bool value;
@@ -142,10 +142,10 @@ void MathPlotConfigSettings::DoRecursiveSearch(bool set, wxWindow* win, const wx
     wxButton* button = (wxButton*)win;
     SetPath(path);
     // It is a button for font configuration
-    if ((button->GetLabel()).IsSameAs("Font"))
+    if ((button->GetLabel()).IsSameAs(_T("Font")))
     {
-      wxString key1 = "ButtonFont" + wxString::Format("%d", level);
-      wxString key2 = "ButtonForeground" + wxString::Format("%d", level);
+      wxString key1 = _T("ButtonFont") + wxString::Format(_T("%d"), level);
+      wxString key2 = _T("ButtonForeground") + wxString::Format(_T("%d"), level);
       if (set)
       {
         wxFont font;
@@ -163,7 +163,7 @@ void MathPlotConfigSettings::DoRecursiveSearch(bool set, wxWindow* win, const wx
     }
     else // It is a button for background colour configuration
     {
-      wxString key = "ButtonBackground" + wxString::Format("%d", level);
+      wxString key = _T("ButtonBackground") + wxString::Format(_T("%d"), level);
       if (set)
       {
         wxColour value;
@@ -179,17 +179,16 @@ void MathPlotConfigSettings::DoRecursiveSearch(bool set, wxWindow* win, const wx
   }
 
   wxWindowList& children = win->GetChildren();
-  wxString winPath = path + "/" + win->GetName();
+  wxString winPath = path + _T("/") + win->GetName();
   if (level != 0)
-    winPath += wxString::Format("%d", level);
+    winPath += wxString::Format(_T("%d"), level);
   int i = 1;
 #if wxCHECK_VERSION(3, 0, 0)
   for (wxWindow* child : children)
   {
-    wxWindow* current = child;
-    if (!current->IsKindOf(wxCLASSINFO(wxStaticText))) // Skip static text
+    if (!child->IsKindOf(wxCLASSINFO(wxStaticText))) // Skip static text
     {
-      DoRecursiveSearch(set, current, winPath, i);
+      DoRecursiveSearch(set, child, winPath, i);
       i++;
     }
   }
@@ -210,8 +209,40 @@ void MathPlotConfigSettings::DoRecursiveSearch(bool set, wxWindow* win, const wx
  * MathPlotConfigDialog class
  ***************************************************/
 
+// List of string message used
+wxString MESS_TRANSPARENT = _T("");
+wxString MESS_COLOUR = _T("");
+wxString MESS_AXIS_DELETE = _T("");
+wxString MESS_DELETE = _T("");
+wxString MESS_LINES_ADD = _T("");
+wxString MESS_LINES_DELETE = _T("");
+wxString MESS_CONFIRM = _T("");
+
+// Axis position
+wxString XAxis_Align[5] = {_T("")};
+wxString YAxis_Align[5] = {_T("")};
+
 MathPlotConfigDialog::MathPlotConfigDialog( wxWindow* parent ): MathPlotConfigDialogBuilder( parent )
 {
+ // Defined here for I18N translation
+  MESS_TRANSPARENT  = _("Transparent not work on Linux");
+  MESS_COLOUR       = _("Please choose the background colour");
+  MESS_AXIS_DELETE  = _("Delete the selected axis ?");
+  MESS_DELETE       = _("Delete the serie ?");
+  MESS_LINES_ADD    = _("Add horizontal line (vertical if No) ?");
+  MESS_LINES_DELETE = _("Delete the line ?");
+  MESS_CONFIRM      = _("Confirmation");
+  XAxis_Align[0] = _("Bottom border");
+  XAxis_Align[1] = _("Bottom");
+  XAxis_Align[2] = _("Center");
+  XAxis_Align[3] = _("Top");
+  XAxis_Align[4] = _("Top border");
+  YAxis_Align[0] = _("Left border");
+  YAxis_Align[1] = _("Left");
+  YAxis_Align[2] = _("Center");
+  YAxis_Align[3] = _("Right");
+  YAxis_Align[4] = _("Right border");
+
   // The plot window
   m_plot = wxDynamicCast(parent, mpWindow);
   // The settings for the config window
@@ -445,15 +476,13 @@ void MathPlotConfigDialog::FillYAxisList(wxChoice* yChoice, bool clearChoice)
 {
   if (clearChoice)
     yChoice->Clear();
-  int i = 0;
-  for (const auto& axisDataY : m_plot->GetAxisDataYList())
+  for (auto& [yID, yData] : m_plot->GetSortedAxisDataYList())
   {
-    if (axisDataY.second.axis)
+    if (yData.axis)
     {
       // axisDataY.second.Axis->GetAxisID() if we want ID
-      wxString yAxisName = wxString::Format(_T("Y%d axis - %s"), i, axisDataY.second.axis->GetName());
-      yChoice->Append(yAxisName, axisDataY.second.axis);
-      i++;
+      wxString yAxisName = wxString::Format(_T("Y%d axis - %s"), yID, yData.axis->GetName());
+      yChoice->Append(yAxisName, yData.axis);
     }
   }
 }
@@ -558,33 +587,25 @@ void MathPlotConfigDialog::OnnbConfigPageChanged(wxNotebookEvent& event)
 
 void MathPlotConfigDialog::UpdateAxis(void)
 {
-  const wxString XAxis_Align[] = {_("Bottom border"), _("Bottom"), _("Center"), _("Top"), _("Top border")};
-  const wxString YAxis_Align[] = {_("Left border"), _("Left"), _("Center"), _("Right"), _("Right border")};
-
   CurrentScale = (mpScale*)ChoiceAxis->GetClientData(ChoiceAxis->GetSelection());
   if (!CurrentScale)
     return;
   wxString classname = CurrentScale->GetClassInfo()->GetClassName();
+  cbAxisPosition->Clear();
+  cbFormat->SetSelection((CurrentScale)->GetLabelMode());
+  edFormat->Enable(cbFormat->GetSelection() == 7);
 
   if (classname.IsSameAs(_T("mpScaleX")))
   {
-    cbAxisPosition->Clear();
     scale_offset = mpALIGN_BORDER_BOTTOM;
     for (int i = scale_offset; i <= mpALIGN_BORDER_TOP; i++)
       cbAxisPosition->Append(XAxis_Align[i - scale_offset]);
-    cbFormat->Enable();
-    cbFormat->SetSelection(((mpScaleX*)CurrentScale)->GetLabelMode());
-    edFormat->Enable(cbFormat->GetSelection() == 5);
   }
   else
   {
-    cbAxisPosition->Clear();
     scale_offset = mpALIGN_BORDER_LEFT;
     for (int i = scale_offset; i <= mpALIGN_BORDER_RIGHT; i++)
       cbAxisPosition->Append(YAxis_Align[i - scale_offset]);
-    cbFormat->SetSelection(0);
-    cbFormat->Enable(false);
-    edFormat->Enable();
   }
 
   edAxisName->SetValue(CurrentScale->GetName());
@@ -679,7 +700,7 @@ void MathPlotConfigDialog::OnAxisSelect(wxCommandEvent& WXUNUSED(event))
 
 void MathPlotConfigDialog::OncbFormatSelect(wxCommandEvent& WXUNUSED(event))
 {
-  edFormat->Enable(cbFormat->GetSelection() == 5);
+  edFormat->Enable(cbFormat->GetSelection() == 7);
 }
 
 void MathPlotConfigDialog::OncbAutoScaleClick(wxCommandEvent& WXUNUSED(event))
@@ -871,6 +892,10 @@ void MathPlotConfigDialog::OnbAddLinesClick(wxCommandEvent& WXUNUSED(event))
     ChoiceLines->SetSelection(ChoiceLines->GetCount() - 1);
     UpdateSelectedLine();
     pLines->Show(true);
+#ifdef _WIN32
+#else
+    sizerLines->Layout();
+#endif
   }
 }
 
@@ -976,17 +1001,17 @@ void MathPlotConfigDialog::Apply(int pageIndex, bool updateFont)
         CurrentScale->SetAlign(scale_offset + cbAxisPosition->GetSelection());
         CurrentScale->SetDrawOutsideMargins(cbAxisOutside->GetValue());
         CurrentScale->SetLabelFormat(edFormat->GetValue());
+        CurrentScale->SetLabelMode((mpLabelType)cbFormat->GetSelection());
 
         wxString newName = _T("");
         wxString classname = CurrentScale->GetClassInfo()->GetClassName();
         if (classname.IsSameAs(_T("mpScaleX")))
         {
           newName = _T("X axis - ");
-          ((mpScaleX*)CurrentScale)->SetLabelMode(cbFormat->GetSelection());
           // Update InfoCoords if present
           if (CurrentCoords)
           {
-            CurrentCoords->SetLabelMode(cbFormat->GetSelection());
+            CurrentCoords->SetLabelMode((mpLabelType)cbFormat->GetSelection());
           }
         }
         else if (classname.IsSameAs(_T("mpScaleY")))
@@ -1011,46 +1036,32 @@ void MathPlotConfigDialog::Apply(int pageIndex, bool updateFont)
 
         if (!CurrentScale->GetAuto())
         {
-          mpRange BoundScaleX;
-          std::vector<mpRange> BoundScaleY;
-          for (const auto& axisDataY : m_plot->GetAxisDataYList())
-          {
-            BoundScaleY.push_back(axisDataY.second.bound);
-          }
+          mpRange BoundScaleX = m_plot->GetBoundX();
+          std::unordered_map<int, mpRange> BoundScaleY = m_plot->GetAllBoundY();
+
           if (classname.IsSameAs(_T("mpScaleX"))) // X axis
           {
             BoundScaleX.Set(scale_min, scale_max);
 
             // Get bound of the other axis
-            int i = 0;
-            for (const auto& axisDataY : m_plot->GetAxisDataYList())
+            for (auto& [yID, yData] : m_plot->GetAxisDataYList())
             {
-              if (axisDataY.second.axis && (!axisDataY.second.axis->GetAuto()))
+              if (yData.axis && !yData.axis->GetAuto())
               {
-                BoundScaleY[i] = axisDataY.second.axis->GetScale();
+                BoundScaleY[yID] = yData.axis->GetScale();
               }
-              i++;
             }
           }
           else if (classname.IsSameAs(_T("mpScaleY")))
           {
             mpScaleY* yAxis = static_cast<mpScaleY*>(CurrentScale);
-            int yAxisID = yAxis->GetAxisID();
-            int i = 0;
-            for (const auto& axisDataY : m_plot->GetAxisDataYList())
-            {
-              if (axisDataY.first == yAxisID)
-              {
-                BoundScaleY[i].Set(scale_min, scale_max);
-              }
-              i++;
-            }
+            BoundScaleY[yAxis->GetAxisID()].Set(scale_min, scale_max);
 
             // Get bound of the other axis
-            mpScale* axis = (mpScale*)m_plot->GetLayerXAxis();
-            if (axis && (!axis->GetAuto()))
+            mpScale* xAxis = (mpScale*)m_plot->GetLayerXAxis();
+            if (xAxis && (!xAxis->GetAuto()))
             {
-              BoundScaleX = axis->GetScale();
+              BoundScaleX = xAxis->GetScale();
             }
           }
           m_plot->Fit(BoundScaleX, BoundScaleY);
