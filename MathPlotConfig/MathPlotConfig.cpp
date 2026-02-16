@@ -1095,17 +1095,18 @@ void MathPlotConfigDialog::OnQuit(wxCommandEvent& WXUNUSED(event))
 void MathPlotConfigDialog::OnbColorClick(wxCommandEvent& event)
 {
   // Get the sender
-  colourButton = wxDynamicCast(event.GetEventObject(), wxButton);
-
-  wxColourData m_clrData;
-  m_clrData.SetColour(colourButton->GetBackgroundColour());
-
-  wxColourDialog ColourDialog(this, &m_clrData);
-  ColourDialog.SetTitle(MESS_COLOUR);
-  if (ColourDialog.ShowModal() == wxID_OK)
+  if ((colourButton = wxDynamicCast(event.GetEventObject(), wxButton)) != NULL)
   {
-    m_clrData = ColourDialog.GetColourData();
-    DoApplyColour(m_clrData.GetColour());
+    wxColourData m_clrData;
+    m_clrData.SetColour(colourButton->GetBackgroundColour());
+
+    wxColourDialog ColourDialog(this, &m_clrData);
+    ColourDialog.SetTitle(MESS_COLOUR);
+    if (ColourDialog.ShowModal() == wxID_OK)
+    {
+      m_clrData = ColourDialog.GetColourData();
+      DoApplyColour(m_clrData.GetColour());
+    }
   }
 }
 
@@ -1151,25 +1152,26 @@ void MathPlotConfigDialog::DoApplyColour(const wxColour& colour)
 
 void MathPlotConfigDialog::OnbFontClick(wxCommandEvent& event)
 {
-  wxButton* fontButton = wxDynamicCast(event.GetEventObject(), wxButton);
-
-  wxFontData retData;
-  retData.SetInitialFont(fontButton->GetFont());
-  retData.SetColour(fontButton->GetForegroundColour());
-
-  wxFontDialog FontDialog(this, retData);
-
-  if (FontDialog.ShowModal() == wxID_OK)
+  if (wxButton* const fontButton = wxDynamicCast(event.GetEventObject(), wxButton))
   {
-    retData = FontDialog.GetFontData();
+    wxFontData retData;
+    retData.SetInitialFont(fontButton->GetFont());
+    retData.SetColour(fontButton->GetForegroundColour());
 
-    SetFontChildren(fontButton, retData);
-    if (fontButton == bFontTitle)
-      fontTitleChanged = true;
-    if (fontButton == bFontLegend)
-      fontLegendChanged = true;
-    if (fontButton == bFontAxis)
-      fontAxisChanged = true;
+    wxFontDialog FontDialog(this, retData);
+
+    if (FontDialog.ShowModal() == wxID_OK)
+    {
+      retData = FontDialog.GetFontData();
+
+      SetFontChildren(fontButton, retData);
+      if (fontButton == bFontTitle)
+        fontTitleChanged = true;
+      if (fontButton == bFontLegend)
+        fontLegendChanged = true;
+      if (fontButton == bFontAxis)
+        fontAxisChanged = true;
+    }
   }
 }
 
@@ -1292,26 +1294,28 @@ void MathPlotConfigDialog::UpdateAxis(void)
 
 void MathPlotConfigDialog::OnbAddAxisClick(wxCommandEvent& event)
 {
-  wxButton* bt = wxDynamicCast(event.GetEventObject(), wxButton);
-  mpScale* newScale = NULL;
-  if (bt == bAddXAxis)
-    newScale = (mpScale*)new mpScaleX(wxT("New X"), mpALIGN_BOTTOM, true, mpLabel_AUTO);
-  else
-    newScale = (mpScale*)new mpScaleY(wxT("New Y"), mpALIGN_LEFT, true);
-
-  if (newScale && (m_plot->AddLayer(newScale, true, false)))
+  if (wxButton* const bt = wxDynamicCast(event.GetEventObject(), wxButton))
   {
-    Initialize(mpcpiAxis);
-    // Find in the choice list the index of the new axis
-    for (unsigned int i = 0; i < ChoiceAxis->GetCount(); i++)
+    mpScale* newScale = NULL;
+    if (bt == bAddXAxis)
+      newScale = (mpScale*)new mpScaleX(wxT("New X"), mpALIGN_BOTTOM, true, mpLabel_AUTO);
+    else
+      newScale = (mpScale*)new mpScaleY(wxT("New Y"), mpALIGN_LEFT, true);
+
+    if (newScale && (m_plot->AddLayer(newScale, true, false)))
     {
-      if ((mpScale*)ChoiceAxis->GetClientData(i) == newScale)
+      Initialize(mpcpiAxis);
+      // Find in the choice list the index of the new axis
+      for (unsigned int i = 0; i < ChoiceAxis->GetCount(); i++)
       {
-        ChoiceAxis->SetSelection(i);
-        break;
+        if ((mpScale*)ChoiceAxis->GetClientData(i) == newScale)
+        {
+          ChoiceAxis->SetSelection(i);
+          break;
+        }
       }
+      UpdateAxis();
     }
-    UpdateAxis();
   }
 }
 
