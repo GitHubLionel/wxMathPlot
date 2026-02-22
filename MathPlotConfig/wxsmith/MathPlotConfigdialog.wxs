@@ -694,7 +694,7 @@
 																	<object class="wxTextCtrl" name="" variable="edScaleMin" member="yes">
 																		<value>-1</value>
 																		<size>64,-1</size>
-																		<validator>wxFloatingPointValidator&lt;double&gt; (2, &amp;scale__min)</validator>
+																		<validator>wxFloatingPointValidator&lt;double&gt; (4, &amp;scale__min)</validator>
 																		<enabled>0</enabled>
 																		<style>wxTE_RIGHT</style>
 																	</object>
@@ -714,7 +714,7 @@
 																	<object class="wxTextCtrl" name="" variable="edScaleMax" member="yes">
 																		<value>1</value>
 																		<size>64,-1</size>
-																		<validator>wxFloatingPointValidator&lt;double&gt; (2, &amp;scale__max)</validator>
+																		<validator>wxFloatingPointValidator&lt;double&gt; (4, &amp;scale__max)</validator>
 																		<enabled>0</enabled>
 																		<style>wxTE_RIGHT</style>
 																	</object>
@@ -1301,7 +1301,7 @@
 														<object class="wxTextCtrl" name="" variable="edLinesValue" member="yes">
 															<value>1</value>
 															<size>64,-1</size>
-															<validator>wxFloatingPointValidator&lt;double&gt; (2, &amp;line__value)</validator>
+															<validator>wxFloatingPointValidator&lt;double&gt; (4, &amp;line__value)</validator>
 															<style>wxTE_RIGHT</style>
 														</object>
 														<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>

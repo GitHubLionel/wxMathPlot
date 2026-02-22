@@ -577,12 +577,12 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   FlexGridSizer12->Add(-1,-1,1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
   StaticText27 = new wxStaticText(Panel3, wxID_ANY, _("Min :"), wxDefaultPosition, wxDefaultSize, 0);
   FlexGridSizer12->Add(StaticText27, 1, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 5);
-  edScaleMin = new wxTextCtrl(Panel3, wxID_ANY, _T("-1"), wxDefaultPosition, wxSize(64,-1), wxTE_RIGHT, wxFloatingPointValidator<double> (2, &scale_min));
+  edScaleMin = new wxTextCtrl(Panel3, wxID_ANY, _T("-1"), wxDefaultPosition, wxSize(64,-1), wxTE_RIGHT, wxFloatingPointValidator<double> (4, &scale_min));
   edScaleMin->Disable();
   FlexGridSizer12->Add(edScaleMin, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 2);
   StaticText28 = new wxStaticText(Panel3, wxID_ANY, _("Max :"), wxDefaultPosition, wxDefaultSize, 0);
   FlexGridSizer12->Add(StaticText28, 1, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 5);
-  edScaleMax = new wxTextCtrl(Panel3, wxID_ANY, _T("1"), wxDefaultPosition, wxSize(64,-1), wxTE_RIGHT, wxFloatingPointValidator<double> (2, &scale_max));
+  edScaleMax = new wxTextCtrl(Panel3, wxID_ANY, _T("1"), wxDefaultPosition, wxSize(64,-1), wxTE_RIGHT, wxFloatingPointValidator<double> (4, &scale_max));
   edScaleMax->Disable();
   FlexGridSizer12->Add(edScaleMax, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 2);
   StaticBoxSizer7->Add(FlexGridSizer12, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
@@ -787,7 +787,7 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   FlexGridSizer9->Add(rbLinesDirection, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
   StaticText30 = new wxStaticText(pLines, wxID_ANY, _("Value :"), wxDefaultPosition, wxDefaultSize, 0);
   FlexGridSizer9->Add(StaticText30, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-  edLinesValue = new wxTextCtrl(pLines, wxID_ANY, _T("1"), wxDefaultPosition, wxSize(64,-1), wxTE_RIGHT, wxFloatingPointValidator<double> (2, &line_value));
+  edLinesValue = new wxTextCtrl(pLines, wxID_ANY, _T("1"), wxDefaultPosition, wxSize(64,-1), wxTE_RIGHT, wxFloatingPointValidator<double> (4, &line_value));
   FlexGridSizer9->Add(edLinesValue, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
   FlexGridSizer9->Add(-1,-1,1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
   stLinesYIndexLabel = new wxStaticText(pLines, wxID_ANY, _("Y axis :"), wxDefaultPosition, wxDefaultSize, 0);
@@ -1231,7 +1231,7 @@ void MathPlotConfigDialog::UpdateAxis(void)
     return;
   wxString classname = CurrentScale->GetClassInfo()->GetClassName();
   cbAxisPosition->Clear();
-  cbFormat->SetSelection((CurrentScale)->GetLabelMode());
+  cbFormat->SetSelection((int)(CurrentScale)->GetLabelMode());
   edFormat->Enable(cbFormat->GetSelection() == 7);
 
   if (classname.IsSameAs(_T("mpScaleX")))

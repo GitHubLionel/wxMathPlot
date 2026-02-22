@@ -2280,11 +2280,14 @@ class WXDLLIMPEXP_MATHPLOT mpScale: public mpLayer
     }
 
     /** Set axis Label format (used for mpLabel_AUTO draw mode).
-     @param format The format string */
-    void SetLabelFormat(const wxString &format)
+     @param format The format string
+     @param updateLabelMode Set label mode to mpLabel_USER (we may want to set a format string
+            but not change the current label mode */
+    void SetLabelFormat(const wxString &format, bool updateLabelMode = false)
     {
       m_labelFormat = format;
-      m_labelType = mpLabel_USER;
+      if (updateLabelMode)
+        m_labelType = mpLabel_USER;
     }
 
     /** Get axis label view mode.
