@@ -66,6 +66,8 @@
 #include <cmath>
 #include <cstdio> // used only for debug
 #include <ctime>  // used for representation of x axes involving date
+#include <fstream>
+#include <iostream> // used for std::ifstream in LoadFile() function
 
 // If we want icon on the popup menu
 #define USE_ICON
@@ -2887,6 +2889,8 @@ void mpWindow::InitParameters()
   SetMargins(50, 50, 50, 50);
 
   m_lockaspect = false;
+
+  m_wildcard = MESS_WILDCARD;
 }
 
 bool mpWindow::CheckUserMouseAction(wxMouseEvent &event)
@@ -3654,19 +3658,12 @@ void mpWindow::OnFullScreen(wxCommandEvent &WXUNUSED(event))
 
 /**
  * Create series from a data file.
- * The file is not formatted. For example a simple txt file or csv file
- * First data is x abscissa and next is up to 9 ordinates
- * Separator is : space or ; or tab
+ * See LoadFile() function for more info.
  */
 void mpWindow::OnLoadFile(wxCommandEvent &WXUNUSED(event))
 {
-  wxFileDialog OpenFile(this, MESS_LOAD, wxEmptyString, wxEmptyString, MESS_WILDCARD, wxFD_OPEN | wxFD_FILE_MUST_EXIST);
-
-  if (OpenFile.ShowModal() == wxID_OK)
-  {
-    LoadFile(OpenFile.GetPath());
+  if (LoadFile())
     Fit();
-  }
 }
 
 #ifdef ENABLE_MP_CONFIG
@@ -4921,43 +4918,67 @@ bool mpWindow::SaveScreenshot(const wxString &filename, int type, wxSize imageSi
 
 bool mpWindow::LoadFile(const wxString &filename)
 {
-  FILE* file = fopen(filename.c_str(), "r");
-  if (file == NULL)
-    return false;
+  wxString thefilename = filename;
+  if (thefilename.IsEmpty())
+  {
+    wxFileDialog OpenFile(this, MESS_LOAD, wxEmptyString, wxEmptyString, m_wildcard, wxFD_OPEN | wxFD_FILE_MUST_EXIST);
 
+    if (OpenFile.ShowModal() == wxID_OK)
+    {
+      thefilename = OpenFile.GetPath();
+    }
+    else
+      return false;
+  }
+
+#if defined(__WXMSW__)
+  std::ifstream file(thefilename.mb_str());
+#else
+  std::ifstream file(thefilename.mb_str(wxConvUTF8));
+#endif
+
+  if (file.fail())
+  {
+    return false;
+  }
+
+  // Get the name of the file for the series name
   unsigned int nb_series = this->CountLayersFXYPlot();
-  wxFileName thefile(filename);
+  wxFileName thefile(thefilename);
   wxString name = thefile.GetName();
 
-  // Max line length
-  char line[1024];
-  // Data separator : space or ; or tab
-  char seps[] = " ;\t\n";
-  char* token;
-  // Maximum, 10 data by line. First data is x coordinate.
-  double data[10];
-  int i = 0, j = 0;
-  do
-  {
-    if (fgets(line, 1024, file) == NULL)
-      continue; // EOF
+  std::string line;
+  std::vector<double> data;
 
-    token = strtok(line, seps);
-    i = 0;
-    while (token != NULL)
+  // Data separator : space or ; or tab
+  char const *const seps {" ;\t\n"};
+
+  while (std::getline(file, line))
+  {
+    // Skip empty line or comment line
+    if ((line.length() == 0) || (line[0] == '#'))
+      continue;
+
+    // Split line with separator
+    char *token = std::strtok(line.data(), seps);
+    while (token != nullptr)
     {
-      data[i++] = atof(token);
-      token = strtok(NULL, seps);
+      data.push_back(atof(token));
+      token = std::strtok(nullptr, seps);
     }
 
-    for (j = 1; j < i; j++)
-      GetXYSeries(nb_series + j - 1, name)->AddData(data[0], data[j], true);
+    // We need at least 2 data X and Y
+    if (data.size() > 1)
+    {
+      for (size_t j = 1; j < data.size(); j++)
+        GetXYSeries(nb_series + j - 1, name)->AddData(data[0], data[j], true);
+    }
 
-  } while (!feof(file));
-
-  fclose(file);
+    data.clear();
+  }
 
   RefreshLegend();
+  Fit();
   return true;
 }
 

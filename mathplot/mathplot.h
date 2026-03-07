@@ -14,8 +14,6 @@
 #ifndef MATHPLOT_H_INCLUDED
 #define MATHPLOT_H_INCLUDED
 
-#define MATHPLOT_MANY_YAXIS ///< Temporary helper for A/B testing of Oskar's multi-Y version against previous (working) version
-
 /** @file mathplot.h */
 /** @mainpage wxMathPlot
  wxMathPlot is a framework for mathematical graph plotting in wxWindows.
@@ -102,6 +100,7 @@
 #define xstr(x) #x
 #define str(x) xstr(x)
 #include str(header)
+#undef header
 #endif
 
 // No, this is supposed to be a build parameter: #define ENABLE_MP_CONFIG
@@ -2639,6 +2638,9 @@ typedef enum {
 
 /**
  * Define an event for when we delete a layer
+ * @Param Sender the mpWindow
+ * @Param classname the class name of the object we want to delete
+ * @Param cancel if true, the deletion is canceled (default false)
  * Use like this :
  *  your_plot->SetOnDeleteLayer([this](void *Sender, const wxString &classname, bool &cancel)
  {  your_event_function(Sender, classname, cancel);});
@@ -3420,10 +3422,29 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     void ClipboardScreenshot(wxSize imageSize = wxDefaultSize, bool fit = false);
 
     /**
-     * Load a data file like a csv file
-     * Data must be formatted in 2 columns X value and Y value separated by space or ; or tab character
+     * Set wildcard for LoadFile() function when we use wxFileDialog
      */
-    bool LoadFile(const wxString &filename);
+    void SetWildcard(const wxString &wildcard)
+    {
+      m_wildcard = wildcard;
+    }
+
+    /**
+     * Get wildcard
+     */
+    const wxString& GetWildcard(void) const
+    {
+      return m_wildcard;
+    }
+
+    /**
+     * Load a data file like a csv file
+     * Data must be formatted in 2 or more columns. First column is X value and others columns are Y values that represent several series.
+     * Each columns are separated by space or ; or tab character.
+     * Lines beginning with # are ignored (comment lines)
+     * @Param filename. Complete path name of the file. If empty, call wxFileDialog to select file with m_wildcard to filter files
+     */
+    bool LoadFile(const wxString &filename = wxEmptyString);
 
     /** This value sets the zoom steps whenever the user clicks "Zoom in/out" or performs zoom with the mouse wheel.
      *  It must be a number above unity. This number is used for zoom in, and its inverse for zoom out. Set to 1.5 by default. */
@@ -3644,6 +3665,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     /** On delete layer event
      * Allows the user to perform certain actions before deleting the layer.
      * The user can abort the deletion.
+     * See mpOnDeleteLayer type.
      */
     void SetOnDeleteLayer(const mpOnDeleteLayer &event)
     {
@@ -3882,6 +3904,8 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     mpMagnet m_magnet;                  //!< For mouse magnetization
 
     wxBitmap* m_Screenshot_bmp;         //!< For clipboard, save and print
+
+    wxString m_wildcard;                //!< For loadfile() function when we use wxFileDialog
 
 #ifdef ENABLE_MP_CONFIG
     MathPlotConfigDialog* m_configWindow = NULL;  //!< For the config dialog
