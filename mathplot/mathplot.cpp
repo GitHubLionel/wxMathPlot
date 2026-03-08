@@ -62,6 +62,7 @@
 #include <wx/clipbrd.h>
 #include <wx/dcbuffer.h>
 #include <wx/filename.h>
+#include <wx/stdpaths.h>
 
 #include <cmath>
 #include <cstdio> // used only for debug
@@ -2740,6 +2741,9 @@ mpWindow::mpWindow(wxWindow *parent, wxWindowID id, const wxPoint &pos, const wx
   wxWindow* pWin = parent;
   while (true)
   {
+    // We stop if we are in top of a Dialog or Frame window
+    if (pWin->IsKindOf(wxCLASSINFO(wxDialog)) || pWin->IsKindOf(wxCLASSINFO(wxFrame)))
+      break;
     if (pWin->GetParent())
       pWin = pWin->GetParent();
     else
@@ -2890,7 +2894,10 @@ void mpWindow::InitParameters()
 
   m_lockaspect = false;
 
+  // For wxFileDialog used in LoadFile() function
   m_wildcard = MESS_WILDCARD;
+  wxFileName f(wxStandardPaths::Get().GetExecutablePath());
+  m_DefaultDir = f.GetPath();
 }
 
 bool mpWindow::CheckUserMouseAction(wxMouseEvent &event)
@@ -3662,8 +3669,7 @@ void mpWindow::OnFullScreen(wxCommandEvent &WXUNUSED(event))
  */
 void mpWindow::OnLoadFile(wxCommandEvent &WXUNUSED(event))
 {
-  if (LoadFile())
-    Fit();
+  LoadFile();
 }
 
 #ifdef ENABLE_MP_CONFIG
@@ -4916,16 +4922,26 @@ bool mpWindow::SaveScreenshot(const wxString &filename, int type, wxSize imageSi
   return screenImage.SaveFile(filename, (wxBitmapType)type);
 }
 
-bool mpWindow::LoadFile(const wxString &filename)
+bool mpWindow::LoadFile(const wxString& filename)
 {
   wxString thefilename = filename;
   if (thefilename.IsEmpty())
   {
-    wxFileDialog OpenFile(this, MESS_LOAD, wxEmptyString, wxEmptyString, m_wildcard, wxFD_OPEN | wxFD_FILE_MUST_EXIST);
+    wxFileDialog OpenFile(this, MESS_LOAD, m_DefaultDir, wxEmptyString, m_wildcard, wxFD_OPEN | wxFD_FILE_MUST_EXIST);
 
     if (OpenFile.ShowModal() == wxID_OK)
     {
       thefilename = OpenFile.GetPath();
+
+      // Save the new default path
+      wxFileName f(OpenFile.GetPath());
+      SetDefaultDir(f.GetPath());
+
+#if defined(__WXMSW__)
+      // This is a stupid workaround for the spurious wxEVT_LEFT_UP event that occurs when you double-click the file
+      MSG msg;
+      while (PeekMessageW(&msg, NULL, WM_MOUSEFIRST, WM_MOUSELAST, PM_REMOVE)) {}
+#endif
     }
     else
       return false;
@@ -4951,7 +4967,7 @@ bool mpWindow::LoadFile(const wxString &filename)
   std::vector<double> data;
 
   // Data separator : space or ; or tab
-  char const *const seps {" ;\t\n"};
+  char const* const seps {" ;\t\n"};
 
   while (std::getline(file, line))
   {
@@ -4960,7 +4976,7 @@ bool mpWindow::LoadFile(const wxString &filename)
       continue;
 
     // Split line with separator
-    char *token = std::strtok(line.data(), seps);
+    char* token = std::strtok(line.data(), seps);
     while (token != nullptr)
     {
       data.push_back(atof(token));
@@ -5020,6 +5036,11 @@ MathPlotConfigDialog* mpWindow::GetConfigWindow(bool Create)
     m_configWindow = new MathPlotConfigDialog(this);
 
   return m_configWindow;
+}
+
+void mpWindow::DeleteConfigWindow(void)
+{
+  DeleteAndNull(m_configWindow);
 }
 #endif // ENABLE_MP_CONFIG
 

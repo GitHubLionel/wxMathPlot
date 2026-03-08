@@ -3446,6 +3446,15 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      */
     bool LoadFile(const wxString &filename = wxEmptyString);
 
+    /**
+     * Set the default directory for wxFileDialog
+     * @Param dirname the name of the directory
+     */
+    void SetDefaultDir(const wxString &dirname)
+    {
+      m_DefaultDir = dirname;
+    }
+
     /** This value sets the zoom steps whenever the user clicks "Zoom in/out" or performs zoom with the mouse wheel.
      *  It must be a number above unity. This number is used for zoom in, and its inverse for zoom out. Set to 1.5 by default. */
     static double m_zoomIncrementalFactor;
@@ -3775,6 +3784,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      * @param : Create. Create the dialog if not exist (default false)
      */
     MathPlotConfigDialog* GetConfigWindow(bool Create = false);
+    void DeleteConfigWindow(void);
 #endif // ENABLE_MP_CONFIG
 
   protected:
@@ -3906,6 +3916,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     wxBitmap* m_Screenshot_bmp;         //!< For clipboard, save and print
 
     wxString m_wildcard;                //!< For loadfile() function when we use wxFileDialog
+    wxString m_DefaultDir;              //!< The default directory for wxFileDialog
 
 #ifdef ENABLE_MP_CONFIG
     MathPlotConfigDialog* m_configWindow = NULL;  //!< For the config dialog
