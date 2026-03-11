@@ -69,6 +69,7 @@
 #include <ctime>  // used for representation of x axes involving date
 #include <fstream>
 #include <iostream> // used for std::ifstream in LoadFile() function
+#include <cstring>
 
 // If we want icon on the popup menu
 #define USE_ICON
@@ -4976,11 +4977,11 @@ bool mpWindow::LoadFile(const wxString& filename)
       continue;
 
     // Split line with separator
-    char* token = std::strtok(line.data(), seps);
+    char* token = strtok(line.data(), seps);
     while (token != nullptr)
     {
       data.push_back(atof(token));
-      token = std::strtok(nullptr, seps);
+      token = strtok(nullptr, seps);
     }
 
     // We need at least 2 data X and Y
