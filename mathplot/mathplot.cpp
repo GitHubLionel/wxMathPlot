@@ -4977,11 +4977,11 @@ bool mpWindow::LoadFile(const wxString& filename)
       continue;
 
     // Split line with separator
-    char* token = strtok(line.data(), seps);
+    char* token = std::strtok(line.data(), seps);
     while (token != nullptr)
     {
       data.push_back(atof(token));
-      token = strtok(nullptr, seps);
+      token = std::strtok(nullptr, seps);
     }
 
     // We need at least 2 data X and Y
