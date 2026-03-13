@@ -1114,8 +1114,9 @@ void MathPlotConfigDialog::FillYAxisList(wxChoice* yChoice, bool clearChoice)
 {
   if (clearChoice)
     yChoice->Clear();
-  for (auto& [yID, yData] : m_plot->GetSortedAxisDataYList())
+  for (LOOP_ITER : m_plot->GetSortedAxisDataYList())
   {
+    BINDING_VALUES()
     if (yData.axis)
     {
       // axisDataY.second.Axis->GetAxisID() if we want ID
@@ -1685,8 +1686,9 @@ void MathPlotConfigDialog::Apply(int pageIndex, bool updateFont)
             BoundScaleX.Set(scale_min, scale_max);
 
             // Get bound of the other axis
-            for (auto& [yID, yData] : m_plot->GetAxisDataYList())
+            for (LOOP_ITER : m_plot->GetAxisDataYList())
             {
+              BINDING_VALUES()
               if (yData.axis && !yData.axis->GetAuto())
               {
                 BoundScaleY[yID] = yData.axis->GetScale();
