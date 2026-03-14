@@ -81,21 +81,22 @@
 typedef std::optional<unsigned int> optional_uint;
 typedef std::optional<int> optional_int;
 #define OPTNULL_INT std::nullopt
-// Use structured binding
 #define OPTTEST(opt) (opt)
 #define OPTGET(opt) (*opt)
+// Use structured binding
 #define LOOP_ITER auto& [yID, yData]
 #define BINDING_VALUES()
+
 #else
 // To replace optional int
 typedef unsigned int optional_uint;
 typedef int optional_int;
 #define OPTNULL_INT -1
-// To replace structured binding
 #define OPTTEST(opt) ((opt) != -1)
 #define OPTGET(opt) (opt)
+// To replace structured binding
 #define LOOP_ITER auto& elem
-#define BINDING_VALUES() auto yID = elem.first; auto yData = elem.second;
+#define BINDING_VALUES() auto &yID = elem.first; auto &yData = elem.second;
 #endif
 
 // #include <wx/wx.h>
@@ -2988,7 +2989,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     std::unordered_map<int, mpRange> GetAllBoundY()
     {
       std::unordered_map<int, mpRange> yRange;
-      for (LOOP_ITER : m_AxisDataYList)
+      for (const LOOP_ITER : m_AxisDataYList)
       {
         BINDING_VALUES();
         yRange[yID] = yData.bound;
@@ -3003,7 +3004,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     std::unordered_map<int, mpRange> GetAllDesiredY()
     {
       std::unordered_map<int, mpRange> yRange;
-      for (LOOP_ITER : m_AxisDataYList)
+      for (const LOOP_ITER : m_AxisDataYList)
       {
         BINDING_VALUES();
         yRange[yID] = yData.desired;
@@ -3970,7 +3971,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     unsigned int GetNewAxisDataID(void)
     {
       int newID = 0;
-      for (LOOP_ITER : m_AxisDataYList)
+      for (const LOOP_ITER : m_AxisDataYList)
       {
         BINDING_VALUES();
         if(yData.axis)

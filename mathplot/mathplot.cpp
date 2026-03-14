@@ -579,7 +579,7 @@ void mpInfoCoords::UpdateInfo(mpWindow &w, wxEvent &event)
     if (m_win->IsLogXaxis())
       xVal = pow(10, xVal);
 
-    for (LOOP_ITER : w.GetAxisDataYList())
+    for (const LOOP_ITER : w.GetAxisDataYList())
     {
       BINDING_VALUES()
       if (m_win->IsLogYaxis(yID))
@@ -641,7 +641,7 @@ wxString mpInfoCoords::GetInfoCoordsText(mpWindow &w, double xVal, std::unordere
     wxString yAxisDataWithName = _T("");
     wxString yAxisDataWithoutName = _T("");
     int nOfUsedYAxes = 0;
-    for (LOOP_ITER : w.GetSortedAxisDataYList())
+    for (const LOOP_ITER : w.GetSortedAxisDataYList())
     {
       BINDING_VALUES()
       if (w.IsYAxisUsed(yID))
@@ -2934,7 +2934,7 @@ void mpWindow::OnMouseLeftDown(wxMouseEvent &event)
   // Store current X and Y scales
   m_mouseScaleX = m_AxisDataX.scale;
   m_mouseScaleYList.clear();
-  for (LOOP_ITER : m_AxisDataYList)
+  for (const LOOP_ITER : m_AxisDataYList)
   {
     BINDING_VALUES()
     m_mouseScaleYList[yID] = yData.scale;
@@ -3339,7 +3339,7 @@ void mpWindow::Fit(const mpRange &rangeX, std::unordered_map<int, mpRange> range
 #endif
     // Keep the lowest "scale" to fit the whole range required by that axis (to actually "fit"!):
     double s = m_AxisDataX.scale;
-    for (LOOP_ITER : m_AxisDataYList)
+    for (const LOOP_ITER : m_AxisDataYList)
     {
       BINDING_VALUES()
       s = std::min(s, yData.scale);
@@ -3561,7 +3561,7 @@ void mpWindow::ZoomRect(wxPoint p0, wxPoint p1)
 
   // Same for all Y-axes
   std::unordered_map<int, mpRange> zoomY;
-  for (LOOP_ITER : m_AxisDataYList)
+  for (const LOOP_ITER : m_AxisDataYList)
   {
     BINDING_VALUES()
     double p0y = p2y(p0.y, yID);
@@ -3652,7 +3652,7 @@ void mpWindow::OnToggleGrids(wxCommandEvent &WXUNUSED(event))
     scaleX->ShowGrids(showGrid);
   }
 
-  for (LOOP_ITER : m_AxisDataYList)
+  for (const LOOP_ITER : m_AxisDataYList)
   {
     BINDING_VALUES()
     if (yData.axis)
@@ -3716,7 +3716,7 @@ void mpWindow::OnCenter(wxCommandEvent &WXUNUSED(event))
   double posX = p2x(m_clickedX - centerX - m_margin.left);
 
   std::unordered_map<int, double> posYList;
-  for (LOOP_ITER : m_AxisDataYList)
+  for (const LOOP_ITER : m_AxisDataYList)
   {
     BINDING_VALUES()
     posYList[yID] = p2y(m_clickedY - centerY - m_margin.top, yID);
@@ -4252,7 +4252,7 @@ bool mpWindow::UpdateBBox()
 void mpWindow::UpdateAll()
 {
   // Make sure axis width is up to date
-  for (LOOP_ITER : m_AxisDataYList)
+  for (const LOOP_ITER : m_AxisDataYList)
   {
     BINDING_VALUES()
     if (yData.axis)
@@ -4317,7 +4317,7 @@ void mpWindow::DoScrollCalc(const int position, const int orientation)
   {
     // Y axis
     std::unordered_map<int, double> posYList;
-    for (LOOP_ITER : m_AxisDataYList)
+    for (const LOOP_ITER : m_AxisDataYList)
     {
       BINDING_VALUES()
       // Get top margin in coord units
@@ -4714,7 +4714,7 @@ mpScaleX* mpWindow::GetLayerXAxis()
  */
 mpScaleY* mpWindow::GetLayerYAxis(int yAxisID)
 {
-  for (LOOP_ITER : m_AxisDataYList)
+  for (const LOOP_ITER : m_AxisDataYList)
   {
     BINDING_VALUES()
     if (yData.axis && (yData.axis->GetAxisID() == yAxisID))
@@ -4727,7 +4727,7 @@ mpScaleY* mpWindow::GetLayerYAxis(int yAxisID)
 
 optional_int mpWindow::IsInsideYAxis(const wxPoint &point)
 {
-  for (LOOP_ITER : m_AxisDataYList)
+  for (const LOOP_ITER : m_AxisDataYList)
   {
     BINDING_VALUES()
     if (yData.axis)
@@ -4834,7 +4834,7 @@ void mpWindow::SetMargins(int top, int right, int bottom, int left)
 int mpWindow::GetLeftYAxesWidth(optional_int yAxisID)
 {
   int yAxesWidth = 0;
-  for (LOOP_ITER : m_AxisDataYList)
+  for (const LOOP_ITER : m_AxisDataYList)
   {
     BINDING_VALUES()
     if (yData.axis)
@@ -4853,7 +4853,7 @@ int mpWindow::GetLeftYAxesWidth(optional_int yAxisID)
 int mpWindow::GetRightYAxesWidth(optional_int yAxisID)
 {
   int yAxesWidth = 0;
-  for (LOOP_ITER : m_AxisDataYList)
+  for (const LOOP_ITER : m_AxisDataYList)
   {
     BINDING_VALUES()
     if (yData.axis)
