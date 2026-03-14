@@ -578,7 +578,7 @@ void mpInfoCoords::UpdateInfo(mpWindow &w, wxEvent &event)
     if (m_win->IsLogXaxis())
       xVal = pow(10, xVal);
 
-    for (auto& [yID, yData] : w.GetAxisDataYList())
+    for (const auto& [yID, yData] : w.GetAxisDataYList())
     {
       if (m_win->IsLogYaxis(yID))
         yValList[yID] = pow(10, yValList[yID]);
@@ -639,7 +639,7 @@ wxString mpInfoCoords::GetInfoCoordsText(mpWindow &w, double xVal, std::unordere
     wxString yAxisDataWithName = _T("");
     wxString yAxisDataWithoutName = _T("");
     int nOfUsedYAxes = 0;
-    for (auto& [yID, yData] : w.GetSortedAxisDataYList())
+    for (const auto& [yID, yData] : w.GetSortedAxisDataYList())
     {
       if (w.IsYAxisUsed(yID))
       {
@@ -2927,7 +2927,7 @@ void mpWindow::OnMouseLeftDown(wxMouseEvent &event)
   // Store current X and Y scales
   m_mouseScaleX = m_AxisDataX.scale;
   m_mouseScaleYList.clear();
-  for (auto& [yID, yData] : m_AxisDataYList)
+  for (const auto& [yID, yData] : m_AxisDataYList)
   {
     m_mouseScaleYList[yID] = yData.scale;
   }
@@ -3324,7 +3324,7 @@ void mpWindow::Fit(const mpRange &rangeX, std::unordered_map<int, mpRange> range
 #endif
     // Keep the lowest "scale" to fit the whole range required by that axis (to actually "fit"!):
     double s = m_AxisDataX.scale;
-    for (auto& [yID, yData] : m_AxisDataYList)
+    for (const auto& [yID, yData] : m_AxisDataYList)
     {
       s = std::min(s, yData.scale);
     }
@@ -3542,7 +3542,7 @@ void mpWindow::ZoomRect(wxPoint p0, wxPoint p1)
 
   // Same for all Y-axes
   std::unordered_map<int, mpRange> zoomY;
-  for (auto& [yID, yData] : m_AxisDataYList)
+  for (const auto& [yID, yData] : m_AxisDataYList)
   {
     double p0y = p2y(p0.y, yID);
     double p1y = p2y(p1.y, yID);
@@ -3631,7 +3631,7 @@ void mpWindow::OnToggleGrids(wxCommandEvent &WXUNUSED(event))
     scaleX->ShowGrids(showGrid);
   }
 
-  for (auto& [yID, yData] : m_AxisDataYList)
+  for (const auto& [yID, yData] : m_AxisDataYList)
   {
     if (yData.axis)
       yData.axis->ShowGrids(showGrid);
@@ -3694,7 +3694,7 @@ void mpWindow::OnCenter(wxCommandEvent &WXUNUSED(event))
   double posX = p2x(m_clickedX - centerX - m_margin.left);
 
   std::unordered_map<int, double> posYList;
-  for (auto& [yID, yData] : m_AxisDataYList)
+  for (const auto& [yID, yData] : m_AxisDataYList)
   {
     posYList[yID] = p2y(m_clickedY - centerY - m_margin.top, yID);
   }
@@ -4220,7 +4220,7 @@ bool mpWindow::UpdateBBox()
 void mpWindow::UpdateAll()
 {
   // Make sure axis width is up to date
-  for (auto& [yID, yData] : m_AxisDataYList)
+  for (const auto& [yID, yData] : m_AxisDataYList)
   {
     if (yData.axis)
       ((mpScaleY*)yData.axis)->UpdateAxisWidth(*this);
@@ -4284,7 +4284,7 @@ void mpWindow::DoScrollCalc(const int position, const int orientation)
   {
     // Y axis
     std::unordered_map<int, double> posYList;
-    for (auto& [yID, yData] : m_AxisDataYList)
+    for (const auto& [yID, yData] : m_AxisDataYList)
     {
       // Get top margin in coord units
       double topMargin = m_margin.top / yData.scale;
@@ -4680,7 +4680,7 @@ mpScaleX* mpWindow::GetLayerXAxis()
  */
 mpScaleY* mpWindow::GetLayerYAxis(int yAxisID)
 {
-  for (auto& [yID, yData] : m_AxisDataYList)
+  for (const auto& [yID, yData] : m_AxisDataYList)
   {
     if (yData.axis && (yData.axis->GetAxisID() == yAxisID))
     {
@@ -4692,7 +4692,7 @@ mpScaleY* mpWindow::GetLayerYAxis(int yAxisID)
 
 std::optional<int> mpWindow::IsInsideYAxis(const wxPoint &point)
 {
-  for (auto& [yID, yData] : m_AxisDataYList)
+  for (const auto& [yID, yData] : m_AxisDataYList)
   {
     if (yData.axis)
     {
@@ -4798,7 +4798,7 @@ void mpWindow::SetMargins(int top, int right, int bottom, int left)
 int mpWindow::GetLeftYAxesWidth(std::optional<int> yAxisID)
 {
   int yAxesWidth = 0;
-  for (auto& [yID, yData] : m_AxisDataYList)
+  for (const auto& [yID, yData] : m_AxisDataYList)
   {
     if (yData.axis)
     {
@@ -4816,7 +4816,7 @@ int mpWindow::GetLeftYAxesWidth(std::optional<int> yAxisID)
 int mpWindow::GetRightYAxesWidth(std::optional<int> yAxisID)
 {
   int yAxesWidth = 0;
-  for (auto& [yID, yData] : m_AxisDataYList)
+  for (const auto& [yID, yData] : m_AxisDataYList)
   {
     if (yData.axis)
     {

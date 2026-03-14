@@ -2963,7 +2963,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     std::unordered_map<int, mpRange> GetAllBoundY()
     {
       std::unordered_map<int, mpRange> yRange;
-      for (auto& [yID, yData] : m_AxisDataYList)
+      for (const auto& [yID, yData] : m_AxisDataYList)
       {
         yRange[yID] = yData.bound;
       }
@@ -2977,7 +2977,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     std::unordered_map<int, mpRange> GetAllDesiredY()
     {
       std::unordered_map<int, mpRange> yRange;
-      for (auto& [yID, yData] : m_AxisDataYList)
+      for (const auto& [yID, yData] : m_AxisDataYList)
       {
         yRange[yID] = yData.desired;
       }
@@ -3941,9 +3941,9 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     unsigned int GetNewAxisDataID(void)
     {
       int newID = 0;
-      for (auto& [yID, yData] : m_AxisDataYList)
+      for (const auto& [yID, yData] : m_AxisDataYList)
       {
-        if(yData.axis)
+        if (yData.axis)
         {
           // This ID is used by an axis. Make sure the new ID is larger
           newID = std::max(newID, yID + 1);
