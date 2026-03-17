@@ -1033,10 +1033,39 @@
 														<object class="sizeritem">
 															<object class="wxCheckBox" name="" variable="cbSeriesShowName" member="yes">
 																<label>Show name</label>
+																<handler function="OncbSeriesShowNameClick" entry="EVT_CHECKBOX" />
 															</object>
 															<flag>wxALL|wxALIGN_LEFT</flag>
 															<border>3</border>
 															<option>1</option>
+														</object>
+														<object class="sizeritem">
+															<object class="wxBoxSizer" variable="BoxSizer23" member="no">
+																<object class="sizeritem">
+																	<object class="wxStaticText" name="" variable="StaticText15" member="yes">
+																		<label>Position :</label>
+																	</object>
+																	<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+																	<border>5</border>
+																</object>
+																<object class="sizeritem">
+																	<object class="wxChoice" name="" variable="cbSeriesNamePosition" member="yes">
+																		<content>
+																			<item>Align NW</item>
+																			<item>Align NE</item>
+																			<item>Align SE</item>
+																			<item>Align SW</item>
+																		</content>
+																		<use_items_array>1</use_items_array>
+																		<enabled>0</enabled>
+																	</object>
+																	<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+																	<border>5</border>
+																	<option>1</option>
+																</object>
+															</object>
+															<flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+															<border>5</border>
 														</object>
 														<object class="sizeritem">
 															<object class="wxCheckBox" name="" variable="cbTractable" member="yes">

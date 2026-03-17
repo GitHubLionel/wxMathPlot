@@ -247,7 +247,7 @@ mpLayer::mpLayer(mpLayerType layerType) :
   m_drawOutsideMargins = false;
   m_visible = true;
   m_tractable = false;
-  m_flags = mpALIGN_NE;
+  m_flags = mpALIGN_SE;
   m_CanDelete = true;
   m_busy = false;
   m_ZIndex = mpZIndex_BACKGROUND;
@@ -1467,8 +1467,8 @@ void mpFXY::DoPlot(wxDC &dc, mpWindow &w)
   Rewind();
   // Get first point
   DoGetNextXY(&x, &y);
-  maxDrawX = minDrawX = (int)x;
-  maxDrawY = minDrawY = (int)y;
+  maxDrawX = minDrawX = w.x2p(x);
+  maxDrawY = minDrawY = w.y2p(y, m_yAxisID);
 
   wxCoord ix = 0, iy = 0;
   wxCoord ixlast = 0, iylast = 0;
@@ -1569,37 +1569,54 @@ void mpFXY::DoPlot(wxDC &dc, mpWindow &w)
 
   if (m_showName && !m_name.IsEmpty())
   {
-    wxCoord tx, ty;
-    dc.GetTextExtent(m_name, &tx, &ty);
-
-    switch (m_flags)
+    // Test if series is always visible, if no don't show name
+    if ((minDrawX < m_plotBoundaries.top) && (maxDrawX > m_plotBoundaries.left) &&
+        (minDrawY < m_plotBoundaries.bottom) && (maxDrawY > m_plotBoundaries.right))
     {
-      case mpALIGN_NW:
-      {
-        tx = minDrawX + 8;
-        ty = maxDrawY + 8;
-        break;
-      }
-      case mpALIGN_NE:
-      {
-        tx = maxDrawX - tx - 8;
-        ty = maxDrawY + 8;
-        break;
-      }
-      case mpALIGN_SE:
-      {
-        tx = maxDrawX - tx - 8;
-        ty = minDrawY - ty - 8;
-        break;
-      }
-      default:
-      { // mpALIGN_SW
-        tx = minDrawX + 8;
-        ty = minDrawY - ty - 8;
-      }
-    }
+      wxCoord tx, ty, tw, th;
+      dc.GetTextExtent(m_name, &tw, &th);
 
-    dc.DrawText(m_name, tx, ty);
+      switch (m_flags)
+      {
+        case mpALIGN_SE:
+        {
+          tx = minDrawX + 8;
+          ty = maxDrawY + 8;
+          break;
+        }
+        case mpALIGN_SW:
+        {
+          tx = maxDrawX - tw - 8;
+          ty = maxDrawY + 8;
+          break;
+        }
+        case mpALIGN_NW:
+        {
+          tx = maxDrawX - tw - 8;
+          ty = minDrawY - th - 8;
+          break;
+        }
+        default:
+        { // mpALIGN_NE
+          tx = minDrawX + 8;
+          ty = minDrawY + th;
+        }
+      }
+
+      // Move name to be visible
+      if (tx < m_plotBoundaries.left)
+        tx = m_plotBoundaries.left;
+      else
+        if (tx + tw > m_plotBoundaries.top)
+          tx = m_plotBoundaries.top - tw;
+      if (ty < m_plotBoundaries.right)
+        ty = m_plotBoundaries.right;
+      else
+        if (ty + th > m_plotBoundaries.bottom)
+          ty = m_plotBoundaries.bottom - th;
+
+      dc.DrawText(m_name, tx, ty);
+    }
   }
 }
 
