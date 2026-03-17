@@ -1129,14 +1129,13 @@ void MathPlotConfigDialog::FillYAxisList(wxChoice* yChoice, bool clearChoice)
 {
   if (clearChoice)
     yChoice->Clear();
-  for (const LOOP_ITER : m_plot->GetSortedAxisDataYList())
+  for (const MP_LOOP_ITER : m_plot->GetSortedAxisDataYList())
   {
-    BINDING_VALUES()
-    if (yData.axis)
+    if (m_yData.axis)
     {
       // axisDataY.second.Axis->GetAxisID() if we want ID
-      wxString yAxisName = wxString::Format(_T("Y%d axis - %s"), yID, yData.axis->GetName());
-      yChoice->Append(yAxisName, yData.axis);
+      wxString yAxisName = wxString::Format(_T("Y%d axis - %s"), m_yID, m_yData.axis->GetName());
+      yChoice->Append(yAxisName, m_yData.axis);
     }
   }
 }
@@ -1708,12 +1707,11 @@ void MathPlotConfigDialog::Apply(int pageIndex, bool updateFont)
             BoundScaleX.Set(scale_min, scale_max);
 
             // Get bound of the other axis
-            for (const LOOP_ITER : m_plot->GetAxisDataYList())
+            for (const MP_LOOP_ITER : m_plot->GetAxisDataYList())
             {
-              BINDING_VALUES()
-              if (yData.axis && !yData.axis->GetAuto())
+              if (m_yData.axis && !m_yData.axis->GetAuto())
               {
-                BoundScaleY[yID] = yData.axis->GetScale();
+                BoundScaleY[m_yID] = m_yData.axis->GetScale();
               }
             }
           }
