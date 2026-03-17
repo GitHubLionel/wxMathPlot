@@ -132,6 +132,7 @@ class MathPlotConfigDialog: public wxDialog
     void OnbAddLinesClick(wxCommandEvent& event);
     void OnbDelLinesClick(wxCommandEvent& event);
     void OnbDelAxisClick(wxCommandEvent& event);
+    void OncbSeriesShowNameClick(wxCommandEvent& event);
     //*)
 
     //(*Identifiers(MathPlotConfigDialog)
@@ -199,6 +200,7 @@ class MathPlotConfigDialog: public wxDialog
     wxChoice* cbLinesPenStyle;
     wxChoice* cbLinesPenWidth;
     wxChoice* cbSeriesBrushStyle;
+    wxChoice* cbSeriesNamePosition;
     wxChoice* cbSeriesPenStyle;
     wxChoice* cbSeriesPenWidth;
     wxChoice* cbSeriesSymbolType;
@@ -217,6 +219,7 @@ class MathPlotConfigDialog: public wxDialog
     wxStaticText* StaticText12;
     wxStaticText* StaticText13;
     wxStaticText* StaticText14;
+    wxStaticText* StaticText15;
     wxStaticText* StaticText16;
     wxStaticText* StaticText17;
     wxStaticText* StaticText18;

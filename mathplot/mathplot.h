@@ -1047,7 +1047,7 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
     bool m_drawOutsideMargins;  //!< Select if the layer should draw only inside margins or over all DC. Default : false
     bool m_visible;             //!< Toggles layer visibility. Default : true
     bool m_tractable;           //!< Is the layer tractable
-    int m_flags;                //!< Holds label alignment. Default : mpALIGN_NE
+    int m_flags;                //!< Holds label alignment. Default : mpALIGN_SW for series and mpALIGN_CENTER for scale
     mpRect m_plotBoundaries;    //!< The boundaries for plotting curve calculated by mpWindow
     bool m_CanDelete;           //!< Is the layer can be deleted
     mpLayerZOrder m_ZIndex;     //!< The index in Z-Order to draw the layer
@@ -1701,7 +1701,7 @@ class WXDLLIMPEXP_MATHPLOT mpFXY: public mpFunction
     /** @param name  Label
      @param flags Label alignment, pass one of #mpALIGN_NE, #mpALIGN_NW, #mpALIGN_SW, #mpALIGN_SE.
      */
-    mpFXY(const wxString &name = wxEmptyString, int flags = mpALIGN_NE, bool viewAsBar = false, unsigned int yAxisID = 0);
+    mpFXY(const wxString &name = wxEmptyString, int flags = mpALIGN_SW, bool viewAsBar = false, unsigned int yAxisID = 0);
 
     /** Rewind value enumeration with mpFXY::GetNextXY.
      Override this function in your implementation.
@@ -1816,7 +1816,7 @@ class WXDLLIMPEXP_MATHPLOT mpFXYVector: public mpFXY
     /** @param name  Label
      @param flags Label alignment, pass one of #mpALIGN_NE, #mpALIGN_NW, #mpALIGN_SW, #mpALIGN_SE.
      */
-    mpFXYVector(const wxString &name = wxEmptyString, int flags = mpALIGN_NE, bool viewAsBar = false, unsigned int yAxisID = 0);
+    mpFXYVector(const wxString &name = wxEmptyString, int flags = mpALIGN_SW, bool viewAsBar = false, unsigned int yAxisID = 0);
 
     /** destrutor
      */
@@ -4158,7 +4158,7 @@ class WXDLLIMPEXP_MATHPLOT mpMovableObject: public mpFunction
       m_reference_x = x;
       m_reference_y = y;
       m_reference_phi = phi;
-      m_flags = mpALIGN_NE;
+      m_flags = mpALIGN_SW;
       ShapeUpdated();
     }
 

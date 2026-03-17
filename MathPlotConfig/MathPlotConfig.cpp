@@ -318,6 +318,7 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   wxBoxSizer* BoxSizer20;
   wxBoxSizer* BoxSizer21;
   wxBoxSizer* BoxSizer22;
+  wxBoxSizer* BoxSizer23;
   wxBoxSizer* BoxSizer2;
   wxBoxSizer* BoxSizer3;
   wxBoxSizer* BoxSizer4;
@@ -694,6 +695,19 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   cbSeriesShowName = new wxCheckBox(Panel4, wxID_ANY, _("Show name"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
   cbSeriesShowName->SetValue(false);
   BoxSizer11->Add(cbSeriesShowName, 1, wxALL|wxALIGN_LEFT, 3);
+  BoxSizer23 = new wxBoxSizer(wxHORIZONTAL);
+  StaticText15 = new wxStaticText(Panel4, wxID_ANY, _("Position :"), wxDefaultPosition, wxDefaultSize, 0);
+  BoxSizer23->Add(StaticText15, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+  const wxString cbSeriesNamePosition_choices[] = {
+  _("Align NW"),
+  _("Align NE"),
+  _("Align SE"),
+  _("Align SW"),
+  };
+  cbSeriesNamePosition = new wxChoice(Panel4, wxID_ANY, wxDefaultPosition, wxDefaultSize, 4, cbSeriesNamePosition_choices, 0, wxDefaultValidator);
+  cbSeriesNamePosition->Disable();
+  BoxSizer23->Add(cbSeriesNamePosition, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+  BoxSizer11->Add(BoxSizer23, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
   cbTractable = new wxCheckBox(Panel4, wxID_ANY, _("Tractable"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
   cbTractable->SetValue(false);
   cbTractable->SetToolTip(_("Allow mouse coordinates"));
@@ -862,6 +876,7 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   ChoiceSeries->Bind(wxEVT_COMMAND_CHOICE_SELECTED, &MathPlotConfigDialog::OnChoiceSeries, this);
   bDelSeries->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotConfigDialog::OnbDelSeriesClick, this);
   bSeriesPenColor->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotConfigDialog::OnbColorClick, this);
+  cbSeriesShowName->Bind(wxEVT_COMMAND_CHECKBOX_CLICKED, &MathPlotConfigDialog::OncbSeriesShowNameClick, this);
   bSeriesBrushColor->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotConfigDialog::OnbColorClick, this);
   ChoiceLines->Bind(wxEVT_COMMAND_CHOICE_SELECTED, &MathPlotConfigDialog::OnChoiceLinesSelect, this);
   bAddLines->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotConfigDialog::OnbAddLinesClick, this);
@@ -1421,6 +1436,8 @@ void MathPlotConfigDialog::UpdateSelectedSerie(void)
   cbSeriesContinuity->SetValue(CurrentSerie->GetContinuity());
   cbSeriesOutside->SetValue(CurrentSerie->GetDrawOutsideMargins());
   cbSeriesShowName->SetValue(CurrentSerie->GetShowName());
+  cbSeriesNamePosition->SetSelection(CurrentSerie->GetAlign() - mpALIGN_NW);
+  cbSeriesNamePosition->Enable(CurrentSerie->GetShowName());
   cbTractable->SetValue(CurrentSerie->IsTractable());
 
   cbSeriesStep->SetValue(CurrentSerie->GetStep());
@@ -1436,6 +1453,11 @@ void MathPlotConfigDialog::UpdateSelectedSerie(void)
     cbBar->Disable();
     cbBar->SetValue(false);
   }
+}
+
+void MathPlotConfigDialog::OncbSeriesShowNameClick(wxCommandEvent& WXUNUSED(event))
+{
+  cbSeriesNamePosition->Enable(cbSeriesShowName->GetValue());
 }
 
 void MathPlotConfigDialog::OnChoiceSeries(wxCommandEvent& WXUNUSED(event))
@@ -1750,6 +1772,7 @@ void MathPlotConfigDialog::Apply(int pageIndex, bool updateFont)
         CurrentSerie->SetContinuity(cbSeriesContinuity->GetValue());
         CurrentSerie->SetDrawOutsideMargins(cbSeriesOutside->GetValue());
         CurrentSerie->SetShowName(cbSeriesShowName->GetValue());
+        CurrentSerie->SetAlign(cbSeriesNamePosition->GetSelection() + mpALIGN_NW);
         CurrentSerie->SetTractable(cbTractable->GetValue());
 
         bool yAxisChange = false;
