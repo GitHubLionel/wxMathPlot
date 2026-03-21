@@ -96,7 +96,7 @@ namespace MathPlot
 wxString Popup_string[mpID_FULLSCREEN - mpID_FIT + 1][2] = {{_T("")}};
 
 // Strings for the help message (mouse commands)
-wxString Help_string[7] = {_T("")};
+wxArrayString Help_string;
 
 // Strings for load file
 wxString MESS_LOAD = _T("");
@@ -136,15 +136,17 @@ static void FillI18NString()
   Popup_string[index][0]   = _("Toggle fullscreen");
   Popup_string[index++][1] = _("Toggle fullscreen.");
 
-  Help_string[0] = _("wxMathPlot help");
-  Help_string[1] = _("Supported Mouse commands:");
-  Help_string[2] = _(" - Left button down +\n"
-                     "    - Alt. 1: Mark area: Rectangular zoom\n"
-                     "    - Alt. 2: Move: Continous zoom");
-  Help_string[3] = _(" - Right button down + Move: Pan (Move)");
-  Help_string[4] = _(" - Wheel: Zoom in/out");
-  Help_string[5] = _(" - Wheel + SHIFT: Horizontal scroll");
-  Help_string[6] = _(" - Wheel + CTRL: Vertical scroll");
+  Help_string.Add(_("wxMathPlot help"));
+  Help_string.Add(_("Supported Mouse commands:"));
+  Help_string.Add(_(" - Left button down +"));
+  Help_string.Add(_("    - Alt. 1: Mark area: Rectangular zoom"));
+  Help_string.Add(_("    - Alt. 2: Move: Continous zoom"));
+  Help_string.Add(_(" - Right button down + Move: Pan (Move)"));
+  Help_string.Add(_(" - Wheel: Zoom in/out"));
+  Help_string.Add(_(" - Wheel + SHIFT: Horizontal scroll"));
+  Help_string.Add(_(" - Wheel + CTRL: Vertical scroll"));
+  Help_string.Add(_(" - Left-click on the series name: show config window"));
+  Help_string.Add(_(" - Left-click + SHIFT on the series name: swap visibility"));
 
   MESS_LOAD = _("Select file");
   MESS_WILDCARD = _("Data files (*.dat)|*.dat|Csv files (csv.*)|csv.*|All files (*.*)|*.*");
@@ -796,84 +798,88 @@ void mpInfoLegend::UpdateBitmap(wxDC &dc, mpWindow &w)
     mpLayer* ly = w.GetLayer(p);
     if (ly->GetLayerType() == mpLAYER_PLOT)
     {
-      if (ly->IsVisible())
+      int labelWidth = 0, labelHeight = 0;
+      wxString label = ly->GetName();
+      wxPen lpen = ly->GetPen(); // for legend line, use exact pen set for this plot layer (including width)
+      buff_dc.SetPen(lpen);
+      buff_dc.SetBrush(ly->GetBrush());
+      wxFont lfont = GetFont(); // use font of InfoLegend
+      // If series is not visible, we strike his name
+      if (!ly->IsVisible())
+        lfont.MakeStrikethrough();
+      buff_dc.SetFont(lfont);
+      buff_dc.GetTextExtent(label, &labelWidth, &labelHeight);
+
+      if (first)
       {
-        int labelWidth = 0, labelHeight = 0;
-        wxString label = ly->GetName();
-        wxPen lpen = ly->GetPen(); // for legend line, use exact pen set for this plot layer (including width)
-        buff_dc.SetPen(lpen);
-        buff_dc.SetBrush(ly->GetBrush());
-        buff_dc.GetTextExtent(label, &labelWidth, &labelHeight);
-
-        if (first)
-        {
-          posX = MARGIN_LEGEND;
-          posY = MARGIN_LEGEND + (labelHeight / 2);
-          // Since labelHeight is constant (all label layers use same legend font), we can initialise height of the legend bitmap
-          height = posY + labelHeight;
-          first = false;
-        }
-
-        // Draw the decoration
-        switch (m_item_mode)
-        {
-          case mpLegendSquare:
-          {
-            wxBrush sqrBrush(*wxWHITE, wxBRUSHSTYLE_SOLID);
-            sqrBrush.SetColour(lpen.GetColour());
-            buff_dc.SetBrush(sqrBrush);
-            buff_dc.DrawRectangle(posX, posY - (LEGEND_LINEWIDTH / 2) + 1,
-            LEGEND_LINEWIDTH, LEGEND_LINEWIDTH);
-            break;
-          }
-
-          case mpLegendSymbol:
-          {
-            mpFunction* pFunctionLayer = dynamic_cast<mpFunction*>(ly); // for mpFunction-subclass-specific processing
-            bool drewSymbol = false;
-            // Draw optional symbol for those layer types where appropriate
-            if (pFunctionLayer)
-            {
-              if (dynamic_cast<mpChart*>(pFunctionLayer) == 0)
-              { // doesn't make sense to use symbols for bar or pie chart
-                drewSymbol = pFunctionLayer->DrawSymbol(buff_dc, posX + LEGEND_LINEWIDTH / 2, posY + 1); // Would be nicer if keyed on symbol size
-              }
-            }
-            // draw line
-            if (!drewSymbol || (pFunctionLayer && pFunctionLayer->GetContinuity()))
-            {
-              buff_dc.DrawLine(posX, posY + 1, posX + LEGEND_LINEWIDTH, posY + 1);
-            }
-            break;
-          }
-
-          default: // mpLegendLine or unknown
-            buff_dc.DrawLine(posX, posY + 1, posX + LEGEND_LINEWIDTH, posY + 1);
-        }
-
-        // Draw the name of the function after the decoration
-        posX += LEGEND_LINEWIDTH + MARGIN_LEGEND;
-        buff_dc.DrawText(label, posX, posY - (labelHeight / 2));
-
-        posX += labelWidth + 2 * MARGIN_LEGEND;
-
-        // Adjust the full size of the Legend and store the end (bottom or right) of this legend component
-        LegendDetail ld;
-        if (m_item_direction == mpVertical)
-        {
-          width = std::max(width, posX);
-          posX = MARGIN_LEGEND;
-          posY += labelHeight;
-          height = ld.legendEnd = posY;
-          posY += 2 * MARGIN_LEGEND;
-        }
-        else
-        {
-          width = ld.legendEnd = posX;
-        }
-        ld.layerIdx = layerIdx;
-        m_LegendDetailList.push_back(ld);
+        posX = MARGIN_LEGEND;
+        posY = MARGIN_LEGEND + (labelHeight / 2);
+        // Since labelHeight is constant (all label layers use same legend font), we can initialise height of the legend bitmap
+        height = posY + labelHeight;
+        first = false;
       }
+
+      // Draw the decoration
+      switch (m_item_mode)
+      {
+        case mpLegendSquare:
+        {
+          wxBrush sqrBrush(*wxWHITE, wxBRUSHSTYLE_SOLID);
+          sqrBrush.SetColour(lpen.GetColour());
+          buff_dc.SetBrush(sqrBrush);
+          buff_dc.DrawRectangle(posX, posY - (LEGEND_LINEWIDTH / 2) + 1,
+          LEGEND_LINEWIDTH, LEGEND_LINEWIDTH);
+          break;
+        }
+
+        case mpLegendSymbol:
+        {
+          mpFunction* pFunctionLayer = dynamic_cast<mpFunction*>(ly); // for mpFunction-subclass-specific processing
+          bool drewSymbol = false;
+          // Draw optional symbol for those layer types where appropriate
+          if (pFunctionLayer)
+          {
+            if (dynamic_cast<mpChart*>(pFunctionLayer) == 0)
+            { // doesn't make sense to use symbols for bar or pie chart
+              drewSymbol = pFunctionLayer->DrawSymbol(buff_dc, posX + LEGEND_LINEWIDTH / 2, posY + 1); // Would be nicer if keyed on symbol size
+            }
+          }
+          // draw line
+          if (!drewSymbol || (pFunctionLayer && pFunctionLayer->GetContinuity()))
+          {
+            buff_dc.DrawLine(posX, posY + 1, posX + LEGEND_LINEWIDTH, posY + 1);
+          }
+          break;
+        }
+
+        default: // mpLegendLine or unknown
+          buff_dc.DrawLine(posX, posY + 1, posX + LEGEND_LINEWIDTH, posY + 1);
+      }
+
+      // Draw the name of the function after the decoration
+      posX += LEGEND_LINEWIDTH + MARGIN_LEGEND;
+      buff_dc.DrawText(label, posX, posY - (labelHeight / 2));
+
+      posX += labelWidth + 2 * MARGIN_LEGEND;
+
+      // Adjust the full size of the Legend and store the end (bottom or right) of this legend component
+      LegendDetail ld;
+      if (m_item_direction == mpVertical)
+      {
+        width = std::max(width, posX);
+        posX = MARGIN_LEGEND;
+        posY += labelHeight;
+        height = ld.legendEnd = posY;
+        posY += 2 * MARGIN_LEGEND;
+      }
+      else
+      {
+        width = ld.legendEnd = posX;
+      }
+      ld.layerIdx = layerIdx;
+      m_LegendDetailList.push_back(ld);
+
+      // Count the series in InfoLegend
       layerIdx++;
     }
   }
@@ -2970,12 +2976,25 @@ void mpWindow::OnMouseLeftDown(wxMouseEvent &event)
   if (m_InInfoLegend)
   {
     int select = m_InfoLegend->GetPointed(*this, m_mouseLClick);
-    if (m_configWindow == NULL)
-      m_configWindow = new MathPlotConfigDialog(this);
 
-    m_configWindow->Initialize(mpcpiSeries);
-    m_configWindow->SelectChoiceSerie(select);
-    m_configWindow->Show();
+    // If shift is pressed, we just swap visibility of the series
+    if (event.m_shiftDown)
+    {
+      mpFunction* CurrentSerie = (mpFunction*)GetLayerPlot(select);
+      CurrentSerie->SetVisible(!CurrentSerie->IsVisible());
+      m_InfoLegend->SetNeedUpdate();
+      Fit();
+    }
+    else
+    {
+      // Show config window
+      if (m_configWindow == NULL)
+        m_configWindow = new MathPlotConfigDialog(this);
+
+      m_configWindow->Initialize(mpcpiSeries);
+      m_configWindow->SelectChoiceSerie(select);
+      m_configWindow->Show();
+    }
   }
 #endif // ENABLE_MP_CONFIG
 
@@ -3634,7 +3653,7 @@ void mpWindow::OnLockAspect(wxCommandEvent &WXUNUSED(event))
 void mpWindow::OnMouseHelp(wxCommandEvent &WXUNUSED(event))
 {
   wxString message = Help_string[1];
-  for (unsigned int i = 2; i < WXSIZEOF(Help_string); i++)
+  for (unsigned int i = 2; i < Help_string.size(); i++)
     message += _T("\n") + Help_string[i];
   wxMessageBox(message, Help_string[0], wxOK, this);
 }

@@ -68,6 +68,7 @@
 #pragma interface "mathplot.h"
 #endif
 
+#include <cassert>  // For assert debug message. Disable if NDEBUG is defined
 #include <vector>
 #include <map>
 #include <unordered_map>
