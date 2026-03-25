@@ -2854,7 +2854,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 
     /*! Get the layer axis in list position indicated.
      */
-    mpLayer* GetLayerAxis(int position, mpScaleType scale = mpsAllType);
+    mpScale* GetLayerAxis(int position, mpScaleType scale = mpsAllType);
 
     /*!
      * Return the serie n

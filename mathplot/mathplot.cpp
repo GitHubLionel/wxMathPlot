@@ -4541,7 +4541,7 @@ mpLayer* mpWindow::GetLayerPlot(int position, mpFunctionType func)
   return NULL;
 }
 
-mpLayer* mpWindow::GetLayerAxis(int position, mpScaleType scale)
+mpScale* mpWindow::GetLayerAxis(int position, mpScaleType scale)
 {
   if (position < 0)
     return NULL;
@@ -4553,7 +4553,7 @@ mpLayer* mpWindow::GetLayerAxis(int position, mpScaleType scale)
     if ((*it)->IsLayerType(mpLAYER_AXIS, &thescale) && ((scale == mpsAllType) || (thescale == scale)))
     {
       if (++layerNo == position)
-        return *it;
+        return (mpScale*)*it;
     }
   }
   return NULL;

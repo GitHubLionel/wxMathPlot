@@ -993,7 +993,7 @@ void MathPlotConfigDialog::Initialize(mpConfigPageId id)
   ChoiceAxis->Clear();
   for (unsigned int i = 0; i < m_plot->CountLayersType(mpLAYER_AXIS); i++)
   {
-    mpScale* axis = (mpScale*)m_plot->GetLayerAxis(i);
+    mpScale* axis = m_plot->GetLayerAxis(i);
     wxString classname = axis->GetClassInfo()->GetClassName();
     // Only mpScaleX should be added to the list for the moment
     if (classname.IsSameAs(_T("mpScaleX")))
@@ -1319,6 +1319,16 @@ void MathPlotConfigDialog::OnbAddAxisClick(wxCommandEvent& event)
 
     if (newScale && (m_plot->AddLayer(newScale, true, false)))
     {
+      // Search the first X or Y scale present to retreive its font
+      // since we probably want the same font for all the axis.
+      mpScale* firstScale = NULL;
+      if (bt == bAddXAxis)
+        firstScale = m_plot->GetLayerAxis(0, mpsScaleX);
+      else
+        firstScale = m_plot->GetLayerAxis(0, mpsScaleY);
+      if (firstScale)
+        newScale->SetFont(firstScale->GetFont());
+
       Initialize(mpcpiAxis);
       // Find in the choice list the index of the new axis
       for (unsigned int i = 0; i < ChoiceAxis->GetCount(); i++)
