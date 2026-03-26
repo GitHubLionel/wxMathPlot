@@ -608,13 +608,13 @@ typedef enum __mp_Direction_Type
 
 typedef enum __Symbol_Type
 {
-  mpsNone,
-  mpsCircle,
-  mpsSquare,
-  mpsUpTriangle,
-  mpsDownTriangle,
-  mpsCross,
-  mpsPlus
+  mpsNone,         //!< No symbol is drawing
+  mpsCircle,       //!< Draw a circle
+  mpsSquare,       //!< Draw a square
+  mpsUpTriangle,   //!< Draw a triangle up oriented
+  mpsDownTriangle, //!< Draw a triangle down oriented
+  mpsCross,        //!< Draw a cross X
+  mpsPlus          //!< Draw a plus +
 } mpSymbol;
 
 //-----------------------------------------------------------------------------
@@ -638,6 +638,7 @@ typedef enum __Text_Type
   mptTitle
 } mpTextType;
 
+/// sub_type values for mpLAYER_PLOT and mpLAYER_LINE
 typedef enum __Function_Type
 {
   mpfNone,
@@ -650,6 +651,7 @@ typedef enum __Function_Type
   mpfAllType
 } mpFunctionType;
 
+/// sub_type values for mpLAYER_AXIS
 typedef enum __Scale_Type
 {
   mpsScaleNone,
@@ -658,6 +660,7 @@ typedef enum __Scale_Type
   mpsAllType
 } mpScaleType;
 
+/// sub_type values for mpLAYER_CHART
 typedef enum __Chart_Type
 {
   mpcChartNone,
@@ -666,12 +669,14 @@ typedef enum __Chart_Type
   mpcAllType
 } mpChartType;
 
+/// enum for left button mouse action: box zoom or drag
 enum mpMouseButtonAction
 {
   mpMouseBoxZoom,
   mpMouseDragZoom,
 };
 
+/// enum for label for grid
 enum mpLabelType
 {
   /** Set label for axis in auto mode, automatically switch between decimal and scientific notation */
@@ -699,6 +704,7 @@ enum mpLabelType
 // mpLayer
 //-----------------------------------------------------------------------------
 
+//!< Major type of an mpLayer (detail is in subtype)
 typedef enum __mp_Layer_Type
 {
   mpLAYER_UNDEF,   //!< Layer type undefined; SHOULD NOT BE USED
@@ -709,7 +715,7 @@ typedef enum __mp_Layer_Type
   mpLAYER_BITMAP,  //!< Bitmap type layer
   mpLAYER_LINE,    //!< Line (horizontal or vertical) type layer
   mpLAYER_CHART,   //!< Chart type layer (bar chart)
-} mpLayerType; //!< Major type of an mpLayer (detail is in subtype)
+} mpLayerType;
 
 /**
  * Z order for drawing layer
@@ -2448,32 +2454,40 @@ class WXDLLIMPEXP_MATHPLOT mpScale: public mpLayer
 
     /** Calculate a 'nice' label step size for the given dataset and desired pixel spacing. Label step
      * size are considered nice if they are 1, 2, 5 or 10 raised to an appropriate power of 10.
-     @param The scale of the axis, denoted in [pixels / data value]
-     @param The minimum wanted label spacing in pixels
+     @param scale The scale of the axis, denoted in [pixels / data value]
+     @param minLabelSpacing The minimum wanted label spacing in pixels
      @return The 'nice' step size for the interval
      */
     double GetStep(double scale, int minLabelSpacing);
+
+    /** Draw the name of the scale<br>
+     * This function is virtual and need to be overloaded in child class
+     * @param dc Current dc
+     * @param w Current window
+     * @param origin the origin of the axis
+     * @param labelSize the size of the label
+     */
     virtual void DrawScaleName(wxDC &dc, mpWindow &w, int origin, int labelSize) = 0;
 
     /** Formats a label value to a string
-     @param The value to be formated
-     @param Maximum absolute value of the visible axis
-     @param Step size of the axis ticks
+     @param value The value to be formated
+     @param maxAxisValue Maximum absolute value of the visible axis
+     @param step Step size of the axis ticks
      @return Label name
      */
     wxString FormatLabelValue(double value, double maxAxisValue, double step);
 
     /** Formats a value to a string used on a log axis
-     @param The value to be formated
+     @param n The value to be formated
      @return Label name for log axis
      */
     wxString FormatLogValue(double n);
 
     /** Get label text width for a given value
-     @param Data value
-     @param Current dc
-     @param Maximum absolute value of the visible axis
-     @param Step size of the axis ticks
+     @param value Data value
+     @param dc Current dc
+     @param maxAxisValue Maximum absolute value of the visible axis
+     @param step Step size of the axis ticks
      @return Label width
      */
     int GetLabelWidth(double value, wxDC &dc, double maxAxisValue, double step);
@@ -2485,14 +2499,14 @@ class WXDLLIMPEXP_MATHPLOT mpScale: public mpLayer
     bool UseScientific(double maxAxisValue);
 
     /** Get number of significant digits to be used in scientific notation
-     @param Step size of the axis ticks
-     @param Maximum absolute value of the visible axis
+     @param step Step size of the axis ticks
+     @param maxAxisValue Maximum absolute value of the visible axis
      @return Number of significant digits
      */
     int GetSignificantDigits(double step, double maxAxisValue);
 
     /** Get number of decimal digits to be used in decimal notation
-     @param Step size of the axis ticks
+     @param step Step size of the axis ticks
      @return Number of decimal digits
      */
     int GetDecimalDigits(double step);
@@ -2554,7 +2568,10 @@ class WXDLLIMPEXP_MATHPLOT mpScaleY: public mpScale
     /** Full constructor.
      @param name Label to plot by the ruler
      @param flags Set the position of the scale with respect to the window.
-     @param grids Show grid or not. Give false (default) for not drawing the grid*/
+     @param grids Show grid or not. Give false (default) for not drawing the grid
+     @param yAxisID optional yAxisID (default 0)
+     @param labelType optional type of the label (default mpLabel_AUTO) @see mpLabelType
+     */
     mpScaleY(const wxString &name = _T("Y"), int flags = mpALIGN_CENTERY, bool grids = false, mpOptional_uint yAxisID = MP_OPTNULL_INT, mpLabelType labelType = mpLabel_AUTO) :
         mpScale(name, flags, grids, labelType, yAxisID)
     {
@@ -2564,7 +2581,7 @@ class WXDLLIMPEXP_MATHPLOT mpScaleY: public mpScale
     }
 
     /** Recalculate the axis width based on the label and name text sizes
-    @param Current window used as canvas */
+    @param w Current window used as canvas */
     void UpdateAxisWidth(mpWindow &w);
 
     int GetAxisWidth()
@@ -2665,9 +2682,9 @@ typedef enum {
 
 /**
  * Define an event for when we delete a layer
- * @Param Sender the mpWindow
- * @Param classname the class name of the object we want to delete
- * @Param cancel if true, the deletion is canceled (default false)
+ * @param Sender the mpWindow
+ * @param classname the class name of the object we want to delete
+ * @param cancel if true, the deletion is canceled (default false)
  * Use like this :
  *  your_plot->SetOnDeleteLayer([this](void *Sender, const wxString &classname, bool &cancel)
  {  your_event_function(Sender, classname, cancel);});
@@ -3256,14 +3273,17 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     void ZoomOutX();
 
     /** Zoom in current view along Y around center and refresh display
-    @param Optional Y-axis ID used to specify which Y-axis to zoom */
+    @param yAxisID Optional Y-axis ID used to specify which Y-axis to zoom */
     void ZoomInY(mpOptional_int yAxisID = MP_OPTNULL_INT);
 
     /** Zoom out current view along Y around center and refresh display
-    @param Optional Y-axis ID used to specify which Y-axis to zoom */
+    @param yAxisID Optional Y-axis ID used to specify which Y-axis to zoom */
     void ZoomOutY(mpOptional_int yAxisID = MP_OPTNULL_INT);
 
-    /** Zoom view fitting given coordinates to the window (p0 and p1 do not need to be in any specific order) */
+    /** Zoom view fitting given coordinates to the window (p0 and p1 do not need to be in any specific order)
+     * @param p0 initial point
+     * @param p1 final point
+     */
     void ZoomRect(wxPoint p0, wxPoint p1);
 
     /** Refresh display */
@@ -3287,17 +3307,18 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      \return The number of profiles plotted.
      */
     unsigned int CountLayersType(mpLayerType type);
-    unsigned int CountLayersFXYPlot();
 
-    /** Draws the mpWindow on a page for printing
-     \param print the mpPrintout where to print the graph */
-    //void PrintGraph(mpPrintout *print);
+    /** Counts the number of XY plot layers.
+     \return The number of XY plot plotted.
+     */
+    unsigned int CountLayersFXYPlot();
 
     /** Update m_desired bounds. Store the min and max position of the visible data
      *  in the plot. Used primarily during frame resizing via OnSize so that the data
      *  stays in the same place when resizing the frame. Needs to be updated whenever
      *  m_posX, m_scaleX, m_posY or m_scaleY is updated.
      *  Check if there is some changes
+     *  @param update the axis to be updated
      */
     void UpdateDesiredBoundingBox(mpAxisUpdate update)
     {
@@ -3321,8 +3342,8 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 
     /**
      * Return a bounding box for an y-axis ID
-     * @param desired: if true return desired bound else return bound
-     * desired yAxisID: the y-axis ID (default 0)
+     * @param desired if true return desired bound else return bound
+     * @param yAxisID the y-axis ID (default 0)
      */
     mpFloatRectSimple GetBoundingBox(bool desired, unsigned int yAxisID = 0)
     {
@@ -3469,13 +3490,13 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      * Data must be formatted in 2 or more columns. First column is X value and others columns are Y values that represent several series.
      * Each columns are separated by space or ; or tab character.
      * Lines beginning with # are ignored (comment lines)
-     * @Param filename. Complete path name of the file. If empty, call wxFileDialog to select file with m_wildcard to filter files
+     * @param filename Complete path name of the file. If empty, call wxFileDialog to select file with m_wildcard to filter files
      */
     bool LoadFile(const wxString &filename = wxEmptyString);
 
     /**
      * Set the default directory for wxFileDialog
-     * @Param dirname the name of the directory
+     * @param dirname the name of the directory
      */
     void SetDefaultDir(const wxString &dirname)
     {
@@ -3625,12 +3646,12 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 
     /** Calculate width of all axes to the left of this axis. If y-axis ID is not specified,
      * calculate width of all left axes
-     @param index of this y-axis  */
+     @param yAxisID of this y-axis  */
     int GetLeftYAxesWidth(mpOptional_int yAxisID = MP_OPTNULL_INT);
 
     /** Calculate width of all axes to the right of this axis. If y-axis ID is not specified,
      * calculate width of all right axes
-     @param index of this y-axis */
+     @param yAxisID of this y-axis */
     int GetRightYAxesWidth(mpOptional_int yAxisID = MP_OPTNULL_INT);
 
     /** Set the draw of the box around the plot. */
@@ -3647,12 +3668,12 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 
     /** Check if a given point is inside the area of a visible Y-axis and returns its ID if so.
      @param point The position to be checked
-     @return If the point is inside a Y-Axis, returns its ID, otherwise -1 */
+     @return point If the point is inside a Y-Axis, returns its ID, otherwise -1 */
     mpOptional_int IsInsideYAxis(const wxPoint &point);
 
     /** Check if a given point is inside the area of a mpInfoLayer and eventually returns its pointer.
      @param point The position to be checked
-     @return If an info layer is found, returns its pointer, NULL otherwise */
+     @return point If an info layer is found, returns its pointer, NULL otherwise */
     mpInfoLayer* IsInsideInfoLayer(const wxPoint &point);
 
     /** Sets the visibility of a layer by its name.
@@ -3788,7 +3809,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 
     /**
      * Set the type of action for the left mouse button
-     * @param Left mouse button action
+     * @param action Left mouse button action
      */
     void SetMouseLeftDownAction(mpMouseButtonAction action)
     {
@@ -3819,20 +3840,20 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     virtual void OnPaint(wxPaintEvent &event);                    //!< Paint handler, will plot all attached layers
     virtual void OnSize(wxSizeEvent &event);                      //!< Size handler, will update scroll bar sizes
     virtual void OnShowPopupMenu(wxMouseEvent &event);            //!< Mouse handler, will show context menu
-    virtual void OnCenter(wxCommandEvent &event);                 //!< Context menu handler
-    virtual void OnFit(wxCommandEvent &event);                    //!< Context menu handler
-    virtual void OnToggleGrids(wxCommandEvent &event);            //!< Context menu handler
-    virtual void OnToggleCoords(wxCommandEvent &event);           //!< Context menu handler
-    virtual void OnScreenShot(wxCommandEvent &event);             //!< Context menu handler
-    virtual void OnFullScreen(wxCommandEvent &event);             //!< Context menu handler
+    virtual void OnCenter(wxCommandEvent &event);                 //!< Center handler
+    virtual void OnFit(wxCommandEvent &event);                    //!< Fit handler
+    virtual void OnToggleGrids(wxCommandEvent &event);            //!< Toggle Grids handler
+    virtual void OnToggleCoords(wxCommandEvent &event);           //!< Toggle Coords handler
+    virtual void OnScreenShot(wxCommandEvent &event);             //!< ScreenShot handler
+    virtual void OnFullScreen(wxCommandEvent &event);             //!< FullScreen handler
 #ifdef ENABLE_MP_CONFIG
-    virtual void OnConfiguration(wxCommandEvent &event);          //!< Context menu handler
+    virtual void OnConfiguration(wxCommandEvent &event);          //!< Configuration window handler
 #endif // ENABLE_MP_CONFIG
-    virtual void OnLoadFile(wxCommandEvent &event);               //!< Context menu handler
-    virtual void OnZoomIn(wxCommandEvent &event);                 //!< Context menu handler
-    virtual void OnZoomOut(wxCommandEvent &event);                //!< Context menu handler
-    virtual void OnLockAspect(wxCommandEvent &event);             //!< Context menu handler
-    virtual void OnMouseHelp(wxCommandEvent &event);              //!< Context menu handler
+    virtual void OnLoadFile(wxCommandEvent &event);               //!< Load File handler
+    virtual void OnZoomIn(wxCommandEvent &event);                 //!< Zoom In handler
+    virtual void OnZoomOut(wxCommandEvent &event);                //!< Zoom Out handler
+    virtual void OnLockAspect(wxCommandEvent &event);             //!< Lock Aspect handler
+    virtual void OnMouseHelp(wxCommandEvent &event);              //!< Help handler
     virtual void OnMouseLeftDown(wxMouseEvent &event);            //!< Mouse left click (for rect zoom)
     virtual void OnMouseRightDown(wxMouseEvent &event);           //!< Mouse handler, for detecting when the user drags with the right button or just "clicks" for the menu
     virtual void OnMouseMove(wxMouseEvent &event);                //!< Mouse handler for mouse motion (for pan)
@@ -3851,18 +3872,18 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     void DoScrollCalc(const int position, const int orientation);
 
     /** Zoom in or out X around a X position. Is the position is not set, it will zoom around center.
-     * @param Zoom in or zoom out boolean
-     * @param Optional center position
+     * @param zoomIn Zoom in or zoom out boolean
+     * @param staticXpixel Optional center position
      * */
     void DoZoomXCalc(bool zoomIn, wxCoord staticXpixel = ZOOM_AROUND_CENTER);
 
     /** Zoom in or out Y around a Y position. Is the position is not set, it will zoom around center.
      * An optional Y-axis ID can be passe to only zoom a specific Y-axis
-     * @param Zoom in or zoom out boolean
-     * @param Optional center position
-     * @param Optional Y-axis ID used to specify which Y-axis to zoom
+     * @param zoomIn Zoom in or zoom out boolean
+     * @param staticYpixel Optional center position
+     * @param yAxisID Optional Y-axis ID used to specify which Y-axis to zoom
      * */
-    void DoZoomYCalc(bool zoomIn, wxCoord staticYpixel = ZOOM_AROUND_CENTER, mpOptional_int = MP_OPTNULL_INT);
+    void DoZoomYCalc(bool zoomIn, wxCoord staticYpixel = ZOOM_AROUND_CENTER, mpOptional_int yAxisID = MP_OPTNULL_INT);
 
     /** Set the m_scaleX directly to fixed zoom level, but also adjust m_posX to to make
      * the zoom around center
@@ -3877,16 +3898,23 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      * */
     void SetScaleYAndCenter(double scaleY, int yAxisID);
 
+    /** zoom action
+     * @param zoomIn if true then zoom in else zoom out
+     * @param centerPoint the focus point on which we zoom
+     * */
     void Zoom(bool zoomIn, const wxPoint &centerPoint);
 
     /** Set bounding box 'm_bound' to contain all visible plots of this mpWindow.
      * \return true if there valid bounding box set in m_bounds. */
     virtual bool UpdateBBox();
 
+    /** Function to initialize all variables to their default values
+     * This function is called in mpWindow constructor and should not be used anymore
+     */
     void InitParameters();
 
-    wxTopLevelWindow* m_parent;
-    bool m_fullscreen;
+    wxTopLevelWindow* m_parent;  //!< Pointer to the top-level window containing the plot (used for fullscreen)
+    bool m_fullscreen;           //!< Boolean value indicating that we are in fullscreen mode (default false)
 
     mpLayerList m_layers;        //!< List of attached plot layers
     mpAxisData m_AxisDataX;      //!< Axis data for the X direction
@@ -3914,28 +3942,26 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     mpRect m_plotBoundariesMargin;      //!< The size of the plot with the margins. Calculated
     wxRect m_PlotArea;                  //!< The full size of the plot with m_extraMargin
 
-    bool m_repainting;
+    bool m_repainting;                  //!< Boolean value indicating that we are in repaint step
     int m_last_lx, m_last_ly;           //!< For double buffering
     wxBitmap* m_buff_bmp;               //!< For double buffering
     bool m_enableDoubleBuffer;          //!< For double buffering. Default enabled
     bool m_enableMouseNavigation;       //!< For pan/zoom with the mouse.
     mpMouseButtonAction m_mouseLeftDownAction;  //!< Type of action for left mouse button
-    bool m_mouseMovedAfterRightClick;
+    bool m_mouseMovedAfterRightClick;   //!< If the mouse does not move after a right click, then the context menu is displayed.
     wxPoint m_mouseRClick;              //!< For the right button "drag" feature
     wxPoint m_mouseLClick;              //!< Starting coords for rectangular zoom selection
     double m_mouseScaleX;               //!< Store current X-scale, used as reference during drag zooming
     std::unordered_map<int, double> m_mouseScaleYList;  //!< Store current Y-scales, used as reference during drag zooming
     mpOptional_int m_mouseYAxisID;      //!< Indicate which ID of Y-axis the mouse was on during zoom/pan
-    bool m_enableScrollBars;
-    int m_scrollX, m_scrollY;
+    bool m_enableScrollBars;            //!< Enable scrollbar in plot window (default false)
     mpInfoLayer* m_movingInfoLayer;     //!< For moving info layers over the window area
-    mpInfoCoords* m_InfoCoords;         //!< pointer to the optional info coords layer
-    mpInfoLegend* m_InfoLegend;         //!< pointer to the optional info legend layer
-    bool m_InInfoLegend;
+    mpInfoCoords* m_InfoCoords;         //!< Pointer to the optional info coords layer
+    mpInfoLegend* m_InfoLegend;         //!< Pointer to the optional info legend layer
+    bool m_InInfoLegend;                //!< Boolean value indicating that the mouse is moving over the legend area
 
     wxBitmap* m_zoom_bmp;               //!< For zoom selection
-    wxRect m_zoom_dim;
-    wxRect m_zoom_oldDim;
+    wxRect m_zoom_Dim;                  //!< Rectangular area selected for zoom
 
     bool m_magnetize;                   //!< For mouse magnetization
     mpMagnet m_magnet;                  //!< For mouse magnetization
@@ -4017,7 +4043,7 @@ class WXDLLIMPEXP_MATHPLOT mpText: public mpLayer
     mpText(const wxString &name, int offsetx, int offsety);
 
     /** @param name text to be displayed
-     @param location in the margin
+     @param marginLocation location in the margin
      */
     mpText(const wxString &name, mpLocation marginLocation);
 
@@ -4060,7 +4086,7 @@ class WXDLLIMPEXP_MATHPLOT mpText: public mpLayer
   protected:
     int m_offsetx;  //!< Holds offset for X in percentage
     int m_offsety;  //!< Holds offset for Y in percentage
-    mpLocation m_location;
+    mpLocation m_location;  //!< The location of the text @see mpLocation
 
     /** Text Layer plot handler.
      This implementation will plot text adjusted to the visible area. */
@@ -4493,6 +4519,10 @@ typedef enum __mp_Colour
 class WXDLLIMPEXP_MATHPLOT wxIndexColour: public wxColour
 {
   public:
+    /**
+     * Constructor
+     * @param id the index in the mpColour list. @see mpColour
+     */
     wxIndexColour(unsigned int id)
     {
       switch (id)

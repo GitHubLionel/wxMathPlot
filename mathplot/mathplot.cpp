@@ -3094,38 +3094,39 @@ void mpWindow::OnMouseMove(wxMouseEvent &event)
           {
             wxMemoryDC m_coord_dc(&dc);
             m_coord_dc.SelectObject(*m_zoom_bmp);
-            dc.Blit(m_zoom_oldDim.x, m_zoom_oldDim.y, m_zoom_oldDim.width, m_zoom_oldDim.height, &m_coord_dc, 0, 0);
+            dc.Blit(m_zoom_Dim.x, m_zoom_Dim.y, m_zoom_Dim.width, m_zoom_Dim.height, &m_coord_dc, 0, 0);
             m_coord_dc.SelectObject(wxNullBitmap);
             DeleteAndNull(m_zoom_bmp);
           }
 
           // Second : store new bitmap
-          m_zoom_dim = wxRect(m_mouseLClick, wxSize(moveVector.x, moveVector.y));
-          if ((m_zoom_dim.width != 0) && (m_zoom_dim.height != 0))
+          // Rectangular area selected for zoom
+          wxRect zoom_dim = wxRect(m_mouseLClick, wxSize(moveVector.x, moveVector.y));
+          if ((zoom_dim.width != 0) && (zoom_dim.height != 0))
           {
-            if (m_zoom_dim.width < 0)
+            if (zoom_dim.width < 0)
             {
-              m_zoom_dim.x += m_zoom_dim.width;
-              m_zoom_dim.width = abs(m_zoom_dim.width);
+              zoom_dim.x += zoom_dim.width;
+              zoom_dim.width = abs(zoom_dim.width);
             }
-            if (m_zoom_dim.height < 0)
+            if (zoom_dim.height < 0)
             {
-              m_zoom_dim.y += m_zoom_dim.height;
-              m_zoom_dim.height = abs(m_zoom_dim.height);
+              zoom_dim.y += zoom_dim.height;
+              zoom_dim.height = abs(zoom_dim.height);
             }
 
-            m_zoom_bmp = new wxBitmap(m_zoom_dim.width, m_zoom_dim.height, dc);
+            m_zoom_bmp = new wxBitmap(zoom_dim.width, zoom_dim.height, dc);
             wxMemoryDC m_coord_dc(&dc);
             m_coord_dc.SelectObject(*m_zoom_bmp);
-            m_coord_dc.Blit(0, 0, m_zoom_dim.width, m_zoom_dim.height, &dc, m_zoom_dim.x, m_zoom_dim.y);
+            m_coord_dc.Blit(0, 0, zoom_dim.width, zoom_dim.height, &dc, zoom_dim.x, zoom_dim.y);
             m_coord_dc.SelectObject(wxNullBitmap);
-            m_zoom_oldDim = m_zoom_dim;
+            m_zoom_Dim = zoom_dim;
 
             // Draw the rectangle that focus the selected region
             wxPen pen(*wxBLACK, 1, wxPENSTYLE_DOT);
             dc.SetPen(pen);
             dc.SetBrush(*wxTRANSPARENT_BRUSH);
-            dc.DrawRectangle(m_zoom_dim);
+            dc.DrawRectangle(zoom_dim);
           }
         }
         else if (m_mouseLeftDownAction == mpMouseDragZoom)
@@ -3295,7 +3296,7 @@ void mpWindow::OnMouseLeave(wxMouseEvent &event)
   {
     wxMemoryDC m_coord_dc(&dc);
     m_coord_dc.SelectObject(*m_zoom_bmp);
-    dc.Blit(m_zoom_oldDim.x, m_zoom_oldDim.y, m_zoom_oldDim.width, m_zoom_oldDim.height, &m_coord_dc, 0, 0);
+    dc.Blit(m_zoom_Dim.x, m_zoom_Dim.y, m_zoom_Dim.width, m_zoom_Dim.height, &m_coord_dc, 0, 0);
     m_coord_dc.SelectObject(wxNullBitmap);
     DeleteAndNull(m_zoom_bmp);
   }

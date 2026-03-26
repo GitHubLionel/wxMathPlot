@@ -72,6 +72,15 @@ typedef enum __ConfigPageIndex
   mpcpiLines
 } mpConfigPageId;
 
+/**
+ * Dialog box for configuring the plot's layer objects
+ * In this dialog, you can configure:
+ * - mpTitle layer (the title of the plot)
+ * - mpInfoCoords layer (mouse coordinate tracking)
+ * - mpInfoLegend layer (the legend of all plots)
+ * - mpScale layer (X and Y axis)
+ * - mpFunction layer (All plotting functions: mpFX, mpFY, mpFXY, mpHorizontalLine, mpVerticalLine)
+ */
 class MathPlotConfigDialog: public wxDialog
 {
   public:
@@ -79,10 +88,31 @@ class MathPlotConfigDialog: public wxDialog
     MathPlotConfigDialog(wxWindow *parent, wxWindowID id = -1);
     virtual ~MathPlotConfigDialog();
 
+    /**
+     * Initialize the dialog box by retrieving the layer properties.
+     * @param id the page to be open in the dialog window (default first page)
+     */
     void Initialize(mpConfigPageId id = mpcpiNone);
+
+    /**
+     * Select the series by number
+     * @param serie the number of the series in the list
+     */
     void SelectChoiceSerie(unsigned int serie);
+
+    /**
+     * Create a file to store the properties of mpTitle, mpInfoCoords and mpInfoLegend layers
+     * @param filename the name of the configuration file
+     * @param path the path for the file (if empty, the directory of the program is used)
+     * @param apply if true then load and apply the settings immediately.
+     */
     void CreateSettingsFile(const wxString& filename, const wxString& path = wxEmptyString, bool apply = false);
+
+    /**
+     * Apply the settings loaded in the configuration file
+     */
     void ApplySettings(void);
+
     /**
      * Give access to m_settings if we want to save some others parameters
      */
