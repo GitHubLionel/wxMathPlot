@@ -3,6 +3,7 @@
  * Purpose:   Defines Application Frame
  * Author:    Lionel ()
  * Created:   2021-01-24
+ * Last edit: 2026-03-27
  * Copyright: Lionel ()
  * License:
  **************************************************************/
@@ -48,14 +49,41 @@ class WXDLLIMPEXP_MATHPLOT mpText;
 class MathPlotConfigSettings : public wxFileConfig
 {
   public:
+    /**
+     * Manages the backup of configuration window data
+     * @param localFilename the name of the file in which the data would be saved
+     */
     MathPlotConfigSettings(const wxString& localFilename) :
         wxFileConfig(wxEmptyString, wxEmptyString, localFilename) {}
     virtual ~MathPlotConfigSettings() {}
 
+    /**
+     * Set the settings to the plot window
+     * @param win the plot window handler
+     */
     void SetSettings(wxWindow* win);
+
+    /**
+     * Get the settings from the plot window
+     * @param win the plot window handler
+     */
     void GetSettings(wxWindow* win);
+
   protected:
+    /**
+     * Get/set the position of the config window in the screen
+     * @param set : set if true else get
+     * @param win : the config window
+     */
     void DoPosition(bool set, wxWindow *win);
+
+    /**
+     * Search recursively all the widgets then get/set parameters
+     * @param set : set if true else get
+     * @param win : the window (container)
+     * @param path : the complete path (created with the name (class) of each window) to reach the window
+     * @param level : the depth in the window (container) hierarchy
+     */
     void DoRecursiveSearch(bool set, wxWindow *win, const wxString &path = wxEmptyString, int level = 0);
 };
 
@@ -85,6 +113,11 @@ class MathPlotConfigDialog: public wxDialog
 {
   public:
 
+    /**
+     * Create a dialog window to configure the plot's layer objects
+     * @param parent the handle of the plot window
+     * @param id an ID for the dialog window (default -1)
+     */
     MathPlotConfigDialog(wxWindow *parent, wxWindowID id = -1);
     virtual ~MathPlotConfigDialog();
 

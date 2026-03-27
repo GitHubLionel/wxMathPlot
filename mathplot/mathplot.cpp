@@ -6,7 +6,7 @@
 // Contributors:    Jose Luis Blanco, Val Greene, Lionel Reynaud, Dave Nadler, MortenMacFly,
 //                  Oskar Waldemarsson (for multi Y axis and corrections)
 // Created:         21/07/2003
-// Last edit:       07/02/2026
+// Last edit:       27/03/2026
 // Copyright:       (c) David Schalig, Davide Rondini
 // Licence:         wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -1425,7 +1425,6 @@ mpFXY::mpFXY(const wxString &name, int flags, bool viewAsBar, unsigned int yAxis
 {
   m_subtype = mpfFXY;
   m_flags = flags;
-  maxDrawX = minDrawX = maxDrawY = minDrawY = 0;
   m_deltaX = m_deltaY = 1e+308; // Big number
   SetViewMode(viewAsBar);
 }
@@ -1443,14 +1442,8 @@ void mpFXY::SetViewMode(bool asBar)
 void mpFXY::UpdateViewBoundary(wxCoord xnew, wxCoord ynew)
 {
   // Keep track of how many points have been drawn into the bounding box
-  if (xnew > maxDrawX)
-    maxDrawX = xnew;
-  else if (xnew < minDrawX)
-    minDrawX = xnew;
-  if (ynew > maxDrawY)
-    maxDrawY = ynew;
-  else if (ynew < minDrawY)
-    minDrawY = ynew;
+  m_drawX.Update(xnew);
+  m_drawY.Update(ynew);
 }
 
 bool mpFXY::DoGetNextXY(double *x, double *y)
@@ -1470,8 +1463,9 @@ void mpFXY::DoPlot(wxDC &dc, mpWindow &w)
   Rewind();
   // Get first point
   DoGetNextXY(&x, &y);
-  maxDrawX = minDrawX = w.x2p(x);
-  maxDrawY = minDrawY = w.y2p(y, m_yAxisID);
+
+  m_drawX.Set(w.x2p(x));
+  m_drawY.Set(w.y2p(y, m_yAxisID));
 
   wxCoord ix = 0, iy = 0;
   wxCoord ixlast = 0, iylast = 0;
@@ -1573,8 +1567,8 @@ void mpFXY::DoPlot(wxDC &dc, mpWindow &w)
   if (m_showName && !m_name.IsEmpty())
   {
     // Test if series is always visible, if no don't show name
-    if ((minDrawX < m_plotBoundaries.top) && (maxDrawX > m_plotBoundaries.left) &&
-        (minDrawY < m_plotBoundaries.bottom) && (maxDrawY > m_plotBoundaries.right))
+    if ((m_drawX.min < m_plotBoundaries.top) && (m_drawX.max > m_plotBoundaries.left) &&
+        (m_drawY.min < m_plotBoundaries.bottom) && (m_drawY.max > m_plotBoundaries.right))
     {
       wxCoord tx, ty, tw, th;
       dc.GetTextExtent(m_name, &tw, &th);
@@ -1583,26 +1577,26 @@ void mpFXY::DoPlot(wxDC &dc, mpWindow &w)
       {
         case mpALIGN_SE:
         {
-          tx = minDrawX + 8;
-          ty = maxDrawY + 8;
+          tx = m_drawX.min + 8;
+          ty = m_drawY.max + 8;
           break;
         }
         case mpALIGN_SW:
         {
-          tx = maxDrawX - tw - 8;
-          ty = maxDrawY + 8;
+          tx = m_drawX.max - tw - 8;
+          ty = m_drawY.max + 8;
           break;
         }
         case mpALIGN_NW:
         {
-          tx = maxDrawX - tw - 8;
-          ty = minDrawY - th - 8;
+          tx = m_drawX.max - tw - 8;
+          ty = m_drawY.min - th - 8;
           break;
         }
         default:
         { // mpALIGN_NE
-          tx = minDrawX + 8;
-          ty = minDrawY + th;
+          tx = m_drawX.min + 8;
+          ty = m_drawY.min + th;
         }
       }
 
@@ -1634,10 +1628,8 @@ mpFXYVector::mpFXYVector(const wxString &name, int flags, bool viewAsBar, unsign
 {
   m_subtype = mpfFXYVector;
   m_index = 0;
-  m_minX = -1;
-  m_maxX = 1;
-  m_minY = -1;
-  m_maxY = 1;
+  m_rangeX.Set(-1, 1);
+  m_rangeY.Set(-1, 1);
   m_xs.clear();
   m_ys.clear();
   SetReserve(1000);
@@ -1719,30 +1711,28 @@ void mpFXYVector::Clear()
   m_xs.clear();
   m_ys.clear();
   // Default min max
-  m_minX = -1;
-  m_maxX = 1;
-  m_minY = -1;
-  m_maxY = 1;
+  m_rangeX.Set(-1, 1);
+  m_rangeY.Set(-1, 1);
   m_deltaX = m_deltaY = 1e+308; // Big number
   Rewind();
 }
 
 void mpFXYVector::First_Point(double x, double y)
 {
-  m_minX = m_maxX = x;
+  m_rangeX.Set(x);
   m_lastX = x;
   m_deltaX = 1e+308; // Big number
-  m_minY = m_maxY = y;
+
+  m_rangeY.Set(y);
   m_lastY = y;
   m_deltaY = 1e+308; // Big number
 }
 
-void mpFXYVector::Check_Limit(double val, double *min, double *max, double *last, double *delta)
+void mpFXYVector::Check_Limit(double val, mpRange<double> *range, double *last, double *delta)
 {
   *delta = std::min(*delta, abs(val - *last));
   *last = val;
-  *min = std::min(*min, val);
-  *max = std::max(*max, val);
+  range->Update(val);
 }
 
 void mpFXYVector::SetData(const std::vector<double> &xs, const std::vector<double> &ys)
@@ -1769,7 +1759,7 @@ void mpFXYVector::SetData(const std::vector<double> &xs, const std::vector<doubl
     it++;
     for (; it != xs.end(); it++)
     {
-      Check_Limit((double)(*it), &m_minX, &m_maxX, &m_lastX, &m_deltaX);
+      Check_Limit((double)(*it), &m_rangeX, &m_lastX, &m_deltaX);
     }
 
     // Y scale
@@ -1777,7 +1767,7 @@ void mpFXYVector::SetData(const std::vector<double> &xs, const std::vector<doubl
     it++;
     for (; it != ys.end(); it++)
     {
-      Check_Limit((double)(*it), &m_minY, &m_maxY, &m_lastY, &m_deltaY);
+      Check_Limit((double)(*it), &m_rangeY, &m_lastY, &m_deltaY);
     }
     Rewind();
   }
@@ -1806,16 +1796,16 @@ bool mpFXYVector::AddData(const double x, const double y, bool updatePlot)
   else
   {
     // X scale
-    Check_Limit(x, &m_minX, &m_maxX, &m_lastX, &m_deltaX);
+    Check_Limit(x, &m_rangeX, &m_lastX, &m_deltaX);
 
     // Y scale
-    Check_Limit(y, &m_minY, &m_maxY, &m_lastY, &m_deltaY);
+    Check_Limit(y, &m_rangeY, &m_lastY, &m_deltaY);
   }
 
   if (m_win)
   {
-    mpRange bboxX;
-    mpRange bboxY;
+    mpRange<double> bboxX;
+    mpRange<double> bboxY;
     if (m_win->GetBoundingBox(&bboxX, &bboxY, m_yAxisID))
     {
       new_limit = (GetMinX() < bboxX.min) || (GetMaxX() > bboxX.max) || (GetMinY() < bboxY.min) || (GetMaxY() > bboxY.max);
@@ -2177,8 +2167,7 @@ mpScale::mpScale(const wxString &name, int flags, bool grids, mpLabelType labelT
   m_ticks = true;
   m_grids = grids;
   m_auto = true;
-  m_min = -1;
-  m_max = 1;
+  m_axisRange.Set(-1, 1);
   m_labelType = labelType;
   m_timeConv = mpX_RAWTIME;
   m_labelFormat = _T("");
@@ -3319,7 +3308,7 @@ void mpWindow::Fit()
 /**
  * Here rangeY is a vector and he is exactly ordered like Range in m_AxisDataYList
  */
-void mpWindow::Fit(const mpRange &rangeX, std::unordered_map<int, mpRange> rangeY, wxCoord *printSizeX, wxCoord *printSizeY)
+void mpWindow::Fit(const mpRange<double> &rangeX, std::unordered_map<int, mpRange<double>> rangeY, wxCoord *printSizeX, wxCoord *printSizeY)
 { // JL
   bool weArePrinting = printSizeX != NULL && printSizeY != NULL;
   if (m_magnetize)
@@ -3406,7 +3395,7 @@ void mpWindow::Fit(const mpRange &rangeX, std::unordered_map<int, mpRange> range
 
 void mpWindow::FitX(void)
 {
-  mpRange bound = GetBoundX();
+  mpRange<double> bound = GetBoundX();
   double Ax = bound.Length();
   m_AxisDataX.scale = ISNOTNULL(Ax) ? m_plotWidth / Ax : 1;
 
@@ -3420,7 +3409,7 @@ void mpWindow::FitY(int yAxisID)
 {
   if (m_AxisDataYList.count(yAxisID) != 0)
   {
-    mpRange bound = GetBoundY(yAxisID);
+    mpRange<double> bound = GetBoundY(yAxisID);
     double Ay = bound.Length();
     m_AxisDataYList[yAxisID].scale = ISNOTNULL(Ay) ? m_plotHeight / Ay : 1;
 
@@ -3579,16 +3568,16 @@ void mpWindow::ZoomRect(wxPoint p0, wxPoint p1)
   double p1x = p2x(p1.x);
 
   // Order them:
-  mpRange zoomX;
+  mpRange<double> zoomX;
   zoomX.Assign(p0x, p1x);
 
   // Same for all Y-axes
-  std::unordered_map<int, mpRange> zoomY;
+  std::unordered_map<int, mpRange<double>> zoomY;
   for (const MP_LOOP_ITER : m_AxisDataYList)
   {
     double p0y = p2y(p0.y, m_yID);
     double p1y = p2y(p1.y, m_yID);
-    zoomY[m_yID] = mpRange(std::min(p0y, p1y), std::max(p0y, p1y));
+    zoomY[m_yID] = mpRange<double>(std::min(p0y, p1y), std::max(p0y, p1y));
   }
 
 #ifdef MATHPLOT_DO_LOGGING
@@ -4161,7 +4150,7 @@ bool mpWindow::UpdateBBox()
 #endif // MATHPLOT_DO_LOGGING
 
   int function;
-  mpRange bound;
+  mpRange<double> bound;
 
   // X axis
   // Take care of scale : restrict bound
@@ -4233,7 +4222,7 @@ bool mpWindow::UpdateBBox()
           if (function == mpfFX)
           {
             mpFX* fx = (mpFX*)(f);
-            mpRange boundFx;
+            mpRange<double> boundFx;
             boundFx.Assign(fx->GetY(m_AxisDataX.bound.min), fx->GetY(m_AxisDataX.bound.max));
             bound.Update(boundFx);
           }
@@ -4886,8 +4875,8 @@ wxBitmap* mpWindow::BitmapScreenshot(wxSize imageSize, bool fit)
   int sizeX, sizeY;
   int bk_scrX = m_scrX;
   int bk_scrY = m_scrY;
-  mpRange bk_m_desiredx = m_AxisDataX.desired;
-  std::unordered_map<int, mpRange> bk_m_desiredy = GetAllDesiredY();
+  mpRange<double> bk_m_desiredx = m_AxisDataX.desired;
+  std::unordered_map<int, mpRange<double>> bk_m_desiredy = GetAllDesiredY();
   wxMemoryDC m_Screenshot_dc;
 
   if (imageSize == wxDefaultSize)
@@ -5120,7 +5109,7 @@ mpText::mpText(const wxString &name, int offsetx, int offsety) :
 }
 
 /** @param name text to be displayed
- @param location in the margin
+ @param marginLocation in the margin
  */
 mpText::mpText(const wxString &name, mpLocation marginLocation) :
     mpText(name)
@@ -5341,26 +5330,15 @@ void mpMovableObject::ShapeUpdated()
     std::vector<double>::iterator itXi, itXo;
     std::vector<double>::iterator itYi, itYo;
 
-    m_bbox_min_x = 1e300;
-    m_bbox_max_x = -1e300;
-    m_bbox_min_y = 1e300;
-    m_bbox_max_y = -1e300;
-
+    // Update the bounding box
     for (itXo = m_trans_shape_xs.begin(), itYo = m_trans_shape_ys.begin(), itXi = m_shape_xs.begin(), itYi = m_shape_ys.begin();
         itXo != m_trans_shape_xs.end(); itXo++, itYo++, itXi++, itYi++)
     {
       *itXo = m_reference_x + ccos * (*itXi) - csin * (*itYi);
       *itYo = m_reference_y + csin * (*itXi) + ccos * (*itYi);
 
-      // Keep BBox:
-      if (*itXo < m_bbox_min_x)
-        m_bbox_min_x = *itXo;
-      if (*itXo > m_bbox_max_x)
-        m_bbox_max_x = *itXo;
-      if (*itYo < m_bbox_min_y)
-        m_bbox_min_y = *itYo;
-      if (*itYo > m_bbox_max_y)
-        m_bbox_max_y = *itYo;
+      m_bbox_x.Update(*itXo);
+      m_bbox_y.Update(*itYo);
     }
   }
 }
@@ -5429,8 +5407,8 @@ void mpMovableObject::DoPlot(wxDC &dc, mpWindow &w)
 
     if (HasBBox())
     {
-      wxCoord sx = (wxCoord)((m_bbox_max_x - w.GetPosX()) * w.GetScaleX());
-      wxCoord sy = (wxCoord)((w.GetPosY(m_yAxisID) - m_bbox_max_y) * w.GetScaleY(m_yAxisID));
+      wxCoord sx = (wxCoord)((m_bbox_x.max - w.GetPosX()) * w.GetScaleX());
+      wxCoord sy = (wxCoord)((w.GetPosY(m_yAxisID) - m_bbox_y.max) * w.GetScaleY(m_yAxisID));
 
       tx = sx - tx - 8;
       ty = sy - 8 - ty;
@@ -5636,10 +5614,8 @@ void mpBitmapLayer::SetBitmap(const wxImage &inBmp, double x, double y, double l
   {
     m_bitmap = inBmp; //.GetSubBitmap( wxRect(0, 0, inBmp.GetWidth(), inBmp.GetHeight()));
     m_scaledBitmap = wxBitmap(wxBitmap(m_bitmap)); // Needed for Linux
-    m_min_x = x;
-    m_min_y = y;
-    m_max_x = x + lx;
-    m_max_y = y + ly;
+    m_bitmapX.Set(x, x + lx);
+    m_bitmapY.Set(y, y + ly);
     m_validImg = true;
     m_bitmapChanged = true;
   }
@@ -5668,10 +5644,10 @@ void mpBitmapLayer::DoPlot(wxDC &dc, mpWindow &w)
    */
 
   // 1st step -------------------------------
-  wxCoord x0 = w.x2p(m_min_x);
-  wxCoord y0 = w.y2p(m_max_y, 0);  // Use 1st y-axis
-  wxCoord x1 = w.x2p(m_max_x);
-  wxCoord y1 = w.y2p(m_min_y, 0);  // Use 1st y-axis
+  wxCoord x0 = w.x2p(m_bitmapX.min);
+  wxCoord y0 = w.y2p(m_bitmapY.max, 0);  // Use 1st y-axis
+  wxCoord x1 = w.x2p(m_bitmapX.max);
+  wxCoord y1 = w.y2p(m_bitmapY.min, 0);  // Use 1st y-axis
 
   // 2nd step -------------------------------
   // Precompute the size of the actual bitmap pixel on the screen (e.g. will be >1 if zoomed in)
@@ -5743,8 +5719,8 @@ void mpBitmapLayer::DoPlot(wxDC &dc, mpWindow &w)
 
     if (HasBBox())
     {
-      wxCoord sx = (wxCoord)((m_max_x - w.GetPosX()) * w.GetScaleX());
-      wxCoord sy = (wxCoord)((w.GetPosY(0) - m_max_y) * w.GetScaleY(0));
+      wxCoord sx = (wxCoord)((m_bitmapX.max - w.GetPosX()) * w.GetScaleX());
+      wxCoord sy = (wxCoord)((w.GetPosY(0) - m_bitmapY.max) * w.GetScaleY(0));
 
       tx = sx - tx - 8;
       ty = sy - 8 - ty;

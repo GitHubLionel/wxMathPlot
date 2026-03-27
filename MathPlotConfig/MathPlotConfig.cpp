@@ -3,6 +3,7 @@
  * Purpose:   Code for Application Frame
  * Author:    Lionel ()
  * Created:   2021-01-24
+ * Last edit: 2026-03-27
  * Copyright: Lionel ()
  * License:
  **************************************************************/
@@ -56,11 +57,6 @@ void MathPlotConfigSettings::GetSettings(wxWindow* win)
     DoRecursiveSearch(false, win);
 }
 
-/**
- * Get/set the position of the config window in the screen
- * @param set : set if true else get
- * @param win : the config window
- */
 void MathPlotConfigSettings::DoPosition(bool set, wxWindow* win)
 {
   SetPath(_T("/Position"));
@@ -78,13 +74,6 @@ void MathPlotConfigSettings::DoPosition(bool set, wxWindow* win)
   }
 }
 
-/**
- * Search recursively all the widgets then get/set parameters
- * @param set : set if true else get
- * @param win : the window (container)
- * @param path : the complete path (created with the name (class) of each window) to reach the window
- * @param level : the depth in the window (container) hierarchy
- */
 void MathPlotConfigSettings::DoRecursiveSearch(bool set, wxWindow* win, const wxString& path, int level)
 {
   // We save only General (panel 1) and Legend (panel 2)
@@ -1279,7 +1268,7 @@ void MathPlotConfigDialog::UpdateAxis(void)
   bFontAxis->Enable();
 
   // Scale
-  mpRange BoundScale;
+  mpRange<double> BoundScale;
   cbAutoScale->SetValue(CurrentScale->GetAuto());
   edScaleMin->Enable(!CurrentScale->GetAuto());
   edScaleMax->Enable(!CurrentScale->GetAuto());
@@ -1709,8 +1698,8 @@ void MathPlotConfigDialog::Apply(int pageIndex, bool updateFont)
 
         if (!CurrentScale->GetAuto())
         {
-          mpRange BoundScaleX = m_plot->GetBoundX();
-          std::unordered_map<int, mpRange> BoundScaleY = m_plot->GetAllBoundY();
+          mpRange<double> BoundScaleX = m_plot->GetBoundX();
+          std::unordered_map<int, mpRange<double>> BoundScaleY = m_plot->GetAllBoundY();
 
           if (classname.IsSameAs(_T("mpScaleX"))) // X axis
           {
