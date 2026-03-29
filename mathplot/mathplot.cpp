@@ -798,89 +798,86 @@ void mpInfoLegend::UpdateBitmap(wxDC &dc, mpWindow &w)
     mpLayer* ly = w.GetLayer(p);
     if (ly->GetLayerType() == mpLAYER_PLOT)
     {
-      int labelWidth = 0, labelHeight = 0;
-      wxString label = ly->GetName();
-      wxPen lpen = ly->GetPen(); // for legend line, use exact pen set for this plot layer (including width)
-      buff_dc.SetPen(lpen);
-      buff_dc.SetBrush(ly->GetBrush());
-      wxFont lfont = GetFont(); // use font of InfoLegend
-      // If series is not visible, we strike his name
-      if (!ly->IsVisible())
-        lfont.MakeStrikethrough();
-      buff_dc.SetFont(lfont);
-      buff_dc.GetTextExtent(label, &labelWidth, &labelHeight);
-
-      if (first)
-      {
-        posX = MARGIN_LEGEND;
-        posY = MARGIN_LEGEND + (labelHeight / 2);
-        // Since labelHeight is constant (all label layers use same legend font), we can initialise height of the legend bitmap
-        height = posY + labelHeight;
-        first = false;
-      }
-
-      // Draw the decoration
-      switch (m_item_mode)
-      {
-        case mpLegendSquare:
+      if (ly->IsVisible())
         {
-          wxBrush sqrBrush(*wxWHITE, wxBRUSHSTYLE_SOLID);
-          sqrBrush.SetColour(lpen.GetColour());
-          buff_dc.SetBrush(sqrBrush);
-          buff_dc.DrawRectangle(posX, posY - (LEGEND_LINEWIDTH / 2) + 1,
-          LEGEND_LINEWIDTH, LEGEND_LINEWIDTH);
-          break;
+        int labelWidth = 0, labelHeight = 0;
+        wxString label = ly->GetName();
+        wxPen lpen = ly->GetPen(); // for legend line, use exact pen set for this plot layer (including width)
+        buff_dc.SetPen(lpen);
+        buff_dc.SetBrush(ly->GetBrush());
+        buff_dc.GetTextExtent(label, &labelWidth, &labelHeight);
+
+        if (first)
+        {
+          posX = MARGIN_LEGEND;
+          posY = MARGIN_LEGEND + (labelHeight / 2);
+          // Since labelHeight is constant (all label layers use same legend font), we can initialise height of the legend bitmap
+          height = posY + labelHeight;
+          first = false;
         }
 
-        case mpLegendSymbol:
+        // Draw the decoration
+        switch (m_item_mode)
         {
-          mpFunction* pFunctionLayer = dynamic_cast<mpFunction*>(ly); // for mpFunction-subclass-specific processing
-          bool drewSymbol = false;
-          // Draw optional symbol for those layer types where appropriate
-          if (pFunctionLayer)
+          case mpLegendSquare:
           {
-            if (dynamic_cast<mpChart*>(pFunctionLayer) == 0)
-            { // doesn't make sense to use symbols for bar or pie chart
-              drewSymbol = pFunctionLayer->DrawSymbol(buff_dc, posX + LEGEND_LINEWIDTH / 2, posY + 1); // Would be nicer if keyed on symbol size
+            wxBrush sqrBrush(*wxWHITE, wxBRUSHSTYLE_SOLID);
+            sqrBrush.SetColour(lpen.GetColour());
+            buff_dc.SetBrush(sqrBrush);
+            buff_dc.DrawRectangle(posX, posY - (LEGEND_LINEWIDTH / 2) + 1,
+            LEGEND_LINEWIDTH, LEGEND_LINEWIDTH);
+            break;
+          }
+
+          case mpLegendSymbol:
+          {
+            mpFunction* pFunctionLayer = dynamic_cast<mpFunction*>(ly); // for mpFunction-subclass-specific processing
+            bool drewSymbol = false;
+            // Draw optional symbol for those layer types where appropriate
+            if (pFunctionLayer)
+            {
+              if (dynamic_cast<mpChart*>(pFunctionLayer) == 0)
+              { // doesn't make sense to use symbols for bar or pie chart
+                drewSymbol = pFunctionLayer->DrawSymbol(buff_dc, posX + LEGEND_LINEWIDTH / 2, posY + 1); // Would be nicer if keyed on symbol size
+              }
             }
+            // draw line
+            if (!drewSymbol || (pFunctionLayer && pFunctionLayer->GetContinuity()))
+            {
+              buff_dc.DrawLine(posX, posY + 1, posX + LEGEND_LINEWIDTH, posY + 1);
+            }
+            break;
           }
-          // draw line
-          if (!drewSymbol || (pFunctionLayer && pFunctionLayer->GetContinuity()))
-          {
+
+          default: // mpLegendLine or unknown
             buff_dc.DrawLine(posX, posY + 1, posX + LEGEND_LINEWIDTH, posY + 1);
-          }
-          break;
         }
 
-        default: // mpLegendLine or unknown
-          buff_dc.DrawLine(posX, posY + 1, posX + LEGEND_LINEWIDTH, posY + 1);
+        // Draw the name of the function after the decoration
+        posX += LEGEND_LINEWIDTH + MARGIN_LEGEND;
+        buff_dc.DrawText(label, posX, posY - (labelHeight / 2));
+
+        posX += labelWidth + 2 * MARGIN_LEGEND;
+
+        // Adjust the full size of the Legend and store the end (bottom or right) of this legend component
+        LegendDetail ld;
+        if (m_item_direction == mpVertical)
+        {
+          width = std::max(width, posX);
+          posX = MARGIN_LEGEND;
+          posY += labelHeight;
+          height = ld.legendEnd = posY;
+          posY += 2 * MARGIN_LEGEND;
+        }
+        else
+        {
+          width = ld.legendEnd = posX;
+        }
+        ld.layerIdx = layerIdx;
+        m_LegendDetailList.push_back(ld);
       }
 
-      // Draw the name of the function after the decoration
-      posX += LEGEND_LINEWIDTH + MARGIN_LEGEND;
-      buff_dc.DrawText(label, posX, posY - (labelHeight / 2));
-
-      posX += labelWidth + 2 * MARGIN_LEGEND;
-
-      // Adjust the full size of the Legend and store the end (bottom or right) of this legend component
-      LegendDetail ld;
-      if (m_item_direction == mpVertical)
-      {
-        width = std::max(width, posX);
-        posX = MARGIN_LEGEND;
-        posY += labelHeight;
-        height = ld.legendEnd = posY;
-        posY += 2 * MARGIN_LEGEND;
-      }
-      else
-      {
-        width = ld.legendEnd = posX;
-      }
-      ld.layerIdx = layerIdx;
-      m_LegendDetailList.push_back(ld);
-
-      // Count the series in InfoLegend
-      layerIdx++;
+      layerIdx++; // Count the visible series in InfoLegend
     }
   }
 
