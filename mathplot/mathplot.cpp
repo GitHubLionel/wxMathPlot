@@ -5097,10 +5097,6 @@ void mpWindow::DeleteConfigWindow(void)
 
 wxIMPLEMENT_DYNAMIC_CLASS(mpText, mpLayer);
 
-/** @param name text to be displayed
- @param offsetx x position in percentage (0-100)
- @param offsetx y position in percentage (0-100)
- */
 mpText::mpText(const wxString &name, int offsetx, int offsety) :
     mpText(name)
 {
@@ -5115,9 +5111,6 @@ mpText::mpText(const wxString &name, int offsetx, int offsety) :
     m_offsety = 50;
 }
 
-/** @param name text to be displayed
- @param marginLocation in the margin
- */
 mpText::mpText(const wxString &name, mpLocation marginLocation) :
     mpText(name)
 {
