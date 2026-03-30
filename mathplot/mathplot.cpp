@@ -790,21 +790,25 @@ void mpInfoLegend::UpdateBitmap(wxDC &dc, mpWindow &w)
   int width = 0, height = 0; // accumulated dimensions of complete legend
   bool first = true;
 
-  // Get series name and create new bitmap legend
+  // Get plot series names and create new bitmap legend
   m_LegendDetailList.clear();
   unsigned int layerIdx = 0;
   for (unsigned int p = 0; p < w.CountAllLayers(); p++)
   {
     mpLayer* ly = w.GetLayer(p);
-    if ((ly->GetLayerType() == mpLAYER_PLOT) && (((mpFunction*)ly)->GetLegendVisibility()))
+    if ((ly->GetLayerType() == mpLAYER_PLOT) &&
+        (ly->IsVisible() || (((mpFunction*)ly)->GetLegendIsAlwaysVisible()))  )
     {
-      if (ly->IsVisible())
-        {
         int labelWidth = 0, labelHeight = 0;
         wxString label = ly->GetName();
         wxPen lpen = ly->GetPen(); // for legend line, use exact pen set for this plot layer (including width)
         buff_dc.SetPen(lpen);
         buff_dc.SetBrush(ly->GetBrush());
+        wxFont lfont = GetFont(); // use font of InfoLegend
+        // If series is not visible AND legend is marked "Always Visible", we strike his name
+        if (!ly->IsVisible() && (((mpFunction*)ly)->GetLegendIsAlwaysVisible()))
+          lfont.MakeStrikethrough();
+        buff_dc.SetFont(lfont);
         buff_dc.GetTextExtent(label, &labelWidth, &labelHeight);
 
         if (first)
@@ -875,9 +879,9 @@ void mpInfoLegend::UpdateBitmap(wxDC &dc, mpWindow &w)
         }
         ld.layerIdx = layerIdx;
         m_LegendDetailList.push_back(ld);
-      }
 
-      layerIdx++; // Count the visible series in InfoLegend
+      // Count the series in InfoLegend
+      layerIdx++;
     }
   }
 
@@ -977,7 +981,7 @@ mpFunction::mpFunction(mpLayerType layerType /*=mpLAYER_PLOT*/, const wxString &
   m_continuous = false; // Default
   m_step = 1;
   SetYAxisID(yAxisID);
-  m_LegendVisibility = true;
+  m_LegendIsAlwaysVisible = false; // preserve prior library behavior!
   m_ZIndex = mpZIndex_PLOT;
 }
 
@@ -5093,9 +5097,10 @@ void mpWindow::DeleteConfigWindow(void)
 
 wxIMPLEMENT_DYNAMIC_CLASS(mpText, mpLayer);
 
-/* name: text to be displayed
-   offsetx: x position in percentage (0-100)
-   offsety: y position in percentage (0-100) */
+/** @param name text to be displayed
+ @param offsetx x position in percentage (0-100)
+ @param offsetx y position in percentage (0-100)
+ */
 mpText::mpText(const wxString &name, int offsetx, int offsety) :
     mpText(name)
 {
@@ -5110,8 +5115,9 @@ mpText::mpText(const wxString &name, int offsetx, int offsety) :
     m_offsety = 50;
 }
 
-/* name: text to be displayed
-   marginLocation: location in the margin */
+/** @param name text to be displayed
+ @param marginLocation in the margin
+ */
 mpText::mpText(const wxString &name, mpLocation marginLocation) :
     mpText(name)
 {

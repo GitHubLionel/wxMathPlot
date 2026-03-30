@@ -6,7 +6,7 @@
 // Contributors:    Jose Luis Blanco, Val Greene, Lionel Reynaud, Dave Nadler, MortenMacFly,
 //                  Oskar Waldemarsson (for multi Y axis and corrections)
 // Created:         21/07/2003
-// Last edit:       29/03/2026
+// Last edit:       30/03/2026
 // Copyright:       (c) David Schalig, Davide Rondini
 // Licence:         wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -1098,7 +1098,7 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
      @return a wxBitmap filled with layer's colour */
     wxBitmap GetColourSquare(int side = 16);
 
-    /** Checks whether the layer is visible or not.
+    /** Is this layer visible?
      @return \a true if visible */
     inline bool IsVisible() const
     {
@@ -1259,12 +1259,12 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLayer: public mpLayer
      */
     virtual void ErasePlot(wxDC &dc, mpWindow &w);
 
-    /** Is a point inside the info box rectangle?
+    /** Is given point inside the info box rectangle?
      @param point The point to be checked
      @return \a true if the point is inside the bounding box */
     virtual bool Inside(const wxPoint &point);
 
-    /** Move the layer rectangle given pixel deltas.
+    /** Move the layer rectangle by given pixel deltas.
      @param delta The wxPoint container for delta coordinates along x and y. Units are in pixels. */
     virtual void Move(wxPoint delta);
 
@@ -1285,7 +1285,7 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLayer: public mpLayer
       return m_dim.GetSize();
     }
 
-    /** Return the current rectangle coordinates.
+    /** Get the current rectangle coordinates.
      @return The info layer rectangle */
     const wxRect& GetRectangle() const
     {
@@ -1613,25 +1613,25 @@ class WXDLLIMPEXP_MATHPLOT mpFunction: public mpLayer
      */
     void SetLegendVisibility(bool visibility)
     {
-      m_LegendVisibility = visibility;
+      m_LegendIsAlwaysVisible = visibility;
     }
 
     /** Get the visibility of the legend.
      * @return the visibility of the legend
      */
-    bool GetLegendVisibility() const
+    bool GetLegendIsAlwaysVisible() const
     {
-      return m_LegendVisibility;
+      return m_LegendIsAlwaysVisible;
     }
 
   protected:
-    bool m_continuous;          //!< Specify if the layer will be plotted as a continuous line or a set of points. Default false
-    mpSymbol m_symbol;          //!< A symbol for the plot in place of point. Default mpNone
-    int m_symbolSize;           //!< Size of the symbol. Default 6
-    int m_symbolSize2;          //!< Size of the symbol div 2.
-    unsigned int m_step;        //!< Step to get point to be draw. Default : 1
-    int m_yAxisID;              //!< The ID of the Y axis used by the function. Equal 0 if no axis.
-    bool m_LegendVisibility;    //!< If true, the name is visible in the legend despite the visibility of the function. Default true
+    bool m_continuous;            //!< Specify if the layer will be plotted as a continuous line or a set of points. Default false
+    mpSymbol m_symbol;            //!< A symbol for the plot in place of point. Default mpNone
+    int m_symbolSize;             //!< Size of the symbol. Default 6
+    int m_symbolSize2;            //!< Size of the symbol div 2.
+    unsigned int m_step;          //!< Step to get point to be draw. Default : 1
+    int m_yAxisID;                //!< The ID of the Y axis used by the function. Equal 0 if no axis.
+    bool m_LegendIsAlwaysVisible; //!< If true, the name is visible in the legend despite the visibility of the function. Default true
 
   wxDECLARE_DYNAMIC_CLASS(mpFunction);
 };

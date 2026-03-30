@@ -1513,7 +1513,7 @@ void MathPlotConfigDialog::UpdateSelectedSerie(void)
   cbSeriesNamePosition->SetSelection(CurrentSerie->GetAlign() - mpALIGN_NW);
   cbSeriesNamePosition->Enable(CurrentSerie->GetShowName());
   cbTractable->SetValue(CurrentSerie->IsTractable());
-  cbSeriesLegend->SetValue(!CurrentSerie->GetLegendVisibility());
+  cbSeriesLegend->SetValue(!CurrentSerie->GetLegendIsAlwaysVisible());
 
   cbSeriesStep->SetValue(CurrentSerie->GetStep());
 
