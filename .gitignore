@@ -2,6 +2,7 @@ Thumbs.db
 *.bak
 whoops/
 tmp/
+backups/
 
 # Microsoft Visual Studio 
 .vs/

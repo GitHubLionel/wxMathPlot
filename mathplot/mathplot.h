@@ -6,7 +6,7 @@
 // Contributors:    Jose Luis Blanco, Val Greene, Lionel Reynaud, Dave Nadler, MortenMacFly,
 //                  Oskar Waldemarsson (for multi Y axis and corrections)
 // Created:         21/07/2003
-// Last edit:       27/03/2026
+// Last edit:       29/03/2026
 // Copyright:       (c) David Schalig, Davide Rondini
 // Licence:         wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -60,7 +60,7 @@
  @code
  #define MP_USER_INCLUDE MyIncludeFile
  @endcode
- This causes wxMathPlot to include `MyIncludeFile.h`.
+ ...causes wxMathPlot to include `MyIncludeFile.h`.
 
  */
 
@@ -154,12 +154,12 @@
 #include <deque>
 #include <algorithm>
 
-/// Expand a macro argument to a string literal.
-#define xstr(x) #x
-/// Expand a macro and then stringify the expanded result.
-#define str(x) xstr(x)
 
 #if defined(MP_USER_INCLUDE)
+  /// Expand a macro argument to a string literal.
+  #define xstr(x) #x
+  /// Expand a macro and then stringify the expanded result.
+  #define str(x) xstr(x)
   #define header MP_USER_INCLUDE.h
   #include str(header)
   #undef header
@@ -417,7 +417,7 @@ struct mpRange
       return (min + max) / 2;
     }
 
-    /// Returns max absolute value of the range
+    /// Max absolute value of the range
     T GetMaxAbs(void) const
     {
       return std::max(fabs(min), fabs(max));
@@ -436,20 +436,20 @@ struct mpRange
       return ((point >= min) && (point <= max));
     }
 
-#if (defined(__cplusplus) && (__cplusplus > 201703L)) // C++20 or newer
-    bool operator==(const mpRange&) const = default;
-#else
-    /// Compare two ranges for equality.
-    bool operator==(const mpRange &other) const
-    {
-      return (min == other.min) && (max == other.max);
-    }
-    /// Compare two ranges for inequality.
-    bool operator!=(const mpRange& other) const
-    {
-      return !(*this == other);
-    }
-#endif
+    #if (defined(__cplusplus) && (__cplusplus > 201703L)) // C++20 or newer
+      bool operator==(const mpRange&) const = default;
+    #else
+      /// Compare two ranges for equality.
+      bool operator==(const mpRange &other) const
+      {
+        return (min == other.min) && (max == other.max);
+      }
+      /// Compare two ranges for inequality.
+      bool operator!=(const mpRange& other) const
+      {
+        return !(*this == other);
+      }
+    #endif
 };
 
 /**
@@ -457,15 +457,15 @@ struct mpRange
  * X refer to X axis
  * Y refer to Y axis
  */
-struct [[deprecated("No more used, X and Y are now separated")]] mpFloatRect
+struct [[deprecated("Deprecated! No longer used as X and Y are now separated")]] mpFloatRect
 {
   mpRange<double> x;               //!< range over x direction
   std::vector<mpRange<double>> y;  //!< array of range over all y directions
 
   /**
-   * Constructs a new mpFloatRect using it parent mpWindow to obtain
+   * Construct a new mpFloatRect using it's parent mpWindow to obtain
    * the number of Y-scales to use. This makes sure that the y-size
-   * always matches the parant mpWindow y-size
+   * always matches the parent mpWindow y-size
    * @param w parent mpWindow from which to obtain informations
    */
   mpFloatRect(mpWindow& w);
@@ -795,7 +795,7 @@ enum mpLabelType
 // mpLayer
 //-----------------------------------------------------------------------------
 
-//!< Major type of an mpLayer (detail is in subtype)
+/// Major type of an mpLayer (detail is in subtype)
 typedef enum __mp_Layer_Type
 {
   mpLAYER_UNDEF,   //!< Layer type undefined; SHOULD NOT BE USED
@@ -881,9 +881,8 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
       return true;
     }
 
-    /** Get layer type: a Layer can be of different types: plot, lines, axis, info boxes, etc,
-     this method returns the right value.
-     @return An integer indicating layer type
+    /** Get layer type: a Layer can be of different types: plot, lines, axis, info boxes, etc.
+     @return An mpLayerType indicating layer type
      @sa mpLayer::GetLayerType */
     mpLayerType GetLayerType() const
     {
@@ -1094,7 +1093,7 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
     }
 
     /** Get a small square bitmap filled with the colour of the pen used in the layer.
-     Useful to create legends or similar reference to the layers.
+     Useful for creating legends or similar reference to the layers.
      @param side side length in pixels
      @return a wxBitmap filled with layer's colour */
     wxBitmap GetColourSquare(int side = 16);
@@ -1141,7 +1140,7 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
       return m_flags;
     }
 
-    /** Define what we do with the object associated with the layer when we delete the layer.
+    /** Set what we do with the object associated with the layer when we delete the layer.
      @param canDelete if true then the object associated to the layer can be deleted */
     void SetCanDelete(bool canDelete)
     {
@@ -1242,7 +1241,7 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLayer: public mpLayer
      @param show visibility bool. */
     virtual void SetVisible(bool show);
 
-    /** Updates the content of the info box. Should be overridden by derived classes.
+    /** Update the content of the info box. Should be overridden by derived classes.
      Update may behave in different ways according to the type of event which called it.
      @param w parent mpWindow from which to obtain informations
      @param event The event which called the update. */
@@ -1260,33 +1259,33 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLayer: public mpLayer
      */
     virtual void ErasePlot(wxDC &dc, mpWindow &w);
 
-    /** Checks whether a point is inside the info box rectangle.
+    /** Is a point inside the info box rectangle?
      @param point The point to be checked
      @return \a true if the point is inside the bounding box */
     virtual bool Inside(const wxPoint &point);
 
-    /** Moves the layer rectangle of given pixel deltas.
+    /** Move the layer rectangle given pixel deltas.
      @param delta The wxPoint container for delta coordinates along x and y. Units are in pixels. */
     virtual void Move(wxPoint delta);
 
-    /** Updates the rectangle reference point. Used by internal methods of mpWindow to correctly move mpInfoLayers. */
+    /** Update the rectangle reference point. Used by internal methods of mpWindow to correctly move mpInfoLayers. */
     virtual void UpdateReference();
 
-    /** Returns the position of the upper left corner of the box (in pixels)
-     @return The rectangle position */
+    /** Get the position of the upper left corner of the box (in pixels)
+     @return Rectangle's upper-left position */
     wxPoint GetPosition() const
     {
       return m_dim.GetPosition();
     }
 
-    /** Returns the size of the box (in pixels)
+    /** Get the size of the box (in pixels)
      @return The rectangle size */
     wxSize GetSize() const
     {
       return m_dim.GetSize();
     }
 
-    /** Returns the current rectangle coordinates.
+    /** Return the current rectangle coordinates.
      @return The info layer rectangle */
     const wxRect& GetRectangle() const
     {
@@ -1354,7 +1353,7 @@ class WXDLLIMPEXP_MATHPLOT mpInfoCoords: public mpInfoLayer
       ;
     }
 
-    /** Updates the content of the info box. It is used to update coordinates.
+    /** Update the content of the info box. Used to update coordinates.
      @param w parent mpWindow from which to obtain information
      @param event The event which called the update. */
     virtual void UpdateInfo(mpWindow &w, wxEvent &event);
@@ -1417,7 +1416,7 @@ class WXDLLIMPEXP_MATHPLOT mpInfoCoords: public mpInfoLayer
 };
 
 /** @class mpInfoLegend
- @brief Implements the legend to be added to the plot
+ @brief Implement the legend to be added to the plot
  This layer allows you to add a legend to describe the plots in the window. The legend uses
  the layer name as a label, and displays only layers of type mpLAYER_PLOT. */
 class WXDLLIMPEXP_MATHPLOT mpInfoLegend: public mpInfoLayer
