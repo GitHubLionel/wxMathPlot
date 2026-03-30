@@ -1572,6 +1572,22 @@ class WXDLLIMPEXP_MATHPLOT mpFunction: public mpLayer
       m_yAxisID = yAxisID;
     }
 
+    /** Set the visibility of the name of the function in the legend despite the visibility of the function in the plot
+     * @param visibility if true, name is always visible in the legend
+     */
+    void SetLegendVisibility(bool visibility)
+    {
+      m_LegendVisibility = visibility;
+    }
+
+    /** Get the visibility of the legend.
+     * @return the visibility of the legend
+     */
+    bool GetLegendVisibility() const
+    {
+      return m_LegendVisibility;
+    }
+
   protected:
     bool m_continuous;          //!< Specify if the layer will be plotted as a continuous line or a set of points. Default false
     mpSymbol m_symbol;          //!< A symbol for the plot in place of point. Default mpNone
@@ -1579,6 +1595,7 @@ class WXDLLIMPEXP_MATHPLOT mpFunction: public mpLayer
     int m_symbolSize2;          //!< Size of the symbol div 2.
     unsigned int m_step;        //!< Step to get point to be draw. Default : 1
     int m_yAxisID;              //!< The ID of the Y axis used by the function. Equal 0 if no axis.
+    bool m_LegendVisibility;    //!< If true, the name is visible in the legend despite the visibility of the function. Default true
 
   wxDECLARE_DYNAMIC_CLASS(mpFunction);
 };
@@ -2153,6 +2170,147 @@ class WXDLLIMPEXP_MATHPLOT mpProfile: public mpFunction
     virtual void DoPlot(wxDC &dc, mpWindow &w);
 
   wxDECLARE_DYNAMIC_CLASS(mpProfile);
+};
+
+/**
+ * Create a generic FX function
+ * Override the ComputeY() function with your function
+ */
+class mpFXGeneric: public mpFX
+{
+  public:
+    /** @param name  Label of the function
+     @param flags Label alignment, pass one of #mpALIGN_RIGHT, #mpALIGN_CENTERY, #mpALIGN_LEFT.
+     @param yAxisID ID of the y axis (default 0, the first y axis)
+     */
+    mpFXGeneric(const wxString &name = wxT("Generic FX function"), int flags = mpALIGN_LEFT, unsigned int yAxisID = 0) :
+        mpFX(name, flags, yAxisID)
+    {
+      wxPen FXpen(*wxBLUE, 1, wxPENSTYLE_SOLID);
+      SetDrawOutsideMargins(false);
+      SetContinuity(true);
+      SetPen(FXpen);
+      SetStep(8); // Draw one point over eight
+    }
+
+    /** Get function value for argument.
+     @param x Argument
+     @return Function value
+     */
+    virtual double GetY(double x)
+    {
+      double y;
+      try
+      {
+        y = ComputeY(x);
+      }
+      catch (...)
+      {
+        y = 0;
+      }
+      m_rangeY.Update(y);
+      return y;
+    }
+
+    /**
+     * Get min Y of the function
+     * @return min Y
+     */
+    virtual double GetMinY()
+    {
+      return m_rangeY.min;
+    }
+
+    /**
+     * Get max Y of the function
+     * @return max Y
+     */
+    virtual double GetMaxY()
+    {
+      return m_rangeY.max;
+    }
+
+  protected:
+    mpRange<double> m_rangeY; //!< Y range
+
+    /**
+     * The main computation of the FX function. Override with your function
+     * @param x x-coordinate
+     * @return the y-coordinate: y = your_function(x)
+     */
+    virtual double ComputeY(double x) = 0;
+};
+
+/**
+ * Classic Gaussian distribution
+ * f(x) = exp(-(x-μ)²/2σ²)/sqrt(2πσ²)
+ */
+class mpGaussian: public mpFXGeneric
+{
+  public:
+    /**
+     * Classic Gaussian distribution
+     * @param mu the mean of the distribution
+     * @param sigma the standard deviation of the distribution
+     */
+    mpGaussian(double mu, double sigma) :
+      mpFXGeneric(wxT("Gaussian"), mpALIGN_LEFT)
+    {
+      m_mu = mu;
+      m_sigma = sigma;
+      m_variance = sigma * sigma;
+      m_const = 1.0 / sqrt(2.0 * M_PI * m_variance);
+    }
+
+  protected:
+    double m_mu;        //!< Mean value
+    double m_sigma;     //!< Sigma value
+    double m_variance;  //!< Sigma² is the variance
+    double m_const;     //!< Const factor
+
+    virtual double ComputeY(double x)
+    {
+      return m_const * exp(-(x - m_mu) * (x - m_mu) / (2.0 * m_variance));
+    }
+};
+
+/**
+ * Classic Normal distribution
+ * f(x) = exp(-(ln(x)-μ)²/2σ²)/(xσ.sqrt(2π))
+ */
+class mpNormal: public mpFXGeneric
+{
+  public:
+    /**
+     * Classic Normal distribution
+     * @param mu the mean of the distribution
+     * @param sigma the standard deviation of the distribution
+     */
+    mpNormal(double mu, double sigma) :
+      mpFXGeneric(wxT("Gaussian"), mpALIGN_LEFT)
+    {
+      m_mu = mu;
+      m_sigma = sigma;
+      m_variance = sigma * sigma;
+      m_const = 1.0 / (m_variance * sqrt(2.0 * M_PI));
+    }
+
+  protected:
+    double m_mu;        //!< Mean value
+    double m_sigma;     //!< Sigma value
+    double m_variance;  //!< Sigma² is the variance
+    double m_const;     //!< Const factor
+
+    virtual double ComputeY(double x)
+    {
+      if (x < 0)
+        return 0.0;
+      else
+      {
+        double tmp = log(x) - m_mu;
+        return m_const * exp(-tmp * tmp / (2.0 * m_variance)) / x;
+      }
+    }
 };
 
 //-----------------------------------------------------------------------------
@@ -4460,7 +4618,7 @@ class WXDLLIMPEXP_MATHPLOT mpMovableObject: public mpFunction
  *     - 2 : 95.45%
  *     - 3 : 99.73%
  *     - 4 : 99.994%
- * For example, see http://en.wikipedia.org/wiki/Normal_distribution#Standard_deviation_and_confidence_intervals
+ * For example, see https://en.wikipedia.org/wiki/Normal_distribution#Standard_deviation_and_confidence_intervals
  *
  * The ellipse will be always centered at the origin. Use mpMovableObject::SetCoordinateBase to move it.
  */

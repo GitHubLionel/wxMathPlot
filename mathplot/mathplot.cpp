@@ -796,7 +796,7 @@ void mpInfoLegend::UpdateBitmap(wxDC &dc, mpWindow &w)
   for (unsigned int p = 0; p < w.CountAllLayers(); p++)
   {
     mpLayer* ly = w.GetLayer(p);
-    if (ly->GetLayerType() == mpLAYER_PLOT)
+    if ((ly->GetLayerType() == mpLAYER_PLOT) && (((mpFunction*)ly)->GetLegendVisibility()))
     {
       int labelWidth = 0, labelHeight = 0;
       wxString label = ly->GetName();
@@ -980,6 +980,7 @@ mpFunction::mpFunction(mpLayerType layerType /*=mpLAYER_PLOT*/, const wxString &
   m_continuous = false; // Default
   m_step = 1;
   SetYAxisID(yAxisID);
+  m_LegendVisibility = true;
   m_ZIndex = mpZIndex_PLOT;
 }
 
@@ -2973,6 +2974,11 @@ void mpWindow::OnMouseLeftDown(wxMouseEvent &event)
       CurrentSerie->SetVisible(!CurrentSerie->IsVisible());
       m_InfoLegend->SetNeedUpdate();
       Fit();
+      if ((m_configWindow != NULL) && (m_configWindow->IsVisible()))
+      {
+        m_configWindow->Initialize(mpcpiSeries);
+        m_configWindow->SelectChoiceSerie(select);
+      }
     }
     else
     {

@@ -14,6 +14,8 @@
 #include <wx/msgdlg.h>
 #include <wx/stdpaths.h>
 #include <wx/filename.h>
+#include <wx/arrstr.h>
+#include <wx/choicdlg.h>
 
 //(*InternalHeaders(MathPlotConfigDialog)
 #include <wx/intl.h>
@@ -210,6 +212,78 @@ void MathPlotConfigSettings::DoRecursiveSearch(bool set, wxWindow* win, const wx
 }
 
 /***************************************************
+ * wxMultiTextCtrlDialog class
+ ***************************************************/
+wxBEGIN_EVENT_TABLE(wxMultiTextCtrlDialog, wxDialog)
+    EVT_BUTTON(wxID_OK, wxMultiTextCtrlDialog::OnOK)
+    EVT_BUTTON(wxID_CANCEL, wxMultiTextCtrlDialog::OnCancel)
+wxEND_EVENT_TABLE()
+
+bool wxMultiTextCtrlDialog::Create(wxWindow* parent, const wxString& title,
+    const wxString& message, long size, const wxString prompt[], double *values,
+    const wxPoint& pos)
+{
+  if (!wxDialog::Create(GetParentForModalDialog(parent, 0), wxID_ANY, title, pos, wxDefaultSize))
+  {
+    return false;
+  }
+
+  // Top vertical sizer
+  wxBoxSizer* topsizer = new wxBoxSizer(wxVERTICAL);
+
+  // add text message
+  topsizer->Add(CreateTextSizer(message), wxSizerFlags().DoubleBorder());
+
+  // add prompt and text ctrl to a grid sizer
+  wxFlexGridSizer* inputsizer = new wxFlexGridSizer(size, 2, 0, 0);
+  for (int i = 0; i < size; i++)
+  {
+    // prompt if any
+    if (!prompt[i].empty())
+      inputsizer->Add(new wxStaticText(this, wxID_ANY, prompt[i]), wxSizerFlags().Center().DoubleBorder(wxLEFT));
+    else
+      inputsizer->Add(0, 0, 1);
+
+    // text ctrl
+    wxTextCtrl* textctrl = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(80, wxDefaultCoord), 0, wxFloatingPointValidator<double> (4, &values[i]));
+    textctrl->GetValidator()->TransferToWindow();
+    m_ctrls.push_back(textctrl);
+
+    inputsizer->Add(textctrl, wxSizerFlags(1).Center().DoubleBorder(wxLEFT | wxRIGHT));
+  }
+  topsizer->Add(inputsizer, wxSizerFlags().Expand().Border(wxLEFT | wxRIGHT));
+
+  // add buttons
+  wxSizer* buttonSizer = CreateSeparatedButtonSizer(wxOK | wxCANCEL);
+  if (buttonSizer)
+  {
+    topsizer->Add(buttonSizer, wxSizerFlags().Expand().DoubleBorder());
+  }
+
+  SetSizer(topsizer);
+  topsizer->SetSizeHints(this);
+
+  Centre(wxBOTH);
+
+  return true;
+}
+
+void wxMultiTextCtrlDialog::OnOK(wxCommandEvent&WXUNUSED(event))
+{
+  for (auto ctrl: m_ctrls)
+  {
+    ctrl->GetValidator()->TransferFromWindow();
+  }
+
+  EndModal(wxID_OK);
+}
+
+void wxMultiTextCtrlDialog::OnCancel(wxCommandEvent&WXUNUSED(event))
+{
+  EndModal(wxID_CANCEL);
+}
+
+/***************************************************
  * MathPlotConfigDialog class
  ***************************************************/
 
@@ -218,7 +292,6 @@ wxString MESS_TRANSPARENT = _T("");
 wxString MESS_COLOUR = _T("");
 wxString MESS_AXIS_DELETE = _T("");
 wxString MESS_DELETE = _T("");
-wxString MESS_LINES_ADD = _T("");
 wxString MESS_LINES_DELETE = _T("");
 wxString MESS_CONFIRM = _T("");
 
@@ -238,7 +311,6 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   MESS_COLOUR       = _("Please choose the background colour");
   MESS_AXIS_DELETE  = _("Delete the selected axis ?");
   MESS_DELETE       = _("Delete the serie ?");
-  MESS_LINES_ADD    = _("Add horizontal line (vertical if No) ?");
   MESS_LINES_DELETE = _("Delete the line ?");
   MESS_CONFIRM      = _("Confirmation");
   XAxis_Align[0] = _("Bottom border");
@@ -701,6 +773,9 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   cbTractable->SetValue(false);
   cbTractable->SetToolTip(_("Allow mouse coordinates"));
   BoxSizer11->Add(cbTractable, 1, wxALL|wxALIGN_LEFT, 3);
+  cbSeriesLegend = new wxCheckBox(Panel4, wxID_ANY, _("Hidden in the Legend"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
+  cbSeriesLegend->SetValue(false);
+  BoxSizer11->Add(cbSeriesLegend, 1, wxALL|wxALIGN_LEFT, 3);
   BoxSizer9->Add(BoxSizer11, 0, wxALL|wxALIGN_LEFT, 5);
   FlexGridSizer15->Add(BoxSizer9, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
   BoxSizer10 = new wxBoxSizer(wxVERTICAL);
@@ -1438,6 +1513,7 @@ void MathPlotConfigDialog::UpdateSelectedSerie(void)
   cbSeriesNamePosition->SetSelection(CurrentSerie->GetAlign() - mpALIGN_NW);
   cbSeriesNamePosition->Enable(CurrentSerie->GetShowName());
   cbTractable->SetValue(CurrentSerie->IsTractable());
+  cbSeriesLegend->SetValue(!CurrentSerie->GetLegendVisibility());
 
   cbSeriesStep->SetValue(CurrentSerie->GetStep());
 
@@ -1538,26 +1614,80 @@ void MathPlotConfigDialog::OnChoiceLinesSelect(wxCommandEvent& WXUNUSED(event))
 
 void MathPlotConfigDialog::OnbAddLinesClick(wxCommandEvent& WXUNUSED(event))
 {
-  int answer = wxMessageDialog(this, MESS_LINES_ADD, MESS_CONFIRM, wxYES_NO | wxCANCEL | wxCENTRE).ShowModal();
+  // String for all operations on lines
+  wxArrayString Choice_string;
+  wxArrayString Line_string;
 
-  if (answer == wxID_CANCEL)
+  // First dialog
+  Choice_string.Add(_("Horizontal Line"));
+  Choice_string.Add(_("Vertical Line"));
+  Choice_string.Add(_("Gaussian distribution"));
+  Choice_string.Add(_("Normal distribution"));
+
+  Line_string.Add(_("Selection of the line function"));
+  Line_string.Add(_("Select:"));
+
+  // Line dialog
+  Line_string.Add(_("Enter value:"));
+  Line_string.Add(_("Axis value"));
+
+  // Gaussian dialog
+  Line_string.Add(_("Enter parameters:"));
+  Line_string.Add(_("mean"));
+  Line_string.Add(_("Sigma"));
+
+  // Dialog window
+  wxSingleChoiceDialog dialog = wxSingleChoiceDialog {this, Line_string[1], Line_string[0], Choice_string};
+
+  if (dialog.ShowModal() == wxID_CANCEL)
     return;
 
-  mpLine* newLine = NULL;
-  if (answer == wxID_YES)
-    newLine = (mpLine*)new mpHorizontalLine(1.0);
-  else
-    newLine = (mpLine*)new mpVerticalLine(1.0);
-  if (m_plot->AddLayer(newLine, true, false))
+  mpFunction* newLine = NULL;
+  int selection = dialog.GetSelection();
+  if (selection < 2)
   {
-    Initialize(mpcpiLines);
-    ChoiceLines->SetSelection(ChoiceLines->GetCount() - 1);
-    UpdateSelectedLine();
-    pLines->Show(true);
+    double values[1] = {1.0};
+    wxString *prompts[1] = {&Line_string[3]};
+    wxMultiTextCtrlDialog dlg = wxMultiTextCtrlDialog(this, Choice_string[selection], Line_string[2], 1, prompts[0], &values[0]);
+    if (dlg.ShowModal() == wxID_OK)
+    {
+      if (selection == 0)
+        newLine = (mpFunction*)new mpHorizontalLine(values[0]);
+      else
+        newLine = (mpFunction*)new mpVerticalLine(values[0]);
+    }
+
+    if (newLine && (m_plot->AddLayer(newLine, true, false)))
+    {
+      Initialize(mpcpiLines);
+      ChoiceLines->SetSelection(ChoiceLines->GetCount() - 1);
+      UpdateSelectedLine();
+      pLines->Show(true);
 #ifdef _WIN32
 #else
-    sizerLines->Layout();
+      sizerLines->Layout();
 #endif
+    }
+  }
+  else
+  {
+    double values[2] = {0.0, 1.0};
+    wxString *prompts[2] = {&Line_string[5], &Line_string[6]};
+    wxMultiTextCtrlDialog dlg = wxMultiTextCtrlDialog(this, Choice_string[selection], Line_string[4], 2, prompts[0], &values[0]);
+    if (dlg.ShowModal() == wxID_OK)
+    {
+      if (selection == 2)
+        newLine = (mpFunction*)new mpGaussian(values[0], values[1]);
+      else
+        newLine = (mpFunction*)new mpNormal(values[0], values[1]);
+    }
+
+    if (newLine && (m_plot->AddLayer(newLine, true, false)))
+    {
+      Initialize(mpcpiSeries);
+      ChoiceSeries->SetSelection(ChoiceSeries->GetCount() - 1);
+      UpdateSelectedSerie();
+    }
   }
 }
 
@@ -1773,6 +1903,7 @@ void MathPlotConfigDialog::Apply(int pageIndex, bool updateFont)
         CurrentSerie->SetShowName(cbSeriesShowName->GetValue());
         CurrentSerie->SetAlign(cbSeriesNamePosition->GetSelection() + mpALIGN_NW);
         CurrentSerie->SetTractable(cbTractable->GetValue());
+        CurrentSerie->SetLegendVisibility(!cbSeriesLegend->GetValue());
 
         bool yAxisChange = false;
         if (ChoiceSeriesYAxis->GetSelection() != wxNOT_FOUND)
