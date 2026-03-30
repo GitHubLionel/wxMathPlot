@@ -88,6 +88,48 @@ class MathPlotConfigSettings : public wxFileConfig
 };
 
 /**
+ * wxMultiTextCtrlDialog class
+ * A simple text control dialog window that support several text control
+ */
+class wxMultiTextCtrlDialog: public wxDialog
+{
+  public:
+    /**
+     * Constructor
+     * @param parent handle of parent window
+     * @param title title of the dialog window
+     * @param message message to display before all the text control
+     * @param size number of input text
+     * @param prompt array of text control label
+     * @param values array of values (double formated with 4 digits)
+     * @param pos position of the window
+     */
+    wxMultiTextCtrlDialog(wxWindow* parent, const wxString& title,
+        const wxString& message, long size, const wxString prompt[], double *values,
+        const wxPoint& pos = wxDefaultPosition)
+    {
+      Create(parent, title, message, size, prompt, values, pos);
+    }
+
+    /**
+     * Create the dialog window.
+     * @sa wxMultiTextCtrlDialog
+     */
+    bool Create(wxWindow* parent, const wxString& title,
+        const wxString& message, long size, const wxString prompt[], double *values,
+        const wxPoint& pos = wxDefaultPosition);
+
+  protected:
+    void OnOK(wxCommandEvent& event);      //!< Ok handler. Data are transfered to values array
+    void OnCancel(wxCommandEvent& event);  //!< Cancel handler.
+
+  private:
+    std::vector<wxTextCtrl *> m_ctrls;    //!< list of wxTextCtrl
+    wxDECLARE_EVENT_TABLE();
+};
+
+
+/**
  * The list of index of the page of the config window
  */
 typedef enum __ConfigPageIndex
@@ -239,6 +281,7 @@ class MathPlotConfigDialog: public wxDialog
     wxCheckBox* cbLogAxis;
     wxCheckBox* cbMagnetize;
     wxCheckBox* cbSeriesContinuity;
+    wxCheckBox* cbSeriesLegend;
     wxCheckBox* cbSeriesOutside;
     wxCheckBox* cbSeriesShowName;
     wxCheckBox* cbSeriesVisible;

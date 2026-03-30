@@ -1076,6 +1076,14 @@
 															<border>3</border>
 															<option>1</option>
 														</object>
+														<object class="sizeritem">
+															<object class="wxCheckBox" name="" variable="cbSeriesLegend" member="yes">
+																<label>Hidden in the Legend</label>
+															</object>
+															<flag>wxALL|wxALIGN_LEFT</flag>
+															<border>3</border>
+															<option>1</option>
+														</object>
 													</object>
 													<flag>wxALL|wxALIGN_LEFT</flag>
 													<border>5</border>
