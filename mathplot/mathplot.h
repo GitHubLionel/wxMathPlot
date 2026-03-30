@@ -1611,9 +1611,9 @@ class WXDLLIMPEXP_MATHPLOT mpFunction: public mpLayer
     /** Set the visibility of the name of the function in the legend despite the visibility of the function in the plot
      * @param visibility if true, name is always visible in the legend
      */
-    void SetLegendVisibility(bool visibility)
+    void SetLegendIsAlwaysVisible(bool alwaysVisible)
     {
-      m_LegendIsAlwaysVisible = visibility;
+      m_LegendIsAlwaysVisible = alwaysVisible;
     }
 
     /** Get the visibility of the legend.
