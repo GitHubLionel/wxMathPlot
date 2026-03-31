@@ -1513,7 +1513,7 @@ void MathPlotConfigDialog::UpdateSelectedSerie(void)
   cbSeriesNamePosition->SetSelection(CurrentSerie->GetAlign() - mpALIGN_NW);
   cbSeriesNamePosition->Enable(CurrentSerie->GetShowName());
   cbTractable->SetValue(CurrentSerie->IsTractable());
-  cbSeriesLegend->SetValue(!CurrentSerie->GetLegendVisibility());
+  cbSeriesLegend->SetValue(!CurrentSerie->GetLegendIsAlwaysVisible());
 
   cbSeriesStep->SetValue(CurrentSerie->GetStep());
 
@@ -1903,7 +1903,7 @@ void MathPlotConfigDialog::Apply(int pageIndex, bool updateFont)
         CurrentSerie->SetShowName(cbSeriesShowName->GetValue());
         CurrentSerie->SetAlign(cbSeriesNamePosition->GetSelection() + mpALIGN_NW);
         CurrentSerie->SetTractable(cbTractable->GetValue());
-        CurrentSerie->SetLegendVisibility(!cbSeriesLegend->GetValue());
+        CurrentSerie->SetLegendIsAlwaysVisible(!cbSeriesLegend->GetValue());
 
         bool yAxisChange = false;
         if (ChoiceSeriesYAxis->GetSelection() != wxNOT_FOUND)
