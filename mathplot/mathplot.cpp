@@ -188,6 +188,9 @@ static void FillI18NString()
 // See doxygen comments.
 double mpWindow::m_zoomIncrementalFactor = 1.5;
 
+// See doxygen comments.
+bool mpWindow::m_DefaultLegendIsAlwaysVisible = false;
+
 // Delete and null pointer
 #define DeleteAndNull(ptr)  \
   { if (ptr) \
@@ -981,7 +984,7 @@ mpFunction::mpFunction(mpLayerType layerType /*=mpLAYER_PLOT*/, const wxString &
   m_continuous = false; // Default
   m_step = 1;
   SetYAxisID(yAxisID);
-  m_LegendIsAlwaysVisible = false; // preserve prior library behavior!
+  m_LegendIsAlwaysVisible = mpWindow::m_DefaultLegendIsAlwaysVisible; // preserve prior library behavior!
   m_ZIndex = mpZIndex_PLOT;
 }
 

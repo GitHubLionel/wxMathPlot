@@ -274,6 +274,7 @@ class MathPlotConfigDialog: public wxDialog
     wxCheckBox* cbCoordinates;
     wxCheckBox* cbDrawBox;
     wxCheckBox* cbGridVisible;
+    wxCheckBox* cbLegendDefaultVisibility;
     wxCheckBox* cbLegendVisible;
     wxCheckBox* cbLinesOutside;
     wxCheckBox* cbLinesShowName;

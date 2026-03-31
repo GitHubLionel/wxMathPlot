@@ -537,7 +537,7 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   Panel1->SetSizer(BoxSizer3);
   Panel2 = new wxPanel(nbConfig, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL);
   BoxSizer16 = new wxBoxSizer(wxHORIZONTAL);
-  FlexGridSizer6 = new wxFlexGridSizer(4, 2, 0, 0);
+  FlexGridSizer6 = new wxFlexGridSizer(5, 2, 0, 0);
   StaticText16 = new wxStaticText(Panel2, wxID_ANY, _("Position :"), wxDefaultPosition, wxDefaultSize, 0);
   FlexGridSizer6->Add(StaticText16, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
   cbLegendPosition = new wxChoice(Panel2, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator);
@@ -566,6 +566,11 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   cbLegendVisible = new wxCheckBox(Panel2, wxID_ANY, _("Visible"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
   cbLegendVisible->SetValue(false);
   FlexGridSizer6->Add(cbLegendVisible, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
+  FlexGridSizer6->Add(0,0,1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+  cbLegendDefaultVisibility = new wxCheckBox(Panel2, wxID_ANY, _("Default visibility"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
+  cbLegendDefaultVisibility->SetValue(false);
+  cbLegendDefaultVisibility->SetToolTip(_("When checked, the series name is always displayed even if the series is not ploted."));
+  FlexGridSizer6->Add(cbLegendDefaultVisibility, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
   BoxSizer16->Add(FlexGridSizer6, 1, wxALL|wxALIGN_TOP, 5);
   BoxSizer15 = new wxBoxSizer(wxVERTICAL);
   bFontLegend = new wxButton(Panel2, wxID_ANY, _("Font"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
@@ -1050,6 +1055,7 @@ void MathPlotConfigDialog::Initialize(mpConfigPageId id)
 
     UpdateFont(CurrentLegend, bFontLegend, true);
     bFontLegend->Enable();
+    cbLegendDefaultVisibility->SetValue(m_plot->m_DefaultLegendIsAlwaysVisible);
   }
 
   // ** Axis page **
@@ -1772,7 +1778,7 @@ void MathPlotConfigDialog::Apply(int pageIndex, bool updateFont)
           UpdateFont(CurrentLegend, bFontLegend, false);
           fontLegendChanged = false;
         }
-
+        m_plot->m_DefaultLegendIsAlwaysVisible = cbLegendDefaultVisibility->GetValue();
         CurrentLegend->SetNeedUpdate();
         m_plot->UpdateAll();
       }

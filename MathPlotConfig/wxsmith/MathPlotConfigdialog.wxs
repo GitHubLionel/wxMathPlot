@@ -364,7 +364,7 @@
 								<object class="sizeritem">
 									<object class="wxFlexGridSizer" variable="FlexGridSizer6" member="no">
 										<cols>2</cols>
-										<rows>4</rows>
+										<rows>5</rows>
 										<object class="sizeritem">
 											<object class="wxStaticText" name="" variable="StaticText16" member="yes">
 												<label>Position :</label>
@@ -431,6 +431,20 @@
 												<label>Visible</label>
 											</object>
 											<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+											<border>5</border>
+											<option>1</option>
+										</object>
+										<object class="spacer">
+											<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+											<border>5</border>
+											<option>1</option>
+										</object>
+										<object class="sizeritem">
+											<object class="wxCheckBox" name="" variable="cbLegendDefaultVisibility" member="yes">
+												<label>Default visibility</label>
+												<tooltip>When checked, the series name is always displayed even if the series is not ploted.</tooltip>
+											</object>
+											<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
 											<border>5</border>
 											<option>1</option>
 										</object>

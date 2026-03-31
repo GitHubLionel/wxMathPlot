@@ -3892,6 +3892,11 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      *  It must be a number above unity. This number is used for zoom in, and its inverse for zoom out. Set to 1.5 by default. */
     static double m_zoomIncrementalFactor;
 
+    /** This value sets the default behaviour when a series is not visible for the legend display.
+     *  If true the legend is always visible and striked when the series is not displayed in the plot.
+     */
+    static bool m_DefaultLegendIsAlwaysVisible;
+
     /** Set window margins, creating a blank area where some kinds of layers cannot draw.
      * This is useful for example to draw axes outside the area where the plots are drawn.
      @param top Top border
