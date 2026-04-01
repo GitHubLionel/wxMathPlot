@@ -1166,6 +1166,9 @@ void mpVerticalLine::DoPlot(wxDC &dc, mpWindow &w)
 //-----------------------------------------------------------------------------
 
 IMPLEMENT_ABSTRACT_CLASS(mpFX, mpFunction)
+IMPLEMENT_ABSTRACT_CLASS(mpFXGeneric, mpLayer)
+IMPLEMENT_ABSTRACT_CLASS(mpGaussian, mpLayer)
+IMPLEMENT_ABSTRACT_CLASS(mpNormal, mpLayer)
 
 mpFX::mpFX(const wxString &name, int flags, unsigned int yAxisID) :
     mpFunction(mpLAYER_PLOT, name, yAxisID)
@@ -2206,6 +2209,10 @@ wxString mpScale::FormatLabelValue(double value, double maxAxisValue, double ste
 {
   wxString s = _T("");
 
+  // To have a real zero
+  if (fabs(value) < EPSILON_SCALE)
+    value = 0;
+
   switch (m_labelType)
   {
     case mpLabel_AUTO:
@@ -2504,10 +2511,6 @@ void mpScaleX::DoPlot(wxDC &dc, mpWindow &w)
   // Draw grid, ticks and compute max label length
   for (n = n0; n < end; n += step)
   {
-    // To have a real zero
-    if (fabs(n) < 1e-10)
-      n = 0;
-
     const int p = w.x2p(n);
 #if defined(MATHPLOT_DO_LOGGING) && defined(MATHPLOT_LOG_SCALE)
     wxLogMessage(_T("mpScaleX::Plot: n: %f -> p = %d"), n, p);
@@ -2676,9 +2679,6 @@ void mpScaleY::DoPlot(wxDC &dc, mpWindow &w)
   // Draw grid, ticks and label
   for (; n < end; n += step)
   {
-    // To have a real zero
-    if (fabs(n) < 1e-10)
-      n = 0;
     const wxCoord p = w.y2p(n, GetAxisID());
     if ((p > m_plotBoundaries.startPy + labelHeight) && (p < m_plotBoundaries.endPy - labelHeight))
     {

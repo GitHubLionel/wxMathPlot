@@ -203,9 +203,11 @@
 #define mpX_RAWTIME mpX_UTCTIME
 
 /// An epsilon for float comparison to 0
-#define EPSILON   1e-8
+#define EPSILON   1e-30
 /// Nullity test according small epsilon
 #define ISNOTNULL(x)  (fabs(x) > EPSILON)
+/// An epsilon for scale to avoid to print a real zero in place of very small number
+#define EPSILON_SCALE   1e-20
 
 /// A small extra margin for the plot boundary
 #define EXTRA_MARGIN  8
@@ -217,6 +219,9 @@
 // classes
 //-----------------------------------------------------------------------------
 
+/// Definition for RTTI. @sa https://docs.wxwidgets.org/trunk/overview_rtti.html
+#define DECLARE_DYNAMIC_CLASS_MATHPLOT(mp_class)  wxDECLARE_DYNAMIC_CLASS(mp_class)
+
 class WXDLLIMPEXP_MATHPLOT mpLayer;
 class WXDLLIMPEXP_MATHPLOT mpFunction;
 class WXDLLIMPEXP_MATHPLOT mpLine;
@@ -226,6 +231,9 @@ class WXDLLIMPEXP_MATHPLOT mpFX;
 class WXDLLIMPEXP_MATHPLOT mpFY;
 class WXDLLIMPEXP_MATHPLOT mpFXY;
 class WXDLLIMPEXP_MATHPLOT mpFXYVector;
+class WXDLLIMPEXP_MATHPLOT mpFXGeneric;
+class WXDLLIMPEXP_MATHPLOT mpGaussian;
+class WXDLLIMPEXP_MATHPLOT mpNormal;
 class WXDLLIMPEXP_MATHPLOT mpProfile;
 class WXDLLIMPEXP_MATHPLOT mpChart;
 class WXDLLIMPEXP_MATHPLOT mpBarChart;
@@ -1210,7 +1218,7 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
     bool m_busy;          //!< Test if we are busy (plot operation)
     mpLayer() = delete;   // default ctor not implemented/permitted
 
-  wxDECLARE_DYNAMIC_CLASS(mpLayer);
+  DECLARE_DYNAMIC_CLASS_MATHPLOT(mpLayer);
 };
 
 //-----------------------------------------------------------------------------
@@ -1325,7 +1333,8 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLayer: public mpLayer
      */
     void SetInfoRectangle(mpWindow &w, int width = 0, int height = 0);
 
-  wxDECLARE_DYNAMIC_CLASS(mpInfoLayer);
+  private:
+    DECLARE_DYNAMIC_CLASS_MATHPLOT(mpInfoLayer);
 };
 
 /** @class mpInfoCoords
@@ -1412,7 +1421,8 @@ class WXDLLIMPEXP_MATHPLOT mpInfoCoords: public mpInfoLayer
      @sa mpLayer::Plot */
     virtual void DoPlot(wxDC &dc, mpWindow &w);
 
-  wxDECLARE_DYNAMIC_CLASS(mpInfoCoords);
+  private:
+    DECLARE_DYNAMIC_CLASS_MATHPLOT(mpInfoCoords);
 };
 
 /** @class mpInfoLegend
@@ -1504,7 +1514,8 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLegend: public mpInfoLayer
      */
     void UpdateBitmap(wxDC &dc, mpWindow &w);
 
-  wxDECLARE_DYNAMIC_CLASS(mpInfoLegend);
+  private:
+    DECLARE_DYNAMIC_CLASS_MATHPLOT(mpInfoLegend);
 };
 
 //-----------------------------------------------------------------------------
@@ -1609,7 +1620,7 @@ class WXDLLIMPEXP_MATHPLOT mpFunction: public mpLayer
     }
 
     /** Set the visibility of the name of the function in the legend despite the visibility of the function in the plot
-     * @param visibility if true, name is always visible in the legend
+     * @param alwaysVisible if true, name is always visible in the legend
      */
     void SetLegendIsAlwaysVisible(bool alwaysVisible)
     {
@@ -1633,7 +1644,8 @@ class WXDLLIMPEXP_MATHPLOT mpFunction: public mpLayer
     int m_yAxisID;                //!< The ID of the Y axis used by the function. Equal 0 if no axis.
     bool m_LegendIsAlwaysVisible; //!< If true, the name is visible in the legend despite the visibility of the function. Default true
 
-  wxDECLARE_DYNAMIC_CLASS(mpFunction);
+  private:
+    DECLARE_DYNAMIC_CLASS_MATHPLOT(mpFunction);
 };
 
 /** Abstract class providing a line.
@@ -1683,7 +1695,8 @@ class WXDLLIMPEXP_MATHPLOT mpLine: public mpFunction
     double m_value;        //!< The x or y coordinates of the line
     bool m_IsHorizontal;   //!< Is the line horizontal? Default false
 
-    wxDECLARE_DYNAMIC_CLASS(mpLine);
+  private:
+    DECLARE_DYNAMIC_CLASS_MATHPLOT(mpLine);
 };
 
 /** Abstract class providing an horizontal line.
@@ -1711,7 +1724,8 @@ class WXDLLIMPEXP_MATHPLOT mpHorizontalLine: public mpLine
 
     virtual void DoPlot(wxDC &dc, mpWindow &w);
 
-    wxDECLARE_DYNAMIC_CLASS(mpHorizontalLine);
+  private:
+    DECLARE_DYNAMIC_CLASS_MATHPLOT(mpHorizontalLine);
 };
 
 /** Abstract class providing an vertical line.
@@ -1747,7 +1761,8 @@ class WXDLLIMPEXP_MATHPLOT mpVerticalLine: public mpLine
       return true;
     }
 
-    wxDECLARE_DYNAMIC_CLASS(mpVerticalLine);
+  private:
+    DECLARE_DYNAMIC_CLASS_MATHPLOT(mpVerticalLine);
 };
 
 /** Abstract base class providing plot and labeling functionality for functions F:X->Y.<br>
@@ -1808,7 +1823,8 @@ class WXDLLIMPEXP_MATHPLOT mpFX: public mpFunction
      */
     double LogDoGetY(double x);
 
-  wxDECLARE_DYNAMIC_CLASS(mpFX);
+  private:
+    DECLARE_DYNAMIC_CLASS_MATHPLOT(mpFX);
 };
 
 /** Abstract base class providing plot and labeling functionality for functions F:Y->X.<br>
@@ -1869,7 +1885,8 @@ class WXDLLIMPEXP_MATHPLOT mpFY: public mpFunction
      */
     double LogDoGetX(double y);
 
-  wxDECLARE_DYNAMIC_CLASS(mpFY);
+  private:
+    DECLARE_DYNAMIC_CLASS_MATHPLOT(mpFY);
 };
 
 /** Abstract base class providing plot and labeling functionality for a locus plot F:N->X,Y.
@@ -1980,7 +1997,8 @@ class WXDLLIMPEXP_MATHPLOT mpFXY: public mpFunction
      */
     void UpdateViewBoundary(wxCoord xnew, wxCoord ynew);
 
-  wxDECLARE_DYNAMIC_CLASS(mpFXY);
+  private:
+    DECLARE_DYNAMIC_CLASS_MATHPLOT(mpFXY);
 };
 
 //-----------------------------------------------------------------------------
@@ -2167,7 +2185,7 @@ class WXDLLIMPEXP_MATHPLOT mpFXYVector: public mpFXY
      */
     void Check_Limit(double val, mpRange<double> *range, double *last, double *delta);
 
-  wxDECLARE_DYNAMIC_CLASS(mpFXYVector);
+  DECLARE_DYNAMIC_CLASS_MATHPLOT(mpFXYVector);
 };
 
 /** Abstract base class providing plot and labeling functionality for functions F:Y->X.
@@ -2201,7 +2219,8 @@ class WXDLLIMPEXP_MATHPLOT mpProfile: public mpFunction
      */
     virtual void DoPlot(wxDC &dc, mpWindow &w);
 
-  wxDECLARE_DYNAMIC_CLASS(mpProfile);
+  private:
+    DECLARE_DYNAMIC_CLASS_MATHPLOT(mpProfile);
 };
 
 /**
@@ -2271,6 +2290,9 @@ class mpFXGeneric: public mpFX
      * @return the y-coordinate: y = your_function(x)
      */
     virtual double ComputeY(double x) = 0;
+
+  private:
+    DECLARE_DYNAMIC_CLASS_MATHPLOT(mpFXGeneric);
 };
 
 /**
@@ -2304,6 +2326,9 @@ class mpGaussian: public mpFXGeneric
     {
       return m_const * exp(-(x - m_mu) * (x - m_mu) / (2.0 * m_variance));
     }
+
+  private:
+    DECLARE_DYNAMIC_CLASS_MATHPLOT(mpGaussian);
 };
 
 /**
@@ -2343,6 +2368,9 @@ class mpNormal: public mpFXGeneric
         return m_const * exp(-tmp * tmp / (2.0 * m_variance)) / x;
       }
     }
+
+  private:
+    DECLARE_DYNAMIC_CLASS_MATHPLOT(mpNormal);
 };
 
 //-----------------------------------------------------------------------------
@@ -2393,7 +2421,8 @@ class WXDLLIMPEXP_MATHPLOT mpChart: public mpFunction
     double m_max_value;               //!< Max value of the values vector
     double m_total_value;             //!< Total of the values vector
 
-    wxDECLARE_DYNAMIC_CLASS(mpChart);
+  private:
+    DECLARE_DYNAMIC_CLASS_MATHPLOT(mpChart);
 };
 
 //-----------------------------------------------------------------------------
@@ -2465,7 +2494,8 @@ class WXDLLIMPEXP_MATHPLOT mpBarChart: public mpChart
      */
     virtual void DoPlot(wxDC &dc, mpWindow &w);
 
-    wxDECLARE_DYNAMIC_CLASS(mpBarChart);
+  private:
+    DECLARE_DYNAMIC_CLASS_MATHPLOT(mpBarChart);
 };
 
 /** \brief Layer for pie chart.
@@ -2554,7 +2584,8 @@ class WXDLLIMPEXP_MATHPLOT mpPieChart: public mpChart
     /// Get the colour used for the slice with the given index.
     const wxColour& GetColour(unsigned int id);
 
-    wxDECLARE_DYNAMIC_CLASS(mpBarChart);
+  private:
+    DECLARE_DYNAMIC_CLASS_MATHPLOT(mpBarChart);
 };
 
 /** @} */
@@ -2861,7 +2892,8 @@ class WXDLLIMPEXP_MATHPLOT mpScale: public mpLayer
      */
     int GetDecimalDigits(double step);
 
-  wxDECLARE_DYNAMIC_CLASS(mpScale);
+  private:
+    DECLARE_DYNAMIC_CLASS_MATHPLOT(mpScale);
 };
 
 
@@ -2905,7 +2937,8 @@ class WXDLLIMPEXP_MATHPLOT mpScaleX: public mpScale
     virtual int GetOrigin(mpWindow &w);
     virtual void DrawScaleName(wxDC &dc, mpWindow &w, int origin, int labelSize);
 
-  wxDECLARE_DYNAMIC_CLASS(mpScaleX);
+  private:
+    DECLARE_DYNAMIC_CLASS_MATHPLOT(mpScaleX);
 };
 
 /** Plot layer implementing a y-scale ruler.
@@ -2975,7 +3008,8 @@ class WXDLLIMPEXP_MATHPLOT mpScaleY: public mpScale
     virtual int GetOrigin(mpWindow &w);
     virtual void DrawScaleName(wxDC &dc, mpWindow &w, int origin, int labelSize);
 
-  wxDECLARE_DYNAMIC_CLASS(mpScaleY);
+  private:
+    DECLARE_DYNAMIC_CLASS_MATHPLOT(mpScaleY);
 };
 
 //-----------------------------------------------------------------------------
@@ -4400,7 +4434,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
       return newID;
     }
 
-  wxDECLARE_DYNAMIC_CLASS(mpWindow);
+  DECLARE_DYNAMIC_CLASS_MATHPLOT(mpWindow);
 
     // To have direct access to m_Screenshot_dc
     friend mpPrintout;
@@ -4487,7 +4521,8 @@ class WXDLLIMPEXP_MATHPLOT mpText: public mpLayer
      This implementation will plot text adjusted to the visible area. */
     virtual void DoPlot(wxDC &dc, mpWindow &w);
 
-  wxDECLARE_DYNAMIC_CLASS(mpText);
+  private:
+    DECLARE_DYNAMIC_CLASS_MATHPLOT(mpText);
 };
 
 /** Plot layer implementing a simple title.
@@ -4510,9 +4545,8 @@ class WXDLLIMPEXP_MATHPLOT mpTitle: public mpText
       SetBrush(*wxWHITE_BRUSH);
     }
 
-  protected:
-
-  wxDECLARE_DYNAMIC_CLASS(mpTitle);
+  private:
+    DECLARE_DYNAMIC_CLASS_MATHPLOT(mpTitle);
 };
 
 //-----------------------------------------------------------------------------
@@ -4569,9 +4603,7 @@ class WXDLLIMPEXP_MATHPLOT mpPrintout: public wxPrintout
     mpWindow* plotWindow;
     int stretch_factor;  // To reduce the size of plot
 
-  protected:
-
-  wxDECLARE_DYNAMIC_CLASS(mpPrintout);
+  DECLARE_DYNAMIC_CLASS_MATHPLOT(mpPrintout);
 };
 
 //-----------------------------------------------------------------------------
@@ -4684,7 +4716,8 @@ class WXDLLIMPEXP_MATHPLOT mpMovableObject: public mpFunction
      */
     void ShapeUpdated();
 
-  wxDECLARE_DYNAMIC_CLASS(mpMovableObject);
+  private:
+    DECLARE_DYNAMIC_CLASS_MATHPLOT(mpMovableObject);
 };
 
 //-----------------------------------------------------------------------------
@@ -4783,7 +4816,8 @@ class WXDLLIMPEXP_MATHPLOT mpCovarianceEllipse: public mpMovableObject
      */
     void RecalculateShape();
 
-  wxDECLARE_DYNAMIC_CLASS(mpCovarianceEllipse);
+  private:
+    DECLARE_DYNAMIC_CLASS_MATHPLOT(mpCovarianceEllipse);
 };
 
 //-----------------------------------------------------------------------------
@@ -4816,9 +4850,8 @@ class WXDLLIMPEXP_MATHPLOT mpPolygon: public mpMovableObject
      */
     void setPoints(const std::vector<double> &points_xs, const std::vector<double> &points_ys, bool closedShape = true);
 
-  protected:
-
-  wxDECLARE_DYNAMIC_CLASS(mpPolygon);
+  private:
+    DECLARE_DYNAMIC_CLASS_MATHPLOT(mpPolygon);
 };
 
 //-----------------------------------------------------------------------------
@@ -4904,7 +4937,8 @@ class WXDLLIMPEXP_MATHPLOT mpBitmapLayer: public mpLayer
 
     virtual void DoPlot(wxDC &dc, mpWindow &w);
 
-  wxDECLARE_DYNAMIC_CLASS(mpBitmapLayer);
+  private:
+    DECLARE_DYNAMIC_CLASS_MATHPLOT(mpBitmapLayer);
 };
 
 // utility class
