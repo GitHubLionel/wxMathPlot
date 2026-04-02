@@ -3717,11 +3717,7 @@ void mpWindow::OnLoadFile(wxCommandEvent &WXUNUSED(event))
 #ifdef ENABLE_MP_CONFIG
 void mpWindow::OnConfiguration(wxCommandEvent &WXUNUSED(event))
 {
-  if (m_configWindow == NULL)
-    m_configWindow = new MathPlotConfigDialog(this);
-
-  m_configWindow->Initialize();
-  m_configWindow->Show();
+  OpenConfiguration();
 }
 #endif // ENABLE_MP_CONFIG
 
@@ -5086,6 +5082,15 @@ MathPlotConfigDialog* mpWindow::GetConfigWindow(bool Create)
     m_configWindow = new MathPlotConfigDialog(this);
 
   return m_configWindow;
+}
+
+void mpWindow::OpenConfiguration()
+{
+  if (m_configWindow == NULL)
+    m_configWindow = new MathPlotConfigDialog(this);
+
+  m_configWindow->Initialize();
+  m_configWindow->Show();
 }
 
 void mpWindow::DeleteConfigWindow(void)
