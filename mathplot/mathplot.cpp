@@ -2205,13 +2205,14 @@ double mpScale::GetStep(double scale, int minLabelSpacing)
   return niceStep * pow(10, exp);
 }
 
-wxString mpScale::FormatLabelValue(double value, double maxAxisValue, double step)
+wxString mpScale::FormatLabelValue(double value)
 {
   wxString s = _T("");
 
-  // To have a real zero
-  if (fabs(value) < EPSILON_SCALE)
-    value = 0;
+  if (fabs(value) < m_ScaleConstraints.EpsilonScale)
+  {
+    return _T("0");
+  }
 
   switch (m_labelType)
   {
@@ -2220,13 +2221,13 @@ wxString mpScale::FormatLabelValue(double value, double maxAxisValue, double ste
       {
         s = FormatLogValue(value);
       }
-      else if(UseScientific(maxAxisValue))
+      else if (m_ScaleConstraints.UseScientific)
       {
-        s.Printf(_T("%.*e"), GetSignificantDigits(step, maxAxisValue), value);
+        s.Printf(_T("%.*e"), m_ScaleConstraints.SignificantDigits, value);
       }
       else
       {
-        s.Printf(_T("%.*f"), GetDecimalDigits(step), value);
+        s.Printf(_T("%.*f"), m_ScaleConstraints.DecimalDigits, value);
       }
       break;
     case mpLabel_DECIMAL:
@@ -2236,7 +2237,7 @@ wxString mpScale::FormatLabelValue(double value, double maxAxisValue, double ste
       }
       else
       {
-        s.Printf(_T("%.*f"), GetDecimalDigits(step), value);
+        s.Printf(_T("%.*f"), m_ScaleConstraints.DecimalDigits, value);
       }
       break;
     case mpLabel_SCIENTIFIC:
@@ -2246,7 +2247,7 @@ wxString mpScale::FormatLabelValue(double value, double maxAxisValue, double ste
       }
       else
       {
-        s.Printf(_T("%.*e"), GetSignificantDigits(step, maxAxisValue), value);
+        s.Printf(_T("%.*e"), m_ScaleConstraints.SignificantDigits, value);
       }
       break;
     case mpLabel_USER:
@@ -2286,7 +2287,7 @@ wxString mpScale::FormatLabelValue(double value, double maxAxisValue, double ste
       double hh = floor(modulus / 3600);
       double mm = floor((modulus - hh * 3600) / 60);
       double ss = modulus - hh * 3600 - mm * 60;
-      if ((maxAxisValue / 60 > 2) || (m_labelType == mpLabel_HOURS))
+      if ((m_ScaleConstraints.maxAxisValue / 60 > 2) || (m_labelType == mpLabel_HOURS))
         // Show hour:minute:second if axis is larger than 2 minutes
         s.Printf(_T("%02.0f:%02.0f:%02.0f"), sign * hh, mm, floor(ss));
       else
@@ -2318,7 +2319,7 @@ wxString mpScale::FormatLogValue(double n)
   return s;
 }
 
-int mpScale::GetLabelWidth(double value, wxDC &dc, double maxAxisValue, double step)
+int mpScale::GetLabelWidth(double value, wxDC &dc)
 {
   if ( IsLogAxis() &&
       ((m_labelType == mpLabel_AUTO)       ||
@@ -2334,11 +2335,22 @@ int mpScale::GetLabelWidth(double value, wxDC &dc, double maxAxisValue, double s
   {
     // For other formats we Need to round according to step size to get correct width
     // Finally +0.0 to mitigate negative zero (-0)
-    value = trunc(value / step) * step + 0.0f;
+    value = trunc(value / m_ScaleConstraints.step) * m_ScaleConstraints.step + 0.0f;
   }
 
-  wxString labelStr = FormatLabelValue(value, maxAxisValue, step);
+  wxString labelStr = FormatLabelValue(value);
   return dc.GetTextExtent(labelStr).GetWidth();
+}
+
+void mpScale::ComputeScaleConstraints(double step, double maxAxisValue)
+{
+  m_ScaleConstraints.step = step;
+  m_ScaleConstraints.maxAxisValue = maxAxisValue;
+  m_ScaleConstraints.DecimalDigits = GetDecimalDigits(step);
+  m_ScaleConstraints.SignificantDigits = GetSignificantDigits(step, maxAxisValue);
+  m_ScaleConstraints.UseScientific = UseScientific(maxAxisValue);
+  double exp = fabs(log10(step)) + 1;
+  m_ScaleConstraints.EpsilonScale = pow(10, -exp);
 }
 
 bool mpScale::UseScientific(double maxAxisValue)
@@ -2488,15 +2500,19 @@ void mpScaleX::DoPlot(wxDC &dc, mpWindow &w)
   double step = GetStep(scaleX, MIN_X_AXIS_LABEL_SEPARATION);
   const double end = w.p2x(w.GetScreenX());
   double maxAxisValue = w.GetDesiredBoundX().GetMaxAbs();
+  // Compute scale constraint
+  ComputeScaleConstraints(step, maxAxisValue);
 
   // Recalculate step but adjusted for max label width now that we know the format of the label.
   // Largest label is either furthest left or furthest right
-  int leftWidth = GetLabelWidth(w.GetPosX(), dc, maxAxisValue, step);
-  int rightWidth = GetLabelWidth(end, dc, maxAxisValue, step);
+  int leftWidth = GetLabelWidth(w.GetPosX(), dc);
+  int rightWidth = GetLabelWidth(end, dc);
   int maxWidth = std::max(leftWidth, rightWidth);
   // For wide labels, make sure that we have at least 20 pixels between them
   int minLabelSeparation = std::max(maxWidth + 20, MIN_X_AXIS_LABEL_SEPARATION);
   step = GetStep(scaleX, minLabelSeparation);
+  // Re-compute scale constraint since we change step
+  ComputeScaleConstraints(step, maxAxisValue);
 
   double n0 = floor(w.GetPosX() / step) * step;
   double n = 0;
@@ -2535,7 +2551,7 @@ void mpScaleX::DoPlot(wxDC &dc, mpWindow &w)
       }
 
       // Write ticks labels in s string : compute size
-      s = FormatLabelValue(n, maxAxisValue, step);
+      s = FormatLabelValue(n);
 
       dc.GetTextExtent(s, &tx, &ty);
 
@@ -2666,12 +2682,14 @@ void mpScaleY::DoPlot(wxDC &dc, mpWindow &w)
   const double start = w.p2y(w.GetScreenY(), GetAxisID());
   const double end = w.GetPosY(GetAxisID());
   double maxAxisValue = w.GetDesiredBoundY(GetAxisID()).GetMaxAbs();
+  // Compute scale constraint
+  ComputeScaleConstraints(step, maxAxisValue);
 
   double n = floor(start / step) * step;
 
   wxCoord labelWidth = 0;
   // Before starting cycle, calculate label height
-  wxString s = FormatLabelValue(n, maxAxisValue, step);
+  wxString s = FormatLabelValue(n);
   wxCoord labelHeight = dc.GetTextExtent(s).GetHeight() / 2;
 
   wxCoord tx = 0, ty = 0;
@@ -2703,7 +2721,7 @@ void mpScaleY::DoPlot(wxDC &dc, mpWindow &w)
         }
       }
 
-      s = FormatLabelValue(n, maxAxisValue, step);
+      s = FormatLabelValue(n);
 
       // Print ticks labels
       dc.GetTextExtent(s, &tx, &ty);
@@ -2730,10 +2748,12 @@ void mpScaleY::UpdateAxisWidth(mpWindow &w)
   dc.SetFont(m_font);
   double step = GetStep(w.GetScaleY(GetAxisID()), MIN_Y_AXIS_LABEL_SEPARATION);
   double maxAxisValue = w.GetDesiredBoundY(GetAxisID()).GetMaxAbs();
+  // Compute scale constraint
+  ComputeScaleConstraints(step, maxAxisValue);
 
   // Widest label is either the uppermost or lowermost one
-  int lowerLabelWidth = GetLabelWidth(w.GetDesiredBoundY(GetAxisID()).min, dc, maxAxisValue, step);
-  int upperLabelWidth = GetLabelWidth(w.GetDesiredBoundY(GetAxisID()).max, dc, maxAxisValue, step);
+  int lowerLabelWidth = GetLabelWidth(w.GetDesiredBoundY(GetAxisID()).min, dc);
+  int upperLabelWidth = GetLabelWidth(w.GetDesiredBoundY(GetAxisID()).max, dc);
   int maxLabelWidth = std::max(lowerLabelWidth, upperLabelWidth);
 
   // Also need to consider size of axis name

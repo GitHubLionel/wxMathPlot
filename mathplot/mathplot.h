@@ -206,8 +206,6 @@
 #define EPSILON   1e-30
 /// Nullity test according small epsilon
 #define ISNOTNULL(x)  (fabs(x) > EPSILON)
-/// An epsilon for scale to avoid to print a real zero in place of very small number
-#define EPSILON_SCALE   1e-20
 
 /// A small extra margin for the plot boundary
 #define EXTRA_MARGIN  8
@@ -2851,12 +2849,11 @@ class WXDLLIMPEXP_MATHPLOT mpScale: public mpLayer
     virtual void DrawScaleName(wxDC &dc, mpWindow &w, int origin, int labelSize) = 0;
 
     /** Formats a label value to a string
+     Use m_ScaleConstraints, so this structure must be up to date
      @param value The value to be formated
-     @param maxAxisValue Maximum absolute value of the visible axis
-     @param step Step size of the axis ticks
      @return Label name
      */
-    wxString FormatLabelValue(double value, double maxAxisValue, double step);
+    wxString FormatLabelValue(double value);
 
     /** Formats a value to a string used on a log axis
      @param n The value to be formated
@@ -2865,13 +2862,12 @@ class WXDLLIMPEXP_MATHPLOT mpScale: public mpLayer
     wxString FormatLogValue(double n);
 
     /** Get label text width for a given value
+     Use m_ScaleConstraints, so this structure must be up to date
      @param value Data value
      @param dc Current dc
-     @param maxAxisValue Maximum absolute value of the visible axis
-     @param step Step size of the axis ticks
      @return Label width
      */
-    int GetLabelWidth(double value, wxDC &dc, double maxAxisValue, double step);
+    int GetLabelWidth(double value, wxDC &dc);
 
     /** Checks if scientific notation shall be used on the labels
      @param maxAxisValue absolute value of the visible axis
@@ -2891,6 +2887,23 @@ class WXDLLIMPEXP_MATHPLOT mpScale: public mpLayer
      @return Number of decimal digits
      */
     int GetDecimalDigits(double step);
+
+    /**
+     * This structure group all properties needed to draw scale
+     */
+    struct {
+      double step;
+      double maxAxisValue;
+      bool UseScientific;
+      int SignificantDigits;
+      int DecimalDigits;
+      double EpsilonScale;
+    } m_ScaleConstraints;
+
+    /**
+     * Initialize and compute properties of m_ScaleConstraints structure.
+     */
+    void ComputeScaleConstraints(double step, double maxAxisValue);
 
   private:
     DECLARE_DYNAMIC_CLASS_MATHPLOT(mpScale);
