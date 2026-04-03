@@ -2170,7 +2170,7 @@ mpScale::mpScale(const wxString &name, int flags, bool grids, mpLabelType labelT
   SetName(name);
   SetFont((wxFont const&)*wxSMALL_FONT);
   SetPen((wxPen const&)*wxGREY_PEN);
-  m_gridpen = wxPen(*wxLIGHT_GREY, 1, wxPENSTYLE_DOT);
+  m_gridpen = wxPen(*wxLIGHT_GREY, 1, wxPENSTYLE_SOLID);
   m_flags = flags;
   m_ticks = true;
   m_grids = grids;
