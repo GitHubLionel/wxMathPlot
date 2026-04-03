@@ -4259,6 +4259,13 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      * @param : Create. Create the dialog if not exist (default false)
      */
     MathPlotConfigDialog* GetConfigWindow(bool Create = false);
+    /**
+     * Opens configuration window
+     */
+    void OpenConfiguration();
+    /**
+     * Deletes configuration window
+     */
     void DeleteConfigWindow(void);
 #endif // ENABLE_MP_CONFIG
 
