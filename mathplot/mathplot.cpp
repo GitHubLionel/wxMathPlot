@@ -2533,31 +2533,25 @@ void mpScaleX::DoPlot(wxDC &dc, mpWindow &w)
 #endif
     if ((p >= m_plotBoundaries.startPx) && (p <= m_plotBoundaries.endPx))
     {
-      // We draw the grid if n <> 0 so as not to overwrite the other axis
-      if (fabs(n) > m_ScaleConstraints.EpsilonScale)
+      // draw grid
+      if (m_grids)
       {
-        // draw grid
-        if (m_grids)
-        {
-          dc.SetPen(m_gridpen);
-          dc.DrawLine(p, m_plotBoundaries.startPy + 1, p, m_plotBoundaries.endPy - 1);
-        }
-
-        // draw axis ticks
-        if (m_ticks)
-        {
-          dc.SetPen(m_pen);
-          if (m_flags == mpALIGN_BORDER_BOTTOM)
-            dc.DrawLine(p, orgy, p, orgy - kTickSize);
-          else
-            dc.DrawLine(p, orgy, p, orgy + kTickSize);
-        }
-
-        // Write ticks labels in s string : compute size
-        s = FormatLabelValue(n);
+        dc.SetPen(m_gridpen);
+        dc.DrawLine(p, m_plotBoundaries.startPy + 1, p, m_plotBoundaries.endPy - 1);
       }
-      else
-        s = _T("0");
+
+      // draw axis ticks
+      if (m_ticks)
+      {
+        dc.SetPen(m_pen);
+        if (m_flags == mpALIGN_BORDER_BOTTOM)
+          dc.DrawLine(p, orgy, p, orgy - kTickSize);
+        else
+          dc.DrawLine(p, orgy, p, orgy + kTickSize);
+      }
+
+      // Write ticks labels in s string : compute size
+      s = FormatLabelValue(n);
 
       dc.GetTextExtent(s, &tx, &ty);
 
@@ -2706,35 +2700,29 @@ void mpScaleY::DoPlot(wxDC &dc, mpWindow &w)
     const wxCoord p = w.y2p(n, GetAxisID());
     if ((p > m_plotBoundaries.startPy + labelHeight) && (p < m_plotBoundaries.endPy - labelHeight))
     {
-      // We draw the grid if n <> 0 so as not to overwrite the other axis
-      if (fabs(n) > m_ScaleConstraints.EpsilonScale)
+      // Draw axis grids
+      if (m_grids)
       {
-        // Draw axis grids
-        if (m_grids)
-        {
-          dc.SetPen(m_gridpen);
-          dc.DrawLine(m_plotBoundaries.startPx + 1, p, m_plotBoundaries.endPx - 1, p);
-        }
-
-        // Draw axis ticks
-        if (m_ticks)
-        {
-          dc.SetPen(m_pen);
-          if (m_flags == mpALIGN_BORDER_LEFT)
-          {
-            dc.DrawLine(orgx, p, orgx + kTickSize, p);
-          }
-          else
-          {
-            dc.DrawLine(orgx - kTickSize, p, orgx, p);
-          }
-        }
-
-        // Write ticks labels in s string : compute size
-        s = FormatLabelValue(n);
+        dc.SetPen(m_gridpen);
+        dc.DrawLine(m_plotBoundaries.startPx + 1, p, m_plotBoundaries.endPx - 1, p);
       }
-      else
-        s = _T("0");
+
+      // Draw axis ticks
+      if (m_ticks)
+      {
+        dc.SetPen(m_pen);
+        if (m_flags == mpALIGN_BORDER_LEFT)
+        {
+          dc.DrawLine(orgx, p, orgx + kTickSize, p);
+        }
+        else
+        {
+          dc.DrawLine(orgx - kTickSize, p, orgx, p);
+        }
+      }
+
+      // Write ticks labels in s string : compute size
+      s = FormatLabelValue(n);
 
       // Print ticks labels
       dc.GetTextExtent(s, &tx, &ty);
