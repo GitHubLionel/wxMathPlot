@@ -401,6 +401,7 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   wxFlexGridSizer* FlexGridSizer1;
   wxFlexGridSizer* FlexGridSizer20;
   wxFlexGridSizer* FlexGridSizer21;
+  wxFlexGridSizer* FlexGridSizer2;
   wxFlexGridSizer* FlexGridSizer3;
   wxFlexGridSizer* FlexGridSizer4;
   wxFlexGridSizer* FlexGridSizer5;
@@ -566,7 +567,7 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   cbLegendVisible = new wxCheckBox(Panel2, wxID_ANY, _("Visible"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
   cbLegendVisible->SetValue(false);
   FlexGridSizer6->Add(cbLegendVisible, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
-  FlexGridSizer6->Add(0,0,1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+  FlexGridSizer6->Add(-1,-1,1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
   cbLegendDefaultVisibility = new wxCheckBox(Panel2, wxID_ANY, _("Default visibility"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
   cbLegendDefaultVisibility->SetValue(false);
   cbLegendDefaultVisibility->SetToolTip(_("When checked, the series name is always displayed even if the series is not ploted."));
@@ -618,23 +619,46 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   BoxSizer6 = new wxBoxSizer(wxHORIZONTAL);
   BoxSizer7 = new wxBoxSizer(wxVERTICAL);
   StaticBoxSizer6 = new wxStaticBoxSizer(wxHORIZONTAL, Panel3, _("Pen "));
+  nbPenAxisGrid = new wxNotebook(Panel3, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0);
+  Panel6 = new wxPanel(nbPenAxisGrid, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL);
   FlexGridSizer10 = new wxFlexGridSizer(3, 2, 0, 0);
-  StaticText12 = new wxStaticText(Panel3, wxID_ANY, _("Color :"), wxDefaultPosition, wxDefaultSize, 0);
+  StaticText12 = new wxStaticText(Panel6, wxID_ANY, _("Color :"), wxDefaultPosition, wxDefaultSize, 0);
   FlexGridSizer10->Add(StaticText12, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
-  bAxisPenColor = new wxButton(Panel3, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
+  bAxisPenColor = new wxButton(Panel6, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
   FlexGridSizer10->Add(bAxisPenColor, 1, wxALL|wxEXPAND, 2);
-  StaticText13 = new wxStaticText(Panel3, wxID_ANY, _("Width :"), wxDefaultPosition, wxDefaultSize, 0);
+  StaticText13 = new wxStaticText(Panel6, wxID_ANY, _("Width :"), wxDefaultPosition, wxDefaultSize, 0);
   FlexGridSizer10->Add(StaticText13, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
-  cbAxisPenWidth = new wxChoice(Panel3, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator);
+  cbAxisPenWidth = new wxChoice(Panel6, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator);
   cbAxisPenWidth->Set(WXSIZEOF(PenWidth_choices), PenWidth_choices);
   cbAxisPenWidth->SetSelection(0);
   FlexGridSizer10->Add(cbAxisPenWidth, 1, wxALL|wxEXPAND, 2);
-  StaticText14 = new wxStaticText(Panel3, wxID_ANY, _("Style :"), wxDefaultPosition, wxDefaultSize, 0);
+  StaticText14 = new wxStaticText(Panel6, wxID_ANY, _("Style :"), wxDefaultPosition, wxDefaultSize, 0);
   FlexGridSizer10->Add(StaticText14, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
-  cbAxisPenStyle = new wxChoice(Panel3, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator);
+  cbAxisPenStyle = new wxChoice(Panel6, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator);
   cbAxisPenStyle->Set(WXSIZEOF(PenStyle_choices), PenStyle_choices);
   FlexGridSizer10->Add(cbAxisPenStyle, 1, wxALL|wxEXPAND, 2);
-  StaticBoxSizer6->Add(FlexGridSizer10, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
+  Panel6->SetSizer(FlexGridSizer10);
+  Panel7 = new wxPanel(nbPenAxisGrid, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL);
+  FlexGridSizer2 = new wxFlexGridSizer(3, 2, 0, 0);
+  StaticText42 = new wxStaticText(Panel7, wxID_ANY, _("Color :"), wxDefaultPosition, wxDefaultSize, 0);
+  FlexGridSizer2->Add(StaticText42, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
+  bGridPenColor = new wxButton(Panel7, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
+  FlexGridSizer2->Add(bGridPenColor, 1, wxALL|wxEXPAND, 2);
+  StaticText43 = new wxStaticText(Panel7, wxID_ANY, _("Width :"), wxDefaultPosition, wxDefaultSize, 0);
+  FlexGridSizer2->Add(StaticText43, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
+  cbGridPenWidth = new wxChoice(Panel7, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator);
+  cbGridPenWidth->Set(WXSIZEOF(PenWidth_choices), PenWidth_choices);
+  cbGridPenWidth->SetSelection(0);
+  FlexGridSizer2->Add(cbGridPenWidth, 1, wxALL|wxEXPAND, 2);
+  StaticText44 = new wxStaticText(Panel7, wxID_ANY, _("Style :"), wxDefaultPosition, wxDefaultSize, 0);
+  FlexGridSizer2->Add(StaticText44, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
+  cbGridPenStyle = new wxChoice(Panel7, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator);
+  cbGridPenStyle->Set(WXSIZEOF(PenStyle_choices), PenStyle_choices);
+  FlexGridSizer2->Add(cbGridPenStyle, 1, wxALL|wxEXPAND, 2);
+  Panel7->SetSizer(FlexGridSizer2);
+  nbPenAxisGrid->AddPage(Panel6, _("Axis"), false);
+  nbPenAxisGrid->AddPage(Panel7, _("Grid"), false);
+  StaticBoxSizer6->Add(nbPenAxisGrid, 1, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
   BoxSizer7->Add(StaticBoxSizer6, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 2);
   StaticBoxSizer7 = new wxStaticBoxSizer(wxHORIZONTAL, Panel3, _("Scale "));
   FlexGridSizer12 = new wxFlexGridSizer(3, 2, 0, 0);
@@ -940,6 +964,7 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   bDelAxis->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotConfigDialog::OnbDelAxisClick, this);
   bFontAxis->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotConfigDialog::OnbFontClick, this);
   bAxisPenColor->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotConfigDialog::OnbColorClick, this);
+  bGridPenColor->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotConfigDialog::OnbColorClick, this);
   cbAutoScale->Bind(wxEVT_COMMAND_CHECKBOX_CLICKED, &MathPlotConfigDialog::OncbAutoScaleClick, this);
   cbFormat->Bind(wxEVT_COMMAND_CHOICE_SELECTED, &MathPlotConfigDialog::OncbFormatSelect, this);
   ChoiceSeries->Bind(wxEVT_COMMAND_CHOICE_SELECTED, &MathPlotConfigDialog::OnChoiceSeries, this);
@@ -1288,6 +1313,16 @@ void MathPlotConfigDialog::SetFontChildren(wxButton* p, const wxFontData& fontda
 
 void MathPlotConfigDialog::OnnbConfigPageChanged(wxNotebookEvent& event)
 {
+  // I don't know why but I have an event over nbPenAxisGrid, so this workaround !
+  if (wxNotebook* const notebook = wxDynamicCast(event.GetEventObject(), wxNotebook))
+  {
+    if (notebook == nbPenAxisGrid)
+    {
+      event.Skip();
+      return;
+    }
+  }
+
   const int idx = event.GetSelection();
   CurrentChoice = NULL;
   switch (idx)
@@ -1333,10 +1368,14 @@ void MathPlotConfigDialog::UpdateAxis(void)
   }
 
   edAxisName->SetValue(CurrentScale->GetName());
-  // Pen config
+  // Pen config: Axis and Grid
   DoButtonColour(bAxisPenColor, CurrentScale->GetPen().GetColour());
   cbAxisPenWidth->SetSelection(CurrentScale->GetPen().GetWidth() - 1);
   cbAxisPenStyle->SetSelection(CurrentScale->GetPen().GetStyle() - wxPENSTYLE_SOLID);
+  DoButtonColour(bGridPenColor, CurrentScale->GetGridPen().GetColour());
+  cbGridPenWidth->SetSelection(CurrentScale->GetGridPen().GetWidth() - 1);
+  cbGridPenStyle->SetSelection(CurrentScale->GetGridPen().GetStyle() - wxPENSTYLE_SOLID);
+
   cbAxisVisible->SetValue(CurrentScale->IsVisible());
   cbGridVisible->SetValue(CurrentScale->GetShowGrids());
   cbAxisPosition->SetSelection(CurrentScale->GetAlign() - scale_offset);
@@ -1643,7 +1682,8 @@ void MathPlotConfigDialog::OnbAddLinesClick(wxCommandEvent& WXUNUSED(event))
   Line_string.Add(_("Sigma"));
 
   // Dialog window
-  wxSingleChoiceDialog dialog = wxSingleChoiceDialog {this, Line_string[1], Line_string[0], Choice_string};
+  wxSingleChoiceDialog dialog(this, Line_string[1], Line_string[0], Choice_string);
+
 
   if (dialog.ShowModal() == wxID_CANCEL)
     return;
@@ -1654,7 +1694,7 @@ void MathPlotConfigDialog::OnbAddLinesClick(wxCommandEvent& WXUNUSED(event))
   {
     double values[1] = {1.0};
     wxString *prompts[1] = {&Line_string[3]};
-    wxMultiTextCtrlDialog dlg = wxMultiTextCtrlDialog(this, Choice_string[selection], Line_string[2], 1, prompts[0], &values[0]);
+    wxMultiTextCtrlDialog dlg(this, Choice_string[selection], Line_string[2], 1, prompts[0], &values[0]);
     if (dlg.ShowModal() == wxID_OK)
     {
       if (selection == 0)
@@ -1679,7 +1719,7 @@ void MathPlotConfigDialog::OnbAddLinesClick(wxCommandEvent& WXUNUSED(event))
   {
     double values[2] = {0.0, 1.0};
     wxString *prompts[2] = {&Line_string[5], &Line_string[6]};
-    wxMultiTextCtrlDialog dlg = wxMultiTextCtrlDialog(this, Choice_string[selection], Line_string[4], 2, prompts[0], &values[0]);
+    wxMultiTextCtrlDialog dlg(this, Choice_string[selection], Line_string[4], 2, prompts[0], &values[0]);
     if (dlg.ShowModal() == wxID_OK)
     {
       if (selection == 2)
@@ -1790,10 +1830,14 @@ void MathPlotConfigDialog::Apply(int pageIndex, bool updateFont)
         bool NameChanged = CurrentScale->GetName() != edAxisName->GetValue();
         if (NameChanged)
           CurrentScale->SetName(edAxisName->GetValue());
-        // Pen config
-        wxPen pen(bAxisPenColor->GetBackgroundColour(), cbAxisPenWidth->GetSelection() + 1,
+        // Pen config: Axis and Grid
+        wxPen penAxis(bAxisPenColor->GetBackgroundColour(), cbAxisPenWidth->GetSelection() + 1,
             (wxPenStyle)(cbAxisPenStyle->GetSelection() + wxPENSTYLE_SOLID));
-        CurrentScale->SetPen(pen);
+        CurrentScale->SetPen(penAxis);
+        wxPen penGrid(bGridPenColor->GetBackgroundColour(), cbGridPenWidth->GetSelection() + 1,
+            (wxPenStyle)(cbGridPenStyle->GetSelection() + wxPENSTYLE_SOLID));
+        CurrentScale->SetGridPen(penGrid);
+
         CurrentScale->SetVisible(cbAxisVisible->GetValue());
         CurrentScale->ShowGrids(cbGridVisible->GetValue());
         CurrentScale->SetAlign(scale_offset + cbAxisPosition->GetSelection());

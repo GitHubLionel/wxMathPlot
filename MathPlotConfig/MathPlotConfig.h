@@ -261,6 +261,7 @@ class MathPlotConfigDialog: public wxDialog
     wxButton* bFontAxis;
     wxButton* bFontLegend;
     wxButton* bFontTitle;
+    wxButton* bGridPenColor;
     wxButton* bLegendBrushColor;
     wxButton* bLinesPenColor;
     wxButton* bSeriesBrushColor;
@@ -300,6 +301,8 @@ class MathPlotConfigDialog: public wxDialog
     wxChoice* cbCoord;
     wxChoice* cbCoordBrushStyle;
     wxChoice* cbFormat;
+    wxChoice* cbGridPenStyle;
+    wxChoice* cbGridPenWidth;
     wxChoice* cbLegendBrushStyle;
     wxChoice* cbLegendDirection;
     wxChoice* cbLegendPosition;
@@ -312,11 +315,14 @@ class MathPlotConfigDialog: public wxDialog
     wxChoice* cbSeriesPenWidth;
     wxChoice* cbSeriesSymbolType;
     wxNotebook* nbConfig;
+    wxNotebook* nbPenAxisGrid;
     wxPanel* Panel1;
     wxPanel* Panel2;
     wxPanel* Panel3;
     wxPanel* Panel4;
     wxPanel* Panel5;
+    wxPanel* Panel6;
+    wxPanel* Panel7;
     wxPanel* pLines;
     wxRadioButton* rbLinesDirection;
     wxSpinCtrl* cbSeriesStep;
@@ -356,6 +362,9 @@ class MathPlotConfigDialog: public wxDialog
     wxStaticText* StaticText3;
     wxStaticText* StaticText40;
     wxStaticText* StaticText41;
+    wxStaticText* StaticText42;
+    wxStaticText* StaticText43;
+    wxStaticText* StaticText44;
     wxStaticText* StaticText4;
     wxStaticText* StaticText5;
     wxStaticText* StaticText6;

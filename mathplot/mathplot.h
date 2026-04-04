@@ -154,7 +154,6 @@
 #include <deque>
 #include <algorithm>
 
-
 #if defined(MP_USER_INCLUDE)
   /// Expand a macro argument to a string literal.
   #define xstr(x) #x
@@ -191,27 +190,27 @@
 #endif // ENABLE_MP_DEBUG
 
 /// Default minimum separation for axes in pixels between the X axis and the plot border.
-#define X_BORDER_SEPARATION 40
+#define MP_X_BORDER_SEPARATION 40
 /// Default minimum separation in pixels between Y axes and the plot border.
-#define Y_BORDER_SEPARATION 60
+#define MP_Y_BORDER_SEPARATION 60
 
 /// When setting x labels in date/time format, convert input time to local time.
-#define mpX_LOCALTIME 0x10
+#define MP_X_LOCALTIME 0x10
 /// When setting x labels in date/time format, convert input time to UTC time (or just leave it raw).
-#define mpX_UTCTIME 0x20
-/// Shortcut for mpX_UTCTIME
-#define mpX_RAWTIME mpX_UTCTIME
+#define MP_X_UTCTIME 0x20
+/// Shortcut for MP_X_UTCTIME
+#define MP_X_RAWTIME MP_X_UTCTIME
 
 /// An epsilon for float comparison to 0
-#define EPSILON   1e-30
-/// Nullity test according small epsilon
-#define ISNOTNULL(x)  (fabs(x) > EPSILON)
+#define MP_EPSILON   1e-30
+/// Nullity test. Old solution is to test according small epsilon: (fabs(x) > MP_EPSILON)
+#define ISNOTNULL(x) (std::fpclassify(x) != FP_ZERO)
 
 /// A small extra margin for the plot boundary
-#define EXTRA_MARGIN  8
+#define MP_EXTRA_MARGIN  8
 
 /// Default value for zoom around a point (default -1 is no zoom)
-#define ZOOM_AROUND_CENTER  -1
+#define MP_ZOOM_AROUND_CENTER  -1
 
 //-----------------------------------------------------------------------------
 // classes
@@ -544,7 +543,7 @@ struct [[deprecated("Deprecated! No longer used as X and Y are now separated")]]
   bool operator==(const mpFloatRect& rect) const
   {
     auto Same = [](double a, double b) {
-      return std::fabs(a - b) < EPSILON;
+      return std::fabs(a - b) < MP_EPSILON;
     };
 
     // Compare scalar members
@@ -1370,7 +1369,7 @@ class WXDLLIMPEXP_MATHPLOT mpInfoCoords: public mpInfoLayer
     /** Set X axis label view mode.
      @param mode mpLabel_AUTO for normal labels, mpLabel_TIME for time axis in hours, minutes, seconds.
      @param time_conv set time format Local or UTC */
-    void SetLabelMode(mpLabelType mode, unsigned int time_conv = mpX_RAWTIME)
+    void SetLabelMode(mpLabelType mode, unsigned int time_conv = MP_X_RAWTIME)
     {
       m_labelType = mode;
       m_timeConv = time_conv;
@@ -2684,7 +2683,7 @@ class WXDLLIMPEXP_MATHPLOT mpScale: public mpLayer
     /** Set axis label view mode.
      @param mode mpLabel_AUTO for normal labels, mpLabel_TIME for time axis in hours, minutes, seconds.
      @param time_conv set time format Local or UTC */
-    void SetLabelMode(mpLabelType mode, unsigned int time_conv = mpX_RAWTIME)
+    void SetLabelMode(mpLabelType mode, unsigned int time_conv = MP_X_RAWTIME)
     {
       m_labelType = mode;
       m_timeConv = time_conv;
@@ -2974,7 +2973,7 @@ class WXDLLIMPEXP_MATHPLOT mpScaleY: public mpScale
         mpScale(name, flags, grids, labelType, yAxisID)
     {
       m_subtype = mpsScaleY;
-      m_axisWidth = Y_BORDER_SEPARATION;
+      m_axisWidth = MP_Y_BORDER_SEPARATION;
       m_xPos = 0;
     }
 
@@ -4323,7 +4322,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      * @param zoomIn Zoom in or zoom out boolean
      * @param staticXpixel Optional center position
      * */
-    void DoZoomXCalc(bool zoomIn, wxCoord staticXpixel = ZOOM_AROUND_CENTER);
+    void DoZoomXCalc(bool zoomIn, wxCoord staticXpixel = MP_ZOOM_AROUND_CENTER);
 
     /** Zoom in or out Y around a Y position. Is the position is not set, it will zoom around center.
      * An optional Y-axis ID can be passe to only zoom a specific Y-axis
@@ -4331,7 +4330,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      * @param staticYpixel Optional center position
      * @param yAxisID Optional Y-axis ID used to specify which Y-axis to zoom
      * */
-    void DoZoomYCalc(bool zoomIn, wxCoord staticYpixel = ZOOM_AROUND_CENTER, mpOptional_int yAxisID = MP_OPTNULL_INT);
+    void DoZoomYCalc(bool zoomIn, wxCoord staticYpixel = MP_ZOOM_AROUND_CENTER, mpOptional_int yAxisID = MP_OPTNULL_INT);
 
     /** Set the m_scaleX directly to fixed zoom level, but also adjust m_posX to to make
      * the zoom around center
