@@ -3943,6 +3943,16 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      */
     static bool m_DefaultLegendIsAlwaysVisible;
 
+    /**
+     * Set if legend is always visible even if series is not plotted
+     * @param visible if true, legend is always visible
+     * @sa m_DefaultLegendIsAlwaysVisible
+     */
+    void SetDefaultLegendIsAlwaysVisible(bool visible)
+    {
+      m_DefaultLegendIsAlwaysVisible = visible;
+    }
+
     /** Set window margins, creating a blank area where some kinds of layers cannot draw.
      * This is useful for example to draw axes outside the area where the plots are drawn.
      @param top Top border

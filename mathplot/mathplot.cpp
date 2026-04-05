@@ -2991,29 +2991,35 @@ void mpWindow::OnMouseLeftDown(wxMouseEvent &event)
   if (m_InInfoLegend)
   {
     int select = m_InfoLegend->GetPointed(*this, m_mouseLClick);
-
-    // If shift is pressed, we just swap visibility of the series
-    if (event.m_shiftDown)
+    if (select != -1)
     {
-      mpFunction* CurrentSerie = (mpFunction*)GetLayerPlot(select);
-      CurrentSerie->SetVisible(!CurrentSerie->IsVisible());
-      m_InfoLegend->SetNeedUpdate();
-      Fit();
-      if ((m_configWindow != NULL) && (m_configWindow->IsVisible()))
+      // If shift is pressed, we just swap visibility of the series
+      // @sa m_DefaultLegendIsAlwaysVisible
+      if (event.m_shiftDown)
       {
+        mpFunction* CurrentSerie = (mpFunction*)GetLayerPlot(select);
+        if (CurrentSerie)
+        {
+          CurrentSerie->SetVisible(!CurrentSerie->IsVisible());
+          m_InfoLegend->SetNeedUpdate();
+          Fit();
+          if ((m_configWindow != NULL) && (m_configWindow->IsVisible()))
+          {
+            m_configWindow->Initialize(mpcpiSeries);
+            m_configWindow->SelectChoiceSerie(select);
+          }
+        }
+      }
+      else
+      {
+        // Show config window
+        if (m_configWindow == NULL)
+          m_configWindow = new MathPlotConfigDialog(this);
+
         m_configWindow->Initialize(mpcpiSeries);
         m_configWindow->SelectChoiceSerie(select);
+        m_configWindow->Show();
       }
-    }
-    else
-    {
-      // Show config window
-      if (m_configWindow == NULL)
-        m_configWindow = new MathPlotConfigDialog(this);
-
-      m_configWindow->Initialize(mpcpiSeries);
-      m_configWindow->SelectChoiceSerie(select);
-      m_configWindow->Show();
     }
   }
 #endif // ENABLE_MP_CONFIG
