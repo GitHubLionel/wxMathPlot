@@ -799,9 +799,10 @@ void mpInfoLegend::UpdateBitmap(wxDC &dc, mpWindow &w)
   for (unsigned int p = 0; p < w.CountAllLayers(); p++)
   {
     mpLayer* ly = w.GetLayer(p);
-    if ((ly->GetLayerType() == mpLAYER_PLOT) &&
-        (ly->IsVisible() || (((mpFunction*)ly)->GetLegendIsAlwaysVisible()))  )
+    if (ly->GetLayerType() == mpLAYER_PLOT)
     {
+      if (ly->IsVisible() || (((mpFunction*)ly)->GetLegendIsAlwaysVisible()))
+      {
         int labelWidth = 0, labelHeight = 0;
         wxString label = ly->GetName();
         wxPen lpen = ly->GetPen(); // for legend line, use exact pen set for this plot layer (including width)
@@ -809,7 +810,7 @@ void mpInfoLegend::UpdateBitmap(wxDC &dc, mpWindow &w)
         buff_dc.SetBrush(ly->GetBrush());
         wxFont lfont = GetFont(); // use font of InfoLegend
         // If series is not visible AND legend is marked "Always Visible", we strike his name
-        if (!ly->IsVisible() && (((mpFunction*)ly)->GetLegendIsAlwaysVisible()))
+        if (!ly->IsVisible())
           lfont.MakeStrikethrough();
         buff_dc.SetFont(lfont);
         buff_dc.GetTextExtent(label, &labelWidth, &labelHeight);
@@ -883,7 +884,8 @@ void mpInfoLegend::UpdateBitmap(wxDC &dc, mpWindow &w)
         ld.layerIdx = layerIdx;
         m_LegendDetailList.push_back(ld);
 
-      // Count the series in InfoLegend
+      }
+      // Count the series visible and not visible
       layerIdx++;
     }
   }
