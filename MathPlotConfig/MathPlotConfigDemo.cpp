@@ -182,7 +182,6 @@ MyFrame::MyFrame(const wxString &title) :
 void MyFrame::CreatePlot(void)
 {
 	m_plot = new mpWindow(this);
-	m_plot->EnableDoubleBuffer(true);
 	m_plot->SetMargins(50, 20, 50, 50);
 
 	mpScaleX *bottomAxis = new mpScaleX(wxT("X"), mpALIGN_CENTERX, true, mpLabel_AUTO);

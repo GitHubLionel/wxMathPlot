@@ -3769,11 +3769,11 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
       return (wxCoord)((m_AxisDataYList[yAxisID].pos - y) * m_AxisDataYList[yAxisID].scale);
     }
 
-    /** Enable/disable the double-buffering of the window, eliminating the flicker (default=enabled).
+    /** Enable/disable the auto buffering of PaintDC. Use dto further elimitate flickering of overlays (see RenderOverlays())
      */
-    void EnableDoubleBuffer(const bool enabled)
+    void EnableBufferedPaintDC(const bool enabled)
     {
-      m_enableDoubleBuffer = enabled;
+      m_enableBufferedPaintDC = enabled;
     }
 
     /** Enable/disable the feature of pan/zoom with the mouse (default=enabled)
@@ -4486,6 +4486,12 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     void DeleteConfigWindow(void);
 
     /**
+     * Paint handler which plot all attached layers, with possibility to chose type of DC
+     * @param dc Either wxPaintDC or wxAutoBufferedPaintDC
+     */
+    void Paint(wxDC& dc);
+
+    /**
      * Draw fast moving objects as a overlay on top of the buffered DC,
      * without having to re-draw all layers
      */
@@ -4606,9 +4612,10 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 
     int m_last_lx;                      //!< Last logical X origin, used for double buffering.
     int m_last_ly;                      //!< Last logical Y origin, used for double buffering.
-    wxBitmap* m_buff_bmp;               //!< For double buffering
+    wxBitmap m_buff_bmp;                //!< Bmp for double buffering
+    wxMemoryDC m_buff_dc;               //!< DC for double buffering
     bool m_cacheDirty;                  //!< Indicate that the cached buffer m_buff_bmp need to be re-created
-    bool m_enableDoubleBuffer;          //!< For double buffering. Default enabled
+    bool m_enableBufferedPaintDC;       //!< For auto DC double buffering
     bool m_enableMouseNavigation;       //!< For pan/zoom with the mouse.
     mpMouseButtonAction m_mouseLeftDownAction;  //!< Type of action for left mouse button
     bool m_mouseMovedAfterRightClick;   //!< If the mouse does not move after a right click, then the context menu is displayed.

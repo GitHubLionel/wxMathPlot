@@ -174,7 +174,6 @@ void MathPlotDemoFrame::InitializePlot(void)
   mPlot->GetConfigWindow(true)->CreateSettingsFile("config.ini");
 #endif
 
-  mPlot->EnableDoubleBuffer(true);
   mPlot->SetMargins(50, 20, 80, 80);
 
   // We always have a bottom axis (X axis) and a left axis (Y axis)
