@@ -6,7 +6,7 @@
 // Contributors:    Jose Luis Blanco, Val Greene, Lionel Reynaud, Dave Nadler, MortenMacFly,
 //                  Oskar Waldemarsson (for multi Y axis and corrections)
 // Created:         21/07/2003
-// Last edit:       27/03/2026
+// Last edit:       18/04/2026
 // Copyright:       (c) David Schalig, Davide Rondini
 // Licence:         wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -324,9 +324,8 @@ mpInfoLayer::mpInfoLayer() :
   m_brush.SetColour(*wxWHITE);
   m_relX = 0;
   m_relY = 0;
-  m_location = mpMarginNone;
+  m_location = mpMarginUser;
   m_ZIndex = mpZIndex_INFO;
-  m_hasBeenManuallyMoved = false;
 }
 
 mpInfoLayer::mpInfoLayer(wxRect rect, const wxBrush &brush, mpLocation location) :
@@ -388,7 +387,6 @@ void mpInfoLayer::Move(wxPoint delta, mpWindow &w)
   // when resizing window
   m_relX = (x + 0.5 * m_dim.width) / w.GetScreenX();
   m_relY = (y + 0.5 * m_dim.height) / w.GetScreenY();
-  m_hasBeenManuallyMoved = true;
 }
 
 void mpInfoLayer::UpdateReference()
@@ -413,7 +411,7 @@ void mpInfoLayer::SetInfoRectangle(mpWindow &w, int width, int height)
   if (height != 0)
     m_dim.height = std::min(height, screenHeight);
 
-  if (m_location == mpMarginNone || m_hasBeenManuallyMoved)
+  if (m_location == mpMarginUser)
   {
     // If box has no fixed position or it has been moved, position it as a percentage
     // relative the screen size
@@ -477,7 +475,7 @@ void mpInfoLayer::SetInfoRectangle(mpWindow &w, int width, int height)
         break;
       }
       case mpCursor:
-      case mpMarginNone:
+      case mpMarginUser:
       default:
         ;
     }
@@ -763,18 +761,34 @@ void mpInfoLegend::UpdateBitmap(wxDC &dc, mpWindow &w)
     buff_dc.SetBrush(m_brush);
   buff_dc.DrawRectangle(0, 0, w.GetScreenX(), w.GetScreenY());
 
-  // Start with a header with a drag symbol used to move legend with mouse
-  wxString headerString = wxString::FromUTF8("≡");  // "Hamburger" symbol used for grip
-  wxSize headerSize = dc.GetTextExtent(headerString);
-  m_headerEnd = headerSize.y;
+  // Height of the font
+  wxSize FontHeight = dc.GetTextExtent("H");
+
+  // Position of the label text
   int posX = MARGIN_LEGEND;
   int posY = 0;
-  buff_dc.DrawText(headerString, posX, posY);
 
-  // Move Y down so legend items start below header
-  posY += m_headerEnd + headerSize.y / 2;
-  int height = posY + headerSize.y;
+  // Final size of the bitmap
+  int height = 0;
   int width = 0;
+
+  // Draw header to grip the legend
+  if (GetLocation() == mpMarginUser)
+  {
+    // Start with a header with a drag symbol used to move legend with mouse
+    m_headerEnd = FontHeight.y;
+    buff_dc.DrawText(m_headerString, posX, posY);
+
+    // Move Y down so legend items start below header
+    posY = (3 * m_headerEnd) / 2;
+    height = posY + m_headerEnd;
+  }
+  else
+  {
+    m_headerEnd = 0;
+    posY = FontHeight.y;
+    height = 2 * FontHeight.y;
+  }
 
   // Get plot series names and create new bitmap legend
   m_LegendDetailList.clear();
@@ -898,7 +912,7 @@ void mpInfoLegend::DoPlot(wxDC &dc, mpWindow &w)
 {
   // If this infoLegend is being moved, don't render it as a normal layer which is stored to cache bmp.
   // Instead it will be rendered as a overlay in RenderOverlays(), which is designed for moving objects
-  if(this != w.GetMovingInfoLayer())
+  if (this != w.GetMovingInfoLayer())
   {
     DrawContent(dc, w);
   }
@@ -958,13 +972,16 @@ void mpInfoLegend::RestoreAxisHighlighting(mpWindow &w)
 
 int mpInfoLegend::GetLegendHitRegion(wxPoint mousePos)
 {
-  if(!Inside(mousePos))
+  if (!Inside(mousePos))
     return HitNone;
 
   // First check if mouse hovers header
   wxCoord mouseY = mousePos.y - m_dim.y;
-  if (mouseY >= 0 && mouseY < m_headerEnd)
-    return HitHeader;
+  if (GetLocation() == mpMarginUser)
+  {
+    if (mouseY >= 0 && mouseY < m_headerEnd)
+      return HitHeader;
+  }
 
   // Adjust clicked point coordinates for legend bitmap's offset within plot area
   wxCoord side;
@@ -2989,9 +3006,9 @@ bool mpWindow::CheckUserMouseAction(wxMouseEvent &event)
   return false;
 }
 
-
 void mpWindow::OnMouseLeftDown(wxMouseEvent &event)
 {
+  // Check if the user has defined a special action for this mouse event
   if (CheckUserMouseAction(event))
     return;
 
@@ -3034,11 +3051,17 @@ void mpWindow::OnMouseLeftDown(wxMouseEvent &event)
   m_movingInfoLayer = IsInsideInfoLayer(m_mouseLClick);
   if (m_movingInfoLayer)
   {
-    m_movingInfoLayer->UpdateReference();
-    UpdateAll();
 #ifdef MATHPLOT_DO_LOGGING
     wxLogMessage(_T("mpWindow::OnMouseLeftDown() started moving layer %p"), m_movingInfoLayer);
 #endif
+    // Check if we can move the info layer
+    if (m_movingInfoLayer->GetLocation() == mpMarginUser)
+    {
+      m_movingInfoLayer->UpdateReference();
+      UpdateAll();
+    }
+    else
+      m_movingInfoLayer = nullptr;
   }
 
   if (m_InfoLegend)
@@ -3084,6 +3107,7 @@ void mpWindow::OnMouseLeftDown(wxMouseEvent &event)
 // JLB
 void mpWindow::OnMouseRightDown(wxMouseEvent &event)
 {
+  // Check if the user has defined a special action for this mouse event
   if (CheckUserMouseAction(event))
     return;
 
@@ -3095,13 +3119,19 @@ void mpWindow::OnMouseRightDown(wxMouseEvent &event)
     SetCursor(*wxCROSS_CURSOR);
 }
 
-// If the user "drags" with the right button pressed, do "pan"
-// JLB
+/**
+ * Mouse is moving
+ * Check if we are over an info layer (coordinates or legend)
+ * If true, for coordinates we can drag. For legend, several actions are possible: drag or click to open config
+ * window or swap visibility of a series.
+ * If false, other actions are possible if we are left/right chicked: pan, move or rectangular zoom
+ */
 void mpWindow::OnMouseMove(wxMouseEvent &event)
 {
   // The current mouse position
   m_mousePos = event.GetPosition();
 
+  // Check if the user has defined a special action for this mouse event
   if (CheckUserMouseAction(event))
     return;
 
@@ -3115,7 +3145,7 @@ void mpWindow::OnMouseMove(wxMouseEvent &event)
   bool showMagnet = false;
   bool showInfoCoord = false;
 
-  // pan
+  // Rigth down click: pan
   if (event.m_rightDown)
   {
     m_mouseMovedAfterRightClick = true; // Hides the popup menu after releasing the button!
@@ -3152,6 +3182,7 @@ void mpWindow::OnMouseMove(wxMouseEvent &event)
     wxLogMessage(_T("[mpWindow::OnMouseMove] Ax:%i Ay:%i m_posX:%f m_posY:%f"), Axy.x, Axy.y, m_AxisDataX.pos, m_AxisDataYList[0].pos);
 #endif
   }
+  // Left down click: move info layer or swap visisility (legend) or rectangular zoom
   else if (event.m_leftDown)
   {
     wxPoint moveVector = m_mousePos - m_mouseLClick;
@@ -3229,19 +3260,31 @@ void mpWindow::OnMouseMove(wxMouseEvent &event)
       UpdateAll();
     }
   }
+  // No click: mouse is moving
   else
   {
-    // Mouse move on legend
-    if (m_InfoLegend && m_InfoLegend->IsVisible())
+    // Check if we are moving over an info layer
+    mpInfoLayer* movingInfoLayer = IsInsideInfoLayer(m_mousePos);
+    if (movingInfoLayer)
     {
-      int select = m_InfoLegend->GetLegendHitRegion(m_mousePos);
-      if(select == m_InfoLegend->HitHeader)
+      int select = -1;
+      // Mouse move on legend
+      if (m_InfoLegend)
+      {
+        select = m_InfoLegend->GetLegendHitRegion(m_mousePos);
+        if(select == m_InfoLegend->HitHeader)
+          SetCursor(wxCursor(wxCURSOR_SIZING));
+        else if(select >= 0)
+          SetCursor(wxCursor(wxCURSOR_HAND));
+      }
+      // Mouse move on coord
+      if ((select == -1) && m_InfoCoords && (m_InfoCoords->GetLocation() == mpMarginUser))
+      {
         SetCursor(wxCursor(wxCURSOR_SIZING));
-      else if(select >= 0)
-        SetCursor(wxCursor(wxCURSOR_HAND));
-      else
-        SetCursor(*wxSTANDARD_CURSOR);
+      }
     }
+    else
+      SetCursor(*wxSTANDARD_CURSOR);
     showMagnet = true;
     showInfoCoord = true;
   }
@@ -3286,6 +3329,7 @@ void mpWindow::OnMouseMove(wxMouseEvent &event)
 
 void mpWindow::OnMouseLeftRelease(wxMouseEvent &event)
 {
+  // Check if the user has defined a special action for this mouse event
   if (CheckUserMouseAction(event))
     return;
 
@@ -3337,6 +3381,7 @@ void mpWindow::OnMouseLeftRelease(wxMouseEvent &event)
 // JLB
 void mpWindow::OnMouseWheel(wxMouseEvent &event)
 {
+  // Check if the user has defined a special action for this mouse event
   if (CheckUserMouseAction(event))
     return;
 
@@ -3397,6 +3442,7 @@ void mpWindow::OnMouseWheel(wxMouseEvent &event)
  */
 void mpWindow::OnMouseLeave(wxMouseEvent &event)
 {
+  // Check if the user has defined a special action for this mouse event
   if (CheckUserMouseAction(event))
     return;
 
@@ -3758,6 +3804,7 @@ void mpWindow::LockAspect(bool enable)
 
 void mpWindow::OnShowPopupMenu(wxMouseEvent &event)
 {
+  // Check if the user has defined a special action for this mouse event
   if (CheckUserMouseAction(event))
     return;
 
@@ -5346,7 +5393,7 @@ void mpText::DoPlot(wxDC &dc, mpWindow &w)
 
   switch (m_location)
   {
-    case mpMarginNone:
+    case mpMarginUser:
     {
       px = m_offsetx * w.GetPlotWidth() / 100;
       py = m_offsety * w.GetPlotHeight() / 100;

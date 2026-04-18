@@ -3,7 +3,7 @@
  * Purpose:   Code for Application Frame
  * Author:    Lionel ()
  * Created:   2021-01-24
- * Last edit: 2026-03-27
+ * Last edit: 2026-04-18
  * Copyright: Lionel ()
  * License:
  **************************************************************/
@@ -360,7 +360,7 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   _("Bottom left"),
   _("Bottom center"),
   _("Bottom right"),
-  _("Default position"),
+  _("User position"),
   _("Cursor position"),
   };
 
@@ -999,6 +999,8 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   cbLegendBrushStyle->SetToolTip(MESS_TRANSPARENT);
 #endif // _WIN32
 
+  // Delete the last item who is nonsense for Legend
+  cbLegendPosition->Delete(WXSIZEOF(InfoPosition_choices) - 1);
   // The plot window
   m_plot = wxDynamicCast(parent, mpWindow);
   // The settings for the config window

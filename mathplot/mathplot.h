@@ -6,7 +6,7 @@
 // Contributors:    Jose Luis Blanco, Val Greene, Lionel Reynaud, Dave Nadler, MortenMacFly,
 //                  Oskar Waldemarsson (for multi Y axis and corrections)
 // Created:         21/07/2003
-// Last edit:       30/03/2026
+// Last edit:       18/04/2026
 // Copyright:       (c) David Schalig, Davide Rondini
 // Licence:         wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -662,7 +662,7 @@ typedef enum __mp_Location_Type
   mpMarginBottomLeft,    //!< Align the info in margin bottom-left
   mpMarginBottomCenter,  //!< Align the info in margin center-bottom
   mpMarginBottomRight,   //!< Align the info in margin bottom-right
-  mpMarginNone,          //!< No alignment
+  mpMarginUser,          //!< User defined position. Can be change by mouse drag
   mpCursor               //!< only for mpInfoCoords
 } mpLocation;
 
@@ -1255,7 +1255,7 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLayer: public mpLayer
      @param rect Sets the initial size rectangle of the layer.
      @param brush pointer to a fill brush. Default is transparent
      @param location to place in the margin or free */
-    mpInfoLayer(wxRect rect, const wxBrush &brush = *wxTRANSPARENT_BRUSH, mpLocation location = mpMarginNone);
+    mpInfoLayer(wxRect rect, const wxBrush &brush = *wxTRANSPARENT_BRUSH, mpLocation location = mpMarginUser);
 
     /** Destructor */
     virtual ~mpInfoLayer();
@@ -1321,7 +1321,6 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLayer: public mpLayer
     void SetLocation(mpLocation location)
     {
       m_location = location;
-      m_hasBeenManuallyMoved = false;
     }
 
     /** Return the location of the mpInfoLayer box
@@ -1338,7 +1337,6 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLayer: public mpLayer
     double m_relX;          //!< Box X position relative window, used to rescale the info box position when the window is resized.
     double m_relY;          //!< Box Y position relative window, used to rescale the info box position when the window is resized.
     mpLocation m_location;  //!< Location of the box in the margin. Default mpMarginNone = use coordinates
-    bool m_hasBeenManuallyMoved;  //!< Indicates if box has been moved manually with mouse
 
     /** Plot method. Can be overridden by derived classes.
      @param dc the device content where to plot
@@ -1373,7 +1371,7 @@ class WXDLLIMPEXP_MATHPLOT mpInfoCoords: public mpInfoLayer
      @param rect The initial bounding rectangle.
      @param brush The wxBrush to be used for box background: default is transparent
      @param location to place in the margin or free */
-    mpInfoCoords(wxRect rect, const wxBrush &brush = *wxTRANSPARENT_BRUSH, mpLocation location = mpMarginNone);
+    mpInfoCoords(wxRect rect, const wxBrush &brush = *wxTRANSPARENT_BRUSH, mpLocation location = mpMarginUser);
 
     /** Default destructor */
     ~mpInfoCoords()
@@ -1493,7 +1491,7 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLegend: public mpInfoLayer
      @param brush The wxBrush to be used for box background: default is transparent
      @param location to place in the margin or free
      @sa mpInfoLayer::mpInfoLayer */
-    mpInfoLegend(wxRect rect, const wxBrush &brush = *wxWHITE_BRUSH, mpLocation location = mpMarginNone);
+    mpInfoLegend(wxRect rect, const wxBrush &brush = *wxWHITE_BRUSH, mpLocation location = mpMarginUser);
 
     /**  Default destructor */
     ~mpInfoLegend() {}
@@ -1533,7 +1531,7 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLegend: public mpInfoLayer
     }
 
     /** Set if dragged series shall be shown or hidden
-    @param show Set if shall be shown */
+    @param active Set if shall be shown */
     void ShowDraggedSeries(bool active)
     {
       m_showDraggedSeries = active;
@@ -1549,8 +1547,8 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLegend: public mpInfoLayer
     /** Checks if mouse is inside legend and if it hovers the header or any of the series
      * If a series is hovered, return its index. If the header is hovered, return HitHeader,
      * otherwise return HitNone
-     * @param eventPoint The mouse position
-     * @return Index of series or header hit */
+     * @param mousePos The mouse position
+     * @return Index of series or header hit. Return -1 if we are outside the legend */
     int GetLegendHitRegion(wxPoint mousePos);
 
     /** When a series is being dragged, draw a rectangle with its name at the mouse cursor.
@@ -1563,8 +1561,7 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLegend: public mpInfoLayer
 
     /** Draw the content of info legend to plot
      * @param dc the device context where to plot
-     * @param w Parent mpWindow from which to obtain information
-     * @param drawToCache */
+     * @param w Parent mpWindow from which to obtain information */
     void DrawContent(wxDC &dc, mpWindow &w);
 
     /** Clear the dragged series rectangle from the plot and restores axis hovering indication
@@ -1585,6 +1582,7 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLegend: public mpInfoLayer
     mpLegendStyle m_item_mode;          //!< Visual style used for each legend entry.
     mpLegendDirection m_item_direction; //!< Layout direction used when arranging legend entries.
     bool m_showDraggedSeries;           //!< Indicate if series that has been gripped with mouse shall be drawn
+    wxString m_headerString = wxString::FromUTF8("≡");  //!< "Hamburger" symbol used for grip the legend
 
     /** Plot method.
      @param dc the device context where to plot
@@ -4691,7 +4689,7 @@ class WXDLLIMPEXP_MATHPLOT mpText: public mpLayer
       SetName(name);
       m_offsetx = 5;
       m_offsety = 50;
-      m_location = mpMarginNone;
+      m_location = mpMarginUser;
       m_ZIndex = mpZIndex_TEXT;
     }
 
