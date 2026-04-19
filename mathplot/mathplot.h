@@ -259,8 +259,8 @@ typedef union
     struct
     {
         wxCoord startPx;
-        wxCoord endPx;
         wxCoord startPy;
+        wxCoord endPx;
         wxCoord endPy;
     };
     struct
