@@ -328,15 +328,15 @@ mpInfoLayer::mpInfoLayer() :
   m_ZIndex = mpZIndex_INFO;
 }
 
-mpInfoLayer::mpInfoLayer(wxRect rect, const wxBrush &brush, mpLocation location) :
+mpInfoLayer::mpInfoLayer(wxPoint pos, const wxBrush &brush, mpLocation location) :
     mpInfoLayer()
 {
   m_brush = brush;
   if (m_brush.GetStyle() == wxBRUSHSTYLE_TRANSPARENT)
     m_brush.SetColour(*wxWHITE);
-  m_dim.x = rect.x;
-  m_dim.y = rect.y;
   m_location = location;
+  m_relX = pos.x / 100.0;
+  m_relY = pos.y / 100.0;
 }
 
 mpInfoLayer::~mpInfoLayer()
@@ -519,10 +519,12 @@ mpInfoCoords::mpInfoCoords(mpLocation location) :
     mpInfoCoords()
 {
   m_location = location;
+  if (m_location == mpMarginUser)
+    m_drawOutsideMargins = true;
 }
 
-mpInfoCoords::mpInfoCoords(wxRect rect, const wxBrush &brush, mpLocation location) :
-    mpInfoLayer(rect, brush, location)
+mpInfoCoords::mpInfoCoords(wxPoint pos, const wxBrush &brush, mpLocation location) :
+    mpInfoLayer(pos, brush, location)
 {
   m_show = false;
   m_subtype = mpiCoords;
@@ -531,6 +533,8 @@ mpInfoCoords::mpInfoCoords(wxRect rect, const wxBrush &brush, mpLocation locatio
   m_mouseX = m_mouseY = 0;
   m_series_coord = false;
   m_content = _T("");
+  if (m_location == mpMarginUser)
+    m_drawOutsideMargins = true;
 }
 
 void mpInfoCoords::UpdateInfo(mpWindow &w, wxEvent &event)
@@ -734,8 +738,8 @@ mpInfoLegend::mpInfoLegend() :
   m_showDraggedSeries = false;
 }
 
-mpInfoLegend::mpInfoLegend(wxRect rect, const wxBrush &brush, mpLocation location) :
-    mpInfoLayer(rect, brush, location)
+mpInfoLegend::mpInfoLegend(wxPoint pos, const wxBrush &brush, mpLocation location) :
+    mpInfoLayer(pos, brush, location)
 {
   m_subtype = mpiLegend;
   m_item_mode = mpLegendLine;
@@ -1602,8 +1606,8 @@ void mpFXY::DoPlot(wxDC &dc, mpWindow &w)
   if (m_showName && !m_name.IsEmpty())
   {
     // Test if series is always visible, if no don't show name
-    if ((m_drawX.min < m_plotBoundaries.right) && (m_drawX.max > m_plotBoundaries.left) &&
-        (m_drawY.min < m_plotBoundaries.bottom) && (m_drawY.max > m_plotBoundaries.top))
+    if ((m_drawX.min < m_plotBoundaries.top) && (m_drawX.max > m_plotBoundaries.left) &&
+        (m_drawY.min < m_plotBoundaries.bottom) && (m_drawY.max > m_plotBoundaries.right))
     {
       wxCoord tx, ty, tw, th;
       dc.GetTextExtent(m_name, &tw, &th);
@@ -1639,10 +1643,10 @@ void mpFXY::DoPlot(wxDC &dc, mpWindow &w)
       if (tx < m_plotBoundaries.left)
         tx = m_plotBoundaries.left;
       else
-        if (tx + tw > m_plotBoundaries.right)
-          tx = m_plotBoundaries.right - tw;
-      if (ty < m_plotBoundaries.top)
-        ty = m_plotBoundaries.top;
+        if (tx + tw > m_plotBoundaries.top)
+          tx = m_plotBoundaries.top - tw;
+      if (ty < m_plotBoundaries.right)
+        ty = m_plotBoundaries.right;
       else
         if (ty + th > m_plotBoundaries.bottom)
           ty = m_plotBoundaries.bottom - th;

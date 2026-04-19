@@ -259,8 +259,8 @@ typedef union
     struct
     {
         wxCoord startPx;
-        wxCoord startPy;
         wxCoord endPx;
+        wxCoord startPy;
         wxCoord endPy;
     };
     struct
@@ -1252,10 +1252,10 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLayer: public mpLayer
     mpInfoLayer();
 
     /** Complete constructor.
-     @param rect Sets the initial size rectangle of the layer.
+     @param pos Sets the initial position in percent of the rectangle of the layer.
      @param brush pointer to a fill brush. Default is transparent
      @param location to place in the margin or free */
-    mpInfoLayer(wxRect rect, const wxBrush &brush = *wxTRANSPARENT_BRUSH, mpLocation location = mpMarginUser);
+    mpInfoLayer(wxPoint pos, const wxBrush &brush = *wxTRANSPARENT_BRUSH, mpLocation location = mpMarginUser);
 
     /** Destructor */
     virtual ~mpInfoLayer();
@@ -1300,6 +1300,14 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLayer: public mpLayer
     wxPoint GetPosition() const
     {
       return m_dim.GetPosition();
+    }
+
+    /** Set the position in percent of the upper left corner of the box
+     @param pos the position in pourcent of the upper left corner of the box */
+    void SetInitialPosition(wxPoint pos)
+    {
+      m_relX = pos.x / 100.0;
+      m_relY = pos.y / 100.0;
     }
 
     /** Get the size of the box (in pixels)
@@ -1368,10 +1376,10 @@ class WXDLLIMPEXP_MATHPLOT mpInfoCoords: public mpInfoLayer
     mpInfoCoords(mpLocation location);
 
     /** Complete constructor, setting initial rectangle and background brush.
-     @param rect The initial bounding rectangle.
+     @param pos The initial position in percent of the rectangle.
      @param brush The wxBrush to be used for box background: default is transparent
      @param location to place in the margin or free */
-    mpInfoCoords(wxRect rect, const wxBrush &brush = *wxTRANSPARENT_BRUSH, mpLocation location = mpMarginUser);
+    mpInfoCoords(wxPoint pos, const wxBrush &brush = *wxTRANSPARENT_BRUSH, mpLocation location = mpMarginUser);
 
     /** Default destructor */
     ~mpInfoCoords()
@@ -1487,11 +1495,11 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLegend: public mpInfoLayer
     mpInfoLegend();
 
     /** Complete constructor, setting initial rectangle and background brush.
-     @param rect The initial bounding rectangle.
+     @param pos The initial position in percent of the rectangle.
      @param brush The wxBrush to be used for box background: default is transparent
      @param location to place in the margin or free
      @sa mpInfoLayer::mpInfoLayer */
-    mpInfoLegend(wxRect rect, const wxBrush &brush = *wxWHITE_BRUSH, mpLocation location = mpMarginUser);
+    mpInfoLegend(wxPoint pos, const wxBrush &brush = *wxWHITE_BRUSH, mpLocation location = mpMarginUser);
 
     /**  Default destructor */
     ~mpInfoLegend() {}
