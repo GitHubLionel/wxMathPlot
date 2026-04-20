@@ -2913,7 +2913,6 @@ mpWindow::~mpWindow()
   // Free all the layers:
   DelAllLayers(mpForceDelete, false);
 
-  DeleteAndNull(m_buff_bmp);
   DeleteAndNull(m_Screenshot_bmp);
 }
 
@@ -2969,9 +2968,8 @@ void mpWindow::InitParameters()
   m_AxisDataYList.emplace(std::make_pair(0, mpAxisData()));
 #endif
 
-  m_buff_bmp = NULL;
   m_Screenshot_bmp = NULL;
-  m_enableDoubleBuffer = true;
+  m_enableBufferedPaintDC = true;
   m_enableMouseNavigation = true;
   m_mouseMovedAfterRightClick = false;
   m_mouseYAxisID = MP_OPTNULL_INT;
@@ -3989,8 +3987,10 @@ bool mpWindow::AddLayer(mpLayer *layer, bool refreshDisplay, bool refreshConfig)
     }
   }
 
-  // add the layer to the layer list
+  // add the layer to the layer list and sort according to Z index
   m_layers.push_back(layer);
+  std::sort(m_layers.begin(), m_layers.end(),
+    [](auto a, auto b) { return a->GetZIndex() < b->GetZIndex(); });
 
   // We just add a function, so we need to update the legend and verify the axis
   if (layer->GetLayerType() == mpLAYER_PLOT)
@@ -4188,17 +4188,25 @@ void mpWindow::DelAllYAxisAfterID(mpDeleteAction alsoDeleteObject, int yAxisID, 
 
 void mpWindow::OnPaint(wxPaintEvent &WXUNUSED(event))
 {
-#ifdef _WIN32
-  wxPaintDC dc(this);
-#else
-  wxAutoBufferedPaintDC dc(this);
-#endif
+  if (m_enableBufferedPaintDC)
+  {
+    wxAutoBufferedPaintDC dc(this);
+    Paint(dc);
+  }
+  else
+  {
+    wxPaintDC dc(this);
+    Paint(dc);
+  }
+}
+
+void mpWindow::Paint(wxDC& dc)
+{
   int h, w;
-  dc.GetSize(&w, &h);   // This is the size of the visible area only!
+  GetClientSize(&w, &h);
   if (w == 0 || h == 0)
     return;
   SetScreen(w, h);
-  wxMemoryDC* m_buff_dc = NULL;
 
 #ifdef MATHPLOT_DO_LOGGING
   {
@@ -4208,31 +4216,15 @@ void mpWindow::OnPaint(wxPaintEvent &WXUNUSED(event))
   }
 #endif
 
-  // Selects direct or buffered draw:
-  wxDC* trgDc;
-
-  // J.L.Blanco @ Aug 2007: Added double buffer support
-  if (m_enableDoubleBuffer)
+  // Recreate Bitmap if sizes have changed
+  if (m_last_lx != m_scrX || m_last_ly != m_scrY)
   {
-    // Recreate Bitmap if sizes have changed
-    if (m_last_lx != m_scrX || m_last_ly != m_scrY)
-    {
-      m_cacheDirty = true;
-      DeleteAndNull(m_buff_bmp);
-      m_buff_bmp = new wxBitmap(m_scrX, m_scrY, dc);
-      m_last_lx = m_scrX;
-      m_last_ly = m_scrY;
-    }
-    m_buff_dc = new wxMemoryDC(&dc);
-    m_buff_dc->SelectObject(*m_buff_bmp);
-    trgDc = m_buff_dc;
-  }
-  else
-  {
-    // If double buffer are disabled, we need to re-draw all layers everytime
     m_cacheDirty = true;
-    trgDc = &dc;
+    m_buff_bmp = wxBitmap(m_scrX, m_scrY);
+    m_last_lx = m_scrX;
+    m_last_ly = m_scrY;
   }
+  m_buff_dc.SelectObject(m_buff_bmp);
 
   // Only re-draw every layer if cached buffer is considered dirty, i.e. if major
   // part of the plot has changed via e.g. zoom, resize or paning operation
@@ -4241,37 +4233,26 @@ void mpWindow::OnPaint(wxPaintEvent &WXUNUSED(event))
     m_cacheDirty = false;
     // Draw background
     // Clean the screen
-    trgDc->Clear();
+    m_buff_dc.Clear();
     if (m_drawBox)
-      trgDc->SetPen(*wxBLACK);
+      m_buff_dc.SetPen(*wxBLACK);
     else
-      trgDc->SetPen(*wxTRANSPARENT_PEN);
-    trgDc->SetBrush(*wxWHITE_BRUSH);
-    trgDc->DrawRectangle(0, 0, m_scrX, m_scrY);
+      m_buff_dc.SetPen(*wxTRANSPARENT_PEN);
+    m_buff_dc.SetBrush(*wxWHITE_BRUSH);
+    m_buff_dc.DrawRectangle(0, 0, m_scrX, m_scrY);
 
     // Draw background plot area
-    trgDc->SetBrush(m_bgColour);
-    trgDc->SetTextForeground(m_fgColour);
-    trgDc->DrawRectangle(m_PlotArea);
+    m_buff_dc.SetBrush(m_bgColour);
+    m_buff_dc.SetTextForeground(m_fgColour);
+    m_buff_dc.DrawRectangle(m_PlotArea);
 
     // Draw all the layers in Z order
-    for (int i = mpZIndex_BACKGROUND; i < mpZIndex_END; i++)
-    {
-      for (mpLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
-      {
-        if ((*it)->GetZIndex() == i)
-          (*it)->Plot(*trgDc, *this);
-      }
-    }
+    for (auto& layer : m_layers)
+      layer->Plot(m_buff_dc, *this);
   }
 
-  // If doublebuffer, draw now to the window:
-  if (m_enableDoubleBuffer)
-  {
-    dc.Blit(0, 0, m_scrX, m_scrY, trgDc, 0, 0, wxCOPY);
-    m_buff_dc->SelectObject(wxNullBitmap);
-    delete m_buff_dc;
-  }
+  dc.Blit(0, 0, m_scrX, m_scrY, &m_buff_dc, 0, 0, wxCOPY);
+  m_buff_dc.SelectObject(wxNullBitmap);
 
   // Overlays shall be drawn directly to dc after the cached m_buff_bmp has been blitted,
   // so that they can be drawn at a much higher frequency without having to clear the plot
