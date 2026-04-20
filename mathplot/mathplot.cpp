@@ -1606,8 +1606,8 @@ void mpFXY::DoPlot(wxDC &dc, mpWindow &w)
   if (m_showName && !m_name.IsEmpty())
   {
     // Test if series is always visible, if no don't show name
-    if ((m_drawX.min < m_plotBoundaries.top) && (m_drawX.max > m_plotBoundaries.left) &&
-        (m_drawY.min < m_plotBoundaries.bottom) && (m_drawY.max > m_plotBoundaries.right))
+    if ((m_drawX.min < m_plotBoundaries.right) && (m_drawX.max > m_plotBoundaries.left) &&
+        (m_drawY.min < m_plotBoundaries.bottom) && (m_drawY.max > m_plotBoundaries.top))
     {
       wxCoord tx, ty, tw, th;
       dc.GetTextExtent(m_name, &tw, &th);
@@ -1643,10 +1643,10 @@ void mpFXY::DoPlot(wxDC &dc, mpWindow &w)
       if (tx < m_plotBoundaries.left)
         tx = m_plotBoundaries.left;
       else
-        if (tx + tw > m_plotBoundaries.top)
-          tx = m_plotBoundaries.top - tw;
-      if (ty < m_plotBoundaries.right)
-        ty = m_plotBoundaries.right;
+        if (tx + tw > m_plotBoundaries.right)
+          tx = m_plotBoundaries.right - tw;
+      if (ty < m_plotBoundaries.top)
+        ty = m_plotBoundaries.top;
       else
         if (ty + th > m_plotBoundaries.bottom)
           ty = m_plotBoundaries.bottom - th;
