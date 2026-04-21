@@ -1698,9 +1698,9 @@ void mpFXYVector::DrawAddedPoint(double x, double y)
     return;
 
   // Direct access to the dc
-  wxClientDC dc(m_win);
-  dc.SetPen(m_pen);
-  dc.SetBrush(m_brush);
+  wxMemoryDC *dc = m_win->GetMemoryDC();
+  dc->SetPen(m_pen);
+  dc->SetBrush(m_brush);
 
   CheckLog(&x, &y, m_yAxisID);
   wxCoord ix = m_win->x2p(x);
@@ -1719,30 +1719,34 @@ void mpFXYVector::DrawAddedPoint(double x, double y)
         CheckLog(&xlast, &ylast, m_yAxisID);
         wxCoord ixlast = m_win->x2p(xlast);
         wxCoord iylast = m_win->y2p(ylast, m_yAxisID);
-        dc.DrawLine(ixlast, iylast, ix, iy);
+        dc->DrawLine(ixlast, iylast, ix, iy);
       };
 
       if (m_symbol != mpsNone)
-        DrawSymbol(dc, ix, iy);
+        DrawSymbol(*dc, ix, iy);
     }
     else
     {
       if (m_symbol == mpsNone)
       {
         if (m_pen.GetWidth() > 1)
-          dc.DrawLine(ix, iy, ix, iy);
+          dc->DrawLine(ix, iy, ix, iy);
         else
-          dc.DrawPoint(ix, iy);
+          dc->DrawPoint(ix, iy);
       }
       else
-        DrawSymbol(dc, ix, iy);
+        DrawSymbol(*dc, ix, iy);
     }
   }
   else
   {
     wxCoord iybase = m_win->y2p(0, m_yAxisID);
-    dc.DrawRectangle(ix - m_BarWidth, iy, 2 * m_BarWidth, iybase - iy);
+    dc->DrawRectangle(ix - m_BarWidth, iy, 2 * m_BarWidth, iybase - iy);
   }
+
+  // Release the bitmap, then refresh
+  dc->SelectObject(wxNullBitmap);
+  m_win->Refresh();
 }
 
 void mpFXYVector::Clear()

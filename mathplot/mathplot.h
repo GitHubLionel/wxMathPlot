@@ -4497,6 +4497,17 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      */
     void RenderOverlays(wxDC& dc);
 
+    /**
+     * Give a direct access to the memory DC to draw in the buffered bitmap
+     * You need release the bitmap after use
+     * @return the memory DC
+     */
+    wxMemoryDC *GetMemoryDC(void)
+    {
+      m_buff_dc.SelectObject(m_buff_bmp);
+      return &m_buff_dc;
+    }
+
   protected:
     virtual void BindEvents(void);                                //!< Connect all events
     virtual void OnPaint(wxPaintEvent &event);                    //!< Paint handler, will plot all attached layers
