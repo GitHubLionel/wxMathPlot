@@ -1706,14 +1706,17 @@ void mpFXYVector::DrawAddedPoint(double x, double y)
   wxCoord ix = m_win->x2p(x);
   wxCoord iy = m_win->y2p(y, m_yAxisID);
 
+  // Last index of the inserted point
+  size_t index = m_xs.size() - 1;
+
   if (!m_ViewAsBar)
   {
     if (m_continuous)
     {
-      if (m_index > 0)
+      if (index > 0)
       { // Do not draw continuous-mode line unless there is a prior point
         // Last point coordinates
-        size_t lastPtIdx = m_index - 1; // we assume that m_step = 1 in this context
+        size_t lastPtIdx = index - 1; // we assume that m_step = 1 in this context
         double xlast = m_xs[lastPtIdx];
         double ylast = m_ys[lastPtIdx];
         CheckLog(&xlast, &ylast, m_yAxisID);
