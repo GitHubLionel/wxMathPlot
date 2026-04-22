@@ -1314,21 +1314,64 @@
 													<border>2</border>
 												</object>
 												<object class="sizeritem">
-													<object class="wxFlexGridSizer" variable="FlexGridSizer19" member="no">
-														<cols>2</cols>
-														<rows>1</rows>
+													<object class="wxStaticBoxSizer" variable="StaticBoxSizer13" member="no">
+														<label>Step</label>
 														<object class="sizeritem">
-															<object class="wxStaticText" name="" variable="StaticText19" member="yes">
-																<label>Skip point over :</label>
-															</object>
-															<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
-															<border>5</border>
-															<option>1</option>
-														</object>
-														<object class="sizeritem">
-															<object class="wxSpinCtrl" name="" variable="cbSeriesStep" member="yes">
-																<value>1</value>
-																<min>1</min>
+															<object class="wxFlexGridSizer" variable="FlexGridSizer19" member="no">
+																<cols>2</cols>
+																<rows>3</rows>
+																<object class="sizeritem">
+																	<object class="wxStaticText" name="" variable="StaticText19" member="yes">
+																		<label>Step size :</label>
+																		<tooltip>Set step size, e.g. 1 to show all points, 2 to show every other step and so on</tooltip>
+																	</object>
+																	<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+																	<border>5</border>
+																	<option>1</option>
+																</object>
+																<object class="sizeritem">
+																	<object class="wxSpinCtrl" name="" variable="cbSeriesStep" member="yes">
+																		<value>1</value>
+																		<min>1</min>
+																	</object>
+																	<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+																	<border>5</border>
+																	<option>1</option>
+																</object>
+																<object class="sizeritem">
+																	<object class="wxCheckBox" name="" variable="cbAutoStep" member="yes">
+																		<label>Auto step</label>
+																		<tooltip>Automatically calculate step size based on how many points that is allowed to be shown</tooltip>
+																		<handler function="OncbAutoStepClick" entry="EVT_CHECKBOX" />
+																	</object>
+																	<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+																	<border>5</border>
+																	<option>1</option>
+																</object>
+																<object class="spacer">
+																	<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+																	<border>5</border>
+																	<option>1</option>
+																</object>
+																<object class="sizeritem">
+																	<object class="wxStaticText" name="" variable="StaticText45" member="yes">
+																		<label>Max nOf points :</label>
+																		<tooltip>Sets how many points to max show in the plot at the same time. Decrease for faster plot</tooltip>
+																	</object>
+																	<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+																	<border>5</border>
+																	<option>1</option>
+																</object>
+																<object class="sizeritem">
+																	<object class="wxSpinCtrl" name="" variable="cbMaxNOfPoints" member="yes">
+																		<value>3000</value>
+																		<min>1</min>
+																		<max>50000</max>
+																	</object>
+																	<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+																	<border>5</border>
+																	<option>1</option>
+																</object>
 															</object>
 															<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
 															<border>5</border>
@@ -1343,9 +1386,8 @@
 														<label>View as bar</label>
 														<enabled>0</enabled>
 													</object>
-													<flag>wxALL|wxEXPAND</flag>
+													<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
 													<border>5</border>
-													<option>1</option>
 												</object>
 											</object>
 											<flag>wxALL|wxALIGN_TOP|wxALIGN_CENTER_HORIZONTAL</flag>

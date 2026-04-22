@@ -1743,6 +1743,36 @@ class WXDLLIMPEXP_MATHPLOT mpFunction: public mpLayer
       return m_LegendIsAlwaysVisible;
     }
 
+    /** Enables auto step which is used to plot a maximum nuber of
+     * points at a time to the plot no matter zoom level
+     * @param enable Enables auto step */
+    void SetAutoStep(bool enable)
+    {
+      m_autoStep = enable;
+    }
+
+    /** Get if auto stop is enabled
+     * @return True if auto step is enabled */
+    bool GetAutoStep() const
+    {
+      return m_autoStep;
+    }
+
+    /** Set how many points that is allowed to be drawn at a time.
+     * Reduce to speed up plotting
+     * @param nOfPoints The maximum number of points to plot */
+    void SetMaxNOfPoints(size_t nOfPoints)
+    {
+      m_maxNOfPoints = nOfPoints;
+    }
+
+    /** Get maximum number of points to plot
+     * @return Maximum number of points */
+    size_t GetMaxNOfPoints() const
+    {
+      return m_maxNOfPoints;
+    }
+
   protected:
     bool m_continuous;            //!< Specify if the layer will be plotted as a continuous line or a set of points. Default false
     mpSymbol m_symbol;            //!< A symbol for the plot in place of point. Default mpNone
@@ -1751,6 +1781,8 @@ class WXDLLIMPEXP_MATHPLOT mpFunction: public mpLayer
     unsigned int m_step;          //!< Step to get point to be draw. Default : 1
     int m_yAxisID;                //!< The ID of the Y axis used by the function. Equal 0 if no axis.
     bool m_LegendIsAlwaysVisible; //!< If true, the name is visible in the legend despite the visibility of the function. Default false
+    bool m_autoStep;              //!< Calculates m_step automatically based on how many points you want to draw
+    size_t m_maxNOfPoints;        //!< Maximum number of points to draw to screen
 
   private:
     DECLARE_DYNAMIC_CLASS_MATHPLOT(mpFunction);

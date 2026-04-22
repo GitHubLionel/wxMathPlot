@@ -412,6 +412,7 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   wxStaticBoxSizer* StaticBoxSizer10;
   wxStaticBoxSizer* StaticBoxSizer11;
   wxStaticBoxSizer* StaticBoxSizer12;
+  wxStaticBoxSizer* StaticBoxSizer13;
   wxStaticBoxSizer* StaticBoxSizer1;
   wxStaticBoxSizer* StaticBoxSizer2;
   wxStaticBoxSizer* StaticBoxSizer3;
@@ -863,17 +864,31 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   FlexGridSizer18->Add(cbSeriesSymbolSize, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 2);
   StaticBoxSizer10->Add(FlexGridSizer18, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
   BoxSizer10->Add(StaticBoxSizer10, 0, wxALL, 2);
-  FlexGridSizer19 = new wxFlexGridSizer(1, 2, 0, 0);
-  StaticText19 = new wxStaticText(Panel4, wxID_ANY, _("Skip point over :"), wxDefaultPosition, wxDefaultSize, 0);
+  StaticBoxSizer13 = new wxStaticBoxSizer(wxHORIZONTAL, Panel4, _("Step"));
+  FlexGridSizer19 = new wxFlexGridSizer(3, 2, 0, 0);
+  StaticText19 = new wxStaticText(Panel4, wxID_ANY, _("Step size :"), wxDefaultPosition, wxDefaultSize, 0);
+  StaticText19->SetToolTip(_("Set step size, e.g. 1 to show all points, 2 to show every other step and so on"));
   FlexGridSizer19->Add(StaticText19, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
   cbSeriesStep = new wxSpinCtrl(Panel4, wxID_ANY, _T("1"), wxDefaultPosition, wxDefaultSize, 0, 1, 100, 1);
   cbSeriesStep->SetValue(_T("1"));
   FlexGridSizer19->Add(cbSeriesStep, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-  BoxSizer10->Add(FlexGridSizer19, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+  cbAutoStep = new wxCheckBox(Panel4, wxID_ANY, _("Auto step"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
+  cbAutoStep->SetValue(false);
+  cbAutoStep->SetToolTip(_("Automatically calculate step size based on how many points that is allowed to be shown"));
+  FlexGridSizer19->Add(cbAutoStep, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
+  FlexGridSizer19->Add(-1,-1,1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+  StaticText45 = new wxStaticText(Panel4, wxID_ANY, _("Max nOf points :"), wxDefaultPosition, wxDefaultSize, 0);
+  StaticText45->SetToolTip(_("Sets how many points to max show in the plot at the same time. Decrease for faster plot"));
+  FlexGridSizer19->Add(StaticText45, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+  cbMaxNOfPoints = new wxSpinCtrl(Panel4, wxID_ANY, _T("3000"), wxDefaultPosition, wxDefaultSize, 0, 1, 50000, 3000);
+  cbMaxNOfPoints->SetValue(_T("3000"));
+  FlexGridSizer19->Add(cbMaxNOfPoints, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+  StaticBoxSizer13->Add(FlexGridSizer19, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+  BoxSizer10->Add(StaticBoxSizer13, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
   cbBar = new wxCheckBox(Panel4, wxID_ANY, _("View as bar"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
   cbBar->SetValue(false);
   cbBar->Disable();
-  BoxSizer10->Add(cbBar, 1, wxALL|wxEXPAND, 5);
+  BoxSizer10->Add(cbBar, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
   FlexGridSizer15->Add(BoxSizer10, 1, wxALL|wxALIGN_TOP|wxALIGN_CENTER_HORIZONTAL, 5);
   BoxSizer8->Add(FlexGridSizer15, 0, wxALL|wxEXPAND, 2);
   Panel4->SetSizer(BoxSizer8);
@@ -983,6 +998,7 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   bSeriesPenColor->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotConfigDialog::OnbColorClick, this);
   cbSeriesShowName->Bind(wxEVT_COMMAND_CHECKBOX_CLICKED, &MathPlotConfigDialog::OncbSeriesShowNameClick, this);
   bSeriesBrushColor->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotConfigDialog::OnbColorClick, this);
+  cbAutoStep->Bind(wxEVT_COMMAND_CHECKBOX_CLICKED, &MathPlotConfigDialog::OncbAutoStepClick, this);
   ChoiceLines->Bind(wxEVT_COMMAND_CHOICE_SELECTED, &MathPlotConfigDialog::OnChoiceLinesSelect, this);
   bAddLines->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotConfigDialog::OnbAddLinesClick, this);
   bDelLines->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MathPlotConfigDialog::OnbDelLinesClick, this);
@@ -1578,6 +1594,20 @@ void MathPlotConfigDialog::UpdateSelectedSerie(void)
   cbSeriesLegend->SetValue(CurrentSerie->GetLegendIsAlwaysVisible());
 
   cbSeriesStep->SetValue(CurrentSerie->GetStep());
+  cbAutoStep->SetValue(CurrentSerie->GetAutoStep());
+  cbMaxNOfPoints->SetValue(CurrentSerie->GetMaxNOfPoints());
+
+  if(CurrentSerie->GetAutoStep())
+  {
+    // Auto step uses max nOf points instead of fixed step
+    cbSeriesStep->Disable();
+    cbMaxNOfPoints->Enable();
+  }
+  else
+  {
+    cbSeriesStep->Enable();
+    cbMaxNOfPoints->Disable();
+  }
 
   CheckBar = (CurrentSerie->GetLayerSubType() == mpfFXYVector);
   if (CheckBar)
@@ -1616,6 +1646,26 @@ void MathPlotConfigDialog::OnbDelSeriesClick(wxCommandEvent& WXUNUSED(event))
       edSeriesName->SetValue(_T(""));
       Initialize(mpcpiSeries);
     }
+  }
+}
+
+void MathPlotConfigDialog::OncbAutoStepClick(wxCommandEvent& WXUNUSED(event))
+{
+  if(cbAutoStep->IsChecked())
+  {
+    // Auto step uses max nOf points instead of fixed step
+    cbSeriesStep->Disable();
+    cbMaxNOfPoints->Enable();
+  }
+  else
+  {
+    cbSeriesStep->Enable();
+    cbMaxNOfPoints->Disable();
+  }
+
+  if(CurrentSerie)
+  {
+    CurrentSerie->SetAutoStep(cbAutoStep->IsChecked());
   }
 }
 
@@ -1990,6 +2040,8 @@ void MathPlotConfigDialog::Apply(int pageIndex, bool updateFont)
         }
 
         CurrentSerie->SetStep(cbSeriesStep->GetValue());
+        CurrentSerie->SetAutoStep(cbAutoStep->GetValue());
+        CurrentSerie->SetMaxNOfPoints(cbMaxNOfPoints->GetValue());
 
         if (CheckBar)
         {
