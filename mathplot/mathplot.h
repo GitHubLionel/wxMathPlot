@@ -2200,31 +2200,22 @@ class WXDLLIMPEXP_MATHPLOT mpFXYVector: public mpFXY
     }
 
   protected:
-    /** The internal copy of the set of data to draw.
-     */
-    std::vector<double> m_xs;  //!< internal copy of the set of data on x direction
-    std::vector<double> m_ys;  //!< internal copy of the set of data on y direction
-
-    /** Memory reserved for m_xs and m_ys. Default 1000
-     */
-    int m_reserveXY;
-
-    /** The internal counter for the "GetNextXY" interface
-     */
-    size_t m_index;
-
+    std::vector<double> m_xs;    //!< internal copy of the set of data on x direction
+    std::vector<double> m_ys;    //!< internal copy of the set of data on y direction
+    bool m_isMonotonicX = true;  //!< Indicates if all all X values are monotonic, i.e increasing, which enables binary search
+    int m_reserveXY;             //!< Memory reserved for m_xs and m_ys. Default 1000
+    size_t m_index;              //!< The internal counter for the "GetNextXY" interface
+    size_t m_endIndex;           //!< The end index indicating the last point inside plot area
     mpRange<double> m_rangeX;    //!< Range min and max on x axis
     double m_lastX;              //!< Last x-coordinate point added
     mpRange<double> m_rangeY;    //!< Range min and max on y axis
     double m_lastY;              //!< Last y-coordinate point added
 
-    /** Rewind value enumeration with mpFXY::GetNextXY.
-     Overridden in this implementation.
+    /**
+     * Calculates the start and end index which shall be used when iterating the data. If all X values
+     * are monotonic (like a time series), the indices can be calculated using binary search
      */
-    inline void Rewind()
-    {
-      m_index = 0;
-    }
+    virtual void Rewind() override;
 
     /** Get locus value for next N.
      Overridden in this implementation.
