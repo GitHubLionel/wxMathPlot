@@ -372,96 +372,95 @@
 						<object class="wxPanel" name="" variable="Panel2" member="yes">
 							<object class="wxBoxSizer" variable="BoxSizer16" member="no">
 								<object class="sizeritem">
-									<object class="wxFlexGridSizer" variable="FlexGridSizer6" member="no">
-										<cols>2</cols>
-										<rows>5</rows>
+									<object class="wxBoxSizer" variable="BoxSizer25" member="no">
+										<orient>wxVERTICAL</orient>
 										<object class="sizeritem">
-											<object class="wxStaticText" name="" variable="StaticText16" member="yes">
-												<label>Position :</label>
-											</object>
-											<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
-											<border>5</border>
-											<option>1</option>
-										</object>
-										<object class="sizeritem">
-											<object class="wxChoice" name="" variable="cbLegendPosition" member="yes">
-												<use_items_array>1</use_items_array>
-												<selection>0</selection>
-												<extra_code>cbLegendPosition-&gt;Set(WXSIZEOF(InfoPosition__choices), InfoPosition__choices);\\&#x0A;cbLegendPosition-&gt;SetSelection(6);</extra_code>
+											<object class="wxFlexGridSizer" variable="FlexGridSizer6" member="no">
+												<cols>2</cols>
+												<rows>3</rows>
+												<object class="sizeritem">
+													<object class="wxStaticText" name="" variable="StaticText16" member="yes">
+														<label>Position :</label>
+													</object>
+													<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+													<border>5</border>
+													<option>1</option>
+												</object>
+												<object class="sizeritem">
+													<object class="wxChoice" name="" variable="cbLegendPosition" member="yes">
+														<use_items_array>1</use_items_array>
+														<selection>0</selection>
+														<extra_code>cbLegendPosition-&gt;Set(WXSIZEOF(InfoPosition__choices), InfoPosition__choices);\\&#x0A;cbLegendPosition-&gt;SetSelection(6);</extra_code>
+													</object>
+													<flag>wxALL|wxEXPAND</flag>
+													<border>2</border>
+													<option>1</option>
+												</object>
+												<object class="sizeritem">
+													<object class="wxStaticText" name="" variable="StaticText24" member="yes">
+														<label>Style :</label>
+													</object>
+													<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+													<border>5</border>
+													<option>1</option>
+												</object>
+												<object class="sizeritem">
+													<object class="wxChoice" name="" variable="cbLegendStyle" member="yes">
+														<content>
+															<item>Line</item>
+															<item>Square</item>
+															<item>Symbol</item>
+														</content>
+														<use_items_array>1</use_items_array>
+														<selection>0</selection>
+													</object>
+													<flag>wxALL|wxEXPAND</flag>
+													<border>2</border>
+													<option>1</option>
+												</object>
+												<object class="sizeritem">
+													<object class="wxStaticText" name="" variable="StaticText25" member="yes">
+														<label>Direction :</label>
+													</object>
+													<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+													<border>5</border>
+													<option>1</option>
+												</object>
+												<object class="sizeritem">
+													<object class="wxChoice" name="" variable="cbLegendDirection" member="yes">
+														<content>
+															<item>Vertical</item>
+															<item>Horizontal</item>
+														</content>
+														<use_items_array>1</use_items_array>
+														<selection>0</selection>
+													</object>
+													<flag>wxALL|wxEXPAND</flag>
+													<border>2</border>
+													<option>1</option>
+												</object>
 											</object>
 											<flag>wxALL|wxEXPAND</flag>
-											<border>2</border>
-											<option>1</option>
-										</object>
-										<object class="sizeritem">
-											<object class="wxStaticText" name="" variable="StaticText24" member="yes">
-												<label>Style :</label>
-											</object>
-											<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
 											<border>5</border>
-											<option>1</option>
-										</object>
-										<object class="sizeritem">
-											<object class="wxChoice" name="" variable="cbLegendStyle" member="yes">
-												<content>
-													<item>Line</item>
-													<item>Square</item>
-													<item>Symbol</item>
-												</content>
-												<use_items_array>1</use_items_array>
-												<selection>0</selection>
-											</object>
-											<flag>wxALL|wxEXPAND</flag>
-											<border>2</border>
-											<option>1</option>
-										</object>
-										<object class="sizeritem">
-											<object class="wxStaticText" name="" variable="StaticText25" member="yes">
-												<label>Direction :</label>
-											</object>
-											<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
-											<border>5</border>
-											<option>1</option>
-										</object>
-										<object class="sizeritem">
-											<object class="wxChoice" name="" variable="cbLegendDirection" member="yes">
-												<content>
-													<item>Vertical</item>
-													<item>Horizontal</item>
-												</content>
-												<use_items_array>1</use_items_array>
-												<selection>0</selection>
-											</object>
-											<flag>wxALL|wxEXPAND</flag>
-											<border>2</border>
-											<option>1</option>
 										</object>
 										<object class="sizeritem">
 											<object class="wxCheckBox" name="" variable="cbLegendVisible" member="yes">
 												<label>Visible</label>
 											</object>
-											<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+											<flag>wxALL|wxEXPAND</flag>
 											<border>5</border>
-											<option>1</option>
-										</object>
-										<object class="spacer">
-											<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
-											<border>5</border>
-											<option>1</option>
 										</object>
 										<object class="sizeritem">
 											<object class="wxCheckBox" name="" variable="cbLegendDefaultVisibility" member="yes">
 												<label>Default visibility</label>
 												<tooltip>By default, when checked, the series name is always displayed even if the series is not ploted.</tooltip>
 											</object>
-											<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+											<flag>wxALL|wxEXPAND</flag>
 											<border>5</border>
-											<option>1</option>
 										</object>
 									</object>
-									<flag>wxALL|wxALIGN_TOP</flag>
+									<flag>wxALL</flag>
 									<border>5</border>
-									<option>1</option>
 								</object>
 								<object class="sizeritem">
 									<object class="wxBoxSizer" variable="BoxSizer15" member="no">
@@ -522,12 +521,11 @@
 													<option>1</option>
 												</object>
 											</object>
-											<flag>wxALL|wxEXPAND</flag>
+											<flag>wxALL</flag>
 										</object>
 									</object>
 									<flag>wxALL|wxALIGN_TOP</flag>
 									<border>5</border>
-									<option>1</option>
 								</object>
 							</object>
 						</object>
@@ -1250,10 +1248,11 @@
 																	<option>1</option>
 																</object>
 															</object>
-															<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+															<flag>wxALL|wxEXPAND</flag>
+															<option>1</option>
 														</object>
 													</object>
-													<flag>wxALL|wxALIGN_LEFT</flag>
+													<flag>wxALL|wxEXPAND</flag>
 													<border>2</border>
 												</object>
 												<object class="sizeritem">
@@ -1307,86 +1306,69 @@
 																	<option>1</option>
 																</object>
 															</object>
-															<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+															<flag>wxALL|wxEXPAND</flag>
+															<option>1</option>
 														</object>
 													</object>
-													<flag>wxALL</flag>
+													<flag>wxALL|wxEXPAND</flag>
 													<border>2</border>
 												</object>
 												<object class="sizeritem">
 													<object class="wxStaticBoxSizer" variable="StaticBoxSizer13" member="no">
 														<label>Step</label>
 														<object class="sizeritem">
-															<object class="wxFlexGridSizer" variable="FlexGridSizer19" member="no">
-																<cols>2</cols>
-																<rows>3</rows>
-																<object class="sizeritem">
-																	<object class="wxStaticText" name="" variable="StaticText19" member="yes">
-																		<label>Step size :</label>
-																		<tooltip>Set step size, e.g. 1 to show all points, 2 to show every other step and so on</tooltip>
-																	</object>
-																	<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
-																	<border>5</border>
-																	<option>1</option>
-																</object>
-																<object class="sizeritem">
-																	<object class="wxSpinCtrl" name="" variable="cbSeriesStep" member="yes">
-																		<value>1</value>
-																		<min>1</min>
-																	</object>
-																	<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
-																	<border>5</border>
-																	<option>1</option>
-																</object>
+															<object class="wxBoxSizer" variable="BoxSizer24" member="no">
+																<orient>wxVERTICAL</orient>
 																<object class="sizeritem">
 																	<object class="wxCheckBox" name="" variable="cbAutoStep" member="yes">
 																		<label>Auto step</label>
 																		<tooltip>Automatically calculate step size based on how many points that is allowed to be shown</tooltip>
 																		<handler function="OncbAutoStepClick" entry="EVT_CHECKBOX" />
 																	</object>
-																	<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+																	<flag>wxALL|wxEXPAND</flag>
 																	<border>5</border>
-																	<option>1</option>
-																</object>
-																<object class="spacer">
-																	<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
-																	<border>5</border>
-																	<option>1</option>
 																</object>
 																<object class="sizeritem">
-																	<object class="wxStaticText" name="" variable="StaticText45" member="yes">
-																		<label>Max nOf points :</label>
-																		<tooltip>Sets how many points to max show in the plot at the same time. Decrease for faster plot</tooltip>
+																	<object class="wxFlexGridSizer" variable="sizerSeriesStep" member="yes">
+																		<cols>2</cols>
+																		<rows>1</rows>
+																		<object class="sizeritem">
+																			<object class="wxStaticText" name="" variable="stStepChoice" member="yes">
+																				<label>Step size :</label>
+																				<tooltip>Set step size, e.g. 1 to show all points, 2 to show every other step and so on</tooltip>
+																			</object>
+																			<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+																			<border>5</border>
+																			<option>1</option>
+																		</object>
+																		<object class="sizeritem">
+																			<object class="wxSpinCtrl" name="" variable="spinSeriesStep" member="yes">
+																				<value>1</value>
+																				<min>1</min>
+																				<size>60,-1</size>
+																			</object>
+																			<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+																			<border>5</border>
+																			<option>1</option>
+																		</object>
 																	</object>
-																	<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
-																	<border>5</border>
-																	<option>1</option>
-																</object>
-																<object class="sizeritem">
-																	<object class="wxSpinCtrl" name="" variable="cbMaxNOfPoints" member="yes">
-																		<value>3000</value>
-																		<min>1</min>
-																		<max>50000</max>
-																	</object>
-																	<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
-																	<border>5</border>
+																	<flag>wxALL|wxEXPAND</flag>
 																	<option>1</option>
 																</object>
 															</object>
-															<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
-															<border>5</border>
+															<flag>wxALL|wxEXPAND</flag>
 															<option>1</option>
 														</object>
 													</object>
-													<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
-													<border>5</border>
+													<flag>wxALL|wxEXPAND</flag>
+													<border>2</border>
 												</object>
 												<object class="sizeritem">
 													<object class="wxCheckBox" name="" variable="cbBar" member="yes">
 														<label>View as bar</label>
 														<enabled>0</enabled>
 													</object>
-													<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+													<flag>wxALL|wxEXPAND</flag>
 													<border>5</border>
 												</object>
 											</object>

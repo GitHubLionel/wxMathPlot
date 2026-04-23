@@ -320,6 +320,7 @@ class MathPlotConfigDialog: public wxDialog
     wxChoice* cbSeriesPenStyle;
     wxChoice* cbSeriesPenWidth;
     wxChoice* cbSeriesSymbolType;
+    wxFlexGridSizer* sizerSeriesStep;
     wxNotebook* nbConfig;
     wxNotebook* nbPenAxisGrid;
     wxPanel* Panel1;
@@ -331,9 +332,8 @@ class MathPlotConfigDialog: public wxDialog
     wxPanel* Panel7;
     wxPanel* pLines;
     wxRadioButton* rbLinesDirection;
-    wxSpinCtrl* cbMaxNOfPoints;
-    wxSpinCtrl* cbSeriesStep;
     wxSpinCtrl* cbSeriesSymbolSize;
+    wxSpinCtrl* spinSeriesStep;
     wxStaticText* StaticText10;
     wxStaticText* StaticText11;
     wxStaticText* StaticText12;
@@ -343,7 +343,6 @@ class MathPlotConfigDialog: public wxDialog
     wxStaticText* StaticText16;
     wxStaticText* StaticText17;
     wxStaticText* StaticText18;
-    wxStaticText* StaticText19;
     wxStaticText* StaticText1;
     wxStaticText* StaticText20;
     wxStaticText* StaticText21;
@@ -372,7 +371,6 @@ class MathPlotConfigDialog: public wxDialog
     wxStaticText* StaticText42;
     wxStaticText* StaticText43;
     wxStaticText* StaticText44;
-    wxStaticText* StaticText45;
     wxStaticText* StaticText4;
     wxStaticText* StaticText5;
     wxStaticText* StaticText6;
@@ -380,6 +378,7 @@ class MathPlotConfigDialog: public wxDialog
     wxStaticText* StaticText8;
     wxStaticText* StaticText9;
     wxStaticText* stLinesYIndexLabel;
+    wxStaticText* stStepChoice;
     wxTextCtrl* edAxisName;
     wxTextCtrl* edExtraMargin;
     wxTextCtrl* edFormat;
@@ -400,6 +399,7 @@ class MathPlotConfigDialog: public wxDialog
     void UpdateSelectedLine(void);
     void UpdateAxis(void);
     void FillYAxisList(wxChoice* yChoice, bool clearChoice = true);
+    void UpdateSeriesStep(void);
 
     void DoButtonColour(wxButton* button, const wxColour& colour);
     void DoApplyColour(const wxColour& colour);

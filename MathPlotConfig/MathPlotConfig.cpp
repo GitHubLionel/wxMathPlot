@@ -380,6 +380,8 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   wxBoxSizer* BoxSizer21;
   wxBoxSizer* BoxSizer22;
   wxBoxSizer* BoxSizer23;
+  wxBoxSizer* BoxSizer24;
+  wxBoxSizer* BoxSizer25;
   wxBoxSizer* BoxSizer2;
   wxBoxSizer* BoxSizer3;
   wxBoxSizer* BoxSizer4;
@@ -397,7 +399,6 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   wxFlexGridSizer* FlexGridSizer16;
   wxFlexGridSizer* FlexGridSizer17;
   wxFlexGridSizer* FlexGridSizer18;
-  wxFlexGridSizer* FlexGridSizer19;
   wxFlexGridSizer* FlexGridSizer1;
   wxFlexGridSizer* FlexGridSizer20;
   wxFlexGridSizer* FlexGridSizer21;
@@ -543,7 +544,8 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   Panel1->SetSizer(BoxSizer3);
   Panel2 = new wxPanel(nbConfig, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL);
   BoxSizer16 = new wxBoxSizer(wxHORIZONTAL);
-  FlexGridSizer6 = new wxFlexGridSizer(5, 2, 0, 0);
+  BoxSizer25 = new wxBoxSizer(wxVERTICAL);
+  FlexGridSizer6 = new wxFlexGridSizer(3, 2, 0, 0);
   StaticText16 = new wxStaticText(Panel2, wxID_ANY, _("Position :"), wxDefaultPosition, wxDefaultSize, 0);
   FlexGridSizer6->Add(StaticText16, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
   cbLegendPosition = new wxChoice(Panel2, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator);
@@ -569,15 +571,15 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   cbLegendDirection = new wxChoice(Panel2, wxID_ANY, wxDefaultPosition, wxDefaultSize, 2, cbLegendDirection_choices, 0, wxDefaultValidator);
   cbLegendDirection->SetSelection(0);
   FlexGridSizer6->Add(cbLegendDirection, 1, wxALL|wxEXPAND, 2);
+  BoxSizer25->Add(FlexGridSizer6, 0, wxALL|wxEXPAND, 5);
   cbLegendVisible = new wxCheckBox(Panel2, wxID_ANY, _("Visible"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
   cbLegendVisible->SetValue(false);
-  FlexGridSizer6->Add(cbLegendVisible, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
-  FlexGridSizer6->Add(-1,-1,1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+  BoxSizer25->Add(cbLegendVisible, 0, wxALL|wxEXPAND, 5);
   cbLegendDefaultVisibility = new wxCheckBox(Panel2, wxID_ANY, _("Default visibility"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
   cbLegendDefaultVisibility->SetValue(false);
   cbLegendDefaultVisibility->SetToolTip(_("By default, when checked, the series name is always displayed even if the series is not ploted."));
-  FlexGridSizer6->Add(cbLegendDefaultVisibility, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-  BoxSizer16->Add(FlexGridSizer6, 1, wxALL|wxALIGN_TOP, 5);
+  BoxSizer25->Add(cbLegendDefaultVisibility, 0, wxALL|wxEXPAND, 5);
+  BoxSizer16->Add(BoxSizer25, 0, wxALL, 5);
   BoxSizer15 = new wxBoxSizer(wxVERTICAL);
   bFontLegend = new wxButton(Panel2, wxID_ANY, _("Font"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
   bFontLegend->Disable();
@@ -595,8 +597,8 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   cbLegendBrushStyle->SetSelection(0);
   FlexGridSizer7->Add(cbLegendBrushStyle, 1, wxALL|wxEXPAND, 2);
   StaticBoxSizer5->Add(FlexGridSizer7, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-  BoxSizer15->Add(StaticBoxSizer5, 0, wxALL|wxEXPAND, 0);
-  BoxSizer16->Add(BoxSizer15, 1, wxALL|wxALIGN_TOP, 5);
+  BoxSizer15->Add(StaticBoxSizer5, 0, wxALL, 0);
+  BoxSizer16->Add(BoxSizer15, 0, wxALL|wxALIGN_TOP, 5);
   Panel2->SetSizer(BoxSizer16);
   Panel3 = new wxPanel(nbConfig, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL);
   sizerAxis = new wxBoxSizer(wxVERTICAL);
@@ -839,8 +841,8 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   cbSeriesBrushStyle = new wxChoice(Panel4, wxID_ANY, wxDefaultPosition, wxDefaultSize, 8, cbSeriesBrushStyle_choices, 0, wxDefaultValidator);
   cbSeriesBrushStyle->SetSelection(0);
   FlexGridSizer16->Add(cbSeriesBrushStyle, 1, wxALL|wxEXPAND, 2);
-  StaticBoxSizer9->Add(FlexGridSizer16, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
-  BoxSizer10->Add(StaticBoxSizer9, 0, wxALL|wxALIGN_LEFT, 2);
+  StaticBoxSizer9->Add(FlexGridSizer16, 1, wxALL|wxEXPAND, 0);
+  BoxSizer10->Add(StaticBoxSizer9, 0, wxALL|wxEXPAND, 2);
   StaticBoxSizer10 = new wxStaticBoxSizer(wxHORIZONTAL, Panel4, _("Symbol "));
   FlexGridSizer18 = new wxFlexGridSizer(2, 2, 0, 0);
   StaticText9 = new wxStaticText(Panel4, wxID_ANY, _("Type :"), wxDefaultPosition, wxDefaultSize, 0);
@@ -862,33 +864,28 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   cbSeriesSymbolSize = new wxSpinCtrl(Panel4, wxID_ANY, _T("4"), wxDefaultPosition, wxDefaultSize, 0, 4, 100, 4);
   cbSeriesSymbolSize->SetValue(_T("4"));
   FlexGridSizer18->Add(cbSeriesSymbolSize, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 2);
-  StaticBoxSizer10->Add(FlexGridSizer18, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
-  BoxSizer10->Add(StaticBoxSizer10, 0, wxALL, 2);
+  StaticBoxSizer10->Add(FlexGridSizer18, 1, wxALL|wxEXPAND, 0);
+  BoxSizer10->Add(StaticBoxSizer10, 0, wxALL|wxEXPAND, 2);
   StaticBoxSizer13 = new wxStaticBoxSizer(wxHORIZONTAL, Panel4, _("Step"));
-  FlexGridSizer19 = new wxFlexGridSizer(3, 2, 0, 0);
-  StaticText19 = new wxStaticText(Panel4, wxID_ANY, _("Step size :"), wxDefaultPosition, wxDefaultSize, 0);
-  StaticText19->SetToolTip(_("Set step size, e.g. 1 to show all points, 2 to show every other step and so on"));
-  FlexGridSizer19->Add(StaticText19, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
-  cbSeriesStep = new wxSpinCtrl(Panel4, wxID_ANY, _T("1"), wxDefaultPosition, wxDefaultSize, 0, 1, 100, 1);
-  cbSeriesStep->SetValue(_T("1"));
-  FlexGridSizer19->Add(cbSeriesStep, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+  BoxSizer24 = new wxBoxSizer(wxVERTICAL);
   cbAutoStep = new wxCheckBox(Panel4, wxID_ANY, _("Auto step"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
   cbAutoStep->SetValue(false);
   cbAutoStep->SetToolTip(_("Automatically calculate step size based on how many points that is allowed to be shown"));
-  FlexGridSizer19->Add(cbAutoStep, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
-  FlexGridSizer19->Add(-1,-1,1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-  StaticText45 = new wxStaticText(Panel4, wxID_ANY, _("Max nOf points :"), wxDefaultPosition, wxDefaultSize, 0);
-  StaticText45->SetToolTip(_("Sets how many points to max show in the plot at the same time. Decrease for faster plot"));
-  FlexGridSizer19->Add(StaticText45, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-  cbMaxNOfPoints = new wxSpinCtrl(Panel4, wxID_ANY, _T("3000"), wxDefaultPosition, wxDefaultSize, 0, 1, 50000, 3000);
-  cbMaxNOfPoints->SetValue(_T("3000"));
-  FlexGridSizer19->Add(cbMaxNOfPoints, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-  StaticBoxSizer13->Add(FlexGridSizer19, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-  BoxSizer10->Add(StaticBoxSizer13, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+  BoxSizer24->Add(cbAutoStep, 0, wxALL|wxEXPAND, 5);
+  sizerSeriesStep = new wxFlexGridSizer(1, 2, 0, 0);
+  stStepChoice = new wxStaticText(Panel4, wxID_ANY, _("Step size :"), wxDefaultPosition, wxDefaultSize, 0);
+  stStepChoice->SetToolTip(_("Set step size, e.g. 1 to show all points, 2 to show every other step and so on"));
+  sizerSeriesStep->Add(stStepChoice, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+  spinSeriesStep = new wxSpinCtrl(Panel4, wxID_ANY, _T("1"), wxDefaultPosition, wxSize(60,-1), 0, 1, 100, 1);
+  spinSeriesStep->SetValue(_T("1"));
+  sizerSeriesStep->Add(spinSeriesStep, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+  BoxSizer24->Add(sizerSeriesStep, 1, wxALL|wxEXPAND, 0);
+  StaticBoxSizer13->Add(BoxSizer24, 1, wxALL|wxEXPAND, 0);
+  BoxSizer10->Add(StaticBoxSizer13, 0, wxALL|wxEXPAND, 2);
   cbBar = new wxCheckBox(Panel4, wxID_ANY, _("View as bar"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
   cbBar->SetValue(false);
   cbBar->Disable();
-  BoxSizer10->Add(cbBar, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+  BoxSizer10->Add(cbBar, 0, wxALL|wxEXPAND, 5);
   FlexGridSizer15->Add(BoxSizer10, 1, wxALL|wxALIGN_TOP|wxALIGN_CENTER_HORIZONTAL, 5);
   BoxSizer8->Add(FlexGridSizer15, 0, wxALL|wxEXPAND, 2);
   Panel4->SetSizer(BoxSizer8);
@@ -1593,21 +1590,8 @@ void MathPlotConfigDialog::UpdateSelectedSerie(void)
   cbTractable->SetValue(CurrentSerie->IsTractable());
   cbSeriesLegend->SetValue(CurrentSerie->GetLegendIsAlwaysVisible());
 
-  cbSeriesStep->SetValue(CurrentSerie->GetStep());
   cbAutoStep->SetValue(CurrentSerie->GetAutoStep());
-  cbMaxNOfPoints->SetValue(CurrentSerie->GetMaxNOfPoints());
-
-  if(CurrentSerie->GetAutoStep())
-  {
-    // Auto step uses max nOf points instead of fixed step
-    cbSeriesStep->Disable();
-    cbMaxNOfPoints->Enable();
-  }
-  else
-  {
-    cbSeriesStep->Enable();
-    cbMaxNOfPoints->Disable();
-  }
+  UpdateSeriesStep();
 
   CheckBar = (CurrentSerie->GetLayerSubType() == mpfFXYVector);
   if (CheckBar)
@@ -1651,22 +1635,29 @@ void MathPlotConfigDialog::OnbDelSeriesClick(wxCommandEvent& WXUNUSED(event))
 
 void MathPlotConfigDialog::OncbAutoStepClick(wxCommandEvent& WXUNUSED(event))
 {
-  if(cbAutoStep->IsChecked())
+  UpdateSeriesStep();
+}
+
+void MathPlotConfigDialog::UpdateSeriesStep(void)
+{
+  if (cbAutoStep->IsChecked())
   {
     // Auto step uses max nOf points instead of fixed step
-    cbSeriesStep->Disable();
-    cbMaxNOfPoints->Enable();
+    stStepChoice->SetLabel(_("Max nOf points :"));
+    stStepChoice->SetToolTip(_("Sets how many points to max show in the plot at the same time. Decrease for faster plot"));
+    spinSeriesStep->SetRange(1, 50000);
+    if (CurrentSerie)
+      spinSeriesStep->SetValue(CurrentSerie->GetMaxNOfPoints());
   }
   else
   {
-    cbSeriesStep->Enable();
-    cbMaxNOfPoints->Disable();
+    stStepChoice->SetLabel(_("Step size :"));
+    stStepChoice->SetToolTip(_("Set step size, e.g. 1 to show all points, 2 to show every other step and so on"));
+    spinSeriesStep->SetRange(1, 100);
+    if (CurrentSerie)
+      spinSeriesStep->SetValue(CurrentSerie->GetStep());
   }
-
-  if(CurrentSerie)
-  {
-    CurrentSerie->SetAutoStep(cbAutoStep->IsChecked());
-  }
+  sizerSeriesStep->Layout();
 }
 
 void MathPlotConfigDialog::UpdateSelectedLine(void)
@@ -2039,9 +2030,16 @@ void MathPlotConfigDialog::Apply(int pageIndex, bool updateFont)
           CurrentSerie->SetYAxisID(yAxis->GetAxisID());
         }
 
-        CurrentSerie->SetStep(cbSeriesStep->GetValue());
-        CurrentSerie->SetAutoStep(cbAutoStep->GetValue());
-        CurrentSerie->SetMaxNOfPoints(cbMaxNOfPoints->GetValue());
+        if (cbAutoStep->GetValue())
+        {
+          CurrentSerie->SetAutoStep(true);
+          CurrentSerie->SetMaxNOfPoints(spinSeriesStep->GetValue());
+        }
+        else
+        {
+          CurrentSerie->SetAutoStep(false);
+          CurrentSerie->SetStep(spinSeriesStep->GetValue());
+        }
 
         if (CheckBar)
         {
