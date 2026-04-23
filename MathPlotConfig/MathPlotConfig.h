@@ -239,6 +239,7 @@ class MathPlotConfigDialog: public wxDialog
     void OnbDelAxisClick(wxCommandEvent& event);
     void OncbSeriesShowNameClick(wxCommandEvent& event);
     void OnbApplyAndFitClick(wxCommandEvent& event);
+    void OncbAutoStepClick(wxCommandEvent& event);
     //*)
 
     //(*Identifiers(MathPlotConfigDialog)
@@ -269,6 +270,7 @@ class MathPlotConfigDialog: public wxDialog
     wxButton* bSeriesBrushColor;
     wxButton* bSeriesPenColor;
     wxCheckBox* cbAutoScale;
+    wxCheckBox* cbAutoStep;
     wxCheckBox* cbAxisOutside;
     wxCheckBox* cbAxisVisible;
     wxCheckBox* cbBar;
@@ -329,6 +331,7 @@ class MathPlotConfigDialog: public wxDialog
     wxPanel* Panel7;
     wxPanel* pLines;
     wxRadioButton* rbLinesDirection;
+    wxSpinCtrl* cbMaxNOfPoints;
     wxSpinCtrl* cbSeriesStep;
     wxSpinCtrl* cbSeriesSymbolSize;
     wxStaticText* StaticText10;
@@ -369,6 +372,7 @@ class MathPlotConfigDialog: public wxDialog
     wxStaticText* StaticText42;
     wxStaticText* StaticText43;
     wxStaticText* StaticText44;
+    wxStaticText* StaticText45;
     wxStaticText* StaticText4;
     wxStaticText* StaticText5;
     wxStaticText* StaticText6;

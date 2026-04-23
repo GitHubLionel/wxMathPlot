@@ -1020,6 +1020,8 @@ mpFunction::mpFunction(mpLayerType layerType /*=mpLAYER_PLOT*/, const wxString &
   m_symbolSize2 = 3;
   m_continuous = false; // Default
   m_step = 1;
+  m_autoStep = false;
+  m_maxNOfPoints = 3000;  // 3000 points at a time can be handled without too much lag
   SetYAxisID(yAxisID);
   m_LegendIsAlwaysVisible = mpWindow::m_DefaultLegendIsAlwaysVisible;
   m_ZIndex = mpZIndex_PLOT;
@@ -1718,14 +1720,21 @@ void mpFXYVector::Rewind()
     if (m_endIndex < m_xs.size())
       m_endIndex++;
 
-    // Make sure you always start on even step
+    if(m_autoStep)
+      m_step = std::max((m_endIndex - m_index) / m_maxNOfPoints, (size_t)1);
+
+    // Make sure you always start and end on even step
     m_index = (m_index / m_step) * m_step;
+    m_endIndex = ((m_endIndex + m_step - 1) / m_step) * m_step;
+    m_endIndex = std::min(m_endIndex, m_xs.size());
   }
   else
   {
     // If X values are not monotonic we need to iterate all data
     m_index = 0;
     m_endIndex = m_xs.size();
+    if(m_autoStep)
+      m_step = std::max((m_endIndex - m_index) / m_maxNOfPoints, (size_t)1);
   }
 }
 
@@ -1798,6 +1807,9 @@ void mpFXYVector::Clear()
 {
   m_xs.clear();
   m_ys.clear();
+  // Also release allocated memory by forcing destructor
+  std::vector<double>().swap(m_xs);
+  std::vector<double>().swap(m_ys);
   // Default min max
   m_rangeX.Set(-1, 1);
   m_rangeY.Set(-1, 1);
