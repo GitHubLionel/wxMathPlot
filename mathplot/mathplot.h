@@ -2234,7 +2234,7 @@ class WXDLLIMPEXP_MATHPLOT mpFXYVector: public mpFXY
   protected:
     std::vector<double> m_xs;    //!< internal copy of the set of data on x direction
     std::vector<double> m_ys;    //!< internal copy of the set of data on y direction
-    bool m_isMonotonicX = true;  //!< Indicates if all all X values are monotonic, i.e increasing, which enables binary search
+    bool m_isMonotonicX;         //!< Indicates if all all X values are monotonic, i.e increasing, which enables binary search
     int m_reserveXY;             //!< Memory reserved for m_xs and m_ys. Default 1000
     size_t m_index;              //!< The internal counter for the "GetNextXY" interface
     size_t m_endIndex;           //!< The end index indicating the last point inside plot area

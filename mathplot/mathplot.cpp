@@ -1668,11 +1668,7 @@ mpFXYVector::mpFXYVector(const wxString &name, int flags, bool viewAsBar, unsign
     mpFXY(name, flags, viewAsBar, yAxisID)
 {
   m_subtype = mpfFXYVector;
-  m_index = 0;
-  m_rangeX.Set(-1, 1);
-  m_rangeY.Set(-1, 1);
-  m_xs.clear();
-  m_ys.clear();
+  Clear();
   SetReserve(1000);
 }
 
@@ -1684,7 +1680,7 @@ bool mpFXYVector::GetNextXY(double *x, double *y)
   {
     *x = m_xs[m_index];
     *y = m_ys[m_index];
-    if(m_index == m_endIndex - 1)
+    if (m_index == m_endIndex - 1)
     {
       // Last point has been drawn. Force exit in next call
       m_index = m_endIndex;
@@ -1700,7 +1696,7 @@ bool mpFXYVector::GetNextXY(double *x, double *y)
 
 void mpFXYVector::Rewind()
 {
-  if (m_isMonotonicX)
+  if (m_isMonotonicX && m_win && (!m_win->IsLogXaxis()))
   {
     // If X values are monotonic (e.g. time series), we can find the start and end X indices inside the plot
     // boundary via binary search, which significantly increases plotting speed for large series
@@ -1720,7 +1716,7 @@ void mpFXYVector::Rewind()
     if (m_endIndex < m_xs.size())
       m_endIndex++;
 
-    if(m_autoStep)
+    if (m_autoStep && (m_maxNOfPoints != 0))
       m_step = std::max((m_endIndex - m_index) / m_maxNOfPoints, (size_t)1);
 
     // Make sure you always start and end on even step
@@ -1733,7 +1729,7 @@ void mpFXYVector::Rewind()
     // If X values are not monotonic we need to iterate all data
     m_index = 0;
     m_endIndex = m_xs.size();
-    if(m_autoStep)
+    if (m_autoStep && (m_maxNOfPoints != 0))
       m_step = std::max((m_endIndex - m_index) / m_maxNOfPoints, (size_t)1);
   }
 }
@@ -1814,7 +1810,9 @@ void mpFXYVector::Clear()
   m_rangeX.Set(-1, 1);
   m_rangeY.Set(-1, 1);
   m_deltaX = m_deltaY = 1e+308; // Big number
-  Rewind();
+  m_index = 0;
+  m_endIndex = 0;
+  m_isMonotonicX = true;
 }
 
 void mpFXYVector::First_Point(double x, double y)
@@ -1826,6 +1824,10 @@ void mpFXYVector::First_Point(double x, double y)
   m_rangeY.Set(y);
   m_lastY = y;
   m_deltaY = 1e+308; // Big number
+
+  m_index = 0;
+  m_endIndex = 0;
+  m_isMonotonicX = true;
 }
 
 void mpFXYVector::Check_Limit(double val, mpRange<double> *range, double *last, double *delta)
@@ -1843,6 +1845,7 @@ void mpFXYVector::SetData(const std::vector<double> &xs, const std::vector<doubl
     wxLogError(_T("wxMathPlot error: X and Y vector are not of the same length!"));
     return;
   }
+
   // Copy the data:
   m_xs = xs;
   m_ys = ys;
@@ -1858,7 +1861,7 @@ void mpFXYVector::SetData(const std::vector<double> &xs, const std::vector<doubl
       Check_Limit(xs[i], &m_rangeX, &m_lastX, &m_deltaX);
       // Check if all X values are monotonic, i.e. always increasing
       if (m_isMonotonicX && (xs[i] < xs[i - 1]))
-          m_isMonotonicX = false;
+        m_isMonotonicX = false;
     }
 
     // Y scale
