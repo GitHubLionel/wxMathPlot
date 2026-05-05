@@ -151,7 +151,7 @@ static void FillI18NString()
   Help_string.Add(_(" - Left-click + SHIFT on the axis name: swap visibility"));
 
   MESS_LOAD = _("Select file");
-  MESS_WILDCARD = _("Data files (*.dat)|*.dat|Csv files (csv.*)|csv.*|All files (*.*)|*.*");
+  MESS_WILDCARD = _("Data files (*.dat)|*.dat|CSV files (*.csv)|*.csv|All files (*.*)|*.*");
   MESS_CLIPFAIL = _("Failed to copy image to clipboard");
 }
 
@@ -245,7 +245,7 @@ mpLayer::mpLayer(mpLayerType layerType) :
     m_type(layerType)
 {
   // The wxWindow handle is not yet available
-  m_win = NULL;
+  m_win = nullptr;
   // Default pen
   SetPen((wxPen const&)*wxBLACK_PEN);
   // Default font
@@ -300,7 +300,7 @@ wxBitmap mpLayer::GetColourSquare(int side)
 
 void mpLayer::CheckLog(double *x, double *y, int yAxisID)
 {
-  if (m_win == NULL)
+  if (m_win == nullptr)
     return;
   if (m_win->IsLogXaxis())
     *x = log10(*x);
@@ -571,6 +571,7 @@ void mpInfoCoords::UpdateInfo(mpWindow &w, wxEvent &event)
     }
 
     // Log axis
+    assert(m_win);
     if (m_win->IsLogXaxis())
       xVal = pow(10, xVal);
 
@@ -1105,6 +1106,7 @@ mpHorizontalLine::mpHorizontalLine(double yvalue, const wxPen &pen, unsigned int
 
 void mpHorizontalLine::DoPlot(wxDC &dc, mpWindow &w)
 {
+  assert(m_win);
   // Get boundaries
   m_plotBoundaries = w.GetPlotBoundaries(!m_drawOutsideMargins);
 
@@ -1160,6 +1162,7 @@ mpVerticalLine::mpVerticalLine(double xvalue, const wxPen &pen) :
 
 void mpVerticalLine::DoPlot(wxDC &dc, mpWindow &w)
 {
+  assert(m_win);
   // Get boundaries
   m_plotBoundaries = w.GetPlotBoundaries(!m_drawOutsideMargins);
 
@@ -1229,6 +1232,7 @@ double mpFX::LogDoGetY(double x)
 
 void mpFX::DefineDoGetY(void)
 {
+  assert(m_win);
   if (m_win->IsLogYaxis(m_yAxisID))
     pDoGetY = &mpFX::LogDoGetY;
   else
@@ -1356,6 +1360,7 @@ double mpFY::LogDoGetX(double y)
 
 void mpFY::DefineDoGetX(void)
 {
+  assert(m_win);
   if (m_win->IsLogXaxis())
     pDoGetX = &mpFY::LogDoGetX;
   else
@@ -1745,6 +1750,7 @@ void mpFXYVector::DrawAddedPoint(double x, double y)
     return;
 
   // Direct access to the dc
+  assert(m_win);
   wxMemoryDC *dc = m_win->GetMemoryDC();
   dc->SetPen(m_pen);
   dc->SetBrush(m_brush);
