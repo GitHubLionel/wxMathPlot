@@ -254,31 +254,32 @@ class MathPlotConfigDialog;
 #endif // ENABLE_MP_CONFIG
 
 /// A rectangle structure in several (integer) flavors
-typedef union
+struct mpRect
 {
-    struct
-    {
-        wxCoord startPx;
-        wxCoord startPy;
-        wxCoord endPx;
-        wxCoord endPy;
+    union {
+        struct
+        {
+            wxCoord startPx;
+            wxCoord startPy;
+            wxCoord endPx;
+            wxCoord endPy;
+        };
+        struct
+        {
+            wxCoord left;
+            wxCoord top;
+            wxCoord right;
+            wxCoord bottom;
+        };
+        struct
+        {
+            wxCoord x1;
+            wxCoord y1;
+            wxCoord x2;
+            wxCoord y2;
+        };
+        wxCoord tab[4];  //!< Alternate array-style access to the rectangle coordinates.
     };
-    struct
-    {
-        wxCoord left;
-        wxCoord top;
-        wxCoord right;
-        wxCoord bottom;
-    };
-    struct
-    {
-        wxCoord x1;
-        wxCoord y1;
-        wxCoord x2;
-        wxCoord y2;
-    };
-    wxCoord tab[4];  //!< Alternate array-style access to the rectangle coordinates.
-
     /**
      * Create rectangular area defined by start and end points
      * @return wxRect object
@@ -287,7 +288,8 @@ typedef union
     {
       return wxRect(startPx, startPy, endPx - startPx, endPy - startPy);
     }
-} mpRect;
+};
+static_assert(sizeof(mpRect) == 4 * sizeof(wxCoord));
 
 /**
  * @brief Represents a numeric range with minimum and maximum values.
