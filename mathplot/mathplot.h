@@ -3794,6 +3794,12 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
       return (wxCoord)((m_AxisDataYList[yAxisID].pos - y) * m_AxisDataYList[yAxisID].scale);
     }
 
+    /** Deprecated: Enable/disable the double-buffering of the window, eliminating the flicker (default=enabled). */
+    void [[deprecated("Deprecated - use EnableBufferedPaintDC??")]] EnableDoubleBuffer(const bool enabled)
+    {
+        EnableBufferedPaintDC(enabled);
+    };
+
     /** Enable/disable the auto buffering of PaintDC. Use dto further elimitate flickering of overlays (see RenderOverlays())
      */
     void EnableBufferedPaintDC(const bool enabled)
