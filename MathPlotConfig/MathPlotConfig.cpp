@@ -1375,6 +1375,8 @@ void MathPlotConfigDialog::OnnbConfigPageChanged(wxNotebookEvent& event)
 
 void MathPlotConfigDialog::UpdateAxis(void)
 {
+  if (ChoiceAxis->GetSelection() == -1)
+    return;
   CurrentScale = (mpScale*)ChoiceAxis->GetClientData(ChoiceAxis->GetSelection());
   if (!CurrentScale)
     return;
