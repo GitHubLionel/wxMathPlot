@@ -32,6 +32,7 @@ You now need to do some corrections because the import is not perfect
 - In an editor, open the wxFormBuilder project
 - replace all strings <i>expanded="true"</i> by <i>expanded="false"</i> (that is the general option we want)
 - change the wrap property from 0 to -1
+- change the auth_needed property from empty to 0
 - save and re-open the project
 - you now need to make some corrections manually:
   - check all wxStaticBoxSizer and re-validate the orientation

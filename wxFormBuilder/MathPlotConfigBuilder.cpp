@@ -40,7 +40,6 @@ MathPlotConfigDialogBuilder::MathPlotConfigDialogBuilder( wxWindow* parent, wxWi
 	bFontTitle = new wxButton( StaticBoxSizer1->GetStaticBox(), wxID_ANY, _("Font"), wxDefaultPosition, wxSize( 64,-1 ), 0 );
 
 	bFontTitle->SetDefault();
-	bFontTitle->SetAuthNeeded();
 	bFontTitle->Enable( false );
 
 	FlexGridSizer1->Add( bFontTitle, 0, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 5 );
@@ -125,7 +124,6 @@ MathPlotConfigDialogBuilder::MathPlotConfigDialogBuilder( wxWindow* parent, wxWi
 	bBGColor = new wxButton( StaticBoxSizer2->GetStaticBox(), wxID_ANY, _("bg color"), wxDefaultPosition, wxDefaultSize, 0 );
 
 	bBGColor->SetDefault();
-	bBGColor->SetAuthNeeded();
 	bBGColor->SetToolTip( _("Color of the background of the plot area") );
 
 	BoxSizer21->Add( bBGColor, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
@@ -206,7 +204,6 @@ MathPlotConfigDialogBuilder::MathPlotConfigDialogBuilder( wxWindow* parent, wxWi
 	bCoordBrushColor = new wxButton( StaticBoxSizer4->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 
 	bCoordBrushColor->SetDefault();
-	bCoordBrushColor->SetAuthNeeded();
 	FlexGridSizer4->Add( bCoordBrushColor, 1, wxALL|wxEXPAND, 2 );
 
 	StaticText23 = new wxStaticText( StaticBoxSizer4->GetStaticBox(), wxID_ANY, _("Style :"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -317,7 +314,6 @@ MathPlotConfigDialogBuilder::MathPlotConfigDialogBuilder( wxWindow* parent, wxWi
 	bFontLegend = new wxButton( Panel2, wxID_ANY, _("Font"), wxDefaultPosition, wxDefaultSize, 0 );
 
 	bFontLegend->SetDefault();
-	bFontLegend->SetAuthNeeded();
 	bFontLegend->Enable( false );
 
 	BoxSizer15->Add( bFontLegend, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 5 );
@@ -337,7 +333,6 @@ MathPlotConfigDialogBuilder::MathPlotConfigDialogBuilder( wxWindow* parent, wxWi
 	bLegendBrushColor = new wxButton( StaticBoxSizer5->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 
 	bLegendBrushColor->SetDefault();
-	bLegendBrushColor->SetAuthNeeded();
 	FlexGridSizer7->Add( bLegendBrushColor, 1, wxALL|wxEXPAND, 2 );
 
 	StaticText21 = new wxStaticText( StaticBoxSizer5->GetStaticBox(), wxID_ANY, _("Style :"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -381,19 +376,16 @@ MathPlotConfigDialogBuilder::MathPlotConfigDialogBuilder( wxWindow* parent, wxWi
 	bAddXAxis = new wxButton( Panel3, wxID_ANY, _("Add X axis"), wxDefaultPosition, wxDefaultSize, 0 );
 
 	bAddXAxis->SetDefault();
-	bAddXAxis->SetAuthNeeded();
 	FlexGridSizer3->Add( bAddXAxis, 0, wxTOP|wxBOTTOM|wxLEFT|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
 
 	bAddYAxis = new wxButton( Panel3, wxID_ANY, _("Add Y axis"), wxDefaultPosition, wxDefaultSize, 0 );
 
 	bAddYAxis->SetDefault();
-	bAddYAxis->SetAuthNeeded();
 	FlexGridSizer3->Add( bAddYAxis, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
 
 	bDelAxis = new wxButton( Panel3, wxID_ANY, _("Delete"), wxDefaultPosition, wxDefaultSize, 0 );
 
 	bDelAxis->SetDefault();
-	bDelAxis->SetAuthNeeded();
 	FlexGridSizer3->Add( bDelAxis, 1, wxTOP|wxBOTTOM|wxRIGHT|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
 
 
@@ -415,7 +407,6 @@ MathPlotConfigDialogBuilder::MathPlotConfigDialogBuilder( wxWindow* parent, wxWi
 	bFontAxis = new wxButton( Panel3, wxID_ANY, _("Font"), wxDefaultPosition, wxSize( 64,-1 ), 0 );
 
 	bFontAxis->SetDefault();
-	bFontAxis->SetAuthNeeded();
 	bFontAxis->Enable( false );
 
 	FlexGridSizer8->Add( bFontAxis, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
@@ -446,7 +437,6 @@ MathPlotConfigDialogBuilder::MathPlotConfigDialogBuilder( wxWindow* parent, wxWi
 	bAxisPenColor = new wxButton( Panel6, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 
 	bAxisPenColor->SetDefault();
-	bAxisPenColor->SetAuthNeeded();
 	FlexGridSizer10->Add( bAxisPenColor, 1, wxALL|wxEXPAND, 2 );
 
 	StaticText13 = new wxStaticText( Panel6, wxID_ANY, _("Width :"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -485,7 +475,6 @@ MathPlotConfigDialogBuilder::MathPlotConfigDialogBuilder( wxWindow* parent, wxWi
 	bGridPenColor = new wxButton( Panel7, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 
 	bGridPenColor->SetDefault();
-	bGridPenColor->SetAuthNeeded();
 	FlexGridSizer2->Add( bGridPenColor, 1, wxALL|wxEXPAND, 2 );
 
 	StaticText43 = new wxStaticText( Panel7, wxID_ANY, _("Width :"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -666,7 +655,6 @@ MathPlotConfigDialogBuilder::MathPlotConfigDialogBuilder( wxWindow* parent, wxWi
 	bDelSeries = new wxButton( Panel4, wxID_ANY, _("Delete"), wxDefaultPosition, wxDefaultSize, 0 );
 
 	bDelSeries->SetDefault();
-	bDelSeries->SetAuthNeeded();
 	bDelSeries->Enable( false );
 
 	FlexGridSizer13->Add( bDelSeries, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
@@ -722,7 +710,6 @@ MathPlotConfigDialogBuilder::MathPlotConfigDialogBuilder( wxWindow* parent, wxWi
 	bSeriesPenColor = new wxButton( StaticBoxSizer8->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 
 	bSeriesPenColor->SetDefault();
-	bSeriesPenColor->SetAuthNeeded();
 	FlexGridSizer17->Add( bSeriesPenColor, 1, wxALL|wxEXPAND, 2 );
 
 	StaticText4 = new wxStaticText( StaticBoxSizer8->GetStaticBox(), wxID_ANY, _("Width :"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -822,7 +809,6 @@ MathPlotConfigDialogBuilder::MathPlotConfigDialogBuilder( wxWindow* parent, wxWi
 	bSeriesBrushColor = new wxButton( StaticBoxSizer9->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 
 	bSeriesBrushColor->SetDefault();
-	bSeriesBrushColor->SetAuthNeeded();
 	FlexGridSizer16->Add( bSeriesBrushColor, 1, wxALL|wxEXPAND, 2 );
 
 	StaticText7 = new wxStaticText( StaticBoxSizer9->GetStaticBox(), wxID_ANY, _("Style :"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -941,13 +927,11 @@ MathPlotConfigDialogBuilder::MathPlotConfigDialogBuilder( wxWindow* parent, wxWi
 	bAddLines = new wxButton( Panel5, wxID_ANY, _("Add"), wxDefaultPosition, wxDefaultSize, 0 );
 
 	bAddLines->SetDefault();
-	bAddLines->SetAuthNeeded();
 	FlexGridSizer5->Add( bAddLines, 0, wxTOP|wxBOTTOM|wxRIGHT|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
 
 	bDelLines = new wxButton( Panel5, wxID_ANY, _("Delete"), wxDefaultPosition, wxDefaultSize, 0 );
 
 	bDelLines->SetDefault();
-	bDelLines->SetAuthNeeded();
 	bDelLines->Enable( false );
 
 	FlexGridSizer5->Add( bDelLines, 0, wxTOP|wxBOTTOM|wxRIGHT|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
@@ -1023,7 +1007,6 @@ MathPlotConfigDialogBuilder::MathPlotConfigDialogBuilder( wxWindow* parent, wxWi
 	bLinesPenColor = new wxButton( StaticBoxSizer11->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 
 	bLinesPenColor->SetDefault();
-	bLinesPenColor->SetAuthNeeded();
 	FlexGridSizer21->Add( bLinesPenColor, 1, wxALL|wxEXPAND, 2 );
 
 	StaticText33 = new wxStaticText( StaticBoxSizer11->GetStaticBox(), wxID_ANY, _("Width :"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -1094,19 +1077,16 @@ MathPlotConfigDialogBuilder::MathPlotConfigDialogBuilder( wxWindow* parent, wxWi
 	bApply = new wxButton( this, wxID_ANY, _("Apply"), wxDefaultPosition, wxDefaultSize, 0 );
 
 	bApply->SetDefault();
-	bApply->SetAuthNeeded();
 	BoxSizer2->Add( bApply, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 4 );
 
 	bApplyAndFit = new wxButton( this, wxID_ANY, _("Apply and fit"), wxDefaultPosition, wxDefaultSize, 0 );
 
 	bApplyAndFit->SetDefault();
-	bApplyAndFit->SetAuthNeeded();
 	BoxSizer2->Add( bApplyAndFit, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
 
 	bClose = new wxButton( this, wxID_ANY, _("Close"), wxDefaultPosition, wxDefaultSize, 0 );
 
 	bClose->SetDefault();
-	bClose->SetAuthNeeded();
 	BoxSizer2->Add( bClose, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 4 );
 
 
