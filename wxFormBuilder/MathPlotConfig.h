@@ -34,16 +34,85 @@ class WXDLLIMPEXP_MATHPLOT mpText;
 class MathPlotConfigSettings : public wxFileConfig
 {
   public:
+    /**
+     * Manages the backup of configuration window data
+     * @param localFilename the name of the file in which the data would be saved
+     */
     MathPlotConfigSettings(const wxString& localFilename) :
         wxFileConfig(wxEmptyString, wxEmptyString, localFilename) {}
     virtual ~MathPlotConfigSettings() {}
 
+    /**
+     * Set the settings to the plot window
+     * @param win the plot window handler
+     */
     void SetSettings(wxWindow* win);
+
+    /**
+     * Get the settings from the plot window
+     * @param win the plot window handler
+     */
     void GetSettings(wxWindow* win);
+
   protected:
+    /**
+     * Get/set the position of the config window in the screen
+     * @param set : set if true else get
+     * @param win : the config window
+     */
     void DoPosition(bool set, wxWindow *win);
+
+    /**
+     * Search recursively all the widgets then get/set parameters
+     * @param set : set if true else get
+     * @param win : the window (container)
+     * @param path : the complete path (created with the name (class) of each window) to reach the window
+     * @param level : the depth in the window (container) hierarchy
+     */
     void DoRecursiveSearch(bool set, wxWindow *win, const wxString &path = wxEmptyString, int level = 0);
 };
+
+/**
+ * wxMultiTextCtrlDialog class
+ * A simple text control dialog window that support several text control
+ */
+class wxMultiTextCtrlDialog: public wxDialog
+{
+  public:
+    /**
+     * Constructor
+     * @param parent handle of parent window
+     * @param title title of the dialog window
+     * @param message message to display before all the text control
+     * @param size number of input text
+     * @param prompt array of text control label
+     * @param values array of values (double formated with 4 digits)
+     * @param pos position of the window
+     */
+    wxMultiTextCtrlDialog(wxWindow* parent, const wxString& title,
+        const wxString& message, long size, const wxString prompt[], double *values,
+        const wxPoint& pos = wxDefaultPosition)
+    {
+      Create(parent, title, message, size, prompt, values, pos);
+    }
+
+    /**
+     * Create the dialog window.
+     * @sa wxMultiTextCtrlDialog
+     */
+    bool Create(wxWindow* parent, const wxString& title,
+        const wxString& message, long size, const wxString prompt[], double *values,
+        const wxPoint& pos = wxDefaultPosition);
+
+  protected:
+    void OnOK(wxCommandEvent& event);      //!< Ok handler. Data are transfered to values array
+    void OnCancel(wxCommandEvent& event);  //!< Cancel handler.
+
+  private:
+    std::vector<wxTextCtrl *> m_ctrls;    //!< list of wxTextCtrl
+    wxDECLARE_EVENT_TABLE();
+};
+
 
 /**
  * The list of index of the page of the config window
@@ -58,20 +127,55 @@ typedef enum __ConfigPageIndex
   mpcpiLines
 } mpConfigPageId;
 
+/**
+ * Dialog box for configuring the plot's layer objects
+ * In this dialog, you can configure:
+ * - mpTitle layer (the title of the plot)
+ * - mpInfoCoords layer (mouse coordinate tracking)
+ * - mpInfoLegend layer (the legend of all plots)
+ * - mpScale layer (X and Y axis)
+ * - mpFunction layer (All plotting functions: mpFX, mpFY, mpFXY, mpHorizontalLine, mpVerticalLine)
+ */
 /** Implementing MathPlotConfigDialogBuilder */
 class MathPlotConfigDialog : public MathPlotConfigDialogBuilder
 {
   public:
+    /**
+     * Create a dialog window to configure the plot's layer objects
+     * @param parent the handle of the plot window
+     * @param id an ID for the dialog window (default -1)
+     */
     /** Constructor */
     MathPlotConfigDialog( wxWindow* parent );
   //// end generated class members
 
     virtual ~MathPlotConfigDialog();
 
+    /**
+     * Initialize the dialog box by retrieving the layer properties.
+     * @param id the page to be open in the dialog window (default first page)
+     */
     void Initialize(mpConfigPageId id = mpcpiNone);
+
+    /**
+     * Select the series by number
+     * @param serie the number of the series in the list
+     */
     void SelectChoiceSerie(unsigned int serie);
+
+    /**
+     * Create a file to store the properties of mpTitle, mpInfoCoords and mpInfoLegend layers
+     * @param filename the name of the configuration file
+     * @param path the path for the file (if empty, the directory of the program is used)
+     * @param apply if true then load and apply the settings immediately.
+     */
     void CreateSettingsFile(const wxString& filename, const wxString& path = wxEmptyString, bool apply = false);
+
+    /**
+     * Apply the settings loaded in the configuration file
+     */
     void ApplySettings(void);
+
     /**
      * Give access to m_settings if we want to save some others parameters
      */
@@ -82,21 +186,24 @@ class MathPlotConfigDialog : public MathPlotConfigDialogBuilder
 
 	protected:
 		// Handlers for MathPlotConfigDialogBuilder events.
-		void OnnbConfigPageChanged( wxNotebookEvent& event );
-		void OnbFontClick( wxCommandEvent& event );
-		void OnbColorClick( wxCommandEvent& event );
-		void OnAxisSelect( wxCommandEvent& event );
-		void OnbAddAxisClick( wxCommandEvent& event );
-		void OnbDelAxisClick( wxCommandEvent& event );
-		void OncbAutoScaleClick( wxCommandEvent& event );
-		void OncbFormatSelect( wxCommandEvent& event );
-		void OnChoiceSeries( wxCommandEvent& event );
-		void OnbDelSeriesClick( wxCommandEvent& event );
-		void OnChoiceLinesSelect( wxCommandEvent& event );
-		void OnbAddLinesClick( wxCommandEvent& event );
-		void OnbDelLinesClick( wxCommandEvent& event );
-		void OnbApplyClick( wxCommandEvent& event );
-		void OnQuit( wxCommandEvent& event );
+    void OnnbConfigPageChanged( wxNotebookEvent& event );
+    void OnbFontClick( wxCommandEvent& event );
+    void OnbColorClick( wxCommandEvent& event );
+    void OnAxisSelect( wxCommandEvent& event );
+    void OnbAddAxisClick( wxCommandEvent& event );
+    void OnbDelAxisClick( wxCommandEvent& event );
+    void OncbAutoScaleClick( wxCommandEvent& event );
+    void OncbFormatSelect( wxCommandEvent& event );
+    void OnChoiceSeries( wxCommandEvent& event );
+    void OnbDelSeriesClick( wxCommandEvent& event );
+    void OncbSeriesShowNameClick( wxCommandEvent& event );
+    void OncbAutoStepClick( wxCommandEvent& event );
+    void OnChoiceLinesSelect( wxCommandEvent& event );
+    void OnbAddLinesClick( wxCommandEvent& event );
+    void OnbDelLinesClick( wxCommandEvent& event );
+    void OnbApplyClick( wxCommandEvent& event );
+    void OnbApplyAndFitClick( wxCommandEvent& event );
+    void OnQuit( wxCommandEvent& event );
 
   private:
     mpWindow* m_plot;
@@ -121,6 +228,7 @@ class MathPlotConfigDialog : public MathPlotConfigDialogBuilder
     void UpdateSelectedLine(void);
     void UpdateAxis(void);
     void FillYAxisList(wxChoice* yChoice, bool clearChoice = true);
+    void UpdateSeriesStep(void);
 
     void DoButtonColour(wxButton* button, const wxColour& colour);
     void DoApplyColour(const wxColour& colour);

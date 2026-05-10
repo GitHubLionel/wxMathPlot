@@ -182,6 +182,12 @@ MathPlotConfigDialogBuilder::MathPlotConfigDialogBuilder( wxWindow* parent, wxWi
 
 	BoxSizer1->Add( cbMagnetize, 0, wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND, 5 );
 
+	cbCoordDefaultVisibility = new wxCheckBox( StaticBoxSizer3->GetStaticBox(), wxID_ANY, _("Default visibility"), wxDefaultPosition, wxDefaultSize, 0 );
+	cbCoordDefaultVisibility->SetValue(true);
+	cbCoordDefaultVisibility->SetToolTip( _("By default, when checked, the mouse coordinates are always displayed even if the axis is not ploted.") );
+
+	BoxSizer1->Add( cbCoordDefaultVisibility, 1, wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND, 5 );
+
 
 	StaticBoxSizer3->Add( BoxSizer1, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
 
@@ -252,8 +258,11 @@ MathPlotConfigDialogBuilder::MathPlotConfigDialogBuilder( wxWindow* parent, wxWi
 	wxBoxSizer* BoxSizer16;
 	BoxSizer16 = new wxBoxSizer( wxHORIZONTAL );
 
+	wxBoxSizer* BoxSizer25;
+	BoxSizer25 = new wxBoxSizer( wxVERTICAL );
+
 	wxFlexGridSizer* FlexGridSizer6;
-	FlexGridSizer6 = new wxFlexGridSizer( 4, 2, 0, 0 );
+	FlexGridSizer6 = new wxFlexGridSizer( 3, 2, 0, 0 );
 	FlexGridSizer6->SetFlexibleDirection( wxBOTH );
 	FlexGridSizer6->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 
@@ -286,12 +295,21 @@ MathPlotConfigDialogBuilder::MathPlotConfigDialogBuilder( wxWindow* parent, wxWi
 	cbLegendDirection->SetSelection( 0 );
 	FlexGridSizer6->Add( cbLegendDirection, 1, wxALL|wxEXPAND, 2 );
 
+
+	BoxSizer25->Add( FlexGridSizer6, 0, wxALL|wxEXPAND, 5 );
+
 	cbLegendVisible = new wxCheckBox( Panel2, wxID_ANY, _("Visible"), wxDefaultPosition, wxDefaultSize, 0 );
 	cbLegendVisible->SetValue(true);
-	FlexGridSizer6->Add( cbLegendVisible, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5 );
+	BoxSizer25->Add( cbLegendVisible, 0, wxALL|wxEXPAND, 5 );
+
+	cbLegendDefaultVisibility = new wxCheckBox( Panel2, wxID_ANY, _("Default visibility"), wxDefaultPosition, wxDefaultSize, 0 );
+	cbLegendDefaultVisibility->SetValue(true);
+	cbLegendDefaultVisibility->SetToolTip( _("By default, when checked, the series name is always displayed even if the series is not ploted.") );
+
+	BoxSizer25->Add( cbLegendDefaultVisibility, 0, wxALL|wxEXPAND, 5 );
 
 
-	BoxSizer16->Add( FlexGridSizer6, 1, wxALL|wxALIGN_TOP, 5 );
+	BoxSizer16->Add( BoxSizer25, 0, wxALL, 5 );
 
 	wxBoxSizer* BoxSizer15;
 	BoxSizer15 = new wxBoxSizer( wxVERTICAL );
@@ -305,7 +323,7 @@ MathPlotConfigDialogBuilder::MathPlotConfigDialogBuilder( wxWindow* parent, wxWi
 	BoxSizer15->Add( bFontLegend, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 5 );
 
 	wxStaticBoxSizer* StaticBoxSizer5;
-	StaticBoxSizer5 = new wxStaticBoxSizer( new wxStaticBox( Panel2, wxID_ANY, _("Brush ") ), wxVERTICAL );
+	StaticBoxSizer5 = new wxStaticBoxSizer( new wxStaticBox( Panel2, wxID_ANY, _("Brush ") ), wxHORIZONTAL );
 
 	wxFlexGridSizer* FlexGridSizer7;
 	FlexGridSizer7 = new wxFlexGridSizer( 2, 2, 0, 0 );
@@ -335,10 +353,10 @@ MathPlotConfigDialogBuilder::MathPlotConfigDialogBuilder( wxWindow* parent, wxWi
 	StaticBoxSizer5->Add( FlexGridSizer7, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
 
 
-	BoxSizer15->Add( StaticBoxSizer5, 0, wxALL|wxEXPAND, 0 );
+	BoxSizer15->Add( StaticBoxSizer5, 0, wxALL, 0 );
 
 
-	BoxSizer16->Add( BoxSizer15, 1, wxALL|wxALIGN_TOP, 5 );
+	BoxSizer16->Add( BoxSizer15, 0, wxALL|wxALIGN_TOP, 5 );
 
 
 	Panel2->SetSizer( BoxSizer16 );
@@ -414,41 +432,87 @@ MathPlotConfigDialogBuilder::MathPlotConfigDialogBuilder( wxWindow* parent, wxWi
 	wxStaticBoxSizer* StaticBoxSizer6;
 	StaticBoxSizer6 = new wxStaticBoxSizer( new wxStaticBox( Panel3, wxID_ANY, _("Pen ") ), wxHORIZONTAL );
 
+	nbPenAxisGrid = new wxNotebook( StaticBoxSizer6->GetStaticBox(), wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
+	Panel6 = new wxPanel( nbPenAxisGrid, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxFlexGridSizer* FlexGridSizer10;
 	FlexGridSizer10 = new wxFlexGridSizer( 3, 2, 0, 0 );
 	FlexGridSizer10->SetFlexibleDirection( wxBOTH );
 	FlexGridSizer10->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 
-	StaticText12 = new wxStaticText( StaticBoxSizer6->GetStaticBox(), wxID_ANY, _("Color :"), wxDefaultPosition, wxDefaultSize, 0 );
+	StaticText12 = new wxStaticText( Panel6, wxID_ANY, _("Color :"), wxDefaultPosition, wxDefaultSize, 0 );
 	StaticText12->Wrap( -1 );
 	FlexGridSizer10->Add( StaticText12, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5 );
 
-	bAxisPenColor = new wxButton( StaticBoxSizer6->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	bAxisPenColor = new wxButton( Panel6, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 
 	bAxisPenColor->SetDefault();
 	bAxisPenColor->SetAuthNeeded();
 	FlexGridSizer10->Add( bAxisPenColor, 1, wxALL|wxEXPAND, 2 );
 
-	StaticText13 = new wxStaticText( StaticBoxSizer6->GetStaticBox(), wxID_ANY, _("Width :"), wxDefaultPosition, wxDefaultSize, 0 );
+	StaticText13 = new wxStaticText( Panel6, wxID_ANY, _("Width :"), wxDefaultPosition, wxDefaultSize, 0 );
 	StaticText13->Wrap( -1 );
 	FlexGridSizer10->Add( StaticText13, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5 );
 
 	wxArrayString cbAxisPenWidthChoices;
-	cbAxisPenWidth = new wxChoice( StaticBoxSizer6->GetStaticBox(), wxID_ANY, wxDefaultPosition, wxDefaultSize, cbAxisPenWidthChoices, 0 );
+	cbAxisPenWidth = new wxChoice( Panel6, wxID_ANY, wxDefaultPosition, wxDefaultSize, cbAxisPenWidthChoices, 0 );
 	cbAxisPenWidth->SetSelection( 0 );
 	FlexGridSizer10->Add( cbAxisPenWidth, 1, wxALL|wxEXPAND, 2 );
 
-	StaticText14 = new wxStaticText( StaticBoxSizer6->GetStaticBox(), wxID_ANY, _("Style :"), wxDefaultPosition, wxDefaultSize, 0 );
+	StaticText14 = new wxStaticText( Panel6, wxID_ANY, _("Style :"), wxDefaultPosition, wxDefaultSize, 0 );
 	StaticText14->Wrap( -1 );
 	FlexGridSizer10->Add( StaticText14, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5 );
 
 	wxArrayString cbAxisPenStyleChoices;
-	cbAxisPenStyle = new wxChoice( StaticBoxSizer6->GetStaticBox(), wxID_ANY, wxDefaultPosition, wxDefaultSize, cbAxisPenStyleChoices, 0 );
+	cbAxisPenStyle = new wxChoice( Panel6, wxID_ANY, wxDefaultPosition, wxDefaultSize, cbAxisPenStyleChoices, 0 );
 	cbAxisPenStyle->SetSelection( 0 );
 	FlexGridSizer10->Add( cbAxisPenStyle, 1, wxALL|wxEXPAND, 2 );
 
 
-	StaticBoxSizer6->Add( FlexGridSizer10, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0 );
+	Panel6->SetSizer( FlexGridSizer10 );
+	Panel6->Layout();
+	FlexGridSizer10->Fit( Panel6 );
+	nbPenAxisGrid->AddPage( Panel6, _("Axis"), true );
+	Panel7 = new wxPanel( nbPenAxisGrid, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	wxFlexGridSizer* FlexGridSizer2;
+	FlexGridSizer2 = new wxFlexGridSizer( 3, 2, 0, 0 );
+	FlexGridSizer2->SetFlexibleDirection( wxBOTH );
+	FlexGridSizer2->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+
+	StaticText42 = new wxStaticText( Panel7, wxID_ANY, _("Color :"), wxDefaultPosition, wxDefaultSize, 0 );
+	StaticText42->Wrap( -1 );
+	FlexGridSizer2->Add( StaticText42, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5 );
+
+	bGridPenColor = new wxButton( Panel7, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+
+	bGridPenColor->SetDefault();
+	bGridPenColor->SetAuthNeeded();
+	FlexGridSizer2->Add( bGridPenColor, 1, wxALL|wxEXPAND, 2 );
+
+	StaticText43 = new wxStaticText( Panel7, wxID_ANY, _("Width :"), wxDefaultPosition, wxDefaultSize, 0 );
+	StaticText43->Wrap( -1 );
+	FlexGridSizer2->Add( StaticText43, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5 );
+
+	wxArrayString cbGridPenWidthChoices;
+	cbGridPenWidth = new wxChoice( Panel7, wxID_ANY, wxDefaultPosition, wxDefaultSize, cbGridPenWidthChoices, 0 );
+	cbGridPenWidth->SetSelection( 0 );
+	FlexGridSizer2->Add( cbGridPenWidth, 1, wxALL|wxEXPAND, 2 );
+
+	StaticText44 = new wxStaticText( Panel7, wxID_ANY, _("Style :"), wxDefaultPosition, wxDefaultSize, 0 );
+	StaticText44->Wrap( -1 );
+	FlexGridSizer2->Add( StaticText44, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5 );
+
+	wxArrayString cbGridPenStyleChoices;
+	cbGridPenStyle = new wxChoice( Panel7, wxID_ANY, wxDefaultPosition, wxDefaultSize, cbGridPenStyleChoices, 0 );
+	cbGridPenStyle->SetSelection( 0 );
+	FlexGridSizer2->Add( cbGridPenStyle, 1, wxALL|wxEXPAND, 2 );
+
+
+	Panel7->SetSizer( FlexGridSizer2 );
+	Panel7->Layout();
+	FlexGridSizer2->Fit( Panel7 );
+	nbPenAxisGrid->AddPage( Panel7, _("Grid"), true );
+
+	StaticBoxSizer6->Add( nbPenAxisGrid, 1, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
 
 
 	BoxSizer7->Add( StaticBoxSizer6, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 2 );
@@ -532,7 +596,7 @@ MathPlotConfigDialogBuilder::MathPlotConfigDialogBuilder( wxWindow* parent, wxWi
 	StaticText29->Wrap( -1 );
 	BoxSizer14->Add( StaticText29, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
 
-	wxString cbFormatChoices[] = { _("Normal"), _("Time"), _("Hours"), _("Date"), _("DateTime"), _("User"), _("None") };
+	wxString cbFormatChoices[] = { _("Auto"), _("Decimal"), _("Scientific"), _("Time"), _("Hours"), _("Date"), _("DateTime"), _("User"), _("None") };
 	int cbFormatNChoices = sizeof( cbFormatChoices ) / sizeof( wxString );
 	cbFormat = new wxChoice( Panel3, wxID_ANY, wxDefaultPosition, wxDefaultSize, cbFormatNChoices, cbFormatChoices, 0 );
 	cbFormat->SetSelection( 0 );
@@ -562,6 +626,12 @@ MathPlotConfigDialogBuilder::MathPlotConfigDialogBuilder( wxWindow* parent, wxWi
 	cbLogAxis = new wxCheckBox( Panel3, wxID_ANY, _("Logarithmic axis"), wxDefaultPosition, wxDefaultSize, 0 );
 	cbLogAxis->SetValue(true);
 	BoxSizer5->Add( cbLogAxis, 0, wxALL|wxALIGN_LEFT, 5 );
+
+	cbMouseCoordVisible = new wxCheckBox( Panel3, wxID_ANY, _("Always show mouse coordinates"), wxDefaultPosition, wxDefaultSize, 0 );
+	cbMouseCoordVisible->SetValue(true);
+	cbMouseCoordVisible->SetToolTip( _("If checked, mouse coordinates are always displayed in info coordinates") );
+
+	BoxSizer5->Add( cbMouseCoordVisible, 0, wxALL|wxALIGN_LEFT, 5 );
 
 
 	BoxSizer6->Add( BoxSizer5, 0, wxALL|wxALIGN_TOP, 2 );
@@ -698,11 +768,35 @@ MathPlotConfigDialogBuilder::MathPlotConfigDialogBuilder( wxWindow* parent, wxWi
 	cbSeriesShowName->SetValue(true);
 	BoxSizer11->Add( cbSeriesShowName, 1, wxALL|wxALIGN_LEFT, 3 );
 
+	wxBoxSizer* BoxSizer23;
+	BoxSizer23 = new wxBoxSizer( wxHORIZONTAL );
+
+	StaticText15 = new wxStaticText( Panel4, wxID_ANY, _("Position :"), wxDefaultPosition, wxDefaultSize, 0 );
+	StaticText15->Wrap( -1 );
+	BoxSizer23->Add( StaticText15, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
+
+	wxString cbSeriesNamePositionChoices[] = { _("Align NW"), _("Align NE"), _("Align SE"), _("Align SW") };
+	int cbSeriesNamePositionNChoices = sizeof( cbSeriesNamePositionChoices ) / sizeof( wxString );
+	cbSeriesNamePosition = new wxChoice( Panel4, wxID_ANY, wxDefaultPosition, wxDefaultSize, cbSeriesNamePositionNChoices, cbSeriesNamePositionChoices, 0 );
+	cbSeriesNamePosition->SetSelection( 0 );
+	cbSeriesNamePosition->Enable( false );
+
+	BoxSizer23->Add( cbSeriesNamePosition, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
+
+
+	BoxSizer11->Add( BoxSizer23, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
+
 	cbTractable = new wxCheckBox( Panel4, wxID_ANY, _("Tractable"), wxDefaultPosition, wxDefaultSize, 0 );
 	cbTractable->SetValue(true);
 	cbTractable->SetToolTip( _("Allow mouse coordinates") );
 
 	BoxSizer11->Add( cbTractable, 1, wxALL|wxALIGN_LEFT, 3 );
+
+	cbSeriesLegend = new wxCheckBox( Panel4, wxID_ANY, _("Always displayed in Legend"), wxDefaultPosition, wxDefaultSize, 0 );
+	cbSeriesLegend->SetValue(true);
+	cbSeriesLegend->SetToolTip( _("If checked, the name of the function is always displayed in the Legend even if the function is not plotted") );
+
+	BoxSizer11->Add( cbSeriesLegend, 1, wxALL|wxALIGN_LEFT, 3 );
 
 
 	BoxSizer9->Add( BoxSizer11, 0, wxALL|wxALIGN_LEFT, 5 );
@@ -745,7 +839,7 @@ MathPlotConfigDialogBuilder::MathPlotConfigDialogBuilder( wxWindow* parent, wxWi
 	StaticBoxSizer9->Add( FlexGridSizer16, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0 );
 
 
-	BoxSizer10->Add( StaticBoxSizer9, 0, wxALL|wxALIGN_LEFT, 2 );
+	BoxSizer10->Add( StaticBoxSizer9, 0, wxALL|wxEXPAND, 2 );
 
 	wxStaticBoxSizer* StaticBoxSizer10;
 	StaticBoxSizer10 = new wxStaticBoxSizer( new wxStaticBox( Panel4, wxID_ANY, _("Symbol ") ), wxHORIZONTAL );
@@ -769,7 +863,7 @@ MathPlotConfigDialogBuilder::MathPlotConfigDialogBuilder( wxWindow* parent, wxWi
 	StaticText10->Wrap( -1 );
 	FlexGridSizer18->Add( StaticText10, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5 );
 
-	cbSeriesSymbolSize = new wxSpinCtrl( StaticBoxSizer10->GetStaticBox(), wxID_ANY, wxT("4"), wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 4, 100, 4 );
+	cbSeriesSymbolSize = new wxSpinCtrl( StaticBoxSizer10->GetStaticBox(), wxID_ANY, wxT("4"), wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 4, 0, 4 );
 	FlexGridSizer18->Add( cbSeriesSymbolSize, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 2 );
 
 
@@ -778,26 +872,45 @@ MathPlotConfigDialogBuilder::MathPlotConfigDialogBuilder( wxWindow* parent, wxWi
 
 	BoxSizer10->Add( StaticBoxSizer10, 0, wxALL, 2 );
 
-	wxFlexGridSizer* FlexGridSizer19;
-	FlexGridSizer19 = new wxFlexGridSizer( 1, 2, 0, 0 );
-	FlexGridSizer19->SetFlexibleDirection( wxBOTH );
-	FlexGridSizer19->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	wxStaticBoxSizer* StaticBoxSizer13;
+	StaticBoxSizer13 = new wxStaticBoxSizer( new wxStaticBox( Panel4, wxID_ANY, _("Step") ), wxHORIZONTAL );
 
-	StaticText19 = new wxStaticText( Panel4, wxID_ANY, _("Skip point over :"), wxDefaultPosition, wxDefaultSize, 0 );
-	StaticText19->Wrap( -1 );
-	FlexGridSizer19->Add( StaticText19, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5 );
+	wxBoxSizer* BoxSizer24;
+	BoxSizer24 = new wxBoxSizer( wxVERTICAL );
 
-	cbSeriesStep = new wxSpinCtrl( Panel4, wxID_ANY, wxT("1"), wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 1, 100, 1 );
-	FlexGridSizer19->Add( cbSeriesStep, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
+	cbAutoStep = new wxCheckBox( StaticBoxSizer13->GetStaticBox(), wxID_ANY, _("Auto step"), wxDefaultPosition, wxDefaultSize, 0 );
+	cbAutoStep->SetValue(true);
+	cbAutoStep->SetToolTip( _("Automatically calculate step size based on how many points that is allowed to be shown") );
+
+	BoxSizer24->Add( cbAutoStep, 0, wxALL|wxEXPAND, 5 );
+
+	sizerSeriesStep = new wxFlexGridSizer( 1, 2, 0, 0 );
+	sizerSeriesStep->SetFlexibleDirection( wxBOTH );
+	sizerSeriesStep->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+
+	stStepChoice = new wxStaticText( StaticBoxSizer13->GetStaticBox(), wxID_ANY, _("Step size :"), wxDefaultPosition, wxDefaultSize, 0 );
+	stStepChoice->Wrap( -1 );
+	stStepChoice->SetToolTip( _("Set step size, e.g. 1 to show all points, 2 to show every other step and so on") );
+
+	sizerSeriesStep->Add( stStepChoice, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
+
+	spinSeriesStep = new wxSpinCtrl( StaticBoxSizer13->GetStaticBox(), wxID_ANY, wxT("1"), wxDefaultPosition, wxSize( 60,-1 ), wxSP_ARROW_KEYS, 1, 0, 1 );
+	sizerSeriesStep->Add( spinSeriesStep, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
 
 
-	BoxSizer10->Add( FlexGridSizer19, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
+	BoxSizer24->Add( sizerSeriesStep, 1, wxALL|wxEXPAND, 0 );
+
+
+	StaticBoxSizer13->Add( BoxSizer24, 1, wxALL|wxEXPAND, 0 );
+
+
+	BoxSizer10->Add( StaticBoxSizer13, 0, wxALL|wxEXPAND, 2 );
 
 	cbBar = new wxCheckBox( Panel4, wxID_ANY, _("View as bar"), wxDefaultPosition, wxDefaultSize, 0 );
 	cbBar->SetValue(true);
 	cbBar->Enable( false );
 
-	BoxSizer10->Add( cbBar, 1, wxALL|wxEXPAND, 5 );
+	BoxSizer10->Add( cbBar, 0, wxALL|wxEXPAND, 5 );
 
 
 	FlexGridSizer15->Add( BoxSizer10, 1, wxALL|wxALIGN_TOP|wxALIGN_CENTER_HORIZONTAL, 5 );
@@ -984,6 +1097,12 @@ MathPlotConfigDialogBuilder::MathPlotConfigDialogBuilder( wxWindow* parent, wxWi
 	bApply->SetAuthNeeded();
 	BoxSizer2->Add( bApply, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 4 );
 
+	bApplyAndFit = new wxButton( this, wxID_ANY, _("Apply and fit"), wxDefaultPosition, wxDefaultSize, 0 );
+
+	bApplyAndFit->SetDefault();
+	bApplyAndFit->SetAuthNeeded();
+	BoxSizer2->Add( bApplyAndFit, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
+
 	bClose = new wxButton( this, wxID_ANY, _("Close"), wxDefaultPosition, wxDefaultSize, 0 );
 
 	bClose->SetDefault();
@@ -998,83 +1117,90 @@ MathPlotConfigDialogBuilder::MathPlotConfigDialogBuilder( wxWindow* parent, wxWi
 	this->Layout();
 	sizerMain->Fit( this );
 
-	// Common choices
-	const wxString PenWidth_choices[] = {
-	_T("1"),
-	_T("2"),
-	_T("3"),
-	_T("4"),
-	_T("5"),
-	_T("6"),
-	_T("7"),
-	_T("8"),
-	_T("9"),
-	_T("10"),
-	};
+  // Common choices
+  const wxString PenWidth_choices[] = {
+  _T("1"),
+  _T("2"),
+  _T("3"),
+  _T("4"),
+  _T("5"),
+  _T("6"),
+  _T("7"),
+  _T("8"),
+  _T("9"),
+  _T("10"),
+  };
 
-	const wxString PenStyle_choices[] = {
-	_("Solid"),
-	_("Dot"),
-	_("Long Dash"),
-	_("Short Dash"),
-	_("Dot Dash"),
-	};
+  const wxString PenStyle_choices[] = {
+  _("Solid"),
+  _("Dot"),
+  _("Long Dash"),
+  _("Short Dash"),
+  _("Dot Dash"),
+  };
 
-	const wxString InfoBrushStyle_choices[] = {
-	_("Solid"),
-	_("Transparent"),
-	};
+  const wxString InfoBrushStyle_choices[] = {
+  _("Solid"),
+  _("Transparent"),
+  };
 
-	const wxString InfoPosition_choices[] = {
-	_("Left center"),
-	_("Top left"),
-	_("Top center"),
-	_("Top right"),
-	_("Right center"),
-	_("Bottom left"),
-	_("Bottom center"),
-	_("Bottom right"),
-	_("Default position"),
-	_("Cursor position"),
-	};
+  const wxString InfoPosition_choices[] = {
+  _("Left center"),
+  _("Top left"),
+  _("Top center"),
+  _("Top right"),
+  _("Right center"),
+  _("Bottom left"),
+  _("Bottom center"),
+  _("Bottom right"),
+  _("Default position"),
+  _("Cursor position"),
+  };
 
-	// Choices
-	cbAxisPenWidth->Set(WXSIZEOF(PenWidth_choices), PenWidth_choices);
-	cbAxisPenWidth->SetSelection(0);
-	cbSeriesPenWidth->Set(WXSIZEOF(PenWidth_choices), PenWidth_choices);
-	cbLinesPenWidth->Set(WXSIZEOF(PenWidth_choices), PenWidth_choices);
-	cbAxisPenStyle->Set(WXSIZEOF(PenStyle_choices), PenStyle_choices);
-	cbSeriesPenStyle->Set(WXSIZEOF(PenStyle_choices), PenStyle_choices);
-	cbLinesPenStyle->Set(WXSIZEOF(PenStyle_choices), PenStyle_choices);
-	cbCoordBrushStyle->Set(WXSIZEOF(InfoBrushStyle_choices), InfoBrushStyle_choices);
-	cbCoordBrushStyle->SetSelection(0);
-	cbLegendBrushStyle->Set(WXSIZEOF(InfoBrushStyle_choices), InfoBrushStyle_choices);
-	cbLegendBrushStyle->SetSelection(0);
-	cbCoord->Set(WXSIZEOF(InfoPosition_choices), InfoPosition_choices);
-	cbCoord->SetSelection(7);
-	cbLegendPosition->Set(WXSIZEOF(InfoPosition_choices), InfoPosition_choices);\
-	cbLegendPosition->SetSelection(6);
+  // Choices
+  cbAxisPenWidth->Set(WXSIZEOF(PenWidth_choices), PenWidth_choices);
+  cbAxisPenWidth->SetSelection(0);
+  cbGridPenWidth->Set(WXSIZEOF(PenWidth_choices), PenWidth_choices);
+  cbGridPenWidth->SetSelection(0);
+  cbSeriesPenWidth->Set(WXSIZEOF(PenWidth_choices), PenWidth_choices);
+  cbLinesPenWidth->Set(WXSIZEOF(PenWidth_choices), PenWidth_choices);
+  cbAxisPenStyle->Set(WXSIZEOF(PenStyle_choices), PenStyle_choices);
+  cbGridPenStyle->Set(WXSIZEOF(PenStyle_choices), PenStyle_choices);
+  cbSeriesPenStyle->Set(WXSIZEOF(PenStyle_choices), PenStyle_choices);
+  cbLinesPenStyle->Set(WXSIZEOF(PenStyle_choices), PenStyle_choices);
+  cbCoordBrushStyle->Set(WXSIZEOF(InfoBrushStyle_choices), InfoBrushStyle_choices);
+  cbCoordBrushStyle->SetSelection(0);
+  cbLegendBrushStyle->Set(WXSIZEOF(InfoBrushStyle_choices), InfoBrushStyle_choices);
+  cbLegendBrushStyle->SetSelection(0);
+  cbCoord->Set(WXSIZEOF(InfoPosition_choices), InfoPosition_choices);
+  cbCoord->SetSelection(7);
+  cbLegendPosition->Set(WXSIZEOF(InfoPosition_choices), InfoPosition_choices);\
+  cbLegendPosition->SetSelection(6);
 
-	// Validators
-	edMarginTop->SetValidator(wxIntegerValidator<unsigned int> (&int_top));
-	edMarginBottom->SetValidator(wxIntegerValidator<unsigned int> (&int_bottom));
-	edMarginLeft->SetValidator(wxIntegerValidator<unsigned int> (&int_left));
-	edMarginRight->SetValidator(wxIntegerValidator<unsigned int> (&int_right));
-	edExtraMargin->SetValidator(wxIntegerValidator<unsigned int> (&int_extra));
-	edScaleMin->SetValidator(wxFloatingPointValidator<double> (2, &scale_min));
-	edScaleMax->SetValidator(wxFloatingPointValidator<double> (2, &scale_max));
-	edLinesValue->SetValidator(wxFloatingPointValidator<double> (2, &line_value));
+  // Delete the last item who is nonsense for Legend
+  cbLegendPosition->Delete(WXSIZEOF(InfoPosition_choices) - 1);
 
-	#ifdef _WIN32
-	#else
-	cbMagnetize->Show(false); // wxINVERT not work on Linux GTK
-	cbLegendBrushStyle->SetToolTip(MESS_TRANSPARENT);
-	#endif // _WIN32
+  // Validators
+  edMarginTop->SetValidator(wxIntegerValidator<unsigned int> (&int_top));
+  edMarginBottom->SetValidator(wxIntegerValidator<unsigned int> (&int_bottom));
+  edMarginLeft->SetValidator(wxIntegerValidator<unsigned int> (&int_left));
+  edMarginRight->SetValidator(wxIntegerValidator<unsigned int> (&int_right));
+  edExtraMargin->SetValidator(wxIntegerValidator<unsigned int> (&int_extra));
+  edScaleMin->SetValidator(wxFloatingPointValidator<double> (2, &scale_min));
+  edScaleMax->SetValidator(wxFloatingPointValidator<double> (2, &scale_max));
+  edLinesValue->SetValidator(wxFloatingPointValidator<double> (2, &line_value));
+
+  #ifdef _WIN32
+  #else
+  cbMagnetize->Show(false); // wxINVERT not work on Linux GTK
+  cbLegendBrushStyle->SetToolTip(MESS_TRANSPARENT);
+  #endif // _WIN32
 
 	// Connect Events
 	nbConfig->Connect( wxEVT_COMMAND_NOTEBOOK_PAGE_CHANGED, wxNotebookEventHandler( MathPlotConfigDialogBuilder::OnnbConfigPageChanged ), NULL, this );
 	bFontTitle->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MathPlotConfigDialogBuilder::OnbFontClick ), NULL, this );
 	bBGColor->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MathPlotConfigDialogBuilder::OnbColorClick ), NULL, this );
+	bCoordBrushColor->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MathPlotConfigDialogBuilder::OnbColorClick ), NULL, this );
 	bFontLegend->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MathPlotConfigDialogBuilder::OnbFontClick ), NULL, this );
 	bLegendBrushColor->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MathPlotConfigDialogBuilder::OnbColorClick ), NULL, this );
 	ChoiceAxis->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MathPlotConfigDialogBuilder::OnAxisSelect ), NULL, this );
@@ -1083,17 +1209,21 @@ MathPlotConfigDialogBuilder::MathPlotConfigDialogBuilder( wxWindow* parent, wxWi
 	bDelAxis->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MathPlotConfigDialogBuilder::OnbDelAxisClick ), NULL, this );
 	bFontAxis->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MathPlotConfigDialogBuilder::OnbFontClick ), NULL, this );
 	bAxisPenColor->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MathPlotConfigDialogBuilder::OnbColorClick ), NULL, this );
+	bGridPenColor->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MathPlotConfigDialogBuilder::OnbColorClick ), NULL, this );
 	cbAutoScale->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MathPlotConfigDialogBuilder::OncbAutoScaleClick ), NULL, this );
 	cbFormat->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MathPlotConfigDialogBuilder::OncbFormatSelect ), NULL, this );
 	ChoiceSeries->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MathPlotConfigDialogBuilder::OnChoiceSeries ), NULL, this );
 	bDelSeries->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MathPlotConfigDialogBuilder::OnbDelSeriesClick ), NULL, this );
 	bSeriesPenColor->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MathPlotConfigDialogBuilder::OnbColorClick ), NULL, this );
+	cbSeriesShowName->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MathPlotConfigDialogBuilder::OncbSeriesShowNameClick ), NULL, this );
 	bSeriesBrushColor->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MathPlotConfigDialogBuilder::OnbColorClick ), NULL, this );
+	cbAutoStep->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MathPlotConfigDialogBuilder::OncbAutoStepClick ), NULL, this );
 	ChoiceLines->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MathPlotConfigDialogBuilder::OnChoiceLinesSelect ), NULL, this );
 	bAddLines->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MathPlotConfigDialogBuilder::OnbAddLinesClick ), NULL, this );
 	bDelLines->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MathPlotConfigDialogBuilder::OnbDelLinesClick ), NULL, this );
 	bLinesPenColor->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MathPlotConfigDialogBuilder::OnbColorClick ), NULL, this );
 	bApply->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MathPlotConfigDialogBuilder::OnbApplyClick ), NULL, this );
+	bApplyAndFit->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MathPlotConfigDialogBuilder::OnbApplyAndFitClick ), NULL, this );
 	bClose->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MathPlotConfigDialogBuilder::OnQuit ), NULL, this );
 }
 
@@ -1103,6 +1233,7 @@ MathPlotConfigDialogBuilder::~MathPlotConfigDialogBuilder()
 	nbConfig->Disconnect( wxEVT_COMMAND_NOTEBOOK_PAGE_CHANGED, wxNotebookEventHandler( MathPlotConfigDialogBuilder::OnnbConfigPageChanged ), NULL, this );
 	bFontTitle->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MathPlotConfigDialogBuilder::OnbFontClick ), NULL, this );
 	bBGColor->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MathPlotConfigDialogBuilder::OnbColorClick ), NULL, this );
+	bCoordBrushColor->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MathPlotConfigDialogBuilder::OnbColorClick ), NULL, this );
 	bFontLegend->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MathPlotConfigDialogBuilder::OnbFontClick ), NULL, this );
 	bLegendBrushColor->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MathPlotConfigDialogBuilder::OnbColorClick ), NULL, this );
 	ChoiceAxis->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MathPlotConfigDialogBuilder::OnAxisSelect ), NULL, this );
@@ -1111,17 +1242,21 @@ MathPlotConfigDialogBuilder::~MathPlotConfigDialogBuilder()
 	bDelAxis->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MathPlotConfigDialogBuilder::OnbDelAxisClick ), NULL, this );
 	bFontAxis->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MathPlotConfigDialogBuilder::OnbFontClick ), NULL, this );
 	bAxisPenColor->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MathPlotConfigDialogBuilder::OnbColorClick ), NULL, this );
+	bGridPenColor->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MathPlotConfigDialogBuilder::OnbColorClick ), NULL, this );
 	cbAutoScale->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MathPlotConfigDialogBuilder::OncbAutoScaleClick ), NULL, this );
 	cbFormat->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MathPlotConfigDialogBuilder::OncbFormatSelect ), NULL, this );
 	ChoiceSeries->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MathPlotConfigDialogBuilder::OnChoiceSeries ), NULL, this );
 	bDelSeries->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MathPlotConfigDialogBuilder::OnbDelSeriesClick ), NULL, this );
 	bSeriesPenColor->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MathPlotConfigDialogBuilder::OnbColorClick ), NULL, this );
+	cbSeriesShowName->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MathPlotConfigDialogBuilder::OncbSeriesShowNameClick ), NULL, this );
 	bSeriesBrushColor->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MathPlotConfigDialogBuilder::OnbColorClick ), NULL, this );
+	cbAutoStep->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MathPlotConfigDialogBuilder::OncbAutoStepClick ), NULL, this );
 	ChoiceLines->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MathPlotConfigDialogBuilder::OnChoiceLinesSelect ), NULL, this );
 	bAddLines->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MathPlotConfigDialogBuilder::OnbAddLinesClick ), NULL, this );
 	bDelLines->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MathPlotConfigDialogBuilder::OnbDelLinesClick ), NULL, this );
 	bLinesPenColor->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MathPlotConfigDialogBuilder::OnbColorClick ), NULL, this );
 	bApply->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MathPlotConfigDialogBuilder::OnbApplyClick ), NULL, this );
+	bApplyAndFit->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MathPlotConfigDialogBuilder::OnbApplyAndFitClick ), NULL, this );
 	bClose->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MathPlotConfigDialogBuilder::OnQuit ), NULL, this );
 
 }
