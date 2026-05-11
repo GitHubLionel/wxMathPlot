@@ -303,6 +303,8 @@ MathPlotConfigDialog::MathPlotConfigDialog( wxWindow* parent ): MathPlotConfigDi
   YAxis_Align[3] = _("Right");
   YAxis_Align[4] = _("Right border");
 
+  // Missing initialization of wxFormBuilder
+  CompleteInitialization();
 
 #ifdef _WIN32
 #else
@@ -345,6 +347,89 @@ MathPlotConfigDialog::~MathPlotConfigDialog()
     delete m_settings;
     m_settings = NULL;
   }
+}
+
+void MathPlotConfigDialog::CompleteInitialization(void)
+{
+  // Common choices
+  const wxString PenWidth_choices[] = {
+  _T("1"),
+  _T("2"),
+  _T("3"),
+  _T("4"),
+  _T("5"),
+  _T("6"),
+  _T("7"),
+  _T("8"),
+  _T("9"),
+  _T("10"),
+  };
+
+  const wxString PenStyle_choices[] = {
+  _("Solid"),
+  _("Dot"),
+  _("Long Dash"),
+  _("Short Dash"),
+  _("Dot Dash"),
+  };
+
+  const wxString InfoBrushStyle_choices[] = {
+  _("Solid"),
+  _("Transparent"),
+  };
+
+  const wxString InfoPosition_choices[] = {
+  _("Left center"),
+  _("Top left"),
+  _("Top center"),
+  _("Top right"),
+  _("Right center"),
+  _("Bottom left"),
+  _("Bottom center"),
+  _("Bottom right"),
+  _("Default position"),
+  _("Cursor position"),
+  };
+
+  // Choices
+  cbAxisPenWidth->Set(WXSIZEOF(PenWidth_choices), PenWidth_choices);
+  cbAxisPenWidth->SetSelection(0);
+  cbGridPenWidth->Set(WXSIZEOF(PenWidth_choices), PenWidth_choices);
+  cbGridPenWidth->SetSelection(0);
+  cbSeriesPenWidth->Set(WXSIZEOF(PenWidth_choices), PenWidth_choices);
+  cbLinesPenWidth->Set(WXSIZEOF(PenWidth_choices), PenWidth_choices);
+  cbAxisPenStyle->Set(WXSIZEOF(PenStyle_choices), PenStyle_choices);
+  cbGridPenStyle->Set(WXSIZEOF(PenStyle_choices), PenStyle_choices);
+  cbSeriesPenStyle->Set(WXSIZEOF(PenStyle_choices), PenStyle_choices);
+  cbLinesPenStyle->Set(WXSIZEOF(PenStyle_choices), PenStyle_choices);
+  cbCoordBrushStyle->Set(WXSIZEOF(InfoBrushStyle_choices), InfoBrushStyle_choices);
+  cbCoordBrushStyle->SetSelection(0);
+  cbLegendBrushStyle->Set(WXSIZEOF(InfoBrushStyle_choices), InfoBrushStyle_choices);
+  cbLegendBrushStyle->SetSelection(0);
+  cbCoord->Set(WXSIZEOF(InfoPosition_choices), InfoPosition_choices);
+  cbCoord->SetSelection(7);
+  cbLegendPosition->Set(WXSIZEOF(InfoPosition_choices), InfoPosition_choices);\
+  cbLegendPosition->SetSelection(6);
+
+  // Delete the last item who is nonsense for Legend
+  cbLegendPosition->Delete(WXSIZEOF(InfoPosition_choices) - 1);
+
+  // Validators
+  edMarginTop->SetValidator(wxIntegerValidator<unsigned int> (&int_top));
+  edMarginBottom->SetValidator(wxIntegerValidator<unsigned int> (&int_bottom));
+  edMarginLeft->SetValidator(wxIntegerValidator<unsigned int> (&int_left));
+  edMarginRight->SetValidator(wxIntegerValidator<unsigned int> (&int_right));
+  edExtraMargin->SetValidator(wxIntegerValidator<unsigned int> (&int_extra));
+  edScaleMin->SetValidator(wxFloatingPointValidator<double> (2, &scale_min));
+  edScaleMax->SetValidator(wxFloatingPointValidator<double> (2, &scale_max));
+  edLinesValue->SetValidator(wxFloatingPointValidator<double> (2, &line_value));
+
+  #ifdef _WIN32
+  #else
+  cbMagnetize->Show(false); // wxINVERT not work on Linux GTK
+  cbLegendBrushStyle->SetToolTip(MESS_TRANSPARENT);
+  #endif // _WIN32
+
 }
 
 void MathPlotConfigDialog::Initialize(mpConfigPageId id)

@@ -29,8 +29,6 @@
 #include <wx/notebook.h>
 #include <wx/spinctrl.h>
 #include <wx/radiobut.h>
-
-#include <wx/valnum.h>
 #include <wx/dialog.h>
 
 ///////////////////////////////////////////////////////////////////////////
@@ -186,13 +184,6 @@ class MathPlotConfigDialogBuilder : public wxDialog
 		wxButton* bApply;
 		wxButton* bApplyAndFit;
 		wxButton* bClose;
-
-		// Margin validator
-		unsigned int int_top, int_bottom, int_left, int_right, int_extra;
-		// Scale validator
-		double scale_min, scale_max;
-		// Line position validator
-		double line_value;
 
 		// Virtual event handlers, override them in your derived class
 		virtual void OnnbConfigPageChanged( wxNotebookEvent& event ) { event.Skip(); }
