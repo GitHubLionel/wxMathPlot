@@ -2,13 +2,13 @@
 <wxsmith>
 	<object class="wxFrame" name="MathPlotDemoFrame">
 		<title>MathPlot Demo</title>
-		<size>800,400</size>
+		<size>800,450</size>
 		<id_arg>0</id_arg>
 		<object class="wxAuiManager" variable="AuiManager1" member="yes">
 			<style>wxAUI_MGR_ALLOW_ACTIVE_PANE|wxAUI_MGR_DEFAULT</style>
 			<object class="AuiManagerItem">
-				<object class="wxPanel" name="ID_PANEL1" variable="pLog" member="yes">
-					<minsize>120,-1</minsize>
+				<object class="wxPanel" name="" variable="pDemo" member="yes">
+					<minsize>140,-1</minsize>
 					<object class="wxBoxSizer" variable="BoxSizer2" member="no">
 						<orient>wxVERTICAL</orient>
 						<object class="sizeritem">
@@ -65,7 +65,7 @@
 								<label>Draw PieChart</label>
 								<handler function="OnbChartClick" entry="EVT_BUTTON" />
 							</object>
-							<flag>wxBOTTOM|wxLEFT|wxRIGHT|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+							<flag>wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND</flag>
 							<border>10</border>
 						</object>
 						<object class="sizeritem">
@@ -101,29 +101,33 @@
 							<flag>wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND</flag>
 							<border>10</border>
 						</object>
+						<object class="spacer">
+							<flag>wxALL|wxEXPAND</flag>
+							<border>5</border>
+							<option>1</option>
+						</object>
 					</object>
 				</object>
 				<name>PaneName0</name>
-				<caption>Log</caption>
+				<standardpanetype>Default</standardpanetype>
+				<caption>Demo</caption>
 				<minimizebutton>0</minimizebutton>
 				<maximizebutton>0</maximizebutton>
 				<pinbutton>0</pinbutton>
 				<closebutton>0</closebutton>
 				<dockdirection>Left</dockdirection>
-				<dockfixed>0</dockfixed>
-				<dockabledirection></dockabledirection>
+				<dockabledirection>.Dockable(false)</dockabledirection>
 				<floatable>0</floatable>
 				<movable>0</movable>
 				<destroyonclose>0</destroyonclose>
 				<firstadd>0</firstadd>
 			</object>
 			<object class="AuiManagerItem">
-				<object class="wxPanel" name="ID_PANEL2" variable="pPlot" member="yes">
-					<pos>227,228</pos>
+				<object class="wxPanel" name="" variable="pPlot" member="yes">
 					<object class="wxBoxSizer" variable="BoxSizer1" member="no">
 						<orient>wxVERTICAL</orient>
 						<object class="sizeritem">
-							<object class="mpWindow" name="ID_MATHPLOT1" variable="mPlot" member="yes" />
+							<object class="mpWindow" name="" variable="mPlot" member="yes" />
 							<flag>wxALL|wxEXPAND</flag>
 							<border>5</border>
 							<option>1</option>

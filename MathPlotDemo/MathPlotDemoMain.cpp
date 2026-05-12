@@ -46,9 +46,6 @@ wxString wxBuildInfo(wxBuildInfoFormat format)
 }
 
 //(*IdInit(MathPlotDemoFrame)
-const wxWindowID MathPlotDemoFrame::ID_PANEL1 = wxNewId();
-const wxWindowID MathPlotDemoFrame::ID_MATHPLOT1 = wxNewId();
-const wxWindowID MathPlotDemoFrame::ID_PANEL2 = wxNewId();
 const wxWindowID MathPlotDemoFrame::idMenuPreview = wxNewId();
 const wxWindowID MathPlotDemoFrame::idMenuPrint = wxNewId();
 const wxWindowID MathPlotDemoFrame::idMenuExit = wxNewId();
@@ -61,7 +58,7 @@ BEGIN_EVENT_TABLE(MathPlotDemoFrame,wxFrame)
     //*)
 END_EVENT_TABLE()
 
-MathPlotDemoFrame::MathPlotDemoFrame(wxWindow* parent,wxWindowID id)
+MathPlotDemoFrame::MathPlotDemoFrame(wxWindow* parent, wxWindowID id)
 {
     (void) id; // Compiler happy
     //(*Initialize(MathPlotDemoFrame)
@@ -75,41 +72,42 @@ MathPlotDemoFrame::MathPlotDemoFrame(wxWindow* parent,wxWindowID id)
     wxMenuItem* miQuit;
 
     Create(parent, wxID_ANY, _("MathPlot Demo"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_FRAME_STYLE, _T("wxID_ANY"));
-    SetClientSize(wxSize(800,400));
+    SetClientSize(wxSize(800,450));
     AuiManager1 = new wxAuiManager(this, wxAUI_MGR_ALLOW_ACTIVE_PANE|wxAUI_MGR_DEFAULT);
-    pLog = new wxPanel(this, ID_PANEL1, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL, _T("ID_PANEL1"));
-    pLog->SetMinSize(wxSize(120,-1));
+    pDemo = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL);
+    pDemo->SetMinSize(wxSize(140,-1));
     BoxSizer2 = new wxBoxSizer(wxVERTICAL);
-    bDraw = new wxButton(pLog, wxID_ANY, _("Draw sinus"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
+    bDraw = new wxButton(pDemo, wxID_ANY, _("Draw sinus"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
     BoxSizer2->Add(bDraw, 0, wxALL|wxEXPAND, 10);
-    bSample = new wxButton(pLog, wxID_ANY, _("Draw Sample"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
+    bSample = new wxButton(pDemo, wxID_ANY, _("Draw Sample"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
     BoxSizer2->Add(bSample, 0, wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND, 10);
-    bBar = new wxButton(pLog, wxID_ANY, _("Draw Bar"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
+    bBar = new wxButton(pDemo, wxID_ANY, _("Draw Bar"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
     bBar->SetToolTip(_("A function view as bar chart"));
     BoxSizer2->Add(bBar, 0, wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND, 10);
-    bLog = new wxButton(pLog, wxID_ANY, _("Log Y sample"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
+    bLog = new wxButton(pDemo, wxID_ANY, _("Log Y sample"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
     BoxSizer2->Add(bLog, 0, wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND, 10);
-    bLogXY = new wxButton(pLog, wxID_ANY, _("Log XY sample"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
+    bLogXY = new wxButton(pDemo, wxID_ANY, _("Log XY sample"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
     BoxSizer2->Add(bLogXY, 0, wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND, 10);
-    bBarChart = new wxButton(pLog, wxID_ANY, _("Draw BarChart"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
+    bBarChart = new wxButton(pDemo, wxID_ANY, _("Draw BarChart"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
     BoxSizer2->Add(bBarChart, 0, wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND, 10);
-    bPieChart = new wxButton(pLog, wxID_ANY, _("Draw PieChart"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
-    BoxSizer2->Add(bPieChart, 0, wxBOTTOM|wxLEFT|wxRIGHT|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 10);
-    bImage = new wxButton(pLog, wxID_ANY, _("Draw Image"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
+    bPieChart = new wxButton(pDemo, wxID_ANY, _("Draw PieChart"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
+    BoxSizer2->Add(bPieChart, 0, wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND, 10);
+    bImage = new wxButton(pDemo, wxID_ANY, _("Draw Image"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
     BoxSizer2->Add(bImage, 0, wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND, 10);
-    bMultiYAxis = new wxButton(pLog, wxID_ANY, _("Multi Y-Axis"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
+    bMultiYAxis = new wxButton(pDemo, wxID_ANY, _("Multi Y-Axis"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
     BoxSizer2->Add(bMultiYAxis, 0, wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND, 10);
-    bMovingObject = new wxButton(pLog, wxID_ANY, _("Moving object"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
+    bMovingObject = new wxButton(pDemo, wxID_ANY, _("Moving object"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
     BoxSizer2->Add(bMovingObject, 0, wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND, 10);
-    cbFreeLine = new wxCheckBox(pLog, wxID_ANY, _("Free line"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
+    cbFreeLine = new wxCheckBox(pDemo, wxID_ANY, _("Free line"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
     cbFreeLine->SetValue(false);
     cbFreeLine->SetToolTip(_("Free drawing on the plot area. Left click and move the mouse. Illustration of OnUserMouseAction"));
     BoxSizer2->Add(cbFreeLine, 0, wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND, 10);
-    pLog->SetSizer(BoxSizer2);
-    AuiManager1->AddPane(pLog, wxAuiPaneInfo().Name(_T("PaneName0")).DefaultPane().Caption(_("Log")).CaptionVisible().CloseButton(false).Left().Floatable(false).MinSize(wxSize(120,-1)).Movable(false));
-    pPlot = new wxPanel(this, ID_PANEL2, wxPoint(227,228), wxDefaultSize, wxTAB_TRAVERSAL, _T("ID_PANEL2"));
+    BoxSizer2->Add(0,0,1, wxALL|wxEXPAND, 5);
+    pDemo->SetSizer(BoxSizer2);
+    AuiManager1->AddPane(pDemo, wxAuiPaneInfo().Name(_T("PaneName0")).DefaultPane().Caption(_("Demo")).CloseButton(false).Left().DockFixed().Dockable(false).Floatable(false).MinSize(wxSize(140,-1)).Movable(false));
+    pPlot = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL);
     BoxSizer1 = new wxBoxSizer(wxVERTICAL);
-    mPlot = new mpWindow(pPlot, ID_MATHPLOT1, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL);
+    mPlot = new mpWindow(pPlot, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL);
     mPlot->UpdateAll();
     mPlot->Fit();
     BoxSizer1->Add(mPlot, 1, wxALL|wxEXPAND, 5);

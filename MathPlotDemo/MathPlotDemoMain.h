@@ -30,7 +30,7 @@ class MathPlotDemoFrame: public wxFrame
 {
     public:
 
-        MathPlotDemoFrame(wxWindow* parent,wxWindowID id = -1);
+        MathPlotDemoFrame(wxWindow* parent, wxWindowID id = -1);
         virtual ~MathPlotDemoFrame();
 
     private:
@@ -54,9 +54,6 @@ class MathPlotDemoFrame: public wxFrame
         //*)
 
         //(*Identifiers(MathPlotDemoFrame)
-        static const wxWindowID ID_PANEL1;
-        static const wxWindowID ID_MATHPLOT1;
-        static const wxWindowID ID_PANEL2;
         static const wxWindowID idMenuPreview;
         static const wxWindowID idMenuPrint;
         static const wxWindowID idMenuExit;
@@ -79,7 +76,7 @@ class MathPlotDemoFrame: public wxFrame
         wxButton* bSample;
         wxCheckBox* cbFreeLine;
         wxMenuItem* miPrint;
-        wxPanel* pLog;
+        wxPanel* pDemo;
         wxPanel* pPlot;
         wxTimer Timer;
         //*)
