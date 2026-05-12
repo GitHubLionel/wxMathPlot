@@ -7,7 +7,7 @@
     <Filter Include="MathPlot">
       <UniqueIdentifier>{f6899dd9-49a4-403d-8365-5417a347c015}</UniqueIdentifier>
     </Filter>
-    <Filter Include="MathPlot\MathPlotConfigDialog">
+    <Filter Include="MathPlot\MathPlot_wxFormBuilder_ConfigDialog">
       <UniqueIdentifier>{15f5c083-b753-4ec7-8865-c9095d8987cf}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -22,10 +22,10 @@
       <Filter>MathPlot</Filter>
     </ClCompile>
     <ClCompile Include="..\wxFormBuilder\MathPlotConfig.cpp">
-      <Filter>MathPlot\MathPlotConfigDialog</Filter>
+      <Filter>MathPlot\MathPlot_wxFormBuilder_ConfigDialog</Filter>
     </ClCompile>
     <ClCompile Include="..\wxFormBuilder\MathPlotConfigBuilder.cpp">
-      <Filter>MathPlot\MathPlotConfigDialog</Filter>
+      <Filter>MathPlot\MathPlot_wxFormBuilder_ConfigDialog</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -39,10 +39,10 @@
       <Filter>MathPlot</Filter>
     </ClInclude>
     <ClInclude Include="..\wxFormBuilder\MathPlotConfig.h">
-      <Filter>MathPlot\MathPlotConfigDialog</Filter>
+      <Filter>MathPlot\MathPlot_wxFormBuilder_ConfigDialog</Filter>
     </ClInclude>
     <ClInclude Include="..\wxFormBuilder\MathPlotConfigBuilder.h">
-      <Filter>MathPlot\MathPlotConfigDialog</Filter>
+      <Filter>MathPlot\MathPlot_wxFormBuilder_ConfigDialog</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
