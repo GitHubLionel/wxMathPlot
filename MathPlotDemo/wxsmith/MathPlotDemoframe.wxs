@@ -116,8 +116,8 @@
 				<pinbutton>0</pinbutton>
 				<closebutton>0</closebutton>
 				<dockdirection>Left</dockdirection>
-				<dockabledirection>.Dockable(false)</dockabledirection>
-				<floatable>0</floatable>
+				<dockfixed>0</dockfixed>
+				<dockabledirection>.TopDockable(false).BottomDockable(false).RightDockable(false)</dockabledirection>
 				<movable>0</movable>
 				<destroyonclose>0</destroyonclose>
 				<firstadd>0</firstadd>

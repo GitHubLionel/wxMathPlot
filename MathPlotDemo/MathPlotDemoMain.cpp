@@ -102,9 +102,9 @@ MathPlotDemoFrame::MathPlotDemoFrame(wxWindow* parent, wxWindowID id)
     cbFreeLine->SetValue(false);
     cbFreeLine->SetToolTip(_("Free drawing on the plot area. Left click and move the mouse. Illustration of OnUserMouseAction"));
     BoxSizer2->Add(cbFreeLine, 0, wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND, 10);
-    BoxSizer2->Add(0,0,1, wxALL|wxEXPAND, 5);
+    BoxSizer2->Add(-1,-1,1, wxALL|wxEXPAND, 5);
     pDemo->SetSizer(BoxSizer2);
-    AuiManager1->AddPane(pDemo, wxAuiPaneInfo().Name(_T("PaneName0")).DefaultPane().Caption(_("Demo")).CloseButton(false).Left().DockFixed().Dockable(false).Floatable(false).MinSize(wxSize(140,-1)).Movable(false));
+    AuiManager1->AddPane(pDemo, wxAuiPaneInfo().Name(_T("PaneName0")).DefaultPane().Caption(_("Demo")).CloseButton(false).Left().TopDockable(false).BottomDockable(false).RightDockable(false).MinSize(wxSize(140,-1)).Movable(false));
     pPlot = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL);
     BoxSizer1 = new wxBoxSizer(wxVERTICAL);
     mPlot = new mpWindow(pPlot, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL);
