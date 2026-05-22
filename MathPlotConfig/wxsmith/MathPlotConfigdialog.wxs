@@ -1299,7 +1299,7 @@
 																<object class="sizeritem">
 																	<object class="wxSpinCtrl" name="" variable="cbSeriesSymbolSize" member="yes">
 																		<value>4</value>
-																		<min>4</min>
+																		<min>1</min>
 																	</object>
 																	<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
 																	<border>2</border>

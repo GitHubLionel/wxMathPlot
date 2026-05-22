@@ -1018,7 +1018,6 @@ mpFunction::mpFunction(mpLayerType layerType /*=mpLAYER_PLOT*/, const wxString &
   SetName(name);
   m_symbol = mpsNone;
   m_symbolSize = 6;
-  m_symbolSize2 = 3;
   m_continuous = false; // Default
   m_step = 1;
   m_autoStep = false;
@@ -1037,7 +1036,7 @@ bool mpFunction::DrawSymbol(wxDC &dc, wxCoord x, wxCoord y)
       break;
 
     case mpsSquare:
-      dc.DrawRectangle(x - m_symbolSize2, y - m_symbolSize2, m_symbolSize, m_symbolSize);
+      dc.DrawRectangle(x - (m_symbolSize/2), y - (m_symbolSize/2), m_symbolSize, m_symbolSize);
       break;
 
     case mpsUpTriangle:

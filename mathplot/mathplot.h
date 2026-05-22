@@ -1705,7 +1705,6 @@ class WXDLLIMPEXP_MATHPLOT mpFunction: public mpLayer
     void SetSymbolSize(int size)
     {
       m_symbolSize = size;
-      m_symbolSize2 = size / 2;
     }
 
     /** Get symbol size.
@@ -1787,7 +1786,6 @@ class WXDLLIMPEXP_MATHPLOT mpFunction: public mpLayer
     bool m_continuous;            //!< Specify if the layer will be plotted as a continuous line or a set of points. Default false
     mpSymbol m_symbol;            //!< A symbol for the plot in place of point. Default mpNone
     int m_symbolSize;             //!< Size of the symbol. Default 6
-    int m_symbolSize2;            //!< Size of the symbol div 2.
     unsigned int m_step;          //!< Step to get point to be draw. Default : 1
     int m_yAxisID;                //!< The ID of the Y axis used by the function. Equal 0 if no axis.
     bool m_LegendIsAlwaysVisible; //!< If true, the name is visible in the legend despite the visibility of the function. Default false
