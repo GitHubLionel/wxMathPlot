@@ -2192,13 +2192,13 @@ class WXDLLIMPEXP_MATHPLOT mpFXYVector: public mpFXY
     /** Clears all the data, leaving the layer empty.
      * @sa SetData
      */
-    void Clear();
+    void Clear() override;
 
     /**
      * Return the number of points in the series
      * We assume that size of m_xs equals size of m_ys
      */
-    virtual int GetSize()
+    virtual int GetSize() override
     {
       return m_xs.size();
     }
@@ -2257,7 +2257,7 @@ class WXDLLIMPEXP_MATHPLOT mpFXYVector: public mpFXY
      @param y Returns Y value
      @returns false when there are no more points (normally true)
      */
-    virtual bool GetNextXY(double *x, double *y);
+    virtual bool GetNextXY(double *x, double *y) override;
 
     /** Draw the point added if there is in bound
      * @param x X value
@@ -2267,7 +2267,7 @@ class WXDLLIMPEXP_MATHPLOT mpFXYVector: public mpFXY
 
     /** Returns the actual minimum X data (loaded in SetData).
      */
-    virtual double GetMinX()
+    virtual double GetMinX()override
     {
       if (m_ViewAsBar)
       {
@@ -2282,14 +2282,14 @@ class WXDLLIMPEXP_MATHPLOT mpFXYVector: public mpFXY
 
     /** Returns the actual minimum Y data (loaded in SetData).
      */
-    virtual double GetMinY()
+    virtual double GetMinY() override
     {
       return m_rangeY.min;
     }
 
     /** Returns the actual maximum X data (loaded in SetData).
      */
-    virtual double GetMaxX()
+    virtual double GetMaxX() override
     {
       if(m_ViewAsBar)
       {
@@ -2304,7 +2304,7 @@ class WXDLLIMPEXP_MATHPLOT mpFXYVector: public mpFXY
 
     /** Returns the actual maximum Y data (loaded in SetData).
      */
-    virtual double GetMaxY()
+    virtual double GetMaxY() override
     {
       return m_rangeY.max;
     }
