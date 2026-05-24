@@ -52,6 +52,14 @@
  Contributors:<br>
  Jose Luis Blanco, Val Greene, Lionel Reynaud, Dave Nadler, MortenMacFly, Oskar Waldemarsson<br>
 
+ @section ENABLE_MP_CONFIG Optional configuration window
+ Define the preprocessor symbol `ENABLE_MP_CONFIG` to have a configuration window. In this dialog box window,
+ the user can modify most of the plot properties like title, legend, scale, ...
+ @sa MathPlotConfigDialog
+
+ @section ENABLE_MP_NAMESPACE Optional namespace
+ Define the preprocessor symbol `ENABLE_MP_NAMESPACE` to have a MathPlot namespace
+
  @section MP_USER_INCLUDE Optional user include configuration hook
  Define the preprocessor symbol `MP_USER_INCLUDE` to the base name of a
  header, without the `.h` suffix, to have wxMathPlot include that header at
