@@ -3795,7 +3795,8 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     }
 
     /** Deprecated: Enable/disable the double-buffering of the window, eliminating the flicker (default=enabled). */
-    void [[deprecated("Deprecated - use EnableBufferedPaintDC??")]] EnableDoubleBuffer(const bool enabled)
+    [[deprecated("Deprecated - use EnableBufferedPaintDC??")]]
+    void EnableDoubleBuffer(const bool enabled)
     {
         EnableBufferedPaintDC(enabled);
     };

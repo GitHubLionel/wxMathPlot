@@ -4331,7 +4331,8 @@ void mpWindow::Paint(wxDC& dc)
 
 void mpWindow::RenderOverlays(wxDC& dc)
 {
-  // Draw all fast moving stuff that needs to be updated as soon as the mouse is moved
+  // Draw all fast moving stuff that needs to be updated as soon as the mouse is moved:
+  // Magnet cross of the mouse, zooming box, info coordinates and legend
   if (m_magnet.IsShown())
     m_magnet.DrawCross(dc, *this);
 
@@ -4341,11 +4342,14 @@ void mpWindow::RenderOverlays(wxDC& dc)
   if (m_InfoCoords && m_InfoCoords->IsShown())
     m_InfoCoords->DrawContent(dc, *this);
 
-  if (m_InfoLegend && m_InfoLegend->IsDraggedSeriesShown())
-    m_InfoLegend->DrawDraggedSeries(dc, *this);
+  if (m_InfoLegend)
+  {
+    if (m_InfoLegend->IsDraggedSeriesShown())
+      m_InfoLegend->DrawDraggedSeries(dc, *this);
 
-  if(m_InfoLegend && m_movingInfoLayer == m_InfoLegend)
-    m_InfoLegend->DrawContent(dc, *this);
+    if (m_InfoLegend == m_movingInfoLayer)
+      m_InfoLegend->DrawContent(dc, *this);
+  }
 }
 
 void mpWindow::SetMPScrollbars(bool status)
