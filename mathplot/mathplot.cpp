@@ -3099,27 +3099,7 @@ void mpWindow::OnMouseLeftDown(wxMouseEvent &event)
     m_mouseScaleYList[m_yID] = m_yData.scale;
   }
 
-  // Indicate if mouse was inside a specific Y-axis
-  m_mouseYAxisID = IsInsideYAxis(m_mouseLClick);
-
-  // We are inside an Y-axis, no need to continue test
-  if (MP_OPTTEST(m_mouseYAxisID))
-  {
-    // If shift is pressed, we just set the axis not visible
-    if (event.m_shiftDown)
-    {
-      mpScaleY* yAxis = (mpScaleY*)GetLayerYAxis(MP_OPTGET(m_mouseYAxisID));
-      yAxis->SetVisible(false);
-      if(m_autoFit)
-        Fit();
-      else
-        UpdateAll();
-
-      RefreshConfigWindow(mpLAYER_AXIS);
-    }
-  }
-
-  // Check if we are inside an Info layer. Could be an Info Legend or an Info Coord
+  // Check if we are inside an Info layer and if we can move it. Could be an Info Legend or an Info Coord
   m_movingInfoLayer = IsInsideInfoLayer(m_mouseLClick);
   if (m_movingInfoLayer)
   {
@@ -3136,17 +3116,19 @@ void mpWindow::OnMouseLeftDown(wxMouseEvent &event)
       m_movingInfoLayer = nullptr;
   }
 
+  // Now check if we are over an InfoLegend and if we have selected a series
+  int selectInfoLegend = -1;
   if (m_InfoLegend)
   {
     // Check if mouse is inside info legend and has selected a series
-    int select = m_InfoLegend->GetLegendHitRegion(m_mouseLClick);
-    if (select >= 0)
+    selectInfoLegend = m_InfoLegend->GetLegendHitRegion(m_mouseLClick);
+    if (selectInfoLegend >= 0)
     {
       // If shift is pressed, we just swap visibility of the series
       // @sa m_DefaultLegendIsAlwaysVisible
       if (event.m_shiftDown)
       {
-        mpFunction* CurrentSerie = (mpFunction*)GetLayerPlot(select);
+        mpFunction* CurrentSerie = (mpFunction*)GetLayerPlot(selectInfoLegend);
         if (CurrentSerie)
         {
           CurrentSerie->SetVisible(!CurrentSerie->IsVisible());
@@ -3155,7 +3137,7 @@ void mpWindow::OnMouseLeftDown(wxMouseEvent &event)
             Fit();
           else
             UpdateAll();
-          RefreshConfigWindow(mpLAYER_PLOT, select);
+          RefreshConfigWindow(mpLAYER_PLOT, selectInfoLegend);
           m_movingInfoLayer = nullptr;  // Do not allow moving
         }
       }
@@ -3164,10 +3146,35 @@ void mpWindow::OnMouseLeftDown(wxMouseEvent &event)
         // Either the user wants to drag a series to an axis, or open the configuration.
         // If mouse starts moving after left down, assume dragging series. If button is
         // released without moving, assume configuration
-        m_InfoLegend->m_selectedSeries = (mpFunction*)GetLayerPlot(select);
+        m_InfoLegend->m_selectedSeries = (mpFunction*)GetLayerPlot(selectInfoLegend);
         m_openConfigWindowPending = true;
-        m_infoLegendSelectedSeries = select;
+        m_infoLegendSelectedSeries = selectInfoLegend;
         m_movingInfoLayer = nullptr;  // Do not allow moving
+      }
+    }
+  }
+
+  // Finally check if we are over an axis
+  m_mouseYAxisID = MP_OPTNULL_INT;
+  if ((m_movingInfoLayer == nullptr) && (selectInfoLegend == -1))
+  {
+    // Indicate if mouse was inside a specific Y-axis
+    m_mouseYAxisID = IsInsideYAxis(m_mouseLClick);
+
+    // We are inside an Y-axis, no need to continue test
+    if (MP_OPTTEST(m_mouseYAxisID))
+    {
+      // If shift is pressed, we just set the axis not visible
+      if (event.m_shiftDown)
+      {
+        mpScaleY* yAxis = (mpScaleY*)GetLayerYAxis(MP_OPTGET(m_mouseYAxisID));
+        yAxis->SetVisible(false);
+        if (m_autoFit)
+          Fit();
+        else
+          UpdateAll();
+
+        RefreshConfigWindow(mpLAYER_AXIS);
       }
     }
   }
