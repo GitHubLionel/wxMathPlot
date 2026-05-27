@@ -849,7 +849,7 @@ MathPlotConfigDialogBuilder::MathPlotConfigDialogBuilder( wxWindow* parent, wxWi
 	StaticText10->Wrap( -1 );
 	FlexGridSizer18->Add( StaticText10, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5 );
 
-	cbSeriesSymbolSize = new wxSpinCtrl( StaticBoxSizer10->GetStaticBox(), wxID_ANY, wxT("4"), wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 4, 0, 4 );
+	cbSeriesSymbolSize = new wxSpinCtrl( StaticBoxSizer10->GetStaticBox(), wxID_ANY, wxT("4"), wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 1, 100, 4 );
 	FlexGridSizer18->Add( cbSeriesSymbolSize, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 2 );
 
 
