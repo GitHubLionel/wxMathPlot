@@ -87,10 +87,10 @@
 #include "Images/Zoom_out.h"
 #endif
 
-#ifdef ENABLE_MP_NAMESPACE
+#if defined(MP_ENABLE_NAMESPACE) || defined(ENABLE_MP_NAMESPACE)
 namespace MathPlot
 {
-#endif // ENABLE_MP_NAMESPACE
+#endif // MP_ENABLE_NAMESPACE
 
 // Strings for the context (popup) menu
 wxString Popup_string[mpID_FULLSCREEN - mpID_FIT + 1][2] = {{_T("")}};
@@ -125,10 +125,10 @@ static void FillI18NString()
   Popup_string[index++][1] = _("Show/Hide info coordinates");
   Popup_string[index][0]   = _("Screen shot");
   Popup_string[index++][1] = _("Copy a screen shot to the clipboard");
-#ifdef ENABLE_MP_CONFIG
+#if defined(MP_ENABLE_CONFIG) || defined(ENABLE_MP_CONFIG)
   Popup_string[index][0]   = _("Configuration");
   Popup_string[index++][1] = _("Plot configuration");
-#endif // ENABLE_MP_CONFIG
+#endif // MP_ENABLE_CONFIG
   Popup_string[index][0]   = _("Load file");
   Popup_string[index++][1] = _("Load data file");
   Popup_string[index][0]   = _("Show mouse commands...");
@@ -3014,9 +3014,9 @@ void mpWindow::BindEvents(void)
   Bind(wxEVT_MENU, &mpWindow::OnToggleGrids, this, mpID_TOGGLE_GRID);
   Bind(wxEVT_MENU, &mpWindow::OnToggleCoords, this, mpID_TOGGLE_COORD);
   Bind(wxEVT_MENU, &mpWindow::OnScreenShot, this, mpID_SCREENSHOT);
-#ifdef ENABLE_MP_CONFIG
+#if defined(MP_ENABLE_CONFIG) || defined(ENABLE_MP_CONFIG)
   Bind(wxEVT_MENU, &mpWindow::OnConfiguration, this, mpID_CONFIG);
-#endif // ENABLE_MP_CONFIG
+#endif // MP_ENABLE_CONFIG
   Bind(wxEVT_MENU, &mpWindow::OnLoadFile, this, mpID_LOAD_FILE);
   Bind(wxEVT_MENU, &mpWindow::OnZoomIn, this, mpID_ZOOM_IN);
   Bind(wxEVT_MENU, &mpWindow::OnZoomOut, this, mpID_ZOOM_OUT);
@@ -5353,7 +5353,7 @@ void mpWindow::SetColourTheme(const wxColour &bgColour, const wxColour &drawColo
   }
 }
 
-#ifdef ENABLE_MP_CONFIG
+#if defined(MP_ENABLE_CONFIG) || defined(ENABLE_MP_CONFIG)
 void mpWindow::OnConfiguration(wxCommandEvent &WXUNUSED(event))
 {
   OpenConfigWindow();
@@ -5366,11 +5366,11 @@ MathPlotConfigDialog* mpWindow::GetConfigWindow(bool Create)
 
   return m_configWindow;
 }
-#endif // ENABLE_MP_CONFIG
+#endif // MP_ENABLE_CONFIG
 
 void mpWindow::RefreshConfigWindow(mpLayerType layerType, int param, bool show)
 {
-#ifdef ENABLE_MP_CONFIG
+#if defined(MP_ENABLE_CONFIG) || defined(ENABLE_MP_CONFIG)
   if (m_configWindow == NULL)
     m_configWindow = new MathPlotConfigDialog(this);
 
@@ -5400,25 +5400,25 @@ void mpWindow::RefreshConfigWindow(mpLayerType layerType, int param, bool show)
   (void) layerType;
   (void) param;
   (void) show;
-#endif // ENABLE_MP_CONFIG
+#endif // MP_ENABLE_CONFIG
 }
 
 void mpWindow::OpenConfigWindow()
 {
-#ifdef ENABLE_MP_CONFIG
+#if defined(MP_ENABLE_CONFIG) || defined(ENABLE_MP_CONFIG)
   if (m_configWindow == NULL)
     m_configWindow = new MathPlotConfigDialog(this);
 
   m_configWindow->Initialize();
   m_configWindow->Show();
-#endif // ENABLE_MP_CONFIG
+#endif // MP_ENABLE_CONFIG
 }
 
 void mpWindow::DeleteConfigWindow(void)
 {
-#ifdef ENABLE_MP_CONFIG
+#if defined(MP_ENABLE_CONFIG) || defined(ENABLE_MP_CONFIG)
   DeleteAndNull(m_configWindow);
-#endif // ENABLE_MP_CONFIG
+#endif // MP_ENABLE_CONFIG
 }
 
 //-----------------------------------------------------------------------------
@@ -6103,9 +6103,9 @@ void mpMagnet::DrawCross(wxDC &dc, mpWindow &w)
   dc.DrawLine(m_domain.GetLeft(), w.GetMousePosition().y, m_domain.GetRight(), w.GetMousePosition().y);
 }
 
-#ifdef ENABLE_MP_NAMESPACE
+#if defined(MP_ENABLE_NAMESPACE) || defined(ENABLE_MP_NAMESPACE)
 } // namespace MathPlot
-#endif // ENABLE_MP_NAMESPACE
+#endif // MP_ENABLE_NAMESPACE
 
 //-----------------------------------------------------------------------------
 // End of file

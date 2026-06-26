@@ -1,5 +1,5 @@
 /***************************************************************
- * Name:      MathPlotConfig.h (included from mathplot.h when ENABLE_MP_CONFIG defined)
+ * Name:      MathPlotConfig.h (included from mathplot.h when MP_ENABLE_CONFIG defined)
  * Purpose:   Defines Application Frame
  * Author:    Lionel ()
  * Created:   2021-01-24
@@ -30,9 +30,9 @@
 #include <wx/valnum.h>
 #include <wx/fileconf.h>
 
-#ifdef ENABLE_MP_NAMESPACE
+#if defined(MP_ENABLE_NAMESPACE) || defined(ENABLE_MP_NAMESPACE)
   namespace MathPlot {
-#endif // ENABLE_MP_NAMESPACE
+#endif // MP_ENABLE_NAMESPACE
 
 class WXDLLIMPEXP_MATHPLOT mpWindow;
 class WXDLLIMPEXP_MATHPLOT mpLayer;
@@ -412,8 +412,8 @@ class MathPlotConfigDialog: public wxDialog
   DECLARE_EVENT_TABLE()
 };
 
-#ifdef ENABLE_MP_NAMESPACE
+#if defined(MP_ENABLE_NAMESPACE) || defined(ENABLE_MP_NAMESPACE)
   }  // namespace MathPlot
-#endif // ENABLE_MP_NAMESPACE
+#endif // MP_ENABLE_NAMESPACE
 
 #endif // MATHPLOTCONFIG_H_INCLUDED

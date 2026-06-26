@@ -8,9 +8,9 @@
  * License:
  **************************************************************/
 
-#ifdef ENABLE_MP_CONFIG
+#if defined(MP_ENABLE_CONFIG) || defined(ENABLE_MP_CONFIG)
 
-#include "mathplot.h" // includes MathPlotConfig.h when ENABLE_MP_CONFIG defined
+#include "mathplot.h" // includes MathPlotConfig.h when MP_ENABLE_CONFIG defined
 #include <wx/msgdlg.h>
 #include <wx/stdpaths.h>
 #include <wx/filename.h>
@@ -25,9 +25,9 @@
 //(*IdInit(MathPlotConfigDialog)
 //*)
 
-#ifdef ENABLE_MP_NAMESPACE // MathPlot namespace
+#if defined(MP_ENABLE_NAMESPACE) || defined(ENABLE_MP_NAMESPACE) // MathPlot namespace
   namespace MathPlot {
-#endif // ENABLE_MP_NAMESPACE
+#endif // MP_ENABLE_NAMESPACE
 
 /***************************************************
  * Helper class to save/restore configuration
@@ -2090,8 +2090,8 @@ void MathPlotConfigDialog::Apply(int pageIndex, bool updateFont)
   }
 }
 
-#ifdef ENABLE_MP_NAMESPACE // MathPlot namespace
+#if defined(MP_ENABLE_NAMESPACE) || defined(ENABLE_MP_NAMESPACE) // MathPlot namespace
   } // namespace MathPlot
-#endif // ENABLE_MP_NAMESPACE
+#endif // MP_ENABLE_NAMESPACE
 
-#endif // ENABLE_MP_CONFIG
+#endif // MP_ENABLE_CONFIG
