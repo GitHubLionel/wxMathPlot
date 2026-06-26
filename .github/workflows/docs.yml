@@ -27,19 +27,20 @@ jobs:
             doxygen -g Doxyfile
           fi
           
-          # 1. PARSE ROOT & RECURSE FOR ALL DIRECTORIES
+          # 1. PARSE RULES & RECURSION
           echo "RECURSIVE              = YES" >> Doxyfile
           echo "FILE_PATTERNS          = *.cpp *.h" >> Doxyfile
           echo "INPUT                  = mathplot MathPlotConfig" >> Doxyfile
-          
-          # 2. CRITICAL EXCLUSION RULE (REMOVES DEMO FOLDER)
           echo "EXCLUDE                = MathPlotDemo" >> Doxyfile
           echo "EXCLUDE_PATTERNS       = */MathPlotDemo/*" >> Doxyfile
           
-          # 3. USE CODE BLOCK AS MAINPAGE INTERFACE 
+          # 2. CRITICAL MAINPAGE & LINK CORRECTIONS
           echo "USE_MDFILE_AS_MAINPAGE =" >> Doxyfile
+          echo "SHOW_USED_FILES        = YES" >> Doxyfile
+          echo "EXTRACT_ALL            = YES" >> Doxyfile
+          echo "EXTRACT_STATIC         = YES" >> Doxyfile
           
-          # 4. ENVIRONMENT PIPELINES
+          # 3. ENVIRONMENT PIPELINES
           echo "OUTPUT_DIRECTORY       = docs_output" >> Doxyfile
           echo "HAVE_DOT               = YES" >> Doxyfile
           echo "DOT_NUM_THREADS        = 4" >> Doxyfile
