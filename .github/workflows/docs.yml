@@ -1,35 +1,45 @@
-name: Generate Doxygen Documentation
+name: Generate Documentation
 
 on:
   push:
     branches:
-      - master # Triggers on changes to the default master branch
+      - master
 
 permissions:
-  contents: write # Needed to allow the script to push documentation to your gh-pages branch
+  contents: write
 
 jobs:
   build-docs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Pull down the repository code
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      # 2. Install modern Doxygen and Graphviz
       - name: Install Doxygen and Graphviz
         run: |
           sudo apt-get update
           sudo apt-get install doxygen graphviz -y
 
-      # 3. Generate the Doxyfile template if needed, or use existing config
-      # Note: We append settings to ensure Graphviz diagrams are forced ON.
       - name: Configure and Run Doxygen
         run: |
           if [ ! -f Doxyfile ]; then
             doxygen -g Doxyfile
           fi
+          
+          # 1. PARSE ROOT & RECURSE FOR ALL DIRECTORIES
+          echo "RECURSIVE              = YES" >> Doxyfile
+          echo "FILE_PATTERNS          = *.cpp *.h" >> Doxyfile
+          echo "INPUT                  = mathplot MathPlotConfig" >> Doxyfile
+          
+          # 2. CRITICAL EXCLUSION RULE (REMOVES DEMO FOLDER)
+          echo "EXCLUDE                = MathPlotDemo" >> Doxyfile
+          echo "EXCLUDE_PATTERNS       = */MathPlotDemo/*" >> Doxyfile
+          
+          # 3. USE CODE BLOCK AS MAINPAGE INTERFACE 
+          echo "USE_MDFILE_AS_MAINPAGE =" >> Doxyfile
+          
+          # 4. ENVIRONMENT PIPELINES
           echo "OUTPUT_DIRECTORY       = docs_output" >> Doxyfile
           echo "HAVE_DOT               = YES" >> Doxyfile
           echo "DOT_NUM_THREADS        = 4" >> Doxyfile
@@ -39,13 +49,12 @@ jobs:
           echo "INCLUDED_BY_GRAPH      = YES" >> Doxyfile
           echo "DOT_IMAGE_FORMAT       = svg" >> Doxyfile
           echo "INTERACTIVE_SVG        = YES" >> Doxyfile
+          
           doxygen Doxyfile
 
-      # 4. Prevent GitHub Pages from skipping Doxygen internal folders
       - name: Add .nojekyll bypass
         run: touch docs_output/html/.nojekyll
 
-      # 5. Deploy the generated documentation folder to the gh-pages branch
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
