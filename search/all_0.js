@@ -1,0 +1,20 @@
+var searchData=
+[
+  ['_5f_5fchart_5ftype_0',['__Chart_Type',['../mathplot_8h.html#a1a024cb27ac2565f5ff164e8ef2e7d53',1,'mathplot.h']]],
+  ['_5f_5fconfigpageindex_1',['__ConfigPageIndex',['../MathPlotConfig_8h.html#a9dcc8c6a57879dee3b2cb919c3125223',1,'MathPlotConfig.h']]],
+  ['_5f_5ffunction_5ftype_2',['__Function_Type',['../mathplot_8h.html#af590de493423d65784ad3762d241b139',1,'mathplot.h']]],
+  ['_5f_5finfo_5ftype_3',['__Info_Type',['../mathplot_8h.html#a46ef806c20fc1437412547671e1db9af',1,'mathplot.h']]],
+  ['_5f_5fmp_5fcolour_4',['__mp_Colour',['../mathplot_8h.html#ac50b8dfeb541d0fec58c5c8af909a607',1,'mathplot.h']]],
+  ['_5f_5fmp_5fdelete_5faction_5',['__mp_Delete_Action',['../mathplot_8h.html#a57ed87328f6251b5dbf30e0848897ddb',1,'mathplot.h']]],
+  ['_5f_5fmp_5fdirection_5ftype_6',['__mp_Direction_Type',['../mathplot_8h.html#a625c5173a3eb2c530c381523add4f67d',1,'mathplot.h']]],
+  ['_5f_5fmp_5flayer_5ftype_7',['__mp_Layer_Type',['../mathplot_8h.html#a3e096aea2344c539195351495aed7e59',1,'mathplot.h']]],
+  ['_5f_5fmp_5flayer_5fzorder_8',['__mp_Layer_ZOrder',['../mathplot_8h.html#ac2a39bcaf885b255fe3cfa97ad43018c',1,'mathplot.h']]],
+  ['_5f_5fmp_5flocation_5ftype_9',['__mp_Location_Type',['../mathplot_8h.html#a1e649b85ade4eaa24f49a72a5ec3143b',1,'mathplot.h']]],
+  ['_5f_5fmp_5fstyle_5ftype_10',['__mp_Style_Type',['../mathplot_8h.html#a11ac353fd1319daa68ec7e8d3b771592',1,'mathplot.h']]],
+  ['_5f_5fplot_5falign_5fname_5ftype_11',['__Plot_Align_Name_Type',['../mathplot_8h.html#ae52a128fe012488cde8e0c969ddce849',1,'mathplot.h']]],
+  ['_5f_5fscale_5ftype_12',['__Scale_Type',['../mathplot_8h.html#ab68b86d10f36c2ab71e40c87e79471cb',1,'mathplot.h']]],
+  ['_5f_5fsymbol_5ftype_13',['__Symbol_Type',['../mathplot_8h.html#ae808fe3d1ce1e376dd79dc9c3de01574',1,'mathplot.h']]],
+  ['_5f_5ftext_5ftype_14',['__Text_Type',['../mathplot_8h.html#a4c6807a4b8ab4f26e88a9953dd5eae7d',1,'mathplot.h']]],
+  ['_5f_5fxaxis_5falign_5ftype_15',['__XAxis_Align_Type',['../mathplot_8h.html#aae7f535d3fba1b4c0aadd0fae5bdd945',1,'mathplot.h']]],
+  ['_5f_5fyaxis_5falign_5ftype_16',['__YAxis_Align_Type',['../mathplot_8h.html#a4a7a8602b6fd67ff7d4c6b3e60644293',1,'mathplot.h']]]
+];

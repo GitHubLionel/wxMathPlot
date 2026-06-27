@@ -1,0 +1,13 @@
+<map id="mpChart" name="mpChart">
+<area shape="rect" id="Node000001" title="abstract Layer for chart (bar and pie)." alt="" coords="77,225,156,251"/>
+<area shape="rect" id="Node000005" href="$classmpBarChart.html" title="Layer for bar chart." alt="" coords="5,299,105,324"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="100,263,67,300,63,297,96,260"/>
+<area shape="rect" id="Node000006" href="$classmpPieChart.html" title="Layer for pie chart. Create a very basic Pie Chart." alt="" coords="130,299,229,324"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="138,259,171,297,167,300,134,263"/>
+<area shape="rect" id="Node000002" href="$classmpFunction.html" title=" " alt="" coords="67,152,166,177"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="119,191,119,225,114,225,114,191"/>
+<area shape="rect" id="Node000003" href="$classmpLayer.html" title=" " alt="" coords="77,79,156,104"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="119,118,119,152,114,152,114,118"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="75,5,158,31"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="119,44,119,79,114,79,114,44"/>
+</map>
