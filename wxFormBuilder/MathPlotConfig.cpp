@@ -1,4 +1,4 @@
-#ifdef ENABLE_MP_CONFIG
+#if defined(MP_ENABLE_CONFIG) || defined(ENABLE_MP_CONFIG)
 
 #include "MathPlotConfig.h"
 #include <wx/msgdlg.h>
@@ -9,9 +9,9 @@
 #include <wx/intl.h>
 #include <wx/string.h>
 
-#ifdef ENABLE_MP_NAMESPACE // MathPlot namespace
+#if defined(MP_ENABLE_NAMESPACE) || defined(ENABLE_MP_NAMESPACE) // MathPlot namespace
   namespace MathPlot {
-#endif // ENABLE_MP_NAMESPACE
+#endif // MP_ENABLE_NAMESPACE
 
 /***************************************************
  * Helper class to save/restore configuration
@@ -1469,8 +1469,8 @@ void MathPlotConfigDialog::Apply(int pageIndex, bool updateFont)
   }
 }
 
-#ifdef ENABLE_MP_NAMESPACE // MathPlot namespace
+#if defined(MP_ENABLE_NAMESPACE) || defined(ENABLE_MP_NAMESPACE) // MathPlot namespace
   } // namespace MathPlot
-#endif // ENABLE_MP_NAMESPACE
+#endif // MP_ENABLE_NAMESPACE
 
-#endif // ENABLE_MP_CONFIG
+#endif // MP_ENABLE_CONFIG

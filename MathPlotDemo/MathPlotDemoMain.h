@@ -22,9 +22,9 @@
 #include <wx/timer.h>
 //*)
 
-#ifdef ENABLE_MP_NAMESPACE
+#if defined(MP_ENABLE_NAMESPACE) || defined(ENABLE_MP_NAMESPACE)
   using namespace MathPlot;
-#endif // ENABLE_MP_NAMESPACE
+#endif // MP_ENABLE_NAMESPACE
 
 class MathPlotDemoFrame: public wxFrame
 {

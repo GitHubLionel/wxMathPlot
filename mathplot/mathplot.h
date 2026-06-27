@@ -52,13 +52,13 @@
  Contributors:<br>
  Jose Luis Blanco, Val Greene, Lionel Reynaud, Dave Nadler, MortenMacFly, Oskar Waldemarsson<br>
 
- @section ENABLE_MP_CONFIG Optional configuration window
- Define the preprocessor symbol `ENABLE_MP_CONFIG` to have a configuration window. In this dialog box window,
+ @section MP_ENABLE_CONFIG Optional configuration window
+ Define the preprocessor symbol `MP_ENABLE_CONFIG` to have a configuration window. In this dialog box window,
  the user can modify most of the plot properties like title, legend, scale, ...
  @sa MathPlotConfigDialog
 
- @section ENABLE_MP_NAMESPACE Optional namespace
- Define the preprocessor symbol `ENABLE_MP_NAMESPACE` to have a MathPlot namespace
+ @section MP_ENABLE_NAMESPACE Optional namespace
+ Define the preprocessor symbol `MP_ENABLE_NAMESPACE` to have a MathPlot namespace
 
  @section MP_USER_INCLUDE Optional user include configuration hook
  Define the preprocessor symbol `MP_USER_INCLUDE` to the base name of a
@@ -172,18 +172,17 @@
   #undef header
 #endif
 
-#ifdef ENABLE_MP_CONFIG
+#if defined(MP_ENABLE_CONFIG) || defined(ENABLE_MP_CONFIG)
   #include "MathPlotConfig.h"
-#endif // ENABLE_MP_CONFIG
+#endif // MP_ENABLE_CONFIG
 
 /**
  * A simple plot component for wxWidgets
  */
 
-// No, this is supposed to be a build parameter: #define ENABLE_MP_NAMESPACE
-#ifdef ENABLE_MP_NAMESPACE
+#if defined(MP_ENABLE_NAMESPACE) || defined(ENABLE_MP_NAMESPACE)
   namespace MathPlot {
-#endif // ENABLE_MP_NAMESPACE
+#endif // MP_ENABLE_NAMESPACE
 
 #ifdef ENABLE_MP_DEBUG
   // For memory leak debug
@@ -257,9 +256,9 @@ class WXDLLIMPEXP_MATHPLOT mpCovarianceEllipse;
 class WXDLLIMPEXP_MATHPLOT mpPolygon;
 class WXDLLIMPEXP_MATHPLOT mpBitmapLayer;
 
-#ifdef ENABLE_MP_CONFIG
+#if defined(MP_ENABLE_CONFIG) || defined(ENABLE_MP_CONFIG)
 class MathPlotConfigDialog;
-#endif // ENABLE_MP_CONFIG
+#endif // MP_ENABLE_CONFIG
 
 /// A rectangle structure in several (integer) flavors
 struct mpRect
@@ -653,9 +652,9 @@ enum
   mpID_TOGGLE_GRID,        //!< Show/Hide grids
   mpID_TOGGLE_COORD,       //!< Show/Hide info coord
   mpID_SCREENSHOT,         //!< Copy a screen shot to the clipboard
-#ifdef ENABLE_MP_CONFIG
+#if defined(MP_ENABLE_CONFIG) || defined(ENABLE_MP_CONFIG)
   mpID_CONFIG,             //!< Configuration
-#endif // ENABLE_MP_CONFIG
+#endif // MP_ENABLE_CONFIG
   mpID_LOAD_FILE,          //!< Load a file
   mpID_HELP_MOUSE,         //!< Shows information about the mouse commands
   mpID_FULLSCREEN          //!< Toggle fullscreen only if parent is a frame windows
@@ -4497,13 +4496,13 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
       return m_movingInfoLayer;
     }
 
-#ifdef ENABLE_MP_CONFIG
+#if defined(MP_ENABLE_CONFIG) || defined(ENABLE_MP_CONFIG)
     /**
      * Give access to the config dialog window
      * @param : Create. Create the dialog if not exist (default false)
      */
     MathPlotConfigDialog* GetConfigWindow(bool Create = false);
-#endif // ENABLE_MP_CONFIG
+#endif // MP_ENABLE_CONFIG
 
     /**
      * Refresh the config window if present
@@ -4557,9 +4556,9 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     virtual void OnToggleCoords(wxCommandEvent &event);           //!< Toggle Coords handler
     virtual void OnScreenShot(wxCommandEvent &event);             //!< ScreenShot handler
     virtual void OnFullScreen(wxCommandEvent &event);             //!< FullScreen handler
-#ifdef ENABLE_MP_CONFIG
+#if defined(MP_ENABLE_CONFIG) || defined(ENABLE_MP_CONFIG)
     virtual void OnConfiguration(wxCommandEvent &event);          //!< Configuration window handler
-#endif // ENABLE_MP_CONFIG
+#endif // MP_ENABLE_CONFIG
     virtual void OnLoadFile(wxCommandEvent &event);               //!< Load File handler
     virtual void OnZoomIn(wxCommandEvent &event);                 //!< Zoom In handler
     virtual void OnZoomOut(wxCommandEvent &event);                //!< Zoom Out handler
@@ -4689,9 +4688,9 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     wxString m_wildcard;                //!< For loadfile() function when we use wxFileDialog
     wxString m_DefaultDir;              //!< The default directory for wxFileDialog
 
-#ifdef ENABLE_MP_CONFIG
+#if defined(MP_ENABLE_CONFIG) || defined(ENABLE_MP_CONFIG)
     MathPlotConfigDialog* m_configWindow = NULL;  //!< For the config dialog
-#endif // ENABLE_MP_CONFIG
+#endif // MP_ENABLE_CONFIG
     bool m_openConfigWindowPending = false;  //!< Only used with config window: indicate if user potentialy want to open the config window
     int m_infoLegendSelectedSeries;          //!< Only used with config window: the selected series in info legend
 
@@ -5300,9 +5299,8 @@ class WXDLLIMPEXP_MATHPLOT wxIndexColour: public wxColour
 /** @} */
 
 // ---------------------------------------------------------------------
-#ifdef ENABLE_MP_NAMESPACE
+#if defined(MP_ENABLE_NAMESPACE) || defined(ENABLE_MP_NAMESPACE)
   }// namespace MathPlot
-  // No, iff build enables namespace, its up to app to use it appropriately: using namespace MathPlot;
-#endif // ENABLE_MP_NAMESPACE
+#endif // MP_ENABLE_NAMESPACE
 
 #endif // MATHPLOT_H_INCLUDED

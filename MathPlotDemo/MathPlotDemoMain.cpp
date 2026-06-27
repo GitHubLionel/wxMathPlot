@@ -167,7 +167,7 @@ MathPlotDemoFrame::~MathPlotDemoFrame()
 
 void MathPlotDemoFrame::InitializePlot(void)
 {
-#ifdef ENABLE_MP_CONFIG
+#if defined(MP_ENABLE_CONFIG) || defined(ENABLE_MP_CONFIG)
   // Create config file
   mPlot->GetConfigWindow(true)->CreateSettingsFile("config.ini");
 #endif
@@ -212,7 +212,7 @@ void MathPlotDemoFrame::InitializePlot(void)
 
   mPlot->Fit();
 
-#ifdef ENABLE_MP_CONFIG
+#if defined(MP_ENABLE_CONFIG) || defined(MP_ENABLE_CONFIG)
   // Apply settings now we have created our layer
   mPlot->GetConfigWindow(false)->ApplySettings();
 #endif

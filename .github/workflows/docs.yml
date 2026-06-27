@@ -1,0 +1,66 @@
+name: Generate Documentation
+
+on:
+  push:
+    branches:
+      - master
+
+permissions:
+  contents: write
+
+jobs:
+  build-docs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Install Doxygen and Graphviz
+        run: |
+          sudo apt-get update
+          sudo apt-get install doxygen graphviz -y
+
+      - name: Configure and Run Doxygen
+        run: |
+          if [ ! -f Doxyfile ]; then
+            doxygen -g Doxyfile
+          fi
+          
+          # 1. SET PROPER PROJECT TITLE
+          echo "PROJECT_NAME           = \"wxMathPlot Plot Library for wxWidgets\"" >> Doxyfile
+          
+          # 2. PARSE RULES & RECURSION
+          echo "RECURSIVE              = YES" >> Doxyfile
+          echo "FILE_PATTERNS          = *.cpp *.h" >> Doxyfile
+          echo "INPUT                  = mathplot MathPlotConfig" >> Doxyfile
+          echo "EXCLUDE                = MathPlotDemo" >> Doxyfile
+          echo "EXCLUDE_PATTERNS       = */MathPlotDemo/*" >> Doxyfile
+          
+          # 3. LINK & MAINPAGE CORRECTIONS
+          echo "USE_MDFILE_AS_MAINPAGE =" >> Doxyfile
+          echo "SHOW_USED_FILES        = YES" >> Doxyfile
+          echo "EXTRACT_ALL            = YES" >> Doxyfile
+          echo "EXTRACT_STATIC         = YES" >> Doxyfile
+          
+          # 4. ENVIRONMENT PIPELINES & GRAPHVIZ
+          echo "OUTPUT_DIRECTORY       = docs_output" >> Doxyfile
+          echo "HAVE_DOT               = YES" >> Doxyfile
+          echo "DOT_NUM_THREADS        = 4" >> Doxyfile
+          echo "CLASS_GRAPH            = YES" >> Doxyfile
+          echo "COLLABORATION_GRAPH    = YES" >> Doxyfile
+          echo "INCLUDE_GRAPH          = YES" >> Doxyfile
+          echo "INCLUDED_BY_GRAPH      = YES" >> Doxyfile
+          echo "DOT_IMAGE_FORMAT       = svg" >> Doxyfile
+          echo "INTERACTIVE_SVG        = YES" >> Doxyfile
+          
+          doxygen Doxyfile
+
+      - name: Add .nojekyll bypass
+        run: touch docs_output/html/.nojekyll
+
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: docs_output/html
+          branch: gh-pages
