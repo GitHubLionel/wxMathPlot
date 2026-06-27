@@ -45,7 +45,7 @@
 			<Add option="-D_UNICODE" />
 			<Add option="-D__WXGTK3__" />
 			<Add option="-D__WXGTK__" />
-            <Add option="-DENABLE_MP_CONFIG" />
+            <Add option="-DMP_ENABLE_CONFIG" />
 			<Add directory="$(#wx)/include" />
 			<Add directory="$(#wx)/lib/wx/include/gtk3-unicode-3.2" />
 			<Add directory="../mathplot" />
