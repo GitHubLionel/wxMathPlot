@@ -24,7 +24,7 @@ jobs:
       - name: Configure and Run Doxygen
         run: |
           # 1. Verify file presence before attempting execution
-          if [ ! -f MathPlot.doxyfile" ]; then
+          if [ ! -f MathPlot.doxyfile ]; then
             echo "ERROR: Target Doxygen control file not found at MathPlot.doxyfile
             exit 1
           fi
