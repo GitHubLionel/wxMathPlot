@@ -6,7 +6,7 @@
 // Contributors:    Jose Luis Blanco, Val Greene, Lionel Reynaud, Dave Nadler, MortenMacFly,
 //                  Oskar Waldemarsson (for multi Y axis and corrections)
 // Created:         21/07/2003
-// Last edit:       18/04/2026
+// Last edit:       26/06/2026
 // Copyright:       (c) David Schalig, Davide Rondini
 // Licence:         wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -16,11 +16,11 @@
 #endif
 
 #include <algorithm>
-#if (defined(__cplusplus) && (__cplusplus > 201703L))
-#include <numbers> // std::numbers::pi
-#define M_PI2 (2.0 * std::numbers::pi)
-#else
-#define M_PI2 (2.0 * M_PI)
+  #if (defined(__cplusplus) && (__cplusplus > 201703L))
+    #include <numbers> // std::numbers::pi
+    #define M_PI2 (2.0 * std::numbers::pi)
+  #else
+    #define M_PI2 (2.0 * M_PI)
 #endif
 
 // For compilers that support precompilation, includes "wx.h".

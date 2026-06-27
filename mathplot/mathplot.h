@@ -6,7 +6,7 @@
 // Contributors:    Jose Luis Blanco, Val Greene, Lionel Reynaud, Dave Nadler, MortenMacFly,
 //                  Oskar Waldemarsson (for multi Y axis and corrections)
 // Created:         21/07/2003
-// Last edit:       18/04/2026
+// Last edit:       26/06/2026
 // Copyright:       (c) David Schalig, Davide Rondini
 // Licence:         wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -37,18 +37,20 @@
  by overriding just one member for retrieving a function value.
 
  mpWindow has built-in support for mouse-based pan and zoom through intuitive combinations of buttons and
- the mouse wheel. It also incorporates an optional double buffering mechanism to avoid flicker. Plots can be
+ the mouse wheel. It also incorporates an optional caching mechanism to avoid flicker. Plots can be
  easily sent to printers or exported in bitmap formats like PNG, BMP or JPEG.
 
  @section coding Coding conventions
- wxMathPlot sticks to wxWindow's coding conventions. All entities defined by wxMathPlot have the prefix <i>mp</i>.
+ wxMathPlot sticks to wxWindow's coding conventions. <br>
+ All entities defined by wxMathPlot have the prefix <i>mp</i>.
 
  @section author Author and license
  wxMathPlot is published under the terms of the wxWindow license.<br>
  The original author is David Schalig <mrhill@users.sourceforge.net>.<br>
  From June 2007 the project is maintained by Davide Rondini <cdron77@users.sourceforge.net>.<br>
  Authors can be contacted via the wxMathPlot's homepage at
- https://sourceforge.net/projects/wxmathplot<br>
+ https://sourceforge.net/projects/wxmathplot, or <br>
+ https://github.com/GitHubLionel/wxMathPlot <br>
  Contributors:<br>
  Jose Luis Blanco, Val Greene, Lionel Reynaud, Dave Nadler, MortenMacFly, Oskar Waldemarsson<br>
 
@@ -62,19 +64,18 @@
 
  @section MP_USER_INCLUDE Optional user include configuration hook
  Define the preprocessor symbol `MP_USER_INCLUDE` to the base name of a
- header, without the `.h` suffix, to have wxMathPlot include that header at
- this point in the file. It can be used for custom internationalization support
+ header, without the `.h` suffix, to have mathplot.h include your custom header.
+ This can be used for custom internationalization support
  or other project-specific integration. For example:
  @code
  #define MP_USER_INCLUDE MyIncludeFile
  @endcode
- ...causes wxMathPlot to include `MyIncludeFile.h`.
+ ...causes mathplot.h to include `MyIncludeFile.h`.
 
  */
 
-//this definition uses windows dll to export function.
-//WXDLLIMPEXP_MATHPLOT definition definition changed to WXDLLIMPEXP_MATHPLOT
-//mathplot_EXPORTS will be defined by cmake
+// mathplot_EXPORTS definition uses windows dll to export function.
+// mathplot_EXPORTS will be defined by cmake
 #ifdef mathplot_EXPORTS
   /// Definition uses windows dll to export function.
   #define WXDLLIMPEXP_MATHPLOT WXEXPORT
@@ -91,7 +92,7 @@
   #pragma interface "mathplot.h"
 #endif
 
-#include <cassert>  // For assert debug message. Disable if NDEBUG is defined
+#include <cassert>  // For assert debug message (assert is disabled if NDEBUG is defined)
 #include <vector>
 #include <map>
 #include <unordered_map>
