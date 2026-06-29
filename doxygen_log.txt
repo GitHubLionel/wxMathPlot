@@ -1,0 +1,218 @@
+E:/wxMathPlot/MathPlotConfig/MathPlotConfig.h:192: warning: return type of member MathPlotConfigDialog::GetSettingsHandle is not documented
+E:/wxMathPlot/mathplot/mathplot.h:3242: warning: parameters of member mpAxisData::operator== are not documented
+E:/wxMathPlot/mathplot/mathplot.h:3242: warning: return type of member mpAxisData::operator== is not documented
+E:/wxMathPlot/mathplot/mathplot.h:2582: warning: parameters of member mpBarChart::mpBarChart are not documented
+E:/wxMathPlot/mathplot/mathplot.h:2591: warning: parameters of member mpBarChart::SetBarColour are not documented
+E:/wxMathPlot/mathplot/mathplot.h:2594: warning: parameters of member mpBarChart::SetColumnWidth are not documented
+E:/wxMathPlot/mathplot/mathplot.h:2600: warning: parameters of member mpBarChart::SetBarLabelPosition are not documented
+E:/wxMathPlot/mathplot/mathplot.h:2523: warning: parameters of member mpChart::mpChart are not documented
+E:/wxMathPlot/mathplot/mathplot.h:1723: warning: return type of member mpFunction::GetYAxisID is not documented
+E:/wxMathPlot/mathplot/mathplot.h:889: warning: parameters of member mpLayer::SetWindow are not documented
+E:/wxMathPlot/mathplot/mathplot.h:1215: warning: parameters of member mpLayer::UpdateContext are not documented
+E:/wxMathPlot/mathplot/mathplot.h:2631: warning: parameters of member mpBarChart::DoPlot are not documented
+E:/wxMathPlot/mathplot/mathplot.h:5172: warning: parameters of member mpBitmapLayer::GetBitmapCopy are not documented
+E:/wxMathPlot/mathplot/mathplot.h:1221: warning: parameters of member mpBitmapLayer::DoPlot are not documented
+E:/wxMathPlot/mathplot/mathplot.h:5192: warning: return type of member mpBitmapLayer::GetMaxX is not documented
+E:/wxMathPlot/mathplot/mathplot.h:5206: warning: return type of member mpBitmapLayer::GetMaxY is not documented
+E:/wxMathPlot/mathplot/mathplot.h:5185: warning: return type of member mpBitmapLayer::GetMinX is not documented
+E:/wxMathPlot/mathplot/mathplot.h:5199: warning: return type of member mpBitmapLayer::GetMinY is not documented
+E:/wxMathPlot/mathplot/mathplot.h:5055: warning: parameters of member mpCovarianceEllipse::SetQuantiles are not documented
+E:/wxMathPlot/mathplot/mathplot.h:5063: warning: parameters of member mpCovarianceEllipse::SetSegments are not documented
+E:/wxMathPlot/mathplot/mathplot.h:5069: warning: return type of member mpCovarianceEllipse::GetSegments is not documented
+E:/wxMathPlot/mathplot/mathplot.h:5075: warning: parameters of member mpCovarianceEllipse::GetCovarianceMatrix are not documented
+E:/wxMathPlot/mathplot/mathplot.h:5084: warning: parameters of member mpCovarianceEllipse::SetCovarianceMatrix are not documented
+E:/wxMathPlot/mathplot/mathplot.h:4924: warning: parameters of member mpMovableObject::GetCoordinateBase are not documented
+E:/wxMathPlot/mathplot/mathplot.h:4933: warning: parameters of member mpMovableObject::SetCoordinateBase are not documented
+E:/wxMathPlot/mathplot/mathplot.h:4987: warning: parameters of member mpMovableObject::TranslatePoint are not documented
+E:/wxMathPlot/mathplot/mathplot.h:5032: warning: parameters of member mpCovarianceEllipse::mpCovarianceEllipse are not documented
+E:/wxMathPlot/mathplot/mathplot.h:554: warning: parameters of member mpFloatRect::IsNotSet are not documented
+E:/wxMathPlot/mathplot/mathplot.h:554: warning: return type of member mpFloatRect::IsNotSet is not documented
+E:/wxMathPlot/mathplot/mathplot.h:556: warning: parameters of member mpFloatRect::operator== are not documented
+E:/wxMathPlot/mathplot/mathplot.h:556: warning: return type of member mpFloatRect::operator== is not documented
+E:/wxMathPlot/mathplot/mathplot.h:502: warning: return type of member mpFloatRect::PointIsInside is not documented
+E:/wxMathPlot/mathplot/mathplot.h:1718: warning: parameters of member mpFunction::DrawSymbol are not documented
+E:/wxMathPlot/mathplot/mathplot.h:1668: warning: return type of member mpFunction::GetContinuity is not documented
+E:/wxMathPlot/mathplot/mathplot.h:1659: warning: parameters of member mpFunction::SetContinuity are not documented
+E:/wxMathPlot/mathplot/mathplot.h:1957: warning: parameters of member mpFX::DoPlot are not documented
+E:/wxMathPlot/mathplot/mathplot.h:1970: warning: return type of member mpFX::LogDoGetY is not documented
+E:/wxMathPlot/mathplot/mathplot.h:1964: warning: return type of member mpFX::NormalDoGetY is not documented
+E:/wxMathPlot/mathplot/mathplot.h:2073: warning: return type of member mpFXY::GetSize is not documented
+E:/wxMathPlot/mathplot/mathplot.h:2296: warning: return type of member mpFXYVector::GetMaxX is not documented
+E:/wxMathPlot/mathplot/mathplot.h:2311: warning: return type of member mpFXYVector::GetMaxY is not documented
+E:/wxMathPlot/mathplot/mathplot.h:2274: warning: return type of member mpFXYVector::GetMinX is not documented
+E:/wxMathPlot/mathplot/mathplot.h:2289: warning: return type of member mpFXYVector::GetMinY is not documented
+E:/wxMathPlot/mathplot/mathplot.h:2204: warning: return type of member mpFXYVector::GetSize is not documented
+E:/wxMathPlot/mathplot/mathplot.h:2193: warning: parameters of member mpFXYVector::SetData are not documented
+E:/wxMathPlot/mathplot/mathplot.h:2019: warning: parameters of member mpFY::DoPlot are not documented
+E:/wxMathPlot/mathplot/mathplot.h:2032: warning: return type of member mpFY::LogDoGetX is not documented
+E:/wxMathPlot/mathplot/mathplot.h:2026: warning: return type of member mpFY::NormalDoGetX is not documented
+E:/wxMathPlot/mathplot/mathplot.h:1221: warning: parameters of member mpHorizontalLine::DoPlot are not documented
+E:/wxMathPlot/mathplot/mathplot.h:1385: warning: parameters of member mpInfoCoords::mpInfoCoords are not documented
+E:/wxMathPlot/mathplot/mathplot.h:1442: warning: parameters of member mpInfoCoords::SetSeriesCoord are not documented
+E:/wxMathPlot/mathplot/mathplot.h:1463: warning: parameters of member mpInfoCoords::SetPenSeries are not documented
+E:/wxMathPlot/mathplot/mathplot.h:1337: warning: parameters of member mpInfoLayer::SetLocation are not documented
+E:/wxMathPlot/mathplot/mathplot.h:1365: warning: parameters of member mpInfoLayer::SetInfoRectangle are not documented
+E:/wxMathPlot/mathplot/mathplot.h:1456: warning: return type of member mpInfoCoords::GetInfoCoordsText is not documented
+E:/wxMathPlot/mathplot/mathplot.h:1525: warning: return type of member mpInfoLegend::GetItemMode is not documented
+E:/wxMathPlot/mathplot/mathplot.h:1539: warning: return type of member mpInfoLegend::GetItemDirection is not documented
+E:/wxMathPlot/mathplot/mathplot.h:1226: warning: return type of member mpLayer::DoBeforePlot is not documented
+E:/wxMathPlot/mathplot/mathplot.h:1221: warning: parameters of member mpLayer::DoPlot are not documented
+E:/wxMathPlot/mathplot/mathplot.h:925: warning: return type of member mpLayer::IsLayerType is not documented
+E:/wxMathPlot/mathplot/mathplot.h:3301: warning: parameters of member mpMagnet::UpdateBox are not documented
+E:/wxMathPlot/mathplot/mathplot.h:3307: warning: parameters of member mpMagnet::Enable are not documented
+E:/wxMathPlot/mathplot/mathplot.h:3313: warning: return type of member mpMagnet::IsEnabled is not documented
+E:/wxMathPlot/mathplot/mathplot.h:3319: warning: parameters of member mpMagnet::DrawCross are not documented
+E:/wxMathPlot/mathplot/mathplot.h:3322: warning: parameters of member mpMagnet::ShouldBeShown are not documented
+E:/wxMathPlot/mathplot/mathplot.h:3322: warning: return type of member mpMagnet::ShouldBeShown is not documented
+E:/wxMathPlot/mathplot/mathplot.h:3328: warning: parameters of member mpMagnet::Show are not documented
+E:/wxMathPlot/mathplot/mathplot.h:3334: warning: return type of member mpMagnet::IsShown is not documented
+E:/wxMathPlot/mathplot/mathplot.h:1221: warning: parameters of member mpMovableObject::DoPlot are not documented
+E:/wxMathPlot/mathplot/mathplot.h:4956: warning: return type of member mpMovableObject::GetMaxX is not documented
+E:/wxMathPlot/mathplot/mathplot.h:4970: warning: return type of member mpMovableObject::GetMaxY is not documented
+E:/wxMathPlot/mathplot/mathplot.h:4949: warning: return type of member mpMovableObject::GetMinX is not documented
+E:/wxMathPlot/mathplot/mathplot.h:4963: warning: return type of member mpMovableObject::GetMinY is not documented
+E:/wxMathPlot/mathplot/mathplot.h:2723: warning: parameters of member mpPieChart::GetColour are not documented
+E:/wxMathPlot/mathplot/mathplot.h:2723: warning: return type of member mpPieChart::GetColour is not documented
+E:/wxMathPlot/mathplot/mathplot.h:2718: warning: parameters of member mpPieChart::DoPlot are not documented
+E:/wxMathPlot/mathplot/mathplot.h:5124: warning: parameters of member mpPolygon::mpPolygon are not documented
+E:/wxMathPlot/mathplot/mathplot.h:4880: warning: parameters of member mpPrintout::OnPrintPage are not documented
+E:/wxMathPlot/mathplot/mathplot.h:4880: warning: return type of member mpPrintout::OnPrintPage is not documented
+E:/wxMathPlot/mathplot/mathplot.h:4882: warning: parameters of member mpPrintout::HasPage are not documented
+E:/wxMathPlot/mathplot/mathplot.h:4882: warning: return type of member mpPrintout::HasPage is not documented
+E:/wxMathPlot/mathplot/mathplot.h:2356: warning: parameters of member mpProfile::DoPlot are not documented
+E:/wxMathPlot/mathplot/mathplot.h:320: warning: parameters of member mpRange::mpRange are not documented
+E:/wxMathPlot/mathplot/mathplot.h:335: warning: parameters of member mpRange::Set are not documented
+E:/wxMathPlot/mathplot/mathplot.h:342: warning: parameters of member mpRange::Set are not documented
+E:/wxMathPlot/mathplot/mathplot.h:349: warning: parameters of member mpRange::SetMin are not documented
+E:/wxMathPlot/mathplot/mathplot.h:357: warning: parameters of member mpRange::SetMax are not documented
+E:/wxMathPlot/mathplot/mathplot.h:365: warning: parameters of member mpRange::Assign are not documented
+E:/wxMathPlot/mathplot/mathplot.h:380: warning: return type of member mpRange::IsSet is not documented
+E:/wxMathPlot/mathplot/mathplot.h:399: warning: parameters of member mpRange::Update are not documented
+E:/wxMathPlot/mathplot/mathplot.h:410: warning: parameters of member mpRange::Update are not documented
+E:/wxMathPlot/mathplot/mathplot.h:432: warning: return type of member mpRange::Length is not documented
+E:/wxMathPlot/mathplot/mathplot.h:438: warning: return type of member mpRange::GetCenter is not documented
+E:/wxMathPlot/mathplot/mathplot.h:444: warning: return type of member mpRange::GetMaxAbs is not documented
+E:/wxMathPlot/mathplot/mathplot.h:457: warning: parameters of member mpRange::PointIsInside are not documented
+E:/wxMathPlot/mathplot/mathplot.h:457: warning: return type of member mpRange::PointIsInside is not documented
+E:/wxMathPlot/mathplot/mathplot.h:466: warning: parameters of member mpRange::operator== are not documented
+E:/wxMathPlot/mathplot/mathplot.h:466: warning: return type of member mpRange::operator== is not documented
+E:/wxMathPlot/mathplot/mathplot.h:471: warning: parameters of member mpRange::operator!= are not documented
+E:/wxMathPlot/mathplot/mathplot.h:471: warning: return type of member mpRange::operator!= is not documented
+E:/wxMathPlot/mathplot/mathplot.h:388: warning: parameters of member mpRange::Update are not documented
+E:/wxMathPlot/mathplot/mathplot.h:3071: warning: parameters of member mpScale::ComputeScaleConstraints are not documented
+E:/wxMathPlot/mathplot/mathplot.h:2763: warning: return type of member mpScale::GetAxisID is not documented
+E:/wxMathPlot/mathplot/mathplot.h:2998: warning: return type of member mpScale::GetOrigin is not documented
+E:/wxMathPlot/mathplot/mathplot.h:2755: warning: return type of member mpScale::HasBBox is not documented
+E:/wxMathPlot/mathplot/mathplot.h:2772: warning: parameters of member mpScale::SetAxisID are not documented
+E:/wxMathPlot/mathplot/mathplot.h:3099: warning: return type of member mpScaleX::IsTopAxis is not documented
+E:/wxMathPlot/mathplot/mathplot.h:3105: warning: return type of member mpScaleX::IsBottomAxis is not documented
+E:/wxMathPlot/mathplot/mathplot.h:3119: warning: parameters of member mpScaleX::DoPlot are not documented
+E:/wxMathPlot/mathplot/mathplot.h:2998: warning: return type of member mpScaleX::GetOrigin is not documented
+E:/wxMathPlot/mathplot/mathplot.h:3162: warning: return type of member mpScaleY::GetAxisWidth is not documented
+E:/wxMathPlot/mathplot/mathplot.h:3168: warning: return type of member mpScaleY::IsLeftAxis is not documented
+E:/wxMathPlot/mathplot/mathplot.h:3174: warning: return type of member mpScaleY::IsRightAxis is not documented
+E:/wxMathPlot/mathplot/mathplot.h:3180: warning: parameters of member mpScaleY::IsInside are not documented
+E:/wxMathPlot/mathplot/mathplot.h:3180: warning: return type of member mpScaleY::IsInside is not documented
+E:/wxMathPlot/mathplot/mathplot.h:3195: warning: parameters of member mpScaleY::DoPlot are not documented
+E:/wxMathPlot/mathplot/mathplot.h:2998: warning: return type of member mpScaleY::GetOrigin is not documented
+E:/wxMathPlot/mathplot/mathplot.h:4748: warning: parameters of member mpText::mpText are not documented
+E:/wxMathPlot/mathplot/mathplot.h:4777: warning: parameters of member mpText::SetLocation are not documented
+E:/wxMathPlot/mathplot/mathplot.h:4791: warning: parameters of member mpText::SetOffset are not documented
+E:/wxMathPlot/mathplot/mathplot.h:4799: warning: parameters of member mpText::GetOffset are not documented
+E:/wxMathPlot/mathplot/mathplot.h:4812: warning: parameters of member mpText::DoPlot are not documented
+E:/wxMathPlot/mathplot/mathplot.h:1904: warning: return type of member mpVerticalLine::DoBeforePlot is not documented
+E:/wxMathPlot/mathplot/mathplot.h:1221: warning: parameters of member mpVerticalLine::DoPlot are not documented
+E:/wxMathPlot/mathplot/mathplot.h:3591: warning: return type of member mpWindow::GetBoundX is not documented
+E:/wxMathPlot/mathplot/mathplot.h:3597: warning: return type of member mpWindow::GetDesiredBoundX is not documented
+E:/wxMathPlot/mathplot/mathplot.h:3803: warning: parameters of member mpWindow::EnableDoubleBuffer are not documented
+E:/wxMathPlot/mathplot/mathplot.h:3817: warning: parameters of member mpWindow::EnableMousePanZoom are not documented
+E:/wxMathPlot/mathplot/mathplot.h:4049: warning: parameters of member mpWindow::InitializeBoundingBox are not documented
+E:/wxMathPlot/mathplot/mathplot.h:4078: warning: parameters of member mpWindow::BitmapScreenshot are not documented
+E:/wxMathPlot/mathplot/mathplot.h:4078: warning: return type of member mpWindow::BitmapScreenshot is not documented
+E:/wxMathPlot/mathplot/mathplot.h:4083: warning: parameters of member mpWindow::ClipboardScreenshot are not documented
+E:/wxMathPlot/mathplot/mathplot.h:4088: warning: parameters of member mpWindow::SetWildcard are not documented
+E:/wxMathPlot/mathplot/mathplot.h:4096: warning: return type of member mpWindow::GetWildcard is not documented
+E:/wxMathPlot/mathplot/mathplot.h:4203: warning: return type of member mpWindow::GetMarginRightOuter is not documented
+E:/wxMathPlot/mathplot/mathplot.h:4250: warning: return type of member mpWindow::GetExtraMargin is not documented
+E:/wxMathPlot/mathplot/mathplot.h:4256: warning: return type of member mpWindow::GetMarginLeftOuter is not documented
+E:/wxMathPlot/mathplot/mathplot.h:4262: warning: return type of member mpWindow::GetPlotWidth is not documented
+E:/wxMathPlot/mathplot/mathplot.h:4268: warning: return type of member mpWindow::GetPlotHeight is not documented
+E:/wxMathPlot/mathplot/mathplot.h:4302: warning: parameters of member mpWindow::SetDrawBox are not documented
+E:/wxMathPlot/mathplot/mathplot.h:4308: warning: return type of member mpWindow::GetDrawBox is not documented
+E:/wxMathPlot/mathplot/mathplot.h:4357: warning: return type of member mpWindow::GetbgColour is not documented
+E:/wxMathPlot/mathplot/mathplot.h:4363: warning: parameters of member mpWindow::SetbgColour are not documented
+E:/wxMathPlot/mathplot/mathplot.h:4458: warning: parameters of member mpWindow::SetMagnetize are not documented
+E:/wxMathPlot/mathplot/mathplot.h:4533: warning: parameters of member mpWindow::RenderOverlays are not documented
+E:/wxMathPlot/mathplot/mathplot.h:4551: warning: parameters of member mpWindow::OnPaint are not documented
+E:/wxMathPlot/mathplot/mathplot.h:4552: warning: parameters of member mpWindow::OnSize are not documented
+E:/wxMathPlot/mathplot/mathplot.h:4553: warning: parameters of member mpWindow::OnShowPopupMenu are not documented
+E:/wxMathPlot/mathplot/mathplot.h:4554: warning: parameters of member mpWindow::OnCenter are not documented
+E:/wxMathPlot/mathplot/mathplot.h:4555: warning: parameters of member mpWindow::OnFit are not documented
+E:/wxMathPlot/mathplot/mathplot.h:4556: warning: parameters of member mpWindow::OnToggleGrids are not documented
+E:/wxMathPlot/mathplot/mathplot.h:4557: warning: parameters of member mpWindow::OnToggleCoords are not documented
+E:/wxMathPlot/mathplot/mathplot.h:4558: warning: parameters of member mpWindow::OnScreenShot are not documented
+E:/wxMathPlot/mathplot/mathplot.h:4559: warning: parameters of member mpWindow::OnFullScreen are not documented
+E:/wxMathPlot/mathplot/mathplot.h:4563: warning: parameters of member mpWindow::OnLoadFile are not documented
+E:/wxMathPlot/mathplot/mathplot.h:4564: warning: parameters of member mpWindow::OnZoomIn are not documented
+E:/wxMathPlot/mathplot/mathplot.h:4565: warning: parameters of member mpWindow::OnZoomOut are not documented
+E:/wxMathPlot/mathplot/mathplot.h:4566: warning: parameters of member mpWindow::OnLockAspect are not documented
+E:/wxMathPlot/mathplot/mathplot.h:4567: warning: parameters of member mpWindow::OnMouseHelp are not documented
+E:/wxMathPlot/mathplot/mathplot.h:4568: warning: parameters of member mpWindow::OnMouseLeftDown are not documented
+E:/wxMathPlot/mathplot/mathplot.h:4569: warning: parameters of member mpWindow::OnMouseRightDown are not documented
+E:/wxMathPlot/mathplot/mathplot.h:4570: warning: parameters of member mpWindow::OnMouseMove are not documented
+E:/wxMathPlot/mathplot/mathplot.h:4571: warning: parameters of member mpWindow::OnMouseLeftRelease are not documented
+E:/wxMathPlot/mathplot/mathplot.h:4572: warning: parameters of member mpWindow::OnMouseWheel are not documented
+E:/wxMathPlot/mathplot/mathplot.h:4573: warning: parameters of member mpWindow::OnMouseLeave are not documented
+E:/wxMathPlot/mathplot/mathplot.h:4574: warning: parameters of member mpWindow::CheckUserMouseAction are not documented
+E:/wxMathPlot/mathplot/mathplot.h:4574: warning: return type of member mpWindow::CheckUserMouseAction is not documented
+E:/wxMathPlot/mathplot/mathplot.h:4575: warning: parameters of member mpWindow::OnScrollThumbTrack are not documented
+E:/wxMathPlot/mathplot/mathplot.h:4576: warning: parameters of member mpWindow::OnScrollPageUp are not documented
+E:/wxMathPlot/mathplot/mathplot.h:4577: warning: parameters of member mpWindow::OnScrollPageDown are not documented
+E:/wxMathPlot/mathplot/mathplot.h:4578: warning: parameters of member mpWindow::OnScrollLineUp are not documented
+E:/wxMathPlot/mathplot/mathplot.h:4579: warning: parameters of member mpWindow::OnScrollLineDown are not documented
+E:/wxMathPlot/mathplot/mathplot.h:4580: warning: parameters of member mpWindow::OnScrollTop are not documented
+E:/wxMathPlot/mathplot/mathplot.h:4581: warning: parameters of member mpWindow::OnScrollBottom are not documented
+E:/wxMathPlot/mathplot/mathplot.h:4583: warning: parameters of member mpWindow::DoScrollCalc are not documented
+E:/wxMathPlot/mathplot/mathplot.h:3915: warning: parameters of member mpWindow::CountLayersType are not documented
+E:/wxMathPlot/mathplot/mathplot.h:3810: warning: parameters of member mpWindow::EnableBufferedPaintDC are not documented
+E:/wxMathPlot/mathplot/mathplot.h:3847: warning: parameters of member mpWindow::Fit are not documented
+E:/wxMathPlot/mathplot/mathplot.h:3952: warning: return type of member mpWindow::GetBoundingBox is not documented
+E:/wxMathPlot/mathplot/mathplot.h:4004: warning: return type of member mpWindow::GetBoundingBox is not documented
+E:/wxMathPlot/mathplot/mathplot.h:3604: warning: return type of member mpWindow::GetBoundY is not documented
+E:/wxMathPlot/mathplot/mathplot.h:3613: warning: return type of member mpWindow::GetDesiredBoundY is not documented
+E:/wxMathPlot/mathplot/mathplot.h:3974: warning: return type of member mpWindow::GetDesiredXmax is not documented
+E:/wxMathPlot/mathplot/mathplot.h:3965: warning: return type of member mpWindow::GetDesiredXmin is not documented
+E:/wxMathPlot/mathplot/mathplot.h:3994: warning: return type of member mpWindow::GetDesiredYmax is not documented
+E:/wxMathPlot/mathplot/mathplot.h:3983: warning: return type of member mpWindow::GetDesiredYmin is not documented
+E:/wxMathPlot/mathplot/mathplot.h:3471: warning: return type of member mpWindow::GetLayerAxis is not documented
+E:/wxMathPlot/mathplot/mathplot.h:3533: warning: parameters of member mpWindow::GetLayerYAxis are not documented
+E:/wxMathPlot/mathplot/mathplot.h:4292: warning: return type of member mpWindow::GetLeftYAxesWidth is not documented
+E:/wxMathPlot/mathplot/mathplot.h:4451: warning: return type of member mpWindow::GetMagnetize is not documented
+E:/wxMathPlot/mathplot/mathplot.h:4216: warning: return type of member mpWindow::GetMarginBottom is not documented
+E:/wxMathPlot/mathplot/mathplot.h:4233: warning: return type of member mpWindow::GetMarginLeft is not documented
+E:/wxMathPlot/mathplot/mathplot.h:4193: warning: return type of member mpWindow::GetMarginRight is not documented
+E:/wxMathPlot/mathplot/mathplot.h:4176: warning: return type of member mpWindow::GetMarginTop is not documented
+E:/wxMathPlot/mathplot/mathplot.h:4275: warning: return type of member mpWindow::GetPlotBoundaries is not documented
+E:/wxMathPlot/mathplot/mathplot.h:4297: warning: return type of member mpWindow::GetRightYAxesWidth is not documented
+E:/wxMathPlot/mathplot/mathplot.h:4402: warning: return type of member mpWindow::IsLogXaxis is not documented
+E:/wxMathPlot/mathplot/mathplot.h:4415: warning: return type of member mpWindow::IsLogYaxis is not documented
+E:/wxMathPlot/mathplot/mathplot.h:4105: warning: return type of member mpWindow::LoadFile is not documented
+E:/wxMathPlot/mathplot/mathplot.h:3825: warning: parameters of member mpWindow::LockAspect are not documented
+E:/wxMathPlot/mathplot/mathplot.h:3767: warning: parameters of member mpWindow::p2x are not documented
+E:/wxMathPlot/mathplot/mathplot.h:3767: warning: return type of member mpWindow::p2x is not documented
+E:/wxMathPlot/mathplot/mathplot.h:3775: warning: parameters of member mpWindow::p2y are not documented
+E:/wxMathPlot/mathplot/mathplot.h:3775: warning: return type of member mpWindow::p2y is not documented
+E:/wxMathPlot/mathplot/mathplot.h:4018: warning: return type of member mpWindow::PointIsInsideBound is not documented
+E:/wxMathPlot/mathplot/mathplot.h:4071: warning: return type of member mpWindow::SaveScreenshot is not documented
+E:/wxMathPlot/mathplot/mathplot.h:4371: warning: parameters of member mpWindow::SetOnDeleteLayer are not documented
+E:/wxMathPlot/mathplot/mathplot.h:4387: warning: parameters of member mpWindow::SetOnUserMouseAction are not documented
+E:/wxMathPlot/mathplot/mathplot.h:3786: warning: parameters of member mpWindow::x2p are not documented
+E:/wxMathPlot/mathplot/mathplot.h:3786: warning: return type of member mpWindow::x2p is not documented
+E:/wxMathPlot/mathplot/mathplot.h:3794: warning: parameters of member mpWindow::y2p are not documented
+E:/wxMathPlot/mathplot/mathplot.h:3794: warning: return type of member mpWindow::y2p is not documented
+E:/wxMathPlot/MathPlotConfig/MathPlotConfig.h:123: warning: parameters of member wxMultiTextCtrlDialog::OnOK are not documented
+E:/wxMathPlot/MathPlotConfig/MathPlotConfig.h:124: warning: parameters of member wxMultiTextCtrlDialog::OnCancel are not documented
+E:/wxMathPlot/MathPlotConfig/MathPlotConfig.h:116: warning: parameters of member wxMultiTextCtrlDialog::Create are not documented
+E:/wxMathPlot/MathPlotConfig/MathPlotConfig.h:116: warning: return type of member wxMultiTextCtrlDialog::Create is not documented
+
+*** Doxygen has finished
