@@ -11,7 +11,7 @@
 <!-- Node0 -->
 <g id="Node000000" class="node">
 <title>Node0</title>
-<g id="a_Node000000"><a xlink:href="structmpFloatRect.html" target="_top" xlink:title=" ">
+<g id="a_Node000000"><a xlink:href="structmp_float_rect.html" target="_top" xlink:title="A structure for computation of bounds in real units (not in screen pixel) X refer to X axis Y refer t...">
 <polygon fill="white" stroke="#666666" points="79,-19 0,-19 0,0 79,0 79,-19"/>
 <text text-anchor="middle" x="39.5" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">mpFloatRect</text>
 </a>

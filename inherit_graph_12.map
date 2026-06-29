@@ -1,5 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" title=" " alt="" coords="5,5,88,31"/>
-<area shape="rect" id="Node000001" href="$classMyFrame.html" title=" " alt="" coords="136,5,219,31"/>
-<area shape="poly" id="edge6_Node000000_Node000001" title=" " alt="" coords="102,15,136,15,136,21,102,21"/>
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,5,97,31"/>
+<area shape="rect" id="Node000001" href="$classmp_printout.html" title="Printout class used by mpWindow to draw in the objects to be printed." alt="" coords="145,5,240,31"/>
+<area shape="poly" id="edge33_Node000000_Node000001" title=" " alt="" coords="111,15,145,15,145,21,111,21"/>
 </map>

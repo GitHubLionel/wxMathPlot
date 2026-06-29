@@ -1,0 +1,59 @@
+<map id="mpLayer" name="mpLayer">
+<area shape="rect" id="Node000001" title="Plot layer, abstract base class." alt="" coords="136,425,215,451"/>
+<area shape="rect" id="Node000003" href="$classmp_bitmap_layer.html" title="A layer that allows you to have a bitmap image printed in the mpWindow." alt="" coords="263,203,389,228"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="179,411,188,373,204,327,228,279,261,237,277,226,280,230,264,241,232,282,209,329,193,374,184,412"/>
+<area shape="rect" id="Node000004" href="$classmp_function.html" title="Plot layer implementing an abstract function plot class." alt="" coords="277,252,375,277"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="195,413,312,276,316,279,199,416"/>
+<area shape="rect" id="Node000022" href="$classmp_info_layer.html" title="Base class to create small rectangular info boxes mpInfoLayer is the base class to create a small rec..." alt="" coords="274,425,378,451"/>
+<area shape="poly" id="edge21_Node000001_Node000022" title=" " alt="" coords="228,435,274,435,274,441,228,441"/>
+<area shape="rect" id="Node000025" href="$classmp_scale.html" title="Plot layer implementing an abstract scale ruler." alt="" coords="287,499,365,524"/>
+<area shape="poly" id="edge24_Node000001_Node000025" title=" " alt="" coords="216,454,300,496,298,501,213,459"/>
+<area shape="rect" id="Node000028" href="$classmp_text.html" title="Plot layer implementing a text string." alt="" coords="291,573,361,599"/>
+<area shape="poly" id="edge27_Node000001_Node000028" title=" " alt="" coords="197,460,265,535,308,571,305,575,261,539,193,464"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,425,88,451"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="102,435,136,435,136,441,102,441"/>
+<area shape="rect" id="Node000005" href="$classmp_chart.html" title="abstract Layer for chart (bar and pie)." alt="" coords="469,55,547,80"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="382,242,387,238,401,219,407,201,410,165,413,128,421,108,435,89,451,78,468,71,470,76,453,83,439,93,426,111,419,129,415,165,412,202,405,222,391,241,386,246"/>
+<area shape="rect" id="Node000008" href="$classmp_f_x.html" title="Abstract base class providing plot and labeling functionality for functions F:X&#45;&gt;Y." alt="" coords="478,104,538,129"/>
+<area shape="poly" id="edge7_Node000004_Node000008" title=" " alt="" coords="381,243,387,238,404,213,410,189,417,164,436,139,456,126,477,119,479,124,458,131,439,143,422,166,416,190,409,216,391,241,384,247"/>
+<area shape="rect" id="Node000012" href="$classmp_f_x_y.html" title="Abstract base class providing plot and labeling functionality for a locus plot F:N&#45;&gt;X,..." alt="" coords="474,153,542,179"/>
+<area shape="poly" id="edge11_Node000004_Node000012" title=" " alt="" coords="377,244,388,237,402,225,411,213,421,200,436,188,473,171,475,176,439,192,424,204,415,216,406,229,391,241,380,248"/>
+<area shape="rect" id="Node000014" href="$classmp_f_y.html" title="Abstract base class providing plot and labeling functionality for functions F:Y&#45;&gt;X." alt="" coords="479,203,537,228"/>
+<area shape="poly" id="edge13_Node000004_Node000014" title=" " alt="" coords="386,246,478,220,479,226,387,251"/>
+<area shape="rect" id="Node000015" href="$classmp_line.html" title="Abstract class providing a line." alt="" coords="473,252,543,277"/>
+<area shape="poly" id="edge14_Node000004_Node000015" title=" " alt="" coords="389,262,472,262,472,267,389,267"/>
+<area shape="rect" id="Node000018" href="$classmp_movable_object.html" title="This virtual class represents objects that can be moved to an arbitrary 2D location+rotation." alt="" coords="437,301,579,327"/>
+<area shape="poly" id="edge17_Node000004_Node000018" title=" " alt="" coords="387,278,461,299,459,304,386,283"/>
+<area shape="rect" id="Node000021" href="$classmp_profile.html" title="Abstract base class providing plot and labeling functionality for functions F:Y&#45;&gt;X." alt="" coords="466,351,550,376"/>
+<area shape="poly" id="edge20_Node000004_Node000021" title=" " alt="" coords="356,284,394,311,439,337,467,349,465,354,436,342,391,315,353,288"/>
+<area shape="rect" id="Node000006" href="$classmp_bar_chart.html" title="Layer for bar chart." alt="" coords="656,5,756,31"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="560,52,655,28,657,33,561,57"/>
+<area shape="rect" id="Node000007" href="$classmp_pie_chart.html" title="Layer for pie chart." alt="" coords="657,55,755,80"/>
+<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="561,65,657,65,657,70,561,70"/>
+<area shape="rect" id="Node000009" href="$classmp_f_x_generic.html" title="Create a generic FX function Override the ComputeY() function with your function." alt="" coords="651,104,761,129"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="552,114,651,114,651,119,552,119"/>
+<area shape="rect" id="Node000010" href="$classmp_gaussian.html" title="Classic Gaussian distribution f(x) = exp(&#45;(x&#45;μ)²/2σ²)/sqrt(2πσ²)" alt="" coords="833,80,936,105"/>
+<area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="775,105,833,97,834,102,776,110"/>
+<area shape="rect" id="Node000011" href="$classmp_normal.html" title="Classic Normal distribution f(x) = exp(&#45;(ln(x)&#45;μ)²/2σ²)/(xσ.sqrt(2π))" alt="" coords="839,129,930,155"/>
+<area shape="poly" id="edge10_Node000009_Node000011" title=" " alt="" coords="776,124,839,133,839,138,775,129"/>
+<area shape="rect" id="Node000013" href="$classmp_f_x_y_vector.html" title="A class providing graphs functionality for a 2D plot (either continuous or a set of points),..." alt="" coords="651,153,761,179"/>
+<area shape="poly" id="edge12_Node000012_Node000013" title=" " alt="" coords="555,163,651,163,651,169,555,169"/>
+<area shape="rect" id="Node000016" href="$classmp_horizontal_line.html" title="Abstract class providing an horizontal line." alt="" coords="637,203,775,228"/>
+<area shape="poly" id="edge15_Node000015_Node000016" title=" " alt="" coords="556,250,654,226,655,231,557,255"/>
+<area shape="rect" id="Node000017" href="$classmp_vertical_line.html" title="Abstract class providing an vertical line." alt="" coords="647,252,765,277"/>
+<area shape="poly" id="edge16_Node000015_Node000017" title=" " alt="" coords="557,262,647,262,647,267,557,267"/>
+<area shape="rect" id="Node000019" href="$classmp_covariance_ellipse.html" title="A 2D ellipse, described by a 2x2 covariance matrix." alt="" coords="627,301,785,327"/>
+<area shape="poly" id="edge18_Node000018_Node000019" title=" " alt="" coords="592,311,626,311,626,317,592,317"/>
+<area shape="rect" id="Node000020" href="$classmp_polygon.html" title="An arbitrary polygon, descendant of mpMovableObject." alt="" coords="659,351,753,376"/>
+<area shape="poly" id="edge19_Node000018_Node000020" title=" " alt="" coords="573,327,659,349,658,354,572,333"/>
+<area shape="rect" id="Node000023" href="$classmp_info_coords.html" title="Implements an overlay box which shows the mouse coordinates in plot units." alt="" coords="451,400,565,425"/>
+<area shape="poly" id="edge22_Node000022_Node000023" title=" " alt="" coords="392,426,451,418,452,423,392,432"/>
+<area shape="rect" id="Node000024" href="$classmp_info_legend.html" title="Implement the legend to be added to the plot This layer allows you to add a legend to describe the pl..." alt="" coords="451,449,565,475"/>
+<area shape="poly" id="edge23_Node000022_Node000024" title=" " alt="" coords="392,444,451,452,450,457,392,449"/>
+<area shape="rect" id="Node000026" href="$classmp_scale_x.html" title="Plot layer implementing a x&#45;scale ruler." alt="" coords="465,499,551,524"/>
+<area shape="poly" id="edge25_Node000025_Node000026" title=" " alt="" coords="379,509,464,509,464,514,379,514"/>
+<area shape="rect" id="Node000027" href="$classmp_scale_y.html" title="Plot layer implementing a y&#45;scale ruler." alt="" coords="465,548,551,573"/>
+<area shape="poly" id="edge26_Node000025_Node000027" title=" " alt="" coords="379,523,465,546,464,552,378,528"/>
+<area shape="rect" id="Node000029" href="$classmp_title.html" title="Plot layer implementing a simple title." alt="" coords="472,597,544,623"/>
+<area shape="poly" id="edge28_Node000028_Node000029" title=" " alt="" coords="375,590,472,603,471,608,374,595"/>
+</map>

@@ -1,0 +1,11 @@
+<map id="mpCovarianceEllipse" name="mpCovarianceEllipse">
+<area shape="rect" id="Node000001" title="A 2D ellipse, described by a 2x2 covariance matrix." alt="" coords="5,299,164,324"/>
+<area shape="rect" id="Node000002" href="$classmp_movable_object.html" title="This virtual class represents objects that can be moved to an arbitrary 2D location+rotation." alt="" coords="14,225,155,251"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="87,264,87,299,82,299,82,264"/>
+<area shape="rect" id="Node000003" href="$classmp_function.html" title="Plot layer implementing an abstract function plot class." alt="" coords="35,152,134,177"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="87,191,87,225,82,225,82,191"/>
+<area shape="rect" id="Node000004" href="$classmp_layer.html" title="Plot layer, abstract base class." alt="" coords="45,79,124,104"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="87,118,87,152,82,152,82,118"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="43,5,126,31"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="87,44,87,79,82,79,82,44"/>
+</map>

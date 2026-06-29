@@ -1,0 +1,11 @@
+<map id="mpHorizontalLine" name="mpHorizontalLine">
+<area shape="rect" id="Node000001" title="Abstract class providing an horizontal line." alt="" coords="5,299,143,324"/>
+<area shape="rect" id="Node000002" href="$classmp_line.html" title="Abstract class providing a line." alt="" coords="39,225,109,251"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="77,264,77,299,71,299,71,264"/>
+<area shape="rect" id="Node000003" href="$classmp_function.html" title="Plot layer implementing an abstract function plot class." alt="" coords="25,152,123,177"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="77,191,77,225,71,225,71,191"/>
+<area shape="rect" id="Node000004" href="$classmp_layer.html" title="Plot layer, abstract base class." alt="" coords="35,79,113,104"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="77,118,77,152,71,152,71,118"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="33,5,115,31"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="77,44,77,79,71,79,71,44"/>
+</map>
