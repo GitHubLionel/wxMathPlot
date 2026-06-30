@@ -880,7 +880,7 @@ MathPlotConfigDialogBuilder::MathPlotConfigDialogBuilder( wxWindow* parent, wxWi
 
 	sizerSeriesStep->Add( stStepChoice, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
 
-	spinSeriesStep = new wxSpinCtrl( StaticBoxSizer13->GetStaticBox(), wxID_ANY, wxT("1"), wxDefaultPosition, wxSize( 60,-1 ), wxSP_ARROW_KEYS, 1, 0, 1 );
+	spinSeriesStep = new wxSpinCtrl( StaticBoxSizer13->GetStaticBox(), wxID_ANY, wxT("1"), wxDefaultPosition, wxSize( -1,-1 ), wxSP_ARROW_KEYS, 1, 0, 1 );
 	sizerSeriesStep->Add( spinSeriesStep, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
 
 

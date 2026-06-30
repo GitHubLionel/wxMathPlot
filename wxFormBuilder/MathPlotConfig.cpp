@@ -1038,6 +1038,7 @@ void MathPlotConfigDialog::UpdateSeriesStep(void)
     if (CurrentSerie)
       spinSeriesStep->SetValue(CurrentSerie->GetStep());
   }
+  sizerMain->SetSizeHints(this); // Required for Linux
   sizerSeriesStep->Layout();
 }
 

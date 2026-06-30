@@ -876,7 +876,7 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   stStepChoice = new wxStaticText(Panel4, wxID_ANY, _("Step size :"), wxDefaultPosition, wxDefaultSize, 0);
   stStepChoice->SetToolTip(_("Set step size, e.g. 1 to show all points, 2 to show every other step and so on"));
   sizerSeriesStep->Add(stStepChoice, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-  spinSeriesStep = new wxSpinCtrl(Panel4, wxID_ANY, _T("1"), wxDefaultPosition, wxSize(60,-1), 0, 1, 100, 1);
+  spinSeriesStep = new wxSpinCtrl(Panel4, wxID_ANY, _T("1"), wxDefaultPosition, wxDefaultSize, 0, 1, 100, 1);
   spinSeriesStep->SetValue(_T("1"));
   sizerSeriesStep->Add(spinSeriesStep, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
   BoxSizer24->Add(sizerSeriesStep, 1, wxALL|wxEXPAND, 0);
@@ -1659,6 +1659,7 @@ void MathPlotConfigDialog::UpdateSeriesStep(void)
     if (CurrentSerie)
       spinSeriesStep->SetValue(CurrentSerie->GetStep());
   }
+  sizerMain->SetSizeHints(this); // Required for Linux
   sizerSeriesStep->Layout();
 }
 

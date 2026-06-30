@@ -1345,7 +1345,6 @@
 																			<object class="wxSpinCtrl" name="" variable="spinSeriesStep" member="yes">
 																				<value>1</value>
 																				<min>1</min>
-																				<size>60,-1</size>
 																			</object>
 																			<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
 																			<border>5</border>
