@@ -6,7 +6,7 @@
 // Contributors:    Jose Luis Blanco, Val Greene, Lionel Reynaud, Dave Nadler, MortenMacFly,
 //                  Oskar Waldemarsson (for multi Y axis and corrections)
 // Created:         21/07/2003
-// Last edit:       26/06/2026
+// Last edit:       01/07/2026
 // Copyright:       (c) David Schalig, Davide Rondini
 // Licence:         wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -71,6 +71,10 @@
  #define MP_USER_INCLUDE MyIncludeFile
  @endcode
  ...causes mathplot.h to include `MyIncludeFile.h`.
+
+ @section C++ Version Compatibility
+ Mathplot Version 2.1 is last version compatible with C++ 14
+ Later versions will require at least C++17 because of the use of 'optional' library and 'structured binding' feature
 
  */
 

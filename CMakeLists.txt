@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.25)
 project(wxMathPlot)
 set(LIB_VERSION_MAJOR "2")
-set(LIB_VERSION_MINOR "0")
+set(LIB_VERSION_MINOR "1")
 set(LIB_VERSION_PATCH "0")
 if (MSVC)
 	add_compile_options(/W4)
