@@ -55,6 +55,7 @@ $(function() {
 <code>#include &lt;vector&gt;</code><br />
 <code>#include &lt;map&gt;</code><br />
 <code>#include &lt;unordered_map&gt;</code><br />
+<code>#include &lt;optional&gt;</code><br />
 <code>#include &lt;wx/defs.h&gt;</code><br />
 <code>#include &lt;wx/menu.h&gt;</code><br />
 <code>#include &lt;wx/scrolwin.h&gt;</code><br />
@@ -201,30 +202,6 @@ Macros</h2></td></tr>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>WXDLLIMPEXP_DATA_MATHPLOT</b>(type)&#160;&#160;&#160;type</td></tr>
 <tr class="memdesc:a7d938851a316574f2e27283d668114d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Definition uses windows dll to export data type. <br /></td></tr>
 <tr class="separator:a7d938851a316574f2e27283d668114d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga4a63a8d90616f739e54c85a87eb7f446" id="r_ga4a63a8d90616f739e54c85a87eb7f446"><td class="memItemLeft" align="right" valign="top">
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>MP_OPTNULL_INT</b>&#160;&#160;&#160;-1</td></tr>
-<tr class="memdesc:ga4a63a8d90616f739e54c85a87eb7f446"><td class="mdescLeft">&#160;</td><td class="mdescRight">Null sentinel used for mpOptional_int / mpOptional_uint in the fallback implementation. <br /></td></tr>
-<tr class="separator:ga4a63a8d90616f739e54c85a87eb7f446"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gade78a4eaf5155f32ae4defdbc387d9d6" id="r_gade78a4eaf5155f32ae4defdbc387d9d6"><td class="memItemLeft" align="right" valign="top">
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>MP_OPTTEST</b>(opt)&#160;&#160;&#160;((opt) != -1)</td></tr>
-<tr class="memdesc:gade78a4eaf5155f32ae4defdbc387d9d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Test whether a fallback optional-style value contains a valid value. <br /></td></tr>
-<tr class="separator:gade78a4eaf5155f32ae4defdbc387d9d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gadfb012b8bcf339f8c38417f8d55765c8" id="r_gadfb012b8bcf339f8c38417f8d55765c8"><td class="memItemLeft" align="right" valign="top">
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>MP_OPTGET</b>(opt)&#160;&#160;&#160;(opt)</td></tr>
-<tr class="memdesc:gadfb012b8bcf339f8c38417f8d55765c8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the contained value from a fallback optional-style value. <br /></td></tr>
-<tr class="separator:gadfb012b8bcf339f8c38417f8d55765c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga2a529b20938d361eb27111fbc870cbd7" id="r_ga2a529b20938d361eb27111fbc870cbd7"><td class="memItemLeft" align="right" valign="top">
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>MP_LOOP_ITER</b>&#160;&#160;&#160;auto&amp; elem</td></tr>
-<tr class="memdesc:ga2a529b20938d361eb27111fbc870cbd7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper macro for iterating through axis maps without structured binding. <br /></td></tr>
-<tr class="separator:ga2a529b20938d361eb27111fbc870cbd7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga754ce27e0f025d1c9a71579045d52360" id="r_ga754ce27e0f025d1c9a71579045d52360"><td class="memItemLeft" align="right" valign="top">
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>m_yID</b>&#160;&#160;&#160;elem.first</td></tr>
-<tr class="memdesc:ga754ce27e0f025d1c9a71579045d52360"><td class="mdescLeft">&#160;</td><td class="mdescRight">Alias for the Y-axis identifier when structured binding is unavailable. <br /></td></tr>
-<tr class="separator:ga754ce27e0f025d1c9a71579045d52360"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga6ec8bfe6da1299b5632bd8c31ecfae26" id="r_ga6ec8bfe6da1299b5632bd8c31ecfae26"><td class="memItemLeft" align="right" valign="top">
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>m_yData</b>&#160;&#160;&#160;elem.second</td></tr>
-<tr class="memdesc:ga6ec8bfe6da1299b5632bd8c31ecfae26"><td class="mdescLeft">&#160;</td><td class="mdescRight">Alias for the Y-axis data when structured binding is unavailable. <br /></td></tr>
-<tr class="separator:ga6ec8bfe6da1299b5632bd8c31ecfae26"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae8eeb4ad561f7b41ceda26be99595e7d" id="r_ae8eeb4ad561f7b41ceda26be99595e7d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="mathplot_8h.html#ae8eeb4ad561f7b41ceda26be99595e7d">MP_X_BORDER_SEPARATION</a>&#160;&#160;&#160;40</td></tr>
 <tr class="memdesc:ae8eeb4ad561f7b41ceda26be99595e7d"><td class="mdescLeft">&#160;</td><td class="mdescRight">A simple plot component for wxWidgets.  <br /></td></tr>
 <tr class="separator:ae8eeb4ad561f7b41ceda26be99595e7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -294,14 +271,14 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:gaf22eb7e67299aafab9fb97d0372a8222" id="r_gaf22eb7e67299aafab9fb97d0372a8222"><td class="memItemLeft" align="right" valign="top">
-typedef unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>mpOptional_uint</b></td></tr>
-<tr class="memdesc:gaf22eb7e67299aafab9fb97d0372a8222"><td class="mdescLeft">&#160;</td><td class="mdescRight">Optional unsigned integer fallback type used when std::optional is unavailable. <br /></td></tr>
-<tr class="separator:gaf22eb7e67299aafab9fb97d0372a8222"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gad736472f986433730b044acb4acd3ed7" id="r_gad736472f986433730b044acb4acd3ed7"><td class="memItemLeft" align="right" valign="top">
-typedef int&#160;</td><td class="memItemRight" valign="bottom"><b>mpOptional_int</b></td></tr>
-<tr class="memdesc:gad736472f986433730b044acb4acd3ed7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Optional integer fallback type used when std::optional is unavailable. <br /></td></tr>
-<tr class="separator:gad736472f986433730b044acb4acd3ed7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2c1baadaf91d06d157ab6489e4500962" id="r_a2c1baadaf91d06d157ab6489e4500962"><td class="memItemLeft" align="right" valign="top"><a id="a2c1baadaf91d06d157ab6489e4500962" name="a2c1baadaf91d06d157ab6489e4500962"></a>
+typedef std::optional&lt; unsigned int &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>mpOptional_uint</b></td></tr>
+<tr class="memdesc:a2c1baadaf91d06d157ab6489e4500962"><td class="mdescLeft">&#160;</td><td class="mdescRight">Shortcut to optional unsigned integer type. <br /></td></tr>
+<tr class="separator:a2c1baadaf91d06d157ab6489e4500962"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af422aa1828c65a92d3585f3693240335" id="r_af422aa1828c65a92d3585f3693240335"><td class="memItemLeft" align="right" valign="top"><a id="af422aa1828c65a92d3585f3693240335" name="af422aa1828c65a92d3585f3693240335"></a>
+typedef std::optional&lt; int &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>mpOptional_int</b></td></tr>
+<tr class="memdesc:af422aa1828c65a92d3585f3693240335"><td class="mdescLeft">&#160;</td><td class="mdescRight">Shortcut to optional integer type.. <br /></td></tr>
+<tr class="separator:af422aa1828c65a92d3585f3693240335"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa2d0916b98f158c8771320d4b71f6a58" id="r_aa2d0916b98f158c8771320d4b71f6a58"><td class="memItemLeft" align="right" valign="top"><a id="aa2d0916b98f158c8771320d4b71f6a58" name="aa2d0916b98f158c8771320d4b71f6a58"></a>
 typedef enum <a class="el" href="mathplot_8h.html#a1e649b85ade4eaa24f49a72a5ec3143b">__mp_Location_Type</a>&#160;</td><td class="memItemRight" valign="bottom"><b>mpLocation</b></td></tr>
 <tr class="memdesc:aa2d0916b98f158c8771320d4b71f6a58"><td class="mdescLeft">&#160;</td><td class="mdescRight">Location for the Info layer. <br /></td></tr>
