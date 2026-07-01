@@ -103,7 +103,6 @@ var menudata={children:[
 {text:"All",url:"globals.html",children:[
 {text:"_",url:"globals.html#index__5F"},
 {text:"d",url:"globals.html#index_d"},
-{text:"i",url:"globals.html#index_i"},
 {text:"m",url:"globals.html#index_m"},
 {text:"w",url:"globals.html#index_w"}]},
 {text:"Typedefs",url:"globals_type.html"},
