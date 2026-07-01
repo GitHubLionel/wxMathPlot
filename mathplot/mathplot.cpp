@@ -156,11 +156,11 @@ static void FillI18NString()
 }
 
 // Memory leak debugging
-#ifdef ENABLE_MP_DEBUG
+#ifdef MP_ENABLE_DEBUG
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif // _DEBUG
-#endif // ENABLE_MP_DEBUG
+#endif // MP_ENABLE_DEBUG
 
 // Legend margins
 #define MARGIN_LEGEND 5 // The margin around the legend (the name of the function) in pixel
@@ -2407,7 +2407,7 @@ wxString mpScale::FormatLogValue(double n)
   // Special format for log axis : 10 ^ exponent
   wxString s = _T("");
 
-  if (!ISNOTNULL(n - round(n)))
+  if (!MP_ISNOTNULL(n - round(n)))
   {
     int exp = (int)round(n);
     if (exp == 0)
@@ -3605,12 +3605,12 @@ void mpWindow::Fit(const mpRange<double> &rangeX, std::unordered_map<int, mpRang
   double Ax, Ay;
 
   Ax = rangeX.Length();
-  m_AxisDataX.scale = ISNOTNULL(Ax) ? m_plotWidth / Ax : 1;
+  m_AxisDataX.scale = MP_ISNOTNULL(Ax) ? m_plotWidth / Ax : 1;
 
   for (MP_LOOP_ITER : m_AxisDataYList)
   {
     Ay = rangeY[m_yID].Length();
-    m_yData.scale = ISNOTNULL(Ay) ? m_plotHeight / Ay : 1;
+    m_yData.scale = MP_ISNOTNULL(Ay) ? m_plotHeight / Ay : 1;
   }
 
   if (m_lockaspect)
@@ -3662,7 +3662,7 @@ void mpWindow::FitX(void)
 {
   mpRange<double> bound = GetBoundX();
   double Ax = bound.Length();
-  m_AxisDataX.scale = ISNOTNULL(Ax) ? m_plotWidth / Ax : 1;
+  m_AxisDataX.scale = MP_ISNOTNULL(Ax) ? m_plotWidth / Ax : 1;
 
   // Since m_posX is at the corner (not including margins) we need to take margin into account
   m_AxisDataX.pos = bound.min - (m_margin.left / m_AxisDataX.scale);
@@ -3676,7 +3676,7 @@ void mpWindow::FitY(int yAxisID)
   {
     mpRange<double> bound = GetBoundY(yAxisID);
     double Ay = bound.Length();
-    m_AxisDataYList[yAxisID].scale = ISNOTNULL(Ay) ? m_plotHeight / Ay : 1;
+    m_AxisDataYList[yAxisID].scale = MP_ISNOTNULL(Ay) ? m_plotHeight / Ay : 1;
 
     // Since m_posY is at the corner (not including margins) we need to take margin into account
     m_AxisDataYList[yAxisID].pos = bound.max + (m_margin.top / m_AxisDataYList[yAxisID].scale);

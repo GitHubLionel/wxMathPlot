@@ -185,7 +185,7 @@
   namespace MathPlot {
 #endif // MP_ENABLE_NAMESPACE
 
-#ifdef ENABLE_MP_DEBUG
+#ifdef MP_ENABLE_DEBUG
   // For memory leak debug
   #ifdef _WINDOWS
     #ifdef _DEBUG
@@ -195,7 +195,7 @@
       #define DEBUG_NEW new
     #endif // _DEBUG
   #endif // _WINDOWS
-#endif // ENABLE_MP_DEBUG
+#endif // MP_ENABLE_DEBUG
 
 /// Default minimum separation for axes in pixels between the X axis and the plot border.
 #define MP_X_BORDER_SEPARATION 40
@@ -212,7 +212,7 @@
 /// An epsilon for float comparison to 0
 #define MP_EPSILON   1e-30
 /// Nullity test. Old solution is to test according small epsilon: (fabs(x) > MP_EPSILON)
-#define ISNOTNULL(x) (std::fpclassify(x) != FP_ZERO)
+#define MP_ISNOTNULL(x) (std::fpclassify(x) != FP_ZERO)
 
 /// A small extra margin for the plot boundary
 #define MP_EXTRA_MARGIN  8
@@ -3540,7 +3540,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      */
     void SetScaleX(const double scaleX)
     {
-      if (ISNOTNULL(scaleX))
+      if (MP_ISNOTNULL(scaleX))
       {
         m_AxisDataX.scale = scaleX;
         UpdateDesiredBoundingBox(uXAxis);
@@ -3564,7 +3564,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     void SetScaleY(const double scaleY, int yAxisID)
     {
       assert(m_AxisDataYList.count(yAxisID) != 0);
-      if (ISNOTNULL(scaleY))
+      if (MP_ISNOTNULL(scaleY))
       {
         m_AxisDataYList[yAxisID].scale = scaleY;
         UpdateDesiredBoundingBox(uYAxis);
