@@ -632,7 +632,7 @@ void MathPlotConfigDialog::FillYAxisList(wxChoice* yChoice, bool clearChoice)
 {
   if (clearChoice)
     yChoice->Clear();
-  for (const MP_LOOP_ITER : m_plot->GetAxisDataYList())
+  for (const auto& [m_yID, m_yData] : m_plot->GetAxisDataYList())
   {
     if (m_yData.axis)
     {
@@ -1334,7 +1334,7 @@ void MathPlotConfigDialog::Apply(int pageIndex, bool updateFont)
             BoundScaleX.Set(scale_min, scale_max);
 
             // Get bound of the other axis
-            for (const MP_LOOP_ITER : m_plot->GetAxisDataYList())
+            for (const auto& [m_yID, m_yData] : m_plot->GetAxisDataYList())
             {
               if (m_yData.axis && !m_yData.axis->GetAuto())
               {

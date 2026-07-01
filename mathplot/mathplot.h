@@ -101,54 +101,11 @@
 #include <map>
 #include <unordered_map>
 
-/**
- * @defgroup mp_cpp_compat C++ compatibility helpers
- * Helper typedefs and macros that provide a single interface across C++14 and
- * C++17-or-newer builds for optional values and Y-axis iteration helpers.
- * @{
- */
-
-// Multiple define to compile with C++14 because
-// Optional is only for C++ >= 17
-// Structured binding is a C++17 feature
-#if (defined(__cplusplus) && (__cplusplus > 201402L)) // C++17 or newer
-  // Use optional
-  #include <optional>
-  /// Optional unsigned integer type used when C++17 std::optional is available.
-  typedef std::optional<unsigned int> mpOptional_uint;
-  /// Optional integer type used when C++17 std::optional is available.
-  typedef std::optional<int> mpOptional_int;
-  /// Null value used for mpOptional_int / mpOptional_uint in the C++17 implementation.
-  #define MP_OPTNULL_INT std::nullopt
-  /// Test whether an optional-style value contains a valid value.
-  #define MP_OPTTEST(opt) (opt)
-  /// Get the contained value from an optional-style value.
-  #define MP_OPTGET(opt) (*opt)
-  // Use structured binding
-  /// Helper macro for iterating through axis maps using structured binding.
-  #define MP_LOOP_ITER auto& [m_yID, m_yData]
-#else
-  // To replace optional int...
-  /// Optional unsigned integer fallback type used when std::optional is unavailable.
-  typedef unsigned int mpOptional_uint;
-  /// Optional integer fallback type used when std::optional is unavailable.
-  typedef int mpOptional_int;
-  /// Null sentinel used for mpOptional_int / mpOptional_uint in the fallback implementation.
-  #define MP_OPTNULL_INT -1
-  /// Test whether a fallback optional-style value contains a valid value.
-  #define MP_OPTTEST(opt) ((opt) != -1)
-  /// Get the contained value from a fallback optional-style value.
-  #define MP_OPTGET(opt) (opt)
-  // To replace structured binding...
-  /// Helper macro for iterating through axis maps without structured binding.
-  #define MP_LOOP_ITER auto& elem
-  /// Alias for the Y-axis identifier when structured binding is unavailable.
-  #define m_yID elem.first
-  /// Alias for the Y-axis data when structured binding is unavailable.
-  #define m_yData elem.second
-#endif
-
-/** @} */
+#include <optional>
+/// Shortcut to optional unsigned integer type.
+typedef std::optional<unsigned int> mpOptional_uint;
+/// Shortcut to optional integer type..
+typedef std::optional<int> mpOptional_int;
 
 // #include <wx/wx.h>
 #include <wx/defs.h>
@@ -1371,7 +1328,6 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLayer: public mpLayer
     void SetInfoRectangle(mpWindow &w, int width = 0, int height = 0);
 
   private:
-    double clamp(double v, double min, double max);
 
     DECLARE_DYNAMIC_CLASS_MATHPLOT(mpInfoLayer);
 };
@@ -1598,7 +1554,7 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLegend: public mpInfoLayer
     };
 
     mpFunction* m_selectedSeries = nullptr;               //!< the series currently selected/clicked by the user
-    mpOptional_int m_lastHoveredAxisID = MP_OPTNULL_INT;  //!< last axis ID that was hovered when dragging series
+    mpOptional_int m_lastHoveredAxisID = std::nullopt;    //!< last axis ID that was hovered when dragging series
 
   protected:
     mpLegendStyle m_item_mode;          //!< Visual style used for each legend entry.
@@ -2753,7 +2709,7 @@ class WXDLLIMPEXP_MATHPLOT mpScale: public mpLayer
      @param labelType optional type of the label (default mpLabel_AUTO) @sa mpLabelType
      @param axisID optional ID of the axis (not use for x-axis)
      */
-    mpScale(const wxString &name, int flags, bool grids, mpLabelType labelType = mpLabel_AUTO, mpOptional_uint axisID = MP_OPTNULL_INT);
+    mpScale(const wxString &name, int flags, bool grids, mpLabelType labelType = mpLabel_AUTO, mpOptional_uint axisID = std::nullopt);
 
     /** Check whether this layer has a bounding box.
      This implementation returns \a FALSE thus making the ruler invisible
@@ -3151,7 +3107,7 @@ class WXDLLIMPEXP_MATHPLOT mpScaleY: public mpScale
      @param yAxisID optional yAxisID (default 0)
      @param labelType optional type of the label (default mpLabel_AUTO) @sa mpLabelType
      */
-    mpScaleY(const wxString &name = _T("Y"), int flags = mpALIGN_CENTERY, bool grids = false, mpOptional_uint yAxisID = MP_OPTNULL_INT, mpLabelType labelType = mpLabel_AUTO) :
+    mpScaleY(const wxString &name = _T("Y"), int flags = mpALIGN_CENTERY, bool grids = false, mpOptional_uint yAxisID = std::nullopt, mpLabelType labelType = mpLabel_AUTO) :
         mpScale(name, flags, grids, labelType, yAxisID)
     {
       m_subtype = mpsScaleY;
@@ -3629,7 +3585,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     std::unordered_map<int, mpRange<double>> GetAllBoundY()
     {
       std::unordered_map<int, mpRange<double>> yRange;
-      for (const MP_LOOP_ITER : m_AxisDataYList)
+      for (const auto& [m_yID, m_yData] : m_AxisDataYList)
       {
         yRange[m_yID] = m_yData.bound;
       }
@@ -3643,7 +3599,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     std::unordered_map<int, mpRange<double>> GetAllDesiredY()
     {
       std::unordered_map<int, mpRange<double>> yRange;
-      for (const MP_LOOP_ITER : m_AxisDataYList)
+      for (const auto& [m_yID, m_yData] : m_AxisDataYList)
       {
         yRange[m_yID] = m_yData.desired;
       }
@@ -3675,7 +3631,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      */
     void SetPosY(std::unordered_map<int, double>& posYList)
     {
-      for (MP_LOOP_ITER : m_AxisDataYList)
+      for (auto& [m_yID, m_yData] : m_AxisDataYList)
       {
         m_yData.pos = posYList[m_yID];
       }
@@ -3886,11 +3842,11 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 
     /** Zoom in current view along Y around center and refresh display
     @param yAxisID Optional Y-axis ID used to specify which Y-axis to zoom */
-    void ZoomInY(mpOptional_int yAxisID = MP_OPTNULL_INT);
+    void ZoomInY(mpOptional_int yAxisID = std::nullopt);
 
     /** Zoom out current view along Y around center and refresh display
     @param yAxisID Optional Y-axis ID used to specify which Y-axis to zoom */
-    void ZoomOutY(mpOptional_int yAxisID = MP_OPTNULL_INT);
+    void ZoomOutY(mpOptional_int yAxisID = std::nullopt);
 
     /** Zoom view fitting given coordinates to the window (p0 and p1 do not need to be in any specific order)
      * @param p0 initial point
@@ -3943,7 +3899,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
       // Change on Y axis
       if (update & uYAxis)
       {
-        for (MP_LOOP_ITER : m_AxisDataYList)
+        for (auto& [m_yID, m_yData] : m_AxisDataYList)
         {
           m_yData.desired.Set(m_yData.pos - ((m_margin.top + m_plotHeight) / m_yData.scale),
               m_yData.pos - (m_margin.top / m_yData.scale));
@@ -4296,12 +4252,12 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     /** Calculate width of all axes to the left of this axis. If y-axis ID is not specified,
      * calculate width of all left axes
      @param yAxisID of this y-axis  */
-    int GetLeftYAxesWidth(mpOptional_int yAxisID = MP_OPTNULL_INT);
+    int GetLeftYAxesWidth(mpOptional_int yAxisID = std::nullopt);
 
     /** Calculate width of all axes to the right of this axis. If y-axis ID is not specified,
      * calculate width of all right axes
      @param yAxisID of this y-axis */
-    int GetRightYAxesWidth(mpOptional_int yAxisID = MP_OPTNULL_INT);
+    int GetRightYAxesWidth(mpOptional_int yAxisID = std::nullopt);
 
     /** Set the draw of the box around the plot. */
     void SetDrawBox(bool drawbox)
@@ -4599,7 +4555,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      * @param staticYpixel Optional center position
      * @param yAxisID Optional Y-axis ID used to specify which Y-axis to zoom
      */
-    void DoZoomYCalc(bool zoomIn, wxCoord staticYpixel = MP_ZOOM_AROUND_CENTER, mpOptional_int yAxisID = MP_OPTNULL_INT);
+    void DoZoomYCalc(bool zoomIn, wxCoord staticYpixel = MP_ZOOM_AROUND_CENTER, mpOptional_int yAxisID = std::nullopt);
 
     /** Set the m_scaleX directly to fixed zoom level, but also adjust m_posX to to make
      * the zoom around center
@@ -4718,7 +4674,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     unsigned int GetNewAxisDataID(void)
     {
       int newID = 0;
-      for (const MP_LOOP_ITER : m_AxisDataYList)
+      for (const auto& [m_yID, m_yData] : m_AxisDataYList)
       {
         if(m_yData.axis)
         {
