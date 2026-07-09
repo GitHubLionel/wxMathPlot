@@ -13,7 +13,7 @@ permissions:
 jobs:
   build-windows-demo-debug:
     name: Build Debug x64 demo
-    runs-on: windows-latest
+    runs-on: windows-2022
 
     env:
       WX_VERSION: v3.2.2
@@ -30,6 +30,8 @@ jobs:
 
       - name: Configure MSBuild
         uses: microsoft/setup-msbuild@v2
+        with:
+          vs-version: '[17.0,18.0)'
 
       - name: Prepare artifact directories
         shell: pwsh
@@ -43,7 +45,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ${{ env.WXWIN }}
-          key: wxwidgets-${{ runner.os }}-${{ env.WX_VERSION }}-v143-debug-x64
+          key: wxwidgets-windows-2022-${{ env.WX_VERSION }}-vc143-debug-x64-makefile-vc
 
       - name: Checkout wxWidgets
         if: steps.cache-wxwidgets.outputs.cache-hit != 'true'
@@ -53,14 +55,11 @@ jobs:
 
       - name: Build wxWidgets Debug x64 static libraries
         if: steps.cache-wxwidgets.outputs.cache-hit != 'true'
-        shell: pwsh
+        shell: cmd
         run: |
-          msbuild "$env:WXWIN\build\msw\wx_vc17.sln" `
-            /m `
-            /p:Configuration=Debug `
-            /p:Platform=x64 `
-            /flp:logfile=artifacts\logs\wxwidgets-msbuild.log;verbosity=normal `
-            /bl:artifacts\logs\wxwidgets-msbuild.binlog
+          call "%ProgramFiles%\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+          cd /d "%WXWIN%\build\msw"
+          nmake /f makefile.vc BUILD=debug SHARED=0 TARGET_CPU=X64 > "%GITHUB_WORKSPACE%\artifacts\logs\wxwidgets-nmake.log" 2>&1
 
       - name: Build wxMathPlot demo Debug x64
         shell: pwsh
@@ -69,6 +68,7 @@ jobs:
             /m `
             /p:Configuration=$env:CONFIGURATION `
             /p:Platform=$env:PLATFORM `
+            /p:PlatformToolset=v143 `
             /flp:logfile=artifacts\logs\wxmathplot-msbuild.log;verbosity=diagnostic `
             /bl:artifacts\logs\wxmathplot-msbuild.binlog
 
