@@ -41,6 +41,7 @@ class MathPlotConfigDialogBuilder : public wxDialog
 	private:
 
 	protected:
+		wxBoxSizer* sizerMain;
 		wxNotebook* nbConfig;
 		wxPanel* Panel1;
 		wxStaticText* StaticText11;
