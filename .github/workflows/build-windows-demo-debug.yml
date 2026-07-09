@@ -45,13 +45,13 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ${{ env.WXWIN }}
-          key: wxwidgets-windows-2022-${{ env.WX_VERSION }}-vc143-debug-x64-makefile-vc
+          key: wxwidgets-windows-2022-${{ env.WX_VERSION }}-vc143-debug-x64-makefile-vc-submodules-v1
 
       - name: Checkout wxWidgets
         if: steps.cache-wxwidgets.outputs.cache-hit != 'true'
         shell: pwsh
         run: |
-          git clone --depth 1 --branch $env:WX_VERSION https://github.com/wxWidgets/wxWidgets.git $env:WXWIN
+          git clone --depth 1 --branch $env:WX_VERSION --recurse-submodules --shallow-submodules https://github.com/wxWidgets/wxWidgets.git $env:WXWIN
 
       - name: Build wxWidgets Debug x64 static libraries
         if: steps.cache-wxwidgets.outputs.cache-hit != 'true'
