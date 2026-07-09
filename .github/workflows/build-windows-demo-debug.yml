@@ -16,7 +16,7 @@ jobs:
     runs-on: windows-2022
 
     env:
-      WX_VERSION: v3.2.2
+      WX_VERSION: v3.2.11
       WXWIN: ${{ github.workspace }}\_deps\wxWidgets
       wxWidgets: ${{ github.workspace }}\_deps\wxWidgets
       wxDir: ${{ github.workspace }}\_deps\wxWidgets
