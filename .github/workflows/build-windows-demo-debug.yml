@@ -64,13 +64,16 @@ jobs:
       - name: Build wxMathPlot demo Debug x64
         shell: pwsh
         run: |
-          msbuild "$env:SOLUTION" `
-            /m `
-            /p:Configuration=$env:CONFIGURATION `
-            /p:Platform=$env:PLATFORM `
-            /p:PlatformToolset=v143 `
-            "/flp:logfile=artifacts\logs\wxmathplot-msbuild.log;verbosity=diagnostic": `
-            /bl:artifacts\logs\wxmathplot-msbuild.binlog
+          $args = @(
+            "$env:SOLUTION",
+            "/m",
+            "/p:Configuration=$env:CONFIGURATION",
+            "/p:Platform=$env:PLATFORM",
+            "/p:PlatformToolset=v143",
+            "/flp:logfile=artifacts\logs\wxmathplot-msbuild.log;verbosity=diagnostic",
+            "/bl:artifacts\logs\wxmathplot-msbuild.binlog"
+          )
+          msbuild @args
 
       - name: Collect executable
         if: success()
