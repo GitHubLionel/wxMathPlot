@@ -69,7 +69,7 @@ jobs:
             /p:Configuration=$env:CONFIGURATION `
             /p:Platform=$env:PLATFORM `
             /p:PlatformToolset=v143 `
-            /flp:logfile=artifacts\logs\wxmathplot-msbuild.log;verbosity=diagnostic `
+            "/flp:logfile=artifacts\logs\wxmathplot-msbuild.log;verbosity=diagnostic": `
             /bl:artifacts\logs\wxmathplot-msbuild.binlog
 
       - name: Collect executable
