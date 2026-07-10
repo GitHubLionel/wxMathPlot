@@ -19,7 +19,6 @@ jobs:
       WX_VERSION: v3.2.11
       WXWIN: ${{ github.workspace }}\_deps\wxWidgets
       wxWidgets: ${{ github.workspace }}\_deps\wxWidgets
-      wxDir: ${{ github.workspace }}\_deps\wxWidgets
       SOLUTION: MathPlotDemo\wxPlotDemo_wxFormBuilder_Windows.sln
       CONFIGURATION: Debug
       PLATFORM: x64
