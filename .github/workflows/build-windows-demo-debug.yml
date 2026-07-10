@@ -102,6 +102,14 @@ jobs:
             Copy-Item $pdb "artifacts\bin\"
           }
 
+          $gridmap = Join-Path $env:GITHUB_WORKSPACE "MathPlotDemo\gridmap.png"
+
+          if (-not (Test-Path $gridmap)) {
+            throw "Required runtime file gridmap.png was not found at $gridmap."
+          }
+
+          Copy-Item $gridmap "artifacts\bin\"
+
           "Executable: $($exe.FullName)" |
             Tee-Object -FilePath "artifacts\logs\build-output.txt"
 
