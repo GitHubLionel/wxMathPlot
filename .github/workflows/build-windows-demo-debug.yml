@@ -1,0 +1,108 @@
+name: Build Windows Demo (wxFormbuilder version) Debug
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-windows-demo-debug:
+    name: Build Debug x64 demo
+    runs-on: windows-2022
+
+    env:
+      WX_VERSION: v3.2.11
+      WXWIN: ${{ github.workspace }}\_deps\wxWidgets
+      wxWidgets: ${{ github.workspace }}\_deps\wxWidgets
+      SOLUTION: MathPlotDemo\wxPlotDemo_wxFormBuilder_Windows.sln
+      CONFIGURATION: Debug
+      PLATFORM: x64
+
+    steps:
+      - name: Checkout wxMathPlot
+        uses: actions/checkout@v4
+
+      - name: Configure MSBuild
+        uses: microsoft/setup-msbuild@v2
+        with:
+          vs-version: '[17.0,18.0)'
+
+      - name: Prepare artifact directories
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force artifacts | Out-Null
+          New-Item -ItemType Directory -Force artifacts\logs | Out-Null
+          New-Item -ItemType Directory -Force artifacts\bin | Out-Null
+
+      - name: Cache wxWidgets Debug x64 build
+        id: cache-wxwidgets
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.WXWIN }}
+          key: wxwidgets-windows-2022-${{ env.WX_VERSION }}-vc143-debug-x64-makefile-vc-submodules-v1
+
+      - name: Checkout wxWidgets
+        if: steps.cache-wxwidgets.outputs.cache-hit != 'true'
+        shell: pwsh
+        run: |
+          git clone --depth 1 --branch $env:WX_VERSION --recurse-submodules --shallow-submodules https://github.com/wxWidgets/wxWidgets.git $env:WXWIN
+
+      - name: Build wxWidgets Debug x64 static libraries
+        if: steps.cache-wxwidgets.outputs.cache-hit != 'true'
+        shell: cmd
+        run: |
+          call "%ProgramFiles%\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+          cd /d "%WXWIN%\build\msw"
+          nmake /f makefile.vc BUILD=debug SHARED=0 TARGET_CPU=X64 > "%GITHUB_WORKSPACE%\artifacts\logs\wxwidgets-nmake.log" 2>&1
+
+      - name: Build wxMathPlot demo Debug x64
+        shell: pwsh
+        run: |
+          $args = @(
+            "$env:SOLUTION",
+            "/m",
+            "/p:Configuration=$env:CONFIGURATION",
+            "/p:Platform=$env:PLATFORM",
+            "/p:PlatformToolset=v143",
+            "/flp:logfile=artifacts\logs\wxmathplot-msbuild.log;verbosity=diagnostic",
+            "/bl:artifacts\logs\wxmathplot-msbuild.binlog"
+          )
+          msbuild @args
+
+      - name: Collect executable
+        if: success()
+        shell: pwsh
+        run: |
+          $exe = Get-ChildItem -Recurse -Filter "wxPlotDemo_wxFormBuilder_Windows.exe" | Select-Object -First 1
+
+          if (-not $exe) {
+            Write-Error "Build succeeded, but wxPlotDemo_wxFormBuilder_Windows.exe was not found."
+          }
+
+          Copy-Item $exe.FullName artifacts\bin\
+
+          $pdb = [System.IO.Path]::ChangeExtension($exe.FullName, ".pdb")
+          if (Test-Path $pdb) {
+            Copy-Item $pdb artifacts\bin\
+          }
+
+          "Executable: $($exe.FullName)" | Tee-Object -FilePath artifacts\logs\build-output.txt
+
+      - name: Upload executable artifact
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: wxMathPlot-Windows-Demo-Debug-x64
+          path: artifacts/bin/*
+
+      - name: Upload build logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: wxMathPlot-Windows-Demo-Debug-x64-build-logs
+          path: artifacts/logs/*

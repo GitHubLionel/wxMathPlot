@@ -153,7 +153,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>MP_ENABLE_NAMESPACE;MP_ENABLE_CONFIG;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(wxDir)/include;$(wxDir)/interface;../mathplot;../mathplotConfig;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(wxWidgets)/include;$(wxWidgets)/interface;../mathplot;../wxFormBuilder;$(wxWidgets)/lib/vc_x64_lib/mswu;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions>/Zc:__cplusplus</AdditionalOptions>
     </ClCompile>
