@@ -666,14 +666,19 @@ void MathPlotDemoFrame::OnbMovingObjectClick(wxCommandEvent &WXUNUSED(event))
 {
   CleanPlot();
 
-  mpBitmapLayer* bmpLayer;
-  mPlot->AddLayer(bmpLayer = new mpBitmapLayer(), false);
+  if (wxFileExists("./gridmap.png"))
+  {
+    mpBitmapLayer* bmpLayer;
+    mPlot->AddLayer(bmpLayer = new mpBitmapLayer(), false);
 
-  wxImage bmp;
-  ::wxInitAllImageHandlers();
-  bmp.LoadFile(wxT("./gridmap.png"), wxBITMAP_TYPE_PNG);
-  bmp.SetMaskColour(0, 0, 0);
-  bmpLayer->SetBitmap(bmp, -40, -40, 120, 120);
+    wxImage bmp;
+    ::wxInitAllImageHandlers();
+    bmp.LoadFile(wxT("./gridmap.png"), wxBITMAP_TYPE_PNG);
+    bmp.SetMaskColour(0, 0, 0);
+    bmpLayer->SetBitmap(bmp, -40, -40, 120, 120);
+  }
+  else
+    new wxTipWindow(this, "Please copy the image 'gridmap.png' to the executable's directory.", 500);
 
   mPlot->AddLayer(new mpCovarianceEllipse(0.4, 0.4, 0.2, 2, 32, wxT("Cov1")), false);
   mPlot->AddLayer(new mpCovarianceEllipse(0.2, 0.2, -0.1, 2, 32, wxT("Cov2")), false);
