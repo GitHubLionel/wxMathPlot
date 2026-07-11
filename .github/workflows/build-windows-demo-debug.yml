@@ -129,28 +129,21 @@ jobs:
         run: |
           $sourceExe = Join-Path `
             $env:GITHUB_WORKSPACE `
-            "MathPlotDemo\x64\Debug\wxPlotDemo_wxFormBuilder_Windows.exe"
+            "MathPlotDemo\x64\Debug\wxPlotDemo_wxFormBuilder_Windows_Debug.exe"
 
           if (-not (Test-Path $sourceExe)) {
             throw "Debug executable was not found at $sourceExe."
           }
 
-          $destinationExe = Join-Path `
-            $env:GITHUB_WORKSPACE `
-            "artifacts\bin-debug\wxPlotDemo_wxFormBuilder_Windows_Debug.exe"
-
-          Copy-Item $sourceExe $destinationExe
+          Copy-Item $sourceExe "artifacts\bin-debug\"
 
           $sourcePdb = [System.IO.Path]::ChangeExtension($sourceExe, ".pdb")
-          $destinationPdb = Join-Path `
-            $env:GITHUB_WORKSPACE `
-            "artifacts\bin-debug\wxPlotDemo_wxFormBuilder_Windows_Debug.pdb"
 
-          if (Test-Path $sourcePdb) {
-            Copy-Item $sourcePdb $destinationPdb
-          } else {
-            Write-Warning "Debug PDB was not found at $sourcePdb."
+          if (-not (Test-Path $sourcePdb)) {
+            throw "Debug PDB was not found at $sourcePdb."
           }
+
+          Copy-Item $sourcePdb "artifacts\bin-debug\"
 
           $gridmap = Join-Path `
             $env:GITHUB_WORKSPACE `
