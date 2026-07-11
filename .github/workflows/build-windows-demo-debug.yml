@@ -1,4 +1,4 @@
-name: Build Windows Demo (wxFormbuilder version) Debug
+name: Build Windows Demo (wxFormbuilder Debug version). Also build and publish selected version of wxWidgets library (debug).
 
 on:
   push:
@@ -50,7 +50,13 @@ jobs:
         if: steps.cache-wxwidgets.outputs.cache-hit != 'true'
         shell: pwsh
         run: |
-          git clone --depth 1 --branch $env:WX_VERSION --recurse-submodules --shallow-submodules https://github.com/wxWidgets/wxWidgets.git $env:WXWIN
+          git clone `
+            --depth 1 `
+            --branch $env:WX_VERSION `
+            --recurse-submodules `
+            --shallow-submodules `
+            https://github.com/wxWidgets/wxWidgets.git `
+            $env:WXWIN
 
       - name: Build wxWidgets Debug x64 static libraries
         if: steps.cache-wxwidgets.outputs.cache-hit != 'true'
@@ -72,26 +78,151 @@ jobs:
             "/flp:logfile=artifacts\logs\wxmathplot-msbuild.log;verbosity=diagnostic",
             "/bl:artifacts\logs\wxmathplot-msbuild.binlog"
           )
+
           msbuild @args
 
       - name: Collect executable
         if: success()
         shell: pwsh
         run: |
-          $exe = Get-ChildItem -Recurse -Filter "wxPlotDemo_wxFormBuilder_Windows.exe" | Select-Object -First 1
+          $exe = Get-ChildItem `
+            -Path "$env:GITHUB_WORKSPACE\MathPlotDemo" `
+            -Recurse `
+            -Filter "wxPlotDemo_wxFormBuilder_Windows.exe" |
+            Select-Object -First 1
 
           if (-not $exe) {
-            Write-Error "Build succeeded, but wxPlotDemo_wxFormBuilder_Windows.exe was not found."
+            throw "Build succeeded, but wxPlotDemo_wxFormBuilder_Windows.exe was not found."
           }
 
-          Copy-Item $exe.FullName artifacts\bin\
+          Copy-Item $exe.FullName "artifacts\bin\"
 
           $pdb = [System.IO.Path]::ChangeExtension($exe.FullName, ".pdb")
           if (Test-Path $pdb) {
-            Copy-Item $pdb artifacts\bin\
+            Copy-Item $pdb "artifacts\bin\"
           }
 
-          "Executable: $($exe.FullName)" | Tee-Object -FilePath artifacts\logs\build-output.txt
+          $gridmap = Join-Path $env:GITHUB_WORKSPACE "MathPlotDemo\gridmap.png"
+
+          if (-not (Test-Path $gridmap)) {
+            throw "Required runtime file gridmap.png was not found at $gridmap."
+          }
+
+          Copy-Item $gridmap "artifacts\bin\"
+
+          "Executable: $($exe.FullName)" |
+            Tee-Object -FilePath "artifacts\logs\build-output.txt"
+
+      - name: Package wxWidgets source, libraries, and PDBs
+        if: success()
+        shell: pwsh
+        run: |
+          $packageRoot = Join-Path $env:GITHUB_WORKSPACE "artifacts\wxWidgets"
+
+          if (Test-Path $packageRoot) {
+            Remove-Item $packageRoot -Recurse -Force
+          }
+
+          New-Item -ItemType Directory -Force $packageRoot | Out-Null
+
+          # Copy the complete wxWidgets tree, including:
+          #   - source files
+          #   - public and generated headers
+          #   - built static libraries
+          #   - all PDB files
+          #
+          # Exclude Git metadata and compiler/linker intermediate files.
+          & robocopy.exe `
+            $env:WXWIN `
+            $packageRoot `
+            /E `
+            /XD `
+              ".git" `
+              "*.tlog" `
+            /XF `
+              "*.obj" `
+              "*.pch" `
+              "*.idb" `
+              "*.ilk" `
+              "*.res" `
+              "*.exp" `
+              "*.iobj" `
+              "*.ipdb" `
+              "*.lastbuildstate" `
+              "*.log" `
+            /R:2 `
+            /W:2 `
+            /NFL `
+            /NDL `
+            /NJH `
+            /NJS `
+            /NP
+
+          $robocopyExitCode = $LASTEXITCODE
+
+          # Robocopy exit codes 0 through 7 indicate success.
+          if ($robocopyExitCode -ge 8) {
+            throw "wxWidgets packaging failed: robocopy exit code $robocopyExitCode."
+          }
+
+          # Prevent a successful nonzero robocopy result from failing the step.
+          $global:LASTEXITCODE = 0
+
+          $libFiles = Get-ChildItem `
+            -Path $packageRoot `
+            -Recurse `
+            -Filter "*.lib"
+
+          if (-not $libFiles) {
+            throw "The wxWidgets package contains no library files."
+          }
+
+          $setupHeader = Get-ChildItem `
+            -Path $packageRoot `
+            -Recurse `
+            -Filter "setup.h" |
+            Where-Object {
+              $_.FullName -match "\\lib\\vc_x64_lib\\mswud\\wx\\setup\.h$"
+            } |
+            Select-Object -First 1
+
+          if (-not $setupHeader) {
+            throw "The generated Debug x64 wxWidgets setup.h was not found in the package."
+          }
+
+          $objectFiles = Get-ChildItem `
+            -Path $packageRoot `
+            -Recurse `
+            -Filter "*.obj" `
+            -ErrorAction SilentlyContinue
+
+          if ($objectFiles) {
+            throw "The wxWidgets package unexpectedly contains .obj files."
+          }
+
+          $pdbCount = @(
+            Get-ChildItem `
+              -Path $packageRoot `
+              -Recurse `
+              -Filter "*.pdb" `
+              -ErrorAction SilentlyContinue
+          ).Count
+
+          $libCount = @($libFiles).Count
+
+          @(
+            "wxWidgets version: $env:WX_VERSION"
+            "Configuration: Debug"
+            "Platform: x64"
+            "Toolset: Visual Studio 2022 v143"
+            "Static build: yes"
+            "Library files: $libCount"
+            "PDB files: $pdbCount"
+            "Generated setup.h: $($setupHeader.FullName.Substring($packageRoot.Length + 1))"
+            "Excluded: .git, OBJ, PCH, IDB, ILK, RES, EXP, IOBJ, IPDB, TLOG and other intermediate files"
+          ) | Set-Content `
+                -Path "$packageRoot\WXWIDGETS-PACKAGE-INFO.txt" `
+                -Encoding UTF8
 
       - name: Upload executable artifact
         if: success()
@@ -99,6 +230,17 @@ jobs:
         with:
           name: wxMathPlot-Windows-Demo-Debug-x64
           path: artifacts/bin/*
+          if-no-files-found: error
+
+      - name: Upload wxWidgets source, libraries, and PDBs
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: wxWidgets-${{ env.WX_VERSION }}-Debug-x64-v143
+          path: artifacts/wxWidgets
+          retention-days: 60
+          if-no-files-found: error
+          include-hidden-files: true
 
       - name: Upload build logs
         if: always()
@@ -106,3 +248,4 @@ jobs:
         with:
           name: wxMathPlot-Windows-Demo-Debug-x64-build-logs
           path: artifacts/logs/*
+          if-no-files-found: warn
