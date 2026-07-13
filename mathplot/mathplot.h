@@ -1,12 +1,12 @@
 /////////////////////////////////////////////////////////////////////////////
-// Name:            mathplot.cpp
+// Name:            mathplot.h
 // Purpose:         Framework for plotting in wxWindows
 // Original Author: David Schalig
 // Maintainer:      Davide Rondini
 // Contributors:    Jose Luis Blanco, Val Greene, Lionel Reynaud, Dave Nadler, MortenMacFly,
 //                  Oskar Waldemarsson (for multi Y axis and corrections)
 // Created:         21/07/2003
-// Last edit:       01/07/2026
+// Last edit:       11/07/2026
 // Copyright:       (c) David Schalig, Davide Rondini
 // Licence:         wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -47,20 +47,20 @@
  @section author Author and license
  wxMathPlot is published under the terms of the wxWindow license.<br>
  The original author is David Schalig <mrhill@users.sourceforge.net>.<br>
- From June 2007 the project is maintained by Davide Rondini <cdron77@users.sourceforge.net>.<br>
- Authors can be contacted via the wxMathPlot's homepage at
- https://sourceforge.net/projects/wxmathplot, or <br>
- https://github.com/GitHubLionel/wxMathPlot <br>
+ From June 2007 ~ 2023 the project was maintained by Davide Rondini <cdron77@users.sourceforge.net>.<br>
+ Original Authors possibly can be contacted via the original wxMathPlot's homepage at
+ https://sourceforge.net/projects/wxmathplot. <br>
+ Current maintainers can be contacted via https://github.com/GitHubLionel/wxMathPlot <br>
  Contributors:<br>
  Jose Luis Blanco, Val Greene, Lionel Reynaud, Dave Nadler, MortenMacFly, Oskar Waldemarsson<br>
 
  @section MP_ENABLE_CONFIG Optional configuration window
  Define the preprocessor symbol `MP_ENABLE_CONFIG` to have a configuration window. In this dialog box window,
- the user can modify most of the plot properties like title, legend, scale, ...
+ the user can modify most plot properties like displayed series, title, legend, scale, ...
  @sa MathPlotConfigDialog
 
  @section MP_ENABLE_NAMESPACE Optional namespace
- Define the preprocessor symbol `MP_ENABLE_NAMESPACE` to have a MathPlot namespace
+ Define the preprocessor symbol `MP_ENABLE_NAMESPACE` to place all wxMathPlot components within the `namespace MathPlot`.
 
  @section MP_USER_INCLUDE Optional user include configuration hook
  Define the preprocessor symbol `MP_USER_INCLUDE` to the base name of a
@@ -73,8 +73,8 @@
  ...causes mathplot.h to include `MyIncludeFile.h`.
 
  @section C++ Version Compatibility
- Mathplot Version 2.1 is last version compatible with C++ 14
- Later versions will require at least C++17 because of the use of 'optional' library and 'structured binding' feature
+ Mathplot Version 2.1 was last version compatible with C++ 14
+ This version requires at least C++17 because of the use of 'optional' library and 'structured binding' feature
 
  */
 
@@ -250,7 +250,7 @@ struct mpRect
         wxCoord tab[4];  //!< Alternate array-style access to the rectangle coordinates.
     };
     /**
-     * Create rectangular area defined by start and end points
+     * Create standard wxWidgets rectangle defined by this object's start and end points
      * @return wxRect object
      */
     wxRect GetRect(void)
