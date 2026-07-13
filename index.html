@@ -60,18 +60,18 @@ Coding conventions</h1>
 Author and license</h1>
 <p>wxMathPlot is published under the terms of the wxWindow license.<br  />
  The original author is David Schalig <a href="#" onclick="location.href='mai'+'lto:'+'mrh'+'il'+'l@u'+'se'+'rs.'+'so'+'urc'+'ef'+'org'+'e.'+'net'; return false;">mrhil<span class="obfuscator">.nosp@m.</span>l@us<span class="obfuscator">.nosp@m.</span>ers.s<span class="obfuscator">.nosp@m.</span>ourc<span class="obfuscator">.nosp@m.</span>eforg<span class="obfuscator">.nosp@m.</span>e.ne<span class="obfuscator">.nosp@m.</span>t</a>.<br  />
- From June 2007 the project is maintained by Davide Rondini <a href="#" onclick="location.href='mai'+'lto:'+'cdr'+'on'+'77@'+'us'+'ers'+'.s'+'our'+'ce'+'for'+'ge'+'.ne'+'t'; return false;">cdron<span class="obfuscator">.nosp@m.</span>77@u<span class="obfuscator">.nosp@m.</span>sers.<span class="obfuscator">.nosp@m.</span>sour<span class="obfuscator">.nosp@m.</span>cefor<span class="obfuscator">.nosp@m.</span>ge.n<span class="obfuscator">.nosp@m.</span>et</a>.<br  />
- Authors can be contacted via the wxMathPlot's homepage at <a href="https://sourceforge.net/projects/wxmathplot">https://sourceforge.net/projects/wxmathplot</a>, or <br  />
- <a href="https://github.com/GitHubLionel/wxMathPlot">https://github.com/GitHubLionel/wxMathPlot</a> <br  />
+ From June 2007 ~ 2023 the project was maintained by Davide Rondini <a href="#" onclick="location.href='mai'+'lto:'+'cdr'+'on'+'77@'+'us'+'ers'+'.s'+'our'+'ce'+'for'+'ge'+'.ne'+'t'; return false;">cdron<span class="obfuscator">.nosp@m.</span>77@u<span class="obfuscator">.nosp@m.</span>sers.<span class="obfuscator">.nosp@m.</span>sour<span class="obfuscator">.nosp@m.</span>cefor<span class="obfuscator">.nosp@m.</span>ge.n<span class="obfuscator">.nosp@m.</span>et</a>.<br  />
+ Original Authors possibly can be contacted via the original wxMathPlot's homepage at <a href="https://sourceforge.net/projects/wxmathplot">https://sourceforge.net/projects/wxmathplot</a>. <br  />
+ Current maintainers can be contacted via <a href="https://github.com/GitHubLionel/wxMathPlot">https://github.com/GitHubLionel/wxMathPlot</a> <br  />
  Contributors:<br  />
  Jose Luis Blanco, Val Greene, Lionel Reynaud, Dave Nadler, MortenMacFly, Oskar Waldemarsson<br  />
 </p>
 <h1><a class="anchor" id="MP_ENABLE_CONFIG"></a>
 Optional configuration window</h1>
-<p>Define the preprocessor symbol <code>MP_ENABLE_CONFIG</code> to have a configuration window. In this dialog box window, the user can modify most of the plot properties like title, legend, scale, ... </p><dl class="section see"><dt>See also</dt><dd><a class="el" href="class_math_plot_config_dialog.html" title="Dialog box for configuring the plot&#39;s layer objects In this dialog, you can configure:">MathPlotConfigDialog</a></dd></dl>
+<p>Define the preprocessor symbol <code>MP_ENABLE_CONFIG</code> to have a configuration window. In this dialog box window, the user can modify most plot properties like displayed series, title, legend, scale, ... </p><dl class="section see"><dt>See also</dt><dd><a class="el" href="class_math_plot_config_dialog.html" title="Dialog box for configuring the plot&#39;s layer objects In this dialog, you can configure:">MathPlotConfigDialog</a></dd></dl>
 <h1><a class="anchor" id="MP_ENABLE_NAMESPACE"></a>
 Optional namespace</h1>
-<p>Define the preprocessor symbol <code>MP_ENABLE_NAMESPACE</code> to have a MathPlot namespace</p>
+<p>Define the preprocessor symbol <code>MP_ENABLE_NAMESPACE</code> to place all wxMathPlot components within the <code>namespace MathPlot</code>.</p>
 <h1><a class="anchor" id="MP_USER_INCLUDE"></a>
 Optional user include configuration hook</h1>
 <p>Define the preprocessor symbol <code>MP_USER_INCLUDE</code> to the base name of a header, without the <code>.h</code> suffix, to have <a class="el" href="mathplot_8h.html">mathplot.h</a> include your custom header. This can be used for custom internationalization support or other project-specific integration. For example: </p><div class="fragment"><div class="line"><span class="preprocessor">#define MP_USER_INCLUDE MyIncludeFile</span></div>
