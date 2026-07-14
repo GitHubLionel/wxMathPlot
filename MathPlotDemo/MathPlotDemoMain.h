@@ -21,6 +21,7 @@
 #include <wx/sizer.h>
 #include <wx/timer.h>
 //*)
+#include <wx/overlay.h> // For Free line demo
 
 #if defined(MP_ENABLE_NAMESPACE) || defined(ENABLE_MP_NAMESPACE)
   using namespace MathPlot;
@@ -87,6 +88,7 @@ class MathPlotDemoFrame: public wxFrame
         void CleanPlot(void);
 
         // Free Line part
+        wxOverlay m_overlay;
         bool isDragging = false;          // Track if the user is dragging the mouse
         mpFXYVector* CurrentPolyline = NULL;
         void OnUserMouseAction(void *Sender, wxMouseEvent &event, bool &cancel);

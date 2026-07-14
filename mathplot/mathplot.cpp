@@ -155,13 +155,6 @@ static void FillI18NString()
   MESS_CLIPFAIL = _("Failed to copy image to clipboard");
 }
 
-// Memory leak debugging
-#ifdef MP_ENABLE_DEBUG
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#endif // _DEBUG
-#endif // MP_ENABLE_DEBUG
-
 // Legend margins
 #define MARGIN_LEGEND 5 // The margin around the legend (the name of the function) in pixel
 #define LEGEND_LINEWIDTH 12 // The size of the decoration in front of the legend (line or square)

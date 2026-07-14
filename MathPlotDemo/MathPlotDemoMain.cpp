@@ -19,7 +19,6 @@
 #include <wx/string.h>
 //*)
 
-#include <wx/overlay.h>
 #include <wx/tipwin.h>
 #include "Sample.h"
 
@@ -36,7 +35,7 @@ wxString wxBuildInfo(wxBuildInfoFormat format)
     #elif defined(__UNIX__)
         wxbuild << _T(" Linux");
     #endif
-    #if wxUSE_UNICODE
+    #ifdef wxUSE_UNICODE
         wxbuild << _T("-Unicode build");
     #else
         wxbuild << _T("-ANSI build");
@@ -444,25 +443,22 @@ void MathPlotDemoFrame::OnbImageClick(wxCommandEvent &WXUNUSED(event))
 
 void MathPlotDemoFrame::OnUserMouseAction(void *Sender, wxMouseEvent &event, bool &cancel)
 {
-  static wxOverlay m_overlay;
   #if wxCHECK_VERSION(3, 3, 0)
   m_overlay.SetOpacity(-1);
   #endif
 
-  // Get the mouse position relative to the mpWindow
-  wxPoint mousePosition = event.GetPosition();
-
   // Cast Sender to mpWindow and convert the coordinates
   mpWindow* plotWindow = (mpWindow*)Sender;
 
-  static wxPoint currentPoint;
+  // Get the mouse position relative to the mpWindow
+  wxPoint mousePosition = event.GetPosition();
+  // Keep the last mouse position (last point plotted)
   static wxPoint lastPoint;
-  double plotX, plotY;
-  int x = mousePosition.x;
-  int y = mousePosition.y;
 
-  plotX = plotWindow->p2x(mousePosition.x);
-  plotY = plotWindow->p2y(mousePosition.y, 0);  // Use 1st y-axis
+  double plotX = plotWindow->p2x(mousePosition.x);
+  double plotY = plotWindow->p2y(mousePosition.y, 0);  // Use 1st y-axis
+
+  static unsigned int colorIndex = 0;
 
   cancel = false;
   // Left mouse button down
@@ -472,7 +468,7 @@ void MathPlotDemoFrame::OnUserMouseAction(void *Sender, wxMouseEvent &event, boo
     isDragging = true;
 
     CurrentPolyline = new mpFXYVector("New polyline");
-    wxColour random_color = wxIndexColour(rand() * 20 / RAND_MAX);
+    wxColour random_color = wxIndexColour(colorIndex++);
     CurrentPolyline->SetPen(wxPen(random_color, 2));
     CurrentPolyline->SetContinuity(true);
 
@@ -481,7 +477,7 @@ void MathPlotDemoFrame::OnUserMouseAction(void *Sender, wxMouseEvent &event, boo
     // Add point to Polyline but not plot it
     CurrentPolyline->AddData(plotX, plotY, false);
 
-    lastPoint = wxPoint(x, y);
+    lastPoint = mousePosition;
     cancel = true;
   }
   // Mouse dragging with left button held down
@@ -490,18 +486,23 @@ void MathPlotDemoFrame::OnUserMouseAction(void *Sender, wxMouseEvent &event, boo
     {
       if (isDragging)
       {
-        wxClientDC dc(plotWindow);
+      	// Add point to Polyline but not plot it
+      	CurrentPolyline->AddData(plotX, plotY, false);
+
+#if wxCHECK_VERSION(3, 3, 0)
+      	wxOverlayDC dc(m_overlay, plotWindow);
+#else
+      	wxClientDC dc(plotWindow);
         PrepareDC(dc);
         wxDCOverlay overlay(m_overlay, &dc);
+#endif
 
         // Only draw the last segment
-        currentPoint = wxPoint(x, y);
         dc.SetPen(wxPen(*wxLIGHT_GREY, 2));
-        dc.DrawLine(lastPoint, currentPoint);
-        lastPoint = currentPoint;
 
-        // Add point to Polyline but not plot it
-        CurrentPolyline->AddData(plotX, plotY, false);
+        dc.DrawLine(lastPoint, mousePosition);
+        lastPoint = mousePosition;
+
         cancel = true;
       }
     }

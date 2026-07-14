@@ -148,7 +148,7 @@ typedef std::optional<int> mpOptional_int;
 
 #ifdef MP_ENABLE_DEBUG
   // For memory leak debug
-  #ifdef _WINDOWS
+  #ifdef _WIN32
     #ifdef _DEBUG
       #include <crtdbg.h>
       #define DEBUG_NEW new(_NORMAL_BLOCK ,__FILE__, __LINE__)
@@ -5221,6 +5221,15 @@ class WXDLLIMPEXP_MATHPLOT wxIndexColour: public wxColour
      */
     wxIndexColour(unsigned int id)
     {
+#ifdef _WIN32
+      auto GetRandomColor = []() {
+        return (rand() * 255) / RAND_MAX;
+      };
+#else
+      auto GetRandomColor = []() {
+        return (random() * 255) / RAND_MAX;
+      };
+#endif
       switch (id)
       {
         case 0:
@@ -5251,8 +5260,7 @@ class WXDLLIMPEXP_MATHPLOT wxIndexColour: public wxColour
           this->Set(128, 128, 0);
           break;  // Olive
         default:
-          this->Set((ChannelType)((rand() * 255) / RAND_MAX), (ChannelType)((rand() * 255) / RAND_MAX),
-              (ChannelType)((rand() * 255) / RAND_MAX));
+          this->Set((ChannelType) (GetRandomColor()), (ChannelType) (GetRandomColor()), (ChannelType) (GetRandomColor()));
       }
     }
 };
