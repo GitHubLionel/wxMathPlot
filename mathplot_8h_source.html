@@ -124,7 +124,7 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span> </div>
 <div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span><span class="preprocessor">#ifdef MP_ENABLE_DEBUG</span></div>
 <div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>  <span class="comment">// For memory leak debug</span></div>
-<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span><span class="preprocessor">  #ifdef _WINDOWS</span></div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span><span class="preprocessor">  #ifdef _WIN32</span></div>
 <div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span><span class="preprocessor">    #ifdef _DEBUG</span></div>
 <div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span><span class="preprocessor">      #include &lt;crtdbg.h&gt;</span></div>
 <div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span><span class="preprocessor">      #define DEBUG_NEW new(_NORMAL_BLOCK ,__FILE__, __LINE__)</span></div>
@@ -4041,50 +4041,58 @@ $(document).ready(function() { init_codefold(0); });
 <div class="foldopen" id="foldopen05222" data-start="{" data-end="}">
 <div class="line"><a id="l05222" name="l05222"></a><span class="lineno"><a class="line" href="classwx_index_colour.html#ad52e47f475a9a6f24311217159c0f019"> 5222</a></span>    <a class="code hl_function" href="classwx_index_colour.html#ad52e47f475a9a6f24311217159c0f019">wxIndexColour</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <span class="keywordtype">id</span>)</div>
 <div class="line"><a id="l05223" name="l05223"></a><span class="lineno"> 5223</span>    {</div>
-<div class="line"><a id="l05224" name="l05224"></a><span class="lineno"> 5224</span>      <span class="keywordflow">switch</span> (<span class="keywordtype">id</span>)</div>
-<div class="line"><a id="l05225" name="l05225"></a><span class="lineno"> 5225</span>      {</div>
-<div class="line"><a id="l05226" name="l05226"></a><span class="lineno"> 5226</span>        <span class="keywordflow">case</span> 0:</div>
-<div class="line"><a id="l05227" name="l05227"></a><span class="lineno"> 5227</span>          this-&gt;Set(0, 0, 255);</div>
-<div class="line"><a id="l05228" name="l05228"></a><span class="lineno"> 5228</span>          <span class="keywordflow">break</span>;  <span class="comment">// Blue</span></div>
-<div class="line"><a id="l05229" name="l05229"></a><span class="lineno"> 5229</span>        <span class="keywordflow">case</span> 1:</div>
-<div class="line"><a id="l05230" name="l05230"></a><span class="lineno"> 5230</span>          this-&gt;Set(255, 0, 0);</div>
-<div class="line"><a id="l05231" name="l05231"></a><span class="lineno"> 5231</span>          <span class="keywordflow">break</span>;  <span class="comment">// Red</span></div>
-<div class="line"><a id="l05232" name="l05232"></a><span class="lineno"> 5232</span>        <span class="keywordflow">case</span> 2:</div>
-<div class="line"><a id="l05233" name="l05233"></a><span class="lineno"> 5233</span>          this-&gt;Set(0, 128, 0);</div>
-<div class="line"><a id="l05234" name="l05234"></a><span class="lineno"> 5234</span>          <span class="keywordflow">break</span>;  <span class="comment">// Green</span></div>
-<div class="line"><a id="l05235" name="l05235"></a><span class="lineno"> 5235</span>        <span class="keywordflow">case</span> 3:</div>
-<div class="line"><a id="l05236" name="l05236"></a><span class="lineno"> 5236</span>          this-&gt;Set(128, 0, 128);</div>
-<div class="line"><a id="l05237" name="l05237"></a><span class="lineno"> 5237</span>          <span class="keywordflow">break</span>;  <span class="comment">// Purple</span></div>
-<div class="line"><a id="l05238" name="l05238"></a><span class="lineno"> 5238</span>        <span class="keywordflow">case</span> 4:</div>
-<div class="line"><a id="l05239" name="l05239"></a><span class="lineno"> 5239</span>          this-&gt;Set(255, 255, 0);</div>
-<div class="line"><a id="l05240" name="l05240"></a><span class="lineno"> 5240</span>          <span class="keywordflow">break</span>;  <span class="comment">// Yellow</span></div>
-<div class="line"><a id="l05241" name="l05241"></a><span class="lineno"> 5241</span>        <span class="keywordflow">case</span> 5:</div>
-<div class="line"><a id="l05242" name="l05242"></a><span class="lineno"> 5242</span>          this-&gt;Set(255, 0, 255);</div>
-<div class="line"><a id="l05243" name="l05243"></a><span class="lineno"> 5243</span>          <span class="keywordflow">break</span>;  <span class="comment">// Fuchsia</span></div>
-<div class="line"><a id="l05244" name="l05244"></a><span class="lineno"> 5244</span>        <span class="keywordflow">case</span> 6:</div>
-<div class="line"><a id="l05245" name="l05245"></a><span class="lineno"> 5245</span>          this-&gt;Set(0, 255, 0);</div>
-<div class="line"><a id="l05246" name="l05246"></a><span class="lineno"> 5246</span>          <span class="keywordflow">break</span>;  <span class="comment">// Lime</span></div>
-<div class="line"><a id="l05247" name="l05247"></a><span class="lineno"> 5247</span>        <span class="keywordflow">case</span> 7:</div>
-<div class="line"><a id="l05248" name="l05248"></a><span class="lineno"> 5248</span>          this-&gt;Set(0, 255, 255);</div>
-<div class="line"><a id="l05249" name="l05249"></a><span class="lineno"> 5249</span>          <span class="keywordflow">break</span>;  <span class="comment">// Aqua/Cyan</span></div>
-<div class="line"><a id="l05250" name="l05250"></a><span class="lineno"> 5250</span>        <span class="keywordflow">case</span> 8:</div>
-<div class="line"><a id="l05251" name="l05251"></a><span class="lineno"> 5251</span>          this-&gt;Set(128, 128, 0);</div>
-<div class="line"><a id="l05252" name="l05252"></a><span class="lineno"> 5252</span>          <span class="keywordflow">break</span>;  <span class="comment">// Olive</span></div>
-<div class="line"><a id="l05253" name="l05253"></a><span class="lineno"> 5253</span>        <span class="keywordflow">default</span>:</div>
-<div class="line"><a id="l05254" name="l05254"></a><span class="lineno"> 5254</span>          this-&gt;Set((ChannelType)((rand() * 255) / RAND_MAX), (ChannelType)((rand() * 255) / RAND_MAX),</div>
-<div class="line"><a id="l05255" name="l05255"></a><span class="lineno"> 5255</span>              (ChannelType)((rand() * 255) / RAND_MAX));</div>
-<div class="line"><a id="l05256" name="l05256"></a><span class="lineno"> 5256</span>      }</div>
-<div class="line"><a id="l05257" name="l05257"></a><span class="lineno"> 5257</span>    }</div>
+<div class="line"><a id="l05224" name="l05224"></a><span class="lineno"> 5224</span><span class="preprocessor">#ifdef _WIN32</span></div>
+<div class="line"><a id="l05225" name="l05225"></a><span class="lineno"> 5225</span>      <span class="keyword">auto</span> GetRandomColor = []() {</div>
+<div class="line"><a id="l05226" name="l05226"></a><span class="lineno"> 5226</span>        <span class="keywordflow">return</span> (rand() * 255) / RAND_MAX;</div>
+<div class="line"><a id="l05227" name="l05227"></a><span class="lineno"> 5227</span>      };</div>
+<div class="line"><a id="l05228" name="l05228"></a><span class="lineno"> 5228</span><span class="preprocessor">#else</span></div>
+<div class="line"><a id="l05229" name="l05229"></a><span class="lineno"> 5229</span>      <span class="keyword">auto</span> GetRandomColor = []() {</div>
+<div class="line"><a id="l05230" name="l05230"></a><span class="lineno"> 5230</span>        <span class="keywordflow">return</span> (random() * 255) / RAND_MAX;</div>
+<div class="line"><a id="l05231" name="l05231"></a><span class="lineno"> 5231</span>      };</div>
+<div class="line"><a id="l05232" name="l05232"></a><span class="lineno"> 5232</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l05233" name="l05233"></a><span class="lineno"> 5233</span>      <span class="keywordflow">switch</span> (<span class="keywordtype">id</span>)</div>
+<div class="line"><a id="l05234" name="l05234"></a><span class="lineno"> 5234</span>      {</div>
+<div class="line"><a id="l05235" name="l05235"></a><span class="lineno"> 5235</span>        <span class="keywordflow">case</span> 0:</div>
+<div class="line"><a id="l05236" name="l05236"></a><span class="lineno"> 5236</span>          this-&gt;Set(0, 0, 255);</div>
+<div class="line"><a id="l05237" name="l05237"></a><span class="lineno"> 5237</span>          <span class="keywordflow">break</span>;  <span class="comment">// Blue</span></div>
+<div class="line"><a id="l05238" name="l05238"></a><span class="lineno"> 5238</span>        <span class="keywordflow">case</span> 1:</div>
+<div class="line"><a id="l05239" name="l05239"></a><span class="lineno"> 5239</span>          this-&gt;Set(255, 0, 0);</div>
+<div class="line"><a id="l05240" name="l05240"></a><span class="lineno"> 5240</span>          <span class="keywordflow">break</span>;  <span class="comment">// Red</span></div>
+<div class="line"><a id="l05241" name="l05241"></a><span class="lineno"> 5241</span>        <span class="keywordflow">case</span> 2:</div>
+<div class="line"><a id="l05242" name="l05242"></a><span class="lineno"> 5242</span>          this-&gt;Set(0, 128, 0);</div>
+<div class="line"><a id="l05243" name="l05243"></a><span class="lineno"> 5243</span>          <span class="keywordflow">break</span>;  <span class="comment">// Green</span></div>
+<div class="line"><a id="l05244" name="l05244"></a><span class="lineno"> 5244</span>        <span class="keywordflow">case</span> 3:</div>
+<div class="line"><a id="l05245" name="l05245"></a><span class="lineno"> 5245</span>          this-&gt;Set(128, 0, 128);</div>
+<div class="line"><a id="l05246" name="l05246"></a><span class="lineno"> 5246</span>          <span class="keywordflow">break</span>;  <span class="comment">// Purple</span></div>
+<div class="line"><a id="l05247" name="l05247"></a><span class="lineno"> 5247</span>        <span class="keywordflow">case</span> 4:</div>
+<div class="line"><a id="l05248" name="l05248"></a><span class="lineno"> 5248</span>          this-&gt;Set(255, 255, 0);</div>
+<div class="line"><a id="l05249" name="l05249"></a><span class="lineno"> 5249</span>          <span class="keywordflow">break</span>;  <span class="comment">// Yellow</span></div>
+<div class="line"><a id="l05250" name="l05250"></a><span class="lineno"> 5250</span>        <span class="keywordflow">case</span> 5:</div>
+<div class="line"><a id="l05251" name="l05251"></a><span class="lineno"> 5251</span>          this-&gt;Set(255, 0, 255);</div>
+<div class="line"><a id="l05252" name="l05252"></a><span class="lineno"> 5252</span>          <span class="keywordflow">break</span>;  <span class="comment">// Fuchsia</span></div>
+<div class="line"><a id="l05253" name="l05253"></a><span class="lineno"> 5253</span>        <span class="keywordflow">case</span> 6:</div>
+<div class="line"><a id="l05254" name="l05254"></a><span class="lineno"> 5254</span>          this-&gt;Set(0, 255, 0);</div>
+<div class="line"><a id="l05255" name="l05255"></a><span class="lineno"> 5255</span>          <span class="keywordflow">break</span>;  <span class="comment">// Lime</span></div>
+<div class="line"><a id="l05256" name="l05256"></a><span class="lineno"> 5256</span>        <span class="keywordflow">case</span> 7:</div>
+<div class="line"><a id="l05257" name="l05257"></a><span class="lineno"> 5257</span>          this-&gt;Set(0, 255, 255);</div>
+<div class="line"><a id="l05258" name="l05258"></a><span class="lineno"> 5258</span>          <span class="keywordflow">break</span>;  <span class="comment">// Aqua/Cyan</span></div>
+<div class="line"><a id="l05259" name="l05259"></a><span class="lineno"> 5259</span>        <span class="keywordflow">case</span> 8:</div>
+<div class="line"><a id="l05260" name="l05260"></a><span class="lineno"> 5260</span>          this-&gt;Set(128, 128, 0);</div>
+<div class="line"><a id="l05261" name="l05261"></a><span class="lineno"> 5261</span>          <span class="keywordflow">break</span>;  <span class="comment">// Olive</span></div>
+<div class="line"><a id="l05262" name="l05262"></a><span class="lineno"> 5262</span>        <span class="keywordflow">default</span>:</div>
+<div class="line"><a id="l05263" name="l05263"></a><span class="lineno"> 5263</span>          this-&gt;Set((ChannelType) (GetRandomColor()), (ChannelType) (GetRandomColor()), (ChannelType) (GetRandomColor()));</div>
+<div class="line"><a id="l05264" name="l05264"></a><span class="lineno"> 5264</span>      }</div>
+<div class="line"><a id="l05265" name="l05265"></a><span class="lineno"> 5265</span>    }</div>
 </div>
-<div class="line"><a id="l05258" name="l05258"></a><span class="lineno"> 5258</span>};</div>
+<div class="line"><a id="l05266" name="l05266"></a><span class="lineno"> 5266</span>};</div>
 </div>
-<div class="line"><a id="l05259" name="l05259"></a><span class="lineno"> 5259</span> </div>
-<div class="line"><a id="l05262" name="l05262"></a><span class="lineno"> 5262</span><span class="comment">// ---------------------------------------------------------------------</span></div>
-<div class="line"><a id="l05263" name="l05263"></a><span class="lineno"> 5263</span><span class="preprocessor">#if defined(MP_ENABLE_NAMESPACE) || defined(ENABLE_MP_NAMESPACE)</span></div>
-<div class="line"><a id="l05264" name="l05264"></a><span class="lineno"> 5264</span>  }<span class="comment">// namespace MathPlot</span></div>
-<div class="line"><a id="l05265" name="l05265"></a><span class="lineno"> 5265</span><span class="preprocessor">#endif </span><span class="comment">// MP_ENABLE_NAMESPACE</span></div>
-<div class="line"><a id="l05266" name="l05266"></a><span class="lineno"> 5266</span> </div>
-<div class="line"><a id="l05267" name="l05267"></a><span class="lineno"> 5267</span><span class="preprocessor">#endif </span><span class="comment">// MATHPLOT_H_INCLUDED</span></div>
+<div class="line"><a id="l05267" name="l05267"></a><span class="lineno"> 5267</span> </div>
+<div class="line"><a id="l05270" name="l05270"></a><span class="lineno"> 5270</span><span class="comment">// ---------------------------------------------------------------------</span></div>
+<div class="line"><a id="l05271" name="l05271"></a><span class="lineno"> 5271</span><span class="preprocessor">#if defined(MP_ENABLE_NAMESPACE) || defined(ENABLE_MP_NAMESPACE)</span></div>
+<div class="line"><a id="l05272" name="l05272"></a><span class="lineno"> 5272</span>  }<span class="comment">// namespace MathPlot</span></div>
+<div class="line"><a id="l05273" name="l05273"></a><span class="lineno"> 5273</span><span class="preprocessor">#endif </span><span class="comment">// MP_ENABLE_NAMESPACE</span></div>
+<div class="line"><a id="l05274" name="l05274"></a><span class="lineno"> 5274</span> </div>
+<div class="line"><a id="l05275" name="l05275"></a><span class="lineno"> 5275</span><span class="preprocessor">#endif </span><span class="comment">// MATHPLOT_H_INCLUDED</span></div>
 <div class="ttc" id="aclass_math_plot_config_dialog_html"><div class="ttname"><a href="class_math_plot_config_dialog.html">MathPlotConfigDialog</a></div><div class="ttdoc">Dialog box for configuring the plot's layer objects In this dialog, you can configure:</div><div class="ttdef"><b>Definition</b> MathPlotConfig.h:156</div></div>
 <div class="ttc" id="aclassmp_bar_chart_html"><div class="ttname"><a href="classmp_bar_chart.html">mpBarChart</a></div><div class="ttdoc">Layer for bar chart.</div><div class="ttdef"><b>Definition</b> mathplot.h:2540</div></div>
 <div class="ttc" id="aclassmp_bar_chart_html_a0350ff14ea89a7b4ad6f248571e4a3ca"><div class="ttname"><a href="classmp_bar_chart.html#a0350ff14ea89a7b4ad6f248571e4a3ca">mpBarChart::GetMaxY</a></div><div class="ttdeci">virtual double GetMaxY()</div><div class="ttdoc">Get inclusive top border of bounding box.</div></div>
