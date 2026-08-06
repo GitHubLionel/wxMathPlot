@@ -2443,7 +2443,7 @@ class mpNormal: public mpFXGeneric
      * @param sigma the standard deviation of the distribution
      */
     mpNormal(double mu, double sigma) :
-      mpFXGeneric(wxT("Gaussian"), mpALIGN_LEFT)
+      mpFXGeneric(wxT("Normal"), mpALIGN_LEFT)
     {
       m_mu = mu;
       m_sigma = sigma;
