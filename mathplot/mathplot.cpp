@@ -721,6 +721,9 @@ mpInfoLegend::mpInfoLegend() :
   m_needs_update = true;
   m_headerEnd = 0;
   m_showDraggedSeries = false;
+  m_maxSeriesValueWidth = 0;
+  m_enableSeriesValues = false;
+  m_showSeriesValues = false;
 }
 
 mpInfoLegend::mpInfoLegend(wxPoint pos, const wxBrush &brush, mpLocation location) :
@@ -732,6 +735,9 @@ mpInfoLegend::mpInfoLegend(wxPoint pos, const wxBrush &brush, mpLocation locatio
   m_needs_update = true;
   m_headerEnd = 0;
   m_showDraggedSeries = false;
+  m_maxSeriesValueWidth = 0;
+  m_enableSeriesValues = false;
+  m_showSeriesValues = false;
 }
 
 void mpInfoLegend::UpdateBitmap(wxDC &dc, mpWindow &w)
@@ -779,24 +785,29 @@ void mpInfoLegend::UpdateBitmap(wxDC &dc, mpWindow &w)
     height = 2 * FontHeight.y;
   }
 
+  // We need to calculate the maximum label width before starting to
+  // draw series values so we can align them vertically
+  int maxLabelWidth = GetMaxLabelWidth(buff_dc, w);
+
   // Get plot series names and create new bitmap legend
   m_LegendDetailList.clear();
   unsigned int layerIdx = 0;
   for (unsigned int p = 0; p < w.CountAllLayers(); p++)
   {
-    mpLayer* ly = w.GetLayer(p);
-    if (ly->GetLayerType() == mpLAYER_PLOT)
+    mpLayer* layer = w.GetLayer(p);
+    if (layer->GetLayerType() == mpLAYER_PLOT)
     {
-      if (ly->IsVisible() || (((mpFunction*)ly)->GetLegendIsAlwaysVisible()))
+      mpFunction& function = static_cast<mpFunction&>(*layer);
+      if (function.IsVisible() || (function.GetLegendIsAlwaysVisible()))
       {
         int labelWidth = 0, labelHeight = 0;
-        wxString label = ly->GetName();
-        wxPen lpen = ly->GetPen(); // for legend line, use exact pen set for this plot layer (including width)
+        wxString label = function.GetName();
+        wxPen lpen = function.GetPen(); // for legend line, use exact pen set for this plot layer (including width)
         buff_dc.SetPen(lpen);
-        buff_dc.SetBrush(ly->GetBrush());
+        buff_dc.SetBrush(function.GetBrush());
         wxFont lfont = GetFont(); // use font of InfoLegend
         // If series is not visible AND legend is marked "Always Visible", we strike his name
-        if (!ly->IsVisible())
+        if (!function.IsVisible())
           lfont.MakeStrikethrough();
         buff_dc.SetFont(lfont);
         buff_dc.GetTextExtent(label, &labelWidth, &labelHeight);
@@ -814,18 +825,14 @@ void mpInfoLegend::UpdateBitmap(wxDC &dc, mpWindow &w)
 
           case mpLegendSymbol:
           {
-            mpFunction* pFunctionLayer = dynamic_cast<mpFunction*>(ly); // for mpFunction-subclass-specific processing
             bool drewSymbol = false;
             // Draw optional symbol for those layer types where appropriate
-            if (pFunctionLayer)
-            {
-              if (dynamic_cast<mpChart*>(pFunctionLayer) == 0)
-              { // doesn't make sense to use symbols for bar or pie chart
-                drewSymbol = pFunctionLayer->DrawSymbol(buff_dc, posX + LEGEND_LINEWIDTH / 2, posY + 1); // Would be nicer if keyed on symbol size
-              }
+            if (dynamic_cast<mpChart*>(&function) == nullptr)
+            { // doesn't make sense to use symbols for bar or pie chart
+              drewSymbol = function.DrawSymbol(buff_dc, posX + LEGEND_LINEWIDTH / 2, posY + 1); // Would be nicer if keyed on symbol size
             }
             // draw line
-            if (!drewSymbol || (pFunctionLayer && pFunctionLayer->GetContinuity()))
+            if (!drewSymbol || function.GetContinuity())
             {
               buff_dc.DrawLine(posX, posY + 1, posX + LEGEND_LINEWIDTH, posY + 1);
             }
@@ -839,6 +846,12 @@ void mpInfoLegend::UpdateBitmap(wxDC &dc, mpWindow &w)
         // Draw the name of the function after the decoration
         posX += LEGEND_LINEWIDTH + MARGIN_LEGEND;
         buff_dc.DrawText(label, posX, posY - (labelHeight / 2));
+
+        // Draw series values next to the series names if "show values" is enabled
+        if(IsSeriesValuesEnabled())
+        {
+          labelWidth = DrawSeriesValue( buff_dc, w, function, posX, posY, labelHeight, labelWidth, maxLabelWidth);
+        }
 
         posX += labelWidth + 2 * MARGIN_LEGEND;
 
@@ -897,11 +910,57 @@ void mpInfoLegend::UpdateBitmap(wxDC &dc, mpWindow &w)
   delete buff_bmp;
 }
 
+int mpInfoLegend::GetMaxLabelWidth(wxDC &dc, mpWindow &w)
+{
+  int maxLabelWidth = 0;
+  if(IsSeriesValuesEnabled())
+  {
+    for (unsigned int p = 0; p < w.CountAllLayers(); p++)
+    {
+      mpLayer* layer = w.GetLayer(p);
+      if (layer->GetLayerType() == mpLAYER_PLOT && (layer->IsVisible() || (((mpFunction*)layer)->GetLegendIsAlwaysVisible())))
+      {
+        wxSize labelSize = dc.GetTextExtent(layer->GetName());
+        maxLabelWidth = std::max(maxLabelWidth, labelSize.x);
+      }
+    }
+  }
+  return maxLabelWidth;
+}
+
+int mpInfoLegend::DrawSeriesValue(wxDC& dc, mpWindow& w, mpFunction& function, int posX, int posY, int labelHeight, int labelWidth, int maxLabelWidth)
+{
+  static wxFont lastFont;
+  double mouseXValue = w.p2x(w.GetMousePosition().x);
+  std::optional<double> value = function.GetSeriesValue(mouseXValue);
+  wxString yValueString;
+  if(value && IsSeriesValuesShown())
+    yValueString = wxString::Format(_T(" = %g"), *value);
+  else
+    yValueString = wxString::Format(_T(" = --"));
+
+  // The width of the value might change depending on number of decimals etc. We need to keep track
+  // of the largest value text and use that to avoid that the box resizes all the time
+  wxSize yValueSize = dc.GetTextExtent(yValueString);
+  if(m_font.IsSameAs(lastFont))
+    m_maxSeriesValueWidth = std::max(m_maxSeriesValueWidth, yValueSize.x);
+  else
+    // If font size changes we need to reset the stored text width to allow box to shrink
+    m_maxSeriesValueWidth = yValueSize.x;
+  lastFont = m_font;
+
+  // For vertical legend, use the max label width of all series. For horizontal just use the current width
+  int labelWidthTemp = (m_item_direction == mpVertical) ? maxLabelWidth : labelWidth;
+  dc.DrawText(yValueString, posX + labelWidthTemp, posY - (labelHeight / 2));
+  return labelWidthTemp + m_maxSeriesValueWidth;
+}
+
 void mpInfoLegend::DoPlot(wxDC &dc, mpWindow &w)
 {
-  // If this infoLegend is being moved, don't render it as a normal layer which is stored to cache bmp.
-  // Instead it will be rendered as a overlay in RenderOverlays(), which is designed for moving objects
-  if (this != w.GetMovingInfoLayer())
+  // If this infoLegend is being moved or shall show series values, don't render it as a normal layer
+  // which is stored to cache bmp. Instead it will be rendered as a overlay in RenderOverlays(),
+  // which is designed for moving objects
+  if (this != w.GetMovingInfoLayer() && IsVisible() && !IsSeriesValuesShown())
   {
     DrawContent(dc, w);
   }
@@ -909,7 +968,7 @@ void mpInfoLegend::DoPlot(wxDC &dc, mpWindow &w)
 
 void mpInfoLegend::DrawContent(wxDC &dc, mpWindow &w)
 {
-  if (m_needs_update)
+  if (m_needs_update || IsSeriesValuesEnabled())
     UpdateBitmap(dc, w);
   else
     // In case we have resize
@@ -932,6 +991,39 @@ void mpInfoLegend::DrawContent(wxDC &dc, mpWindow &w)
     dc.Blit(m_dim.GetPosition(), m_dim.GetSize(), &buff_dc, wxPoint(0, 0));
 #endif
     buff_dc.SelectObject(wxNullBitmap);
+
+    if(IsSeriesValuesShown())
+    {
+      // Draw a vertical line to indicate location of the shown values (where the line cross a series)
+      mpRect bound = w.GetPlotBoundaries(true);
+      dc.SetPen(*wxBLACK_PEN);
+      dc.DrawLine(w.GetMousePosition().x, bound.top, w.GetMousePosition().x, bound.bottom);
+
+      // Draw a circle on the series where the vertical line cross it
+      for (unsigned int p = 0; p < w.CountAllLayers(); p++)
+      {
+        mpLayer* layer = w.GetLayer(p);
+        if (layer->GetLayerType() == mpLAYER_PLOT)
+        {
+          mpFunction& function = static_cast<mpFunction&>(*layer);
+          if (function.IsVisible() || (function.GetLegendIsAlwaysVisible()))
+          {
+            double mouseXValue = w.p2x(w.GetMousePosition().x);
+            if(std::optional<double> value = function.GetSeriesValue(mouseXValue))
+            {
+              double valueScaled = (m_win->IsLogYaxis(function.GetYAxisID())) ? log10(*value) : *value;
+              wxCoord yCoord = w.y2p(valueScaled, function.GetYAxisID());
+              if(yCoord >= bound.top && yCoord <= bound.bottom)
+              {
+                dc.SetPen(wxPen(*wxBLACK, 1));
+                dc.SetBrush(wxBrush(function.GetPen().GetColour()));
+                dc.DrawCircle(w.GetMousePosition().x, w.y2p(valueScaled, function.GetYAxisID()), 4);
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }
 
@@ -1054,6 +1146,68 @@ bool mpFunction::DrawSymbol(wxDC &dc, wxCoord x, wxCoord y)
       return false; // Do nothing, and let caller know nothing was done
   }
   return true;
+}
+
+std::optional<double> mpFunction::GetSeriesValue(double xValue)
+{
+  std::optional<double> value;
+  switch (GetLayerSubType())
+  {
+    case mpfFX:
+    {
+      mpFX* fx = dynamic_cast<mpFX*>(this);
+      if(fx)
+        value = fx->DoGetY(xValue);
+      break;
+    }
+    case mpfFXY:
+    case mpfFXYVector:
+    {
+      mpFXY* fxy = dynamic_cast<mpFXY*>(this);
+      if(fxy)
+      {
+        double x1, y1, x2, y2;
+        fxy->Rewind();
+        if (!fxy->DoGetNextXY(&x1, &y1))
+          break;
+        while (fxy->DoGetNextXY(&x2, &y2))
+        {
+          // Search through data until target X value is between two x values in the series
+          if ((x1 <= xValue && x2 >= xValue) ||
+              (x2 <= xValue && x1 >= xValue))
+          {
+            if (fxy->ViewAsBar())
+            {
+              // For bars, show the value of the bar closest to the target X value
+              if(xValue < ((x1 + x2) / 2))
+                value = y1;
+              else
+                value = y2;
+            }
+            else
+            {
+              // Otherise interpolate between the two data points
+              value = y1 + (xValue - x1) * (y2 - y1) / (x2 - x1);
+            }
+            break;
+          }
+          x1 = x2;
+          y1 = y2;
+        }
+      }
+      break;
+    }
+
+    default: // nothing to do in others cases
+      ;
+  }
+
+  // If axis is logarithmic, the returned value has been scaled with log10. But we want the
+  // original actual value so we need to restore it via pow().
+  if (value && m_win->IsLogYaxis(GetYAxisID()))
+    value = pow(10, *value);
+
+  return value;
 }
 
 //-----------------------------------------------------------------------------
@@ -3097,7 +3251,7 @@ void mpWindow::OnMouseLeftDown(wxMouseEvent &event)
 
   // Now check if we are over an InfoLegend and if we have selected a series
   int selectInfoLegend = -1;
-  if (m_InfoLegend)
+  if (m_InfoLegend && m_InfoLegend->IsVisible())
   {
     // Check if mouse is inside info legend and has selected a series
     selectInfoLegend = m_InfoLegend->GetLegendHitRegion(m_mouseLClick);
@@ -3200,7 +3354,9 @@ void mpWindow::OnMouseMove(wxMouseEvent &event)
   }
 
   bool requestRefresh = false;
+  bool requestUpdateAll = false;
   bool showMagnet = false;
+  bool showSeriesValues = false;
   bool showInfoCoord = false;
 
   // Rigth down click: pan
@@ -3234,7 +3390,7 @@ void mpWindow::OnMouseMove(wxMouseEvent &event)
     }
 
     UpdateDesiredBoundingBox(uXYAxis);
-    UpdateAll();
+    requestUpdateAll = true;
 
 #ifdef MATHPLOT_DO_LOGGING
     wxLogMessage(_T("[mpWindow::OnMouseMove] Ax:%i Ay:%i m_posX:%f m_posY:%f"), Axy.x, Axy.y, m_AxisDataX.pos, m_AxisDataYList[0].pos);
@@ -3245,7 +3401,7 @@ void mpWindow::OnMouseMove(wxMouseEvent &event)
   {
     wxPoint moveVector = m_mousePos - m_mouseLClick;
 
-    if (m_InfoLegend && m_InfoLegend->m_selectedSeries)
+    if (m_InfoLegend && m_InfoLegend->IsVisible() && m_InfoLegend->m_selectedSeries)
     {
       // If a series from the legend has been clicked on, it can be drag and dropped
       // onto an Y-axis. Indicate that it shall be shown and request a refresh to draw it
@@ -3270,7 +3426,7 @@ void mpWindow::OnMouseMove(wxMouseEvent &event)
           m_AxisDataYList[*newAxisID].axis->SetHovering(true);
         }
         // Need a complete re-draw in order to highlight the axis properly
-        UpdateAll();
+        requestUpdateAll = true;
       }
       m_InfoLegend->m_lastHoveredAxisID = newAxisID;
     }
@@ -3314,7 +3470,7 @@ void mpWindow::OnMouseMove(wxMouseEvent &event)
       }
 
       showMagnet = true;
-      UpdateAll();
+      requestUpdateAll = true;
     }
   }
   // No click: mouse is moving
@@ -3326,7 +3482,7 @@ void mpWindow::OnMouseMove(wxMouseEvent &event)
     {
       int select = -1;
       // Mouse move on legend
-      if (m_InfoLegend)
+      if (m_InfoLegend && m_InfoLegend->IsVisible())
       {
         select = m_InfoLegend->GetLegendHitRegion(m_mousePos);
         if(select == m_InfoLegend->HitHeader)
@@ -3343,6 +3499,7 @@ void mpWindow::OnMouseMove(wxMouseEvent &event)
     else
       SetCursor(*wxSTANDARD_CURSOR);
     showMagnet = true;
+    showSeriesValues = true;
     showInfoCoord = true;
   }
 
@@ -3355,7 +3512,22 @@ void mpWindow::OnMouseMove(wxMouseEvent &event)
   else if (m_magnet.IsShown())
   {
     m_magnet.Show(false);
-    requestRefresh = true;
+    requestUpdateAll = true;
+  }
+
+  // Check series values shall be shown in info legend
+  if (m_InfoLegend && m_InfoLegend->IsVisible())
+  {
+    if (showSeriesValues && m_InfoLegend->SeriesValuesShouldBeShown(m_PlotArea, m_mousePos))
+    {
+      m_InfoLegend->ShowSeriesValues(true);
+      requestRefresh = true;
+    }
+    else if (m_InfoLegend->IsSeriesValuesShown())
+    {
+      m_InfoLegend->ShowSeriesValues(false);
+      requestUpdateAll = true;
+    }
   }
 
   // Check if info coords shall be shown
@@ -3374,7 +3546,11 @@ void mpWindow::OnMouseMove(wxMouseEvent &event)
     }
   }
 
-  if (requestRefresh)
+  if(requestUpdateAll)
+  {
+    UpdateAll();
+  }
+  else if (requestRefresh)
   {
     // Calling Refresh() without setting m_cacheDirty and without going through UpdateAll() results
     // in a very lightweight and quick OnPaint event where only mouse-related overlays are rendered
@@ -3407,7 +3583,7 @@ void mpWindow::OnMouseLeftRelease(wxMouseEvent &event)
     }
   }
 
-  if (m_InfoLegend && m_InfoLegend->m_selectedSeries)
+  if (m_InfoLegend && m_InfoLegend->IsVisible() && m_InfoLegend->m_selectedSeries)
   {
     // Switch Y-axis of series if it was dropped on a axis
     mpOptional_int yAxisID = IsInsideYAxis(event.GetPosition());
@@ -3523,12 +3699,21 @@ void mpWindow::OnMouseLeave(wxMouseEvent &event)
   }
 
   // For InfoLegend, we need a full update
-  if (m_InfoLegend && m_InfoLegend->m_selectedSeries)
+  if (m_InfoLegend && m_InfoLegend->IsVisible())
   {
-    m_InfoLegend->m_selectedSeries = nullptr;
-    m_InfoLegend->ShowDraggedSeries(false);
-    m_InfoLegend->RestoreAxisHighlighting(*this);
-    needUpdateAll = true;
+    if(m_InfoLegend->m_selectedSeries)
+    {
+      m_InfoLegend->m_selectedSeries = nullptr;
+      m_InfoLegend->ShowDraggedSeries(false);
+      m_InfoLegend->RestoreAxisHighlighting(*this);
+      needUpdateAll = true;
+    }
+
+    if (m_InfoLegend->IsSeriesValuesShown())
+    {
+      m_InfoLegend->ShowSeriesValues(false);
+      needUpdateAll = true;
+    }
   }
 
   if (m_movingInfoLayer)
@@ -4320,12 +4505,12 @@ void mpWindow::RenderOverlays(wxDC& dc)
   if (m_InfoCoords && m_InfoCoords->IsShown())
     m_InfoCoords->DrawContent(dc, *this);
 
-  if (m_InfoLegend)
+  if (m_InfoLegend && m_InfoLegend->IsVisible())
   {
     if (m_InfoLegend->IsDraggedSeriesShown())
       m_InfoLegend->DrawDraggedSeries(dc, *this);
 
-    if (m_InfoLegend == m_movingInfoLayer)
+    if (m_InfoLegend == m_movingInfoLayer || m_InfoLegend->IsSeriesValuesShown())
       m_InfoLegend->DrawContent(dc, *this);
   }
 }

@@ -1522,6 +1522,43 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLegend: public mpInfoLayer
       return m_showDraggedSeries;
     }
 
+    /** Enables to show series values in the legend
+     @param enable Set true to enable series values */
+    void EnableSeriesValues(bool enable)
+    {
+      m_enableSeriesValues = enable;
+      m_maxSeriesValueWidth = 0;
+    }
+
+    /** Check if series values is enabled in legend
+     @return True if series values is enabled */
+    bool IsSeriesValuesEnabled() const
+    {
+      return m_enableSeriesValues;
+    }
+
+    /** Check if series values should be shown in plot, depending on where mouse is
+     @param plotArea Area of the plot
+     @param mousePos Current mouse position */
+    bool SeriesValuesShouldBeShown(wxRect plotArea, wxPoint mousePos)
+    {
+      return m_enableSeriesValues && plotArea.Contains(mousePos);
+    }
+
+    /** Set if the series values shall be drawn to the plot
+     @param show Set if shall be shown or not */
+    void ShowSeriesValues(bool show)
+    {
+      m_showSeriesValues = show;
+    }
+
+    /** Indicates if series values shall be shown
+     @return True if series values shall be shown */
+    bool IsSeriesValuesShown()
+    {
+      return m_showSeriesValues && IsVisible();
+    }
+
     /** Checks if mouse is inside legend and if it hovers the header or any of the series
      * If a series is hovered, return its index. If the header is hovered, return HitHeader,
      * otherwise return HitNone
@@ -1577,8 +1614,12 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLegend: public mpInfoLayer
                              //!< area occupied by the function name and decoration
     };
     std::vector<LegendDetail> m_LegendDetailList; //!< list (well, vector) of details for each individual plot's legend component
-    wxCoord m_headerEnd; //!< End position of header row in box, used to check if header has been clicked
-    bool m_needs_update; //!< Do we need to redraw the legend bitmap? Set when a plot function changes (name, visibility, add or remove)
+    wxCoord m_headerEnd;                //!< End position of header row in box, used to check if header has been clicked
+    bool m_needs_update;                //!< Do we need to redraw the legend bitmap? Set when a plot function changes (name, visibility, add or remove)
+    int m_maxSeriesValueWidth;          //!< Keep track of the widest series value text
+    bool m_enableSeriesValues;          //!< Enables to show series values in legend
+    bool m_showSeriesValues;            //!< Shall series values be drawn to plot
+
     /**
      * Create/update the bitmap image of this legend.
      * This operation must be done when:
@@ -1590,6 +1631,38 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLegend: public mpInfoLayer
      * The call of this function is triggered by the boolean m_needs_update
      */
     void UpdateBitmap(wxDC &dc, mpWindow &w);
+
+    /**
+     * Calculates the largest label (series name) width of all series
+     * that is drawn to the legend
+     * @param dc  The device context where to plot
+     * @param w   Parent mpWindow from which to obtain information
+     *
+     * @return Max label width
+     */
+    int GetMaxLabelWidth(wxDC &dc, mpWindow &w);
+
+    /**
+     * Draws the current series value next to a legend entry and returns the
+     * updated label width including the value text.
+     *
+     * The displayed value is retrieved from the series at the current mouse
+     * X-position in plot coordinates. The function also updates the cached
+     * maximum value text width to keep the legend size stable when displayed
+     * values change length.
+     *
+     * @param dc             Device context used for text measurement and drawing.
+     * @param w              Plot window used for coordinate conversion.
+     * @param functionLayer  Plot function associated with the legend entry.
+     * @param posX           X-position of the legend label text.
+     * @param posY           Y-position of the legend entry.
+     * @param labelHeight    Height of the legend label text.
+     * @param labelWidth     Width of the legend label text.
+     * @param maxLabelWidth  Maximum label width among all legend entries.
+     *
+     * @return Updated label width including the rendered series value text.
+     */
+    int DrawSeriesValue(wxDC& dc, mpWindow& w, mpFunction& function, int posX, int posY, int labelHeight, int labelWidth, int maxLabelWidth);
 
   private:
     DECLARE_DYNAMIC_CLASS_MATHPLOT(mpInfoLegend);
@@ -1678,6 +1751,11 @@ class WXDLLIMPEXP_MATHPLOT mpFunction: public mpLayer
      @return true if a symbol was drawn (false if m_symbol is mpsNone)
      */
     virtual bool DrawSymbol(wxDC &dc, wxCoord x, wxCoord y);
+
+    /** Get Y value of series at specified X.
+     @return Y value if x is within series range, std::nullopt otherwise
+     */
+    std::optional<double> GetSeriesValue(double xValue);
 
     /**
      * Get the ID of the Y axis used by the function
@@ -3764,10 +3842,11 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     [[deprecated("Deprecated - use EnableBufferedPaintDC??")]]
     void EnableDoubleBuffer(const bool enabled)
     {
-        EnableBufferedPaintDC(enabled);
-    };
+      EnableBufferedPaintDC(enabled);
+    }
 
-    /** Enable/disable the auto buffering of PaintDC. Use dto further elimitate flickering of overlays (see RenderOverlays())
+    /** Enable/disable the auto buffering of PaintDC. Used to further elimitate flickering of overlays (see RenderOverlays())
+     * @param enabled Enable/disable auto buffering
      */
     void EnableBufferedPaintDC(const bool enabled)
     {

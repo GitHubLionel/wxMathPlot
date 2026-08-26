@@ -579,6 +579,10 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   cbLegendDefaultVisibility->SetValue(false);
   cbLegendDefaultVisibility->SetToolTip(_("By default, when checked, the series name is always displayed even if the series is not ploted."));
   BoxSizer25->Add(cbLegendDefaultVisibility, 0, wxALL|wxEXPAND, 5);
+  cbShowSeriesValues = new wxCheckBox(Panel2, wxID_ANY, _("Show series values"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
+  cbShowSeriesValues->SetValue(false);
+  cbShowSeriesValues->SetToolTip(_("By default, when checked, the series name is always displayed even if the series is not ploted."));
+  BoxSizer25->Add(cbShowSeriesValues, 1, wxALL|wxALIGN_LEFT, 5);
   BoxSizer16->Add(BoxSizer25, 0, wxALL, 5);
   BoxSizer15 = new wxBoxSizer(wxVERTICAL);
   bFontLegend = new wxButton(Panel2, wxID_ANY, _("Font"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
@@ -1110,6 +1114,7 @@ void MathPlotConfigDialog::Initialize(mpConfigPageId id)
     UpdateFont(CurrentLegend, bFontLegend, true);
     bFontLegend->Enable();
     cbLegendDefaultVisibility->SetValue(m_plot->m_DefaultLegendIsAlwaysVisible);
+    cbShowSeriesValues->SetValue(CurrentLegend->IsSeriesValuesEnabled());
   }
 
   // ** Axis page **
@@ -1865,6 +1870,11 @@ void MathPlotConfigDialog::Apply(int pageIndex, bool updateFont)
         CurrentCoords->SetBrush(bCoordBrushColor->GetBackgroundColour(), IdToBrushStyle(cbCoordBrushStyle->GetSelection()));
       }
 
+      if (CurrentLegend)
+      {
+        CurrentLegend->SetNeedUpdate();
+      }
+
       m_plot->SetMouseLeftDownAction((mpMouseButtonAction)ChoiceLeftMouseAction->GetSelection());
 
       m_plot->UpdateAll();
@@ -1887,6 +1897,7 @@ void MathPlotConfigDialog::Apply(int pageIndex, bool updateFont)
           fontLegendChanged = false;
         }
         m_plot->m_DefaultLegendIsAlwaysVisible = cbLegendDefaultVisibility->GetValue();
+        CurrentLegend->EnableSeriesValues(cbShowSeriesValues->GetValue());
         CurrentLegend->SetNeedUpdate();
         m_plot->UpdateAll();
       }

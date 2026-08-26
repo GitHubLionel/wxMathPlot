@@ -204,8 +204,9 @@ void MathPlotDemoFrame::InitializePlot(void)
   info->SetVisible(true);
 
   // Add a legend info layer
-  mpInfoLegend* legend;
-  mPlot->AddLayer(legend = new mpInfoLegend(), false);
+  mpInfoLegend* legend = new mpInfoLegend();
+  legend->EnableSeriesValues(true);
+  mPlot->AddLayer(legend, false);
   legend->SetItemDirection(mpHorizontal); // Note: Comment out this line to test mpVertical
   legend->SetVisible(true);
 
