@@ -458,6 +458,15 @@
 											<flag>wxALL|wxEXPAND</flag>
 											<border>5</border>
 										</object>
+										<object class="sizeritem">
+											<object class="wxCheckBox" name="" variable="cbShowSeriesValues" member="yes">
+												<label>Show series values</label>
+												<tooltip>By default, when checked, the series name is always displayed even if the series is not ploted.</tooltip>
+											</object>
+											<flag>wxALL|wxALIGN_LEFT</flag>
+											<border>5</border>
+											<option>1</option>
+										</object>
 									</object>
 									<flag>wxALL</flag>
 									<border>5</border>
