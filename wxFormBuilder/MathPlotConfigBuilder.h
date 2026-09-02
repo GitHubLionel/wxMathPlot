@@ -82,6 +82,7 @@ class MathPlotConfigDialogBuilder : public wxDialog
 		wxChoice* cbLegendDirection;
 		wxCheckBox* cbLegendVisible;
 		wxCheckBox* cbLegendDefaultVisibility;
+		wxCheckBox* cbShowSeriesValues;
 		wxButton* bFontLegend;
 		wxStaticText* StaticText20;
 		wxButton* bLegendBrushColor;

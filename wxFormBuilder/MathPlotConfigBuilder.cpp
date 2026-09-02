@@ -304,6 +304,12 @@ MathPlotConfigDialogBuilder::MathPlotConfigDialogBuilder( wxWindow* parent, wxWi
 
 	BoxSizer25->Add( cbLegendDefaultVisibility, 0, wxALL|wxEXPAND, 5 );
 
+	cbShowSeriesValues = new wxCheckBox( Panel2, wxID_ANY, _("Show series values"), wxDefaultPosition, wxDefaultSize, 0 );
+	cbShowSeriesValues->SetValue(true);
+	cbShowSeriesValues->SetToolTip( _("By default, when checked, the series name is always displayed even if the series is not ploted.") );
+
+	BoxSizer25->Add( cbShowSeriesValues, 0, wxALL, 5 );
+
 
 	BoxSizer16->Add( BoxSizer25, 0, wxALL, 5 );
 

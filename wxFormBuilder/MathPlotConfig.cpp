@@ -489,6 +489,7 @@ void MathPlotConfigDialog::Initialize(mpConfigPageId id)
     UpdateFont(CurrentLegend, bFontLegend, true);
     bFontLegend->Enable();
     cbLegendDefaultVisibility->SetValue(m_plot->m_DefaultLegendIsAlwaysVisible);
+    cbShowSeriesValues->SetValue(CurrentLegend->IsSeriesValuesEnabled());
   }
 
   // ** Axis page **
@@ -1244,6 +1245,11 @@ void MathPlotConfigDialog::Apply(int pageIndex, bool updateFont)
         CurrentCoords->SetBrush(bCoordBrushColor->GetBackgroundColour(), IdToBrushStyle(cbCoordBrushStyle->GetSelection()));
       }
 
+      if (CurrentLegend)
+      {
+        CurrentLegend->SetNeedUpdate();
+      }
+
       m_plot->SetMouseLeftDownAction((mpMouseButtonAction)ChoiceLeftMouseAction->GetSelection());
 
       m_plot->UpdateAll();
@@ -1266,6 +1272,7 @@ void MathPlotConfigDialog::Apply(int pageIndex, bool updateFont)
           fontLegendChanged = false;
         }
         m_plot->m_DefaultLegendIsAlwaysVisible = cbLegendDefaultVisibility->GetValue();
+        CurrentLegend->EnableSeriesValues(cbShowSeriesValues->GetValue());
         CurrentLegend->SetNeedUpdate();
         m_plot->UpdateAll();
       }
