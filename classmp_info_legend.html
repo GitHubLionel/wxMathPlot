@@ -111,6 +111,21 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>SetNeedUpdate</b> ()<
 <tr class="memitem:afb8fcbe7f9fb326379b28af9e241a7cf" id="r_afb8fcbe7f9fb326379b28af9e241a7cf"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_info_legend.html#afb8fcbe7f9fb326379b28af9e241a7cf">IsDraggedSeriesShown</a> () const</td></tr>
 <tr class="memdesc:afb8fcbe7f9fb326379b28af9e241a7cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get shown status of dragged series.  <br /></td></tr>
 <tr class="separator:afb8fcbe7f9fb326379b28af9e241a7cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8283550009a1af7985a471914255bbfb" id="r_a8283550009a1af7985a471914255bbfb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_info_legend.html#a8283550009a1af7985a471914255bbfb">EnableSeriesValues</a> (bool enable)</td></tr>
+<tr class="memdesc:a8283550009a1af7985a471914255bbfb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables to show series values in the legend.  <br /></td></tr>
+<tr class="separator:a8283550009a1af7985a471914255bbfb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab67d42d35f53e7e3f2e64dfd4ca99973" id="r_ab67d42d35f53e7e3f2e64dfd4ca99973"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_info_legend.html#ab67d42d35f53e7e3f2e64dfd4ca99973">IsSeriesValuesEnabled</a> () const</td></tr>
+<tr class="memdesc:ab67d42d35f53e7e3f2e64dfd4ca99973"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if series values is enabled in legend.  <br /></td></tr>
+<tr class="separator:ab67d42d35f53e7e3f2e64dfd4ca99973"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a274e9afdebc613bcef50742415d63e28" id="r_a274e9afdebc613bcef50742415d63e28"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_info_legend.html#a274e9afdebc613bcef50742415d63e28">SeriesValuesShouldBeShown</a> (wxRect plotArea, wxPoint mousePos)</td></tr>
+<tr class="memdesc:a274e9afdebc613bcef50742415d63e28"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if series values should be shown in plot, depending on where mouse is.  <br /></td></tr>
+<tr class="separator:a274e9afdebc613bcef50742415d63e28"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad2ad569aeb5018738b49b85c4eaa6ebe" id="r_ad2ad569aeb5018738b49b85c4eaa6ebe"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_info_legend.html#ad2ad569aeb5018738b49b85c4eaa6ebe">ShowSeriesValues</a> (bool show)</td></tr>
+<tr class="memdesc:ad2ad569aeb5018738b49b85c4eaa6ebe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set if the series values shall be drawn to the plot.  <br /></td></tr>
+<tr class="separator:ad2ad569aeb5018738b49b85c4eaa6ebe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adaaf77e4844c1f92dc95dd90e6379839" id="r_adaaf77e4844c1f92dc95dd90e6379839"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_info_legend.html#adaaf77e4844c1f92dc95dd90e6379839">IsSeriesValuesShown</a> ()</td></tr>
+<tr class="memdesc:adaaf77e4844c1f92dc95dd90e6379839"><td class="mdescLeft">&#160;</td><td class="mdescRight">Indicates if series values shall be shown.  <br /></td></tr>
+<tr class="separator:adaaf77e4844c1f92dc95dd90e6379839"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1826fd48cee3c2ddd4fe9d0d6d31fa02" id="r_a1826fd48cee3c2ddd4fe9d0d6d31fa02"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_info_legend.html#a1826fd48cee3c2ddd4fe9d0d6d31fa02">GetLegendHitRegion</a> (wxPoint mousePos)</td></tr>
 <tr class="memdesc:a1826fd48cee3c2ddd4fe9d0d6d31fa02"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if mouse is inside legend and if it hovers the header or any of the series If a series is hovered, return its index.  <br /></td></tr>
 <tr class="separator:a1826fd48cee3c2ddd4fe9d0d6d31fa02"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -594,6 +609,40 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>m_CanDelete</b></td><
 
 </div>
 </div>
+<a id="a8283550009a1af7985a471914255bbfb" name="a8283550009a1af7985a471914255bbfb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8283550009a1af7985a471914255bbfb">&#9670;&#160;</a></span>EnableSeriesValues()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void mpInfoLegend::EnableSeriesValues </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>enable</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Enables to show series values in the legend. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">enable</td><td>Set true to enable series values </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="a1826fd48cee3c2ddd4fe9d0d6d31fa02" name="a1826fd48cee3c2ddd4fe9d0d6d31fa02"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1826fd48cee3c2ddd4fe9d0d6d31fa02">&#9670;&#160;</a></span>GetLegendHitRegion()</h2>
 
@@ -649,6 +698,62 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>m_CanDelete</b></td><
 
 </div>
 </div>
+<a id="ab67d42d35f53e7e3f2e64dfd4ca99973" name="ab67d42d35f53e7e3f2e64dfd4ca99973"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab67d42d35f53e7e3f2e64dfd4ca99973">&#9670;&#160;</a></span>IsSeriesValuesEnabled()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool mpInfoLegend::IsSeriesValuesEnabled </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Check if series values is enabled in legend. </p>
+<dl class="section return"><dt>Returns</dt><dd>True if series values is enabled </dd></dl>
+
+</div>
+</div>
+<a id="adaaf77e4844c1f92dc95dd90e6379839" name="adaaf77e4844c1f92dc95dd90e6379839"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adaaf77e4844c1f92dc95dd90e6379839">&#9670;&#160;</a></span>IsSeriesValuesShown()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool mpInfoLegend::IsSeriesValuesShown </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Indicates if series values shall be shown. </p>
+<dl class="section return"><dt>Returns</dt><dd>True if series values shall be shown </dd></dl>
+
+</div>
+</div>
 <a id="a624acd500ad90e504c76e77d35e900bb" name="a624acd500ad90e504c76e77d35e900bb"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a624acd500ad90e504c76e77d35e900bb">&#9670;&#160;</a></span>RestoreAxisHighlighting()</h2>
 
@@ -669,6 +774,51 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>m_CanDelete</b></td><
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">w</td><td>the window to plot </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a274e9afdebc613bcef50742415d63e28" name="a274e9afdebc613bcef50742415d63e28"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a274e9afdebc613bcef50742415d63e28">&#9670;&#160;</a></span>SeriesValuesShouldBeShown()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool mpInfoLegend::SeriesValuesShouldBeShown </td>
+          <td>(</td>
+          <td class="paramtype">wxRect&#160;</td>
+          <td class="paramname"><em>plotArea</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">wxPoint&#160;</td>
+          <td class="paramname"><em>mousePos</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Check if series values should be shown in plot, depending on where mouse is. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">plotArea</td><td>Area of the plot </td></tr>
+    <tr><td class="paramname">mousePos</td><td>Current mouse position </td></tr>
   </table>
   </dd>
 </dl>
@@ -771,6 +921,40 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>m_CanDelete</b></td><
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">active</td><td>Set if shall be shown </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ad2ad569aeb5018738b49b85c4eaa6ebe" name="ad2ad569aeb5018738b49b85c4eaa6ebe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad2ad569aeb5018738b49b85c4eaa6ebe">&#9670;&#160;</a></span>ShowSeriesValues()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void mpInfoLegend::ShowSeriesValues </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>show</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Set if the series values shall be drawn to the plot. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">show</td><td>Set if shall be shown or not </td></tr>
   </table>
   </dd>
 </dl>
