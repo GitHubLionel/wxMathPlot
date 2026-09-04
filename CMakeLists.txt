@@ -26,7 +26,10 @@ endif()
 # wxMathPlot lib
 set(wxmathplot_src mathplot/mathplot.cpp MathPlotConfig/MathPlotConfig.cpp)
 add_library(wxmathplot SHARED ${wxmathplot_src})
+target_link_libraries(wxmathplot PRIVATE ${wxWidgets_LIBRARIES} )
+
 add_library(wxmathplot_static ${wxmathplot_src})
+target_link_libraries(wxmathplot_static PRIVATE ${wxWidgets_LIBRARIES} )
 
 target_include_directories(wxmathplot PUBLIC
 		${CMAKE_CURRENT_SOURCE_DIR}/mathplot
