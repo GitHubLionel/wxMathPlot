@@ -37,3 +37,7 @@ docs_output
 mathplot/mathplot.h_save.h
 mathplot/mathplot_refactorTypes.cpp
 mathplot/mathplot_refactorTypes.h
+
+# JetBrains IDE
+.idea/
+

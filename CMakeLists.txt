@@ -1,4 +1,8 @@
+include (CMakePrintHelpers)
 cmake_minimum_required(VERSION 3.25)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_DEBUG_POSTFIX d)
+
 project(wxMathPlot)
 set(LIB_VERSION_MAJOR "2")
 set(LIB_VERSION_MINOR "1")
@@ -8,16 +12,33 @@ if (MSVC)
 else()
 	add_compile_options(-Wall -Wextra)
 endif()
+
 find_package(wxWidgets REQUIRED core base adv aui)
+if (CMAKE_VERSION VERSION_GREATER_EQUAL "4.2")
+	include (UsewxWidgets)
+else()
+    include(${wxWidgets_USE_FILE})
+endif()
+
 # wxMathPlot lib
 set(wxmathplot_src mathplot/mathplot.cpp MathPlotConfig/MathPlotConfig.cpp)
 add_library(wxmathplot SHARED ${wxmathplot_src})
 add_library(wxmathplot_static ${wxmathplot_src})
-target_link_libraries(wxmathplot ${wxWidgets_LIBRARIES})
-include(${wxWidgets_USE_FILE})
-include_directories(${CMAKE_SOURCE_DIR}/MathPlotConfig)
-include_directories(${CMAKE_SOURCE_DIR}/mathplot)
-INSTALL(TARGETS wxmathplot
+
+target_include_directories(wxmathplot PUBLIC
+		${CMAKE_CURRENT_SOURCE_DIR}/mathplot
+		${CMAKE_CURRENT_SOURCE_DIR}/MathPlotConfig)
+target_include_directories(wxmathplot_static PUBLIC
+		${CMAKE_CURRENT_SOURCE_DIR}/mathplot
+		${CMAKE_CURRENT_SOURCE_DIR}/MathPlotConfig)
+
+target_link_libraries(wxmathplot INTERFACE wxmathplot ${wxWidgets_LIBRARIES})
+target_link_libraries(wxmathplot_static INTERFACE wxmathplot_static ${wxWidgets_LIBRARIES})
+
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/MathPlotConfig)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/mathplot)
+
+install(TARGETS wxmathplot wxmathplot_static
 	RUNTIME DESTINATION bin COMPONENT Applications
 	LIBRARY DESTINATION lib COMPONENT Libraries
 )
@@ -58,3 +79,7 @@ set(CPACK_SOURCE_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME}_${LIB_VERSION_MAJOR}.$
 
 set(CPACK_COMPONENTS_ALL Libraries Development Applications)
 include(CPack)
+
+cmake_print_properties(TARGETS wxmathplot wxmathplot_static
+		PROPERTIES INTERFACE_INCLUDE_DIRECTORIES
+		           INTERFACE_LINK_LIBRARIES)
