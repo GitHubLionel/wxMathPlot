@@ -19,6 +19,9 @@ if (CMAKE_VERSION VERSION_GREATER_EQUAL "4.2")
 else()
     include(${wxWidgets_USE_FILE})
 endif()
+if (CMAKE_TOOLCHAIN_FILE)
+	find_package(WebP CONFIG REQUIRED)
+endif()
 
 # wxMathPlot lib
 set(wxmathplot_src mathplot/mathplot.cpp MathPlotConfig/MathPlotConfig.cpp)
@@ -31,9 +34,6 @@ target_include_directories(wxmathplot PUBLIC
 target_include_directories(wxmathplot_static PUBLIC
 		${CMAKE_CURRENT_SOURCE_DIR}/mathplot
 		${CMAKE_CURRENT_SOURCE_DIR}/MathPlotConfig)
-
-target_link_libraries(wxmathplot INTERFACE wxmathplot ${wxWidgets_LIBRARIES})
-target_link_libraries(wxmathplot_static INTERFACE wxmathplot_static ${wxWidgets_LIBRARIES})
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/MathPlotConfig)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/mathplot)
@@ -49,12 +49,18 @@ install(FILES MathPlotConfig/MathPlotConfig.h DESTINATION include/wxmathplot COM
 add_executable(MathPlotDemo 
 	MathPlotDemo/MathPlotDemoApp.cpp MathPlotDemo/MathPlotDemoMain.cpp
 	)
-target_link_libraries(MathPlotDemo wxmathplot_static ${wxWidgets_LIBRARIES})
+target_link_libraries(MathPlotDemo PRIVATE wxmathplot_static ${wxWidgets_LIBRARIES}  )
+if (CMAKE_TOOLCHAIN_FILE)
+	target_link_libraries(MathPlotDemo PRIVATE WebP::webp WebP::webpdecoder WebP::webpdemux )
+endif()
 
 add_executable(MathPlotConfigDemo 
 	MathPlotConfig/MathPlotConfigDemo.cpp
 	)
-target_link_libraries(MathPlotConfigDemo wxmathplot_static ${wxWidgets_LIBRARIES})
+target_link_libraries(MathPlotConfigDemo PRIVATE ${wxWidgets_LIBRARIES} wxmathplot_static )
+if (CMAKE_TOOLCHAIN_FILE)
+	target_link_libraries(MathPlotConfigDemo PRIVATE WebP::webp WebP::webpdecoder WebP::webpdemux )
+endif()
 
 if(WIN32 AND MSVC)
 	set_target_properties(MathPlotDemo PROPERTIES LINK_FLAGS "/SUBSYSTEM:WINDOWS")
@@ -79,7 +85,7 @@ set(CPACK_SOURCE_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME}_${LIB_VERSION_MAJOR}.$
 
 set(CPACK_COMPONENTS_ALL Libraries Development Applications)
 include(CPack)
-
-cmake_print_properties(TARGETS wxmathplot wxmathplot_static
+cmake_print_variables(wxWidgets_LIBRARIES)
+cmake_print_properties(TARGETS wxmathplot wxmathplot_static wxWidgets::wxWidgets
 		PROPERTIES INTERFACE_INCLUDE_DIRECTORIES
 		           INTERFACE_LINK_LIBRARIES)

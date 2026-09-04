@@ -1,0 +1,6 @@
+{
+  "name": "wxmathplot",
+  "version": "2.1.0",
+  "dependencies": ["wxwidgets", "libwebp"]
+
+}
