@@ -1067,7 +1067,7 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
 
     /** Get Name visibility.
      @return \a true if visible */
-    inline bool GetShowName() const
+    bool GetShowName() const
     {
       return m_showName;
     }
@@ -1094,7 +1094,7 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
 
     /** Is this layer visible?
      @return \a true if visible */
-    inline bool IsVisible() const
+    bool IsVisible() const
     {
       return m_visible;
     }
@@ -1108,7 +1108,7 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
 
     /** Checks whether the layer is tractable or not.
      @return \a true if visible */
-    inline bool IsTractable() const
+    bool IsTractable() const
     {
       return m_tractable;
     }
@@ -3803,7 +3803,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     /** Converts mpWindow (screen) pixel coordinates into graph (floating point) coordinates,
      * using current mpWindow position and scale.
      * @sa p2y,x2p,y2p */
-    inline double p2x(const wxCoord pixelCoordX) const
+    double p2x(const wxCoord pixelCoordX) const
     {
       return m_AxisDataX.pos + (pixelCoordX / m_AxisDataX.scale);
     }
@@ -3811,7 +3811,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     /** Converts mpWindow (screen) pixel coordinates into graph (floating point) coordinates,
      * using current mpWindow position and scale.
      * @sa p2x,x2p,y2p */
-    inline double p2y(const wxCoord pixelCoordY, int yAxisID = 0)
+    double p2y(const wxCoord pixelCoordY, int yAxisID = 0)
     {
       assert(m_AxisDataYList.count(yAxisID) != 0);
       if (m_AxisDataYList.count(yAxisID) == 0)
@@ -3822,7 +3822,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     /** Converts graph (floating point) coordinates into mpWindow (screen) pixel coordinates,
      * using current mpWindow position and scale.
      * @sa p2x,p2y,y2p */
-    inline wxCoord x2p(const double x) const
+    wxCoord x2p(const double x) const
     {
       return (wxCoord)((x - m_AxisDataX.pos) * m_AxisDataX.scale);
     }
@@ -3830,7 +3830,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     /** Converts graph (floating point) coordinates into mpWindow (screen) pixel coordinates,
      * using current mpWindow position and scale.
      * @sa p2x,p2y,x2p */
-    inline wxCoord y2p(const double y, int yAxisID = 0)
+    wxCoord y2p(const double y, int yAxisID = 0)
     {
       assert(m_AxisDataYList.count(yAxisID) != 0);
       if (m_AxisDataYList.count(yAxisID) == 0)
@@ -3871,7 +3871,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      @retval TRUE Locked
      @retval FALSE Unlocked
      */
-    inline bool IsAspectLocked() const
+    bool IsAspectLocked() const
     {
       return m_lockaspect;
     }
