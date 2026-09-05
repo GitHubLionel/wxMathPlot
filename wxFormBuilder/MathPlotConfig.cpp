@@ -1029,7 +1029,7 @@ void MathPlotConfigDialog::UpdateSeriesStep(void)
     stStepChoice->SetToolTip(_("Sets how many points to max show in the plot at the same time. Decrease for faster plot"));
     spinSeriesStep->SetRange(1, 50000);
     if (CurrentSerie)
-      spinSeriesStep->SetValue(CurrentSerie->GetMaxNOfPoints());
+      spinSeriesStep->SetValue((int)CurrentSerie->GetMaxNOfPoints());
   }
   else
   {

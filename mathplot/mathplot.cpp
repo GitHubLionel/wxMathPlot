@@ -1859,7 +1859,7 @@ void mpFXYVector::Rewind()
       m_endIndex++;
 
     if (m_autoStep && (m_maxNOfPoints != 0))
-      m_step = std::max((m_endIndex - m_index) / m_maxNOfPoints, (size_t)1);
+      m_step = (unsigned int)std::max((m_endIndex - m_index) / m_maxNOfPoints, (size_t)1);
 
     // Make sure you always start and end on even step
     m_index = (m_index / m_step) * m_step;
@@ -1872,7 +1872,7 @@ void mpFXYVector::Rewind()
     m_index = 0;
     m_endIndex = m_xs.size();
     if (m_autoStep && (m_maxNOfPoints != 0))
-      m_step = std::max((m_endIndex - m_index) / m_maxNOfPoints, (size_t)1);
+      m_step = (unsigned int)std::max((m_endIndex - m_index) / m_maxNOfPoints, (size_t)1);
   }
 }
 
@@ -2222,8 +2222,8 @@ void mpBarChart::DoPlot(wxDC &dc, mpWindow &w)
     {
       rect_x_tl = w.x2p(((double)binIndex) + 1.0 - 0.5 * m_width);
       rect_y_tl = w.y2p(values[binIndex], m_yAxisID);
-      rect_width = m_width * w.GetScaleX();
-      rect_height = values[binIndex] * w.GetScaleY(m_yAxisID);
+      rect_width = (wxCoord)round(m_width * w.GetScaleX());
+      rect_height = (wxCoord)round(values[binIndex] * w.GetScaleY(m_yAxisID));
       dc.DrawRectangle(rect_x_tl, rect_y_tl, rect_width, rect_height);
       if (drawLabels)
       {
@@ -2337,24 +2337,24 @@ void mpPieChart::DoPlot(wxDC &dc, mpWindow &w)
 
   if (values.size() > 0)
   {
-    xc = w.x2p(m_center.x) * scale + offset;
-    x1 = w.x2p(m_radius + m_center.x) * scale + offset;
+    xc = (wxCoord)round(w.x2p(m_center.x) * scale + offset);
+    x1 = (wxCoord)round(w.x2p(m_radius + m_center.x) * scale + offset);
     y1 = yc = w.y2p(m_center.y, m_yAxisID);
 
     for (size_t binIndex = 0; binIndex < values.size(); binIndex++)
     {
       angle = values[binIndex] / m_total_value * M_PI2;
       anglepie += angle;
-      x2 = w.x2p(m_radius * cos(anglepie) + m_center.x) * scale + offset;
+      x2 = (wxCoord)round(w.x2p(m_radius * cos(anglepie) + m_center.x) * scale + offset);
       y2 = w.y2p(m_radius * sin(anglepie) + m_center.y, m_yAxisID);
-      wxBrush brush(GetColour(binIndex), wxBRUSHSTYLE_SOLID);
+      wxBrush brush(GetColour((unsigned int)binIndex), wxBRUSHSTYLE_SOLID);
       dc.SetBrush(brush);
       dc.DrawArc(x1, y1, x2, y2, xc, yc);
       if (drawLabels)
       {
         currentLabel = wxConvUTF8.cMB2WX(labels[binIndex].c_str());
         dc.GetTextExtent(currentLabel, &labelW, &labelH);
-        labelX = w.x2p(m_radius * cos(angletxt + angle / 2.0) + m_center.x) * scale + offset + 10;
+        labelX = (wxCoord)round(w.x2p(m_radius * cos(angletxt + angle / 2.0) + m_center.x) * scale + offset + 10);
         labelY = w.y2p(m_radius * sin(angletxt + angle / 2.0) + m_center.y, m_yAxisID);
         // Print label at left of pie
         if ((angletxt > 1.5) && (angletxt < 4.5)) // [Pi/2, 3Pi/2]
@@ -2385,7 +2385,7 @@ const wxColour& mpPieChart::GetColour(unsigned int id)
   // Create colours if necessary
   while (id >= colours.size())
   {
-    colours.push_back(wxIndexColour(colours.size()));
+    colours.push_back(wxIndexColour((unsigned int)colours.size()));
   }
   return colours[id];
 }
@@ -5474,7 +5474,7 @@ bool mpWindow::LoadFile(const wxString& filename)
     if (data.size() > 1)
     {
       for (size_t j = 1; j < data.size(); j++)
-        GetXYSeries(nb_series + j - 1, name)->AddData(data[0], data[j], true);
+        GetXYSeries((unsigned int)(nb_series + j - 1), name)->AddData(data[0], data[j], true);
     }
 
     data.clear();

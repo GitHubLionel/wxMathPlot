@@ -2110,7 +2110,7 @@ class WXDLLIMPEXP_MATHPLOT mpFXY: public mpFunction
     /**
      * Return the number of points in the series
      */
-    virtual int GetSize()
+    virtual size_t GetSize()
     {
       return 0;
     }
@@ -2242,7 +2242,7 @@ class WXDLLIMPEXP_MATHPLOT mpFXYVector: public mpFXY
      * Return the number of points in the series
      * We assume that size of m_xs equals size of m_ys
      */
-    virtual int GetSize() override
+    virtual size_t GetSize() override
     {
       return m_xs.size();
     }
