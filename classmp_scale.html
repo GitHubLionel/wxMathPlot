@@ -42,6 +42,7 @@ $(function() {
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
+<a href="#pro-static-methods">Static Protected Member Functions</a> &#124;
 <a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="#pro-static-attribs">Static Protected Attributes</a> &#124;
 <a href="classmp_scale-members.html">List of all members</a>  </div>
@@ -69,36 +70,36 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ad3a23f1ed69e9a10a51959c8a5d62d44" id="r_ad3a23f1ed69e9a10a51959c8a5d62d44"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_scale.html#ad3a23f1ed69e9a10a51959c8a5d62d44">mpScale</a> (const wxString &amp;name, int flags, bool grids, <a class="el" href="mathplot_8h.html#ab285929a0e74f3648f421ec238859a6c">mpLabelType</a> labelType=<a class="el" href="mathplot_8h.html#ab285929a0e74f3648f421ec238859a6ca560ebde2769c732f3543406462829722">mpLabel_AUTO</a>, <a class="el" href="mathplot_8h.html#a2c1baadaf91d06d157ab6489e4500962">mpOptional_uint</a> axisID=std::nullopt)</td></tr>
 <tr class="memdesc:ad3a23f1ed69e9a10a51959c8a5d62d44"><td class="mdescLeft">&#160;</td><td class="mdescRight">Full constructor.  <br /></td></tr>
 <tr class="separator:ad3a23f1ed69e9a10a51959c8a5d62d44"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a89c254885d1a3c5bcc6453ccfa20aabf" id="r_a89c254885d1a3c5bcc6453ccfa20aabf"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_scale.html#a89c254885d1a3c5bcc6453ccfa20aabf">HasBBox</a> ()</td></tr>
-<tr class="memdesc:a89c254885d1a3c5bcc6453ccfa20aabf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check whether this layer has a bounding box.  <br /></td></tr>
-<tr class="separator:a89c254885d1a3c5bcc6453ccfa20aabf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a808c8488aa6c71672f9386b9db6057cc" id="r_a808c8488aa6c71672f9386b9db6057cc"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_scale.html#a808c8488aa6c71672f9386b9db6057cc">GetAxisID</a> (void)</td></tr>
-<tr class="memdesc:a808c8488aa6c71672f9386b9db6057cc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the ID of the Axis.  <br /></td></tr>
-<tr class="separator:a808c8488aa6c71672f9386b9db6057cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8751338e110c03348a630e4e2831694f" id="r_a8751338e110c03348a630e4e2831694f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_scale.html#a8751338e110c03348a630e4e2831694f">SetAxisID</a> (unsigned int yAxisID)</td></tr>
-<tr class="memdesc:a8751338e110c03348a630e4e2831694f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set an ID to the axis.  <br /></td></tr>
-<tr class="separator:a8751338e110c03348a630e4e2831694f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abd966e06d8af148b2c40a37eb96b4870" id="r_abd966e06d8af148b2c40a37eb96b4870"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_scale.html#abd966e06d8af148b2c40a37eb96b4870">ShowTicks</a> (bool ticks)</td></tr>
-<tr class="memdesc:abd966e06d8af148b2c40a37eb96b4870"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set axis ticks.  <br /></td></tr>
-<tr class="separator:abd966e06d8af148b2c40a37eb96b4870"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9e8cfb769e28f3ddcc17006a848edb05" id="r_a9e8cfb769e28f3ddcc17006a848edb05"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_scale.html#a9e8cfb769e28f3ddcc17006a848edb05">HasBBox</a> () override</td></tr>
+<tr class="memdesc:a9e8cfb769e28f3ddcc17006a848edb05"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check whether this layer has a bounding box.  <br /></td></tr>
+<tr class="separator:a9e8cfb769e28f3ddcc17006a848edb05"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa90d3c89e80563b84587c91b00510216" id="r_aa90d3c89e80563b84587c91b00510216"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_scale.html#aa90d3c89e80563b84587c91b00510216">GetAxisID</a> (void) const</td></tr>
+<tr class="memdesc:aa90d3c89e80563b84587c91b00510216"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the ID of the Axis.  <br /></td></tr>
+<tr class="separator:aa90d3c89e80563b84587c91b00510216"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2bc8b853ffbf0c5ab934747f8c7a8b42" id="r_a2bc8b853ffbf0c5ab934747f8c7a8b42"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_scale.html#a2bc8b853ffbf0c5ab934747f8c7a8b42">SetAxisID</a> (const unsigned int yAxisID)</td></tr>
+<tr class="memdesc:a2bc8b853ffbf0c5ab934747f8c7a8b42"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set an ID to the axis.  <br /></td></tr>
+<tr class="separator:a2bc8b853ffbf0c5ab934747f8c7a8b42"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0e3f743de2984fe12b5200b15457b2ea" id="r_a0e3f743de2984fe12b5200b15457b2ea"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_scale.html#a0e3f743de2984fe12b5200b15457b2ea">ShowTicks</a> (const bool ticks)</td></tr>
+<tr class="memdesc:a0e3f743de2984fe12b5200b15457b2ea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set axis ticks.  <br /></td></tr>
+<tr class="separator:a0e3f743de2984fe12b5200b15457b2ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a70f51be7f451502a5799ea1742cce30a" id="r_a70f51be7f451502a5799ea1742cce30a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_scale.html#a70f51be7f451502a5799ea1742cce30a">GetShowTicks</a> () const</td></tr>
 <tr class="memdesc:a70f51be7f451502a5799ea1742cce30a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get axis ticks.  <br /></td></tr>
 <tr class="separator:a70f51be7f451502a5799ea1742cce30a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a813865bb073c0c286206137c72de38c4" id="r_a813865bb073c0c286206137c72de38c4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_scale.html#a813865bb073c0c286206137c72de38c4">ShowGrids</a> (bool grids)</td></tr>
-<tr class="memdesc:a813865bb073c0c286206137c72de38c4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set axis grids.  <br /></td></tr>
-<tr class="separator:a813865bb073c0c286206137c72de38c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a800dcfde7fb557cd0f83f8349d4abf1e" id="r_a800dcfde7fb557cd0f83f8349d4abf1e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_scale.html#a800dcfde7fb557cd0f83f8349d4abf1e">ShowGrids</a> (const bool grids)</td></tr>
+<tr class="memdesc:a800dcfde7fb557cd0f83f8349d4abf1e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set axis grids.  <br /></td></tr>
+<tr class="separator:a800dcfde7fb557cd0f83f8349d4abf1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adc54e2b1f2c55094b5fa0ebb4521397d" id="r_adc54e2b1f2c55094b5fa0ebb4521397d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_scale.html#adc54e2b1f2c55094b5fa0ebb4521397d">GetShowGrids</a> () const</td></tr>
 <tr class="memdesc:adc54e2b1f2c55094b5fa0ebb4521397d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get axis grids.  <br /></td></tr>
 <tr class="separator:adc54e2b1f2c55094b5fa0ebb4521397d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2ce739ba66c460e59418c0b66c74525e" id="r_a2ce739ba66c460e59418c0b66c74525e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_scale.html#a2ce739ba66c460e59418c0b66c74525e">SetLabelFormat</a> (const wxString &amp;format, bool updateLabelMode=false)</td></tr>
-<tr class="memdesc:a2ce739ba66c460e59418c0b66c74525e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set axis Label format (used for mpLabel_AUTO draw mode).  <br /></td></tr>
-<tr class="separator:a2ce739ba66c460e59418c0b66c74525e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2a8e8cc6dde72e49ac3e8903974c6a02" id="r_a2a8e8cc6dde72e49ac3e8903974c6a02"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_scale.html#a2a8e8cc6dde72e49ac3e8903974c6a02">SetLabelFormat</a> (const wxString &amp;format, const bool updateLabelMode=false)</td></tr>
+<tr class="memdesc:a2a8e8cc6dde72e49ac3e8903974c6a02"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set axis Label format (used for mpLabel_AUTO draw mode).  <br /></td></tr>
+<tr class="separator:a2a8e8cc6dde72e49ac3e8903974c6a02"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a03f34dfb940d0a2f9bc4dc5ce478b339" id="r_a03f34dfb940d0a2f9bc4dc5ce478b339"><td class="memItemLeft" align="right" valign="top"><a class="el" href="mathplot_8h.html#ab285929a0e74f3648f421ec238859a6c">mpLabelType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_scale.html#a03f34dfb940d0a2f9bc4dc5ce478b339">GetLabelMode</a> () const</td></tr>
 <tr class="memdesc:a03f34dfb940d0a2f9bc4dc5ce478b339"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get axis label view mode.  <br /></td></tr>
 <tr class="separator:a03f34dfb940d0a2f9bc4dc5ce478b339"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab9c0571542a9359ae86f2716dc33582d" id="r_ab9c0571542a9359ae86f2716dc33582d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_scale.html#ab9c0571542a9359ae86f2716dc33582d">SetLabelMode</a> (<a class="el" href="mathplot_8h.html#ab285929a0e74f3648f421ec238859a6c">mpLabelType</a> mode, unsigned int time_conv=0x20)</td></tr>
-<tr class="memdesc:ab9c0571542a9359ae86f2716dc33582d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set axis label view mode.  <br /></td></tr>
-<tr class="separator:ab9c0571542a9359ae86f2716dc33582d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae0d075878cc21642fa4f9beac67be4b4" id="r_ae0d075878cc21642fa4f9beac67be4b4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_scale.html#ae0d075878cc21642fa4f9beac67be4b4">SetLabelMode</a> (const <a class="el" href="mathplot_8h.html#ab285929a0e74f3648f421ec238859a6c">mpLabelType</a> mode, const unsigned int time_conv=0x20)</td></tr>
+<tr class="memdesc:ae0d075878cc21642fa4f9beac67be4b4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set axis label view mode.  <br /></td></tr>
+<tr class="separator:ae0d075878cc21642fa4f9beac67be4b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a439127895d14252a50028483feba282c" id="r_a439127895d14252a50028483feba282c"><td class="memItemLeft" align="right" valign="top">const wxString &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_scale.html#a439127895d14252a50028483feba282c">GetLabelFormat</a> () const</td></tr>
 <tr class="memdesc:a439127895d14252a50028483feba282c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get axis Label format (used for mpLabel_AUTO draw mode).  <br /></td></tr>
 <tr class="separator:a439127895d14252a50028483feba282c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -108,48 +109,48 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ab64bba4ec3b41c1678543e84529ee32e" id="r_ab64bba4ec3b41c1678543e84529ee32e"><td class="memItemLeft" align="right" valign="top">const wxPen &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_scale.html#ab64bba4ec3b41c1678543e84529ee32e">GetGridPen</a> () const</td></tr>
 <tr class="memdesc:ab64bba4ec3b41c1678543e84529ee32e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get pen set for this axis.  <br /></td></tr>
 <tr class="separator:ab64bba4ec3b41c1678543e84529ee32e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aad1d27c614a20a71e8bf59f512ed5a44" id="r_aad1d27c614a20a71e8bf59f512ed5a44"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_scale.html#aad1d27c614a20a71e8bf59f512ed5a44">SetAuto</a> (bool automaticScalingIsEnabled)</td></tr>
-<tr class="memdesc:aad1d27c614a20a71e8bf59f512ed5a44"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable/Disable automatic scaling for this axis.  <br /></td></tr>
-<tr class="separator:aad1d27c614a20a71e8bf59f512ed5a44"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa479155a2503da5778fb8d06c18c3246" id="r_aa479155a2503da5778fb8d06c18c3246"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_scale.html#aa479155a2503da5778fb8d06c18c3246">SetAuto</a> (const bool automaticScalingIsEnabled)</td></tr>
+<tr class="memdesc:aa479155a2503da5778fb8d06c18c3246"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable/Disable automatic scaling for this axis.  <br /></td></tr>
+<tr class="separator:aa479155a2503da5778fb8d06c18c3246"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab540537290a98465c4fbfbc26f85f50b" id="r_ab540537290a98465c4fbfbc26f85f50b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_scale.html#ab540537290a98465c4fbfbc26f85f50b">GetAuto</a> () const</td></tr>
 <tr class="memdesc:ab540537290a98465c4fbfbc26f85f50b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Is automatic scaling enabled for this axis?  <br /></td></tr>
 <tr class="separator:ab540537290a98465c4fbfbc26f85f50b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9a2ca7472694a6e7130e62995acbb0f7" id="r_a9a2ca7472694a6e7130e62995acbb0f7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_scale.html#a9a2ca7472694a6e7130e62995acbb0f7">SetMinScale</a> (double min)</td></tr>
-<tr class="memdesc:a9a2ca7472694a6e7130e62995acbb0f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the minimum of the scale range when we are in automatic mode.  <br /></td></tr>
-<tr class="separator:a9a2ca7472694a6e7130e62995acbb0f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae599311843268545bfbc22331203e390" id="r_ae599311843268545bfbc22331203e390"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_scale.html#ae599311843268545bfbc22331203e390">SetMinScale</a> (const double min)</td></tr>
+<tr class="memdesc:ae599311843268545bfbc22331203e390"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the minimum of the scale range when we are in automatic mode.  <br /></td></tr>
+<tr class="separator:ae599311843268545bfbc22331203e390"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afd6958d567924969041535186b93cca3" id="r_afd6958d567924969041535186b93cca3"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_scale.html#afd6958d567924969041535186b93cca3">GetMinScale</a> () const</td></tr>
 <tr class="memdesc:afd6958d567924969041535186b93cca3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the minimum of the scale range when we are in automatic mode.  <br /></td></tr>
 <tr class="separator:afd6958d567924969041535186b93cca3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a05f5c965f85d755fcca8908fbb972b5e" id="r_a05f5c965f85d755fcca8908fbb972b5e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_scale.html#a05f5c965f85d755fcca8908fbb972b5e">SetMaxScale</a> (double max)</td></tr>
-<tr class="memdesc:a05f5c965f85d755fcca8908fbb972b5e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the maximum of the scale range when we are in automatic mode.  <br /></td></tr>
-<tr class="separator:a05f5c965f85d755fcca8908fbb972b5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaf4a25f0dbb00f44e6c970d65ee5dce6" id="r_aaf4a25f0dbb00f44e6c970d65ee5dce6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_scale.html#aaf4a25f0dbb00f44e6c970d65ee5dce6">SetMaxScale</a> (const double max)</td></tr>
+<tr class="memdesc:aaf4a25f0dbb00f44e6c970d65ee5dce6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the maximum of the scale range when we are in automatic mode.  <br /></td></tr>
+<tr class="separator:aaf4a25f0dbb00f44e6c970d65ee5dce6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aac29c61dc0f5582ae804e1107ed3e6bb" id="r_aac29c61dc0f5582ae804e1107ed3e6bb"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_scale.html#aac29c61dc0f5582ae804e1107ed3e6bb">GetMaxScale</a> () const</td></tr>
 <tr class="memdesc:aac29c61dc0f5582ae804e1107ed3e6bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the maximum of the scale range when we are in automatic mode.  <br /></td></tr>
 <tr class="separator:aac29c61dc0f5582ae804e1107ed3e6bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a638f82244dc5adf90f2a39031cf78bda" id="r_a638f82244dc5adf90f2a39031cf78bda"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_scale.html#a638f82244dc5adf90f2a39031cf78bda">SetScale</a> (double min, double max)</td></tr>
-<tr class="memdesc:a638f82244dc5adf90f2a39031cf78bda"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the minimum and maximum of the scale range when we are in automatic mode.  <br /></td></tr>
-<tr class="separator:a638f82244dc5adf90f2a39031cf78bda"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac65d02e41adc7f67650f2b261ada3f8e" id="r_ac65d02e41adc7f67650f2b261ada3f8e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_scale.html#ac65d02e41adc7f67650f2b261ada3f8e">SetScale</a> (const double min, const double max)</td></tr>
+<tr class="memdesc:ac65d02e41adc7f67650f2b261ada3f8e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the minimum and maximum of the scale range when we are in automatic mode.  <br /></td></tr>
+<tr class="separator:ac65d02e41adc7f67650f2b261ada3f8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a07e6533122e4558abf131b41482531d2" id="r_a07e6533122e4558abf131b41482531d2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_scale.html#a07e6533122e4558abf131b41482531d2">GetScale</a> (double *min, double *max) const</td></tr>
 <tr class="memdesc:a07e6533122e4558abf131b41482531d2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the minimum and maximum of the scale range when we are in automatic mode.  <br /></td></tr>
 <tr class="separator:a07e6533122e4558abf131b41482531d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a84261f64dc78dc58b03e8416089eca22" id="r_a84261f64dc78dc58b03e8416089eca22"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_scale.html#a84261f64dc78dc58b03e8416089eca22">SetScale</a> (<a class="el" href="structmp_range.html">mpRange</a>&lt; double &gt; range)</td></tr>
-<tr class="memdesc:a84261f64dc78dc58b03e8416089eca22"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the minimum and maximum of the scale range when we are in automatic mode.  <br /></td></tr>
-<tr class="separator:a84261f64dc78dc58b03e8416089eca22"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5c553f57efa772569eee1ef42830f695" id="r_a5c553f57efa772569eee1ef42830f695"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_scale.html#a5c553f57efa772569eee1ef42830f695">SetScale</a> (const <a class="el" href="structmp_range.html">mpRange</a>&lt; double &gt; range)</td></tr>
+<tr class="memdesc:a5c553f57efa772569eee1ef42830f695"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the minimum and maximum of the scale range when we are in automatic mode.  <br /></td></tr>
+<tr class="separator:a5c553f57efa772569eee1ef42830f695"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af55bd9e6d880ab48cfb834efe743cb80" id="r_af55bd9e6d880ab48cfb834efe743cb80"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structmp_range.html">mpRange</a>&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_scale.html#af55bd9e6d880ab48cfb834efe743cb80">GetScale</a> () const</td></tr>
 <tr class="memdesc:af55bd9e6d880ab48cfb834efe743cb80"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the minimum and maximum of the scale range when we are in automatic mode.  <br /></td></tr>
 <tr class="separator:af55bd9e6d880ab48cfb834efe743cb80"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac84f8cc6def721b88afb3a687b2922f4" id="r_ac84f8cc6def721b88afb3a687b2922f4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_scale.html#ac84f8cc6def721b88afb3a687b2922f4">SetHovering</a> (bool hover)</td></tr>
-<tr class="memdesc:ac84f8cc6def721b88afb3a687b2922f4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set if axis shall be highlighted when a series is dragged over it.  <br /></td></tr>
-<tr class="separator:ac84f8cc6def721b88afb3a687b2922f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa8cd4ba276a579f4391b5f79d82cfb60" id="r_aa8cd4ba276a579f4391b5f79d82cfb60"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_scale.html#aa8cd4ba276a579f4391b5f79d82cfb60">SetHovering</a> (const bool hover)</td></tr>
+<tr class="memdesc:aa8cd4ba276a579f4391b5f79d82cfb60"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set if axis shall be highlighted when a series is dragged over it.  <br /></td></tr>
+<tr class="separator:aa8cd4ba276a579f4391b5f79d82cfb60"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3a98803f6e2515ecccf39b4b4eac6650" id="r_a3a98803f6e2515ecccf39b4b4eac6650"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_scale.html#a3a98803f6e2515ecccf39b4b4eac6650">IsLogAxis</a> ()</td></tr>
 <tr class="memdesc:a3a98803f6e2515ecccf39b4b4eac6650"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get if we are in Logarithmic mode.  <br /></td></tr>
 <tr class="separator:a3a98803f6e2515ecccf39b4b4eac6650"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1faae3f094611ed31805d65aaa8d6867" id="r_a1faae3f094611ed31805d65aaa8d6867"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_scale.html#a1faae3f094611ed31805d65aaa8d6867">SetLogAxis</a> (bool log)</td></tr>
-<tr class="memdesc:a1faae3f094611ed31805d65aaa8d6867"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set Logarithmic mode.  <br /></td></tr>
-<tr class="separator:a1faae3f094611ed31805d65aaa8d6867"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a68db749a33b51f1629774ed6ba1f8daf" id="r_a68db749a33b51f1629774ed6ba1f8daf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_scale.html#a68db749a33b51f1629774ed6ba1f8daf">SetCoordIsAlwaysVisible</a> (bool alwaysVisible)</td></tr>
-<tr class="memdesc:a68db749a33b51f1629774ed6ba1f8daf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the visibility of the mouse coordinates in the info coordinates despite the visibility of the axis.  <br /></td></tr>
-<tr class="separator:a68db749a33b51f1629774ed6ba1f8daf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7abf5f80174548a355a016e5e53ac043" id="r_a7abf5f80174548a355a016e5e53ac043"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_scale.html#a7abf5f80174548a355a016e5e53ac043">SetLogAxis</a> (const bool log)</td></tr>
+<tr class="memdesc:a7abf5f80174548a355a016e5e53ac043"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set Logarithmic mode.  <br /></td></tr>
+<tr class="separator:a7abf5f80174548a355a016e5e53ac043"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a46620c3268f9fd0da7691ea55245f198" id="r_a46620c3268f9fd0da7691ea55245f198"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_scale.html#a46620c3268f9fd0da7691ea55245f198">SetCoordIsAlwaysVisible</a> (const bool alwaysVisible)</td></tr>
+<tr class="memdesc:a46620c3268f9fd0da7691ea55245f198"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the visibility of the mouse coordinates in the info coordinates despite the visibility of the axis.  <br /></td></tr>
+<tr class="separator:a46620c3268f9fd0da7691ea55245f198"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a688ce357b5a2d7589093daab6174dbd1" id="r_a688ce357b5a2d7589093daab6174dbd1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_scale.html#a688ce357b5a2d7589093daab6174dbd1">GetCoordIsAlwaysVisible</a> () const</td></tr>
 <tr class="memdesc:a688ce357b5a2d7589093daab6174dbd1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the visibility of the mouse coordinates in the info coordinates.  <br /></td></tr>
 <tr class="separator:a688ce357b5a2d7589093daab6174dbd1"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -167,9 +168,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>SetWindow</b> (<a cla
 <tr class="memitem:a9b87c982de14d11b3d8ccb07abf08d66 inherit pub_methods_classmp_layer" id="r_a9b87c982de14d11b3d8ccb07abf08d66"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_layer.html#a9b87c982de14d11b3d8ccb07abf08d66">GetLayerSubType</a> () const</td></tr>
 <tr class="memdesc:a9b87c982de14d11b3d8ccb07abf08d66 inherit pub_methods_classmp_layer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get layer subtype: each layer type can have several flavors.  <br /></td></tr>
 <tr class="separator:a9b87c982de14d11b3d8ccb07abf08d66 inherit pub_methods_classmp_layer"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa40cea42f19322a782da7fd4e6579155 inherit pub_methods_classmp_layer" id="r_aa40cea42f19322a782da7fd4e6579155"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_layer.html#aa40cea42f19322a782da7fd4e6579155">IsLayerType</a> (<a class="el" href="mathplot_8h.html#a5dba29b7583413d9cb8b98a013628b21">mpLayerType</a> typeOfInterest, int *subtype)</td></tr>
-<tr class="memdesc:aa40cea42f19322a782da7fd4e6579155 inherit pub_methods_classmp_layer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the layer's subtype in caller variable, and return true if the layer is of type "typeOfInterest".  <br /></td></tr>
-<tr class="separator:aa40cea42f19322a782da7fd4e6579155 inherit pub_methods_classmp_layer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7e7689ffb73e1d69ae8ac78a9d707da0 inherit pub_methods_classmp_layer" id="r_a7e7689ffb73e1d69ae8ac78a9d707da0"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_layer.html#a7e7689ffb73e1d69ae8ac78a9d707da0">IsLayerType</a> (const <a class="el" href="mathplot_8h.html#a5dba29b7583413d9cb8b98a013628b21">mpLayerType</a> typeOfInterest, int *subtype)</td></tr>
+<tr class="memdesc:a7e7689ffb73e1d69ae8ac78a9d707da0 inherit pub_methods_classmp_layer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the layer's subtype in caller variable, and return true if the layer is of type "typeOfInterest".  <br /></td></tr>
+<tr class="separator:a7e7689ffb73e1d69ae8ac78a9d707da0 inherit pub_methods_classmp_layer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adf8df2da43c1dc3f0e382f0ae3698b5a inherit pub_methods_classmp_layer" id="r_adf8df2da43c1dc3f0e382f0ae3698b5a"><td class="memItemLeft" align="right" valign="top">virtual double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_layer.html#adf8df2da43c1dc3f0e382f0ae3698b5a">GetMinX</a> ()</td></tr>
 <tr class="memdesc:adf8df2da43c1dc3f0e382f0ae3698b5a inherit pub_methods_classmp_layer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get inclusive left border of bounding box.  <br /></td></tr>
 <tr class="separator:adf8df2da43c1dc3f0e382f0ae3698b5a inherit pub_methods_classmp_layer"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -218,15 +219,15 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>SetWindow</b> (<a cla
 <tr class="memitem:af1654cb594ec1ef3c7387c3147e70890 inherit pub_methods_classmp_layer" id="r_af1654cb594ec1ef3c7387c3147e70890"><td class="memItemLeft" align="right" valign="top">const wxBrush &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_layer.html#af1654cb594ec1ef3c7387c3147e70890">GetBrush</a> () const</td></tr>
 <tr class="memdesc:af1654cb594ec1ef3c7387c3147e70890 inherit pub_methods_classmp_layer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get brush set for this layer.  <br /></td></tr>
 <tr class="separator:af1654cb594ec1ef3c7387c3147e70890 inherit pub_methods_classmp_layer"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a86ff0510b1f7370b32ef505d6c7821c5 inherit pub_methods_classmp_layer" id="r_a86ff0510b1f7370b32ef505d6c7821c5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_layer.html#a86ff0510b1f7370b32ef505d6c7821c5">SetShowName</a> (bool show)</td></tr>
-<tr class="memdesc:a86ff0510b1f7370b32ef505d6c7821c5 inherit pub_methods_classmp_layer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set Name visibility.  <br /></td></tr>
-<tr class="separator:a86ff0510b1f7370b32ef505d6c7821c5 inherit pub_methods_classmp_layer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aab5d2f48d2d7eca3153b6436563e5146 inherit pub_methods_classmp_layer" id="r_aab5d2f48d2d7eca3153b6436563e5146"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_layer.html#aab5d2f48d2d7eca3153b6436563e5146">SetShowName</a> (const bool show)</td></tr>
+<tr class="memdesc:aab5d2f48d2d7eca3153b6436563e5146 inherit pub_methods_classmp_layer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set Name visibility.  <br /></td></tr>
+<tr class="separator:aab5d2f48d2d7eca3153b6436563e5146 inherit pub_methods_classmp_layer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a739a820448d483e36eecdc4442e4c69f inherit pub_methods_classmp_layer" id="r_a739a820448d483e36eecdc4442e4c69f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_layer.html#a739a820448d483e36eecdc4442e4c69f">GetShowName</a> () const</td></tr>
 <tr class="memdesc:a739a820448d483e36eecdc4442e4c69f inherit pub_methods_classmp_layer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get Name visibility.  <br /></td></tr>
 <tr class="separator:a739a820448d483e36eecdc4442e4c69f inherit pub_methods_classmp_layer"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afc08c8f852363550e5714959d71806a7 inherit pub_methods_classmp_layer" id="r_afc08c8f852363550e5714959d71806a7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_layer.html#afc08c8f852363550e5714959d71806a7">SetDrawOutsideMargins</a> (bool drawModeOutside)</td></tr>
-<tr class="memdesc:afc08c8f852363550e5714959d71806a7 inherit pub_methods_classmp_layer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set Draw mode: inside or outside margins.  <br /></td></tr>
-<tr class="separator:afc08c8f852363550e5714959d71806a7 inherit pub_methods_classmp_layer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abd817c45b00f70b8bd6fb2a058ac9904 inherit pub_methods_classmp_layer" id="r_abd817c45b00f70b8bd6fb2a058ac9904"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_layer.html#abd817c45b00f70b8bd6fb2a058ac9904">SetDrawOutsideMargins</a> (const bool drawModeOutside)</td></tr>
+<tr class="memdesc:abd817c45b00f70b8bd6fb2a058ac9904 inherit pub_methods_classmp_layer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set Draw mode: inside or outside margins.  <br /></td></tr>
+<tr class="separator:abd817c45b00f70b8bd6fb2a058ac9904 inherit pub_methods_classmp_layer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a17d125b5e5402c8504cee938d8999bf8 inherit pub_methods_classmp_layer" id="r_a17d125b5e5402c8504cee938d8999bf8"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_layer.html#a17d125b5e5402c8504cee938d8999bf8">GetDrawOutsideMargins</a> () const</td></tr>
 <tr class="memdesc:a17d125b5e5402c8504cee938d8999bf8 inherit pub_methods_classmp_layer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get Draw mode: inside or outside margins.  <br /></td></tr>
 <tr class="separator:a17d125b5e5402c8504cee938d8999bf8 inherit pub_methods_classmp_layer"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -236,24 +237,24 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>SetWindow</b> (<a cla
 <tr class="memitem:a42d87f773eaf6f0e6eb8b16ae439f41b inherit pub_methods_classmp_layer" id="r_a42d87f773eaf6f0e6eb8b16ae439f41b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_layer.html#a42d87f773eaf6f0e6eb8b16ae439f41b">IsVisible</a> () const</td></tr>
 <tr class="memdesc:a42d87f773eaf6f0e6eb8b16ae439f41b inherit pub_methods_classmp_layer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Is this layer visible?  <br /></td></tr>
 <tr class="separator:a42d87f773eaf6f0e6eb8b16ae439f41b inherit pub_methods_classmp_layer"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac9b4db5e38ba086e548170e0bd2142c8 inherit pub_methods_classmp_layer" id="r_ac9b4db5e38ba086e548170e0bd2142c8"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_layer.html#ac9b4db5e38ba086e548170e0bd2142c8">SetVisible</a> (bool show)</td></tr>
-<tr class="memdesc:ac9b4db5e38ba086e548170e0bd2142c8 inherit pub_methods_classmp_layer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets layer visibility.  <br /></td></tr>
-<tr class="separator:ac9b4db5e38ba086e548170e0bd2142c8 inherit pub_methods_classmp_layer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abdcce97492c7b7cc1c1b7e9c0e81c4b0 inherit pub_methods_classmp_layer" id="r_abdcce97492c7b7cc1c1b7e9c0e81c4b0"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_layer.html#abdcce97492c7b7cc1c1b7e9c0e81c4b0">SetVisible</a> (const bool show)</td></tr>
+<tr class="memdesc:abdcce97492c7b7cc1c1b7e9c0e81c4b0 inherit pub_methods_classmp_layer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets layer visibility.  <br /></td></tr>
+<tr class="separator:abdcce97492c7b7cc1c1b7e9c0e81c4b0 inherit pub_methods_classmp_layer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab19ae2598adc332d97f18cb381a01aea inherit pub_methods_classmp_layer" id="r_ab19ae2598adc332d97f18cb381a01aea"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_layer.html#ab19ae2598adc332d97f18cb381a01aea">IsTractable</a> () const</td></tr>
 <tr class="memdesc:ab19ae2598adc332d97f18cb381a01aea inherit pub_methods_classmp_layer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether the layer is tractable or not.  <br /></td></tr>
 <tr class="separator:ab19ae2598adc332d97f18cb381a01aea inherit pub_methods_classmp_layer"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab86b76a7f774d2c58679c4167277bb2f inherit pub_methods_classmp_layer" id="r_ab86b76a7f774d2c58679c4167277bb2f"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_layer.html#ab86b76a7f774d2c58679c4167277bb2f">SetTractable</a> (bool track)</td></tr>
-<tr class="memdesc:ab86b76a7f774d2c58679c4167277bb2f inherit pub_methods_classmp_layer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets layer tractability.  <br /></td></tr>
-<tr class="separator:ab86b76a7f774d2c58679c4167277bb2f inherit pub_methods_classmp_layer"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9f25d4b7354b2e256482cdfe48eb13f4 inherit pub_methods_classmp_layer" id="r_a9f25d4b7354b2e256482cdfe48eb13f4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_layer.html#a9f25d4b7354b2e256482cdfe48eb13f4">SetAlign</a> (int align)</td></tr>
-<tr class="memdesc:a9f25d4b7354b2e256482cdfe48eb13f4 inherit pub_methods_classmp_layer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set X/Y alignment.  <br /></td></tr>
-<tr class="separator:a9f25d4b7354b2e256482cdfe48eb13f4 inherit pub_methods_classmp_layer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a781d74630d9dae32fa2106494d8a00c9 inherit pub_methods_classmp_layer" id="r_a781d74630d9dae32fa2106494d8a00c9"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_layer.html#a781d74630d9dae32fa2106494d8a00c9">SetTractable</a> (const bool track)</td></tr>
+<tr class="memdesc:a781d74630d9dae32fa2106494d8a00c9 inherit pub_methods_classmp_layer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets layer tractability.  <br /></td></tr>
+<tr class="separator:a781d74630d9dae32fa2106494d8a00c9 inherit pub_methods_classmp_layer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a78eeed6726ea5701a3873d934985e459 inherit pub_methods_classmp_layer" id="r_a78eeed6726ea5701a3873d934985e459"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_layer.html#a78eeed6726ea5701a3873d934985e459">SetAlign</a> (const int align)</td></tr>
+<tr class="memdesc:a78eeed6726ea5701a3873d934985e459 inherit pub_methods_classmp_layer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set X/Y alignment.  <br /></td></tr>
+<tr class="separator:a78eeed6726ea5701a3873d934985e459 inherit pub_methods_classmp_layer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af7a3f5169187a0b1eca74f915b444d76 inherit pub_methods_classmp_layer" id="r_af7a3f5169187a0b1eca74f915b444d76"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_layer.html#af7a3f5169187a0b1eca74f915b444d76">GetAlign</a> () const</td></tr>
 <tr class="memdesc:af7a3f5169187a0b1eca74f915b444d76 inherit pub_methods_classmp_layer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get X/Y alignment.  <br /></td></tr>
 <tr class="separator:af7a3f5169187a0b1eca74f915b444d76 inherit pub_methods_classmp_layer"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afa4e9ae189d3ca1090cba1c91b526c42 inherit pub_methods_classmp_layer" id="r_afa4e9ae189d3ca1090cba1c91b526c42"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_layer.html#afa4e9ae189d3ca1090cba1c91b526c42">SetCanDelete</a> (bool canDelete)</td></tr>
-<tr class="memdesc:afa4e9ae189d3ca1090cba1c91b526c42 inherit pub_methods_classmp_layer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set what we do with the object associated with the layer when we delete the layer.  <br /></td></tr>
-<tr class="separator:afa4e9ae189d3ca1090cba1c91b526c42 inherit pub_methods_classmp_layer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6b604a8d26c759faed740ca7446ee976 inherit pub_methods_classmp_layer" id="r_a6b604a8d26c759faed740ca7446ee976"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_layer.html#a6b604a8d26c759faed740ca7446ee976">SetCanDelete</a> (const bool canDelete)</td></tr>
+<tr class="memdesc:a6b604a8d26c759faed740ca7446ee976 inherit pub_methods_classmp_layer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set what we do with the object associated with the layer when we delete the layer.  <br /></td></tr>
+<tr class="separator:a6b604a8d26c759faed740ca7446ee976 inherit pub_methods_classmp_layer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2fa1c8cc5119e1e0542200c9c62913b6 inherit pub_methods_classmp_layer" id="r_a2fa1c8cc5119e1e0542200c9c62913b6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_layer.html#a2fa1c8cc5119e1e0542200c9c62913b6">GetCanDelete</a> (void) const</td></tr>
 <tr class="memdesc:a2fa1c8cc5119e1e0542200c9c62913b6 inherit pub_methods_classmp_layer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retreive what we do with the object associated with the layer when we delete the layer.  <br /></td></tr>
 <tr class="separator:a2fa1c8cc5119e1e0542200c9c62913b6 inherit pub_methods_classmp_layer"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -266,9 +267,6 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:a5d4e84454d79bef629a84a49afacee57" id="r_a5d4e84454d79bef629a84a49afacee57"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_scale.html#a5d4e84454d79bef629a84a49afacee57">GetOrigin</a> (<a class="el" href="classmp_window.html">mpWindow</a> &amp;w)=0</td></tr>
 <tr class="memdesc:a5d4e84454d79bef629a84a49afacee57"><td class="mdescLeft">&#160;</td><td class="mdescRight">virtual function to compute origin of the axis  <br /></td></tr>
 <tr class="separator:a5d4e84454d79bef629a84a49afacee57"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa3056005ed6a325ad3124c4b99ab36b6" id="r_aa3056005ed6a325ad3124c4b99ab36b6"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_scale.html#aa3056005ed6a325ad3124c4b99ab36b6">GetStep</a> (double scale, int minLabelSpacing)</td></tr>
-<tr class="memdesc:aa3056005ed6a325ad3124c4b99ab36b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate a 'nice' label step size for the given dataset and desired pixel spacing.  <br /></td></tr>
-<tr class="separator:aa3056005ed6a325ad3124c4b99ab36b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab00b94e2566c1b55cf72ed8e519bc9bb" id="r_ab00b94e2566c1b55cf72ed8e519bc9bb"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_scale.html#ab00b94e2566c1b55cf72ed8e519bc9bb">DrawScaleName</a> (wxDC &amp;dc, <a class="el" href="classmp_window.html">mpWindow</a> &amp;w, int origin, int labelSize)=0</td></tr>
 <tr class="memdesc:ab00b94e2566c1b55cf72ed8e519bc9bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw the name of the scale<br  />
  This function is virtual and need to be overloaded in child class.  <br /></td></tr>
@@ -276,21 +274,9 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:a0ac47d3e9f4af6bd57505fd1c05e6203" id="r_a0ac47d3e9f4af6bd57505fd1c05e6203"><td class="memItemLeft" align="right" valign="top">wxString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_scale.html#a0ac47d3e9f4af6bd57505fd1c05e6203">FormatLabelValue</a> (double value)</td></tr>
 <tr class="memdesc:a0ac47d3e9f4af6bd57505fd1c05e6203"><td class="mdescLeft">&#160;</td><td class="mdescRight">Formats a label value to a string Use m_ScaleConstraints, so this structure must be up to date.  <br /></td></tr>
 <tr class="separator:a0ac47d3e9f4af6bd57505fd1c05e6203"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9f596cf2507e2fbac5f6e2c972bfdb58" id="r_a9f596cf2507e2fbac5f6e2c972bfdb58"><td class="memItemLeft" align="right" valign="top">wxString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_scale.html#a9f596cf2507e2fbac5f6e2c972bfdb58">FormatLogValue</a> (double n)</td></tr>
-<tr class="memdesc:a9f596cf2507e2fbac5f6e2c972bfdb58"><td class="mdescLeft">&#160;</td><td class="mdescRight">Formats a value to a string used on a log axis.  <br /></td></tr>
-<tr class="separator:a9f596cf2507e2fbac5f6e2c972bfdb58"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afc56507a83817cee2c947e12f6522fbf" id="r_afc56507a83817cee2c947e12f6522fbf"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_scale.html#afc56507a83817cee2c947e12f6522fbf">GetLabelWidth</a> (double value, wxDC &amp;dc)</td></tr>
 <tr class="memdesc:afc56507a83817cee2c947e12f6522fbf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get label text width for a given value Use m_ScaleConstraints, so this structure must be up to date.  <br /></td></tr>
 <tr class="separator:afc56507a83817cee2c947e12f6522fbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a621293a6d63d03af1ab60e765afbff43" id="r_a621293a6d63d03af1ab60e765afbff43"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_scale.html#a621293a6d63d03af1ab60e765afbff43">UseScientific</a> (double maxAxisValue)</td></tr>
-<tr class="memdesc:a621293a6d63d03af1ab60e765afbff43"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if scientific notation shall be used on the labels.  <br /></td></tr>
-<tr class="separator:a621293a6d63d03af1ab60e765afbff43"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac7ffab7220ab4eae8b603c3e998884a0" id="r_ac7ffab7220ab4eae8b603c3e998884a0"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_scale.html#ac7ffab7220ab4eae8b603c3e998884a0">GetSignificantDigits</a> (double step, double maxAxisValue)</td></tr>
-<tr class="memdesc:ac7ffab7220ab4eae8b603c3e998884a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get number of significant digits to be used in scientific notation.  <br /></td></tr>
-<tr class="separator:ac7ffab7220ab4eae8b603c3e998884a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaa934b33c3e349843f9beee95f5b3788" id="r_aaa934b33c3e349843f9beee95f5b3788"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_scale.html#aaa934b33c3e349843f9beee95f5b3788">GetDecimalDigits</a> (double step)</td></tr>
-<tr class="memdesc:aaa934b33c3e349843f9beee95f5b3788"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get number of decimal digits to be used in decimal notation.  <br /></td></tr>
-<tr class="separator:aaa934b33c3e349843f9beee95f5b3788"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7819c81507f2e31a6cd51a8926044ff9" id="r_a7819c81507f2e31a6cd51a8926044ff9"><td class="memItemLeft" align="right" valign="top"><a id="a7819c81507f2e31a6cd51a8926044ff9" name="a7819c81507f2e31a6cd51a8926044ff9"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>ComputeScaleConstraints</b> (double step, double maxAxisValue)</td></tr>
 <tr class="memdesc:a7819c81507f2e31a6cd51a8926044ff9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize and compute properties of m_ScaleConstraints structure. <br /></td></tr>
@@ -309,6 +295,24 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>UpdateContext</b> (wx
 <tr class="memitem:aefdc0499d3f12bf9e4b668b84ffee367 inherit pro_methods_classmp_layer" id="r_aefdc0499d3f12bf9e4b668b84ffee367"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_layer.html#aefdc0499d3f12bf9e4b668b84ffee367">CheckLog</a> (double *x, double *y, int yAxisID)</td></tr>
 <tr class="memdesc:aefdc0499d3f12bf9e4b668b84ffee367 inherit pro_methods_classmp_layer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Test if we are in log axis and if true return the log of the values.  <br /></td></tr>
 <tr class="separator:aefdc0499d3f12bf9e4b668b84ffee367 inherit pro_methods_classmp_layer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-static-methods" name="pro-static-methods"></a>
+Static Protected Member Functions</h2></td></tr>
+<tr class="memitem:afb4998f4a8db761cd4f2a063dcc5d785" id="r_afb4998f4a8db761cd4f2a063dcc5d785"><td class="memItemLeft" align="right" valign="top">static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_scale.html#afb4998f4a8db761cd4f2a063dcc5d785">GetStep</a> (double scale, int minLabelSpacing)</td></tr>
+<tr class="memdesc:afb4998f4a8db761cd4f2a063dcc5d785"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate a 'nice' label step size for the given dataset and desired pixel spacing.  <br /></td></tr>
+<tr class="separator:afb4998f4a8db761cd4f2a063dcc5d785"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aed644be11414e3951fb49d03d5e6a548" id="r_aed644be11414e3951fb49d03d5e6a548"><td class="memItemLeft" align="right" valign="top">static wxString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_scale.html#aed644be11414e3951fb49d03d5e6a548">FormatLogValue</a> (double n)</td></tr>
+<tr class="memdesc:aed644be11414e3951fb49d03d5e6a548"><td class="mdescLeft">&#160;</td><td class="mdescRight">Formats a value to a string used on a log axis.  <br /></td></tr>
+<tr class="separator:aed644be11414e3951fb49d03d5e6a548"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6e602cb722f815fbb9f96b863061d253" id="r_a6e602cb722f815fbb9f96b863061d253"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_scale.html#a6e602cb722f815fbb9f96b863061d253">UseScientific</a> (double maxAxisValue)</td></tr>
+<tr class="memdesc:a6e602cb722f815fbb9f96b863061d253"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if scientific notation shall be used on the labels.  <br /></td></tr>
+<tr class="separator:a6e602cb722f815fbb9f96b863061d253"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a03ac17d604fc54fcdda2291741593cd6" id="r_a03ac17d604fc54fcdda2291741593cd6"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_scale.html#a03ac17d604fc54fcdda2291741593cd6">GetSignificantDigits</a> (double step, double maxAxisValue)</td></tr>
+<tr class="memdesc:a03ac17d604fc54fcdda2291741593cd6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get number of significant digits to be used in scientific notation.  <br /></td></tr>
+<tr class="separator:a03ac17d604fc54fcdda2291741593cd6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6f701b31a67ce15b2f19084a2555aaba" id="r_a6f701b31a67ce15b2f19084a2555aaba"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_scale.html#a6f701b31a67ce15b2f19084a2555aaba">GetDecimalDigits</a> (double step)</td></tr>
+<tr class="memdesc:a6f701b31a67ce15b2f19084a2555aaba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get number of decimal digits to be used in decimal notation.  <br /></td></tr>
+<tr class="separator:a6f701b31a67ce15b2f19084a2555aaba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
@@ -452,14 +456,14 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>m_CanDelete</b></td><
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-static-attribs" name="pro-static-attribs"></a>
 Static Protected Attributes</h2></td></tr>
-<tr class="memitem:a2cef473832d5208bd184563bdc87f747" id="r_a2cef473832d5208bd184563bdc87f747"><td class="memItemLeft" align="right" valign="top"><a id="a2cef473832d5208bd184563bdc87f747" name="a2cef473832d5208bd184563bdc87f747"></a>
-static const wxCoord&#160;</td><td class="memItemRight" valign="bottom"><b>kTickSize</b> = 4</td></tr>
-<tr class="memdesc:a2cef473832d5208bd184563bdc87f747"><td class="mdescLeft">&#160;</td><td class="mdescRight">Length of tick line. <br /></td></tr>
-<tr class="separator:a2cef473832d5208bd184563bdc87f747"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0856a7c7c2c258d953b42c33c74596b9" id="r_a0856a7c7c2c258d953b42c33c74596b9"><td class="memItemLeft" align="right" valign="top"><a id="a0856a7c7c2c258d953b42c33c74596b9" name="a0856a7c7c2c258d953b42c33c74596b9"></a>
-static const wxCoord&#160;</td><td class="memItemRight" valign="bottom"><b>kAxisExtraSpace</b> = 6</td></tr>
-<tr class="memdesc:a0856a7c7c2c258d953b42c33c74596b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extra space for axis to make it look good. <br /></td></tr>
-<tr class="separator:a0856a7c7c2c258d953b42c33c74596b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a88587d6e34f299ab186ccfb03f73a49f" id="r_a88587d6e34f299ab186ccfb03f73a49f"><td class="memItemLeft" align="right" valign="top"><a id="a88587d6e34f299ab186ccfb03f73a49f" name="a88587d6e34f299ab186ccfb03f73a49f"></a>
+static constexpr wxCoord&#160;</td><td class="memItemRight" valign="bottom"><b>kTickSize</b> = 4</td></tr>
+<tr class="memdesc:a88587d6e34f299ab186ccfb03f73a49f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Length of tick line. <br /></td></tr>
+<tr class="separator:a88587d6e34f299ab186ccfb03f73a49f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a05fe51133d340941761654fc27cc5076" id="r_a05fe51133d340941761654fc27cc5076"><td class="memItemLeft" align="right" valign="top"><a id="a05fe51133d340941761654fc27cc5076" name="a05fe51133d340941761654fc27cc5076"></a>
+static constexpr wxCoord&#160;</td><td class="memItemRight" valign="bottom"><b>kAxisExtraSpace</b> = 6</td></tr>
+<tr class="memdesc:a05fe51133d340941761654fc27cc5076"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extra space for axis to make it look good. <br /></td></tr>
+<tr class="separator:a05fe51133d340941761654fc27cc5076"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Plot layer implementing an abstract scale ruler. </p>
@@ -588,7 +592,7 @@ static const wxCoord&#160;</td><td class="memItemRight" valign="bottom"><b>kAxis
   </dd>
 </dl>
 
-<p>Implemented in <a class="el" href="classmp_scale_x.html#ac3b4583565512c6744ba569b44eb92ba">mpScaleX</a>, and <a class="el" href="classmp_scale_y.html#a2cbc4de4d0068249fada0586906f39d6">mpScaleY</a>.</p>
+<p>Implemented in <a class="el" href="classmp_scale_x.html#ab2d6b58197328859fc4c494864934e69">mpScaleX</a>, and <a class="el" href="classmp_scale_y.html#a09bd5e513481b199bc9ee82c996514cf">mpScaleY</a>.</p>
 
 </div>
 </div>
@@ -627,8 +631,8 @@ static const wxCoord&#160;</td><td class="memItemRight" valign="bottom"><b>kAxis
 
 </div>
 </div>
-<a id="a9f596cf2507e2fbac5f6e2c972bfdb58" name="a9f596cf2507e2fbac5f6e2c972bfdb58"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9f596cf2507e2fbac5f6e2c972bfdb58">&#9670;&#160;</a></span>FormatLogValue()</h2>
+<a id="aed644be11414e3951fb49d03d5e6a548" name="aed644be11414e3951fb49d03d5e6a548"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aed644be11414e3951fb49d03d5e6a548">&#9670;&#160;</a></span>FormatLogValue()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -637,7 +641,7 @@ static const wxCoord&#160;</td><td class="memItemRight" valign="bottom"><b>kAxis
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">wxString mpScale::FormatLogValue </td>
+          <td class="memname">static wxString mpScale::FormatLogValue </td>
           <td>(</td>
           <td class="paramtype">double&#160;</td>
           <td class="paramname"><em>n</em></td><td>)</td>
@@ -646,7 +650,7 @@ static const wxCoord&#160;</td><td class="memItemRight" valign="bottom"><b>kAxis
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">protected</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -690,8 +694,8 @@ static const wxCoord&#160;</td><td class="memItemRight" valign="bottom"><b>kAxis
 
 </div>
 </div>
-<a id="a808c8488aa6c71672f9386b9db6057cc" name="a808c8488aa6c71672f9386b9db6057cc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a808c8488aa6c71672f9386b9db6057cc">&#9670;&#160;</a></span>GetAxisID()</h2>
+<a id="aa90d3c89e80563b84587c91b00510216" name="aa90d3c89e80563b84587c91b00510216"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa90d3c89e80563b84587c91b00510216">&#9670;&#160;</a></span>GetAxisID()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -704,7 +708,7 @@ static const wxCoord&#160;</td><td class="memItemRight" valign="bottom"><b>kAxis
           <td>(</td>
           <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
   </td>
@@ -747,8 +751,8 @@ static const wxCoord&#160;</td><td class="memItemRight" valign="bottom"><b>kAxis
 
 </div>
 </div>
-<a id="aaa934b33c3e349843f9beee95f5b3788" name="aaa934b33c3e349843f9beee95f5b3788"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aaa934b33c3e349843f9beee95f5b3788">&#9670;&#160;</a></span>GetDecimalDigits()</h2>
+<a id="a6f701b31a67ce15b2f19084a2555aaba" name="a6f701b31a67ce15b2f19084a2555aaba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6f701b31a67ce15b2f19084a2555aaba">&#9670;&#160;</a></span>GetDecimalDigits()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -757,7 +761,7 @@ static const wxCoord&#160;</td><td class="memItemRight" valign="bottom"><b>kAxis
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">int mpScale::GetDecimalDigits </td>
+          <td class="memname">static int mpScale::GetDecimalDigits </td>
           <td>(</td>
           <td class="paramtype">double&#160;</td>
           <td class="paramname"><em>step</em></td><td>)</td>
@@ -766,7 +770,7 @@ static const wxCoord&#160;</td><td class="memItemRight" valign="bottom"><b>kAxis
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">protected</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -1000,7 +1004,7 @@ static const wxCoord&#160;</td><td class="memItemRight" valign="bottom"><b>kAxis
   </dd>
 </dl>
 
-<p>Implemented in <a class="el" href="classmp_scale_x.html#a24a5a6a781465f2db74629a3d9d3f662">mpScaleX</a>, and <a class="el" href="classmp_scale_y.html#ab26cc318573e842e25f23c2ed85bd3ef">mpScaleY</a>.</p>
+<p>Implemented in <a class="el" href="classmp_scale_x.html#adcd0a2e1d67b526cd577c32223787c7f">mpScaleX</a>, and <a class="el" href="classmp_scale_y.html#a9b8359b241df12e0a9e773cc12b81700">mpScaleY</a>.</p>
 
 </div>
 </div>
@@ -1133,8 +1137,8 @@ static const wxCoord&#160;</td><td class="memItemRight" valign="bottom"><b>kAxis
 
 </div>
 </div>
-<a id="ac7ffab7220ab4eae8b603c3e998884a0" name="ac7ffab7220ab4eae8b603c3e998884a0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac7ffab7220ab4eae8b603c3e998884a0">&#9670;&#160;</a></span>GetSignificantDigits()</h2>
+<a id="a03ac17d604fc54fcdda2291741593cd6" name="a03ac17d604fc54fcdda2291741593cd6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a03ac17d604fc54fcdda2291741593cd6">&#9670;&#160;</a></span>GetSignificantDigits()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1143,7 +1147,7 @@ static const wxCoord&#160;</td><td class="memItemRight" valign="bottom"><b>kAxis
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">int mpScale::GetSignificantDigits </td>
+          <td class="memname">static int mpScale::GetSignificantDigits </td>
           <td>(</td>
           <td class="paramtype">double&#160;</td>
           <td class="paramname"><em>step</em>, </td>
@@ -1162,7 +1166,7 @@ static const wxCoord&#160;</td><td class="memItemRight" valign="bottom"><b>kAxis
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">protected</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -1179,8 +1183,8 @@ static const wxCoord&#160;</td><td class="memItemRight" valign="bottom"><b>kAxis
 
 </div>
 </div>
-<a id="aa3056005ed6a325ad3124c4b99ab36b6" name="aa3056005ed6a325ad3124c4b99ab36b6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa3056005ed6a325ad3124c4b99ab36b6">&#9670;&#160;</a></span>GetStep()</h2>
+<a id="afb4998f4a8db761cd4f2a063dcc5d785" name="afb4998f4a8db761cd4f2a063dcc5d785"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afb4998f4a8db761cd4f2a063dcc5d785">&#9670;&#160;</a></span>GetStep()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1189,7 +1193,7 @@ static const wxCoord&#160;</td><td class="memItemRight" valign="bottom"><b>kAxis
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">double mpScale::GetStep </td>
+          <td class="memname">static double mpScale::GetStep </td>
           <td>(</td>
           <td class="paramtype">double&#160;</td>
           <td class="paramname"><em>scale</em>, </td>
@@ -1208,7 +1212,7 @@ static const wxCoord&#160;</td><td class="memItemRight" valign="bottom"><b>kAxis
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">protected</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -1225,8 +1229,8 @@ static const wxCoord&#160;</td><td class="memItemRight" valign="bottom"><b>kAxis
 
 </div>
 </div>
-<a id="a89c254885d1a3c5bcc6453ccfa20aabf" name="a89c254885d1a3c5bcc6453ccfa20aabf"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a89c254885d1a3c5bcc6453ccfa20aabf">&#9670;&#160;</a></span>HasBBox()</h2>
+<a id="a9e8cfb769e28f3ddcc17006a848edb05" name="a9e8cfb769e28f3ddcc17006a848edb05"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9e8cfb769e28f3ddcc17006a848edb05">&#9670;&#160;</a></span>HasBBox()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1235,7 +1239,7 @@ static const wxCoord&#160;</td><td class="memItemRight" valign="bottom"><b>kAxis
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual bool mpScale::HasBBox </td>
+          <td class="memname">bool mpScale::HasBBox </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -1243,7 +1247,7 @@ static const wxCoord&#160;</td><td class="memItemRight" valign="bottom"><b>kAxis
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -1283,8 +1287,8 @@ static const wxCoord&#160;</td><td class="memItemRight" valign="bottom"><b>kAxis
 
 </div>
 </div>
-<a id="aad1d27c614a20a71e8bf59f512ed5a44" name="aad1d27c614a20a71e8bf59f512ed5a44"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aad1d27c614a20a71e8bf59f512ed5a44">&#9670;&#160;</a></span>SetAuto()</h2>
+<a id="aa479155a2503da5778fb8d06c18c3246" name="aa479155a2503da5778fb8d06c18c3246"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa479155a2503da5778fb8d06c18c3246">&#9670;&#160;</a></span>SetAuto()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1295,7 +1299,7 @@ static const wxCoord&#160;</td><td class="memItemRight" valign="bottom"><b>kAxis
         <tr>
           <td class="memname">void mpScale::SetAuto </td>
           <td>(</td>
-          <td class="paramtype">bool&#160;</td>
+          <td class="paramtype">const bool&#160;</td>
           <td class="paramname"><em>automaticScalingIsEnabled</em></td><td>)</td>
           <td></td>
         </tr>
@@ -1317,8 +1321,8 @@ static const wxCoord&#160;</td><td class="memItemRight" valign="bottom"><b>kAxis
 
 </div>
 </div>
-<a id="a8751338e110c03348a630e4e2831694f" name="a8751338e110c03348a630e4e2831694f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8751338e110c03348a630e4e2831694f">&#9670;&#160;</a></span>SetAxisID()</h2>
+<a id="a2bc8b853ffbf0c5ab934747f8c7a8b42" name="a2bc8b853ffbf0c5ab934747f8c7a8b42"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2bc8b853ffbf0c5ab934747f8c7a8b42">&#9670;&#160;</a></span>SetAxisID()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1329,7 +1333,7 @@ static const wxCoord&#160;</td><td class="memItemRight" valign="bottom"><b>kAxis
         <tr>
           <td class="memname">void mpScale::SetAxisID </td>
           <td>(</td>
-          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramtype">const unsigned int&#160;</td>
           <td class="paramname"><em>yAxisID</em></td><td>)</td>
           <td></td>
         </tr>
@@ -1346,8 +1350,8 @@ static const wxCoord&#160;</td><td class="memItemRight" valign="bottom"><b>kAxis
 
 </div>
 </div>
-<a id="a68db749a33b51f1629774ed6ba1f8daf" name="a68db749a33b51f1629774ed6ba1f8daf"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a68db749a33b51f1629774ed6ba1f8daf">&#9670;&#160;</a></span>SetCoordIsAlwaysVisible()</h2>
+<a id="a46620c3268f9fd0da7691ea55245f198" name="a46620c3268f9fd0da7691ea55245f198"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a46620c3268f9fd0da7691ea55245f198">&#9670;&#160;</a></span>SetCoordIsAlwaysVisible()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1358,7 +1362,7 @@ static const wxCoord&#160;</td><td class="memItemRight" valign="bottom"><b>kAxis
         <tr>
           <td class="memname">void mpScale::SetCoordIsAlwaysVisible </td>
           <td>(</td>
-          <td class="paramtype">bool&#160;</td>
+          <td class="paramtype">const bool&#160;</td>
           <td class="paramname"><em>alwaysVisible</em></td><td>)</td>
           <td></td>
         </tr>
@@ -1414,8 +1418,8 @@ static const wxCoord&#160;</td><td class="memItemRight" valign="bottom"><b>kAxis
 
 </div>
 </div>
-<a id="ac84f8cc6def721b88afb3a687b2922f4" name="ac84f8cc6def721b88afb3a687b2922f4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac84f8cc6def721b88afb3a687b2922f4">&#9670;&#160;</a></span>SetHovering()</h2>
+<a id="aa8cd4ba276a579f4391b5f79d82cfb60" name="aa8cd4ba276a579f4391b5f79d82cfb60"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa8cd4ba276a579f4391b5f79d82cfb60">&#9670;&#160;</a></span>SetHovering()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1426,7 +1430,7 @@ static const wxCoord&#160;</td><td class="memItemRight" valign="bottom"><b>kAxis
         <tr>
           <td class="memname">void mpScale::SetHovering </td>
           <td>(</td>
-          <td class="paramtype">bool&#160;</td>
+          <td class="paramtype">const bool&#160;</td>
           <td class="paramname"><em>hover</em></td><td>)</td>
           <td></td>
         </tr>
@@ -1448,8 +1452,8 @@ static const wxCoord&#160;</td><td class="memItemRight" valign="bottom"><b>kAxis
 
 </div>
 </div>
-<a id="a2ce739ba66c460e59418c0b66c74525e" name="a2ce739ba66c460e59418c0b66c74525e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2ce739ba66c460e59418c0b66c74525e">&#9670;&#160;</a></span>SetLabelFormat()</h2>
+<a id="a2a8e8cc6dde72e49ac3e8903974c6a02" name="a2a8e8cc6dde72e49ac3e8903974c6a02"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2a8e8cc6dde72e49ac3e8903974c6a02">&#9670;&#160;</a></span>SetLabelFormat()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1466,7 +1470,7 @@ static const wxCoord&#160;</td><td class="memItemRight" valign="bottom"><b>kAxis
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">bool&#160;</td>
+          <td class="paramtype">const bool&#160;</td>
           <td class="paramname"><em>updateLabelMode</em> = <code>false</code>&#160;</td>
         </tr>
         <tr>
@@ -1493,8 +1497,8 @@ static const wxCoord&#160;</td><td class="memItemRight" valign="bottom"><b>kAxis
 
 </div>
 </div>
-<a id="ab9c0571542a9359ae86f2716dc33582d" name="ab9c0571542a9359ae86f2716dc33582d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab9c0571542a9359ae86f2716dc33582d">&#9670;&#160;</a></span>SetLabelMode()</h2>
+<a id="ae0d075878cc21642fa4f9beac67be4b4" name="ae0d075878cc21642fa4f9beac67be4b4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae0d075878cc21642fa4f9beac67be4b4">&#9670;&#160;</a></span>SetLabelMode()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1505,13 +1509,13 @@ static const wxCoord&#160;</td><td class="memItemRight" valign="bottom"><b>kAxis
         <tr>
           <td class="memname">void mpScale::SetLabelMode </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="mathplot_8h.html#ab285929a0e74f3648f421ec238859a6c">mpLabelType</a>&#160;</td>
+          <td class="paramtype">const <a class="el" href="mathplot_8h.html#ab285929a0e74f3648f421ec238859a6c">mpLabelType</a>&#160;</td>
           <td class="paramname"><em>mode</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramtype">const unsigned int&#160;</td>
           <td class="paramname"><em>time_conv</em> = <code>0x20</code>&#160;</td>
         </tr>
         <tr>
@@ -1538,8 +1542,8 @@ static const wxCoord&#160;</td><td class="memItemRight" valign="bottom"><b>kAxis
 
 </div>
 </div>
-<a id="a1faae3f094611ed31805d65aaa8d6867" name="a1faae3f094611ed31805d65aaa8d6867"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1faae3f094611ed31805d65aaa8d6867">&#9670;&#160;</a></span>SetLogAxis()</h2>
+<a id="a7abf5f80174548a355a016e5e53ac043" name="a7abf5f80174548a355a016e5e53ac043"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7abf5f80174548a355a016e5e53ac043">&#9670;&#160;</a></span>SetLogAxis()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1550,7 +1554,7 @@ static const wxCoord&#160;</td><td class="memItemRight" valign="bottom"><b>kAxis
         <tr>
           <td class="memname">virtual void mpScale::SetLogAxis </td>
           <td>(</td>
-          <td class="paramtype">bool&#160;</td>
+          <td class="paramtype">const bool&#160;</td>
           <td class="paramname"><em>log</em></td><td>)</td>
           <td></td>
         </tr>
@@ -1572,8 +1576,8 @@ static const wxCoord&#160;</td><td class="memItemRight" valign="bottom"><b>kAxis
 
 </div>
 </div>
-<a id="a05f5c965f85d755fcca8908fbb972b5e" name="a05f5c965f85d755fcca8908fbb972b5e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a05f5c965f85d755fcca8908fbb972b5e">&#9670;&#160;</a></span>SetMaxScale()</h2>
+<a id="aaf4a25f0dbb00f44e6c970d65ee5dce6" name="aaf4a25f0dbb00f44e6c970d65ee5dce6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaf4a25f0dbb00f44e6c970d65ee5dce6">&#9670;&#160;</a></span>SetMaxScale()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1584,7 +1588,7 @@ static const wxCoord&#160;</td><td class="memItemRight" valign="bottom"><b>kAxis
         <tr>
           <td class="memname">void mpScale::SetMaxScale </td>
           <td>(</td>
-          <td class="paramtype">double&#160;</td>
+          <td class="paramtype">const double&#160;</td>
           <td class="paramname"><em>max</em></td><td>)</td>
           <td></td>
         </tr>
@@ -1606,8 +1610,8 @@ static const wxCoord&#160;</td><td class="memItemRight" valign="bottom"><b>kAxis
 
 </div>
 </div>
-<a id="a9a2ca7472694a6e7130e62995acbb0f7" name="a9a2ca7472694a6e7130e62995acbb0f7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9a2ca7472694a6e7130e62995acbb0f7">&#9670;&#160;</a></span>SetMinScale()</h2>
+<a id="ae599311843268545bfbc22331203e390" name="ae599311843268545bfbc22331203e390"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae599311843268545bfbc22331203e390">&#9670;&#160;</a></span>SetMinScale()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1618,7 +1622,7 @@ static const wxCoord&#160;</td><td class="memItemRight" valign="bottom"><b>kAxis
         <tr>
           <td class="memname">void mpScale::SetMinScale </td>
           <td>(</td>
-          <td class="paramtype">double&#160;</td>
+          <td class="paramtype">const double&#160;</td>
           <td class="paramname"><em>min</em></td><td>)</td>
           <td></td>
         </tr>
@@ -1640,8 +1644,8 @@ static const wxCoord&#160;</td><td class="memItemRight" valign="bottom"><b>kAxis
 
 </div>
 </div>
-<a id="a638f82244dc5adf90f2a39031cf78bda" name="a638f82244dc5adf90f2a39031cf78bda"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a638f82244dc5adf90f2a39031cf78bda">&#9670;&#160;</a></span>SetScale() <span class="overload">[1/2]</span></h2>
+<a id="ac65d02e41adc7f67650f2b261ada3f8e" name="ac65d02e41adc7f67650f2b261ada3f8e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac65d02e41adc7f67650f2b261ada3f8e">&#9670;&#160;</a></span>SetScale() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1652,13 +1656,13 @@ static const wxCoord&#160;</td><td class="memItemRight" valign="bottom"><b>kAxis
         <tr>
           <td class="memname">void mpScale::SetScale </td>
           <td>(</td>
-          <td class="paramtype">double&#160;</td>
+          <td class="paramtype">const double&#160;</td>
           <td class="paramname"><em>min</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">double&#160;</td>
+          <td class="paramtype">const double&#160;</td>
           <td class="paramname"><em>max</em>&#160;</td>
         </tr>
         <tr>
@@ -1685,8 +1689,8 @@ static const wxCoord&#160;</td><td class="memItemRight" valign="bottom"><b>kAxis
 
 </div>
 </div>
-<a id="a84261f64dc78dc58b03e8416089eca22" name="a84261f64dc78dc58b03e8416089eca22"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a84261f64dc78dc58b03e8416089eca22">&#9670;&#160;</a></span>SetScale() <span class="overload">[2/2]</span></h2>
+<a id="a5c553f57efa772569eee1ef42830f695" name="a5c553f57efa772569eee1ef42830f695"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5c553f57efa772569eee1ef42830f695">&#9670;&#160;</a></span>SetScale() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1697,7 +1701,7 @@ static const wxCoord&#160;</td><td class="memItemRight" valign="bottom"><b>kAxis
         <tr>
           <td class="memname">void mpScale::SetScale </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="structmp_range.html">mpRange</a>&lt; double &gt;&#160;</td>
+          <td class="paramtype">const <a class="el" href="structmp_range.html">mpRange</a>&lt; double &gt;&#160;</td>
           <td class="paramname"><em>range</em></td><td>)</td>
           <td></td>
         </tr>
@@ -1719,8 +1723,8 @@ static const wxCoord&#160;</td><td class="memItemRight" valign="bottom"><b>kAxis
 
 </div>
 </div>
-<a id="a813865bb073c0c286206137c72de38c4" name="a813865bb073c0c286206137c72de38c4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a813865bb073c0c286206137c72de38c4">&#9670;&#160;</a></span>ShowGrids()</h2>
+<a id="a800dcfde7fb557cd0f83f8349d4abf1e" name="a800dcfde7fb557cd0f83f8349d4abf1e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a800dcfde7fb557cd0f83f8349d4abf1e">&#9670;&#160;</a></span>ShowGrids()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1731,7 +1735,7 @@ static const wxCoord&#160;</td><td class="memItemRight" valign="bottom"><b>kAxis
         <tr>
           <td class="memname">void mpScale::ShowGrids </td>
           <td>(</td>
-          <td class="paramtype">bool&#160;</td>
+          <td class="paramtype">const bool&#160;</td>
           <td class="paramname"><em>grids</em></td><td>)</td>
           <td></td>
         </tr>
@@ -1753,8 +1757,8 @@ static const wxCoord&#160;</td><td class="memItemRight" valign="bottom"><b>kAxis
 
 </div>
 </div>
-<a id="abd966e06d8af148b2c40a37eb96b4870" name="abd966e06d8af148b2c40a37eb96b4870"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abd966e06d8af148b2c40a37eb96b4870">&#9670;&#160;</a></span>ShowTicks()</h2>
+<a id="a0e3f743de2984fe12b5200b15457b2ea" name="a0e3f743de2984fe12b5200b15457b2ea"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0e3f743de2984fe12b5200b15457b2ea">&#9670;&#160;</a></span>ShowTicks()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1765,7 +1769,7 @@ static const wxCoord&#160;</td><td class="memItemRight" valign="bottom"><b>kAxis
         <tr>
           <td class="memname">void mpScale::ShowTicks </td>
           <td>(</td>
-          <td class="paramtype">bool&#160;</td>
+          <td class="paramtype">const bool&#160;</td>
           <td class="paramname"><em>ticks</em></td><td>)</td>
           <td></td>
         </tr>
@@ -1787,8 +1791,8 @@ static const wxCoord&#160;</td><td class="memItemRight" valign="bottom"><b>kAxis
 
 </div>
 </div>
-<a id="a621293a6d63d03af1ab60e765afbff43" name="a621293a6d63d03af1ab60e765afbff43"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a621293a6d63d03af1ab60e765afbff43">&#9670;&#160;</a></span>UseScientific()</h2>
+<a id="a6e602cb722f815fbb9f96b863061d253" name="a6e602cb722f815fbb9f96b863061d253"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6e602cb722f815fbb9f96b863061d253">&#9670;&#160;</a></span>UseScientific()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1797,7 +1801,7 @@ static const wxCoord&#160;</td><td class="memItemRight" valign="bottom"><b>kAxis
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">bool mpScale::UseScientific </td>
+          <td class="memname">static bool mpScale::UseScientific </td>
           <td>(</td>
           <td class="paramtype">double&#160;</td>
           <td class="paramname"><em>maxAxisValue</em></td><td>)</td>
@@ -1806,7 +1810,7 @@ static const wxCoord&#160;</td><td class="memItemRight" valign="bottom"><b>kAxis
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">protected</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">

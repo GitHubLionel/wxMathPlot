@@ -41,6 +41,7 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="#pro-attribs">Protected Attributes</a> &#124;
@@ -111,8 +112,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a7cc642ef337ed09e6e9e60bf998e0bbc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a67e4276df0a24b19ef551db8f8696d3e" id="r_a67e4276df0a24b19ef551db8f8696d3e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#a67e4276df0a24b19ef551db8f8696d3e">IsYAxisUsedByFunction</a> (int yAxisID, int *position)</td></tr>
 <tr class="separator:a67e4276df0a24b19ef551db8f8696d3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5f20f52def7a8121f2ebbeccac3e2d07" id="r_a5f20f52def7a8121f2ebbeccac3e2d07"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classmp_scale_x.html">mpScaleX</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#a5f20f52def7a8121f2ebbeccac3e2d07">GetLayerXAxis</a> ()</td></tr>
-<tr class="separator:a5f20f52def7a8121f2ebbeccac3e2d07"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afe4ecf6285821f827f0e8088939f0f04" id="r_afe4ecf6285821f827f0e8088939f0f04"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classmp_scale_x.html">mpScaleX</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#afe4ecf6285821f827f0e8088939f0f04">GetLayerXAxis</a> () const</td></tr>
+<tr class="separator:afe4ecf6285821f827f0e8088939f0f04"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5c3ea57796aa5f5297352cc7f9ff03dd" id="r_a5c3ea57796aa5f5297352cc7f9ff03dd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classmp_scale_y.html">mpScaleY</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#a5c3ea57796aa5f5297352cc7f9ff03dd">GetLayerYAxis</a> (int yAxisID)</td></tr>
 <tr class="separator:a5c3ea57796aa5f5297352cc7f9ff03dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a35e963ecb7da80675ef3f15c0a83c75f" id="r_a35e963ecb7da80675ef3f15c0a83c75f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#a35e963ecb7da80675ef3f15c0a83c75f">SetScaleX</a> (const double scaleX)</td></tr>
@@ -121,12 +122,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a7c504fb99a778caef5a85735ff8b640c" id="r_a7c504fb99a778caef5a85735ff8b640c"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#a7c504fb99a778caef5a85735ff8b640c">GetScaleX</a> (void) const</td></tr>
 <tr class="memdesc:a7c504fb99a778caef5a85735ff8b640c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get current view's X scale.  <br /></td></tr>
 <tr class="separator:a7c504fb99a778caef5a85735ff8b640c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0f344c39e75c186b5bcd271a4981de01" id="r_a0f344c39e75c186b5bcd271a4981de01"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#a0f344c39e75c186b5bcd271a4981de01">SetScaleY</a> (const double scaleY, int yAxisID)</td></tr>
-<tr class="memdesc:a0f344c39e75c186b5bcd271a4981de01"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set current view's Y scale and refresh display.  <br /></td></tr>
-<tr class="separator:a0f344c39e75c186b5bcd271a4981de01"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a15a59e20741b6b0ccba95511b95ce25f" id="r_a15a59e20741b6b0ccba95511b95ce25f"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#a15a59e20741b6b0ccba95511b95ce25f">GetScaleY</a> (int yAxisID)</td></tr>
-<tr class="memdesc:a15a59e20741b6b0ccba95511b95ce25f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get current view's Y scale.  <br /></td></tr>
-<tr class="separator:a15a59e20741b6b0ccba95511b95ce25f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aca15a08268a9dcc1f26ccbf1210b71c9" id="r_aca15a08268a9dcc1f26ccbf1210b71c9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#aca15a08268a9dcc1f26ccbf1210b71c9">SetScaleY</a> (const double scaleY, const int yAxisID)</td></tr>
+<tr class="memdesc:aca15a08268a9dcc1f26ccbf1210b71c9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set current view's Y scale and refresh display.  <br /></td></tr>
+<tr class="separator:aca15a08268a9dcc1f26ccbf1210b71c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa2b8693f695093c2609b8b4f9ab09499" id="r_aa2b8693f695093c2609b8b4f9ab09499"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#aa2b8693f695093c2609b8b4f9ab09499">GetScaleY</a> (const int yAxisID)</td></tr>
+<tr class="memdesc:aa2b8693f695093c2609b8b4f9ab09499"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get current view's Y scale.  <br /></td></tr>
+<tr class="separator:aa2b8693f695093c2609b8b4f9ab09499"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3f746f1c75072b4fca7db619b04943cc" id="r_a3f746f1c75072b4fca7db619b04943cc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#a3f746f1c75072b4fca7db619b04943cc">SetBound</a> ()</td></tr>
 <tr class="memdesc:a3f746f1c75072b4fca7db619b04943cc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update bound for <a class="el" href="classmp_f_x.html" title="Abstract base class providing plot and labeling functionality for functions F:X-&gt;Y.">mpFX</a> and <a class="el" href="classmp_f_y.html" title="Abstract base class providing plot and labeling functionality for functions F:Y-&gt;X.">mpFY</a> when axis is scaled.  <br /></td></tr>
 <tr class="separator:a3f746f1c75072b4fca7db619b04943cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -138,12 +139,12 @@ Public Member Functions</h2></td></tr>
 <a class="el" href="structmp_range.html">mpRange</a>&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>GetDesiredBoundX</b> (void) const</td></tr>
 <tr class="memdesc:a03f57141a258374c7205229bdc98b271"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get desired bounding box for X axis. <br /></td></tr>
 <tr class="separator:a03f57141a258374c7205229bdc98b271"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a108d51a66b11e49fec705ae6fdd0c00e" id="r_a108d51a66b11e49fec705ae6fdd0c00e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structmp_range.html">mpRange</a>&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#a108d51a66b11e49fec705ae6fdd0c00e">GetBoundY</a> (int yAxisID)</td></tr>
-<tr class="memdesc:a108d51a66b11e49fec705ae6fdd0c00e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get bounding box for Y axis of ID yAxisID.  <br /></td></tr>
-<tr class="separator:a108d51a66b11e49fec705ae6fdd0c00e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad44a06596c54b9680998e05ae57464b3" id="r_ad44a06596c54b9680998e05ae57464b3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structmp_range.html">mpRange</a>&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#ad44a06596c54b9680998e05ae57464b3">GetDesiredBoundY</a> (int yAxisID)</td></tr>
-<tr class="memdesc:ad44a06596c54b9680998e05ae57464b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get desired bounding box for Y axis of ID yAxisID.  <br /></td></tr>
-<tr class="separator:ad44a06596c54b9680998e05ae57464b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a575f61fca0962de9b0ed5ac7e7b9f632" id="r_a575f61fca0962de9b0ed5ac7e7b9f632"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structmp_range.html">mpRange</a>&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#a575f61fca0962de9b0ed5ac7e7b9f632">GetBoundY</a> (const int yAxisID)</td></tr>
+<tr class="memdesc:a575f61fca0962de9b0ed5ac7e7b9f632"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get bounding box for Y axis of ID yAxisID.  <br /></td></tr>
+<tr class="separator:a575f61fca0962de9b0ed5ac7e7b9f632"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a13a2fa15ecfa38b7da9725038eb9c7f5" id="r_a13a2fa15ecfa38b7da9725038eb9c7f5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structmp_range.html">mpRange</a>&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#a13a2fa15ecfa38b7da9725038eb9c7f5">GetDesiredBoundY</a> (const int yAxisID)</td></tr>
+<tr class="memdesc:a13a2fa15ecfa38b7da9725038eb9c7f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get desired bounding box for Y axis of ID yAxisID.  <br /></td></tr>
+<tr class="separator:a13a2fa15ecfa38b7da9725038eb9c7f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:addcf92ef505af4d6d482215395206a24" id="r_addcf92ef505af4d6d482215395206a24"><td class="memItemLeft" align="right" valign="top">std::unordered_map&lt; int, <a class="el" href="structmp_range.html">mpRange</a>&lt; double &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#addcf92ef505af4d6d482215395206a24">GetAllBoundY</a> ()</td></tr>
 <tr class="memdesc:addcf92ef505af4d6d482215395206a24"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the bounds for all Y-axes.  <br /></td></tr>
 <tr class="separator:addcf92ef505af4d6d482215395206a24"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -159,9 +160,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a224f7dd4b4ad2bb9ba1932fbf5e4f8cb" id="r_a224f7dd4b4ad2bb9ba1932fbf5e4f8cb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#a224f7dd4b4ad2bb9ba1932fbf5e4f8cb">SetPosY</a> (std::unordered_map&lt; int, double &gt; &amp;posYList)</td></tr>
 <tr class="memdesc:a224f7dd4b4ad2bb9ba1932fbf5e4f8cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set current view's Y position and refresh display.  <br /></td></tr>
 <tr class="separator:a224f7dd4b4ad2bb9ba1932fbf5e4f8cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afea2019b27b400557cb40b7678fcbf7d" id="r_afea2019b27b400557cb40b7678fcbf7d"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#afea2019b27b400557cb40b7678fcbf7d">GetPosY</a> (int yAxisID)</td></tr>
-<tr class="memdesc:afea2019b27b400557cb40b7678fcbf7d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get current view's Y position.  <br /></td></tr>
-<tr class="separator:afea2019b27b400557cb40b7678fcbf7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a01b2f34f40c9a252ddf29503ad298aeb" id="r_a01b2f34f40c9a252ddf29503ad298aeb"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#a01b2f34f40c9a252ddf29503ad298aeb">GetPosY</a> (const int yAxisID)</td></tr>
+<tr class="memdesc:a01b2f34f40c9a252ddf29503ad298aeb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get current view's Y position.  <br /></td></tr>
+<tr class="separator:a01b2f34f40c9a252ddf29503ad298aeb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a087d31080a5176abbf4e00be5ff57ee5" id="r_a087d31080a5176abbf4e00be5ff57ee5"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#a087d31080a5176abbf4e00be5ff57ee5">GetNOfYAxis</a> (void) const</td></tr>
 <tr class="memdesc:a087d31080a5176abbf4e00be5ff57ee5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the number of Y axis.  <br /></td></tr>
 <tr class="separator:a087d31080a5176abbf4e00be5ff57ee5"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -183,15 +184,15 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a9570a943f47c733c6cfaff15bf7b4553" id="r_a9570a943f47c733c6cfaff15bf7b4553"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#a9570a943f47c733c6cfaff15bf7b4553">p2x</a> (const wxCoord pixelCoordX) const</td></tr>
 <tr class="memdesc:a9570a943f47c733c6cfaff15bf7b4553"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts <a class="el" href="classmp_window.html" title="Canvas for plotting mpLayer implementations.">mpWindow</a> (screen) pixel coordinates into graph (floating point) coordinates, using current <a class="el" href="classmp_window.html" title="Canvas for plotting mpLayer implementations.">mpWindow</a> position and scale.  <br /></td></tr>
 <tr class="separator:a9570a943f47c733c6cfaff15bf7b4553"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a68c0c0aa41eb16ea22c3c2ec1d6316fc" id="r_a68c0c0aa41eb16ea22c3c2ec1d6316fc"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#a68c0c0aa41eb16ea22c3c2ec1d6316fc">p2y</a> (const wxCoord pixelCoordY, int yAxisID=0)</td></tr>
-<tr class="memdesc:a68c0c0aa41eb16ea22c3c2ec1d6316fc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts <a class="el" href="classmp_window.html" title="Canvas for plotting mpLayer implementations.">mpWindow</a> (screen) pixel coordinates into graph (floating point) coordinates, using current <a class="el" href="classmp_window.html" title="Canvas for plotting mpLayer implementations.">mpWindow</a> position and scale.  <br /></td></tr>
-<tr class="separator:a68c0c0aa41eb16ea22c3c2ec1d6316fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afa66aff410fa5bdc5e13d5fbc9f00a9c" id="r_afa66aff410fa5bdc5e13d5fbc9f00a9c"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#afa66aff410fa5bdc5e13d5fbc9f00a9c">p2y</a> (const wxCoord pixelCoordY, const int yAxisID=0)</td></tr>
+<tr class="memdesc:afa66aff410fa5bdc5e13d5fbc9f00a9c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts <a class="el" href="classmp_window.html" title="Canvas for plotting mpLayer implementations.">mpWindow</a> (screen) pixel coordinates into graph (floating point) coordinates, using current <a class="el" href="classmp_window.html" title="Canvas for plotting mpLayer implementations.">mpWindow</a> position and scale.  <br /></td></tr>
+<tr class="separator:afa66aff410fa5bdc5e13d5fbc9f00a9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a493e8b7e8505eed51e3ec6b5216c6d6c" id="r_a493e8b7e8505eed51e3ec6b5216c6d6c"><td class="memItemLeft" align="right" valign="top">wxCoord&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#a493e8b7e8505eed51e3ec6b5216c6d6c">x2p</a> (const double x) const</td></tr>
 <tr class="memdesc:a493e8b7e8505eed51e3ec6b5216c6d6c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts graph (floating point) coordinates into <a class="el" href="classmp_window.html" title="Canvas for plotting mpLayer implementations.">mpWindow</a> (screen) pixel coordinates, using current <a class="el" href="classmp_window.html" title="Canvas for plotting mpLayer implementations.">mpWindow</a> position and scale.  <br /></td></tr>
 <tr class="separator:a493e8b7e8505eed51e3ec6b5216c6d6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a38c6cb03e8eedf9a46c615542d677d17" id="r_a38c6cb03e8eedf9a46c615542d677d17"><td class="memItemLeft" align="right" valign="top">wxCoord&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#a38c6cb03e8eedf9a46c615542d677d17">y2p</a> (const double y, int yAxisID=0)</td></tr>
-<tr class="memdesc:a38c6cb03e8eedf9a46c615542d677d17"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts graph (floating point) coordinates into <a class="el" href="classmp_window.html" title="Canvas for plotting mpLayer implementations.">mpWindow</a> (screen) pixel coordinates, using current <a class="el" href="classmp_window.html" title="Canvas for plotting mpLayer implementations.">mpWindow</a> position and scale.  <br /></td></tr>
-<tr class="separator:a38c6cb03e8eedf9a46c615542d677d17"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeb7df5a3c387a20494c719ff07ba1c5e" id="r_aeb7df5a3c387a20494c719ff07ba1c5e"><td class="memItemLeft" align="right" valign="top">wxCoord&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#aeb7df5a3c387a20494c719ff07ba1c5e">y2p</a> (const double y, const int yAxisID=0)</td></tr>
+<tr class="memdesc:aeb7df5a3c387a20494c719ff07ba1c5e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts graph (floating point) coordinates into <a class="el" href="classmp_window.html" title="Canvas for plotting mpLayer implementations.">mpWindow</a> (screen) pixel coordinates, using current <a class="el" href="classmp_window.html" title="Canvas for plotting mpLayer implementations.">mpWindow</a> position and scale.  <br /></td></tr>
+<tr class="separator:aeb7df5a3c387a20494c719ff07ba1c5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab8179558e435b807a6b6edbe3227c36e" id="r_ab8179558e435b807a6b6edbe3227c36e"><td class="memItemLeft" align="right" valign="top"><a id="ab8179558e435b807a6b6edbe3227c36e" name="ab8179558e435b807a6b6edbe3227c36e"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>EnableDoubleBuffer</b> (const bool enabled)</td></tr>
 <tr class="memdesc:ab8179558e435b807a6b6edbe3227c36e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deprecated: Enable/disable the double-buffering of the window, eliminating the flicker (default=enabled). <br /></td></tr>
@@ -209,17 +210,17 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>EnableMousePanZoom</b
 <tr class="memitem:a9189e0e467f28fb4d25372f554b67bbd" id="r_a9189e0e467f28fb4d25372f554b67bbd"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#a9189e0e467f28fb4d25372f554b67bbd">IsAspectLocked</a> () const</td></tr>
 <tr class="memdesc:a9189e0e467f28fb4d25372f554b67bbd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether the X/Y scale aspect is locked.  <br /></td></tr>
 <tr class="separator:a9189e0e467f28fb4d25372f554b67bbd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a37f91908f31b78e07dbc42e16aec7399" id="r_a37f91908f31b78e07dbc42e16aec7399"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#a37f91908f31b78e07dbc42e16aec7399">Fit</a> ()</td></tr>
-<tr class="memdesc:a37f91908f31b78e07dbc42e16aec7399"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set view to fit global bounding box of all plot layers and refresh display with <a class="el" href="classmp_window.html#a990707383217cdd98cdf6a635ccb63b7" title="Refresh display.">UpdateAll()</a>.  <br /></td></tr>
-<tr class="separator:a37f91908f31b78e07dbc42e16aec7399"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeb6ddca87045fc5de1814361ba145591" id="r_aeb6ddca87045fc5de1814361ba145591"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#aeb6ddca87045fc5de1814361ba145591">Fit</a> () override</td></tr>
+<tr class="memdesc:aeb6ddca87045fc5de1814361ba145591"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set view to fit global bounding box of all plot layers and refresh display with <a class="el" href="classmp_window.html#a990707383217cdd98cdf6a635ccb63b7" title="Refresh display.">UpdateAll()</a>.  <br /></td></tr>
+<tr class="separator:aeb6ddca87045fc5de1814361ba145591"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af011559ba1af67c343d7c9fc7ca3675b" id="r_af011559ba1af67c343d7c9fc7ca3675b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#af011559ba1af67c343d7c9fc7ca3675b">Fit</a> (const <a class="el" href="structmp_range.html">mpRange</a>&lt; double &gt; &amp;rangeX, std::unordered_map&lt; int, <a class="el" href="structmp_range.html">mpRange</a>&lt; double &gt; &gt; rangeY, wxCoord *printSizeX=NULL, wxCoord *printSizeY=NULL)</td></tr>
 <tr class="memdesc:af011559ba1af67c343d7c9fc7ca3675b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set view to fit a given bounding box and refresh display with <a class="el" href="classmp_window.html#a990707383217cdd98cdf6a635ccb63b7" title="Refresh display.">UpdateAll()</a>.  <br /></td></tr>
 <tr class="separator:af011559ba1af67c343d7c9fc7ca3675b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae8ec61b47afcd3cafae291fa99322a7f" id="r_ae8ec61b47afcd3cafae291fa99322a7f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#ae8ec61b47afcd3cafae291fa99322a7f">FitX</a> (void)</td></tr>
-<tr class="memdesc:ae8ec61b47afcd3cafae291fa99322a7f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Similar to <a class="el" href="classmp_window.html#a37f91908f31b78e07dbc42e16aec7399" title="Set view to fit global bounding box of all plot layers and refresh display with UpdateAll().">Fit()</a> but only fit in X.  <br /></td></tr>
+<tr class="memdesc:ae8ec61b47afcd3cafae291fa99322a7f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Similar to <a class="el" href="classmp_window.html#aeb6ddca87045fc5de1814361ba145591" title="Set view to fit global bounding box of all plot layers and refresh display with UpdateAll().">Fit()</a> but only fit in X.  <br /></td></tr>
 <tr class="separator:ae8ec61b47afcd3cafae291fa99322a7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af3456a4acd3930373c85678da3c7fe09" id="r_af3456a4acd3930373c85678da3c7fe09"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#af3456a4acd3930373c85678da3c7fe09">FitY</a> (int yAxisID)</td></tr>
-<tr class="memdesc:af3456a4acd3930373c85678da3c7fe09"><td class="mdescLeft">&#160;</td><td class="mdescRight">Similar to <a class="el" href="classmp_window.html#a37f91908f31b78e07dbc42e16aec7399" title="Set view to fit global bounding box of all plot layers and refresh display with UpdateAll().">Fit()</a> but only fit in Y and only one Y-axis, specified by ID.  <br /></td></tr>
+<tr class="memdesc:af3456a4acd3930373c85678da3c7fe09"><td class="mdescLeft">&#160;</td><td class="mdescRight">Similar to <a class="el" href="classmp_window.html#aeb6ddca87045fc5de1814361ba145591" title="Set view to fit global bounding box of all plot layers and refresh display with UpdateAll().">Fit()</a> but only fit in Y and only one Y-axis, specified by ID.  <br /></td></tr>
 <tr class="separator:af3456a4acd3930373c85678da3c7fe09"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8936aaa169572ebb070dcae460c5b86a" id="r_a8936aaa169572ebb070dcae460c5b86a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#a8936aaa169572ebb070dcae460c5b86a">ZoomIn</a> (const wxPoint &amp;centerPoint=wxDefaultPosition)</td></tr>
 <tr class="memdesc:a8936aaa169572ebb070dcae460c5b86a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Zoom into current view and refresh display.  <br /></td></tr>
@@ -251,46 +252,46 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>UpdateAll</b> ()</td>
 <tr class="memitem:a3aa67e0a001ba7cbb4f2ff9aa998e433" id="r_a3aa67e0a001ba7cbb4f2ff9aa998e433"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#a3aa67e0a001ba7cbb4f2ff9aa998e433">CountLayers</a> ()</td></tr>
 <tr class="memdesc:a3aa67e0a001ba7cbb4f2ff9aa998e433"><td class="mdescLeft">&#160;</td><td class="mdescRight">Counts the number of plot layers, including axes: this is to count only the layers which have a bounding box.  <br /></td></tr>
 <tr class="separator:a3aa67e0a001ba7cbb4f2ff9aa998e433"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7b8de4e10864f0922b547968ae96b5b1" id="r_a7b8de4e10864f0922b547968ae96b5b1"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#a7b8de4e10864f0922b547968ae96b5b1">CountAllLayers</a> ()</td></tr>
-<tr class="memdesc:a7b8de4e10864f0922b547968ae96b5b1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Counts the number of plot layers, whether or not they have a bounding box.  <br /></td></tr>
-<tr class="separator:a7b8de4e10864f0922b547968ae96b5b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae215fbee5c2c38e851f3b7dae06496b2" id="r_ae215fbee5c2c38e851f3b7dae06496b2"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#ae215fbee5c2c38e851f3b7dae06496b2">CountAllLayers</a> () const</td></tr>
+<tr class="memdesc:ae215fbee5c2c38e851f3b7dae06496b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Counts the number of plot layers, whether or not they have a bounding box.  <br /></td></tr>
+<tr class="separator:ae215fbee5c2c38e851f3b7dae06496b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1ea524733ea152c77da03730fdcf0e88" id="r_a1ea524733ea152c77da03730fdcf0e88"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#a1ea524733ea152c77da03730fdcf0e88">CountLayersType</a> (<a class="el" href="mathplot_8h.html#a5dba29b7583413d9cb8b98a013628b21">mpLayerType</a> type)</td></tr>
 <tr class="memdesc:a1ea524733ea152c77da03730fdcf0e88"><td class="mdescLeft">&#160;</td><td class="mdescRight">Counts the number of plot layers: this is to count only the layers which have a plot.  <br /></td></tr>
 <tr class="separator:a1ea524733ea152c77da03730fdcf0e88"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1d2e72a26f95bb53dc1dc10608a80cb5" id="r_a1d2e72a26f95bb53dc1dc10608a80cb5"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#a1d2e72a26f95bb53dc1dc10608a80cb5">CountLayersFXYPlot</a> ()</td></tr>
 <tr class="memdesc:a1d2e72a26f95bb53dc1dc10608a80cb5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Counts the number of XY plot layers.  <br /></td></tr>
 <tr class="separator:a1d2e72a26f95bb53dc1dc10608a80cb5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2a2e9f643f3697fe1b78fb41dd763f7b" id="r_a2a2e9f643f3697fe1b78fb41dd763f7b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#a2a2e9f643f3697fe1b78fb41dd763f7b">UpdateDesiredBoundingBox</a> (<a class="el" href="mathplot_8h.html#a6195ffa0c0f96a949275aa81a5534c64">mpAxisUpdate</a> update)</td></tr>
-<tr class="memdesc:a2a2e9f643f3697fe1b78fb41dd763f7b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update m_desired bounds.  <br /></td></tr>
-<tr class="separator:a2a2e9f643f3697fe1b78fb41dd763f7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5617d664200b6d3e957e9a476ba8875e" id="r_a5617d664200b6d3e957e9a476ba8875e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structmp_float_rect_simple.html">mpFloatRectSimple</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#a5617d664200b6d3e957e9a476ba8875e">GetBoundingBox</a> (bool desired, unsigned int yAxisID=0)</td></tr>
-<tr class="memdesc:a5617d664200b6d3e957e9a476ba8875e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a bounding box for an y-axis ID.  <br /></td></tr>
-<tr class="separator:a5617d664200b6d3e957e9a476ba8875e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8916a10e6a4a854a9539c86a68f63761" id="r_a8916a10e6a4a854a9539c86a68f63761"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#a8916a10e6a4a854a9539c86a68f63761">UpdateDesiredBoundingBox</a> (const <a class="el" href="mathplot_8h.html#a6195ffa0c0f96a949275aa81a5534c64">mpAxisUpdate</a> update)</td></tr>
+<tr class="memdesc:a8916a10e6a4a854a9539c86a68f63761"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update m_desired bounds.  <br /></td></tr>
+<tr class="separator:a8916a10e6a4a854a9539c86a68f63761"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aca0e49722b99aa7174725aef556759d3" id="r_aca0e49722b99aa7174725aef556759d3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structmp_float_rect_simple.html">mpFloatRectSimple</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#aca0e49722b99aa7174725aef556759d3">GetBoundingBox</a> (const bool desired, const unsigned int yAxisID=0)</td></tr>
+<tr class="memdesc:aca0e49722b99aa7174725aef556759d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a bounding box for an y-axis ID.  <br /></td></tr>
+<tr class="separator:aca0e49722b99aa7174725aef556759d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aabd112443442dc765951a494218e748f" id="r_aabd112443442dc765951a494218e748f"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#aabd112443442dc765951a494218e748f">GetDesiredXmin</a> () const</td></tr>
 <tr class="memdesc:aabd112443442dc765951a494218e748f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the left-border layer coordinate that the user wants the <a class="el" href="classmp_window.html" title="Canvas for plotting mpLayer implementations.">mpWindow</a> to show (it may be not exactly the actual shown coordinate in the case of locked aspect ratio).  <br /></td></tr>
 <tr class="separator:aabd112443442dc765951a494218e748f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9b9328047569995fd281799742ad0a01" id="r_a9b9328047569995fd281799742ad0a01"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#a9b9328047569995fd281799742ad0a01">GetDesiredXmax</a> () const</td></tr>
 <tr class="memdesc:a9b9328047569995fd281799742ad0a01"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the right-border layer coordinate that the user wants the <a class="el" href="classmp_window.html" title="Canvas for plotting mpLayer implementations.">mpWindow</a> to show (it may be not exactly the actual shown coordinate in the case of locked aspect ratio).  <br /></td></tr>
 <tr class="separator:a9b9328047569995fd281799742ad0a01"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aba4a791dc153a469d6a77641c35960c1" id="r_aba4a791dc153a469d6a77641c35960c1"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#aba4a791dc153a469d6a77641c35960c1">GetDesiredYmin</a> (int yAxisID)</td></tr>
-<tr class="memdesc:aba4a791dc153a469d6a77641c35960c1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the bottom-border layer coordinate that the user wants the <a class="el" href="classmp_window.html" title="Canvas for plotting mpLayer implementations.">mpWindow</a> to show (it may be not exactly the actual shown coordinate in the case of locked aspect ratio).  <br /></td></tr>
-<tr class="separator:aba4a791dc153a469d6a77641c35960c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a681d5fb1c7ffbe84d60bf1dff6db10d2" id="r_a681d5fb1c7ffbe84d60bf1dff6db10d2"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#a681d5fb1c7ffbe84d60bf1dff6db10d2">GetDesiredYmax</a> (int yAxisID)</td></tr>
-<tr class="memdesc:a681d5fb1c7ffbe84d60bf1dff6db10d2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the top layer-border coordinate that the user wants the <a class="el" href="classmp_window.html" title="Canvas for plotting mpLayer implementations.">mpWindow</a> to show (it may be not exactly the actual shown coordinate in the case of locked aspect ratio).  <br /></td></tr>
-<tr class="separator:a681d5fb1c7ffbe84d60bf1dff6db10d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a81d9e0f731008943eac04e65c99f2d36" id="r_a81d9e0f731008943eac04e65c99f2d36"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#a81d9e0f731008943eac04e65c99f2d36">GetBoundingBox</a> (<a class="el" href="structmp_range.html">mpRange</a>&lt; double &gt; *boundX, <a class="el" href="structmp_range.html">mpRange</a>&lt; double &gt; *boundY, int yAxisID)</td></tr>
-<tr class="memdesc:a81d9e0f731008943eac04e65c99f2d36"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the bounding box coordinates for the Y axis of ID yAxisID.  <br /></td></tr>
-<tr class="separator:a81d9e0f731008943eac04e65c99f2d36"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0553b676aa3e87ecf838b9adda8be40f" id="r_a0553b676aa3e87ecf838b9adda8be40f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#a0553b676aa3e87ecf838b9adda8be40f">PointIsInsideBound</a> (double px, double py, int yAxisID)</td></tr>
-<tr class="memdesc:a0553b676aa3e87ecf838b9adda8be40f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Is the given point inside the current bounding box for the selected Y axis?  <br /></td></tr>
-<tr class="separator:a0553b676aa3e87ecf838b9adda8be40f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac79d5218c15afb26a267f9b528c16642" id="r_ac79d5218c15afb26a267f9b528c16642"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#ac79d5218c15afb26a267f9b528c16642">UpdateBoundingBoxToInclude</a> (double px, double py, int yAxisID)</td></tr>
-<tr class="memdesc:ac79d5218c15afb26a267f9b528c16642"><td class="mdescLeft">&#160;</td><td class="mdescRight">Ensure the bounding box includes the given point for the selected Y axis.  <br /></td></tr>
-<tr class="separator:ac79d5218c15afb26a267f9b528c16642"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aebc6be2435fa27cfb3e2a2cb5fd7c4ba" id="r_aebc6be2435fa27cfb3e2a2cb5fd7c4ba"><td class="memItemLeft" align="right" valign="top"><a id="aebc6be2435fa27cfb3e2a2cb5fd7c4ba" name="aebc6be2435fa27cfb3e2a2cb5fd7c4ba"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>InitializeBoundingBox</b> (double px, double py, int yAxisID)</td></tr>
-<tr class="memdesc:aebc6be2435fa27cfb3e2a2cb5fd7c4ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the bounding box from a first point for the selected Y axis. <br /></td></tr>
-<tr class="separator:aebc6be2435fa27cfb3e2a2cb5fd7c4ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9ed5452fab757a112e96be5ffcf49ba5" id="r_a9ed5452fab757a112e96be5ffcf49ba5"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#a9ed5452fab757a112e96be5ffcf49ba5">GetDesiredYmin</a> (const int yAxisID)</td></tr>
+<tr class="memdesc:a9ed5452fab757a112e96be5ffcf49ba5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the bottom-border layer coordinate that the user wants the <a class="el" href="classmp_window.html" title="Canvas for plotting mpLayer implementations.">mpWindow</a> to show (it may be not exactly the actual shown coordinate in the case of locked aspect ratio).  <br /></td></tr>
+<tr class="separator:a9ed5452fab757a112e96be5ffcf49ba5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4abd6c9abbcafe10fb9f863860d85e8c" id="r_a4abd6c9abbcafe10fb9f863860d85e8c"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#a4abd6c9abbcafe10fb9f863860d85e8c">GetDesiredYmax</a> (const int yAxisID)</td></tr>
+<tr class="memdesc:a4abd6c9abbcafe10fb9f863860d85e8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the top layer-border coordinate that the user wants the <a class="el" href="classmp_window.html" title="Canvas for plotting mpLayer implementations.">mpWindow</a> to show (it may be not exactly the actual shown coordinate in the case of locked aspect ratio).  <br /></td></tr>
+<tr class="separator:a4abd6c9abbcafe10fb9f863860d85e8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aff475b2dbf1192c3761c9110ab8798cd" id="r_aff475b2dbf1192c3761c9110ab8798cd"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#aff475b2dbf1192c3761c9110ab8798cd">GetBoundingBox</a> (<a class="el" href="structmp_range.html">mpRange</a>&lt; double &gt; *boundX, <a class="el" href="structmp_range.html">mpRange</a>&lt; double &gt; *boundY, const int yAxisID)</td></tr>
+<tr class="memdesc:aff475b2dbf1192c3761c9110ab8798cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the bounding box coordinates for the Y axis of ID yAxisID.  <br /></td></tr>
+<tr class="separator:aff475b2dbf1192c3761c9110ab8798cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a154debde0faaeb004ca88e5c8f7e4756" id="r_a154debde0faaeb004ca88e5c8f7e4756"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#a154debde0faaeb004ca88e5c8f7e4756">PointIsInsideBound</a> (const double px, const double py, const int yAxisID)</td></tr>
+<tr class="memdesc:a154debde0faaeb004ca88e5c8f7e4756"><td class="mdescLeft">&#160;</td><td class="mdescRight">Is the given point inside the current bounding box for the selected Y axis?  <br /></td></tr>
+<tr class="separator:a154debde0faaeb004ca88e5c8f7e4756"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6a0ca559b903b08269defd59bc861f8e" id="r_a6a0ca559b903b08269defd59bc861f8e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#a6a0ca559b903b08269defd59bc861f8e">UpdateBoundingBoxToInclude</a> (const double px, const double py, const int yAxisID)</td></tr>
+<tr class="memdesc:a6a0ca559b903b08269defd59bc861f8e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Ensure the bounding box includes the given point for the selected Y axis.  <br /></td></tr>
+<tr class="separator:a6a0ca559b903b08269defd59bc861f8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa934a9387611039f39f9a52a0becb4d6" id="r_aa934a9387611039f39f9a52a0becb4d6"><td class="memItemLeft" align="right" valign="top"><a id="aa934a9387611039f39f9a52a0becb4d6" name="aa934a9387611039f39f9a52a0becb4d6"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>InitializeBoundingBox</b> (const double px, const double py, const int yAxisID)</td></tr>
+<tr class="memdesc:aa934a9387611039f39f9a52a0becb4d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the bounding box from a first point for the selected Y axis. <br /></td></tr>
+<tr class="separator:aa934a9387611039f39f9a52a0becb4d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab8965a8ba9fe900a4a35d234d9668d4b" id="r_ab8965a8ba9fe900a4a35d234d9668d4b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#ab8965a8ba9fe900a4a35d234d9668d4b">SetMPScrollbars</a> (bool status)</td></tr>
 <tr class="memdesc:ab8965a8ba9fe900a4a35d234d9668d4b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable/disable scrollbars.  <br /></td></tr>
 <tr class="separator:ab8965a8ba9fe900a4a35d234d9668d4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -322,49 +323,46 @@ const wxString &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>GetWi
 <tr class="memitem:a386ad53fcb04f5185d6116976dc255f5" id="r_a386ad53fcb04f5185d6116976dc255f5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#a386ad53fcb04f5185d6116976dc255f5">SetDefaultDir</a> (const wxString &amp;dirname)</td></tr>
 <tr class="memdesc:a386ad53fcb04f5185d6116976dc255f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the default directory for wxFileDialog.  <br /></td></tr>
 <tr class="separator:a386ad53fcb04f5185d6116976dc255f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8fec60c6806c83a1f1e57b937fd27246" id="r_a8fec60c6806c83a1f1e57b937fd27246"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#a8fec60c6806c83a1f1e57b937fd27246">SetDefaultLegendIsAlwaysVisible</a> (bool visible)</td></tr>
-<tr class="memdesc:a8fec60c6806c83a1f1e57b937fd27246"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set if legend is always visible even if series is not plotted.  <br /></td></tr>
-<tr class="separator:a8fec60c6806c83a1f1e57b937fd27246"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a470b6f27826647a0fbfea34b077938e0" id="r_a470b6f27826647a0fbfea34b077938e0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#a470b6f27826647a0fbfea34b077938e0">SetAutoFit</a> (bool autoFit)</td></tr>
-<tr class="memdesc:a470b6f27826647a0fbfea34b077938e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set if plot shall be auto fitted when hiding or showing axis and series via mouse.  <br /></td></tr>
-<tr class="separator:a470b6f27826647a0fbfea34b077938e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3060399916dffea77d0e302ff40a6087" id="r_a3060399916dffea77d0e302ff40a6087"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#a3060399916dffea77d0e302ff40a6087">SetAutoFit</a> (const bool autoFit)</td></tr>
+<tr class="memdesc:a3060399916dffea77d0e302ff40a6087"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set if plot shall be auto fitted when hiding or showing axis and series via mouse.  <br /></td></tr>
+<tr class="separator:a3060399916dffea77d0e302ff40a6087"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a31f302c5a5d89e16b135a4bc5919d61c" id="r_a31f302c5a5d89e16b135a4bc5919d61c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#a31f302c5a5d89e16b135a4bc5919d61c">SetMargins</a> (int top, int right, int bottom, int left)</td></tr>
 <tr class="memdesc:a31f302c5a5d89e16b135a4bc5919d61c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set window margins, creating a blank area where some kinds of layers cannot draw.  <br /></td></tr>
 <tr class="separator:a31f302c5a5d89e16b135a4bc5919d61c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af17686ffad1ab45ed620c9b207252476" id="r_af17686ffad1ab45ed620c9b207252476"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#af17686ffad1ab45ed620c9b207252476">UpdateMargins</a> ()</td></tr>
 <tr class="memdesc:af17686ffad1ab45ed620c9b207252476"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update margins if e.g.  <br /></td></tr>
 <tr class="separator:af17686ffad1ab45ed620c9b207252476"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5d14fbe18d633439beb2d48749653941" id="r_a5d14fbe18d633439beb2d48749653941"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#a5d14fbe18d633439beb2d48749653941">SetMarginTop</a> (int top)</td></tr>
-<tr class="memdesc:a5d14fbe18d633439beb2d48749653941"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the top margin.  <br /></td></tr>
-<tr class="separator:a5d14fbe18d633439beb2d48749653941"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a06ee34c4296a9c01f5fd1b24cdb956d8" id="r_a06ee34c4296a9c01f5fd1b24cdb956d8"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#a06ee34c4296a9c01f5fd1b24cdb956d8">GetMarginTop</a> (bool minusExtra=false) const</td></tr>
-<tr class="memdesc:a06ee34c4296a9c01f5fd1b24cdb956d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the top margin.  <br /></td></tr>
-<tr class="separator:a06ee34c4296a9c01f5fd1b24cdb956d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4b93b976de346bded4ee861f3c008ff2" id="r_a4b93b976de346bded4ee861f3c008ff2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#a4b93b976de346bded4ee861f3c008ff2">SetMarginRight</a> (int right)</td></tr>
-<tr class="memdesc:a4b93b976de346bded4ee861f3c008ff2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the right margin.  <br /></td></tr>
-<tr class="separator:a4b93b976de346bded4ee861f3c008ff2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af2730ec07b8d1eaed8339d2a4b9a67ba" id="r_af2730ec07b8d1eaed8339d2a4b9a67ba"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#af2730ec07b8d1eaed8339d2a4b9a67ba">GetMarginRight</a> (bool minusExtra=false) const</td></tr>
-<tr class="memdesc:af2730ec07b8d1eaed8339d2a4b9a67ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the right margin.  <br /></td></tr>
-<tr class="separator:af2730ec07b8d1eaed8339d2a4b9a67ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:add3c2263953a6daa3238e23319ad8d9a" id="r_add3c2263953a6daa3238e23319ad8d9a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#add3c2263953a6daa3238e23319ad8d9a">SetMarginTop</a> (const int top)</td></tr>
+<tr class="memdesc:add3c2263953a6daa3238e23319ad8d9a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the top margin.  <br /></td></tr>
+<tr class="separator:add3c2263953a6daa3238e23319ad8d9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a74253003a4bf982e7e1df61afebd7045" id="r_a74253003a4bf982e7e1df61afebd7045"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#a74253003a4bf982e7e1df61afebd7045">GetMarginTop</a> (const bool minusExtra=false) const</td></tr>
+<tr class="memdesc:a74253003a4bf982e7e1df61afebd7045"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the top margin.  <br /></td></tr>
+<tr class="separator:a74253003a4bf982e7e1df61afebd7045"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa7189acc4a27421e3f04b12e820e8dc6" id="r_aa7189acc4a27421e3f04b12e820e8dc6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#aa7189acc4a27421e3f04b12e820e8dc6">SetMarginRight</a> (const int right)</td></tr>
+<tr class="memdesc:aa7189acc4a27421e3f04b12e820e8dc6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the right margin.  <br /></td></tr>
+<tr class="separator:aa7189acc4a27421e3f04b12e820e8dc6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae69f4616b068db602e9b60bae595264e" id="r_ae69f4616b068db602e9b60bae595264e"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#ae69f4616b068db602e9b60bae595264e">GetMarginRight</a> (const bool minusExtra=false) const</td></tr>
+<tr class="memdesc:ae69f4616b068db602e9b60bae595264e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the right margin.  <br /></td></tr>
+<tr class="separator:ae69f4616b068db602e9b60bae595264e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aedd755004e0591fa2d57b82aa5a534e1" id="r_aedd755004e0591fa2d57b82aa5a534e1"><td class="memItemLeft" align="right" valign="top"><a id="aedd755004e0591fa2d57b82aa5a534e1" name="aedd755004e0591fa2d57b82aa5a534e1"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>GetMarginRightOuter</b> () const</td></tr>
 <tr class="memdesc:aedd755004e0591fa2d57b82aa5a534e1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the right outer margin, exluding Y-axis. <br /></td></tr>
 <tr class="separator:aedd755004e0591fa2d57b82aa5a534e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7bb14b97a77169baf26d558f5a718f09" id="r_a7bb14b97a77169baf26d558f5a718f09"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#a7bb14b97a77169baf26d558f5a718f09">SetMarginBottom</a> (int bottom)</td></tr>
-<tr class="memdesc:a7bb14b97a77169baf26d558f5a718f09"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the bottom margin.  <br /></td></tr>
-<tr class="separator:a7bb14b97a77169baf26d558f5a718f09"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0af2ad3e535b2418084010a26791862b" id="r_a0af2ad3e535b2418084010a26791862b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#a0af2ad3e535b2418084010a26791862b">GetMarginBottom</a> (bool minusExtra=false) const</td></tr>
-<tr class="memdesc:a0af2ad3e535b2418084010a26791862b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the bottom margin.  <br /></td></tr>
-<tr class="separator:a0af2ad3e535b2418084010a26791862b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1ea89241390c557c0b6e0c7c67dca48a" id="r_a1ea89241390c557c0b6e0c7c67dca48a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#a1ea89241390c557c0b6e0c7c67dca48a">SetMarginLeft</a> (int left)</td></tr>
-<tr class="memdesc:a1ea89241390c557c0b6e0c7c67dca48a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the left margin.  <br /></td></tr>
-<tr class="separator:a1ea89241390c557c0b6e0c7c67dca48a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aab3604daac6c7b54dcba8a1613571f48" id="r_aab3604daac6c7b54dcba8a1613571f48"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#aab3604daac6c7b54dcba8a1613571f48">GetMarginLeft</a> (bool minusExtra=false) const</td></tr>
-<tr class="memdesc:aab3604daac6c7b54dcba8a1613571f48"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the left margin.  <br /></td></tr>
-<tr class="separator:aab3604daac6c7b54dcba8a1613571f48"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acf1eeea315de99a1dde21ea6f514010f" id="r_acf1eeea315de99a1dde21ea6f514010f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#acf1eeea315de99a1dde21ea6f514010f">SetExtraMargin</a> (int extra)</td></tr>
-<tr class="memdesc:acf1eeea315de99a1dde21ea6f514010f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the extra margin.  <br /></td></tr>
-<tr class="separator:acf1eeea315de99a1dde21ea6f514010f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8cb981b2b63114addf0ae3837910e937" id="r_a8cb981b2b63114addf0ae3837910e937"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#a8cb981b2b63114addf0ae3837910e937">SetMarginBottom</a> (const int bottom)</td></tr>
+<tr class="memdesc:a8cb981b2b63114addf0ae3837910e937"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the bottom margin.  <br /></td></tr>
+<tr class="separator:a8cb981b2b63114addf0ae3837910e937"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac83d89a416b9de70b3b64eca53807775" id="r_ac83d89a416b9de70b3b64eca53807775"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#ac83d89a416b9de70b3b64eca53807775">GetMarginBottom</a> (const bool minusExtra=false) const</td></tr>
+<tr class="memdesc:ac83d89a416b9de70b3b64eca53807775"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the bottom margin.  <br /></td></tr>
+<tr class="separator:ac83d89a416b9de70b3b64eca53807775"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af962d176937cd0726b346b8d3bd722b8" id="r_af962d176937cd0726b346b8d3bd722b8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#af962d176937cd0726b346b8d3bd722b8">SetMarginLeft</a> (const int left)</td></tr>
+<tr class="memdesc:af962d176937cd0726b346b8d3bd722b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the left margin.  <br /></td></tr>
+<tr class="separator:af962d176937cd0726b346b8d3bd722b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a907002c9c24e886c0cfb0feec4cd594d" id="r_a907002c9c24e886c0cfb0feec4cd594d"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#a907002c9c24e886c0cfb0feec4cd594d">GetMarginLeft</a> (const bool minusExtra=false) const</td></tr>
+<tr class="memdesc:a907002c9c24e886c0cfb0feec4cd594d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the left margin.  <br /></td></tr>
+<tr class="separator:a907002c9c24e886c0cfb0feec4cd594d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae5f779349824e2768ca0e93fe49b4ae6" id="r_ae5f779349824e2768ca0e93fe49b4ae6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#ae5f779349824e2768ca0e93fe49b4ae6">SetExtraMargin</a> (const int extra)</td></tr>
+<tr class="memdesc:ae5f779349824e2768ca0e93fe49b4ae6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the extra margin.  <br /></td></tr>
+<tr class="separator:ae5f779349824e2768ca0e93fe49b4ae6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1ad8337751e1a46414349292d71a363d" id="r_a1ad8337751e1a46414349292d71a363d"><td class="memItemLeft" align="right" valign="top"><a id="a1ad8337751e1a46414349292d71a363d" name="a1ad8337751e1a46414349292d71a363d"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>GetExtraMargin</b> () const</td></tr>
 <tr class="memdesc:a1ad8337751e1a46414349292d71a363d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the extra margin. <br /></td></tr>
@@ -381,19 +379,19 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>GetPlotWidth</b> () co
 int&#160;</td><td class="memItemRight" valign="bottom"><b>GetPlotHeight</b> () const</td></tr>
 <tr class="memdesc:ad899519e8de94d2034ad7cabe03f8a3c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the height of the plot. <br /></td></tr>
 <tr class="separator:ad899519e8de94d2034ad7cabe03f8a3c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a06b319db1771f209a1fa3e799447d6c3" id="r_a06b319db1771f209a1fa3e799447d6c3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structmp_rect.html">mpRect</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#a06b319db1771f209a1fa3e799447d6c3">GetPlotBoundaries</a> (bool with_margin) const</td></tr>
-<tr class="memdesc:a06b319db1771f209a1fa3e799447d6c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the boundaries of the plot.  <br /></td></tr>
-<tr class="separator:a06b319db1771f209a1fa3e799447d6c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3fdc36bca2bc05c97ec220f5ff80636e" id="r_a3fdc36bca2bc05c97ec220f5ff80636e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structmp_rect.html">mpRect</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#a3fdc36bca2bc05c97ec220f5ff80636e">GetPlotBoundaries</a> (const bool with_margin) const</td></tr>
+<tr class="memdesc:a3fdc36bca2bc05c97ec220f5ff80636e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the boundaries of the plot.  <br /></td></tr>
+<tr class="separator:a3fdc36bca2bc05c97ec220f5ff80636e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adb5c793be453209e9e7d603aa23cd147" id="r_adb5c793be453209e9e7d603aa23cd147"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#adb5c793be453209e9e7d603aa23cd147">GetLeftYAxesWidth</a> (<a class="el" href="mathplot_8h.html#af422aa1828c65a92d3585f3693240335">mpOptional_int</a> yAxisID=std::nullopt)</td></tr>
 <tr class="memdesc:adb5c793be453209e9e7d603aa23cd147"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate width of all axes to the left of this axis.  <br /></td></tr>
 <tr class="separator:adb5c793be453209e9e7d603aa23cd147"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3d5b9b2c9ab2fbf808e945d988be397c" id="r_a3d5b9b2c9ab2fbf808e945d988be397c"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#a3d5b9b2c9ab2fbf808e945d988be397c">GetRightYAxesWidth</a> (<a class="el" href="mathplot_8h.html#af422aa1828c65a92d3585f3693240335">mpOptional_int</a> yAxisID=std::nullopt)</td></tr>
 <tr class="memdesc:a3d5b9b2c9ab2fbf808e945d988be397c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate width of all axes to the right of this axis.  <br /></td></tr>
 <tr class="separator:a3d5b9b2c9ab2fbf808e945d988be397c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a517056c9d3cc51596d19ee687db4a1eb" id="r_a517056c9d3cc51596d19ee687db4a1eb"><td class="memItemLeft" align="right" valign="top"><a id="a517056c9d3cc51596d19ee687db4a1eb" name="a517056c9d3cc51596d19ee687db4a1eb"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>SetDrawBox</b> (bool drawbox)</td></tr>
-<tr class="memdesc:a517056c9d3cc51596d19ee687db4a1eb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the draw of the box around the plot. <br /></td></tr>
-<tr class="separator:a517056c9d3cc51596d19ee687db4a1eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a95f4953dfb72eb6e0afd4aa04d7c363e" id="r_a95f4953dfb72eb6e0afd4aa04d7c363e"><td class="memItemLeft" align="right" valign="top"><a id="a95f4953dfb72eb6e0afd4aa04d7c363e" name="a95f4953dfb72eb6e0afd4aa04d7c363e"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>SetDrawBox</b> (const bool drawbox)</td></tr>
+<tr class="memdesc:a95f4953dfb72eb6e0afd4aa04d7c363e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the draw of the box around the plot. <br /></td></tr>
+<tr class="separator:a95f4953dfb72eb6e0afd4aa04d7c363e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a119eb2de0c73b861bf6793d5d7409f91" id="r_a119eb2de0c73b861bf6793d5d7409f91"><td class="memItemLeft" align="right" valign="top"><a id="a119eb2de0c73b861bf6793d5d7409f91" name="a119eb2de0c73b861bf6793d5d7409f91"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>GetDrawBox</b> () const</td></tr>
 <tr class="memdesc:a119eb2de0c73b861bf6793d5d7409f91"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the draw of the box around the plot. <br /></td></tr>
@@ -444,39 +442,39 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>UnSetOnDeleteLayer</b
 void&#160;</td><td class="memItemRight" valign="bottom"><b>UnSetOnUserMouseAction</b> ()</td></tr>
 <tr class="memdesc:a0bf9b5b71de647b553a7c08482be5b84"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove the 'user mouse action event' callback. <br /></td></tr>
 <tr class="separator:a0bf9b5b71de647b553a7c08482be5b84"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a693b14b17bdf69e8c3c429894fef63e3" id="r_a693b14b17bdf69e8c3c429894fef63e3"><td class="memItemLeft" align="right" valign="top"><a id="a693b14b17bdf69e8c3c429894fef63e3" name="a693b14b17bdf69e8c3c429894fef63e3"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>IsLogXaxis</b> ()</td></tr>
-<tr class="memdesc:a693b14b17bdf69e8c3c429894fef63e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Is this an X axis to be displayed with log scale? It is really an axis property but as we need to control the bound and the scale, it is easiest and faster to declare this property here. <br /></td></tr>
-<tr class="separator:a693b14b17bdf69e8c3c429894fef63e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adda430ed5ca9867e345422219c2911e7" id="r_adda430ed5ca9867e345422219c2911e7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#adda430ed5ca9867e345422219c2911e7">IsLogYaxis</a> (int yAxisID)</td></tr>
-<tr class="memdesc:adda430ed5ca9867e345422219c2911e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the log property (true or false) Y layer (Y axis) with a specific Y ID or false if not found.  <br /></td></tr>
-<tr class="separator:adda430ed5ca9867e345422219c2911e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af43d057f2361d221b6ade5d062508fa8" id="r_af43d057f2361d221b6ade5d062508fa8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#af43d057f2361d221b6ade5d062508fa8">SetLogXaxis</a> (bool log)</td></tr>
-<tr class="memdesc:af43d057f2361d221b6ade5d062508fa8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable or disable logarithmic scaling on the X axis.  <br /></td></tr>
-<tr class="separator:af43d057f2361d221b6ade5d062508fa8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1c30df98af68c86a5f52a52d89e3144f" id="r_a1c30df98af68c86a5f52a52d89e3144f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#a1c30df98af68c86a5f52a52d89e3144f">SetLogYaxis</a> (int yAxisID, bool log)</td></tr>
-<tr class="memdesc:a1c30df98af68c86a5f52a52d89e3144f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the log property (true or false) for a Y layer (Y axis) given by is ID.  <br /></td></tr>
-<tr class="separator:a1c30df98af68c86a5f52a52d89e3144f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a72d94ebf1150e2e0b71be8be51daefa5" id="r_a72d94ebf1150e2e0b71be8be51daefa5"><td class="memItemLeft" align="right" valign="top"><a id="a72d94ebf1150e2e0b71be8be51daefa5" name="a72d94ebf1150e2e0b71be8be51daefa5"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>IsLogXaxis</b> () const</td></tr>
+<tr class="memdesc:a72d94ebf1150e2e0b71be8be51daefa5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Is this an X axis to be displayed with log scale? It is really an axis property but as we need to control the bound and the scale, it is easiest and faster to declare this property here. <br /></td></tr>
+<tr class="separator:a72d94ebf1150e2e0b71be8be51daefa5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2bddb87ce1166fb859799b31f47403fb" id="r_a2bddb87ce1166fb859799b31f47403fb"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#a2bddb87ce1166fb859799b31f47403fb">IsLogYaxis</a> (const int yAxisID)</td></tr>
+<tr class="memdesc:a2bddb87ce1166fb859799b31f47403fb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the log property (true or false) Y layer (Y axis) with a specific Y ID or false if not found.  <br /></td></tr>
+<tr class="separator:a2bddb87ce1166fb859799b31f47403fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3d2828ccf0f190ac3f21e9a95f8ef455" id="r_a3d2828ccf0f190ac3f21e9a95f8ef455"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#a3d2828ccf0f190ac3f21e9a95f8ef455">SetLogXaxis</a> (const bool log)</td></tr>
+<tr class="memdesc:a3d2828ccf0f190ac3f21e9a95f8ef455"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable or disable logarithmic scaling on the X axis.  <br /></td></tr>
+<tr class="separator:a3d2828ccf0f190ac3f21e9a95f8ef455"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a58305863b883c1a7a693e1abc041aed6" id="r_a58305863b883c1a7a693e1abc041aed6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#a58305863b883c1a7a693e1abc041aed6">SetLogYaxis</a> (const int yAxisID, const bool log)</td></tr>
+<tr class="memdesc:a58305863b883c1a7a693e1abc041aed6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the log property (true or false) for a Y layer (Y axis) given by is ID.  <br /></td></tr>
+<tr class="separator:a58305863b883c1a7a693e1abc041aed6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a22f5e7c72d466211543a51972b92a1da" id="r_a22f5e7c72d466211543a51972b92a1da"><td class="memItemLeft" align="right" valign="top"><a id="a22f5e7c72d466211543a51972b92a1da" name="a22f5e7c72d466211543a51972b92a1da"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>GetMagnetize</b> () const</td></tr>
 <tr class="memdesc:a22f5e7c72d466211543a51972b92a1da"><td class="mdescLeft">&#160;</td><td class="mdescRight">Is mouse magnetization enabled? Useful to read the position on the axes. <br /></td></tr>
 <tr class="separator:a22f5e7c72d466211543a51972b92a1da"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8c1dda9288ce16f9630e40eac322bca5" id="r_a8c1dda9288ce16f9630e40eac322bca5"><td class="memItemLeft" align="right" valign="top"><a id="a8c1dda9288ce16f9630e40eac322bca5" name="a8c1dda9288ce16f9630e40eac322bca5"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>SetMagnetize</b> (bool mag)</td></tr>
-<tr class="memdesc:a8c1dda9288ce16f9630e40eac322bca5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable or disable mouse-position magnet lines (cross-hairs) in the plot area. <br /></td></tr>
-<tr class="separator:a8c1dda9288ce16f9630e40eac322bca5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afc89c763182691d11a0351deb59078e3" id="r_afc89c763182691d11a0351deb59078e3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#afc89c763182691d11a0351deb59078e3">SetMouseLeftDownAction</a> (<a class="el" href="mathplot_8h.html#a896e30331831640ffba4d1204a479c2f">mpMouseButtonAction</a> action)</td></tr>
-<tr class="memdesc:afc89c763182691d11a0351deb59078e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the type of action for the left mouse button.  <br /></td></tr>
-<tr class="separator:afc89c763182691d11a0351deb59078e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a43c36685f890a08c4892158c38c3d5d2" id="r_a43c36685f890a08c4892158c38c3d5d2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="mathplot_8h.html#a896e30331831640ffba4d1204a479c2f">mpMouseButtonAction</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#a43c36685f890a08c4892158c38c3d5d2">GetMouseLeftDownAction</a> ()</td></tr>
-<tr class="memdesc:a43c36685f890a08c4892158c38c3d5d2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the type of action for the left mouse button.  <br /></td></tr>
-<tr class="separator:a43c36685f890a08c4892158c38c3d5d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5b2752d7e09da3e89ce1bdac65a1fa5f" id="r_a5b2752d7e09da3e89ce1bdac65a1fa5f"><td class="memItemLeft" align="right" valign="top">wxPoint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#a5b2752d7e09da3e89ce1bdac65a1fa5f">GetMousePosition</a> ()</td></tr>
-<tr class="memdesc:a5b2752d7e09da3e89ce1bdac65a1fa5f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns current mouse position in window.  <br /></td></tr>
-<tr class="separator:a5b2752d7e09da3e89ce1bdac65a1fa5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab2ba507f85d00bd5ee05c0957f15e6ee" id="r_ab2ba507f85d00bd5ee05c0957f15e6ee"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classmp_info_layer.html">mpInfoLayer</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#ab2ba507f85d00bd5ee05c0957f15e6ee">GetMovingInfoLayer</a> ()</td></tr>
-<tr class="memdesc:ab2ba507f85d00bd5ee05c0957f15e6ee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns moving info layer.  <br /></td></tr>
-<tr class="separator:ab2ba507f85d00bd5ee05c0957f15e6ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae9c061c3311e7009158bd8b04f56dab3" id="r_ae9c061c3311e7009158bd8b04f56dab3"><td class="memItemLeft" align="right" valign="top"><a id="ae9c061c3311e7009158bd8b04f56dab3" name="ae9c061c3311e7009158bd8b04f56dab3"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>SetMagnetize</b> (const bool mag)</td></tr>
+<tr class="memdesc:ae9c061c3311e7009158bd8b04f56dab3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable or disable mouse-position magnet lines (cross-hairs) in the plot area. <br /></td></tr>
+<tr class="separator:ae9c061c3311e7009158bd8b04f56dab3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a25afde5cfc2fb0d84fe132f138523727" id="r_a25afde5cfc2fb0d84fe132f138523727"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#a25afde5cfc2fb0d84fe132f138523727">SetMouseLeftDownAction</a> (const <a class="el" href="mathplot_8h.html#a896e30331831640ffba4d1204a479c2f">mpMouseButtonAction</a> action)</td></tr>
+<tr class="memdesc:a25afde5cfc2fb0d84fe132f138523727"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the type of action for the left mouse button.  <br /></td></tr>
+<tr class="separator:a25afde5cfc2fb0d84fe132f138523727"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3424ee4ee5a507b7198ac1980e2d0aaf" id="r_a3424ee4ee5a507b7198ac1980e2d0aaf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="mathplot_8h.html#a896e30331831640ffba4d1204a479c2f">mpMouseButtonAction</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#a3424ee4ee5a507b7198ac1980e2d0aaf">GetMouseLeftDownAction</a> () const</td></tr>
+<tr class="memdesc:a3424ee4ee5a507b7198ac1980e2d0aaf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the type of action for the left mouse button.  <br /></td></tr>
+<tr class="separator:a3424ee4ee5a507b7198ac1980e2d0aaf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae9074ce2f75934e544c2485e8050f506" id="r_ae9074ce2f75934e544c2485e8050f506"><td class="memItemLeft" align="right" valign="top">wxPoint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#ae9074ce2f75934e544c2485e8050f506">GetMousePosition</a> () const</td></tr>
+<tr class="memdesc:ae9074ce2f75934e544c2485e8050f506"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns current mouse position in window.  <br /></td></tr>
+<tr class="separator:ae9074ce2f75934e544c2485e8050f506"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a14df5b370eed897f8f0bf0b5514ac3d1" id="r_a14df5b370eed897f8f0bf0b5514ac3d1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classmp_info_layer.html">mpInfoLayer</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#a14df5b370eed897f8f0bf0b5514ac3d1">GetMovingInfoLayer</a> () const</td></tr>
+<tr class="memdesc:a14df5b370eed897f8f0bf0b5514ac3d1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns moving info layer.  <br /></td></tr>
+<tr class="separator:a14df5b370eed897f8f0bf0b5514ac3d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae674520f213ad8c9d0a3f869bde5992e" id="r_ae674520f213ad8c9d0a3f869bde5992e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#ae674520f213ad8c9d0a3f869bde5992e">RefreshConfigWindow</a> (<a class="el" href="mathplot_8h.html#a5dba29b7583413d9cb8b98a013628b21">mpLayerType</a> layerType, int param=0, bool show=false)</td></tr>
 <tr class="memdesc:ae674520f213ad8c9d0a3f869bde5992e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Refresh the config window if present.  <br /></td></tr>
 <tr class="separator:ae674520f213ad8c9d0a3f869bde5992e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -498,6 +496,12 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>RenderOverlays</b> (w
 <tr class="memitem:a2d496352445dc9acaf7e3c2cdc4f1df3" id="r_a2d496352445dc9acaf7e3c2cdc4f1df3"><td class="memItemLeft" align="right" valign="top">wxMemoryDC *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#a2d496352445dc9acaf7e3c2cdc4f1df3">GetMemoryDC</a> (void)</td></tr>
 <tr class="memdesc:a2d496352445dc9acaf7e3c2cdc4f1df3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Give a direct access to the memory DC to draw in the buffered bitmap You need release the bitmap after use.  <br /></td></tr>
 <tr class="separator:a2d496352445dc9acaf7e3c2cdc4f1df3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
+Static Public Member Functions</h2></td></tr>
+<tr class="memitem:a74f91b19c1ceb3dc5945ace12af1622e" id="r_a74f91b19c1ceb3dc5945ace12af1622e"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#a74f91b19c1ceb3dc5945ace12af1622e">SetDefaultLegendIsAlwaysVisible</a> (const bool visible)</td></tr>
+<tr class="memdesc:a74f91b19c1ceb3dc5945ace12af1622e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set if legend is always visible even if series is not plotted.  <br /></td></tr>
+<tr class="separator:a74f91b19c1ceb3dc5945ace12af1622e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
@@ -999,8 +1003,8 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
 
 </div>
 </div>
-<a id="a7b8de4e10864f0922b547968ae96b5b1" name="a7b8de4e10864f0922b547968ae96b5b1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7b8de4e10864f0922b547968ae96b5b1">&#9670;&#160;</a></span>CountAllLayers()</h2>
+<a id="ae215fbee5c2c38e851f3b7dae06496b2" name="ae215fbee5c2c38e851f3b7dae06496b2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae215fbee5c2c38e851f3b7dae06496b2">&#9670;&#160;</a></span>CountAllLayers()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1012,7 +1016,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
           <td class="memname">unsigned int mpWindow::CountAllLayers </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
   </td>
@@ -1459,11 +1463,14 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
 
 </div>
 </div>
-<a id="a37f91908f31b78e07dbc42e16aec7399" name="a37f91908f31b78e07dbc42e16aec7399"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a37f91908f31b78e07dbc42e16aec7399">&#9670;&#160;</a></span>Fit() <span class="overload">[1/2]</span></h2>
+<a id="aeb6ddca87045fc5de1814361ba145591" name="aeb6ddca87045fc5de1814361ba145591"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aeb6ddca87045fc5de1814361ba145591">&#9670;&#160;</a></span>Fit() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void mpWindow::Fit </td>
@@ -1472,6 +1479,11 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
           <td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p>Set view to fit global bounding box of all plot layers and refresh display with <a class="el" href="classmp_window.html#a990707383217cdd98cdf6a635ccb63b7" title="Refresh display.">UpdateAll()</a>. </p>
@@ -1538,7 +1550,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
       </table>
 </div><div class="memdoc">
 
-<p>Similar to <a class="el" href="classmp_window.html#a37f91908f31b78e07dbc42e16aec7399" title="Set view to fit global bounding box of all plot layers and refresh display with UpdateAll().">Fit()</a> but only fit in X. </p>
+<p>Similar to <a class="el" href="classmp_window.html#aeb6ddca87045fc5de1814361ba145591" title="Set view to fit global bounding box of all plot layers and refresh display with UpdateAll().">Fit()</a> but only fit in X. </p>
 <p>Intentionally don't call <a class="el" href="classmp_window.html#a990707383217cdd98cdf6a635ccb63b7" title="Refresh display.">UpdateAll()</a> since you might want to perform other actions before updating plot </p>
 
 </div>
@@ -1559,7 +1571,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
       </table>
 </div><div class="memdoc">
 
-<p>Similar to <a class="el" href="classmp_window.html#a37f91908f31b78e07dbc42e16aec7399" title="Set view to fit global bounding box of all plot layers and refresh display with UpdateAll().">Fit()</a> but only fit in Y and only one Y-axis, specified by ID. </p>
+<p>Similar to <a class="el" href="classmp_window.html#aeb6ddca87045fc5de1814361ba145591" title="Set view to fit global bounding box of all plot layers and refresh display with UpdateAll().">Fit()</a> but only fit in Y and only one Y-axis, specified by ID. </p>
 <p>Intentionally don't call <a class="el" href="classmp_window.html#a990707383217cdd98cdf6a635ccb63b7" title="Refresh display.">UpdateAll()</a> since you might want to perform other actions before updating plot </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">yAxisID</td><td>indicating which Y-axis to fit </td></tr>
@@ -1682,8 +1694,8 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
 
 </div>
 </div>
-<a id="a5617d664200b6d3e957e9a476ba8875e" name="a5617d664200b6d3e957e9a476ba8875e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5617d664200b6d3e957e9a476ba8875e">&#9670;&#160;</a></span>GetBoundingBox() <span class="overload">[1/2]</span></h2>
+<a id="aca0e49722b99aa7174725aef556759d3" name="aca0e49722b99aa7174725aef556759d3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aca0e49722b99aa7174725aef556759d3">&#9670;&#160;</a></span>GetBoundingBox() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1694,13 +1706,13 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
         <tr>
           <td class="memname"><a class="el" href="structmp_float_rect_simple.html">mpFloatRectSimple</a> mpWindow::GetBoundingBox </td>
           <td>(</td>
-          <td class="paramtype">bool&#160;</td>
+          <td class="paramtype">const bool&#160;</td>
           <td class="paramname"><em>desired</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramtype">const unsigned int&#160;</td>
           <td class="paramname"><em>yAxisID</em> = <code>0</code>&#160;</td>
         </tr>
         <tr>
@@ -1727,8 +1739,8 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
 
 </div>
 </div>
-<a id="a81d9e0f731008943eac04e65c99f2d36" name="a81d9e0f731008943eac04e65c99f2d36"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a81d9e0f731008943eac04e65c99f2d36">&#9670;&#160;</a></span>GetBoundingBox() <span class="overload">[2/2]</span></h2>
+<a id="aff475b2dbf1192c3761c9110ab8798cd" name="aff475b2dbf1192c3761c9110ab8798cd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aff475b2dbf1192c3761c9110ab8798cd">&#9670;&#160;</a></span>GetBoundingBox() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1751,7 +1763,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype">const int&#160;</td>
           <td class="paramname"><em>yAxisID</em>&#160;</td>
         </tr>
         <tr>
@@ -1779,8 +1791,8 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
 
 </div>
 </div>
-<a id="a108d51a66b11e49fec705ae6fdd0c00e" name="a108d51a66b11e49fec705ae6fdd0c00e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a108d51a66b11e49fec705ae6fdd0c00e">&#9670;&#160;</a></span>GetBoundY()</h2>
+<a id="a575f61fca0962de9b0ed5ac7e7b9f632" name="a575f61fca0962de9b0ed5ac7e7b9f632"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a575f61fca0962de9b0ed5ac7e7b9f632">&#9670;&#160;</a></span>GetBoundY()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1791,7 +1803,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
         <tr>
           <td class="memname"><a class="el" href="structmp_range.html">mpRange</a>&lt; double &gt; mpWindow::GetBoundY </td>
           <td>(</td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype">const int&#160;</td>
           <td class="paramname"><em>yAxisID</em></td><td>)</td>
           <td></td>
         </tr>
@@ -1863,8 +1875,8 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
 
 </div>
 </div>
-<a id="ad44a06596c54b9680998e05ae57464b3" name="ad44a06596c54b9680998e05ae57464b3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad44a06596c54b9680998e05ae57464b3">&#9670;&#160;</a></span>GetDesiredBoundY()</h2>
+<a id="a13a2fa15ecfa38b7da9725038eb9c7f5" name="a13a2fa15ecfa38b7da9725038eb9c7f5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a13a2fa15ecfa38b7da9725038eb9c7f5">&#9670;&#160;</a></span>GetDesiredBoundY()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1875,7 +1887,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
         <tr>
           <td class="memname"><a class="el" href="structmp_range.html">mpRange</a>&lt; double &gt; mpWindow::GetDesiredBoundY </td>
           <td>(</td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype">const int&#160;</td>
           <td class="paramname"><em>yAxisID</em></td><td>)</td>
           <td></td>
         </tr>
@@ -1921,7 +1933,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
 </div><div class="memdoc">
 
 <p>Return the right-border layer coordinate that the user wants the <a class="el" href="classmp_window.html" title="Canvas for plotting mpLayer implementations.">mpWindow</a> to show (it may be not exactly the actual shown coordinate in the case of locked aspect ratio). </p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="classmp_window.html#a37f91908f31b78e07dbc42e16aec7399" title="Set view to fit global bounding box of all plot layers and refresh display with UpdateAll().">Fit</a>, <a class="el" href="classmp_window.html#a29fdb0472249e75a721d1dee73557848" title="zoom action">Zoom</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classmp_window.html#aeb6ddca87045fc5de1814361ba145591" title="Set view to fit global bounding box of all plot layers and refresh display with UpdateAll().">Fit</a>, <a class="el" href="classmp_window.html#a29fdb0472249e75a721d1dee73557848" title="zoom action">Zoom</a> </dd></dl>
 
 </div>
 </div>
@@ -1949,12 +1961,12 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
 </div><div class="memdoc">
 
 <p>Returns the left-border layer coordinate that the user wants the <a class="el" href="classmp_window.html" title="Canvas for plotting mpLayer implementations.">mpWindow</a> to show (it may be not exactly the actual shown coordinate in the case of locked aspect ratio). </p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="classmp_window.html#a37f91908f31b78e07dbc42e16aec7399" title="Set view to fit global bounding box of all plot layers and refresh display with UpdateAll().">Fit</a>, <a class="el" href="classmp_window.html#a29fdb0472249e75a721d1dee73557848" title="zoom action">Zoom</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classmp_window.html#aeb6ddca87045fc5de1814361ba145591" title="Set view to fit global bounding box of all plot layers and refresh display with UpdateAll().">Fit</a>, <a class="el" href="classmp_window.html#a29fdb0472249e75a721d1dee73557848" title="zoom action">Zoom</a> </dd></dl>
 
 </div>
 </div>
-<a id="a681d5fb1c7ffbe84d60bf1dff6db10d2" name="a681d5fb1c7ffbe84d60bf1dff6db10d2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a681d5fb1c7ffbe84d60bf1dff6db10d2">&#9670;&#160;</a></span>GetDesiredYmax()</h2>
+<a id="a4abd6c9abbcafe10fb9f863860d85e8c" name="a4abd6c9abbcafe10fb9f863860d85e8c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4abd6c9abbcafe10fb9f863860d85e8c">&#9670;&#160;</a></span>GetDesiredYmax()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1965,7 +1977,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
         <tr>
           <td class="memname">double mpWindow::GetDesiredYmax </td>
           <td>(</td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype">const int&#160;</td>
           <td class="paramname"><em>yAxisID</em></td><td>)</td>
           <td></td>
         </tr>
@@ -1984,12 +1996,12 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
   </table>
   </dd>
 </dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="classmp_window.html#a37f91908f31b78e07dbc42e16aec7399" title="Set view to fit global bounding box of all plot layers and refresh display with UpdateAll().">Fit</a>, <a class="el" href="classmp_window.html#a29fdb0472249e75a721d1dee73557848" title="zoom action">Zoom</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classmp_window.html#aeb6ddca87045fc5de1814361ba145591" title="Set view to fit global bounding box of all plot layers and refresh display with UpdateAll().">Fit</a>, <a class="el" href="classmp_window.html#a29fdb0472249e75a721d1dee73557848" title="zoom action">Zoom</a> </dd></dl>
 
 </div>
 </div>
-<a id="aba4a791dc153a469d6a77641c35960c1" name="aba4a791dc153a469d6a77641c35960c1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aba4a791dc153a469d6a77641c35960c1">&#9670;&#160;</a></span>GetDesiredYmin()</h2>
+<a id="a9ed5452fab757a112e96be5ffcf49ba5" name="a9ed5452fab757a112e96be5ffcf49ba5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9ed5452fab757a112e96be5ffcf49ba5">&#9670;&#160;</a></span>GetDesiredYmin()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2000,7 +2012,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
         <tr>
           <td class="memname">double mpWindow::GetDesiredYmin </td>
           <td>(</td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype">const int&#160;</td>
           <td class="paramname"><em>yAxisID</em></td><td>)</td>
           <td></td>
         </tr>
@@ -2019,7 +2031,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
   </table>
   </dd>
 </dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="classmp_window.html#a37f91908f31b78e07dbc42e16aec7399" title="Set view to fit global bounding box of all plot layers and refresh display with UpdateAll().">Fit</a>, <a class="el" href="classmp_window.html#a29fdb0472249e75a721d1dee73557848" title="zoom action">Zoom</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classmp_window.html#aeb6ddca87045fc5de1814361ba145591" title="Set view to fit global bounding box of all plot layers and refresh display with UpdateAll().">Fit</a>, <a class="el" href="classmp_window.html#a29fdb0472249e75a721d1dee73557848" title="zoom action">Zoom</a> </dd></dl>
 
 </div>
 </div>
@@ -2230,8 +2242,8 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
 
 </div>
 </div>
-<a id="a5f20f52def7a8121f2ebbeccac3e2d07" name="a5f20f52def7a8121f2ebbeccac3e2d07"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5f20f52def7a8121f2ebbeccac3e2d07">&#9670;&#160;</a></span>GetLayerXAxis()</h2>
+<a id="afe4ecf6285821f827f0e8088939f0f04" name="afe4ecf6285821f827f0e8088939f0f04"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afe4ecf6285821f827f0e8088939f0f04">&#9670;&#160;</a></span>GetLayerXAxis()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2240,7 +2252,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
           <td class="memname"><a class="el" href="classmp_scale_x.html">mpScaleX</a> * mpWindow::GetLayerXAxis </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -2294,8 +2306,8 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
 
 </div>
 </div>
-<a id="a0af2ad3e535b2418084010a26791862b" name="a0af2ad3e535b2418084010a26791862b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0af2ad3e535b2418084010a26791862b">&#9670;&#160;</a></span>GetMarginBottom()</h2>
+<a id="ac83d89a416b9de70b3b64eca53807775" name="ac83d89a416b9de70b3b64eca53807775"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac83d89a416b9de70b3b64eca53807775">&#9670;&#160;</a></span>GetMarginBottom()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2306,7 +2318,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
         <tr>
           <td class="memname">int mpWindow::GetMarginBottom </td>
           <td>(</td>
-          <td class="paramtype">bool&#160;</td>
+          <td class="paramtype">const bool&#160;</td>
           <td class="paramname"><em>minusExtra</em> = <code>false</code></td><td>)</td>
           <td> const</td>
         </tr>
@@ -2328,8 +2340,8 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
 
 </div>
 </div>
-<a id="aab3604daac6c7b54dcba8a1613571f48" name="aab3604daac6c7b54dcba8a1613571f48"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aab3604daac6c7b54dcba8a1613571f48">&#9670;&#160;</a></span>GetMarginLeft()</h2>
+<a id="a907002c9c24e886c0cfb0feec4cd594d" name="a907002c9c24e886c0cfb0feec4cd594d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a907002c9c24e886c0cfb0feec4cd594d">&#9670;&#160;</a></span>GetMarginLeft()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2340,7 +2352,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
         <tr>
           <td class="memname">int mpWindow::GetMarginLeft </td>
           <td>(</td>
-          <td class="paramtype">bool&#160;</td>
+          <td class="paramtype">const bool&#160;</td>
           <td class="paramname"><em>minusExtra</em> = <code>false</code></td><td>)</td>
           <td> const</td>
         </tr>
@@ -2362,8 +2374,8 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
 
 </div>
 </div>
-<a id="af2730ec07b8d1eaed8339d2a4b9a67ba" name="af2730ec07b8d1eaed8339d2a4b9a67ba"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af2730ec07b8d1eaed8339d2a4b9a67ba">&#9670;&#160;</a></span>GetMarginRight()</h2>
+<a id="ae69f4616b068db602e9b60bae595264e" name="ae69f4616b068db602e9b60bae595264e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae69f4616b068db602e9b60bae595264e">&#9670;&#160;</a></span>GetMarginRight()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2374,7 +2386,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
         <tr>
           <td class="memname">int mpWindow::GetMarginRight </td>
           <td>(</td>
-          <td class="paramtype">bool&#160;</td>
+          <td class="paramtype">const bool&#160;</td>
           <td class="paramname"><em>minusExtra</em> = <code>false</code></td><td>)</td>
           <td> const</td>
         </tr>
@@ -2396,8 +2408,8 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
 
 </div>
 </div>
-<a id="a06ee34c4296a9c01f5fd1b24cdb956d8" name="a06ee34c4296a9c01f5fd1b24cdb956d8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a06ee34c4296a9c01f5fd1b24cdb956d8">&#9670;&#160;</a></span>GetMarginTop()</h2>
+<a id="a74253003a4bf982e7e1df61afebd7045" name="a74253003a4bf982e7e1df61afebd7045"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a74253003a4bf982e7e1df61afebd7045">&#9670;&#160;</a></span>GetMarginTop()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2408,7 +2420,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
         <tr>
           <td class="memname">int mpWindow::GetMarginTop </td>
           <td>(</td>
-          <td class="paramtype">bool&#160;</td>
+          <td class="paramtype">const bool&#160;</td>
           <td class="paramname"><em>minusExtra</em> = <code>false</code></td><td>)</td>
           <td> const</td>
         </tr>
@@ -2459,8 +2471,8 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
 
 </div>
 </div>
-<a id="a43c36685f890a08c4892158c38c3d5d2" name="a43c36685f890a08c4892158c38c3d5d2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a43c36685f890a08c4892158c38c3d5d2">&#9670;&#160;</a></span>GetMouseLeftDownAction()</h2>
+<a id="a3424ee4ee5a507b7198ac1980e2d0aaf" name="a3424ee4ee5a507b7198ac1980e2d0aaf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3424ee4ee5a507b7198ac1980e2d0aaf">&#9670;&#160;</a></span>GetMouseLeftDownAction()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2472,7 +2484,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
           <td class="memname"><a class="el" href="mathplot_8h.html#a896e30331831640ffba4d1204a479c2f">mpMouseButtonAction</a> mpWindow::GetMouseLeftDownAction </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
   </td>
@@ -2487,8 +2499,8 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
 
 </div>
 </div>
-<a id="a5b2752d7e09da3e89ce1bdac65a1fa5f" name="a5b2752d7e09da3e89ce1bdac65a1fa5f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5b2752d7e09da3e89ce1bdac65a1fa5f">&#9670;&#160;</a></span>GetMousePosition()</h2>
+<a id="ae9074ce2f75934e544c2485e8050f506" name="ae9074ce2f75934e544c2485e8050f506"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae9074ce2f75934e544c2485e8050f506">&#9670;&#160;</a></span>GetMousePosition()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2500,7 +2512,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
           <td class="memname">wxPoint mpWindow::GetMousePosition </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
   </td>
@@ -2515,8 +2527,8 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
 
 </div>
 </div>
-<a id="ab2ba507f85d00bd5ee05c0957f15e6ee" name="ab2ba507f85d00bd5ee05c0957f15e6ee"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab2ba507f85d00bd5ee05c0957f15e6ee">&#9670;&#160;</a></span>GetMovingInfoLayer()</h2>
+<a id="a14df5b370eed897f8f0bf0b5514ac3d1" name="a14df5b370eed897f8f0bf0b5514ac3d1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a14df5b370eed897f8f0bf0b5514ac3d1">&#9670;&#160;</a></span>GetMovingInfoLayer()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2528,7 +2540,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
           <td class="memname"><a class="el" href="classmp_info_layer.html">mpInfoLayer</a> * mpWindow::GetMovingInfoLayer </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
   </td>
@@ -2600,8 +2612,8 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
 
 </div>
 </div>
-<a id="a06b319db1771f209a1fa3e799447d6c3" name="a06b319db1771f209a1fa3e799447d6c3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a06b319db1771f209a1fa3e799447d6c3">&#9670;&#160;</a></span>GetPlotBoundaries()</h2>
+<a id="a3fdc36bca2bc05c97ec220f5ff80636e" name="a3fdc36bca2bc05c97ec220f5ff80636e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3fdc36bca2bc05c97ec220f5ff80636e">&#9670;&#160;</a></span>GetPlotBoundaries()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2612,7 +2624,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
         <tr>
           <td class="memname"><a class="el" href="structmp_rect.html">mpRect</a> mpWindow::GetPlotBoundaries </td>
           <td>(</td>
-          <td class="paramtype">bool&#160;</td>
+          <td class="paramtype">const bool&#160;</td>
           <td class="paramname"><em>with_margin</em></td><td>)</td>
           <td> const</td>
         </tr>
@@ -2691,8 +2703,8 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
 
 </div>
 </div>
-<a id="afea2019b27b400557cb40b7678fcbf7d" name="afea2019b27b400557cb40b7678fcbf7d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afea2019b27b400557cb40b7678fcbf7d">&#9670;&#160;</a></span>GetPosY()</h2>
+<a id="a01b2f34f40c9a252ddf29503ad298aeb" name="a01b2f34f40c9a252ddf29503ad298aeb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a01b2f34f40c9a252ddf29503ad298aeb">&#9670;&#160;</a></span>GetPosY()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2703,7 +2715,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
         <tr>
           <td class="memname">double mpWindow::GetPosY </td>
           <td>(</td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype">const int&#160;</td>
           <td class="paramname"><em>yAxisID</em></td><td>)</td>
           <td></td>
         </tr>
@@ -2781,8 +2793,8 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
 
 </div>
 </div>
-<a id="a15a59e20741b6b0ccba95511b95ce25f" name="a15a59e20741b6b0ccba95511b95ce25f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a15a59e20741b6b0ccba95511b95ce25f">&#9670;&#160;</a></span>GetScaleY()</h2>
+<a id="aa2b8693f695093c2609b8b4f9ab09499" name="aa2b8693f695093c2609b8b4f9ab09499"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa2b8693f695093c2609b8b4f9ab09499">&#9670;&#160;</a></span>GetScaleY()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2793,7 +2805,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
         <tr>
           <td class="memname">double mpWindow::GetScaleY </td>
           <td>(</td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype">const int&#160;</td>
           <td class="paramname"><em>yAxisID</em></td><td>)</td>
           <td></td>
         </tr>
@@ -3059,8 +3071,8 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
 
 </div>
 </div>
-<a id="adda430ed5ca9867e345422219c2911e7" name="adda430ed5ca9867e345422219c2911e7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adda430ed5ca9867e345422219c2911e7">&#9670;&#160;</a></span>IsLogYaxis()</h2>
+<a id="a2bddb87ce1166fb859799b31f47403fb" name="a2bddb87ce1166fb859799b31f47403fb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2bddb87ce1166fb859799b31f47403fb">&#9670;&#160;</a></span>IsLogYaxis()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -3071,7 +3083,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
         <tr>
           <td class="memname">bool mpWindow::IsLogYaxis </td>
           <td>(</td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype">const int&#160;</td>
           <td class="paramname"><em>yAxisID</em></td><td>)</td>
           <td></td>
         </tr>
@@ -3197,7 +3209,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
 </div><div class="memdoc">
 
 <p>Enable or disable X/Y scale aspect locking for the view. </p>
-<dl class="section note"><dt>Note</dt><dd>Explicit calls to <a class="el" href="classmp_window.html#a35e963ecb7da80675ef3f15c0a83c75f" title="Set current view&#39;s X scale and refresh display.">mpWindow::SetScaleX</a> and <a class="el" href="classmp_window.html#a0f344c39e75c186b5bcd271a4981de01" title="Set current view&#39;s Y scale and refresh display.">mpWindow::SetScaleY</a> will set an unlocked aspect, but any other action changing the view scale will lock the aspect again. </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>Explicit calls to <a class="el" href="classmp_window.html#a35e963ecb7da80675ef3f15c0a83c75f" title="Set current view&#39;s X scale and refresh display.">mpWindow::SetScaleX</a> and <a class="el" href="classmp_window.html#aca15a08268a9dcc1f26ccbf1210b71c9" title="Set current view&#39;s Y scale and refresh display.">mpWindow::SetScaleY</a> will set an unlocked aspect, but any other action changing the view scale will lock the aspect again. </dd></dl>
 
 </div>
 </div>
@@ -3226,12 +3238,12 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
 </div><div class="memdoc">
 
 <p>Converts <a class="el" href="classmp_window.html" title="Canvas for plotting mpLayer implementations.">mpWindow</a> (screen) pixel coordinates into graph (floating point) coordinates, using current <a class="el" href="classmp_window.html" title="Canvas for plotting mpLayer implementations.">mpWindow</a> position and scale. </p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="classmp_window.html#a68c0c0aa41eb16ea22c3c2ec1d6316fc" title="Converts mpWindow (screen) pixel coordinates into graph (floating point) coordinates,...">p2y</a>,<a class="el" href="classmp_window.html#a493e8b7e8505eed51e3ec6b5216c6d6c" title="Converts graph (floating point) coordinates into mpWindow (screen) pixel coordinates,...">x2p</a>,<a class="el" href="classmp_window.html#a38c6cb03e8eedf9a46c615542d677d17" title="Converts graph (floating point) coordinates into mpWindow (screen) pixel coordinates,...">y2p</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classmp_window.html#afa66aff410fa5bdc5e13d5fbc9f00a9c" title="Converts mpWindow (screen) pixel coordinates into graph (floating point) coordinates,...">p2y</a>,<a class="el" href="classmp_window.html#a493e8b7e8505eed51e3ec6b5216c6d6c" title="Converts graph (floating point) coordinates into mpWindow (screen) pixel coordinates,...">x2p</a>,<a class="el" href="classmp_window.html#aeb7df5a3c387a20494c719ff07ba1c5e" title="Converts graph (floating point) coordinates into mpWindow (screen) pixel coordinates,...">y2p</a> </dd></dl>
 
 </div>
 </div>
-<a id="a68c0c0aa41eb16ea22c3c2ec1d6316fc" name="a68c0c0aa41eb16ea22c3c2ec1d6316fc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a68c0c0aa41eb16ea22c3c2ec1d6316fc">&#9670;&#160;</a></span>p2y()</h2>
+<a id="afa66aff410fa5bdc5e13d5fbc9f00a9c" name="afa66aff410fa5bdc5e13d5fbc9f00a9c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afa66aff410fa5bdc5e13d5fbc9f00a9c">&#9670;&#160;</a></span>p2y()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -3248,7 +3260,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype">const int&#160;</td>
           <td class="paramname"><em>yAxisID</em> = <code>0</code>&#160;</td>
         </tr>
         <tr>
@@ -3265,7 +3277,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
 </div><div class="memdoc">
 
 <p>Converts <a class="el" href="classmp_window.html" title="Canvas for plotting mpLayer implementations.">mpWindow</a> (screen) pixel coordinates into graph (floating point) coordinates, using current <a class="el" href="classmp_window.html" title="Canvas for plotting mpLayer implementations.">mpWindow</a> position and scale. </p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="classmp_window.html#a9570a943f47c733c6cfaff15bf7b4553" title="Converts mpWindow (screen) pixel coordinates into graph (floating point) coordinates,...">p2x</a>,<a class="el" href="classmp_window.html#a493e8b7e8505eed51e3ec6b5216c6d6c" title="Converts graph (floating point) coordinates into mpWindow (screen) pixel coordinates,...">x2p</a>,<a class="el" href="classmp_window.html#a38c6cb03e8eedf9a46c615542d677d17" title="Converts graph (floating point) coordinates into mpWindow (screen) pixel coordinates,...">y2p</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classmp_window.html#a9570a943f47c733c6cfaff15bf7b4553" title="Converts mpWindow (screen) pixel coordinates into graph (floating point) coordinates,...">p2x</a>,<a class="el" href="classmp_window.html#a493e8b7e8505eed51e3ec6b5216c6d6c" title="Converts graph (floating point) coordinates into mpWindow (screen) pixel coordinates,...">x2p</a>,<a class="el" href="classmp_window.html#aeb7df5a3c387a20494c719ff07ba1c5e" title="Converts graph (floating point) coordinates into mpWindow (screen) pixel coordinates,...">y2p</a> </dd></dl>
 
 </div>
 </div>
@@ -3295,8 +3307,8 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
 
 </div>
 </div>
-<a id="a0553b676aa3e87ecf838b9adda8be40f" name="a0553b676aa3e87ecf838b9adda8be40f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0553b676aa3e87ecf838b9adda8be40f">&#9670;&#160;</a></span>PointIsInsideBound()</h2>
+<a id="a154debde0faaeb004ca88e5c8f7e4756" name="a154debde0faaeb004ca88e5c8f7e4756"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a154debde0faaeb004ca88e5c8f7e4756">&#9670;&#160;</a></span>PointIsInsideBound()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -3307,19 +3319,19 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
         <tr>
           <td class="memname">bool mpWindow::PointIsInsideBound </td>
           <td>(</td>
-          <td class="paramtype">double&#160;</td>
+          <td class="paramtype">const double&#160;</td>
           <td class="paramname"><em>px</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">double&#160;</td>
+          <td class="paramtype">const double&#160;</td>
           <td class="paramname"><em>py</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype">const int&#160;</td>
           <td class="paramname"><em>yAxisID</em>&#160;</td>
         </tr>
         <tr>
@@ -3461,8 +3473,8 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
 
 </div>
 </div>
-<a id="a470b6f27826647a0fbfea34b077938e0" name="a470b6f27826647a0fbfea34b077938e0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a470b6f27826647a0fbfea34b077938e0">&#9670;&#160;</a></span>SetAutoFit()</h2>
+<a id="a3060399916dffea77d0e302ff40a6087" name="a3060399916dffea77d0e302ff40a6087"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3060399916dffea77d0e302ff40a6087">&#9670;&#160;</a></span>SetAutoFit()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -3473,7 +3485,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
         <tr>
           <td class="memname">void mpWindow::SetAutoFit </td>
           <td>(</td>
-          <td class="paramtype">bool&#160;</td>
+          <td class="paramtype">const bool&#160;</td>
           <td class="paramname"><em>autoFit</em></td><td>)</td>
           <td></td>
         </tr>
@@ -3593,8 +3605,8 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
 
 </div>
 </div>
-<a id="a8fec60c6806c83a1f1e57b937fd27246" name="a8fec60c6806c83a1f1e57b937fd27246"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8fec60c6806c83a1f1e57b937fd27246">&#9670;&#160;</a></span>SetDefaultLegendIsAlwaysVisible()</h2>
+<a id="a74f91b19c1ceb3dc5945ace12af1622e" name="a74f91b19c1ceb3dc5945ace12af1622e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a74f91b19c1ceb3dc5945ace12af1622e">&#9670;&#160;</a></span>SetDefaultLegendIsAlwaysVisible()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -3603,16 +3615,16 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void mpWindow::SetDefaultLegendIsAlwaysVisible </td>
+          <td class="memname">static void mpWindow::SetDefaultLegendIsAlwaysVisible </td>
           <td>(</td>
-          <td class="paramtype">bool&#160;</td>
+          <td class="paramtype">const bool&#160;</td>
           <td class="paramname"><em>visible</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -3628,8 +3640,8 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
 
 </div>
 </div>
-<a id="acf1eeea315de99a1dde21ea6f514010f" name="acf1eeea315de99a1dde21ea6f514010f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acf1eeea315de99a1dde21ea6f514010f">&#9670;&#160;</a></span>SetExtraMargin()</h2>
+<a id="ae5f779349824e2768ca0e93fe49b4ae6" name="ae5f779349824e2768ca0e93fe49b4ae6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae5f779349824e2768ca0e93fe49b4ae6">&#9670;&#160;</a></span>SetExtraMargin()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -3640,7 +3652,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
         <tr>
           <td class="memname">void mpWindow::SetExtraMargin </td>
           <td>(</td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype">const int&#160;</td>
           <td class="paramname"><em>extra</em></td><td>)</td>
           <td></td>
         </tr>
@@ -3736,8 +3748,8 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
 
 </div>
 </div>
-<a id="af43d057f2361d221b6ade5d062508fa8" name="af43d057f2361d221b6ade5d062508fa8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af43d057f2361d221b6ade5d062508fa8">&#9670;&#160;</a></span>SetLogXaxis()</h2>
+<a id="a3d2828ccf0f190ac3f21e9a95f8ef455" name="a3d2828ccf0f190ac3f21e9a95f8ef455"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3d2828ccf0f190ac3f21e9a95f8ef455">&#9670;&#160;</a></span>SetLogXaxis()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -3748,7 +3760,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
         <tr>
           <td class="memname">void mpWindow::SetLogXaxis </td>
           <td>(</td>
-          <td class="paramtype">bool&#160;</td>
+          <td class="paramtype">const bool&#160;</td>
           <td class="paramname"><em>log</em></td><td>)</td>
           <td></td>
         </tr>
@@ -3770,8 +3782,8 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
 
 </div>
 </div>
-<a id="a1c30df98af68c86a5f52a52d89e3144f" name="a1c30df98af68c86a5f52a52d89e3144f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1c30df98af68c86a5f52a52d89e3144f">&#9670;&#160;</a></span>SetLogYaxis()</h2>
+<a id="a58305863b883c1a7a693e1abc041aed6" name="a58305863b883c1a7a693e1abc041aed6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a58305863b883c1a7a693e1abc041aed6">&#9670;&#160;</a></span>SetLogYaxis()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -3782,13 +3794,13 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
         <tr>
           <td class="memname">void mpWindow::SetLogYaxis </td>
           <td>(</td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype">const int&#160;</td>
           <td class="paramname"><em>yAxisID</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">bool&#160;</td>
+          <td class="paramtype">const bool&#160;</td>
           <td class="paramname"><em>log</em>&#160;</td>
         </tr>
         <tr>
@@ -3815,8 +3827,8 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
 
 </div>
 </div>
-<a id="a7bb14b97a77169baf26d558f5a718f09" name="a7bb14b97a77169baf26d558f5a718f09"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7bb14b97a77169baf26d558f5a718f09">&#9670;&#160;</a></span>SetMarginBottom()</h2>
+<a id="a8cb981b2b63114addf0ae3837910e937" name="a8cb981b2b63114addf0ae3837910e937"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8cb981b2b63114addf0ae3837910e937">&#9670;&#160;</a></span>SetMarginBottom()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -3827,7 +3839,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
         <tr>
           <td class="memname">void mpWindow::SetMarginBottom </td>
           <td>(</td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype">const int&#160;</td>
           <td class="paramname"><em>bottom</em></td><td>)</td>
           <td></td>
         </tr>
@@ -3849,8 +3861,8 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
 
 </div>
 </div>
-<a id="a1ea89241390c557c0b6e0c7c67dca48a" name="a1ea89241390c557c0b6e0c7c67dca48a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1ea89241390c557c0b6e0c7c67dca48a">&#9670;&#160;</a></span>SetMarginLeft()</h2>
+<a id="af962d176937cd0726b346b8d3bd722b8" name="af962d176937cd0726b346b8d3bd722b8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af962d176937cd0726b346b8d3bd722b8">&#9670;&#160;</a></span>SetMarginLeft()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -3861,7 +3873,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
         <tr>
           <td class="memname">void mpWindow::SetMarginLeft </td>
           <td>(</td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype">const int&#160;</td>
           <td class="paramname"><em>left</em></td><td>)</td>
           <td></td>
         </tr>
@@ -3883,8 +3895,8 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
 
 </div>
 </div>
-<a id="a4b93b976de346bded4ee861f3c008ff2" name="a4b93b976de346bded4ee861f3c008ff2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4b93b976de346bded4ee861f3c008ff2">&#9670;&#160;</a></span>SetMarginRight()</h2>
+<a id="aa7189acc4a27421e3f04b12e820e8dc6" name="aa7189acc4a27421e3f04b12e820e8dc6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa7189acc4a27421e3f04b12e820e8dc6">&#9670;&#160;</a></span>SetMarginRight()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -3895,7 +3907,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
         <tr>
           <td class="memname">void mpWindow::SetMarginRight </td>
           <td>(</td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype">const int&#160;</td>
           <td class="paramname"><em>right</em></td><td>)</td>
           <td></td>
         </tr>
@@ -3968,8 +3980,8 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
 
 </div>
 </div>
-<a id="a5d14fbe18d633439beb2d48749653941" name="a5d14fbe18d633439beb2d48749653941"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5d14fbe18d633439beb2d48749653941">&#9670;&#160;</a></span>SetMarginTop()</h2>
+<a id="add3c2263953a6daa3238e23319ad8d9a" name="add3c2263953a6daa3238e23319ad8d9a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#add3c2263953a6daa3238e23319ad8d9a">&#9670;&#160;</a></span>SetMarginTop()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -3980,7 +3992,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
         <tr>
           <td class="memname">void mpWindow::SetMarginTop </td>
           <td>(</td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype">const int&#160;</td>
           <td class="paramname"><em>top</em></td><td>)</td>
           <td></td>
         </tr>
@@ -4002,8 +4014,8 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
 
 </div>
 </div>
-<a id="afc89c763182691d11a0351deb59078e3" name="afc89c763182691d11a0351deb59078e3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afc89c763182691d11a0351deb59078e3">&#9670;&#160;</a></span>SetMouseLeftDownAction()</h2>
+<a id="a25afde5cfc2fb0d84fe132f138523727" name="a25afde5cfc2fb0d84fe132f138523727"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a25afde5cfc2fb0d84fe132f138523727">&#9670;&#160;</a></span>SetMouseLeftDownAction()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -4014,7 +4026,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
         <tr>
           <td class="memname">void mpWindow::SetMouseLeftDownAction </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="mathplot_8h.html#a896e30331831640ffba4d1204a479c2f">mpMouseButtonAction</a>&#160;</td>
+          <td class="paramtype">const <a class="el" href="mathplot_8h.html#a896e30331831640ffba4d1204a479c2f">mpMouseButtonAction</a>&#160;</td>
           <td class="paramname"><em>action</em></td><td>)</td>
           <td></td>
         </tr>
@@ -4301,8 +4313,8 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
 
 </div>
 </div>
-<a id="a0f344c39e75c186b5bcd271a4981de01" name="a0f344c39e75c186b5bcd271a4981de01"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0f344c39e75c186b5bcd271a4981de01">&#9670;&#160;</a></span>SetScaleY()</h2>
+<a id="aca15a08268a9dcc1f26ccbf1210b71c9" name="aca15a08268a9dcc1f26ccbf1210b71c9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aca15a08268a9dcc1f26ccbf1210b71c9">&#9670;&#160;</a></span>SetScaleY()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -4319,7 +4331,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype">const int&#160;</td>
           <td class="paramname"><em>yAxisID</em>&#160;</td>
         </tr>
         <tr>
@@ -4464,8 +4476,8 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
 
 </div>
 </div>
-<a id="ac79d5218c15afb26a267f9b528c16642" name="ac79d5218c15afb26a267f9b528c16642"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac79d5218c15afb26a267f9b528c16642">&#9670;&#160;</a></span>UpdateBoundingBoxToInclude()</h2>
+<a id="a6a0ca559b903b08269defd59bc861f8e" name="a6a0ca559b903b08269defd59bc861f8e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6a0ca559b903b08269defd59bc861f8e">&#9670;&#160;</a></span>UpdateBoundingBoxToInclude()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -4476,19 +4488,19 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
         <tr>
           <td class="memname">void mpWindow::UpdateBoundingBoxToInclude </td>
           <td>(</td>
-          <td class="paramtype">double&#160;</td>
+          <td class="paramtype">const double&#160;</td>
           <td class="paramname"><em>px</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">double&#160;</td>
+          <td class="paramtype">const double&#160;</td>
           <td class="paramname"><em>py</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype">const int&#160;</td>
           <td class="paramname"><em>yAxisID</em>&#160;</td>
         </tr>
         <tr>
@@ -4516,8 +4528,8 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
 
 </div>
 </div>
-<a id="a2a2e9f643f3697fe1b78fb41dd763f7b" name="a2a2e9f643f3697fe1b78fb41dd763f7b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2a2e9f643f3697fe1b78fb41dd763f7b">&#9670;&#160;</a></span>UpdateDesiredBoundingBox()</h2>
+<a id="a8916a10e6a4a854a9539c86a68f63761" name="a8916a10e6a4a854a9539c86a68f63761"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8916a10e6a4a854a9539c86a68f63761">&#9670;&#160;</a></span>UpdateDesiredBoundingBox()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -4528,7 +4540,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
         <tr>
           <td class="memname">void mpWindow::UpdateDesiredBoundingBox </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="mathplot_8h.html#a6195ffa0c0f96a949275aa81a5534c64">mpAxisUpdate</a>&#160;</td>
+          <td class="paramtype">const <a class="el" href="mathplot_8h.html#a6195ffa0c0f96a949275aa81a5534c64">mpAxisUpdate</a>&#160;</td>
           <td class="paramname"><em>update</em></td><td>)</td>
           <td></td>
         </tr>
@@ -4603,12 +4615,12 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
 </div><div class="memdoc">
 
 <p>Converts graph (floating point) coordinates into <a class="el" href="classmp_window.html" title="Canvas for plotting mpLayer implementations.">mpWindow</a> (screen) pixel coordinates, using current <a class="el" href="classmp_window.html" title="Canvas for plotting mpLayer implementations.">mpWindow</a> position and scale. </p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="classmp_window.html#a9570a943f47c733c6cfaff15bf7b4553" title="Converts mpWindow (screen) pixel coordinates into graph (floating point) coordinates,...">p2x</a>,<a class="el" href="classmp_window.html#a68c0c0aa41eb16ea22c3c2ec1d6316fc" title="Converts mpWindow (screen) pixel coordinates into graph (floating point) coordinates,...">p2y</a>,<a class="el" href="classmp_window.html#a38c6cb03e8eedf9a46c615542d677d17" title="Converts graph (floating point) coordinates into mpWindow (screen) pixel coordinates,...">y2p</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classmp_window.html#a9570a943f47c733c6cfaff15bf7b4553" title="Converts mpWindow (screen) pixel coordinates into graph (floating point) coordinates,...">p2x</a>,<a class="el" href="classmp_window.html#afa66aff410fa5bdc5e13d5fbc9f00a9c" title="Converts mpWindow (screen) pixel coordinates into graph (floating point) coordinates,...">p2y</a>,<a class="el" href="classmp_window.html#aeb7df5a3c387a20494c719ff07ba1c5e" title="Converts graph (floating point) coordinates into mpWindow (screen) pixel coordinates,...">y2p</a> </dd></dl>
 
 </div>
 </div>
-<a id="a38c6cb03e8eedf9a46c615542d677d17" name="a38c6cb03e8eedf9a46c615542d677d17"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a38c6cb03e8eedf9a46c615542d677d17">&#9670;&#160;</a></span>y2p()</h2>
+<a id="aeb7df5a3c387a20494c719ff07ba1c5e" name="aeb7df5a3c387a20494c719ff07ba1c5e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aeb7df5a3c387a20494c719ff07ba1c5e">&#9670;&#160;</a></span>y2p()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -4625,7 +4637,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype">const int&#160;</td>
           <td class="paramname"><em>yAxisID</em> = <code>0</code>&#160;</td>
         </tr>
         <tr>
@@ -4642,7 +4654,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
 </div><div class="memdoc">
 
 <p>Converts graph (floating point) coordinates into <a class="el" href="classmp_window.html" title="Canvas for plotting mpLayer implementations.">mpWindow</a> (screen) pixel coordinates, using current <a class="el" href="classmp_window.html" title="Canvas for plotting mpLayer implementations.">mpWindow</a> position and scale. </p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="classmp_window.html#a9570a943f47c733c6cfaff15bf7b4553" title="Converts mpWindow (screen) pixel coordinates into graph (floating point) coordinates,...">p2x</a>,<a class="el" href="classmp_window.html#a68c0c0aa41eb16ea22c3c2ec1d6316fc" title="Converts mpWindow (screen) pixel coordinates into graph (floating point) coordinates,...">p2y</a>,<a class="el" href="classmp_window.html#a493e8b7e8505eed51e3ec6b5216c6d6c" title="Converts graph (floating point) coordinates into mpWindow (screen) pixel coordinates,...">x2p</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classmp_window.html#a9570a943f47c733c6cfaff15bf7b4553" title="Converts mpWindow (screen) pixel coordinates into graph (floating point) coordinates,...">p2x</a>,<a class="el" href="classmp_window.html#afa66aff410fa5bdc5e13d5fbc9f00a9c" title="Converts mpWindow (screen) pixel coordinates into graph (floating point) coordinates,...">p2y</a>,<a class="el" href="classmp_window.html#a493e8b7e8505eed51e3ec6b5216c6d6c" title="Converts graph (floating point) coordinates into mpWindow (screen) pixel coordinates,...">x2p</a> </dd></dl>
 
 </div>
 </div>
