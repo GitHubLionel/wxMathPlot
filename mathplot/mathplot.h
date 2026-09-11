@@ -3465,9 +3465,10 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      @param alsoDeleteObject If set to true, the mpLayer objects will be also "deleted", not just removed from the internal list.
      @param func Select type of plot
      @param refreshDisplay States whether to refresh the display (UpdateAll) after removing the layers.
+     @param refreshConfig States whether to refresh the config window (if exist)
      See DelLayer() for more infos
      */
-    void DelAllPlot(mpDeleteAction alsoDeleteObject, mpFunctionType func = mpfAllType, bool refreshDisplay = true);
+    void DelAllPlot(mpDeleteAction alsoDeleteObject, mpFunctionType func = mpfAllType, bool refreshDisplay = true, bool refreshConfig = true);
 
     /** Remove all extra y axis after the selected y axis.
      @param alsoDeleteObject If set to true, the mpLayer objects will be also "deleted", not just removed from the internal list.
@@ -4545,17 +4546,20 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
 #endif // MP_ENABLE_CONFIG
 
     /**
-     * Refresh the config window if present
+     * Refresh the config window if present. Never creates or shows the dialog;
+     * if no config window exists yet it simply returns.
      * @param layerType the type of layer to see the good page in the window
      * @param param specific parameter for the page
-     * @param show if true, the window is shown in any cases
      */
-    void RefreshConfigWindow(mpLayerType layerType, int param = 0, bool show = false);
+    void RefreshConfigWindow(mpLayerType layerType, int param = 0);
 
     /**
-     * Opens configuration window
+     * Opens the configuration window, creating it lazily on first use.
+     * @param layerType optional layer type to select the matching page.
+     *                  mpLAYER_UNDEF (default) keeps the last shown page.
+     * @param param specific parameter for the page (e.g. series index)
      */
-    void OpenConfigWindow();
+    void OpenConfigWindow(mpLayerType layerType = mpLAYER_UNDEF, int param = 0);
 
     /**
      * Deletes configuration window

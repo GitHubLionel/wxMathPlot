@@ -3603,8 +3603,7 @@ void mpWindow::OnMouseLeftRelease(wxMouseEvent &event)
   {
     // Legend was left clicked. Open config when released
     m_openConfigWindowPending = false;
-    // Show config window
-    RefreshConfigWindow(mpLAYER_PLOT, m_infoLegendSelectedSeries, true);
+    OpenConfigWindow(mpLAYER_PLOT, m_infoLegendSelectedSeries);
   }
 
   event.Skip();
@@ -4347,7 +4346,7 @@ bool mpWindow::DelLayer(mpLayer *layer, mpDeleteAction alsoDeleteObject, bool re
 void mpWindow::DelAllLayers(mpDeleteAction alsoDeleteObject, bool refreshDisplay)
 {
   // First we delete all the function so we can after delete axis
-  DelAllPlot(alsoDeleteObject, mpfAllType, false);
+  DelAllPlot(alsoDeleteObject, mpfAllType, false, false);
 
   while (m_layers.size() > 0)
   {
@@ -4368,7 +4367,7 @@ void mpWindow::DelAllLayers(mpDeleteAction alsoDeleteObject, bool refreshDisplay
   DeleteConfigWindow();
 }
 
-void mpWindow::DelAllPlot(mpDeleteAction alsoDeleteObject, mpFunctionType func, bool refreshDisplay)
+void mpWindow::DelAllPlot(mpDeleteAction alsoDeleteObject, mpFunctionType func, bool refreshDisplay, bool refreshConfig)
 {
   int function;
   mpLayerList::iterator it = m_layers.begin();
@@ -4390,7 +4389,8 @@ void mpWindow::DelAllPlot(mpDeleteAction alsoDeleteObject, mpFunctionType func, 
   if (refreshDisplay)
     UpdateAll();
 
-  RefreshConfigWindow(mpLAYER_PLOT, -1);
+  if (refreshConfig)
+    RefreshConfigWindow(mpLAYER_PLOT, -1);
 }
 
 void mpWindow::DelAllYAxisAfterID(mpDeleteAction alsoDeleteObject, int yAxisID, bool refreshDisplay)
@@ -5525,11 +5525,13 @@ MathPlotConfigDialog* mpWindow::GetConfigWindow(bool Create)
 }
 #endif // MP_ENABLE_CONFIG
 
-void mpWindow::RefreshConfigWindow(mpLayerType layerType, int param, bool show)
+void mpWindow::RefreshConfigWindow(mpLayerType layerType, int param)
 {
 #if defined(MP_ENABLE_CONFIG) || defined(ENABLE_MP_CONFIG)
-  if (m_configWindow == NULL)
-    m_configWindow = new MathPlotConfigDialog(this);
+  if (m_configWindow == nullptr)
+    // m_configWindow is only created the first time the user opens the configuration window,
+    // thus if it has never been opened, there is no need to refresh it
+    return;
 
   switch (layerType)
   {
@@ -5548,26 +5550,25 @@ void mpWindow::RefreshConfigWindow(mpLayerType layerType, int param, bool show)
       break;
     case mpLAYER_UNDEF:
     default:
-      m_configWindow->Initialize(mpcpiGeneral);
+      m_configWindow->Initialize();   // mpcpiNone: keep the last shown page
   }
-
-  if (show)
-    m_configWindow->Show();
 #else
   (void) layerType;
   (void) param;
-  (void) show;
 #endif // MP_ENABLE_CONFIG
 }
 
-void mpWindow::OpenConfigWindow()
+void mpWindow::OpenConfigWindow(mpLayerType layerType, int param)
 {
 #if defined(MP_ENABLE_CONFIG) || defined(ENABLE_MP_CONFIG)
   if (m_configWindow == NULL)
     m_configWindow = new MathPlotConfigDialog(this);
 
-  m_configWindow->Initialize();
+  RefreshConfigWindow(layerType, param);
   m_configWindow->Show();
+#else
+  (void) layerType;
+  (void) param;
 #endif // MP_ENABLE_CONFIG
 }
 
