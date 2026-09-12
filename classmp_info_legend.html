@@ -69,6 +69,11 @@ Collaboration diagram for mpInfoLegend:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
+<tr class="memitem:ac2da38ef18ec5b3a13a640dabfdb5b33" id="r_ac2da38ef18ec5b3a13a640dabfdb5b33"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_info_legend.html#ac2da38ef18ec5b3a13a640dabfdb5b33">VerticalCursorMode</a> { <a class="el" href="classmp_info_legend.html#ac2da38ef18ec5b3a13a640dabfdb5b33af5df817bd9c010bc0ba426ae4da190e6">CursorMode_mouse</a>
+, <a class="el" href="classmp_info_legend.html#ac2da38ef18ec5b3a13a640dabfdb5b33ac8497a76ead45b247855dec5b531da69">CursorMode_fixed</a>
+ }</td></tr>
+<tr class="memdesc:ac2da38ef18ec5b3a13a640dabfdb5b33"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enumeration for vertical cursor mode, which determines how the vertical cursor is positioned for series intersection indication.  <a href="classmp_info_legend.html#ac2da38ef18ec5b3a13a640dabfdb5b33">More...</a><br /></td></tr>
+<tr class="separator:ac2da38ef18ec5b3a13a640dabfdb5b33"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae7da457f6aa4b93a9ac13c265f4c7c4f" id="r_ae7da457f6aa4b93a9ac13c265f4c7c4f"><td class="memItemLeft" align="right" valign="top"><a id="ae7da457f6aa4b93a9ac13c265f4c7c4f" name="ae7da457f6aa4b93a9ac13c265f4c7c4f"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_info_legend.html#ae7da457f6aa4b93a9ac13c265f4c7c4f">HitCode</a> : int { <b>HitNone</b> = -1
 , <b>HitHeader</b> = -2
  }</td></tr>
@@ -127,6 +132,21 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>SetNeedUpdate</b> ()<
 <tr class="memitem:af097dfae0b3df8677ad82a1f88ae722f" id="r_af097dfae0b3df8677ad82a1f88ae722f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_info_legend.html#af097dfae0b3df8677ad82a1f88ae722f">IsSeriesValuesShown</a> () const</td></tr>
 <tr class="memdesc:af097dfae0b3df8677ad82a1f88ae722f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Indicates if series values shall be shown.  <br /></td></tr>
 <tr class="separator:af097dfae0b3df8677ad82a1f88ae722f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8801fb39e655fd88bb47765e7b008de5" id="r_a8801fb39e655fd88bb47765e7b008de5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_info_legend.html#a8801fb39e655fd88bb47765e7b008de5">IndicateSeriesIntersection</a> (const bool enable)</td></tr>
+<tr class="memdesc:a8801fb39e655fd88bb47765e7b008de5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set if the intersection of the series with the vertical cursor shall be indicated.  <br /></td></tr>
+<tr class="separator:a8801fb39e655fd88bb47765e7b008de5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa5cbcf59d19968127c1b126f57394eb2" id="r_aa5cbcf59d19968127c1b126f57394eb2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_info_legend.html#aa5cbcf59d19968127c1b126f57394eb2">SetVerticalCursorFollowMouse</a> ()</td></tr>
+<tr class="memdesc:aa5cbcf59d19968127c1b126f57394eb2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Make the vertical cursor follow the mouse position.  <br /></td></tr>
+<tr class="separator:aa5cbcf59d19968127c1b126f57394eb2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6d93690d5950c0c61cc8ec10d8f3cfa2" id="r_a6d93690d5950c0c61cc8ec10d8f3cfa2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_info_legend.html#a6d93690d5950c0c61cc8ec10d8f3cfa2">SetVerticalCursorFixed</a> (double posX)</td></tr>
+<tr class="memdesc:a6d93690d5950c0c61cc8ec10d8f3cfa2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Place the vertical cursor at a fixed position and show the series values.  <br /></td></tr>
+<tr class="separator:a6d93690d5950c0c61cc8ec10d8f3cfa2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa42af40fe0d808c9cdd351e69fe1459f" id="r_aa42af40fe0d808c9cdd351e69fe1459f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classmp_info_legend.html#ac2da38ef18ec5b3a13a640dabfdb5b33">VerticalCursorMode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_info_legend.html#aa42af40fe0d808c9cdd351e69fe1459f">GetVerticalCursorMode</a> () const</td></tr>
+<tr class="memdesc:aa42af40fe0d808c9cdd351e69fe1459f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the current vertical cursor mode.  <br /></td></tr>
+<tr class="separator:aa42af40fe0d808c9cdd351e69fe1459f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac4962761de9d193a5482e905490164af" id="r_ac4962761de9d193a5482e905490164af"><td class="memItemLeft" align="right" valign="top">wxCoord&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_info_legend.html#ac4962761de9d193a5482e905490164af">GetVerticalCursorX</a> () const</td></tr>
+<tr class="memdesc:ac4962761de9d193a5482e905490164af"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the current x position (in pixels) of the vertical cursor.  <br /></td></tr>
+<tr class="separator:ac4962761de9d193a5482e905490164af"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1826fd48cee3c2ddd4fe9d0d6d31fa02" id="r_a1826fd48cee3c2ddd4fe9d0d6d31fa02"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_info_legend.html#a1826fd48cee3c2ddd4fe9d0d6d31fa02">GetLegendHitRegion</a> (wxPoint mousePos)</td></tr>
 <tr class="memdesc:a1826fd48cee3c2ddd4fe9d0d6d31fa02"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if mouse is inside legend and if it hovers the header or any of the series If a series is hovered, return its index.  <br /></td></tr>
 <tr class="separator:a1826fd48cee3c2ddd4fe9d0d6d31fa02"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -444,7 +464,30 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>m_CanDelete</b></td><
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Implement the legend to be added to the plot This layer allows you to add a legend to describe the plots in the window. </p>
 <p>The legend uses the layer name as a label, and displays only layers of type mpLAYER_PLOT. </p>
-</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+</div><h2 class="groupheader">Member Enumeration Documentation</h2>
+<a id="ac2da38ef18ec5b3a13a640dabfdb5b33" name="ac2da38ef18ec5b3a13a640dabfdb5b33"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac2da38ef18ec5b3a13a640dabfdb5b33">&#9670;&#160;</a></span>VerticalCursorMode</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="classmp_info_legend.html#ac2da38ef18ec5b3a13a640dabfdb5b33">mpInfoLegend::VerticalCursorMode</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Enumeration for vertical cursor mode, which determines how the vertical cursor is positioned for series intersection indication. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ac2da38ef18ec5b3a13a640dabfdb5b33af5df817bd9c010bc0ba426ae4da190e6" name="ac2da38ef18ec5b3a13a640dabfdb5b33af5df817bd9c010bc0ba426ae4da190e6"></a>CursorMode_mouse&#160;</td><td class="fielddoc"><p>Vertical cursor is at mouse position. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ac2da38ef18ec5b3a13a640dabfdb5b33ac8497a76ead45b247855dec5b531da69" name="ac2da38ef18ec5b3a13a640dabfdb5b33ac8497a76ead45b247855dec5b531da69"></a>CursorMode_fixed&#160;</td><td class="fielddoc"><p>Vertical cursor is at fixed position. </p>
+</td></tr>
+</table>
+
+</div>
+</div>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a3640179bea2f6c324fbcb3c84da064f8" name="a3640179bea2f6c324fbcb3c84da064f8"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a3640179bea2f6c324fbcb3c84da064f8">&#9670;&#160;</a></span>mpInfoLegend()</h2>
 
@@ -671,6 +714,88 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>m_CanDelete</b></td><
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Index of series or header hit. Return -1 if we are outside the legend </dd></dl>
+
+</div>
+</div>
+<a id="aa42af40fe0d808c9cdd351e69fe1459f" name="aa42af40fe0d808c9cdd351e69fe1459f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa42af40fe0d808c9cdd351e69fe1459f">&#9670;&#160;</a></span>GetVerticalCursorMode()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classmp_info_legend.html#ac2da38ef18ec5b3a13a640dabfdb5b33">VerticalCursorMode</a> mpInfoLegend::GetVerticalCursorMode </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the current vertical cursor mode. </p>
+<dl class="section return"><dt>Returns</dt><dd>Cursor mode </dd></dl>
+
+</div>
+</div>
+<a id="ac4962761de9d193a5482e905490164af" name="ac4962761de9d193a5482e905490164af"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac4962761de9d193a5482e905490164af">&#9670;&#160;</a></span>GetVerticalCursorX()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">wxCoord mpInfoLegend::GetVerticalCursorX </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the current x position (in pixels) of the vertical cursor. </p>
+<p>Defined out-of-line in mathplot.cpp because it dereferences <a class="el" href="classmp_window.html" title="Canvas for plotting mpLayer implementations.">mpWindow</a>, which is only forward-declared at this point in the header. </p>
+
+</div>
+</div>
+<a id="a8801fb39e655fd88bb47765e7b008de5" name="a8801fb39e655fd88bb47765e7b008de5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8801fb39e655fd88bb47765e7b008de5">&#9670;&#160;</a></span>IndicateSeriesIntersection()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void mpInfoLegend::IndicateSeriesIntersection </td>
+          <td>(</td>
+          <td class="paramtype">const bool&#160;</td>
+          <td class="paramname"><em>enable</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Set if the intersection of the series with the vertical cursor shall be indicated. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">enable</td><td>Set if enabled </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -902,6 +1027,52 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>m_CanDelete</b></td><
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="a6d93690d5950c0c61cc8ec10d8f3cfa2" name="a6d93690d5950c0c61cc8ec10d8f3cfa2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6d93690d5950c0c61cc8ec10d8f3cfa2">&#9670;&#160;</a></span>SetVerticalCursorFixed()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void mpInfoLegend::SetVerticalCursorFixed </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>posX</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Place the vertical cursor at a fixed position and show the series values. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">posX</td><td>Fractional x position in the plot area, clamped to [0, 1] </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="aa5cbcf59d19968127c1b126f57394eb2" name="aa5cbcf59d19968127c1b126f57394eb2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa5cbcf59d19968127c1b126f57394eb2">&#9670;&#160;</a></span>SetVerticalCursorFollowMouse()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void mpInfoLegend::SetVerticalCursorFollowMouse </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Make the vertical cursor follow the mouse position. </p>
+<p>No position is needed in this mode. </p>
 
 </div>
 </div>
