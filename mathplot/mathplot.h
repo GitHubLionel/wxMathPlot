@@ -1559,6 +1559,40 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLegend: public mpInfoLayer
       return m_showSeriesValues && IsVisible();
     }
 
+    /** Set if the intersection of the series with the vertical cursor shall be indicated
+     @param enable Set if enabled */
+    void IndicateSeriesIntersection(const bool enable)
+    {
+      m_indicateSeriesIntersection = enable;
+    }
+
+    /** Make the vertical cursor follow the mouse position.
+     *  No position is needed in this mode. */
+    void SetVerticalCursorFollowMouse();
+
+    /** Place the vertical cursor at a fixed position and show the series values.
+     *  @param posX Fractional x position in the plot area, clamped to [0, 1] */
+    void SetVerticalCursorFixed(double posX);
+
+    /// Enumeration for vertical cursor mode, which determines how the vertical cursor is positioned for series intersection indication.
+    enum VerticalCursorMode
+    {
+       CursorMode_mouse, //!< Vertical cursor is at mouse position
+       CursorMode_fixed  //!< Vertical cursor is at fixed position
+    };
+
+    /** Get the current vertical cursor mode.
+     *  @return Cursor mode */
+    VerticalCursorMode GetVerticalCursorMode() const
+    {
+      return m_verticalCursorMode;
+    }
+
+    /** Get the current x position (in pixels) of the vertical cursor.
+     *  Defined out-of-line in mathplot.cpp because it dereferences mpWindow,
+     *  which is only forward-declared at this point in the header. */
+    wxCoord GetVerticalCursorX() const;
+
     /** Checks if mouse is inside legend and if it hovers the header or any of the series
      * If a series is hovered, return its index. If the header is hovered, return HitHeader,
      * otherwise return HitNone
@@ -1614,11 +1648,14 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLegend: public mpInfoLayer
                              //!< area occupied by the function name and decoration
     };
     std::vector<LegendDetail> m_LegendDetailList; //!< list (well, vector) of details for each individual plot's legend component
-    wxCoord m_headerEnd;                //!< End position of header row in box, used to check if header has been clicked
-    bool m_needs_update;                //!< Do we need to redraw the legend bitmap? Set when a plot function changes (name, visibility, add or remove)
-    int m_maxSeriesValueWidth;          //!< Keep track of the widest series value text
-    bool m_enableSeriesValues;          //!< Enables to show series values in legend
-    bool m_showSeriesValues;            //!< Shall series values be drawn to plot
+    wxCoord m_headerEnd;                          //!< End position of header row in box, used to check if header has been clicked
+    bool m_needs_update;                          //!< Do we need to redraw the legend bitmap? Set when a plot function changes (name, visibility, add or remove)
+    int m_maxSeriesValueWidth;                    //!< Keep track of the widest series value text
+    bool m_enableSeriesValues;                    //!< Enables to show series values in legend
+    bool m_showSeriesValues;                      //!< Shall series values be drawn to plot
+    bool m_indicateSeriesIntersection;            //!< Shall we indicate the intersection of the series and the vertical cursor with a circle marker
+    VerticalCursorMode m_verticalCursorMode;      //!< How shall we position the vertical cursor for series intersection indication (at mouse or at fixed position)
+    double m_verticalCursorPosX;                  //!< X position of the vertical cursor relative to the plot area (0 = left, 1 = right). Only used if m_verticalCursorMode is CursorMode_fixed.
 
     /**
      * Create/update the bitmap image of this legend.

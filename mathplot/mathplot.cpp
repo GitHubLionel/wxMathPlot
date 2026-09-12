@@ -724,6 +724,9 @@ mpInfoLegend::mpInfoLegend() :
   m_maxSeriesValueWidth = 0;
   m_enableSeriesValues = false;
   m_showSeriesValues = false;
+  m_indicateSeriesIntersection = true;
+  m_verticalCursorMode = CursorMode_mouse;
+  m_verticalCursorPosX = 0.0;
 }
 
 mpInfoLegend::mpInfoLegend(wxPoint pos, const wxBrush &brush, mpLocation location) :
@@ -738,6 +741,9 @@ mpInfoLegend::mpInfoLegend(wxPoint pos, const wxBrush &brush, mpLocation locatio
   m_maxSeriesValueWidth = 0;
   m_enableSeriesValues = false;
   m_showSeriesValues = false;
+  m_indicateSeriesIntersection = true;
+  m_verticalCursorMode = CursorMode_mouse;
+  m_verticalCursorPosX = 0.0;
 }
 
 void mpInfoLegend::UpdateBitmap(wxDC &dc, mpWindow &w)
@@ -931,8 +937,9 @@ int mpInfoLegend::GetMaxLabelWidth(wxDC &dc, mpWindow &w) const
 int mpInfoLegend::DrawSeriesValue(wxDC& dc, mpWindow& w, mpFunction& function, int posX, int posY, int labelHeight, int labelWidth, int maxLabelWidth)
 {
   static wxFont lastFont;
-  const double mouseXValue = w.p2x(w.GetMousePosition().x);
-  std::optional<double> value = function.GetSeriesValue(mouseXValue);
+  wxCoord cursorX = GetVerticalCursorX();
+  const double cursorXValue = w.p2x(cursorX);
+  std::optional<double> value = function.GetSeriesValue(cursorXValue);
   wxString yValueString;
   if(value && IsSeriesValuesShown())
     yValueString = wxString::Format(_T(" = %g"), *value);
@@ -994,30 +1001,34 @@ void mpInfoLegend::DrawContent(wxDC &dc, mpWindow &w)
 
     if(IsSeriesValuesShown())
     {
+      wxCoord cursorX = GetVerticalCursorX();
       // Draw a vertical line to indicate location of the shown values (where the line cross a series)
       const mpRect bound = w.GetPlotBoundaries(true);
       dc.SetPen(*wxBLACK_PEN);
-      dc.DrawLine(w.GetMousePosition().x, bound.top, w.GetMousePosition().x, bound.bottom);
+      dc.DrawLine(cursorX, bound.top, cursorX, bound.bottom);
 
-      // Draw a circle on the series where the vertical line cross it
-      for (unsigned int p = 0; p < w.CountAllLayers(); p++)
+      if (m_indicateSeriesIntersection)
       {
-        mpLayer* layer = w.GetLayer(p);
-        if (layer->GetLayerType() == mpLAYER_PLOT)
+        // Draw a circle on the series where the vertical line cross it
+        for (unsigned int p = 0; p < w.CountAllLayers(); p++)
         {
-          mpFunction& function = static_cast<mpFunction&>(*layer);
-          if (function.IsVisible() || (function.GetLegendIsAlwaysVisible()))
+          mpLayer* layer = w.GetLayer(p);
+          if (layer->GetLayerType() == mpLAYER_PLOT)
           {
-            const double mouseXValue = w.p2x(w.GetMousePosition().x);
-            if(std::optional<double> value = function.GetSeriesValue(mouseXValue))
+            mpFunction& function = static_cast<mpFunction&>(*layer);
+            if (function.IsVisible() || (function.GetLegendIsAlwaysVisible()))
             {
-              const double valueScaled = (m_win->IsLogYaxis(function.GetYAxisID())) ? log10(*value) : *value;
-              const wxCoord yCoord = w.y2p(valueScaled, function.GetYAxisID());
-              if(yCoord >= bound.top && yCoord <= bound.bottom)
+              const double cursorXValue = w.p2x(cursorX);
+              if(std::optional<double> value = function.GetSeriesValue(cursorXValue))
               {
-                dc.SetPen(wxPen(*wxBLACK, 1));
-                dc.SetBrush(wxBrush(function.GetPen().GetColour()));
-                dc.DrawCircle(w.GetMousePosition().x, w.y2p(valueScaled, function.GetYAxisID()), 4);
+                const double valueScaled = (m_win->IsLogYaxis(function.GetYAxisID())) ? log10(*value) : *value;
+                const wxCoord yCoord = w.y2p(valueScaled, function.GetYAxisID());
+                if(yCoord >= bound.top && yCoord <= bound.bottom)
+                {
+                  dc.SetPen(wxPen(*wxBLACK, 1));
+                  dc.SetBrush(wxBrush(function.GetPen().GetColour()));
+                  dc.DrawCircle(cursorX, w.y2p(valueScaled, function.GetYAxisID()), 4);
+                }
               }
             }
           }
@@ -1048,6 +1059,32 @@ void mpInfoLegend::RestoreAxisHighlighting(mpWindow &w)
     {
       m_yData.axis->SetHovering(false);
     }
+  }
+}
+
+void mpInfoLegend::SetVerticalCursorFollowMouse()
+{
+  m_verticalCursorMode = CursorMode_mouse;
+}
+
+void mpInfoLegend::SetVerticalCursorFixed(double posX)
+{
+  m_verticalCursorMode = CursorMode_fixed;
+  m_verticalCursorPosX = std::clamp(posX, 0.0, 1.0);
+  ShowSeriesValues(true);
+  if (m_win)
+    m_win->Refresh();
+}
+
+wxCoord mpInfoLegend::GetVerticalCursorX() const
+{
+  if (m_verticalCursorMode == CursorMode_mouse)
+  {
+    return m_win->GetMousePosition().x;
+  }
+  else
+  {
+    return m_win->GetMarginLeft() + (wxCoord)(m_verticalCursorPosX * m_win->GetPlotWidth());
   }
 }
 
@@ -1186,7 +1223,7 @@ std::optional<double> mpFunction::GetSeriesValue(double xValue)
             }
             else
             {
-              // Otherise interpolate between the two data points
+              // Otherwise interpolate between the two data points
               value = y1 + (xValue - x1) * (y2 - y1) / (x2 - x1);
             }
             break;
@@ -3518,7 +3555,8 @@ void mpWindow::OnMouseMove(wxMouseEvent &event)
   // Check series values shall be shown in info legend
   if (m_InfoLegend && m_InfoLegend->IsVisible())
   {
-    if (showSeriesValues && m_InfoLegend->SeriesValuesShouldBeShown(m_PlotArea, m_mousePos))
+    if ((showSeriesValues && m_InfoLegend->SeriesValuesShouldBeShown(m_PlotArea, m_mousePos)) ||
+        (m_InfoLegend->GetVerticalCursorMode() == mpInfoLegend::CursorMode_fixed)              )
     {
       m_InfoLegend->ShowSeriesValues(true);
       requestRefresh = true;
@@ -3708,7 +3746,7 @@ void mpWindow::OnMouseLeave(wxMouseEvent &event)
       needUpdateAll = true;
     }
 
-    if (m_InfoLegend->IsSeriesValuesShown())
+    if ((m_InfoLegend->GetVerticalCursorMode() == mpInfoLegend::CursorMode_mouse) && m_InfoLegend->IsSeriesValuesShown())
     {
       m_InfoLegend->ShowSeriesValues(false);
       needUpdateAll = true;
