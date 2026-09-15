@@ -60,11 +60,12 @@ class MathPlotConfigDialogBuilder : public wxDialog
 		wxStaticText* StaticText37;
 		wxTextCtrl* edExtraMargin;
 		wxButton* bBGColor;
-		wxStaticText* StaticText18;
+		wxStaticText* StaticText221;
 		wxChoice* cbCoord;
+		wxStaticText* StaticText231;
+		wxChoice* cbInfoCoordType;
 		wxCheckBox* cbCoordVisible;
 		wxCheckBox* cbCoordOutside;
-		wxCheckBox* cbCoordinates;
 		wxCheckBox* cbMagnetize;
 		wxCheckBox* cbCoordDefaultVisibility;
 		wxStaticText* StaticText22;

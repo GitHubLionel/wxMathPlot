@@ -311,6 +311,7 @@ class MathPlotConfigDialog: public wxDialog
     wxChoice* cbFormat;
     wxChoice* cbGridPenStyle;
     wxChoice* cbGridPenWidth;
+    wxChoice* cbInfoCoordType;
     wxChoice* cbLegendBrushStyle;
     wxChoice* cbLegendDirection;
     wxChoice* cbLegendPosition;
@@ -344,7 +345,7 @@ class MathPlotConfigDialog: public wxDialog
     wxStaticText* StaticText15;
     wxStaticText* StaticText16;
     wxStaticText* StaticText17;
-    wxStaticText* StaticText18;
+    wxStaticText* StaticText19;
     wxStaticText* StaticText1;
     wxStaticText* StaticText20;
     wxStaticText* StaticText21;
@@ -373,6 +374,7 @@ class MathPlotConfigDialog: public wxDialog
     wxStaticText* StaticText42;
     wxStaticText* StaticText43;
     wxStaticText* StaticText44;
+    wxStaticText* StaticText45;
     wxStaticText* StaticText4;
     wxStaticText* StaticText5;
     wxStaticText* StaticText6;

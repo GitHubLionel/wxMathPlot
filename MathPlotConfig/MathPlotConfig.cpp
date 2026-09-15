@@ -367,7 +367,6 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   //(*Initialize(MathPlotConfigDialog)
   wxBoxSizer* BoxSizer10;
   wxBoxSizer* BoxSizer11;
-  wxBoxSizer* BoxSizer12;
   wxBoxSizer* BoxSizer13;
   wxBoxSizer* BoxSizer14;
   wxBoxSizer* BoxSizer15;
@@ -399,6 +398,7 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   wxFlexGridSizer* FlexGridSizer16;
   wxFlexGridSizer* FlexGridSizer17;
   wxFlexGridSizer* FlexGridSizer18;
+  wxFlexGridSizer* FlexGridSizer19;
   wxFlexGridSizer* FlexGridSizer1;
   wxFlexGridSizer* FlexGridSizer20;
   wxFlexGridSizer* FlexGridSizer21;
@@ -486,14 +486,24 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   BoxSizer3->Add(StaticBoxSizer2, 0, wxALL|wxEXPAND, 2);
   StaticBoxSizer3 = new wxStaticBoxSizer(wxHORIZONTAL, Panel1, _("Mouse coordinates "));
   BoxSizer1 = new wxBoxSizer(wxVERTICAL);
-  BoxSizer12 = new wxBoxSizer(wxHORIZONTAL);
-  StaticText18 = new wxStaticText(StaticBoxSizer3->GetStaticBox(), wxID_ANY, _("Position :"), wxDefaultPosition, wxDefaultSize, 0);
-  BoxSizer12->Add(StaticText18, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+  FlexGridSizer19 = new wxFlexGridSizer(2, 2, 0, 0);
+  StaticText19 = new wxStaticText(StaticBoxSizer3->GetStaticBox(), wxID_ANY, _("Position :"), wxDefaultPosition, wxDefaultSize, 0);
+  FlexGridSizer19->Add(StaticText19, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
   cbCoord = new wxChoice(StaticBoxSizer3->GetStaticBox(), wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator);
   cbCoord->Set(WXSIZEOF(InfoPosition_choices), InfoPosition_choices);
   cbCoord->SetSelection(7);
-  BoxSizer12->Add(cbCoord, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-  BoxSizer1->Add(BoxSizer12, 0, wxALL|wxALIGN_LEFT, 0);
+  FlexGridSizer19->Add(cbCoord, 1, wxALL, 5);
+  StaticText45 = new wxStaticText(StaticBoxSizer3->GetStaticBox(), wxID_ANY, _("Style :"), wxDefaultPosition, wxDefaultSize, 0);
+  FlexGridSizer19->Add(StaticText45, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
+  const wxString cbInfoCoordType_choices[] = {
+  _("Axes coordinates"),
+  _("Closest series value"),
+  _("All series value"),
+  };
+  cbInfoCoordType = new wxChoice(StaticBoxSizer3->GetStaticBox(), wxID_ANY, wxDefaultPosition, wxDefaultSize, 3, cbInfoCoordType_choices, 0, wxDefaultValidator);
+  cbInfoCoordType->SetSelection(0);
+  FlexGridSizer19->Add(cbInfoCoordType, 1, wxALL|wxEXPAND, 2);
+  BoxSizer1->Add(FlexGridSizer19, 1, wxALL|wxALIGN_LEFT, 5);
   cbCoordVisible = new wxCheckBox(StaticBoxSizer3->GetStaticBox(), wxID_ANY, _("Visible"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
   cbCoordVisible->SetValue(false);
   BoxSizer1->Add(cbCoordVisible, 0, wxALL|wxEXPAND, 5);
@@ -512,7 +522,7 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   cbCoordDefaultVisibility = new wxCheckBox(StaticBoxSizer3->GetStaticBox(), wxID_ANY, _("Default visibility"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator);
   cbCoordDefaultVisibility->SetValue(true);
   cbCoordDefaultVisibility->SetToolTip(_("By default, when checked, the mouse coordinates are always displayed even if the axis is not ploted."));
-  BoxSizer1->Add(cbCoordDefaultVisibility, 1, wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND, 5);
+  BoxSizer1->Add(cbCoordDefaultVisibility, 0, wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND, 5);
   StaticBoxSizer3->Add(BoxSizer1, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
   StaticBoxSizer4 = new wxStaticBoxSizer(wxHORIZONTAL, StaticBoxSizer3->GetStaticBox(), _("Brush "));
   FlexGridSizer4 = new wxFlexGridSizer(2, 2, 0, 0);
@@ -866,7 +876,6 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   StaticText10 = new wxStaticText(StaticBoxSizer10->GetStaticBox(), wxID_ANY, _("Size :"), wxDefaultPosition, wxDefaultSize, 0);
   FlexGridSizer18->Add(StaticText10, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
   cbSeriesSymbolSize = new wxSpinCtrl(StaticBoxSizer10->GetStaticBox(), wxID_ANY, _T("4"), wxDefaultPosition, wxDefaultSize, 0, 1, 100, 4);
-  cbSeriesSymbolSize->SetValue(_T("4"));
   FlexGridSizer18->Add(cbSeriesSymbolSize, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 2);
   StaticBoxSizer10->Add(FlexGridSizer18, 1, wxALL|wxEXPAND, 0);
   BoxSizer10->Add(StaticBoxSizer10, 0, wxALL|wxEXPAND, 2);
@@ -881,7 +890,6 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   stStepChoice->SetToolTip(_("Set step size, e.g. 1 to show all points, 2 to show every other step and so on"));
   sizerSeriesStep->Add(stStepChoice, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
   spinSeriesStep = new wxSpinCtrl(StaticBoxSizer13->GetStaticBox(), wxID_ANY, _T("1"), wxDefaultPosition, wxDefaultSize, 0, 1, 100, 1);
-  spinSeriesStep->SetValue(_T("1"));
   sizerSeriesStep->Add(spinSeriesStep, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
   BoxSizer24->Add(sizerSeriesStep, 1, wxALL|wxEXPAND, 0);
   StaticBoxSizer13->Add(BoxSizer24, 1, wxALL|wxEXPAND, 0);
@@ -1090,7 +1098,7 @@ void MathPlotConfigDialog::Initialize(mpConfigPageId id)
     cbCoord->SetSelection(CurrentCoords->GetLocation());
     cbCoordVisible->SetValue(CurrentCoords->IsVisible());
     cbCoordOutside->SetValue(CurrentCoords->GetDrawOutsideMargins());
-    cbCoordinates->SetValue(CurrentCoords->IsSeriesCoord());
+    cbInfoCoordType->SetSelection((int)CurrentCoords->GetInfoCoordType());
     cbCoordDefaultVisibility->SetValue(m_plot->m_DefaultCoordIsAlwaysVisible);
     // Brush config
     DoButtonColour(bCoordBrushColor, CurrentCoords->GetBrush().GetColour());
@@ -1864,7 +1872,7 @@ void MathPlotConfigDialog::Apply(int pageIndex, bool updateFont)
           CurrentCoords->SetLocation((mpLocation)cbCoord->GetSelection());
         CurrentCoords->SetVisible(cbCoordVisible->GetValue());
         CurrentCoords->SetDrawOutsideMargins(cbCoordOutside->GetValue());
-        CurrentCoords->SetSeriesCoord(cbCoordinates->GetValue());
+        CurrentCoords->SetInfoCoordType((mpInfoCoords::infoCoordType)cbInfoCoordType->GetSelection());
         m_plot->m_DefaultCoordIsAlwaysVisible = cbCoordDefaultVisibility->GetValue();
         // Brush config
         CurrentCoords->SetBrush(bCoordBrushColor->GetBackgroundColour(), IdToBrushStyle(cbCoordBrushStyle->GetSelection()));
