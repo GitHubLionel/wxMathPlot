@@ -387,7 +387,7 @@ void MathPlotConfigDialog::CompleteInitialization(void)
   _("Bottom left"),
   _("Bottom center"),
   _("Bottom right"),
-  _("Default position"),
+  _("User position"),
   _("Cursor position"),
   };
 

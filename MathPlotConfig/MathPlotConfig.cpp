@@ -492,7 +492,7 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   cbCoord = new wxChoice(StaticBoxSizer3->GetStaticBox(), wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator);
   cbCoord->Set(WXSIZEOF(InfoPosition_choices), InfoPosition_choices);
   cbCoord->SetSelection(7);
-  FlexGridSizer19->Add(cbCoord, 1, wxALL, 5);
+  FlexGridSizer19->Add(cbCoord, 1, wxALL, 2);
   StaticText45 = new wxStaticText(StaticBoxSizer3->GetStaticBox(), wxID_ANY, _("Style :"), wxDefaultPosition, wxDefaultSize, 0);
   FlexGridSizer19->Add(StaticText45, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
   const wxString cbInfoCoordType_choices[] = {
@@ -875,7 +875,8 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   FlexGridSizer18->Add(cbSeriesSymbolType, 1, wxALL|wxEXPAND, 2);
   StaticText10 = new wxStaticText(StaticBoxSizer10->GetStaticBox(), wxID_ANY, _("Size :"), wxDefaultPosition, wxDefaultSize, 0);
   FlexGridSizer18->Add(StaticText10, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
-  cbSeriesSymbolSize = new wxSpinCtrl(StaticBoxSizer10->GetStaticBox(), wxID_ANY, _T("4"), wxDefaultPosition, wxDefaultSize, 0, 1, 100, 4);
+  cbSeriesSymbolSize = new wxSpinCtrl(StaticBoxSizer10->GetStaticBox(), wxID_ANY, _T("6"), wxDefaultPosition, wxDefaultSize, 0, 1, 100, 6);
+  cbSeriesSymbolSize->SetValue(_T("6"));
   FlexGridSizer18->Add(cbSeriesSymbolSize, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 2);
   StaticBoxSizer10->Add(FlexGridSizer18, 1, wxALL|wxEXPAND, 0);
   BoxSizer10->Add(StaticBoxSizer10, 0, wxALL|wxEXPAND, 2);
@@ -890,6 +891,7 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
   stStepChoice->SetToolTip(_("Set step size, e.g. 1 to show all points, 2 to show every other step and so on"));
   sizerSeriesStep->Add(stStepChoice, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
   spinSeriesStep = new wxSpinCtrl(StaticBoxSizer13->GetStaticBox(), wxID_ANY, _T("1"), wxDefaultPosition, wxDefaultSize, 0, 1, 100, 1);
+  spinSeriesStep->SetValue(_T("1"));
   sizerSeriesStep->Add(spinSeriesStep, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
   BoxSizer24->Add(sizerSeriesStep, 1, wxALL|wxEXPAND, 0);
   StaticBoxSizer13->Add(BoxSizer24, 1, wxALL|wxEXPAND, 0);

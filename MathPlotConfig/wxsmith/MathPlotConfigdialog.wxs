@@ -230,7 +230,7 @@
 																<extra_code>cbCoord-&gt;Set(WXSIZEOF(InfoPosition__choices), InfoPosition__choices);&#x0A;cbCoord-&gt;SetSelection(7);</extra_code>
 															</object>
 															<flag>wxALL</flag>
-															<border>5</border>
+															<border>2</border>
 															<option>1</option>
 														</object>
 														<object class="sizeritem">
@@ -1333,7 +1333,7 @@
 																</object>
 																<object class="sizeritem">
 																	<object class="wxSpinCtrl" name="" variable="cbSeriesSymbolSize" member="yes">
-																		<value>4</value>
+																		<value>6</value>
 																		<min>1</min>
 																	</object>
 																	<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>

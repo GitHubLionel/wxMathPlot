@@ -154,7 +154,7 @@ MathPlotConfigDialogBuilder::MathPlotConfigDialogBuilder( wxWindow* parent, wxWi
 	wxArrayString cbCoordChoices;
 	cbCoord = new wxChoice( StaticBoxSizer3->GetStaticBox(), wxID_ANY, wxDefaultPosition, wxDefaultSize, cbCoordChoices, 0 );
 	cbCoord->SetSelection( 0 );
-	FlexGridSizer41->Add( cbCoord, 0, wxALL, 5 );
+	FlexGridSizer41->Add( cbCoord, 0, wxALL, 2 );
 
 	StaticText231 = new wxStaticText( StaticBoxSizer3->GetStaticBox(), wxID_ANY, _("Type :"), wxDefaultPosition, wxDefaultSize, 0 );
 	StaticText231->Wrap( -1 );
@@ -860,7 +860,7 @@ MathPlotConfigDialogBuilder::MathPlotConfigDialogBuilder( wxWindow* parent, wxWi
 	StaticText10->Wrap( -1 );
 	FlexGridSizer18->Add( StaticText10, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5 );
 
-	cbSeriesSymbolSize = new wxSpinCtrl( StaticBoxSizer10->GetStaticBox(), wxID_ANY, wxT("4"), wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 1, 100, 4 );
+	cbSeriesSymbolSize = new wxSpinCtrl( StaticBoxSizer10->GetStaticBox(), wxID_ANY, wxT("6"), wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 1, 100, 6 );
 	FlexGridSizer18->Add( cbSeriesSymbolSize, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 2 );
 
 
