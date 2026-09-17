@@ -40,7 +40,9 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="#pro-static-methods">Static Protected Member Functions</a> &#124;
 <a href="#pro-attribs">Protected Attributes</a> &#124;
@@ -65,6 +67,12 @@ Collaboration diagram for mpScale:</div>
 <div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="classmp_scale__coll__graph.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmp_scale_1_1mp_scale_constraints.html">mpScaleConstraints</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Group of properties, derived from the axis step size and range, that control how scale labels are formatted.  <a href="structmp_scale_1_1mp_scale_constraints.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:ad3a23f1ed69e9a10a51959c8a5d62d44" id="r_ad3a23f1ed69e9a10a51959c8a5d62d44"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_scale.html#ad3a23f1ed69e9a10a51959c8a5d62d44">mpScale</a> (const wxString &amp;name, int flags, bool grids, <a class="el" href="mathplot_8h.html#ab285929a0e74f3648f421ec238859a6c">mpLabelType</a> labelType=<a class="el" href="mathplot_8h.html#ab285929a0e74f3648f421ec238859a6ca560ebde2769c732f3543406462829722">mpLabel_AUTO</a>, <a class="el" href="mathplot_8h.html#a2c1baadaf91d06d157ab6489e4500962">mpOptional_uint</a> axisID=std::nullopt)</td></tr>
@@ -154,6 +162,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a688ce357b5a2d7589093daab6174dbd1" id="r_a688ce357b5a2d7589093daab6174dbd1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_scale.html#a688ce357b5a2d7589093daab6174dbd1">GetCoordIsAlwaysVisible</a> () const</td></tr>
 <tr class="memdesc:a688ce357b5a2d7589093daab6174dbd1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the visibility of the mouse coordinates in the info coordinates.  <br /></td></tr>
 <tr class="separator:a688ce357b5a2d7589093daab6174dbd1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afd0e30d90375498f11fdee5bc44bdbfc" id="r_afd0e30d90375498f11fdee5bc44bdbfc"><td class="memItemLeft" align="right" valign="top">wxString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_scale.html#afd0e30d90375498f11fdee5bc44bdbfc">FormatLabelValue</a> (double value, const <a class="el" href="structmp_scale_1_1mp_scale_constraints.html">mpScaleConstraints</a> &amp;constraints)</td></tr>
+<tr class="memdesc:afd0e30d90375498f11fdee5bc44bdbfc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Formats a label value to a string Use m_ScaleConstraints, so this structure must be up to date.  <br /></td></tr>
+<tr class="separator:afd0e30d90375498f11fdee5bc44bdbfc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classmp_layer"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classmp_layer')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classmp_layer.html">mpLayer</a></td></tr>
 <tr class="memitem:a9df4aff3de4eeb7663806bc89b973c98 inherit pub_methods_classmp_layer" id="r_a9df4aff3de4eeb7663806bc89b973c98"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_layer.html#a9df4aff3de4eeb7663806bc89b973c98">mpLayer</a> (<a class="el" href="mathplot_8h.html#a5dba29b7583413d9cb8b98a013628b21">mpLayerType</a> layerType)</td></tr>
 <tr class="memdesc:a9df4aff3de4eeb7663806bc89b973c98 inherit pub_methods_classmp_layer"><td class="mdescLeft">&#160;</td><td class="mdescRight">The base class of all layer objects.  <br /></td></tr>
@@ -262,6 +273,12 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>SetWindow</b> (<a cla
 <tr class="memdesc:a4c33bf4aa16fcaacba9d240d5b081961 inherit pub_methods_classmp_layer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the ZIndex of the plot.  <br /></td></tr>
 <tr class="separator:a4c33bf4aa16fcaacba9d240d5b081961 inherit pub_methods_classmp_layer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
+Static Public Member Functions</h2></td></tr>
+<tr class="memitem:ab94a9fcc91e7310fc42f213bae30508b" id="r_ab94a9fcc91e7310fc42f213bae30508b"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="structmp_scale_1_1mp_scale_constraints.html">mpScaleConstraints</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_scale.html#ab94a9fcc91e7310fc42f213bae30508b">ComputeScaleConstraints</a> (double step, double maxAxisValue)</td></tr>
+<tr class="memdesc:ab94a9fcc91e7310fc42f213bae30508b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the scale constraints for the given step size and axis range.  <br /></td></tr>
+<tr class="separator:ab94a9fcc91e7310fc42f213bae30508b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
 <tr class="memitem:a5d4e84454d79bef629a84a49afacee57" id="r_a5d4e84454d79bef629a84a49afacee57"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_scale.html#a5d4e84454d79bef629a84a49afacee57">GetOrigin</a> (<a class="el" href="classmp_window.html">mpWindow</a> &amp;w)=0</td></tr>
@@ -271,16 +288,9 @@ Protected Member Functions</h2></td></tr>
 <tr class="memdesc:ab00b94e2566c1b55cf72ed8e519bc9bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw the name of the scale<br  />
  This function is virtual and need to be overloaded in child class.  <br /></td></tr>
 <tr class="separator:ab00b94e2566c1b55cf72ed8e519bc9bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0ac47d3e9f4af6bd57505fd1c05e6203" id="r_a0ac47d3e9f4af6bd57505fd1c05e6203"><td class="memItemLeft" align="right" valign="top">wxString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_scale.html#a0ac47d3e9f4af6bd57505fd1c05e6203">FormatLabelValue</a> (double value)</td></tr>
-<tr class="memdesc:a0ac47d3e9f4af6bd57505fd1c05e6203"><td class="mdescLeft">&#160;</td><td class="mdescRight">Formats a label value to a string Use m_ScaleConstraints, so this structure must be up to date.  <br /></td></tr>
-<tr class="separator:a0ac47d3e9f4af6bd57505fd1c05e6203"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afc56507a83817cee2c947e12f6522fbf" id="r_afc56507a83817cee2c947e12f6522fbf"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_scale.html#afc56507a83817cee2c947e12f6522fbf">GetLabelWidth</a> (double value, wxDC &amp;dc)</td></tr>
-<tr class="memdesc:afc56507a83817cee2c947e12f6522fbf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get label text width for a given value Use m_ScaleConstraints, so this structure must be up to date.  <br /></td></tr>
-<tr class="separator:afc56507a83817cee2c947e12f6522fbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7819c81507f2e31a6cd51a8926044ff9" id="r_a7819c81507f2e31a6cd51a8926044ff9"><td class="memItemLeft" align="right" valign="top"><a id="a7819c81507f2e31a6cd51a8926044ff9" name="a7819c81507f2e31a6cd51a8926044ff9"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>ComputeScaleConstraints</b> (double step, double maxAxisValue)</td></tr>
-<tr class="memdesc:a7819c81507f2e31a6cd51a8926044ff9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize and compute properties of m_ScaleConstraints structure. <br /></td></tr>
-<tr class="separator:a7819c81507f2e31a6cd51a8926044ff9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa7bbbe56a1a9e267023e129f05ed6c69" id="r_aa7bbbe56a1a9e267023e129f05ed6c69"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_scale.html#aa7bbbe56a1a9e267023e129f05ed6c69">GetLabelWidth</a> (double value, wxDC &amp;dc, const <a class="el" href="structmp_scale_1_1mp_scale_constraints.html">mpScaleConstraints</a> &amp;constraints)</td></tr>
+<tr class="memdesc:aa7bbbe56a1a9e267023e129f05ed6c69"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get label text width for a given value.  <br /></td></tr>
+<tr class="separator:aa7bbbe56a1a9e267023e129f05ed6c69"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_methods_classmp_layer"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classmp_layer')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="classmp_layer.html">mpLayer</a></td></tr>
 <tr class="memitem:a06309b34dcd6819baf75b487b7e9c74c inherit pro_methods_classmp_layer" id="r_a06309b34dcd6819baf75b487b7e9c74c"><td class="memItemLeft" align="right" valign="top">
 void&#160;</td><td class="memItemRight" valign="bottom"><b>UpdateContext</b> (wxDC &amp;dc) const</td></tr>
@@ -364,30 +374,6 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>m_hover</b> = false</
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>m_CoordIsAlwaysVisible</b></td></tr>
 <tr class="memdesc:a76a0fb8e0542c33d362236c96b945dd8"><td class="mdescLeft">&#160;</td><td class="mdescRight">If true, the mouse coordinates is visible in the info coordinates despite the visibility of the axis. Default true. <br /></td></tr>
 <tr class="separator:a76a0fb8e0542c33d362236c96b945dd8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5c597121c5b7be88d322d0d7715aa22d" id="r_a5c597121c5b7be88d322d0d7715aa22d"><td class="memItemLeft" ><a id="a5c597121c5b7be88d322d0d7715aa22d" name="a5c597121c5b7be88d322d0d7715aa22d"></a>
-struct {&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a855b2ea2c6f41941d1d679cc190efe05" id="r_a855b2ea2c6f41941d1d679cc190efe05"><td class="memItemLeft" >
-&#160;&#160;&#160;double&#160;&#160;&#160;<b>step</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
-<tr class="separator:a855b2ea2c6f41941d1d679cc190efe05"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaaa50ba297e9a53ecbf4768f4aa89e8d" id="r_aaaa50ba297e9a53ecbf4768f4aa89e8d"><td class="memItemLeft" >
-&#160;&#160;&#160;double&#160;&#160;&#160;<b>maxAxisValue</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
-<tr class="separator:aaaa50ba297e9a53ecbf4768f4aa89e8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7e62dcb049af1a4e8742ef2e279c20b9" id="r_a7e62dcb049af1a4e8742ef2e279c20b9"><td class="memItemLeft" >
-&#160;&#160;&#160;bool&#160;&#160;&#160;<b>UseScientific</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
-<tr class="separator:a7e62dcb049af1a4e8742ef2e279c20b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a722630af20e19d8adae3d5520cc242e0" id="r_a722630af20e19d8adae3d5520cc242e0"><td class="memItemLeft" >
-&#160;&#160;&#160;int&#160;&#160;&#160;<b>SignificantDigits</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
-<tr class="separator:a722630af20e19d8adae3d5520cc242e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad8cdfecf16c1965c7fa6f944e1d3b5b4" id="r_ad8cdfecf16c1965c7fa6f944e1d3b5b4"><td class="memItemLeft" >
-&#160;&#160;&#160;int&#160;&#160;&#160;<b>DecimalDigits</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
-<tr class="separator:ad8cdfecf16c1965c7fa6f944e1d3b5b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5416f2941d570d44f8c743e70172c6c0" id="r_a5416f2941d570d44f8c743e70172c6c0"><td class="memItemLeft" >
-&#160;&#160;&#160;double&#160;&#160;&#160;<b>EpsilonScale</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
-<tr class="separator:a5416f2941d570d44f8c743e70172c6c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5c597121c5b7be88d322d0d7715aa22d" id="r_a5c597121c5b7be88d322d0d7715aa22d"><td class="memItemLeft" valign="top">}&#160;</td><td class="memItemRight" valign="bottom"><b>m_ScaleConstraints</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
-<tr class="memdesc:a5c597121c5b7be88d322d0d7715aa22d"><td class="mdescLeft">&#160;</td><td class="mdescRight">This structure group all properties needed to draw scale. <br /></td></tr>
-<tr class="separator:a5c597121c5b7be88d322d0d7715aa22d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_classmp_layer"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classmp_layer')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classmp_layer.html">mpLayer</a></td></tr>
 <tr class="memitem:a7aa14bb2308c71f8369eb8dcb91be219 inherit pro_attribs_classmp_layer" id="r_a7aa14bb2308c71f8369eb8dcb91be219"><td class="memItemLeft" align="right" valign="top">
 const <a class="el" href="mathplot_8h.html#a5dba29b7583413d9cb8b98a013628b21">mpLayerType</a>&#160;</td><td class="memItemRight" valign="bottom"><b>m_type</b></td></tr>
@@ -534,6 +520,52 @@ static constexpr wxCoord&#160;</td><td class="memItemRight" valign="bottom"><b>k
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="ab94a9fcc91e7310fc42f213bae30508b" name="ab94a9fcc91e7310fc42f213bae30508b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab94a9fcc91e7310fc42f213bae30508b">&#9670;&#160;</a></span>ComputeScaleConstraints()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="structmp_scale_1_1mp_scale_constraints.html">mpScaleConstraints</a> mpScale::ComputeScaleConstraints </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>step</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>maxAxisValue</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Compute the scale constraints for the given step size and axis range. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">step</td><td>Step size between axis ticks </td></tr>
+    <tr><td class="paramname">maxAxisValue</td><td>Maximum absolute value visible on the axis </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The computed constraints, ready to pass to <a class="el" href="classmp_scale.html#afd0e30d90375498f11fdee5bc44bdbfc" title="Formats a label value to a string Use m_ScaleConstraints, so this structure must be up to date.">FormatLabelValue()</a> </dd></dl>
+
+</div>
+</div>
 <a id="ab00b94e2566c1b55cf72ed8e519bc9bb" name="ab00b94e2566c1b55cf72ed8e519bc9bb"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab00b94e2566c1b55cf72ed8e519bc9bb">&#9670;&#160;</a></span>DrawScaleName()</h2>
 
@@ -596,34 +628,37 @@ static constexpr wxCoord&#160;</td><td class="memItemRight" valign="bottom"><b>k
 
 </div>
 </div>
-<a id="a0ac47d3e9f4af6bd57505fd1c05e6203" name="a0ac47d3e9f4af6bd57505fd1c05e6203"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0ac47d3e9f4af6bd57505fd1c05e6203">&#9670;&#160;</a></span>FormatLabelValue()</h2>
+<a id="afd0e30d90375498f11fdee5bc44bdbfc" name="afd0e30d90375498f11fdee5bc44bdbfc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afd0e30d90375498f11fdee5bc44bdbfc">&#9670;&#160;</a></span>FormatLabelValue()</h2>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">wxString mpScale::FormatLabelValue </td>
           <td>(</td>
           <td class="paramtype">double&#160;</td>
-          <td class="paramname"><em>value</em></td><td>)</td>
+          <td class="paramname"><em>value</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">const <a class="el" href="structmp_scale_1_1mp_scale_constraints.html">mpScaleConstraints</a> &amp;&#160;</td>
+          <td class="paramname"><em>constraints</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Formats a label value to a string Use m_ScaleConstraints, so this structure must be up to date. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">value</td><td>The value to be formated </td></tr>
+    <tr><td class="paramname">constraints</td><td>Scale constraints describing the label format </td></tr>
   </table>
   </dd>
 </dl>
@@ -870,8 +905,8 @@ static constexpr wxCoord&#160;</td><td class="memItemRight" valign="bottom"><b>k
 
 </div>
 </div>
-<a id="afc56507a83817cee2c947e12f6522fbf" name="afc56507a83817cee2c947e12f6522fbf"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afc56507a83817cee2c947e12f6522fbf">&#9670;&#160;</a></span>GetLabelWidth()</h2>
+<a id="aa7bbbe56a1a9e267023e129f05ed6c69" name="aa7bbbe56a1a9e267023e129f05ed6c69"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa7bbbe56a1a9e267023e129f05ed6c69">&#9670;&#160;</a></span>GetLabelWidth()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -889,7 +924,13 @@ static constexpr wxCoord&#160;</td><td class="memItemRight" valign="bottom"><b>k
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">wxDC &amp;&#160;</td>
-          <td class="paramname"><em>dc</em>&#160;</td>
+          <td class="paramname"><em>dc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structmp_scale_1_1mp_scale_constraints.html">mpScaleConstraints</a> &amp;&#160;</td>
+          <td class="paramname"><em>constraints</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -904,11 +945,12 @@ static constexpr wxCoord&#160;</td><td class="memItemRight" valign="bottom"><b>k
 </table>
 </div><div class="memdoc">
 
-<p>Get label text width for a given value Use m_ScaleConstraints, so this structure must be up to date. </p>
+<p>Get label text width for a given value. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">value</td><td>Data value </td></tr>
     <tr><td class="paramname">dc</td><td>Current dc </td></tr>
+    <tr><td class="paramname">constraints</td><td>Scale constraints describing the label format </td></tr>
   </table>
   </dd>
 </dl>

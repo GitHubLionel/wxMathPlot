@@ -1,5 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" title=" " alt="" coords="5,5,111,31"/>
-<area shape="rect" id="Node000001" href="$class_math_plot_config_settings.html" title="Helper class to save/restore configuration." alt="" coords="159,5,333,31"/>
-<area shape="poly" id="edge4_Node000000_Node000001" title=" " alt="" coords="125,15,159,15,159,21,125,21"/>
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,5,88,31"/>
+<area shape="rect" id="Node000001" href="$classwx_index_colour.html" title="Create a wxColour id is the number of the colour : blue, red, green, ..." alt="" coords="136,5,255,31"/>
+<area shape="poly" id="edge1_Node000000_Node000001" title=" " alt="" coords="102,15,136,15,136,21,102,21"/>
 </map>

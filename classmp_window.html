@@ -100,8 +100,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a4a28381dbefd3a36ff8191a7fe24a6bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af5933d717e1eb8b8334a77a5f6ae7ec8" id="r_af5933d717e1eb8b8334a77a5f6ae7ec8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classmp_f_x_y_vector.html">mpFXYVector</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#af5933d717e1eb8b8334a77a5f6ae7ec8">GetXYSeries</a> (unsigned int n, const wxString &amp;name=_T(&quot;Serie &quot;), bool create=true)</td></tr>
 <tr class="separator:af5933d717e1eb8b8334a77a5f6ae7ec8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a69c956487be4e116cde865314e7b2dc9" id="r_a69c956487be4e116cde865314e7b2dc9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classmp_layer.html">mpLayer</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#a69c956487be4e116cde865314e7b2dc9">GetClosestPlot</a> (wxCoord ix, wxCoord iy, double *xnear, double *ynear)</td></tr>
-<tr class="separator:a69c956487be4e116cde865314e7b2dc9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7ce2b863cde0a60d8c273b2f1781567d" id="r_a7ce2b863cde0a60d8c273b2f1781567d"><td class="memItemLeft" align="right" valign="top">std::optional&lt; <a class="el" href="structmp_plot_hit.html">mpPlotHit</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#a7ce2b863cde0a60d8c273b2f1781567d">GetClosestPlot</a> (wxCoord ix, wxCoord iy)</td></tr>
+<tr class="separator:a7ce2b863cde0a60d8c273b2f1781567d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acd0a1257d921d969d9309af63a8ddd22" id="r_acd0a1257d921d969d9309af63a8ddd22"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classmp_layer.html">mpLayer</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#acd0a1257d921d969d9309af63a8ddd22">GetLayerByName</a> (const wxString &amp;name)</td></tr>
 <tr class="separator:acd0a1257d921d969d9309af63a8ddd22"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3cd4951fbde4e1285be4abadcafa1633" id="r_a3cd4951fbde4e1285be4abadcafa1633"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classmp_layer.html">mpLayer</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#a3cd4951fbde4e1285be4abadcafa1633">GetLayerByClassName</a> (const wxString &amp;name)</td></tr>
@@ -1831,14 +1831,14 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
 
 </div>
 </div>
-<a id="a69c956487be4e116cde865314e7b2dc9" name="a69c956487be4e116cde865314e7b2dc9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a69c956487be4e116cde865314e7b2dc9">&#9670;&#160;</a></span>GetClosestPlot()</h2>
+<a id="a7ce2b863cde0a60d8c273b2f1781567d" name="a7ce2b863cde0a60d8c273b2f1781567d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7ce2b863cde0a60d8c273b2f1781567d">&#9670;&#160;</a></span>GetClosestPlot()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classmp_layer.html">mpLayer</a> * mpWindow::GetClosestPlot </td>
+          <td class="memname">std::optional&lt; <a class="el" href="structmp_plot_hit.html">mpPlotHit</a> &gt; mpWindow::GetClosestPlot </td>
           <td>(</td>
           <td class="paramtype">wxCoord&#160;</td>
           <td class="paramname"><em>ix</em>, </td>
@@ -1847,19 +1847,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">wxCoord&#160;</td>
-          <td class="paramname"><em>iy</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">double *&#160;</td>
-          <td class="paramname"><em>xnear</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">double *&#160;</td>
-          <td class="paramname"><em>ynear</em>&#160;</td>
+          <td class="paramname"><em>iy</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1872,12 +1860,10 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
   <table class="params">
     <tr><td class="paramname">ix</td><td>x-coordinate </td></tr>
     <tr><td class="paramname">iy</td><td>y-coordinate </td></tr>
-    <tr><td class="paramname">xnear</td><td>Return the x value of the plot </td></tr>
-    <tr><td class="paramname">ynear</td><td>Return the y value of the plot </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>A pointer to the plot closest to the point </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>An <a class="el" href="structmp_plot_hit.html" title="Result of mpWindow::GetClosestPlot: the colour and data-space coordinates of the plot point closest t...">mpPlotHit</a> (colour + data-space coordinates) of the closest plot point, or std::nullopt if no plot is near the point. </dd></dl>
 
 </div>
 </div>
@@ -2926,7 +2912,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
 <p>Return the serie n If the serie not exist then create it </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">n</td><td>the number of the series </td></tr>
-    <tr><td class="paramname">name</td><td>the name to give to the series in case we create it </td></tr>
+    <tr><td class="paramname">name</td><td>the name to give to the series in case we create it. </td></tr>
     <tr><td class="paramname">create</td><td>if true and the series doesn't exist, then we'll create it. </td></tr>
   </table>
   </dd>
