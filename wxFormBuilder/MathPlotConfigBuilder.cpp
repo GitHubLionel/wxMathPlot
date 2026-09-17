@@ -142,20 +142,32 @@ MathPlotConfigDialogBuilder::MathPlotConfigDialogBuilder( wxWindow* parent, wxWi
 	wxBoxSizer* BoxSizer1;
 	BoxSizer1 = new wxBoxSizer( wxVERTICAL );
 
-	wxBoxSizer* BoxSizer12;
-	BoxSizer12 = new wxBoxSizer( wxHORIZONTAL );
+	wxFlexGridSizer* FlexGridSizer41;
+	FlexGridSizer41 = new wxFlexGridSizer( 2, 2, 0, 0 );
+	FlexGridSizer41->SetFlexibleDirection( wxBOTH );
+	FlexGridSizer41->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 
-	StaticText18 = new wxStaticText( StaticBoxSizer3->GetStaticBox(), wxID_ANY, _("Position :"), wxDefaultPosition, wxDefaultSize, 0 );
-	StaticText18->Wrap( -1 );
-	BoxSizer12->Add( StaticText18, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
+	StaticText221 = new wxStaticText( StaticBoxSizer3->GetStaticBox(), wxID_ANY, _("Position :"), wxDefaultPosition, wxDefaultSize, 0 );
+	StaticText221->Wrap( -1 );
+	FlexGridSizer41->Add( StaticText221, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5 );
 
 	wxArrayString cbCoordChoices;
 	cbCoord = new wxChoice( StaticBoxSizer3->GetStaticBox(), wxID_ANY, wxDefaultPosition, wxDefaultSize, cbCoordChoices, 0 );
 	cbCoord->SetSelection( 0 );
-	BoxSizer12->Add( cbCoord, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
+	FlexGridSizer41->Add( cbCoord, 0, wxALL, 5 );
+
+	StaticText231 = new wxStaticText( StaticBoxSizer3->GetStaticBox(), wxID_ANY, _("Type :"), wxDefaultPosition, wxDefaultSize, 0 );
+	StaticText231->Wrap( -1 );
+	FlexGridSizer41->Add( StaticText231, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5 );
+
+	wxString cbInfoCoordTypeChoices[] = { _("Axes coordinates"), _("Closest series value"), _("All series value"), wxEmptyString, wxEmptyString };
+	int cbInfoCoordTypeNChoices = sizeof( cbInfoCoordTypeChoices ) / sizeof( wxString );
+	cbInfoCoordType = new wxChoice( StaticBoxSizer3->GetStaticBox(), wxID_ANY, wxDefaultPosition, wxDefaultSize, cbInfoCoordTypeNChoices, cbInfoCoordTypeChoices, 0 );
+	cbInfoCoordType->SetSelection( 0 );
+	FlexGridSizer41->Add( cbInfoCoordType, 1, wxALL|wxEXPAND, 2 );
 
 
-	BoxSizer1->Add( BoxSizer12, 0, wxALL|wxALIGN_LEFT, 0 );
+	BoxSizer1->Add( FlexGridSizer41, 1, wxEXPAND, 5 );
 
 	cbCoordVisible = new wxCheckBox( StaticBoxSizer3->GetStaticBox(), wxID_ANY, _("Visible"), wxDefaultPosition, wxDefaultSize, 0 );
 	cbCoordVisible->SetValue(true);
@@ -167,12 +179,6 @@ MathPlotConfigDialogBuilder::MathPlotConfigDialogBuilder( wxWindow* parent, wxWi
 
 	BoxSizer1->Add( cbCoordOutside, 0, wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND, 5 );
 
-	cbCoordinates = new wxCheckBox( StaticBoxSizer3->GetStaticBox(), wxID_ANY, _("Series coordinates"), wxDefaultPosition, wxDefaultSize, 0 );
-	cbCoordinates->SetValue(true);
-	cbCoordinates->SetToolTip( _("Shows the coordinates of the series closest to the mouse position") );
-
-	BoxSizer1->Add( cbCoordinates, 0, wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND, 5 );
-
 	cbMagnetize = new wxCheckBox( StaticBoxSizer3->GetStaticBox(), wxID_ANY, _("Magnetize"), wxDefaultPosition, wxDefaultSize, 0 );
 	cbMagnetize->SetValue(true);
 	cbMagnetize->SetToolTip( _("Follow the mouse by drawing a horizontal and vertical line") );
@@ -183,7 +189,7 @@ MathPlotConfigDialogBuilder::MathPlotConfigDialogBuilder( wxWindow* parent, wxWi
 	cbCoordDefaultVisibility->SetValue(true);
 	cbCoordDefaultVisibility->SetToolTip( _("By default, when checked, the mouse coordinates are always displayed even if the axis is not ploted.") );
 
-	BoxSizer1->Add( cbCoordDefaultVisibility, 1, wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND, 5 );
+	BoxSizer1->Add( cbCoordDefaultVisibility, 0, wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND, 5 );
 
 
 	StaticBoxSizer3->Add( BoxSizer1, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );

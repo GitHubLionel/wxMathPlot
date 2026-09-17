@@ -601,6 +601,14 @@ struct mpFloatRectSimple
   }
 };
 
+/// Result of mpWindow::GetClosestPlot: the colour and data-space
+/// coordinates of the plot point closest to a given pixel.
+struct mpPlotHit
+{
+  wxColour colour;      //!< pen colour of the matched plot layer
+  wxRealPoint coords;   //!< data-space (x, y) of the closest point
+};
+
 /** Command IDs used by mpWindow
  * Same order for the popup menu
  */
@@ -1357,6 +1365,14 @@ class WXDLLIMPEXP_MATHPLOT mpInfoCoords: public mpInfoLayer
       ;
     }
 
+    /** Type of info coordinates to be displayed (axis, closest series, or all series) */
+    enum infoCoordType
+    {
+      infoCoord_axis,             //!< Show axis coordinates at mouse position
+      infoCoord_closestSeries,    //!< Show the X and Y value of the closest series
+      infoCoord_allSeries         //!< Show the Y-values of all series that intersect with a vertical line drawn at the mouse position
+    };
+
     /** Update the content of the info box. Used to update coordinates.
      @param w parent mpWindow from which to obtain information
      @param event The event which called the update. */
@@ -1401,16 +1417,26 @@ class WXDLLIMPEXP_MATHPLOT mpInfoCoords: public mpInfoLayer
 
     /** Set the series coordinates of the mouse position (if tractable set)
      */
+    [[deprecated("Deprecated, use SetInfoCoordType instead")]]
     void SetSeriesCoord(const bool show)
     {
-      m_series_coord = show;
+      m_infoCoordType = show ? infoCoord_closestSeries : infoCoord_axis;
     }
-
-    /** Return if we show the series coordinates
-     @return bool */
-    bool IsSeriesCoord() const
+    
+    /** Set the type of info coordinates to be displayed (axis, closest series, or all series)
+     @param type The type of info coordinates to be displayed (axis, closest series, or all series)
+     */
+    void SetInfoCoordType(const infoCoordType type)
     {
-      return m_series_coord;
+      m_infoCoordType = type;
+    }
+    
+    /** Get the type of info coordinates to be displayed (axis, closest series, or all series)
+     @return The type of info coordinates to be displayed (axis, closest series, or all series)
+     */
+    infoCoordType GetInfoCoordType() const
+    {
+      return m_infoCoordType;
     }
 
     /** Get string describing mouse position. Override in your derived class to customize mpInfoCoords display.
@@ -1420,27 +1446,20 @@ class WXDLLIMPEXP_MATHPLOT mpInfoCoords: public mpInfoLayer
     otherwise mouse position for each Y-axis is supplied */
     virtual wxString GetInfoCoordsText(mpWindow &w, double xVal, std::unordered_map<int, double> yValList);
 
-    /** Pen series for tractable
-     */
-    void SetPenSeries(const wxPen &pen)
-    {
-      m_penSeries = pen;
-    }
-
     /** Draw the content of info coords to plot
      @param dc the device context where to plot
      @param w the window to plot */
     void DrawContent(wxDC &dc, mpWindow &w);
 
   protected:
-    bool m_show;              //!< Indicates if magnet shall be shown in plot
-    wxString m_content;       //!< string holding the coordinates to be drawn.
-    mpLabelType m_labelType;  //!< Label formatting mode used for the X coordinate display.
-    unsigned int m_timeConv;  //!< Time conversion mode used when formatting date/time X values.
-    wxCoord m_mouseX;         //!< Last mouse X position in window pixel coordinates.
-    wxCoord m_mouseY;         //!< Last mouse Y position in window pixel coordinates.
-    bool m_series_coord;      //!< True to show the nearest plotted series value instead of raw mouse Y coordinates.
-    wxPen m_penSeries;        //!< Pen used to draw the series marker when series-coordinate mode is active.
+    bool m_show;                          //!< Indicates if magnet shall be shown in plot
+    wxString m_content;                   //!< string holding the coordinates to be drawn.
+    mpLabelType m_labelType;              //!< Label formatting mode used for the X coordinate display.
+    unsigned int m_timeConv;              //!< Time conversion mode used when formatting date/time X values.
+    wxCoord m_mouseX;                     //!< Last mouse X position in window pixel coordinates.
+    wxCoord m_mouseY;                     //!< Last mouse Y position in window pixel coordinates.
+    infoCoordType m_infoCoordType;        //!< Type of info coordinates to be displayed (axis, closest series, or all series).
+    std::vector<wxColor> m_seriesColors;  //!< Colors of the series in the order they were added to the mpWindow.
 
     /** Plot method.
      @param dc the device content where to plot
@@ -1449,7 +1468,6 @@ class WXDLLIMPEXP_MATHPLOT mpInfoCoords: public mpInfoLayer
     void DoPlot(wxDC &dc, mpWindow &w) override;
 
   private:
-    std::unordered_map<int, double> m_yValList; //!< a list of plot layer id.
 
     DECLARE_DYNAMIC_CLASS_MATHPLOT(mpInfoCoords);
 };
@@ -2817,6 +2835,21 @@ class WXDLLIMPEXP_MATHPLOT mpPieChart: public mpChart
 class WXDLLIMPEXP_MATHPLOT mpScale: public mpLayer
 {
   public:
+    /** Group of properties, derived from the axis step size and range, that
+     control how scale labels are formatted.
+     Compute with mpScale::ComputeScaleConstraints() and pass to
+     mpScale::FormatLabelValue() / mpScale::GetLabelWidth().
+     */
+    struct mpScaleConstraints
+    {
+      double step = 0.0;          //!< Step size between axis ticks
+      double maxAxisValue = 0.0;  //!< Maximum absolute value visible on the axis
+      bool UseScientific = false; //!< Whether to use scientific notation
+      int SignificantDigits = 0;  //!< Significant digits for scientific notation
+      int DecimalDigits = 0;      //!< Decimal digits for fixed notation
+      double EpsilonScale = 0.0;  //!< Values with a smaller magnitude are shown as "0"
+    };
+
     /** Full constructor.
      @param name Label to plot by the ruler
      @param flags Set the position of the scale with respect to the window.
@@ -3052,6 +3085,22 @@ class WXDLLIMPEXP_MATHPLOT mpScale: public mpLayer
       return m_CoordIsAlwaysVisible;
     }
 
+    /**
+     * Compute the scale constraints for the given step size and axis range.
+     * @param step Step size between axis ticks
+     * @param maxAxisValue Maximum absolute value visible on the axis
+     * @return The computed constraints, ready to pass to FormatLabelValue()
+     */
+    static mpScaleConstraints ComputeScaleConstraints(double step, double maxAxisValue);
+
+    /** Formats a label value to a string
+     Use m_ScaleConstraints, so this structure must be up to date
+     @param value The value to be formated
+     @param constraints Scale constraints describing the label format
+     @return Label name
+     */
+    wxString FormatLabelValue(double value, const mpScaleConstraints &constraints);
+
   protected:
     static constexpr wxCoord kTickSize = 4;       //!< Length of tick line
     static constexpr wxCoord kAxisExtraSpace = 6; //!< Extra space for axis to make it look good
@@ -3090,13 +3139,6 @@ class WXDLLIMPEXP_MATHPLOT mpScale: public mpLayer
      */
     virtual void DrawScaleName(wxDC &dc, mpWindow &w, int origin, int labelSize) = 0;
 
-    /** Formats a label value to a string
-     Use m_ScaleConstraints, so this structure must be up to date
-     @param value The value to be formated
-     @return Label name
-     */
-    wxString FormatLabelValue(double value);
-
     /** Formats a value to a string used on a log axis
      @param n The value to be formated
      @return Label name for log axis
@@ -3104,12 +3146,12 @@ class WXDLLIMPEXP_MATHPLOT mpScale: public mpLayer
     static wxString FormatLogValue(double n);
 
     /** Get label text width for a given value
-     Use m_ScaleConstraints, so this structure must be up to date
      @param value Data value
      @param dc Current dc
+     @param constraints Scale constraints describing the label format
      @return Label width
      */
-    int GetLabelWidth(double value, wxDC &dc);
+    int GetLabelWidth(double value, wxDC &dc, const mpScaleConstraints &constraints);
 
     /** Checks if scientific notation shall be used on the labels
      @param maxAxisValue absolute value of the visible axis
@@ -3129,23 +3171,6 @@ class WXDLLIMPEXP_MATHPLOT mpScale: public mpLayer
      @return Number of decimal digits
      */
     static int GetDecimalDigits(double step);
-
-    /**
-     * This structure group all properties needed to draw scale
-     */
-    struct {
-      double step;
-      double maxAxisValue;
-      bool UseScientific;
-      int SignificantDigits;
-      int DecimalDigits;
-      double EpsilonScale;
-    } m_ScaleConstraints;
-
-    /**
-     * Initialize and compute properties of m_ScaleConstraints structure.
-     */
-    void ComputeScaleConstraints(double step, double maxAxisValue);
 
   private:
     DECLARE_DYNAMIC_CLASS_MATHPLOT(mpScale);
@@ -3555,7 +3580,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      * Return the serie n
      * If the serie not exist then create it
      * @param n the number of the series
-     * @param name the name to give to the series in case we create it
+     * @param name the name to give to the series in case we create it.
      * @param create if true and the series doesn't exist, then we'll create it.
      * @return the existing or created series. NULL if not found or not created.
      */
@@ -3565,11 +3590,10 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      * Search the point of the layer plot nearest a point
      * @param ix x-coordinate
      * @param iy y-coordinate
-     * @param xnear Return the x value of the plot
-     * @param ynear Return the y value of the plot
-     * @return A pointer to the plot closest to the point
+     * @return An mpPlotHit (colour + data-space coordinates) of the closest
+     *         plot point, or std::nullopt if no plot is near the point.
      */
-    mpLayer* GetClosestPlot(wxCoord ix, wxCoord iy, double *xnear, double *ynear);
+    std::optional<mpPlotHit> GetClosestPlot(wxCoord ix, wxCoord iy);
 
     /*! Get the layer by its name (case sensitive).
      @param name The name of the layer to retrieve

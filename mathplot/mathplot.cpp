@@ -490,12 +490,10 @@ mpInfoCoords::mpInfoCoords() :
   m_labelType = mpLabel_AUTO;
   m_timeConv = 0;
   m_mouseX = m_mouseY = 0;
+  m_infoCoordType = infoCoord_axis;
   m_location = mpMarginBottomRight;
   const wxBrush coord(wxColour(232, 232, 232), wxBRUSHSTYLE_SOLID);
   SetBrush(coord);
-  m_series_coord = false;
-  // Default pen
-  SetPenSeries((const wxPen&)*wxBLACK_PEN);
   m_content = _T("");
 }
 
@@ -515,7 +513,7 @@ mpInfoCoords::mpInfoCoords(wxPoint pos, const wxBrush &brush, mpLocation locatio
   m_labelType = mpLabel_AUTO;
   m_timeConv = 0;
   m_mouseX = m_mouseY = 0;
-  m_series_coord = false;
+  m_infoCoordType = infoCoord_axis;
   m_content = _T("");
   if (m_location == mpMarginUser)
     m_drawOutsideMargins = true;
@@ -524,34 +522,78 @@ mpInfoCoords::mpInfoCoords(wxPoint pos, const wxBrush &brush, mpLocation locatio
 void mpInfoCoords::UpdateInfo(mpWindow &w, wxEvent &event)
 {
   m_content.Clear();
+  m_seriesColors.clear();
 
   if (event.GetEventType() == wxEVT_MOTION)
   {
-    double xVal = 0.0, yVal = 0.0;
+    double xVal = 0.0;
+    std::unordered_map<int, double> yValList;
 
     m_mouseX = ((wxMouseEvent&)event).GetX();
     m_mouseY = ((wxMouseEvent&)event).GetY();
 
-    if (m_series_coord)
+    switch(m_infoCoordType)
     {
-      mpLayer* layer = w.GetClosestPlot(m_mouseX, m_mouseY, &xVal, &yVal);
-      m_yValList[0] = yVal;
-      if (layer)
+      case infoCoord_closestSeries:
+        if (auto hit = w.GetClosestPlot(m_mouseX, m_mouseY))
+        {
+          xVal = hit->coords.x;
+          yValList[0] = hit->coords.y;
+          m_seriesColors.push_back(hit->colour);
+        }
+        else
+          return;
+        break;
+
+      case infoCoord_axis:
+        xVal = w.p2x(m_mouseX);
+        for (auto& [m_yID, m_yData] : w.GetAxisDataYList())
+        {
+          yValList[m_yID] = w.p2y(m_mouseY, m_yID);
+        }
+        break;
+
+      case infoCoord_allSeries:
       {
-        // Just change the colour
-        m_penSeries.SetColour(layer->GetPen().GetColour());
-      }
-      else
+        mpScaleX* xAxis = w.GetLayerXAxis();
+        if(xAxis)
+        {
+          // Use same label format as X-axis if such exists, but reduce the step size by x100 to get better precision
+          double maxAxisValue = w.GetDesiredBoundX().GetMaxAbs();
+          double step = w.GetDesiredBoundX().Length() / 100;
+          wxString valueString = xAxis->FormatLabelValue(w.p2x(m_mouseX), xAxis->ComputeScaleConstraints(step, maxAxisValue));
+          m_content.Printf(_T("x = %s\n"), valueString);
+        }
+        else
+        {
+          m_content.Printf(_T("x = %g\n"), w.p2x(m_mouseX));
+        }
+
+        for (unsigned int p = 0; p < w.CountAllLayers(); p++)
+        {
+          mpLayer* layer = w.GetLayer(p);
+          if (layer->GetLayerType() == mpLAYER_PLOT)
+          {
+            mpFunction& function = static_cast<mpFunction&>(*layer);
+            if (function.IsVisible())
+            {
+              const double cursorXValue = w.p2x(m_mouseX);
+              if (std::optional<double> value = function.GetSeriesValue(cursorXValue))
+                m_content += wxString::Format(_T("%s = %g\n"), function.GetName(), *value);
+              else
+                m_content += wxString::Format(_T("%s = --\n"), function.GetName());
+
+              m_seriesColors.push_back(function.GetPen().GetColour());
+            }
+          }
+        }
+        m_content.Trim();  // Remove the trailing '\n' added by the last series
         return;
-    }
-    else
-    {
-      xVal = w.p2x(m_mouseX);
-      for (auto& [m_yID, m_yData] : w.GetAxisDataYList())
-      {
-        yVal = w.p2y(m_mouseY, m_yID);
-        m_yValList[m_yID] = yVal;
+        break;
       }
+
+      default:
+        return;
     }
 
     // Log axis
@@ -562,10 +604,10 @@ void mpInfoCoords::UpdateInfo(mpWindow &w, wxEvent &event)
     for (const auto& [m_yID, m_yData] : w.GetAxisDataYList())
     {
       if (m_win->IsLogYaxis(m_yID))
-        m_yValList[m_yID] = pow(10, m_yValList[m_yID]);
+        yValList[m_yID] = pow(10, yValList[m_yID]);
     }
 
-    m_content = GetInfoCoordsText(w, xVal, m_yValList);
+    m_content = GetInfoCoordsText(w, xVal, yValList);
   }
 }
 
@@ -612,7 +654,7 @@ wxString mpInfoCoords::GetInfoCoordsText(mpWindow &w, double xVal, std::unordere
 
   // Format Y part
   // If we show the nearest plotted series value or we have just one Y axis (Visible or not)
-  if ((m_series_coord) || (w.GetAxisDataYList().size() == 1))
+  if ((m_infoCoordType == infoCoord_closestSeries) || (w.GetAxisDataYList().size() == 1))
   {
     result.Printf(_T("%s\ny = %g"), result, yValList[0]);
   }
@@ -664,18 +706,12 @@ void mpInfoCoords::DrawContent(wxDC &dc, mpWindow &w)
     return;
 
   int textX = 0, textY = 0;
-  int width = 0, height = 0;
-  const int offset = (m_series_coord) ? LEGEND_LINEWIDTH : 0;
+  // Extra space for series colored square
+  const int offset = ((m_infoCoordType == infoCoord_closestSeries) || (m_infoCoordType == infoCoord_allSeries)) ? LEGEND_LINEWIDTH : 0;
 
   // Compute text size. Should work on both Windows and Linux. If not, use GetTextExtent for Linux
   dc.GetMultiLineTextExtent(m_content, &textX, &textY);
-  if (width < textX + MARGIN_COORD_X2 + offset)
-    width = textX + MARGIN_COORD_X2 + offset;
-  if (height < textY + MARGIN_COORD_X2)
-    height = textY + MARGIN_COORD_X2;
-  textY /= 2;
-
-  SetInfoRectangle(w, width, height);
+  SetInfoRectangle(w, textX + MARGIN_COORD_X2 + offset, textY + MARGIN_COORD_X2);
 
   // Position rectangle near cursor if needed
   if (m_location == mpCursor)
@@ -690,17 +726,41 @@ void mpInfoCoords::DrawContent(wxDC &dc, mpWindow &w)
 
   // Draw background rectangle and text
   dc.SetBrush(m_brush);
-  dc.SetPen(m_penSeries);
+  dc.SetPen(*wxBLACK_PEN);
   dc.DrawRectangle(m_dim);
   dc.DrawText(m_content, m_dim.x + MARGIN_COORD + offset, m_dim.y + MARGIN_COORD);
 
+  // Height of a single text line (used to align the series color squares with
+  // their corresponding text line). m_content contains one line per '\n' + 1.
+  const int lineCount = (int) (std::count(m_content.begin(), m_content.end(), _T('\n')) + 1);
+  const int lineHeight = (lineCount > 0) ? (textY / lineCount) : textY;
+
   // Draw series square if needed
-  if (m_series_coord)
+  if (m_infoCoordType == infoCoord_closestSeries && !m_seriesColors.empty())
   {
-    const int sqrY = m_dim.y + MARGIN_COORD + textY + (textY / 2) + 2;
-    const wxBrush sqrBrush(m_penSeries.GetColour(), wxBRUSHSTYLE_SOLID);
+    // The value is shown on the second line (index 1: the "y = ..." line)
+    const int sqrY = m_dim.y + MARGIN_COORD + lineHeight + (lineHeight / 2) + 2;
+    const wxBrush sqrBrush(m_seriesColors[0], wxBRUSHSTYLE_SOLID);
     dc.SetBrush(sqrBrush);
     dc.DrawRectangle(m_dim.x + 2, sqrY - (LEGEND_LINEWIDTH / 2), LEGEND_LINEWIDTH, LEGEND_LINEWIDTH);
+  }
+  else if (m_infoCoordType == infoCoord_allSeries)
+  {
+    // Draw series squares for each series. The first series value is shown on
+    // the second line (index 1), just after the "x = ..." line.
+    int sqrY = m_dim.y + MARGIN_COORD + lineHeight + (lineHeight / 2) + 2;
+    for (const auto& color : m_seriesColors)
+    {
+      const wxBrush sqrBrush(color, wxBRUSHSTYLE_SOLID);
+      dc.SetBrush(sqrBrush);
+      dc.DrawRectangle(m_dim.x + 2, sqrY - (LEGEND_LINEWIDTH / 2), LEGEND_LINEWIDTH, LEGEND_LINEWIDTH);
+      sqrY += lineHeight; // Move down for the next series
+    }
+
+    // Draw a vertical line to indicate location of the shown values (where the line cross a series)
+    const mpRect bound = w.GetPlotBoundaries(true);
+    dc.SetPen(*wxBLACK_PEN);
+    dc.DrawLine(w.GetMousePosition().x, bound.top, w.GetMousePosition().x, bound.bottom);
   }
 }
 
@@ -763,7 +823,7 @@ void mpInfoLegend::UpdateBitmap(wxDC &dc, mpWindow &w)
   buff_dc.DrawRectangle(0, 0, w.GetScreenX(), w.GetScreenY());
 
   // Height of the font
-  const wxSize FontHeight = dc.GetTextExtent("H");
+  const wxSize FontHeight = buff_dc.GetTextExtent("H");
 
   // Position of the label text
   int posX = MARGIN_LEGEND;
@@ -2481,11 +2541,11 @@ double mpScale::GetStep(double scale, int minLabelSpacing)
   return niceStep * pow(10, exp);
 }
 
-wxString mpScale::FormatLabelValue(double value)
+wxString mpScale::FormatLabelValue(double value, const mpScaleConstraints &constraints)
 {
   wxString s = _T("");
 
-  if (fabs(value) < m_ScaleConstraints.EpsilonScale)
+  if (fabs(value) < constraints.EpsilonScale)
   {
     return _T("0");
   }
@@ -2497,13 +2557,13 @@ wxString mpScale::FormatLabelValue(double value)
       {
         s = FormatLogValue(value);
       }
-      else if (m_ScaleConstraints.UseScientific)
+      else if (constraints.UseScientific)
       {
-        s.Printf(_T("%.*e"), m_ScaleConstraints.SignificantDigits, value);
+        s.Printf(_T("%.*e"), constraints.SignificantDigits, value);
       }
       else
       {
-        s.Printf(_T("%.*f"), m_ScaleConstraints.DecimalDigits, value);
+        s.Printf(_T("%.*f"), constraints.DecimalDigits, value);
       }
       break;
     case mpLabel_DECIMAL:
@@ -2513,7 +2573,7 @@ wxString mpScale::FormatLabelValue(double value)
       }
       else
       {
-        s.Printf(_T("%.*f"), m_ScaleConstraints.DecimalDigits, value);
+        s.Printf(_T("%.*f"), constraints.DecimalDigits, value);
       }
       break;
     case mpLabel_SCIENTIFIC:
@@ -2523,7 +2583,7 @@ wxString mpScale::FormatLabelValue(double value)
       }
       else
       {
-        s.Printf(_T("%.*e"), m_ScaleConstraints.SignificantDigits, value);
+        s.Printf(_T("%.*e"), constraints.SignificantDigits, value);
       }
       break;
     case mpLabel_USER:
@@ -2563,7 +2623,7 @@ wxString mpScale::FormatLabelValue(double value)
       const double hh = floor(modulus / 3600);
       const double mm = floor((modulus - hh * 3600) / 60);
       const double ss = modulus - hh * 3600 - mm * 60;
-      if ((m_ScaleConstraints.maxAxisValue / 60 > 2) || (m_labelType == mpLabel_HOURS))
+      if ((constraints.maxAxisValue / 60 > 2) || (m_labelType == mpLabel_HOURS))
         // Show hour:minute:second if axis is larger than 2 minutes
         s.Printf(_T("%02.0f:%02.0f:%02.0f"), sign * hh, mm, floor(ss));
       else
@@ -2595,7 +2655,7 @@ wxString mpScale::FormatLogValue(double n)
   return s;
 }
 
-int mpScale::GetLabelWidth(double value, wxDC &dc)
+int mpScale::GetLabelWidth(double value, wxDC &dc, const mpScaleConstraints &constraints)
 {
   if ( IsLogAxis() &&
       ((m_labelType == mpLabel_AUTO)       ||
@@ -2611,22 +2671,24 @@ int mpScale::GetLabelWidth(double value, wxDC &dc)
   {
     // For other formats we Need to round according to step size to get correct width
     // Finally +0.0 to mitigate negative zero (-0)
-    value = trunc(value / m_ScaleConstraints.step) * m_ScaleConstraints.step + 0.0f;
+    value = trunc(value / constraints.step) * constraints.step + 0.0f;
   }
 
-  const wxString labelStr = FormatLabelValue(value);
+  const wxString labelStr = FormatLabelValue(value, constraints);
   return dc.GetTextExtent(labelStr).GetWidth();
 }
 
-void mpScale::ComputeScaleConstraints(double step, double maxAxisValue)
+mpScale::mpScaleConstraints mpScale::ComputeScaleConstraints(double step, double maxAxisValue)
 {
-  m_ScaleConstraints.step = step;
-  m_ScaleConstraints.maxAxisValue = maxAxisValue;
-  m_ScaleConstraints.DecimalDigits = GetDecimalDigits(step);
-  m_ScaleConstraints.SignificantDigits = GetSignificantDigits(step, maxAxisValue);
-  m_ScaleConstraints.UseScientific = UseScientific(maxAxisValue);
+  mpScaleConstraints constraints;
+  constraints.step = step;
+  constraints.maxAxisValue = maxAxisValue;
+  constraints.DecimalDigits = GetDecimalDigits(step);
+  constraints.SignificantDigits = GetSignificantDigits(step, maxAxisValue);
+  constraints.UseScientific = UseScientific(maxAxisValue);
   const double exp = fabs(log10(step)) + 1;
-  m_ScaleConstraints.EpsilonScale = pow(10, -exp);
+  constraints.EpsilonScale = pow(10, -exp);
+  return constraints;
 }
 
 bool mpScale::UseScientific(double maxAxisValue)
@@ -2780,18 +2842,18 @@ void mpScaleX::DoPlot(wxDC &dc, mpWindow &w)
   const double end = w.p2x(w.GetScreenX());
   const double maxAxisValue = w.GetDesiredBoundX().GetMaxAbs();
   // Compute scale constraint
-  ComputeScaleConstraints(step, maxAxisValue);
+  mpScaleConstraints constraints = ComputeScaleConstraints(step, maxAxisValue);
 
   // Recalculate step but adjusted for max label width now that we know the format of the label.
   // Largest label is either furthest left or furthest right
-  const int leftWidth = GetLabelWidth(w.GetPosX(), dc);
-  const int rightWidth = GetLabelWidth(end, dc);
+  const int leftWidth = GetLabelWidth(w.GetPosX(), dc, constraints);
+  const int rightWidth = GetLabelWidth(end, dc, constraints);
   const int maxWidth = std::max(leftWidth, rightWidth);
   // For wide labels, make sure that we have at least 20 pixels between them
   const int minLabelSeparation = std::max(maxWidth + 20, MIN_X_AXIS_LABEL_SEPARATION);
   step = GetStep(scaleX, minLabelSeparation);
   // Re-compute scale constraint since we change step
-  ComputeScaleConstraints(step, maxAxisValue);
+  constraints = ComputeScaleConstraints(step, maxAxisValue);
 
   const double n0 = floor(w.GetPosX() / step) * step;
 #if defined(MATHPLOT_DO_LOGGING) && defined(MATHPLOT_LOG_SCALE)
@@ -2829,7 +2891,7 @@ void mpScaleX::DoPlot(wxDC &dc, mpWindow &w)
       }
 
       // Write ticks labels in s string : compute size
-      s = FormatLabelValue(n);
+      s = FormatLabelValue(n, constraints);
 
       wxCoord tx = 0, ty = 0;
       dc.GetTextExtent(s, &tx, &ty);
@@ -2976,7 +3038,7 @@ void mpScaleY::DoPlot(wxDC &dc, mpWindow &w)
   const double end = w.GetPosY(GetAxisID());
   const double maxAxisValue = w.GetDesiredBoundY(GetAxisID()).GetMaxAbs();
   // Compute scale constraint
-  ComputeScaleConstraints(step, maxAxisValue);
+  const mpScaleConstraints constraints = ComputeScaleConstraints(step, maxAxisValue);
 
   const double n0 = floor(start / step) * step;
 #if defined(MATHPLOT_DO_LOGGING) && defined(MATHPLOT_LOG_SCALE)
@@ -2985,7 +3047,7 @@ void mpScaleY::DoPlot(wxDC &dc, mpWindow &w)
 
   wxCoord labelWidth = 0;
   // Before starting cycle, calculate label height
-  wxString s = FormatLabelValue(n0);
+  wxString s = FormatLabelValue(n0, constraints);
   const wxCoord labelHeight = dc.GetTextExtent(s).GetHeight() / 2;
 
   // Draw grid, ticks and label
@@ -3021,7 +3083,7 @@ void mpScaleY::DoPlot(wxDC &dc, mpWindow &w)
       }
 
       // Write ticks labels in s string : compute size
-      s = FormatLabelValue(n);
+      s = FormatLabelValue(n, constraints);
 
       // Print ticks labels
       wxCoord tx = 0, ty = 0;
@@ -3050,11 +3112,11 @@ void mpScaleY::UpdateAxisWidth(mpWindow &w)
   const double step = GetStep(w.GetScaleY(GetAxisID()), MIN_Y_AXIS_LABEL_SEPARATION);
   const double maxAxisValue = w.GetDesiredBoundY(GetAxisID()).GetMaxAbs();
   // Compute scale constraint
-  ComputeScaleConstraints(step, maxAxisValue);
+  const mpScaleConstraints constraints = ComputeScaleConstraints(step, maxAxisValue);
 
   // Widest label is either the uppermost or lowermost one
-  const int lowerLabelWidth = GetLabelWidth(w.GetDesiredBoundY(GetAxisID()).min, dc);
-  const int upperLabelWidth = GetLabelWidth(w.GetDesiredBoundY(GetAxisID()).max, dc);
+  const int lowerLabelWidth = GetLabelWidth(w.GetDesiredBoundY(GetAxisID()).min, dc, constraints);
+  const int upperLabelWidth = GetLabelWidth(w.GetDesiredBoundY(GetAxisID()).max, dc, constraints);
   const int maxLabelWidth = std::max(lowerLabelWidth, upperLabelWidth);
 
   // Also need to consider size of axis name
@@ -5027,11 +5089,14 @@ mpFXYVector* mpWindow::GetXYSeries(unsigned int n, const wxString &name, bool cr
   return serie;
 }
 
-mpLayer* mpWindow::GetClosestPlot(wxCoord ix, wxCoord iy, double *xnear, double *ynear)
+std::optional<mpPlotHit> mpWindow::GetClosestPlot(wxCoord ix, wxCoord iy)
 {
 #define NEAR_AREA 8
   int function;
   mpLayer* result = NULL;
+  double nearX = 0.0, nearY = 0.0;
+  double* xnear = &nearX;
+  double* ynear = &nearY;
 
   for (mpLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
   {
@@ -5113,7 +5178,9 @@ mpLayer* mpWindow::GetClosestPlot(wxCoord ix, wxCoord iy, double *xnear, double 
     if (result)
       break;
   }
-  return result;
+  if (result)
+    return mpPlotHit{result->GetPen().GetColour(), wxRealPoint(nearX, nearY)};
+  return std::nullopt;
 }
 
 mpLayer* mpWindow::GetLayerByName(const wxString &name)

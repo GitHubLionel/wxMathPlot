@@ -465,7 +465,7 @@ void MathPlotConfigDialog::Initialize(mpConfigPageId id)
     cbCoord->SetSelection(CurrentCoords->GetLocation());
     cbCoordVisible->SetValue(CurrentCoords->IsVisible());
     cbCoordOutside->SetValue(CurrentCoords->GetDrawOutsideMargins());
-    cbCoordinates->SetValue(CurrentCoords->IsSeriesCoord());
+    cbInfoCoordType->SetSelection((int)CurrentCoords->GetInfoCoordType());
     cbCoordDefaultVisibility->SetValue(m_plot->m_DefaultCoordIsAlwaysVisible);
     // Brush config
     DoButtonColour(bCoordBrushColor, CurrentCoords->GetBrush().GetColour());
@@ -1239,7 +1239,7 @@ void MathPlotConfigDialog::Apply(int pageIndex, bool updateFont)
           CurrentCoords->SetLocation((mpLocation)cbCoord->GetSelection());
         CurrentCoords->SetVisible(cbCoordVisible->GetValue());
         CurrentCoords->SetDrawOutsideMargins(cbCoordOutside->GetValue());
-        CurrentCoords->SetSeriesCoord(cbCoordinates->GetValue());
+        CurrentCoords->SetInfoCoordType((mpInfoCoords::infoCoordType)cbInfoCoordType->GetSelection());
         m_plot->m_DefaultCoordIsAlwaysVisible = cbCoordDefaultVisibility->GetValue();
         // Brush config
         CurrentCoords->SetBrush(bCoordBrushColor->GetBackgroundColour(), IdToBrushStyle(cbCoordBrushStyle->GetSelection()));

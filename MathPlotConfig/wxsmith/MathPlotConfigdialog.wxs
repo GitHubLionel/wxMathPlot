@@ -212,13 +212,16 @@
 											<object class="wxBoxSizer" variable="BoxSizer1" member="no">
 												<orient>wxVERTICAL</orient>
 												<object class="sizeritem">
-													<object class="wxBoxSizer" variable="BoxSizer12" member="no">
+													<object class="wxFlexGridSizer" variable="FlexGridSizer19" member="no">
+														<cols>2</cols>
+														<rows>2</rows>
 														<object class="sizeritem">
-															<object class="wxStaticText" name="" variable="StaticText18" member="yes">
+															<object class="wxStaticText" name="" variable="StaticText19" member="yes">
 																<label>Position :</label>
 															</object>
 															<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
 															<border>5</border>
+															<option>1</option>
 														</object>
 														<object class="sizeritem">
 															<object class="wxChoice" name="" variable="cbCoord" member="yes">
@@ -226,12 +229,36 @@
 																<selection>0</selection>
 																<extra_code>cbCoord-&gt;Set(WXSIZEOF(InfoPosition__choices), InfoPosition__choices);&#x0A;cbCoord-&gt;SetSelection(7);</extra_code>
 															</object>
-															<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+															<flag>wxALL</flag>
 															<border>5</border>
+															<option>1</option>
+														</object>
+														<object class="sizeritem">
+															<object class="wxStaticText" name="" variable="StaticText45" member="yes">
+																<label>Style :</label>
+															</object>
+															<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+															<border>5</border>
+															<option>1</option>
+														</object>
+														<object class="sizeritem">
+															<object class="wxChoice" name="" variable="cbInfoCoordType" member="yes">
+																<content>
+																	<item>Axes coordinates</item>
+																	<item>Closest series value</item>
+																	<item>All series value</item>
+																</content>
+																<use_items_array>1</use_items_array>
+																<selection>0</selection>
+															</object>
+															<flag>wxALL|wxEXPAND</flag>
+															<border>2</border>
 															<option>1</option>
 														</object>
 													</object>
 													<flag>wxALL|wxALIGN_LEFT</flag>
+													<border>5</border>
+													<option>1</option>
 												</object>
 												<object class="sizeritem">
 													<object class="wxCheckBox" name="" variable="cbCoordVisible" member="yes">
@@ -272,7 +299,6 @@
 													</object>
 													<flag>wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND</flag>
 													<border>5</border>
-													<option>1</option>
 												</object>
 											</object>
 											<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
