@@ -2302,6 +2302,18 @@ class WXDLLIMPEXP_MATHPLOT mpFXYVector: public mpFXY
       return m_xs.size();
     }
 
+    /** Get read-only access to the internal X data vector */
+    const std::vector<double>& GetXData() const
+    {
+      return m_xs;
+    }
+
+    /** Get read-only access to the internal Y data vector */
+    const std::vector<double>& GetYData() const
+    {
+      return m_ys;
+    }
+
     /** Add data to the internal vector. This method DOES NOT refresh the mpWindow unless updatePlot = true
      * and the added point is in bound; do it manually by calling UpdateAll() or just Fit() if we want to adjust plot
      * @param x
