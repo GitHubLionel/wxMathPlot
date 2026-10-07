@@ -3114,8 +3114,11 @@ class WXDLLIMPEXP_MATHPLOT mpScale: public mpLayer
     wxString FormatLabelValue(double value, const mpScaleConstraints &constraints);
 
   protected:
-    static constexpr wxCoord kTickSize = 4;       //!< Length of tick line
-    static constexpr wxCoord kAxisExtraSpace = 6; //!< Extra space for axis to make it look good
+    static constexpr wxCoord kTickSize = 4;        //!< Length of tick line
+    static constexpr wxCoord kYAxisExtraSpace = 6; //!< Extra space for Y-axis to make it look good
+    static constexpr wxCoord kYAxisTitleSpace = 2; //!< Extra space for Y-axis title to make it look good
+    static constexpr wxCoord kYAxisLabelSpace = 2; //!< Extra space for Y-axis tick labels to make it look good
+    static constexpr wxCoord kXAxisTitleSpace = 3; //!< Extra space for X-axis title to make it look good
 
     int m_axisID;                //!< Unique ID that identify this axis. Default -1 mean that axis is not used.
     wxPen m_gridpen;             //!< Grid's pen. Default Colour = LIGHT_GREY, width = 1, style = wxPENSTYLE_DOT
@@ -3308,7 +3311,7 @@ class WXDLLIMPEXP_MATHPLOT mpScaleY: public mpScale
     void DoPlot(wxDC &dc, mpWindow &w) override;
 
     int GetOrigin(mpWindow &w) override;
-    void DrawScaleName(wxDC &dc, mpWindow &w, int origin, int labelSize) override;
+    void DrawScaleName(wxDC &dc, mpWindow &w, int origin, int maxLabelWidth) override;
 
   private:
     DECLARE_DYNAMIC_CLASS_MATHPLOT(mpScaleY);
@@ -3962,7 +3965,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      pixel scales are computed accordingly. Also, in this case the passed borders are not saved
      as the "desired borders", since this use will be invoked only when printing.
      */
-    void Fit(const mpRange<double> &rangeX, std::unordered_map<int, mpRange<double>> rangeY, wxCoord *printSizeX = NULL, wxCoord *printSizeY = NULL);
+    void Fit(const mpRange<double> &rangeX, std::unordered_map<int, mpRange<double>> rangeY, bool updateDesired = true, wxCoord *printSizeX = NULL, wxCoord *printSizeY = NULL);
 
     /** Similar to Fit() but only fit in X. Intentionally don't call UpdateAll() since
      *  you might want to perform other actions before updating plot
@@ -4052,10 +4055,10 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
       // Change on Y axis
       if (update & uYAxis)
       {
-        for (auto& [m_yID, m_yData] : m_AxisDataYList)
+        for (auto& [yID, yData] : m_AxisDataYList)
         {
-          m_yData.desired.Set(m_yData.pos - ((m_margin.top + m_plotHeight) / m_yData.scale),
-              m_yData.pos - (m_margin.top / m_yData.scale));
+          yData.desired.Set(yData.pos - ((m_margin.top + m_plotHeight) / yData.scale),
+              yData.pos - (m_margin.top / yData.scale));
         }
       }
     }
@@ -4072,45 +4075,6 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
         return mpFloatRectSimple(m_AxisDataX.desired, m_AxisDataYList[yAxisID].desired);
       else
         return mpFloatRectSimple(m_AxisDataX.bound, m_AxisDataYList[yAxisID].bound);
-    }
-
-    /** Returns the left-border layer coordinate that the user wants the mpWindow to show (it may be not exactly the actual shown coordinate in the case of locked aspect ratio).
-     * @sa Fit, Zoom
-     */
-    double GetDesiredXmin() const
-    {
-      return m_AxisDataX.desired.min;
-    }
-
-    /** Return the right-border layer coordinate that the user wants the mpWindow to show
-     * (it may be not exactly the actual shown coordinate in the case of locked aspect ratio).
-     * @sa Fit, Zoom
-     */
-    double GetDesiredXmax() const
-    {
-      return m_AxisDataX.desired.max;
-    }
-
-    /** Return the bottom-border layer coordinate that the user wants the mpWindow to show (it may be
-     * not exactly the actual shown coordinate in the case of locked aspect ratio).
-     * @param yAxisID Y axis ID to get desired min
-     * @sa Fit, Zoom
-     */
-    double GetDesiredYmin(const int yAxisID)
-    {
-      assert(m_AxisDataYList.count(yAxisID) != 0);
-      return m_AxisDataYList[yAxisID].desired.min;
-    }
-
-    /** Return the top layer-border coordinate that the user wants the mpWindow to show (it may be
-     * not exactly the actual shown coordinate in the case of locked aspect ratio).
-     * @param yAxisID Y axis ID to get desired max
-     * @sa Fit, Zoom
-     */
-    double GetDesiredYmax(const int yAxisID)
-    {
-      assert(m_AxisDataYList.count(yAxisID) != 0);
-      return m_AxisDataYList[yAxisID].desired.max;
     }
 
     /** Return the bounding box coordinates for the Y axis of ID yAxisID
