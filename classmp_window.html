@@ -213,9 +213,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>EnableMousePanZoom</b
 <tr class="memitem:aeb6ddca87045fc5de1814361ba145591" id="r_aeb6ddca87045fc5de1814361ba145591"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#aeb6ddca87045fc5de1814361ba145591">Fit</a> () override</td></tr>
 <tr class="memdesc:aeb6ddca87045fc5de1814361ba145591"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set view to fit global bounding box of all plot layers and refresh display with <a class="el" href="classmp_window.html#a990707383217cdd98cdf6a635ccb63b7" title="Refresh display.">UpdateAll()</a>.  <br /></td></tr>
 <tr class="separator:aeb6ddca87045fc5de1814361ba145591"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af011559ba1af67c343d7c9fc7ca3675b" id="r_af011559ba1af67c343d7c9fc7ca3675b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#af011559ba1af67c343d7c9fc7ca3675b">Fit</a> (const <a class="el" href="structmp_range.html">mpRange</a>&lt; double &gt; &amp;rangeX, std::unordered_map&lt; int, <a class="el" href="structmp_range.html">mpRange</a>&lt; double &gt; &gt; rangeY, wxCoord *printSizeX=NULL, wxCoord *printSizeY=NULL)</td></tr>
-<tr class="memdesc:af011559ba1af67c343d7c9fc7ca3675b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set view to fit a given bounding box and refresh display with <a class="el" href="classmp_window.html#a990707383217cdd98cdf6a635ccb63b7" title="Refresh display.">UpdateAll()</a>.  <br /></td></tr>
-<tr class="separator:af011559ba1af67c343d7c9fc7ca3675b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abfadffbb87c7ed1d9c7c0bd0126bfc83" id="r_abfadffbb87c7ed1d9c7c0bd0126bfc83"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#abfadffbb87c7ed1d9c7c0bd0126bfc83">Fit</a> (const <a class="el" href="structmp_range.html">mpRange</a>&lt; double &gt; &amp;rangeX, std::unordered_map&lt; int, <a class="el" href="structmp_range.html">mpRange</a>&lt; double &gt; &gt; rangeY, bool updateDesired=true, wxCoord *printSizeX=NULL, wxCoord *printSizeY=NULL)</td></tr>
+<tr class="memdesc:abfadffbb87c7ed1d9c7c0bd0126bfc83"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set view to fit a given bounding box and refresh display with <a class="el" href="classmp_window.html#a990707383217cdd98cdf6a635ccb63b7" title="Refresh display.">UpdateAll()</a>.  <br /></td></tr>
+<tr class="separator:abfadffbb87c7ed1d9c7c0bd0126bfc83"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae8ec61b47afcd3cafae291fa99322a7f" id="r_ae8ec61b47afcd3cafae291fa99322a7f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#ae8ec61b47afcd3cafae291fa99322a7f">FitX</a> (void)</td></tr>
 <tr class="memdesc:ae8ec61b47afcd3cafae291fa99322a7f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Similar to <a class="el" href="classmp_window.html#aeb6ddca87045fc5de1814361ba145591" title="Set view to fit global bounding box of all plot layers and refresh display with UpdateAll().">Fit()</a> but only fit in X.  <br /></td></tr>
 <tr class="separator:ae8ec61b47afcd3cafae291fa99322a7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -267,18 +267,6 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>UpdateAll</b> ()</td>
 <tr class="memitem:aca0e49722b99aa7174725aef556759d3" id="r_aca0e49722b99aa7174725aef556759d3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structmp_float_rect_simple.html">mpFloatRectSimple</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#aca0e49722b99aa7174725aef556759d3">GetBoundingBox</a> (const bool desired, const unsigned int yAxisID=0)</td></tr>
 <tr class="memdesc:aca0e49722b99aa7174725aef556759d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a bounding box for an y-axis ID.  <br /></td></tr>
 <tr class="separator:aca0e49722b99aa7174725aef556759d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aabd112443442dc765951a494218e748f" id="r_aabd112443442dc765951a494218e748f"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#aabd112443442dc765951a494218e748f">GetDesiredXmin</a> () const</td></tr>
-<tr class="memdesc:aabd112443442dc765951a494218e748f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the left-border layer coordinate that the user wants the <a class="el" href="classmp_window.html" title="Canvas for plotting mpLayer implementations.">mpWindow</a> to show (it may be not exactly the actual shown coordinate in the case of locked aspect ratio).  <br /></td></tr>
-<tr class="separator:aabd112443442dc765951a494218e748f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9b9328047569995fd281799742ad0a01" id="r_a9b9328047569995fd281799742ad0a01"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#a9b9328047569995fd281799742ad0a01">GetDesiredXmax</a> () const</td></tr>
-<tr class="memdesc:a9b9328047569995fd281799742ad0a01"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the right-border layer coordinate that the user wants the <a class="el" href="classmp_window.html" title="Canvas for plotting mpLayer implementations.">mpWindow</a> to show (it may be not exactly the actual shown coordinate in the case of locked aspect ratio).  <br /></td></tr>
-<tr class="separator:a9b9328047569995fd281799742ad0a01"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9ed5452fab757a112e96be5ffcf49ba5" id="r_a9ed5452fab757a112e96be5ffcf49ba5"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#a9ed5452fab757a112e96be5ffcf49ba5">GetDesiredYmin</a> (const int yAxisID)</td></tr>
-<tr class="memdesc:a9ed5452fab757a112e96be5ffcf49ba5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the bottom-border layer coordinate that the user wants the <a class="el" href="classmp_window.html" title="Canvas for plotting mpLayer implementations.">mpWindow</a> to show (it may be not exactly the actual shown coordinate in the case of locked aspect ratio).  <br /></td></tr>
-<tr class="separator:a9ed5452fab757a112e96be5ffcf49ba5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4abd6c9abbcafe10fb9f863860d85e8c" id="r_a4abd6c9abbcafe10fb9f863860d85e8c"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#a4abd6c9abbcafe10fb9f863860d85e8c">GetDesiredYmax</a> (const int yAxisID)</td></tr>
-<tr class="memdesc:a4abd6c9abbcafe10fb9f863860d85e8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the top layer-border coordinate that the user wants the <a class="el" href="classmp_window.html" title="Canvas for plotting mpLayer implementations.">mpWindow</a> to show (it may be not exactly the actual shown coordinate in the case of locked aspect ratio).  <br /></td></tr>
-<tr class="separator:a4abd6c9abbcafe10fb9f863860d85e8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aff475b2dbf1192c3761c9110ab8798cd" id="r_aff475b2dbf1192c3761c9110ab8798cd"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#aff475b2dbf1192c3761c9110ab8798cd">GetBoundingBox</a> (<a class="el" href="structmp_range.html">mpRange</a>&lt; double &gt; *boundX, <a class="el" href="structmp_range.html">mpRange</a>&lt; double &gt; *boundY, const int yAxisID)</td></tr>
 <tr class="memdesc:aff475b2dbf1192c3761c9110ab8798cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the bounding box coordinates for the Y axis of ID yAxisID.  <br /></td></tr>
 <tr class="separator:aff475b2dbf1192c3761c9110ab8798cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1497,8 +1485,8 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
 
 </div>
 </div>
-<a id="af011559ba1af67c343d7c9fc7ca3675b" name="af011559ba1af67c343d7c9fc7ca3675b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af011559ba1af67c343d7c9fc7ca3675b">&#9670;&#160;</a></span>Fit() <span class="overload">[2/2]</span></h2>
+<a id="abfadffbb87c7ed1d9c7c0bd0126bfc83" name="abfadffbb87c7ed1d9c7c0bd0126bfc83"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abfadffbb87c7ed1d9c7c0bd0126bfc83">&#9670;&#160;</a></span>Fit() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1514,6 +1502,12 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
           <td></td>
           <td class="paramtype">std::unordered_map&lt; int, <a class="el" href="structmp_range.html">mpRange</a>&lt; double &gt; &gt;&#160;</td>
           <td class="paramname"><em>rangeY</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>updateDesired</em> = <code>true</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -1898,132 +1892,6 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
   </table>
   </dd>
 </dl>
-
-</div>
-</div>
-<a id="a9b9328047569995fd281799742ad0a01" name="a9b9328047569995fd281799742ad0a01"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9b9328047569995fd281799742ad0a01">&#9670;&#160;</a></span>GetDesiredXmax()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">double mpWindow::GetDesiredXmax </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Return the right-border layer coordinate that the user wants the <a class="el" href="classmp_window.html" title="Canvas for plotting mpLayer implementations.">mpWindow</a> to show (it may be not exactly the actual shown coordinate in the case of locked aspect ratio). </p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="classmp_window.html#aeb6ddca87045fc5de1814361ba145591" title="Set view to fit global bounding box of all plot layers and refresh display with UpdateAll().">Fit</a>, <a class="el" href="classmp_window.html#a29fdb0472249e75a721d1dee73557848" title="zoom action">Zoom</a> </dd></dl>
-
-</div>
-</div>
-<a id="aabd112443442dc765951a494218e748f" name="aabd112443442dc765951a494218e748f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aabd112443442dc765951a494218e748f">&#9670;&#160;</a></span>GetDesiredXmin()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">double mpWindow::GetDesiredXmin </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Returns the left-border layer coordinate that the user wants the <a class="el" href="classmp_window.html" title="Canvas for plotting mpLayer implementations.">mpWindow</a> to show (it may be not exactly the actual shown coordinate in the case of locked aspect ratio). </p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="classmp_window.html#aeb6ddca87045fc5de1814361ba145591" title="Set view to fit global bounding box of all plot layers and refresh display with UpdateAll().">Fit</a>, <a class="el" href="classmp_window.html#a29fdb0472249e75a721d1dee73557848" title="zoom action">Zoom</a> </dd></dl>
-
-</div>
-</div>
-<a id="a4abd6c9abbcafe10fb9f863860d85e8c" name="a4abd6c9abbcafe10fb9f863860d85e8c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4abd6c9abbcafe10fb9f863860d85e8c">&#9670;&#160;</a></span>GetDesiredYmax()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">double mpWindow::GetDesiredYmax </td>
-          <td>(</td>
-          <td class="paramtype">const int&#160;</td>
-          <td class="paramname"><em>yAxisID</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Return the top layer-border coordinate that the user wants the <a class="el" href="classmp_window.html" title="Canvas for plotting mpLayer implementations.">mpWindow</a> to show (it may be not exactly the actual shown coordinate in the case of locked aspect ratio). </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">yAxisID</td><td>Y axis ID to get desired max </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="classmp_window.html#aeb6ddca87045fc5de1814361ba145591" title="Set view to fit global bounding box of all plot layers and refresh display with UpdateAll().">Fit</a>, <a class="el" href="classmp_window.html#a29fdb0472249e75a721d1dee73557848" title="zoom action">Zoom</a> </dd></dl>
-
-</div>
-</div>
-<a id="a9ed5452fab757a112e96be5ffcf49ba5" name="a9ed5452fab757a112e96be5ffcf49ba5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9ed5452fab757a112e96be5ffcf49ba5">&#9670;&#160;</a></span>GetDesiredYmin()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">double mpWindow::GetDesiredYmin </td>
-          <td>(</td>
-          <td class="paramtype">const int&#160;</td>
-          <td class="paramname"><em>yAxisID</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Return the bottom-border layer coordinate that the user wants the <a class="el" href="classmp_window.html" title="Canvas for plotting mpLayer implementations.">mpWindow</a> to show (it may be not exactly the actual shown coordinate in the case of locked aspect ratio). </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">yAxisID</td><td>Y axis ID to get desired min </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="classmp_window.html#aeb6ddca87045fc5de1814361ba145591" title="Set view to fit global bounding box of all plot layers and refresh display with UpdateAll().">Fit</a>, <a class="el" href="classmp_window.html#a29fdb0472249e75a721d1dee73557848" title="zoom action">Zoom</a> </dd></dl>
 
 </div>
 </div>

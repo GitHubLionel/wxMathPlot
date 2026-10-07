@@ -294,10 +294,10 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:a9b8359b241df12e0a9e773cc12b81700" id="r_a9b8359b241df12e0a9e773cc12b81700"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_scale_y.html#a9b8359b241df12e0a9e773cc12b81700">GetOrigin</a> (<a class="el" href="classmp_window.html">mpWindow</a> &amp;w) override</td></tr>
 <tr class="memdesc:a9b8359b241df12e0a9e773cc12b81700"><td class="mdescLeft">&#160;</td><td class="mdescRight">virtual function to compute origin of the axis  <br /></td></tr>
 <tr class="separator:a9b8359b241df12e0a9e773cc12b81700"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a09bd5e513481b199bc9ee82c996514cf" id="r_a09bd5e513481b199bc9ee82c996514cf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_scale_y.html#a09bd5e513481b199bc9ee82c996514cf">DrawScaleName</a> (wxDC &amp;dc, <a class="el" href="classmp_window.html">mpWindow</a> &amp;w, int origin, int labelSize) override</td></tr>
-<tr class="memdesc:a09bd5e513481b199bc9ee82c996514cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw the name of the scale<br  />
+<tr class="memitem:a916ccdd10c3505b7cff5d81e58120db8" id="r_a916ccdd10c3505b7cff5d81e58120db8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_scale_y.html#a916ccdd10c3505b7cff5d81e58120db8">DrawScaleName</a> (wxDC &amp;dc, <a class="el" href="classmp_window.html">mpWindow</a> &amp;w, int origin, int maxLabelWidth) override</td></tr>
+<tr class="memdesc:a916ccdd10c3505b7cff5d81e58120db8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw the name of the scale<br  />
  This function is virtual and need to be overloaded in child class.  <br /></td></tr>
-<tr class="separator:a09bd5e513481b199bc9ee82c996514cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:a916ccdd10c3505b7cff5d81e58120db8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_methods_classmp_scale"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classmp_scale')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="classmp_scale.html">mpScale</a></td></tr>
 <tr class="memitem:aa7bbbe56a1a9e267023e129f05ed6c69 inherit pro_methods_classmp_scale" id="r_aa7bbbe56a1a9e267023e129f05ed6c69"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_scale.html#aa7bbbe56a1a9e267023e129f05ed6c69">GetLabelWidth</a> (double value, wxDC &amp;dc, const <a class="el" href="structmp_scale_1_1mp_scale_constraints.html">mpScaleConstraints</a> &amp;constraints)</td></tr>
 <tr class="memdesc:aa7bbbe56a1a9e267023e129f05ed6c69 inherit pro_methods_classmp_scale"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get label text width for a given value.  <br /></td></tr>
@@ -466,10 +466,22 @@ Additional Inherited Members</h2></td></tr>
 static constexpr wxCoord&#160;</td><td class="memItemRight" valign="bottom"><b>kTickSize</b> = 4</td></tr>
 <tr class="memdesc:a88587d6e34f299ab186ccfb03f73a49f inherit pro_static_attribs_classmp_scale"><td class="mdescLeft">&#160;</td><td class="mdescRight">Length of tick line. <br /></td></tr>
 <tr class="separator:a88587d6e34f299ab186ccfb03f73a49f inherit pro_static_attribs_classmp_scale"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a05fe51133d340941761654fc27cc5076 inherit pro_static_attribs_classmp_scale" id="r_a05fe51133d340941761654fc27cc5076"><td class="memItemLeft" align="right" valign="top">
-static constexpr wxCoord&#160;</td><td class="memItemRight" valign="bottom"><b>kAxisExtraSpace</b> = 6</td></tr>
-<tr class="memdesc:a05fe51133d340941761654fc27cc5076 inherit pro_static_attribs_classmp_scale"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extra space for axis to make it look good. <br /></td></tr>
-<tr class="separator:a05fe51133d340941761654fc27cc5076 inherit pro_static_attribs_classmp_scale"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a80268461df87c3c9f01a3ea29bbe79e4 inherit pro_static_attribs_classmp_scale" id="r_a80268461df87c3c9f01a3ea29bbe79e4"><td class="memItemLeft" align="right" valign="top">
+static constexpr wxCoord&#160;</td><td class="memItemRight" valign="bottom"><b>kYAxisExtraSpace</b> = 6</td></tr>
+<tr class="memdesc:a80268461df87c3c9f01a3ea29bbe79e4 inherit pro_static_attribs_classmp_scale"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extra space for Y-axis to make it look good. <br /></td></tr>
+<tr class="separator:a80268461df87c3c9f01a3ea29bbe79e4 inherit pro_static_attribs_classmp_scale"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3440100dde36b169c115c74d6ceb8799 inherit pro_static_attribs_classmp_scale" id="r_a3440100dde36b169c115c74d6ceb8799"><td class="memItemLeft" align="right" valign="top">
+static constexpr wxCoord&#160;</td><td class="memItemRight" valign="bottom"><b>kYAxisTitleSpace</b> = 2</td></tr>
+<tr class="memdesc:a3440100dde36b169c115c74d6ceb8799 inherit pro_static_attribs_classmp_scale"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extra space for Y-axis title to make it look good. <br /></td></tr>
+<tr class="separator:a3440100dde36b169c115c74d6ceb8799 inherit pro_static_attribs_classmp_scale"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abb2784ad08a74964c4a013254fe6218d inherit pro_static_attribs_classmp_scale" id="r_abb2784ad08a74964c4a013254fe6218d"><td class="memItemLeft" align="right" valign="top">
+static constexpr wxCoord&#160;</td><td class="memItemRight" valign="bottom"><b>kYAxisLabelSpace</b> = 2</td></tr>
+<tr class="memdesc:abb2784ad08a74964c4a013254fe6218d inherit pro_static_attribs_classmp_scale"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extra space for Y-axis tick labels to make it look good. <br /></td></tr>
+<tr class="separator:abb2784ad08a74964c4a013254fe6218d inherit pro_static_attribs_classmp_scale"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a49d6a53881b1c226853e1f3006d16d5e inherit pro_static_attribs_classmp_scale" id="r_a49d6a53881b1c226853e1f3006d16d5e"><td class="memItemLeft" align="right" valign="top">
+static constexpr wxCoord&#160;</td><td class="memItemRight" valign="bottom"><b>kXAxisTitleSpace</b> = 3</td></tr>
+<tr class="memdesc:a49d6a53881b1c226853e1f3006d16d5e inherit pro_static_attribs_classmp_scale"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extra space for X-axis title to make it look good. <br /></td></tr>
+<tr class="separator:a49d6a53881b1c226853e1f3006d16d5e inherit pro_static_attribs_classmp_scale"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Plot layer implementing a y-scale ruler. </p>
@@ -584,8 +596,8 @@ static constexpr wxCoord&#160;</td><td class="memItemRight" valign="bottom"><b>k
 
 </div>
 </div>
-<a id="a09bd5e513481b199bc9ee82c996514cf" name="a09bd5e513481b199bc9ee82c996514cf"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a09bd5e513481b199bc9ee82c996514cf">&#9670;&#160;</a></span>DrawScaleName()</h2>
+<a id="a916ccdd10c3505b7cff5d81e58120db8" name="a916ccdd10c3505b7cff5d81e58120db8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a916ccdd10c3505b7cff5d81e58120db8">&#9670;&#160;</a></span>DrawScaleName()</h2>
 
 <div class="memitem">
 <div class="memproto">
