@@ -838,7 +838,7 @@ void MathPlotConfigDialog::OnbAddAxisClick(wxCommandEvent& event)
     else
       newScale = (mpScale*)new mpScaleY(wxT("New Y"), mpALIGN_LEFT, true);
 
-    if (newScale && (m_plot->AddLayer(newScale, true, false)))
+    if (newScale && (m_plot->AddLayer(newScale, false, false)))
     {
       // Search the first X or Y scale present to retreive its font
       // since we probably want the same font for all the axis.
@@ -1144,7 +1144,7 @@ void MathPlotConfigDialog::OnbAddLinesClick(wxCommandEvent& WXUNUSED(event))
         newLine = (mpFunction*)new mpVerticalLine(values[0]);
     }
 
-    if (newLine && (m_plot->AddLayer(newLine, true, false)))
+    if (newLine && (m_plot->AddLayer(newLine, false, false)))
     {
       Initialize(mpcpiLines);
       ChoiceLines->SetSelection(ChoiceLines->GetCount() - 1);
@@ -1169,7 +1169,7 @@ void MathPlotConfigDialog::OnbAddLinesClick(wxCommandEvent& WXUNUSED(event))
         newLine = (mpFunction*)new mpNormal(values[0], values[1]);
     }
 
-    if (newLine && (m_plot->AddLayer(newLine, true, false)))
+    if (newLine && (m_plot->AddLayer(newLine, false, false)))
     {
       Initialize(mpcpiSeries);
       ChoiceSeries->SetSelection(ChoiceSeries->GetCount() - 1);

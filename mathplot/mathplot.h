@@ -352,9 +352,8 @@ struct mpRange
     {
       if (value < min)
         min = value;
-      else
-        if (value > max)
-          max = value;
+      else if (value > max)
+        max = value;
     }
 
     /** Update range with new min and max values if this expand the range
@@ -3510,12 +3509,12 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     /** Add a plot layer to the canvas.
      @param layer Pointer to layer. The mpLayer object will get under control of mpWindow,
      i.e. it will be delete'd on mpWindow destruction
-     @param refreshDisplay States whether to fit and refresh the display (UpdateAll) after adding the layer.
+     @param fit States whether to fit all functions / series to the plot after adding the layer.
      @param refreshConfig States whether to refresh the config window (if exist)
      @retval TRUE Success
      @retval FALSE Failure. layer = NULL or layer already exist (Coords or Legend).
      */
-    bool AddLayer(mpLayer *layer, bool refreshDisplay = true, bool refreshConfig = true);
+    bool AddLayer(mpLayer *layer, bool fit = true, bool refreshConfig = true);
 
     /** Remove a plot layer from the canvas.
      @param layer Pointer to layer. The mpLayer object will be destructed using delete.
@@ -3731,6 +3730,25 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     {
       assert(m_AxisDataYList.count(yAxisID) != 0);
       return m_AxisDataYList[yAxisID].desired;
+    }
+
+    /** Get the visible range for X axis, i.e. the range of X values currently visible in the plot area.
+     * @return The active range for X axis.
+     */
+    mpRange<double> GetVisibleRangeX()
+    {
+      return mpRange<double>(m_AxisDataX.pos + (m_margin.left / m_AxisDataX.scale), m_AxisDataX.pos + ((m_margin.left + m_plotWidth) / m_AxisDataX.scale));
+    }
+
+    /** Get the visible range for Y axis of ID yAxisID, i.e. the range of Y values currently visible in the plot area.
+     * @param yAxisID Y axis ID to get active range
+     * @return The active range for Y axis.
+     */
+    mpRange<double> GetVisibleRangeY(const unsigned int yAxisID = 0)
+    {
+      assert(m_AxisDataYList.count(yAxisID) != 0);
+      mpAxisData& yData = m_AxisDataYList[yAxisID];
+      return mpRange<double>(yData.pos - ((m_margin.top + m_plotHeight) / yData.scale), yData.pos - (m_margin.top / yData.scale));
     }
 
     /**
@@ -4048,8 +4066,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
       // Change on X axis
       if (update & uXAxis)
       {
-        m_AxisDataX.desired.Set(m_AxisDataX.pos + (m_margin.left / m_AxisDataX.scale),
-            m_AxisDataX.pos + ((m_margin.left + m_plotWidth) / m_AxisDataX.scale));
+        m_AxisDataX.desired = GetVisibleRangeX();
       }
 
       // Change on Y axis
@@ -4057,8 +4074,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
       {
         for (auto& [yID, yData] : m_AxisDataYList)
         {
-          yData.desired.Set(yData.pos - ((m_margin.top + m_plotHeight) / yData.scale),
-              yData.pos - (m_margin.top / yData.scale));
+          yData.desired = GetVisibleRangeY(yID);
         }
       }
     }
@@ -4075,20 +4091,6 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
         return mpFloatRectSimple(m_AxisDataX.desired, m_AxisDataYList[yAxisID].desired);
       else
         return mpFloatRectSimple(m_AxisDataX.bound, m_AxisDataYList[yAxisID].bound);
-    }
-
-    /** Return the bounding box coordinates for the Y axis of ID yAxisID
-     * @param boundX range over x axis
-     * @param boundY range over y axis located by its ID
-     * @param yAxisID the y-axis ID
-     */
-    bool GetBoundingBox(mpRange<double> *boundX, mpRange<double> *boundY, const int yAxisID)
-    {
-      if (m_AxisDataYList.count(yAxisID) == 0)
-        return false;
-      *boundX = m_AxisDataX.bound;
-      *boundY = m_AxisDataYList[yAxisID].bound;
-      return true;
     }
 
     /** Is the given point inside the current bounding box for the selected Y axis?

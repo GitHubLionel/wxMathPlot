@@ -1492,6 +1492,9 @@ void mpFX::DoPlot(wxDC &dc, mpWindow &w)
 
   if (!m_drawOutsideMargins)
   {
+    if ((m_plotBoundaries.endPx <= m_plotBoundaries.startPx) || (m_plotBoundaries.endPy <= m_plotBoundaries.startPy))
+      // Nothing visible if the plot area is inverted/empty (e.g. window smaller than the margins)
+      return;
     dc.SetClippingRegion(m_plotBoundaries.GetRect());
   }
 
@@ -1620,6 +1623,9 @@ void mpFY::DoPlot(wxDC &dc, mpWindow &w)
 
   if (!m_drawOutsideMargins)
   {
+    if ((m_plotBoundaries.endPx <= m_plotBoundaries.startPx) || (m_plotBoundaries.endPy <= m_plotBoundaries.startPy))
+      // Nothing visible if the plot area is inverted/empty (e.g. window smaller than the margins)
+      return;
     dc.SetClippingRegion(m_plotBoundaries.GetRect());
   }
 
@@ -1757,6 +1763,9 @@ void mpFXY::DoPlot(wxDC &dc, mpWindow &w)
 
   if (!m_drawOutsideMargins)
   {
+    if ((m_plotBoundaries.endPx <= m_plotBoundaries.startPx) || (m_plotBoundaries.endPy <= m_plotBoundaries.startPy))
+      // Nothing visible if the plot area is inverted/empty (e.g. window smaller than the margins)
+      return;
     dc.SetClippingRegion(m_plotBoundaries.GetRect());
   }
 
@@ -2147,16 +2156,13 @@ bool mpFXYVector::AddData(const double x, const double y, bool updatePlot)
 
   if (m_win)
   {
-    mpRange<double> bboxX;
-    mpRange<double> bboxY;
-    if (m_win->GetBoundingBox(&bboxX, &bboxY, m_yAxisID))
-    {
-      new_limit = (GetMinX() < bboxX.min) || (GetMaxX() > bboxX.max) || (GetMinY() < bboxY.min) || (GetMaxY() > bboxY.max);
+    mpRange<double> bboxX = m_win->GetBoundX();
+    mpRange<double> bboxY = m_win->GetBoundY(m_yAxisID);
+    new_limit = (GetMinX() < bboxX.min) || (GetMaxX() > bboxX.max) || (GetMinY() < bboxY.min) || (GetMaxY() > bboxY.max);
 
-      if (updatePlot && !new_limit)
-      {
-        DrawAddedPoint(x, y);
-      }
+    if (updatePlot && !new_limit)
+    {
+      DrawAddedPoint(x, y);
     }
   }
   // In all cases, we increment the index
@@ -2831,7 +2837,7 @@ void mpScaleX::DoPlot(wxDC &dc, mpWindow &w)
   if (m_orgy == -1)
     return;
 
-  if(!axisOutside)
+  if(!axisOutside && (m_plotBoundaries.startPx < m_plotBoundaries.endPx))
   {
     // Draw X axis
     dc.DrawLine(m_plotBoundaries.startPx, m_orgy, m_plotBoundaries.endPx, m_orgy);
@@ -2877,7 +2883,8 @@ void mpScaleX::DoPlot(wxDC &dc, mpWindow &w)
       if (m_grids)
       {
         dc.SetPen(m_gridpen);
-        dc.DrawLine(p, m_plotBoundaries.startPy + 1, p, m_plotBoundaries.endPy - 1);
+        if(m_plotBoundaries.startPy < m_plotBoundaries.endPy)
+          dc.DrawLine(p, m_plotBoundaries.startPy + 1, p, m_plotBoundaries.endPy - 1);
       }
 
       // Draw ticks and labels only if axis is not outside margins
@@ -3035,7 +3042,7 @@ void mpScaleY::DoPlot(wxDC &dc, mpWindow &w)
     dc.SetBrush(oldBrush);
   }
 
-  if(!axisOutside)
+  if(!axisOutside && (m_plotBoundaries.startPy < m_plotBoundaries.endPy))
   {
     // Draw Y axis
     dc.DrawLine(orgx, m_plotBoundaries.startPy, orgx, m_plotBoundaries.endPy);
@@ -3044,7 +3051,7 @@ void mpScaleY::DoPlot(wxDC &dc, mpWindow &w)
   const double step = GetStep(w.GetScaleY(GetAxisID()), MIN_Y_AXIS_LABEL_SEPARATION);
   const double start = w.p2y(w.GetScreenY(), GetAxisID());
   const double end = w.GetPosY(GetAxisID());
-  const double maxAxisValue = w.GetDesiredBoundY(GetAxisID()).GetMaxAbs();
+  const double maxAxisValue = w.GetVisibleRangeY(GetAxisID()).GetMaxAbs();
   // Compute scale constraint
   const mpScaleConstraints constraints = ComputeScaleConstraints(step, maxAxisValue);
 
@@ -3073,7 +3080,8 @@ void mpScaleY::DoPlot(wxDC &dc, mpWindow &w)
       if ((m_grids) && (mpScaleX::m_orgy != p))
       {
         dc.SetPen(m_gridpen);
-        dc.DrawLine(m_plotBoundaries.startPx + 1, p, m_plotBoundaries.endPx - 1, p);
+        if(m_plotBoundaries.startPx < m_plotBoundaries.endPx)
+          dc.DrawLine(m_plotBoundaries.startPx + 1, p, m_plotBoundaries.endPx - 1, p);
       }
 
       if(!axisOutside)
@@ -3123,14 +3131,15 @@ void mpScaleY::UpdateAxisWidth(mpWindow &w)
 {
   wxClientDC dc(&w);
   dc.SetFont(m_font);
+  mpRange<double> rangeY = w.GetVisibleRangeY(GetAxisID());
   const double step = GetStep(w.GetScaleY(GetAxisID()), MIN_Y_AXIS_LABEL_SEPARATION);
-  const double maxAxisValue = w.GetDesiredBoundY(GetAxisID()).GetMaxAbs();
+  const double maxAxisValue = rangeY.GetMaxAbs();
   // Compute scale constraint
   const mpScaleConstraints constraints = ComputeScaleConstraints(step, maxAxisValue);
 
   // Widest label is either the uppermost or lowermost one
-  const int lowerLabelWidth = GetLabelWidth(w.GetDesiredBoundY(GetAxisID()).min, dc, constraints);
-  const int upperLabelWidth = GetLabelWidth(w.GetDesiredBoundY(GetAxisID()).max, dc, constraints);
+  const int lowerLabelWidth = GetLabelWidth(rangeY.min, dc, constraints);
+  const int upperLabelWidth = GetLabelWidth(rangeY.max, dc, constraints);
   const int maxLabelWidth = std::max(lowerLabelWidth, upperLabelWidth);
 
   int nameWidth = 0;
@@ -3284,10 +3293,6 @@ void mpWindow::InitParameters()
 {
   m_scrX = m_scrY = 64;
   m_last_lx = m_last_ly = 0;
-
-  // Insert the first default y-axis (ID = 0). Note that it is only the data, not the GUI axis.
-  m_AxisDataYList.try_emplace(0);
-
   m_Screenshot_bmp = NULL;
   m_enableBufferedPaintDC = true;
   m_enableMouseNavigation = true;
@@ -3876,58 +3881,69 @@ void mpWindow::Fit(const mpRange<double> &rangeX, std::unordered_map<int, mpRang
     SetScreen(w, h);
   }
 
-  double Ax, Ay;
-
-  Ax = rangeX.Length();
-  m_AxisDataX.scale = MP_ISNOTNULL(Ax) ? m_plotWidth / Ax : 1;
-
-  for (auto& [m_yID, m_yData] : m_AxisDataYList)
+  // Plot size must be valid for fit to work properly
+  if((m_plotWidth > 0) & (m_plotHeight > 0))
   {
-    Ay = rangeY[m_yID].Length();
-    m_yData.scale = MP_ISNOTNULL(Ay) ? m_plotHeight / Ay : 1;
-  }
+    double Ax, Ay;
 
-  if (m_lockaspect)
-  {
-#ifdef MATHPLOT_DO_LOGGING
-    wxLogMessage(_T("mpWindow::Fit()(lock) m_scaleX=%f,m_scaleY=%f"), m_AxisDataX.scale, m_AxisDataYList[0].scale);
-#endif
-    // Keep the lowest "scale" to fit the whole range required by that axis (to actually "fit"!):
-    double s = m_AxisDataX.scale;
-    for (const auto& [m_yID, m_yData] : m_AxisDataYList)
+    Ax = rangeX.Length();
+    if(MP_ISNOTNULL(Ax))
+      m_AxisDataX.scale = m_plotWidth / Ax;
+
+    for (auto& [yID, yData] : m_AxisDataYList)
     {
-      s = std::min(s, m_yData.scale);
+      Ay = rangeY[yID].Length();
+      if(MP_ISNOTNULL(Ay))
+        yData.scale = m_plotHeight / Ay;
     }
 
-    m_AxisDataX.scale = s;
-    for (auto& [m_yID, m_yData] : m_AxisDataYList)
+    if (m_lockaspect)
     {
-      m_yData.scale = s;
+#ifdef MATHPLOT_DO_LOGGING
+      wxLogMessage(_T("mpWindow::Fit()(lock) m_scaleX=%f,m_scaleY=%f"), m_AxisDataX.scale, m_AxisDataYList[0].scale);
+#endif
+      // Keep the lowest "scale" to fit the whole range required by that axis (to actually "fit"!):
+      double s = m_AxisDataX.scale;
+      for (const auto& [yID, yData] : m_AxisDataYList)
+      {
+        s = std::min(s, yData.scale);
+      }
+
+      m_AxisDataX.scale = s;
+      for (auto& [yID, yData] : m_AxisDataYList)
+      {
+        yData.scale = s;
+      }
     }
-  }
 
-  // Adjusts corner coordinates: This should be simply:
-  //   m_posX = m_minX;
-  //   m_posY = m_maxY;
-  // But account for centering if we have lock aspect:
-  m_AxisDataX.pos = rangeX.GetCenter() - (m_plotWidth / 2 + m_margin.left) / m_AxisDataX.scale;
-  for (auto& [m_yID, m_yData] : m_AxisDataYList)
-  {
-    m_yData.pos = rangeY[m_yID].GetCenter() + (m_plotHeight / 2 + m_margin.top) / m_yData.scale;
-  }
+    // Adjusts corner coordinates: This should be simply:
+    //   m_posX = m_minX;
+    //   m_posY = m_maxY;
+    // But account for centering if we have lock aspect:
+    if(MP_ISNOTNULL(rangeX.Length()))
+      // Fitting without a valid range yields unwanted effects
+      m_AxisDataX.pos = rangeX.GetCenter() - (m_plotWidth / 2 + m_margin.left) / m_AxisDataX.scale;
 
-  if (updateDesired)
-  {
-    // Always update desired to current view, except during frame resize
-    UpdateDesiredBoundingBox(uXYAxis);
-  }
+    for (auto& [yID, yData] : m_AxisDataYList)
+    {
+      if(MP_ISNOTNULL(rangeY[yID].Length()))
+        // Fitting without a valid range yields unwanted effects
+        yData.pos = rangeY[yID].GetCenter() + (m_plotHeight / 2 + m_margin.top) / yData.scale;
+    }
+
+    if (updateDesired)
+    {
+      // Always update desired to current view, except during frame resize
+      UpdateDesiredBoundingBox(uXYAxis);
+    }
 
 #ifdef MATHPLOT_DO_LOGGING
-  wxLogMessage(_T("mpWindow::Fit() m_desired.x.min=%f m_desired.x.max=%f  m_desired.y[0].min=%f m_desired.Ymax=%f"),
-      m_AxisDataX.desired.min, m_AxisDataX.desired.max, m_AxisDataYList[0].desired.min, m_AxisDataYList[0].desired.max);
-  wxLogMessage(_T("mpWindow::Fit() m_scaleX = %f , m_scrX = %d,m_scrY=%d, Ax=%f, Ay=%f, m_posX=%f, m_posY=%f"),
-      m_AxisDataX.scale, m_scrX, m_scrY, Ax, Ay, m_AxisDataX.pos, m_AxisDataYList[0].pos);
+    wxLogMessage(_T("mpWindow::Fit() m_desired.x.min=%f m_desired.x.max=%f  m_desired.y[0].min=%f m_desired.Ymax=%f"),
+        m_AxisDataX.desired.min, m_AxisDataX.desired.max, m_AxisDataYList[0].desired.min, m_AxisDataYList[0].desired.max);
+    wxLogMessage(_T("mpWindow::Fit() m_scaleX = %f , m_scrX = %d,m_scrY=%d, Ax=%f, Ay=%f, m_posX=%f, m_posY=%f"),
+        m_AxisDataX.scale, m_scrX, m_scrY, Ax, Ay, m_AxisDataX.pos, m_AxisDataYList[0].pos);
 #endif
+  }
 
   // It is VERY IMPORTANT to DO NOT call Refresh if we are drawing to the printer!!
   // Otherwise, the DC dimensions will be those of the window instead of the printer device
@@ -4291,7 +4307,7 @@ void mpWindow::OnSize(wxSizeEvent &WXUNUSED(event))
 #endif // MATHPLOT_DO_LOGGING
 }
 
-bool mpWindow::AddLayer(mpLayer *layer, bool refreshDisplay, bool refreshConfig)
+bool mpWindow::AddLayer(mpLayer *layer, bool fit, bool refreshConfig)
 {
   // Exit if layer is null or already exist
   if ((layer == NULL) || (GetLayerPosition(layer) != -1))
@@ -4364,8 +4380,10 @@ bool mpWindow::AddLayer(mpLayer *layer, bool refreshDisplay, bool refreshConfig)
   layer->SetWindow(*this);
 
   // Fit and refresh display
-  if (refreshDisplay)
+  if (fit)
     Fit();
+  else
+    UpdateAll();
 
   if (refreshConfig)
     RefreshConfigWindow(mpLAYER_UNDEF);
@@ -4596,7 +4614,8 @@ void mpWindow::Paint(wxDC& dc)
     // Draw background plot area
     m_buff_dc.SetBrush(m_bgColour);
     m_buff_dc.SetTextForeground(m_fgColour);
-    m_buff_dc.DrawRectangle(m_PlotArea);
+    if((m_PlotArea.width > 0) && (m_PlotArea.height > 0))
+      m_buff_dc.DrawRectangle(m_PlotArea);
 
     // Draw all the layers in Z order
     for (auto& layer : m_layers)
