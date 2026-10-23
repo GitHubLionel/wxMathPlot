@@ -73,9 +73,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aaa605b08794d5e72d5d467480d422fd6" id="r_aaa605b08794d5e72d5d467480d422fd6"><td class="memItemLeft" align="right" valign="top">wxMenu *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#aaa605b08794d5e72d5d467480d422fd6">GetPopupMenu</a> ()</td></tr>
 <tr class="memdesc:aaa605b08794d5e72d5d467480d422fd6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get reference to context menu of the plot canvas.  <br /></td></tr>
 <tr class="separator:aaa605b08794d5e72d5d467480d422fd6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af38bef9d02ff6456306b3cf7bf7f9aa5" id="r_af38bef9d02ff6456306b3cf7bf7f9aa5"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#af38bef9d02ff6456306b3cf7bf7f9aa5">AddLayer</a> (<a class="el" href="classmp_layer.html">mpLayer</a> *layer, bool refreshDisplay=true, bool refreshConfig=true)</td></tr>
-<tr class="memdesc:af38bef9d02ff6456306b3cf7bf7f9aa5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add a plot layer to the canvas.  <br /></td></tr>
-<tr class="separator:af38bef9d02ff6456306b3cf7bf7f9aa5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7d2097f76b915503329f40ecde1b5ee6" id="r_a7d2097f76b915503329f40ecde1b5ee6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#a7d2097f76b915503329f40ecde1b5ee6">AddLayer</a> (<a class="el" href="classmp_layer.html">mpLayer</a> *layer, bool fit=true, bool refreshConfig=true)</td></tr>
+<tr class="memdesc:a7d2097f76b915503329f40ecde1b5ee6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add a plot layer to the canvas.  <br /></td></tr>
+<tr class="separator:a7d2097f76b915503329f40ecde1b5ee6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a83aea0963c81aff8095ff3e3a8c0ac06" id="r_a83aea0963c81aff8095ff3e3a8c0ac06"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#a83aea0963c81aff8095ff3e3a8c0ac06">DelLayer</a> (<a class="el" href="classmp_layer.html">mpLayer</a> *layer, <a class="el" href="mathplot_8h.html#ae49214744f415ad499cbe25b13a37abe">mpDeleteAction</a> alsoDeleteObject, bool refreshDisplay=true, bool refreshConfig=true)</td></tr>
 <tr class="memdesc:a83aea0963c81aff8095ff3e3a8c0ac06"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove a plot layer from the canvas.  <br /></td></tr>
 <tr class="separator:a83aea0963c81aff8095ff3e3a8c0ac06"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -145,6 +145,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a13a2fa15ecfa38b7da9725038eb9c7f5" id="r_a13a2fa15ecfa38b7da9725038eb9c7f5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structmp_range.html">mpRange</a>&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#a13a2fa15ecfa38b7da9725038eb9c7f5">GetDesiredBoundY</a> (const int yAxisID)</td></tr>
 <tr class="memdesc:a13a2fa15ecfa38b7da9725038eb9c7f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get desired bounding box for Y axis of ID yAxisID.  <br /></td></tr>
 <tr class="separator:a13a2fa15ecfa38b7da9725038eb9c7f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adf5f10940a6cb53a028d2eb823ca7cc6" id="r_adf5f10940a6cb53a028d2eb823ca7cc6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structmp_range.html">mpRange</a>&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#adf5f10940a6cb53a028d2eb823ca7cc6">GetVisibleRangeX</a> ()</td></tr>
+<tr class="memdesc:adf5f10940a6cb53a028d2eb823ca7cc6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the visible range for X axis, i.e.  <br /></td></tr>
+<tr class="separator:adf5f10940a6cb53a028d2eb823ca7cc6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a012246f8923671119422990c12e0836b" id="r_a012246f8923671119422990c12e0836b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structmp_range.html">mpRange</a>&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#a012246f8923671119422990c12e0836b">GetVisibleRangeY</a> (const unsigned int yAxisID=0)</td></tr>
+<tr class="memdesc:a012246f8923671119422990c12e0836b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the visible range for Y axis of ID yAxisID, i.e.  <br /></td></tr>
+<tr class="separator:a012246f8923671119422990c12e0836b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:addcf92ef505af4d6d482215395206a24" id="r_addcf92ef505af4d6d482215395206a24"><td class="memItemLeft" align="right" valign="top">std::unordered_map&lt; int, <a class="el" href="structmp_range.html">mpRange</a>&lt; double &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#addcf92ef505af4d6d482215395206a24">GetAllBoundY</a> ()</td></tr>
 <tr class="memdesc:addcf92ef505af4d6d482215395206a24"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the bounds for all Y-axes.  <br /></td></tr>
 <tr class="separator:addcf92ef505af4d6d482215395206a24"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -267,9 +273,6 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>UpdateAll</b> ()</td>
 <tr class="memitem:aca0e49722b99aa7174725aef556759d3" id="r_aca0e49722b99aa7174725aef556759d3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structmp_float_rect_simple.html">mpFloatRectSimple</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#aca0e49722b99aa7174725aef556759d3">GetBoundingBox</a> (const bool desired, const unsigned int yAxisID=0)</td></tr>
 <tr class="memdesc:aca0e49722b99aa7174725aef556759d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a bounding box for an y-axis ID.  <br /></td></tr>
 <tr class="separator:aca0e49722b99aa7174725aef556759d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aff475b2dbf1192c3761c9110ab8798cd" id="r_aff475b2dbf1192c3761c9110ab8798cd"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#aff475b2dbf1192c3761c9110ab8798cd">GetBoundingBox</a> (<a class="el" href="structmp_range.html">mpRange</a>&lt; double &gt; *boundX, <a class="el" href="structmp_range.html">mpRange</a>&lt; double &gt; *boundY, const int yAxisID)</td></tr>
-<tr class="memdesc:aff475b2dbf1192c3761c9110ab8798cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the bounding box coordinates for the Y axis of ID yAxisID.  <br /></td></tr>
-<tr class="separator:aff475b2dbf1192c3761c9110ab8798cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a154debde0faaeb004ca88e5c8f7e4756" id="r_a154debde0faaeb004ca88e5c8f7e4756"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#a154debde0faaeb004ca88e5c8f7e4756">PointIsInsideBound</a> (const double px, const double py, const int yAxisID)</td></tr>
 <tr class="memdesc:a154debde0faaeb004ca88e5c8f7e4756"><td class="mdescLeft">&#160;</td><td class="mdescRight">Is the given point inside the current bounding box for the selected Y axis?  <br /></td></tr>
 <tr class="separator:a154debde0faaeb004ca88e5c8f7e4756"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -866,7 +869,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Canvas for plotting <a class="el" href="classmp_layer.html" title="Plot layer, abstract base class.">mpLayer</a> implementations. </p>
-<p>This class defines a zoomable and moveable 2D plot canvas. Any number of <a class="el" href="classmp_layer.html" title="Plot layer, abstract base class.">mpLayer</a> implementations (scale rulers, function plots, ...) can be attached using <a class="el" href="classmp_window.html#af38bef9d02ff6456306b3cf7bf7f9aa5" title="Add a plot layer to the canvas.">mpWindow::AddLayer</a>.</p>
+<p>This class defines a zoomable and moveable 2D plot canvas. Any number of <a class="el" href="classmp_layer.html" title="Plot layer, abstract base class.">mpLayer</a> implementations (scale rulers, function plots, ...) can be attached using <a class="el" href="classmp_window.html#a7d2097f76b915503329f40ecde1b5ee6" title="Add a plot layer to the canvas.">mpWindow::AddLayer</a>.</p>
 <p>The canvas window provides a context menu with actions for navigating the view. The context menu can be retrieved with <a class="el" href="classmp_window.html#aaa605b08794d5e72d5d467480d422fd6" title="Get reference to context menu of the plot canvas.">mpWindow::GetPopupMenu</a>, e.g. for extending it externally.</p>
 <p>Since wxMathPlot version 0.03, the <a class="el" href="classmp_window.html" title="Canvas for plotting mpLayer implementations.">mpWindow</a> incorporates the following features:</p><ul>
 <li>DoubleBuffering (Default=disabled): Can be set with EnableDoubleBuffer</li>
@@ -939,8 +942,8 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="af38bef9d02ff6456306b3cf7bf7f9aa5" name="af38bef9d02ff6456306b3cf7bf7f9aa5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af38bef9d02ff6456306b3cf7bf7f9aa5">&#9670;&#160;</a></span>AddLayer()</h2>
+<a id="a7d2097f76b915503329f40ecde1b5ee6" name="a7d2097f76b915503329f40ecde1b5ee6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7d2097f76b915503329f40ecde1b5ee6">&#9670;&#160;</a></span>AddLayer()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -955,7 +958,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>refreshDisplay</em> = <code>true</code>, </td>
+          <td class="paramname"><em>fit</em> = <code>true</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -975,7 +978,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">layer</td><td>Pointer to layer. The <a class="el" href="classmp_layer.html" title="Plot layer, abstract base class.">mpLayer</a> object will get under control of <a class="el" href="classmp_window.html" title="Canvas for plotting mpLayer implementations.">mpWindow</a>, i.e. it will be delete'd on <a class="el" href="classmp_window.html" title="Canvas for plotting mpLayer implementations.">mpWindow</a> destruction </td></tr>
-    <tr><td class="paramname">refreshDisplay</td><td>States whether to fit and refresh the display (UpdateAll) after adding the layer. </td></tr>
+    <tr><td class="paramname">fit</td><td>States whether to fit all functions / series to the plot after adding the layer. </td></tr>
     <tr><td class="paramname">refreshConfig</td><td>States whether to refresh the config window (if exist) </td></tr>
   </table>
   </dd>
@@ -1695,7 +1698,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
 </div>
 </div>
 <a id="aca0e49722b99aa7174725aef556759d3" name="aca0e49722b99aa7174725aef556759d3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aca0e49722b99aa7174725aef556759d3">&#9670;&#160;</a></span>GetBoundingBox() <span class="overload">[1/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aca0e49722b99aa7174725aef556759d3">&#9670;&#160;</a></span>GetBoundingBox()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1733,58 +1736,6 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
   <table class="params">
     <tr><td class="paramname">desired</td><td>if true return desired bound else return bound </td></tr>
     <tr><td class="paramname">yAxisID</td><td>the y-axis ID (default 0) </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="aff475b2dbf1192c3761c9110ab8798cd" name="aff475b2dbf1192c3761c9110ab8798cd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aff475b2dbf1192c3761c9110ab8798cd">&#9670;&#160;</a></span>GetBoundingBox() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool mpWindow::GetBoundingBox </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structmp_range.html">mpRange</a>&lt; double &gt; *&#160;</td>
-          <td class="paramname"><em>boundX</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="structmp_range.html">mpRange</a>&lt; double &gt; *&#160;</td>
-          <td class="paramname"><em>boundY</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const int&#160;</td>
-          <td class="paramname"><em>yAxisID</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Return the bounding box coordinates for the Y axis of ID yAxisID. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">boundX</td><td>range over x axis </td></tr>
-    <tr><td class="paramname">boundY</td><td>range over y axis located by its ID </td></tr>
-    <tr><td class="paramname">yAxisID</td><td>the y-axis ID </td></tr>
   </table>
   </dd>
 </dl>
@@ -2743,6 +2694,69 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
 
 <p>Get current view's Y dimension in device context units. </p>
 <p>Usually this is equal to wxDC::GetSize, but it might differ thus <a class="el" href="classmp_layer.html" title="Plot layer, abstract base class.">mpLayer</a> implementations should rely on the value returned by the function. See <a class="el" href="classmp_layer.html#a13fa2fdda9c7db573c498a6d1a6486a3">rules for coordinate transformation</a> </p><dl class="section return"><dt>Returns</dt><dd>Y dimension. </dd></dl>
+
+</div>
+</div>
+<a id="adf5f10940a6cb53a028d2eb823ca7cc6" name="adf5f10940a6cb53a028d2eb823ca7cc6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adf5f10940a6cb53a028d2eb823ca7cc6">&#9670;&#160;</a></span>GetVisibleRangeX()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structmp_range.html">mpRange</a>&lt; double &gt; mpWindow::GetVisibleRangeX </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the visible range for X axis, i.e. </p>
+<p>the range of X values currently visible in the plot area. </p><dl class="section return"><dt>Returns</dt><dd>The active range for X axis. </dd></dl>
+
+</div>
+</div>
+<a id="a012246f8923671119422990c12e0836b" name="a012246f8923671119422990c12e0836b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a012246f8923671119422990c12e0836b">&#9670;&#160;</a></span>GetVisibleRangeY()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structmp_range.html">mpRange</a>&lt; double &gt; mpWindow::GetVisibleRangeY </td>
+          <td>(</td>
+          <td class="paramtype">const unsigned int&#160;</td>
+          <td class="paramname"><em>yAxisID</em> = <code>0</code></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the visible range for Y axis of ID yAxisID, i.e. </p>
+<p>the range of Y values currently visible in the plot area. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">yAxisID</td><td>Y axis ID to get active range </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The active range for Y axis. </dd></dl>
 
 </div>
 </div>
