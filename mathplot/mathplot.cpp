@@ -656,37 +656,31 @@ wxString mpInfoCoords::GetInfoCoordsText(mpWindow &w, double xVal, std::unordere
   // If we show the nearest plotted series value or we have just one Y axis (Visible or not)
   if ((m_infoCoordType == infoCoord_closestSeries) || (w.GetAxisDataYList().size() == 1))
   {
-    result.Printf(_T("%s\ny = %g"), result, yValList[0]);
+    result += wxString::Format(_T("\ny = %g"), yValList[0]);
   }
   else
   {
     wxString yAxisDataName = _T("");
     for (const auto& [m_yID, m_yData] : w.GetAxisDataYList())
     {
-      int pos;
-      // If the Y-Axis is not used, don't display its coordinates
-      if (w.IsYAxisUsedByFunction(m_yID, &pos))
-      {
-        mpScaleY* yAxis = (mpScaleY*) m_yData.axis;
-        wxString axisName = wxString::Format(_T("y%d"), m_yID);
-        if (yAxis)
-        {
-          if (yAxis->GetCoordIsAlwaysVisible() || yAxis->IsVisible())
-          {
-            axisName += wxString::Format(_T(" - %s"), yAxis->GetName());
-            yAxisDataName += wxString::Format(_T("\n%s = %g"), axisName, yValList[m_yID]);
-          }
-        }
-        else
-        {
-          yAxisDataName += wxString::Format(_T("\n%s = %g"), axisName, yValList[m_yID]);
-        }
-      }
+      // Skip Y-Axes that are not used by any function
+      if (!w.IsYAxisUsedByFunction(m_yID))
+        continue;
+
+      mpScaleY* yAxis = (mpScaleY*) m_yData.axis;
+      // Skip existing Y-Axes that are hidden
+      if (yAxis && !yAxis->GetCoordIsAlwaysVisible() && !yAxis->IsVisible())
+        continue;
+
+      wxString axisName = yAxis ? wxString::Format(_T("y%d - %s"), m_yID, yAxis->GetName())
+                                : wxString::Format(_T("y%d"), m_yID);
+
+      yAxisDataName += wxString::Format(_T("\n%s = %g"), axisName, yValList[m_yID]);
     }
 
     // If we have no Y-Axis name, use the first Y-Axis
     if (yAxisDataName.IsEmpty())
-      result.Printf(_T("%s\ny = %g"), result, yValList[0]);
+      result += wxString::Format(_T("\ny = %g"), yValList[0]);
     else
       result += yAxisDataName;
   }
@@ -3025,6 +3019,10 @@ void mpScaleY::DrawScaleName(wxDC &dc, mpWindow &w, int origin, int maxLabelWidt
 
 void mpScaleY::DoPlot(wxDC &dc, mpWindow &w)
 {
+  // Skip drawing if the axis is auto hidden (not used by any series)
+  if (!w.ShouldDrawYAxis(*this))
+    return;
+
   const int orgx = GetOrigin(w);
 
   bool axisOutside = ((m_flags == mpALIGN_CENTERY) && !m_drawOutsideMargins && ((orgx > (w.GetScreenX() - w.GetMarginRight())) || (orgx + 1 < w.GetMarginLeft())));
@@ -4467,6 +4465,11 @@ bool mpWindow::DelLayer(mpLayer *layer, mpDeleteAction alsoDeleteObject, bool re
         m_AxisDataYList[yAxisID].axis = nullptr;
       else
         m_AxisDataYList.erase(yAxisID);
+
+      // Might need to update margins for removed Y axis
+      UpdateMargins();
+      // Also update desired bounds since margins have changed
+      UpdateDesiredBoundingBox(uXYAxis);
     }
 
     if (layer->IsLayerType(mpLAYER_PLOT, &subType))
@@ -5280,50 +5283,34 @@ void mpWindow::RefreshLegend(void)
     legend->SetNeedUpdate();
 }
 
-bool mpWindow::IsYAxisUsedByFunction(int yAxisID, int *position)
+bool mpWindow::IsYAxisUsedByFunction(int yAxisID)
 {
   // Search if there is at least one series that use this Y-Axis
-  int pos = 0;
   for (mpLayer* layer : m_layers)
   {
     int subType;
     if (layer->IsLayerType(mpLAYER_PLOT, &subType))
     {
       mpFunction* function = dynamic_cast<mpFunction*>(layer);
-      if (function && (function->GetYAxisID() == yAxisID))
+      if (function && function->IsVisible() && (function->GetYAxisID() == yAxisID))
       {
-        *position = pos;
         return true;
       }
-      pos++;
     }
   }
   return false;
 }
 
-bool mpWindow::IsYAxisUsed(int yAxisID)
+bool mpWindow::ShouldDrawYAxis(const mpScaleY &yAxis)
 {
-  for (mpLayer* layer : m_layers)
+  if (!yAxis.IsVisible())
+    return false;
+
+  if (yAxis.GetAutoHideAxis())
   {
-    int subType;
-    if (layer->IsLayerType(mpLAYER_AXIS, &subType) && (subType == mpsScaleY))
-    {
-      mpScaleY* scaleY = dynamic_cast<mpScaleY*>(layer);
-      if ((scaleY->GetAxisID() == yAxisID) && scaleY->IsVisible())
-      {
-        return true;
-      }
-    }
-    else if (layer->IsLayerType(mpLAYER_PLOT, &subType))
-    {
-      mpFunction* function = dynamic_cast<mpFunction*>(layer);
-      if (function->GetYAxisID() == yAxisID)
-      {
-        return true;
-      }
-    }
+    return IsYAxisUsedByFunction(yAxis.GetAxisID());
   }
-  return false;
+  return true;
 }
 
 /**
@@ -5358,10 +5345,10 @@ mpOptional_int mpWindow::IsInsideYAxis(const wxPoint &point)
   {
     if (m_yData.axis)
     {
-      mpScaleY* yAxis = (mpScaleY*)m_yData.axis;
-      if (yAxis->IsVisible() && yAxis->IsInside(point.x))
+      mpScaleY& yAxis = static_cast<mpScaleY&>(*m_yData.axis);
+      if (ShouldDrawYAxis(yAxis) && yAxis.IsInside(point.x))
       {
-        return yAxis->GetAxisID();
+        return yAxis.GetAxisID();
       }
     }
   }
@@ -5453,6 +5440,9 @@ void mpWindow::SetMargins(int top, int right, int bottom, int left)
   m_plotBoundaries.endPy = m_scrY;
   m_plotBoundariesMargin.endPy = m_scrY - m_margin.bottom;
 
+  m_plotWidth = m_scrX - (m_margin.left + m_margin.right);
+  m_plotHeight = m_scrY - (m_margin.top + m_margin.bottom);
+
   m_PlotArea = wxRect(m_margin.left - m_extraMargin, m_margin.top - m_extraMargin, m_plotWidth + 2 * m_extraMargin,
       m_plotHeight + 2 * m_extraMargin);
 }
@@ -5465,7 +5455,7 @@ int mpWindow::GetLeftYAxesWidth(mpOptional_int yAxisID)
     if (m_yData.axis)
     {
       mpScaleY& yAxis = static_cast<mpScaleY&>(*m_yData.axis);
-      if (yAxis.IsLeftAxis() && yAxis.IsVisible() && (!yAxisID || (yAxis.GetAxisID() < *yAxisID)))
+      if (yAxis.IsLeftAxis() && ShouldDrawYAxis(yAxis) && (!yAxisID || (yAxis.GetAxisID() < *yAxisID)))
       {
         // For every left y-axis that is left of this one (lower index) and visible, add its width
         yAxesWidth += yAxis.GetAxisWidth();
@@ -5483,7 +5473,7 @@ int mpWindow::GetRightYAxesWidth(mpOptional_int yAxisID)
     if (m_yData.axis)
     {
       mpScaleY& yAxis = static_cast<mpScaleY&>(*m_yData.axis);
-      if (yAxis.IsRightAxis() && yAxis.IsVisible() && (!yAxisID || (yAxis.GetAxisID() < *yAxisID)))
+      if (yAxis.IsRightAxis() && ShouldDrawYAxis(yAxis) && (!yAxisID || (yAxis.GetAxisID() < *yAxisID)))
       {
         // For every right y-axis that is right of this one (lower index) and visible, add its width
         yAxesWidth += yAxis.GetAxisWidth();

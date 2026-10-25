@@ -3273,6 +3273,7 @@ class WXDLLIMPEXP_MATHPLOT mpScaleY: public mpScale
       m_subtype = mpsScaleY;
       m_axisWidth = MP_Y_BORDER_SEPARATION;
       m_xPos = 0;
+      m_autoHideAxis = false;
     }
 
     /** Recalculate the axis width based on the label and name text sizes
@@ -3283,6 +3284,20 @@ class WXDLLIMPEXP_MATHPLOT mpScaleY: public mpScale
     int GetAxisWidth() const
     {
       return m_axisWidth;
+    }
+
+    /** Enable or disable automatic hiding of this axis when no series uses it.
+     *  @param autoHide true to automatically hide the axis when no series uses it, false to always show it.
+     *  @sa mpWindow::ShouldDrawYAxis */
+    void SetAutoHideAxis(const bool autoHide)
+    {
+      m_autoHideAxis = autoHide;
+    }
+
+    /// Return true if this axis is automatically hidden when not used by any series.
+    bool GetAutoHideAxis() const
+    {
+      return m_autoHideAxis;
     }
 
     /// Return true if this Y axis is aligned to the left side.
@@ -3308,8 +3323,9 @@ class WXDLLIMPEXP_MATHPLOT mpScaleY: public mpScale
     }
 
   protected:
-    int m_axisWidth;  //!< Reserved width for this Y axis including labels, in pixels.
-    int m_xPos;       //!< Leftmost X pixel occupied by this axis (starting point).
+    int m_axisWidth;      //!< Reserved width for this Y axis including labels, in pixels.
+    int m_xPos;           //!< Leftmost X pixel occupied by this axis (starting point).
+    bool m_autoHideAxis;  //!< Hide axis automatically if no series uses it. Default: false
 
     /** Layer plot handler.
      This implementation will plot the ruler adjusted to the visible area. */
@@ -3632,18 +3648,20 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      */
     void RefreshLegend(void);
 
-    /*! Check if a specific Y-axis exists and is visible or is used by any function
-     @param yAxisID ID of Y axis to check
-     @return True if specified Y-axis is used, false otherwise
-     */
-    bool IsYAxisUsed(int yAxisID);
-
     /*! Check if a specific Y-axis is used by at least one function
      @param yAxisID ID of Y axis to check
      @param position get the position in the list of function if found
      @return True if specified Y-axis is used, false otherwise
      */
-    bool IsYAxisUsedByFunction(int yAxisID, int *position);
+    bool IsYAxisUsedByFunction(int yAxisID);
+
+    /*! Check if a Y-axis should be drawn and take up space in the margins.
+     The axis must be visible and, if its auto hide option is set, used by at least one function.
+     @param yAxis Y axis to check
+     @return True if the axis should be drawn, false otherwise
+     */
+    bool ShouldDrawYAxis(const mpScaleY &yAxis);
+
 
     /*! Get the first scale X layer (X axis).
      @return A pointer to the mpScaleX object, or NULL if not found.
