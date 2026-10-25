@@ -914,7 +914,7 @@ void mpInfoLegend::UpdateBitmap(wxDC &dc, mpWindow &w)
         buff_dc.DrawText(label, posX, posY - (labelHeight / 2));
 
         // Draw series values next to the series names if "show values" is enabled
-        if(IsSeriesValuesEnabled())
+        if(IsSeriesValuesEnabled() && function.IsVisible())
         {
           labelWidth = DrawSeriesValue( buff_dc, w, function, posX, posY, labelHeight, labelWidth, maxLabelWidth);
         }
@@ -984,7 +984,7 @@ int mpInfoLegend::GetMaxLabelWidth(wxDC &dc, mpWindow &w) const
     for (unsigned int p = 0; p < w.CountAllLayers(); p++)
     {
       mpLayer* layer = w.GetLayer(p);
-      if (layer->GetLayerType() == mpLAYER_PLOT && (layer->IsVisible() || (((mpFunction*)layer)->GetLegendIsAlwaysVisible())))
+      if ((layer->GetLayerType() == mpLAYER_PLOT) && (layer->IsVisible()))
       {
         const wxSize labelSize = dc.GetTextExtent(layer->GetName());
         maxLabelWidth = std::max(maxLabelWidth, labelSize.x);
@@ -1061,35 +1061,40 @@ void mpInfoLegend::DrawContent(wxDC &dc, mpWindow &w)
 
     if(IsSeriesValuesShown())
     {
-      wxCoord cursorX = GetVerticalCursorX();
-      // Draw a vertical line to indicate location of the shown values (where the line cross a series)
-      const mpRect bound = w.GetPlotBoundaries(true);
-      dc.SetPen(*wxBLACK_PEN);
-      dc.DrawLine(cursorX, bound.top, cursorX, bound.bottom);
+      DrawVerticalCursor(dc, w);
+    }
+  }
+}
 
-      if (m_indicateSeriesIntersection)
+void mpInfoLegend::DrawVerticalCursor(wxDC &dc, mpWindow &w)
+{
+  wxCoord cursorX = GetVerticalCursorX();
+  // Draw a vertical line to indicate location of the shown values (where the line cross a series)
+  const mpRect bound = w.GetPlotBoundaries(true);
+  dc.SetPen(*wxBLACK_PEN);
+  dc.DrawLine(cursorX, bound.top, cursorX, bound.bottom);
+
+  if (m_indicateSeriesIntersection)
+  {
+    // Draw a circle on the series where the vertical line cross it
+    for (unsigned int p = 0; p < w.CountAllLayers(); p++)
+    {
+      mpLayer* layer = w.GetLayer(p);
+      if (layer->GetLayerType() == mpLAYER_PLOT)
       {
-        // Draw a circle on the series where the vertical line cross it
-        for (unsigned int p = 0; p < w.CountAllLayers(); p++)
+        mpFunction& function = static_cast<mpFunction&>(*layer);
+        if (function.IsVisible())
         {
-          mpLayer* layer = w.GetLayer(p);
-          if (layer->GetLayerType() == mpLAYER_PLOT)
+          const double cursorXValue = w.p2x(cursorX);
+          if(std::optional<double> value = function.GetSeriesValue(cursorXValue))
           {
-            mpFunction& function = static_cast<mpFunction&>(*layer);
-            if (function.IsVisible() || (function.GetLegendIsAlwaysVisible()))
+            const double valueScaled = (m_win->IsLogYaxis(function.GetYAxisID())) ? log10(*value) : *value;
+            const wxCoord yCoord = w.y2p(valueScaled, function.GetYAxisID());
+            if(yCoord >= bound.top && yCoord <= bound.bottom)
             {
-              const double cursorXValue = w.p2x(cursorX);
-              if(std::optional<double> value = function.GetSeriesValue(cursorXValue))
-              {
-                const double valueScaled = (m_win->IsLogYaxis(function.GetYAxisID())) ? log10(*value) : *value;
-                const wxCoord yCoord = w.y2p(valueScaled, function.GetYAxisID());
-                if(yCoord >= bound.top && yCoord <= bound.bottom)
-                {
-                  dc.SetPen(wxPen(*wxBLACK, 1));
-                  dc.SetBrush(wxBrush(function.GetPen().GetColour()));
-                  dc.DrawCircle(cursorX, w.y2p(valueScaled, function.GetYAxisID()), 4);
-                }
-              }
+              dc.SetPen(wxPen(*wxBLACK, 1));
+              dc.SetBrush(wxBrush(function.GetPen().GetColour()));
+              dc.DrawCircle(cursorX, w.y2p(valueScaled, function.GetYAxisID()), 4);
             }
           }
         }
@@ -3271,6 +3276,7 @@ void mpWindow::BindEvents(void)
   Bind(wxEVT_LEAVE_WINDOW, &mpWindow::OnMouseLeave, this);
   Bind(wxEVT_LEFT_DOWN, &mpWindow::OnMouseLeftDown, this);
   Bind(wxEVT_LEFT_UP, &mpWindow::OnMouseLeftRelease, this);
+  Bind(wxEVT_LEFT_DCLICK, &mpWindow::OnMouseLeftDoubleClick, this);
 
   // Popup menu events
   Bind(wxEVT_MENU, &mpWindow::OnCenter, this, mpID_CENTER);
@@ -3392,7 +3398,7 @@ void mpWindow::OnMouseLeftDown(wxMouseEvent &event)
             Fit();
           else
             UpdateAll();
-          RefreshConfigWindow(mpLAYER_PLOT, selectInfoLegend);
+          RefreshConfigWindow();
           m_movingInfoLayer = nullptr;  // Do not allow moving
         }
       }
@@ -3429,9 +3435,37 @@ void mpWindow::OnMouseLeftDown(wxMouseEvent &event)
         else
           UpdateAll();
 
-        RefreshConfigWindow(mpLAYER_AXIS);
+        RefreshConfigWindow();
       }
     }
+  }
+
+  event.Skip();
+}
+
+/**
+ * Mouse left button double click.
+ * If the double click occurred over a Y-axis, the configuration window is opened
+ * on the axis page with this Y-axis selected.
+ */
+void mpWindow::OnMouseLeftDoubleClick(wxMouseEvent &event)
+{
+  // Check if the user has defined a special action for this mouse event
+  if (CheckUserMouseAction(event))
+    return;
+
+  const wxPoint dClickPos(event.GetPosition());
+  if (const mpOptional_int yAxisID = IsInsideYAxis(dClickPos))
+  {
+    // Cancel pending actions started by the preceding left down event
+    m_boxZoomActive = false;
+    m_movingInfoLayer = nullptr;
+    m_openConfigWindowPending = false;
+    m_mouseYAxisID = yAxisID;
+
+    OpenConfigWindow(mpLAYER_AXIS, *yAxisID);
+    UpdateAll();
+    return;
   }
 
   event.Skip();
@@ -3691,7 +3725,6 @@ void mpWindow::OnMouseLeftRelease(wxMouseEvent &event)
 
   if (m_movingInfoLayer)
   {
-    RefreshConfigWindow(mpLAYER_INFO, m_movingInfoLayer->GetLayerSubType());
     m_movingInfoLayer = nullptr;
     UpdateAll();
   }
@@ -4386,7 +4419,7 @@ bool mpWindow::AddLayer(mpLayer *layer, bool fit, bool refreshConfig)
     UpdateAll();
 
   if (refreshConfig)
-    RefreshConfigWindow(mpLAYER_UNDEF);
+    RefreshConfigWindow();
 
   return true;
 }
@@ -4472,7 +4505,7 @@ bool mpWindow::DelLayer(mpLayer *layer, mpDeleteAction alsoDeleteObject, bool re
       UpdateAll();
 
     if (refreshConfig)
-      RefreshConfigWindow(mpLAYER_UNDEF);
+      RefreshConfigWindow();
 
     break;
   } // end for mpLayerList
@@ -4527,7 +4560,7 @@ void mpWindow::DelAllPlot(mpDeleteAction alsoDeleteObject, mpFunctionType func, 
     UpdateAll();
 
   if (refreshConfig)
-    RefreshConfigWindow(mpLAYER_PLOT, -1);
+    RefreshConfigWindow();
 }
 
 void mpWindow::DelAllYAxisAfterID(mpDeleteAction alsoDeleteObject, int yAxisID, bool refreshDisplay)
@@ -4553,7 +4586,7 @@ void mpWindow::DelAllYAxisAfterID(mpDeleteAction alsoDeleteObject, int yAxisID, 
   if (refreshDisplay)
     UpdateAll();
 
-  RefreshConfigWindow(mpLAYER_AXIS);
+  RefreshConfigWindow();
 }
 
 void mpWindow::OnPaint(wxPaintEvent &WXUNUSED(event))
@@ -5680,6 +5713,8 @@ void mpWindow::RefreshConfigWindow(mpLayerType layerType, int param)
   {
     case mpLAYER_AXIS:
       m_configWindow->Initialize(mpcpiAxis);
+      if (param >= 0)
+        m_configWindow->SelectChoiceYAxis(param);
       break;
     case mpLAYER_PLOT:
       m_configWindow->Initialize(mpcpiSeries);

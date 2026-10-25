@@ -1718,6 +1718,12 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLegend: public mpInfoLayer
      */
     int DrawSeriesValue(wxDC& dc, mpWindow& w, mpFunction& function, int posX, int posY, int labelHeight, int labelWidth, int maxLabelWidth);
 
+    /** Draws a vertical cursor line at the current mouse position or at a fixed position, depending on the vertical cursor mode.
+     *  @param dc the device context where to plot
+     *  @param w Parent mpWindow from which to obtain information
+     */
+    void DrawVerticalCursor(wxDC &dc, mpWindow &w);
+
   private:
     DECLARE_DYNAMIC_CLASS_MATHPLOT(mpInfoLegend);
 };
@@ -4588,17 +4594,19 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      * Refresh the config window if present. Never creates or shows the dialog;
      * if no config window exists yet it simply returns.
      * @param layerType the type of layer to see the good page in the window
-     * @param param specific parameter for the page
+     * @param param specific parameter for the page (e.g. series index, or Y-axis ID for
+     *              mpLAYER_AXIS where a negative value keeps the current axis selection)
      */
-    void RefreshConfigWindow(mpLayerType layerType, int param = 0);
+    void RefreshConfigWindow(mpLayerType layerType = mpLAYER_UNDEF, int param = -1);
 
     /**
      * Opens the configuration window, creating it lazily on first use.
      * @param layerType optional layer type to select the matching page.
      *                  mpLAYER_UNDEF (default) keeps the last shown page.
-     * @param param specific parameter for the page (e.g. series index)
+     * @param param specific parameter for the page (e.g. series index, or Y-axis ID for
+     *              mpLAYER_AXIS where a negative value keeps the current axis selection)
      */
-    void OpenConfigWindow(mpLayerType layerType = mpLAYER_UNDEF, int param = 0);
+    void OpenConfigWindow(mpLayerType layerType = mpLAYER_UNDEF, int param = -1);
 
     /**
      * Deletes configuration window
@@ -4648,6 +4656,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     virtual void OnLockAspect(wxCommandEvent &event);             //!< Lock Aspect handler
     virtual void OnMouseHelp(wxCommandEvent &event);              //!< Help handler
     virtual void OnMouseLeftDown(wxMouseEvent &event);            //!< Mouse left click (for rect zoom)
+    virtual void OnMouseLeftDoubleClick(wxMouseEvent &event);     //!< Mouse left double click (opens the configuration window of a Y-axis)
     virtual void OnMouseRightDown(wxMouseEvent &event);           //!< Mouse handler, for detecting when the user drags with the right button or just "clicks" for the menu
     virtual void OnMouseMove(wxMouseEvent &event);                //!< Mouse handler for mouse motion (for pan)
     virtual void OnMouseLeftRelease(wxMouseEvent &event);         //!< Mouse left click (for rect zoom)

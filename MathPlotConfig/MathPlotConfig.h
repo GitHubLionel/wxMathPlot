@@ -177,6 +177,13 @@ class MathPlotConfigDialog: public wxDialog
     void SelectChoiceSerie(unsigned int serie);
 
     /**
+     * Select the Y axis having the given axis ID in the axis page
+     * @param yAxisID the ID of the Y axis
+     */
+    void SelectChoiceYAxis(int yAxisID);
+
+
+    /**
      * Create a file to store the properties of mpTitle, mpInfoCoords and mpInfoLegend layers
      * @param filename the name of the configuration file
      * @param path the path for the file (if empty, the directory of the program is used)
