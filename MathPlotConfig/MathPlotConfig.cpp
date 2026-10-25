@@ -1128,21 +1128,30 @@ void MathPlotConfigDialog::Initialize(mpConfigPageId id)
   }
 
   // ** Axis page **
-  // Fill Axis list. Group X axis first then Y axis
+  // Clear and re-fill Axis list. Group X axis first then Y axis
+  // Before clearing the list, save the last selected axis to re-select it if it still exists
+  mpScale* lastAxis = static_cast<mpScale*>(ChoiceAxis->GetClientData(ChoiceAxis->GetSelection()));
   ChoiceAxis->Clear();
-  for (unsigned int i = 0; i < m_plot->CountLayersType(mpLAYER_AXIS); i++)
+  if(mpScaleX* xAxis = m_plot->GetLayerXAxis())
   {
-    mpScale* axis = m_plot->GetLayerAxis(i);
-    wxString classname = axis->GetClassInfo()->GetClassName();
-    // Only mpScaleX should be added to the list for the moment
-    if (classname.IsSameAs(_T("mpScaleX")))
-      ChoiceAxis->Append(_T("X axis - ") + axis->GetName(), axis);
+    ChoiceAxis->Append(_T("X axis - ") + xAxis->GetName(), xAxis);
   }
   FillYAxisList(ChoiceAxis, false);
-  ChoiceAxis->SetSelection(0);
+  if (lastAxis && lastAxis->IsKindOf(wxCLASSINFO(mpScaleY)))
+  {
+    // If last selected axis was a Y-axis, re-select it if it still exists
+    SelectChoiceYAxis(static_cast<mpScaleY*>(lastAxis)->GetAxisID());
+  }
+  else
+  {
+    // Otherwise, select the first axis (X-axis)
+    ChoiceAxis->SetSelection(0);
+  }
   UpdateAxis();
 
   // ** Series page **
+  // Clear and re-fill Series list. Before clearing the list, save the last selected series to re-select it if it still exists
+  int lastSelection = ChoiceSeries->GetSelection();
   ChoiceSeries->Clear();
   for (unsigned int i = 0; i < m_plot->CountLayersType(mpLAYER_PLOT); i++)
   {
@@ -1152,9 +1161,15 @@ void MathPlotConfigDialog::Initialize(mpConfigPageId id)
 
   // Fill Y axis
   FillYAxisList(ChoiceSeriesYAxis);
-
-  // Select the first serie
-  SelectChoiceSerie(0);
+  if((lastSelection >= 0) && (lastSelection < (int)ChoiceSeries->GetCount()))
+  {
+    SelectChoiceSerie(lastSelection);
+  }
+  else
+  {
+    // Select the first serie
+    SelectChoiceSerie(0);
+  }
 
   // ** Lines page **
   ChoiceLines->Clear();
@@ -1558,6 +1573,20 @@ void MathPlotConfigDialog::SelectChoiceSerie(unsigned int serie)
   {
     ChoiceSeries->SetSelection(serie);
     UpdateSelectedSerie();
+  }
+}
+
+void MathPlotConfigDialog::SelectChoiceYAxis(int yAxisID)
+{
+  for (unsigned int i = 0; i < ChoiceAxis->GetCount(); i++)
+  {
+    mpScale* axis = static_cast<mpScale*>(ChoiceAxis->GetClientData(i));
+    if (axis && axis->IsKindOf(wxCLASSINFO(mpScaleY)) && (static_cast<mpScaleY*>(axis)->GetAxisID() == yAxisID))
+    {
+      ChoiceAxis->SetSelection(i);
+      UpdateAxis();
+      return;
+    }
   }
 }
 
