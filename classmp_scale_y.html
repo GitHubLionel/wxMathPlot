@@ -75,6 +75,13 @@ Public Member Functions</h2></td></tr>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>GetAxisWidth</b> () const</td></tr>
 <tr class="memdesc:a8ef9b649f879f414c32974e04d53f5b4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the reserved width of the Y axis in pixels. <br /></td></tr>
 <tr class="separator:a8ef9b649f879f414c32974e04d53f5b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8a020ba12f4ae9ef0109d59d6be1a010" id="r_a8a020ba12f4ae9ef0109d59d6be1a010"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_scale_y.html#a8a020ba12f4ae9ef0109d59d6be1a010">SetAutoHideAxis</a> (const bool autoHide)</td></tr>
+<tr class="memdesc:a8a020ba12f4ae9ef0109d59d6be1a010"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable or disable automatic hiding of this axis when no series uses it.  <br /></td></tr>
+<tr class="separator:a8a020ba12f4ae9ef0109d59d6be1a010"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a44e982b903f297ef8b2662552d93635f" id="r_a44e982b903f297ef8b2662552d93635f"><td class="memItemLeft" align="right" valign="top"><a id="a44e982b903f297ef8b2662552d93635f" name="a44e982b903f297ef8b2662552d93635f"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>GetAutoHideAxis</b> () const</td></tr>
+<tr class="memdesc:a44e982b903f297ef8b2662552d93635f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return true if this axis is automatically hidden when not used by any series. <br /></td></tr>
+<tr class="separator:a44e982b903f297ef8b2662552d93635f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad5a36d3ecee47f9d3b8516f35b73952c" id="r_ad5a36d3ecee47f9d3b8516f35b73952c"><td class="memItemLeft" align="right" valign="top"><a id="ad5a36d3ecee47f9d3b8516f35b73952c" name="ad5a36d3ecee47f9d3b8516f35b73952c"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>IsLeftAxis</b> () const</td></tr>
 <tr class="memdesc:ad5a36d3ecee47f9d3b8516f35b73952c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return true if this Y axis is aligned to the left side. <br /></td></tr>
@@ -324,6 +331,10 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_axisWidth</b></td></
 int&#160;</td><td class="memItemRight" valign="bottom"><b>m_xPos</b></td></tr>
 <tr class="memdesc:a796929f66de82d9375c19e130b54ff75"><td class="mdescLeft">&#160;</td><td class="mdescRight">Leftmost X pixel occupied by this axis (starting point). <br /></td></tr>
 <tr class="separator:a796929f66de82d9375c19e130b54ff75"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad9ac75fe049e8f36fee6c8f08bab3de2" id="r_ad9ac75fe049e8f36fee6c8f08bab3de2"><td class="memItemLeft" align="right" valign="top"><a id="ad9ac75fe049e8f36fee6c8f08bab3de2" name="ad9ac75fe049e8f36fee6c8f08bab3de2"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>m_autoHideAxis</b></td></tr>
+<tr class="memdesc:ad9ac75fe049e8f36fee6c8f08bab3de2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Hide axis automatically if no series uses it. Default: false. <br /></td></tr>
+<tr class="separator:ad9ac75fe049e8f36fee6c8f08bab3de2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_classmp_scale"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classmp_scale')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classmp_scale.html">mpScale</a></td></tr>
 <tr class="memitem:a72e7c6a46eda7ccca8358f00b194cdc5 inherit pro_attribs_classmp_scale" id="r_a72e7c6a46eda7ccca8358f00b194cdc5"><td class="memItemLeft" align="right" valign="top">
 int&#160;</td><td class="memItemRight" valign="bottom"><b>m_axisID</b></td></tr>
@@ -691,6 +702,41 @@ static constexpr wxCoord&#160;</td><td class="memItemRight" valign="bottom"><b>k
 </dl>
 
 <p>Implements <a class="el" href="classmp_scale.html#a5d4e84454d79bef629a84a49afacee57">mpScale</a>.</p>
+
+</div>
+</div>
+<a id="a8a020ba12f4ae9ef0109d59d6be1a010" name="a8a020ba12f4ae9ef0109d59d6be1a010"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8a020ba12f4ae9ef0109d59d6be1a010">&#9670;&#160;</a></span>SetAutoHideAxis()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void mpScaleY::SetAutoHideAxis </td>
+          <td>(</td>
+          <td class="paramtype">const bool&#160;</td>
+          <td class="paramname"><em>autoHide</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Enable or disable automatic hiding of this axis when no series uses it. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">autoHide</td><td>true to automatically hide the axis when no series uses it, false to always show it. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classmp_window.html#aeeeae17d80e4db78cc24c27504ae1021">mpWindow::ShouldDrawYAxis</a> </dd></dl>
 
 </div>
 </div>
