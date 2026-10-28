@@ -3295,7 +3295,7 @@ void mpWindow::BindEvents(void)
 
 void mpWindow::InitParameters()
 {
-  m_scrX = m_scrY = 64;
+  m_scrX = m_scrY = 0;
   m_last_lx = m_last_ly = 0;
   m_Screenshot_bmp = NULL;
   m_enableBufferedPaintDC = true;
@@ -3658,7 +3658,7 @@ void mpWindow::OnMouseMove(wxMouseEvent &event)
   }
 
   // Check if magnet shall be shown
-  if (showMagnet && m_magnet.ShouldBeShown(m_mousePos))
+  if (showMagnet && m_magnet.ShouldBeShown(m_PlotArea, m_mousePos))
   {
     m_magnet.Show(true);
     requestRefresh = true;
@@ -3913,19 +3913,19 @@ void mpWindow::Fit(const mpRange<double> &rangeX, std::unordered_map<int, mpRang
   }
 
   // Plot size must be valid for fit to work properly
-  if((m_plotWidth > 0) & (m_plotHeight > 0))
+  if((GetPlotWidth() > 0) & (GetPlotHeight() > 0))
   {
     double Ax, Ay;
 
     Ax = rangeX.Length();
     if(MP_ISNOTNULL(Ax))
-      m_AxisDataX.scale = m_plotWidth / Ax;
+      m_AxisDataX.scale = GetPlotWidth() / Ax;
 
     for (auto& [yID, yData] : m_AxisDataYList)
     {
       Ay = rangeY[yID].Length();
       if(MP_ISNOTNULL(Ay))
-        yData.scale = m_plotHeight / Ay;
+        yData.scale = GetPlotHeight() / Ay;
     }
 
     if (m_lockaspect)
@@ -3953,13 +3953,13 @@ void mpWindow::Fit(const mpRange<double> &rangeX, std::unordered_map<int, mpRang
     // But account for centering if we have lock aspect:
     if(MP_ISNOTNULL(rangeX.Length()))
       // Fitting without a valid range yields unwanted effects
-      m_AxisDataX.pos = rangeX.GetCenter() - (m_plotWidth / 2 + m_margin.left) / m_AxisDataX.scale;
+      m_AxisDataX.pos = rangeX.GetCenter() - (GetPlotWidth() / 2 + m_margin.left) / m_AxisDataX.scale;
 
     for (auto& [yID, yData] : m_AxisDataYList)
     {
       if(MP_ISNOTNULL(rangeY[yID].Length()))
         // Fitting without a valid range yields unwanted effects
-        yData.pos = rangeY[yID].GetCenter() + (m_plotHeight / 2 + m_margin.top) / yData.scale;
+        yData.pos = rangeY[yID].GetCenter() + (GetPlotHeight() / 2 + m_margin.top) / yData.scale;
     }
 
     if (updateDesired)
@@ -3989,7 +3989,7 @@ void mpWindow::FitX(void)
 {
   const mpRange<double> bound = GetBoundX();
   const double Ax = bound.Length();
-  m_AxisDataX.scale = MP_ISNOTNULL(Ax) ? m_plotWidth / Ax : 1;
+  m_AxisDataX.scale = MP_ISNOTNULL(Ax) ? GetPlotWidth() / Ax : 1;
 
   // Since m_posX is at the corner (not including margins) we need to take margin into account
   m_AxisDataX.pos = bound.min - (m_margin.left / m_AxisDataX.scale);
@@ -4003,7 +4003,7 @@ void mpWindow::FitY(int yAxisID)
   {
     const mpRange<double> bound = GetBoundY(yAxisID);
     const double Ay = bound.Length();
-    m_AxisDataYList[yAxisID].scale = MP_ISNOTNULL(Ay) ? m_plotHeight / Ay : 1;
+    m_AxisDataYList[yAxisID].scale = MP_ISNOTNULL(Ay) ? GetPlotHeight() / Ay : 1;
 
     // Since m_posY is at the corner (not including margins) we need to take margin into account
     m_AxisDataYList[yAxisID].pos = bound.max + (m_margin.top / m_AxisDataYList[yAxisID].scale);
@@ -4017,7 +4017,7 @@ void mpWindow::DoZoomXCalc(bool zoomIn, wxCoord staticXpixel)
   if (staticXpixel == MP_ZOOM_AROUND_CENTER)
   {
     // Zoom around center
-    staticXpixel = (m_plotWidth / 2) + m_margin.left;
+    staticXpixel = (GetPlotWidth() / 2) + m_margin.left;
   }
 
   // Preserve the position of the clicked point:
@@ -4040,7 +4040,7 @@ void mpWindow::DoZoomYCalc(bool zoomIn, wxCoord staticYpixel, mpOptional_int yAx
   if (staticYpixel == MP_ZOOM_AROUND_CENTER)
   {
     // Zoom around center
-    staticYpixel = (m_plotHeight / 2) + m_margin.top;
+    staticYpixel = (GetPlotHeight() / 2) + m_margin.top;
   }
 
   const double zoomFactor = zoomIn ? m_zoomIncrementalFactor : (1.0 / m_zoomIncrementalFactor);
@@ -4067,7 +4067,7 @@ void mpWindow::DoZoomYCalc(bool zoomIn, wxCoord staticYpixel, mpOptional_int yAx
 void mpWindow::SetScaleXAndCenter(double scaleX)
 {
   // Zoom around center
-  const wxCoord centerXPixel = (m_plotWidth / 2) + m_margin.left;
+  const wxCoord centerXPixel = (GetPlotWidth() / 2) + m_margin.left;
 
   // Preserve the center value
   const double centerXValue = p2x(centerXPixel);
@@ -4087,7 +4087,7 @@ void mpWindow::SetScaleYAndCenter(double scaleY, int yAxisID)
     return;
 
   // Zoom around center
-  const wxCoord centerYpixel = (m_plotHeight / 2) + m_margin.top;
+  const wxCoord centerYpixel = (GetPlotHeight() / 2) + m_margin.top;
 
   // Preserve the position of the clicked point:
   const double centerYValue = p2y(centerYpixel, yAxisID);
@@ -4302,8 +4302,8 @@ void mpWindow::OnCenter(wxCommandEvent &WXUNUSED(event))
   int h, w;
   GetClientSize(&w, &h);
   SetScreen(w, h);
-  const int centerX = m_plotWidth / 2;
-  const int centerY = m_plotHeight / 2;
+  const int centerX = GetPlotWidth() / 2;
+  const int centerY = GetPlotHeight() / 2;
   const double posX = p2x(m_clickedX - centerX - m_margin.left);
 
   std::unordered_map<int, double> posYList;
@@ -5423,6 +5423,11 @@ void mpWindow::SetMargins(int top, int right, int bottom, int left)
   m_marginOuter.bottom = bottom;
   m_marginOuter.left = left;
 
+  UpdateMargins();
+}
+
+void mpWindow::UpdateMargins()
+{
   // For the normal m_margin, we need to account for the width of left and right Y-axes
   // since this can differ depending on how many Y-axis are used
   m_margin.top = m_marginOuter.top;
@@ -5430,21 +5435,21 @@ void mpWindow::SetMargins(int top, int right, int bottom, int left)
   m_margin.bottom = m_marginOuter.bottom;
   m_margin.left = m_marginOuter.left + GetLeftYAxesWidth() + m_extraMargin;
 
-  m_plotBoundaries.startPx = 0;
-  m_plotBoundariesMargin.startPx = m_margin.left;
-  m_plotBoundaries.endPx = m_scrX;
-  m_plotBoundariesMargin.endPx = m_scrX - m_margin.right;
+  UpdatePlotBoundaries();
+}
 
-  m_plotBoundaries.startPy = 0;
+void mpWindow::UpdatePlotBoundaries()
+{
+  m_plotBoundariesMargin.startPx = m_margin.left;
+  m_plotBoundariesMargin.endPx = m_scrX - m_margin.right;
   m_plotBoundariesMargin.startPy = m_margin.top;
-  m_plotBoundaries.endPy = m_scrY;
   m_plotBoundariesMargin.endPy = m_scrY - m_margin.bottom;
 
-  m_plotWidth = m_scrX - (m_margin.left + m_margin.right);
-  m_plotHeight = m_scrY - (m_margin.top + m_margin.bottom);
-
-  m_PlotArea = wxRect(m_margin.left - m_extraMargin, m_margin.top - m_extraMargin, m_plotWidth + 2 * m_extraMargin,
-      m_plotHeight + 2 * m_extraMargin);
+  m_PlotArea = wxRect(
+      m_plotBoundariesMargin.left        - m_extraMargin,
+      m_plotBoundariesMargin.top         - m_extraMargin,
+      m_plotBoundariesMargin.GetWidth()  + 2*m_extraMargin,
+      m_plotBoundariesMargin.GetHeight() + 2*m_extraMargin);
 }
 
 int mpWindow::GetLeftYAxesWidth(mpOptional_int yAxisID)
@@ -6424,9 +6429,10 @@ void mpBitmapLayer::DoPlot(wxDC &dc, mpWindow &w)
 
 void mpMagnet::DrawCross(wxDC &dc, mpWindow &w)
 {
+  const mpRect bound = w.GetPlotBoundaries(true);
   dc.SetPen(*wxBLACK_PEN);
-  dc.DrawLine(w.GetMousePosition().x, m_domain.GetTop(), w.GetMousePosition().x, m_domain.GetBottom());
-  dc.DrawLine(m_domain.GetLeft(), w.GetMousePosition().y, m_domain.GetRight(), w.GetMousePosition().y);
+  dc.DrawLine(w.GetMousePosition().x, bound.top, w.GetMousePosition().x, bound.bottom);
+  dc.DrawLine(bound.left, w.GetMousePosition().y, bound.right, w.GetMousePosition().y);
 }
 
 #if defined(MP_ENABLE_NAMESPACE) || defined(ENABLE_MP_NAMESPACE)
