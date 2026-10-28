@@ -257,6 +257,25 @@ struct mpRect
     {
       return wxRect(startPx, startPy, endPx - startPx, endPy - startPy);
     }
+
+    /**
+     * Get the width of the rectangle defined by this object's left and right coordinates
+     * @return Width of the rectangle
+     */
+    int GetWidth() const
+    {
+      return right - left;
+    }
+
+    /**
+     * Get the height of the rectangle defined by this object's top and bottom coordinates
+     * @return Height of the rectangle
+     */
+    int GetHeight() const
+    {
+      return bottom - top;
+    }
+
 };
 static_assert(sizeof(mpRect) == 4 * sizeof(wxCoord));
 
@@ -3434,12 +3453,6 @@ class mpMagnet
       ;
     }
 
-    /// Update the drawable magnet area from a wxRect.
-    void UpdateBox(const wxRect &plotArea)
-    {
-      m_domain = plotArea;
-    }
-
     /// Enables the magnet
     void Enable(const bool enable)
     {
@@ -3456,9 +3469,9 @@ class mpMagnet
     void DrawCross(wxDC &dc, mpWindow &w);
 
     /// Check conditions if magnet shall be shown
-    bool ShouldBeShown(const wxPoint mousePos) const
+    bool ShouldBeShown(const wxRect plotArea, const wxPoint mousePos) const
     {
-      return m_enable && m_domain.Contains(mousePos);
+      return m_enable && plotArea.Contains(mousePos);
     }
 
     /// Set if magnet shall be shown or hidden
@@ -3476,7 +3489,6 @@ class mpMagnet
   private:
     bool m_enable;             //!< Indicats if magnet is enabled
     bool m_show;               //!< Indicates if magnet shall be shown in plot
-    wxRect m_domain;           //!< The area delimited by axis (m_margin.left, m_margin.top, m_plotWidth, m_plotHeight)
 };
 
 /** Canvas for plotting mpLayer implementations.
@@ -3761,7 +3773,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      */
     mpRange<double> GetVisibleRangeX()
     {
-      return mpRange<double>(m_AxisDataX.pos + (m_margin.left / m_AxisDataX.scale), m_AxisDataX.pos + ((m_margin.left + m_plotWidth) / m_AxisDataX.scale));
+      return mpRange<double>(m_AxisDataX.pos + (m_margin.left / m_AxisDataX.scale), m_AxisDataX.pos + ((m_margin.left + GetPlotWidth()) / m_AxisDataX.scale));
     }
 
     /** Get the visible range for Y axis of ID yAxisID, i.e. the range of Y values currently visible in the plot area.
@@ -3772,7 +3784,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     {
       assert(m_AxisDataYList.count(yAxisID) != 0);
       mpAxisData& yData = m_AxisDataYList[yAxisID];
-      return mpRange<double>(yData.pos - ((m_margin.top + m_plotHeight) / yData.scale), yData.pos - (m_margin.top / yData.scale));
+      return mpRange<double>(yData.pos - ((m_margin.top + GetPlotHeight()) / yData.scale), yData.pos - (m_margin.top / yData.scale));
     }
 
     /**
@@ -3872,18 +3884,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     {
       m_scrX = scrX;
       m_scrY = scrY;
-      m_plotWidth = m_scrX - (m_margin.left + m_margin.right);
-      m_plotHeight = m_scrY - (m_margin.top + m_margin.bottom);
-
-      m_plotBoundaries.endPx = m_scrX;
-      m_plotBoundariesMargin.endPx = m_scrX - m_margin.right;
-      m_plotBoundaries.endPy = m_scrY;
-      m_plotBoundariesMargin.endPy = m_scrY - m_margin.bottom;
-
-      m_PlotArea = wxRect(m_margin.left - m_extraMargin, m_margin.top - m_extraMargin,
-          m_plotWidth + 2*m_extraMargin, m_plotHeight + 2*m_extraMargin);
-
-      m_magnet.UpdateBox(m_PlotArea);
+      UpdatePlotBoundaries();
     }
 
     /** Get current view's X dimension in device context units.
@@ -4088,13 +4089,13 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     void UpdateDesiredBoundingBox(const mpAxisUpdate update)
     {
       // Change on X axis
-      if (update & uXAxis)
+      if ((update & uXAxis) && (GetPlotWidth() > 0))
       {
         m_AxisDataX.desired = GetVisibleRangeX();
       }
 
       // Change on Y axis
-      if (update & uYAxis)
+      if ((update & uYAxis) && (GetPlotHeight() > 0))
       {
         for (auto& [yID, yData] : m_AxisDataYList)
         {
@@ -4264,10 +4265,11 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     void SetMargins(int top, int right, int bottom, int left);
 
     /** Update margins if e.g. more axis have been added. */
-    void UpdateMargins()
-    {
-      SetMargins(m_marginOuter.top, m_marginOuter.right, m_marginOuter.bottom, m_marginOuter.left);
-    }
+    void UpdateMargins();
+
+    /** Update all plot boundaries variables
+     */
+    void UpdatePlotBoundaries();
 
     /** Set the top margin. @param top Top Margin */
     void SetMarginTop(const int top)
@@ -4347,7 +4349,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     void SetExtraMargin(const int extra)
     {
       m_extraMargin = extra;
-      SetMargins(m_marginOuter.top, m_marginOuter.right, m_marginOuter.bottom, m_marginOuter.left);
+      UpdateMargins();
     }
 
     /** Get the extra margin. */
@@ -4365,13 +4367,13 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     /** Get the width of the plot. */
     int GetPlotWidth() const
     {
-      return m_plotWidth;
+      return m_plotBoundariesMargin.GetWidth();
     }
 
     /** Get the height of the plot. */
     int GetPlotHeight() const
     {
-      return m_plotHeight;
+      return m_plotBoundariesMargin.GetHeight();
     }
 
     /** Get the boundaries of the plot.
@@ -4382,9 +4384,16 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     {
       mpRect bond;
       if (with_margin)
+      {
         bond = m_plotBoundariesMargin;
+      }
       else
-        bond = m_plotBoundaries;
+      {
+        bond.startPx = 0;
+        bond.startPy = 0;
+        bond.endPx = m_scrX;
+        bond.endPy = m_scrY;
+      }
       bond.startPx -= m_extraMargin;
       bond.endPx += m_extraMargin;
       bond.startPy -= m_extraMargin;
@@ -4761,10 +4770,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     mpRect m_margin;                    //!< Margin around the plot including Y-axis
     mpRect m_marginOuter;               //!< Margin around the plot exluding Y-axis. Default 50
     int m_extraMargin;                  //!< Extra margin around the plot. Default 8
-    wxCoord m_plotWidth;                //!< Width of the plot = m_scrX - (m_margin.left + m_margin.right)
-    wxCoord m_plotHeight;               //!< Height of the plot = m_scrY - (m_margin.top + m_margin.bottom)
 
-    mpRect m_plotBoundaries;            //!< The full size of the plot. Calculated
     mpRect m_plotBoundariesMargin;      //!< The size of the plot with the margins. Calculated
     wxRect m_PlotArea;                  //!< The full size of the plot with m_extraMargin
 
