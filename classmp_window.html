@@ -323,6 +323,10 @@ const wxString &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>GetWi
 <tr class="memitem:af17686ffad1ab45ed620c9b207252476" id="r_af17686ffad1ab45ed620c9b207252476"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#af17686ffad1ab45ed620c9b207252476">UpdateMargins</a> ()</td></tr>
 <tr class="memdesc:af17686ffad1ab45ed620c9b207252476"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update margins if e.g.  <br /></td></tr>
 <tr class="separator:af17686ffad1ab45ed620c9b207252476"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afe613b0786df866ba6188758492930d6" id="r_afe613b0786df866ba6188758492930d6"><td class="memItemLeft" align="right" valign="top"><a id="afe613b0786df866ba6188758492930d6" name="afe613b0786df866ba6188758492930d6"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>UpdatePlotBoundaries</b> ()</td></tr>
+<tr class="memdesc:afe613b0786df866ba6188758492930d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update all plot boundaries variables. <br /></td></tr>
+<tr class="separator:afe613b0786df866ba6188758492930d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:add3c2263953a6daa3238e23319ad8d9a" id="r_add3c2263953a6daa3238e23319ad8d9a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_window.html#add3c2263953a6daa3238e23319ad8d9a">SetMarginTop</a> (const int top)</td></tr>
 <tr class="memdesc:add3c2263953a6daa3238e23319ad8d9a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the top margin.  <br /></td></tr>
 <tr class="separator:add3c2263953a6daa3238e23319ad8d9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -734,18 +738,6 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_clickedY</b></td></t
 int&#160;</td><td class="memItemRight" valign="bottom"><b>m_extraMargin</b></td></tr>
 <tr class="memdesc:aeca3676ec27a26ff4fcd218b89fc40c1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extra margin around the plot. Default 8. <br /></td></tr>
 <tr class="separator:aeca3676ec27a26ff4fcd218b89fc40c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5b8bb700a38befb33249ad4dae277c0a" id="r_a5b8bb700a38befb33249ad4dae277c0a"><td class="memItemLeft" align="right" valign="top"><a id="a5b8bb700a38befb33249ad4dae277c0a" name="a5b8bb700a38befb33249ad4dae277c0a"></a>
-wxCoord&#160;</td><td class="memItemRight" valign="bottom"><b>m_plotWidth</b></td></tr>
-<tr class="memdesc:a5b8bb700a38befb33249ad4dae277c0a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Width of the plot = m_scrX - (m_margin.left + m_margin.right) <br /></td></tr>
-<tr class="separator:a5b8bb700a38befb33249ad4dae277c0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a55acadba2278907b1e58324bde31de95" id="r_a55acadba2278907b1e58324bde31de95"><td class="memItemLeft" align="right" valign="top"><a id="a55acadba2278907b1e58324bde31de95" name="a55acadba2278907b1e58324bde31de95"></a>
-wxCoord&#160;</td><td class="memItemRight" valign="bottom"><b>m_plotHeight</b></td></tr>
-<tr class="memdesc:a55acadba2278907b1e58324bde31de95"><td class="mdescLeft">&#160;</td><td class="mdescRight">Height of the plot = m_scrY - (m_margin.top + m_margin.bottom) <br /></td></tr>
-<tr class="separator:a55acadba2278907b1e58324bde31de95"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7ba671af5533de709608c70a9dd5acfa" id="r_a7ba671af5533de709608c70a9dd5acfa"><td class="memItemLeft" align="right" valign="top"><a id="a7ba671af5533de709608c70a9dd5acfa" name="a7ba671af5533de709608c70a9dd5acfa"></a>
-<a class="el" href="structmp_rect.html">mpRect</a>&#160;</td><td class="memItemRight" valign="bottom"><b>m_plotBoundaries</b></td></tr>
-<tr class="memdesc:a7ba671af5533de709608c70a9dd5acfa"><td class="mdescLeft">&#160;</td><td class="mdescRight">The full size of the plot. Calculated. <br /></td></tr>
-<tr class="separator:a7ba671af5533de709608c70a9dd5acfa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeb932913d8332b3ebb53ea083c019c0e" id="r_aeb932913d8332b3ebb53ea083c019c0e"><td class="memItemLeft" align="right" valign="top"><a id="aeb932913d8332b3ebb53ea083c019c0e" name="aeb932913d8332b3ebb53ea083c019c0e"></a>
 <a class="el" href="structmp_rect.html">mpRect</a>&#160;</td><td class="memItemRight" valign="bottom"><b>m_plotBoundariesMargin</b></td></tr>
 <tr class="memdesc:aeb932913d8332b3ebb53ea083c019c0e"><td class="mdescLeft">&#160;</td><td class="mdescRight">The size of the plot with the margins. Calculated. <br /></td></tr>
@@ -4465,9 +4457,6 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void mpWindow::UpdateMargins </td>
@@ -4476,11 +4465,6 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
           <td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Update margins if e.g. </p>
