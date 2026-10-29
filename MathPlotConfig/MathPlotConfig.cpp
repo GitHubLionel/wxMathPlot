@@ -1022,7 +1022,6 @@ MathPlotConfigDialog::MathPlotConfigDialog(wxWindow *parent, wxWindowID WXUNUSED
 
 #ifdef _WIN32
 #else
-  cbMagnetize->Show(false); // wxINVERT not work on Linux GTK
   cbLegendBrushStyle->SetToolTip(MESS_TRANSPARENT);
 #endif // _WIN32
 
@@ -1130,7 +1129,9 @@ void MathPlotConfigDialog::Initialize(mpConfigPageId id)
   // ** Axis page **
   // Clear and re-fill Axis list. Group X axis first then Y axis
   // Before clearing the list, save the last selected axis to re-select it if it still exists
-  mpScale* lastAxis = static_cast<mpScale*>(ChoiceAxis->GetClientData(ChoiceAxis->GetSelection()));
+  mpScale* lastAxis = nullptr;
+  if (ChoiceAxis->GetSelection() != wxNOT_FOUND)
+    lastAxis = static_cast<mpScale*>(ChoiceAxis->GetClientData(ChoiceAxis->GetSelection()));
   ChoiceAxis->Clear();
   if(mpScaleX* xAxis = m_plot->GetLayerXAxis())
   {
@@ -1405,7 +1406,7 @@ void MathPlotConfigDialog::OnnbConfigPageChanged(wxNotebookEvent& event)
 
 void MathPlotConfigDialog::UpdateAxis(void)
 {
-  if (ChoiceAxis->GetSelection() == -1)
+  if (ChoiceAxis->GetSelection() == wxNOT_FOUND)
     return;
   CurrentScale = (mpScale*)ChoiceAxis->GetClientData(ChoiceAxis->GetSelection());
   if (!CurrentScale)
