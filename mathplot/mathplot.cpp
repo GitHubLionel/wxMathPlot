@@ -3921,30 +3921,25 @@ void mpWindow::Fit(const mpRange<double> &rangeX, std::unordered_map<int, mpRang
     if(MP_ISNOTNULL(Ax))
       m_AxisDataX.scale = GetPlotWidth() / Ax;
 
+    // Compute each Y-axis scale and, in case we lock the aspect ratio, track the smallest
+    // scale across the X axis and every Y axis in the same pass.
+    double minScale = m_AxisDataX.scale;
     for (auto& [yID, yData] : m_AxisDataYList)
     {
       Ay = rangeY[yID].Length();
       if(MP_ISNOTNULL(Ay))
         yData.scale = GetPlotHeight() / Ay;
+      minScale = std::min(minScale, yData.scale);
     }
 
+    // Lock aspect: force the X axis (and, below, every Y axis) to the common smallest scale.
+    // Using the lowest scale guarantees the whole required range of every axis still fits.
     if (m_lockaspect)
     {
 #ifdef MATHPLOT_DO_LOGGING
       wxLogMessage(_T("mpWindow::Fit()(lock) m_scaleX=%f,m_scaleY=%f"), m_AxisDataX.scale, m_AxisDataYList[0].scale);
 #endif
-      // Keep the lowest "scale" to fit the whole range required by that axis (to actually "fit"!):
-      double s = m_AxisDataX.scale;
-      for (const auto& [yID, yData] : m_AxisDataYList)
-      {
-        s = std::min(s, yData.scale);
-      }
-
-      m_AxisDataX.scale = s;
-      for (auto& [yID, yData] : m_AxisDataYList)
-      {
-        yData.scale = s;
-      }
+      m_AxisDataX.scale = minScale;
     }
 
     // Adjusts corner coordinates: This should be simply:
@@ -3955,8 +3950,11 @@ void mpWindow::Fit(const mpRange<double> &rangeX, std::unordered_map<int, mpRang
       // Fitting without a valid range yields unwanted effects
       m_AxisDataX.pos = rangeX.GetCenter() - (GetPlotWidth() / 2 + m_margin.left) / m_AxisDataX.scale;
 
+    // Apply the locked scale (if any) and compute each Y position in one pass.
     for (auto& [yID, yData] : m_AxisDataYList)
     {
+      if (m_lockaspect)
+        yData.scale = minScale;
       if(MP_ISNOTNULL(rangeY[yID].Length()))
         // Fitting without a valid range yields unwanted effects
         yData.pos = rangeY[yID].GetCenter() + (GetPlotHeight() / 2 + m_margin.top) / yData.scale;
@@ -3975,6 +3973,17 @@ void mpWindow::Fit(const mpRange<double> &rangeX, std::unordered_map<int, mpRang
         m_AxisDataX.scale, m_scrX, m_scrY, Ax, Ay, m_AxisDataX.pos, m_AxisDataYList[0].pos);
 #endif
   }
+  else if (updateDesired)
+  {
+    // Plot size not valid yet (e.g. Fit() from a constructor before layout). The scale/pos
+    // path above - and its UpdateDesiredBoundingBox() - was skipped, so fall back to the
+    // requested range as 'desired' for OnSize() to re-fit to, once a real size is available.
+    m_AxisDataX.desired = rangeX;
+    for (auto& [yID, yData] : m_AxisDataYList)
+    {
+      yData.desired = rangeY[yID];
+    }
+  }
 
   // It is VERY IMPORTANT to DO NOT call Refresh if we are drawing to the printer!!
   // Otherwise, the DC dimensions will be those of the window instead of the printer device
@@ -3988,13 +3997,15 @@ void mpWindow::Fit(const mpRange<double> &rangeX, std::unordered_map<int, mpRang
 void mpWindow::FitX(void)
 {
   const mpRange<double> bound = GetBoundX();
-  const double Ax = bound.Length();
-  m_AxisDataX.scale = MP_ISNOTNULL(Ax) ? GetPlotWidth() / Ax : 1;
+  if(MP_ISNOTNULL(bound.Length()))
+  {
+    m_AxisDataX.scale = GetPlotWidth() / bound.Length();
 
-  // Since m_posX is at the corner (not including margins) we need to take margin into account
-  m_AxisDataX.pos = bound.min - (m_margin.left / m_AxisDataX.scale);
+    // Since m_posX is at the corner (not including margins) we need to take margin into account
+    m_AxisDataX.pos = bound.min - (m_margin.left / m_AxisDataX.scale);
 
-  UpdateDesiredBoundingBox(uXAxis);
+    UpdateDesiredBoundingBox(uXAxis);
+  }
 }
 
 void mpWindow::FitY(int yAxisID)
@@ -4002,13 +4013,15 @@ void mpWindow::FitY(int yAxisID)
   if (m_AxisDataYList.count(yAxisID) != 0)
   {
     const mpRange<double> bound = GetBoundY(yAxisID);
-    const double Ay = bound.Length();
-    m_AxisDataYList[yAxisID].scale = MP_ISNOTNULL(Ay) ? GetPlotHeight() / Ay : 1;
+    if(MP_ISNOTNULL(bound.Length()))
+    {
+      m_AxisDataYList[yAxisID].scale = GetPlotHeight() / bound.Length();
 
-    // Since m_posY is at the corner (not including margins) we need to take margin into account
-    m_AxisDataYList[yAxisID].pos = bound.max + (m_margin.top / m_AxisDataYList[yAxisID].scale);
+      // Since m_posY is at the corner (not including margins) we need to take margin into account
+      m_AxisDataYList[yAxisID].pos = bound.max + (m_margin.top / m_AxisDataYList[yAxisID].scale);
 
-    UpdateDesiredBoundingBox(uYAxis);
+      UpdateDesiredBoundingBox(uYAxis);
+    }
   }
 }
 
