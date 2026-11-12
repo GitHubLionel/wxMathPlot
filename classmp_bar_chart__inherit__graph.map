@@ -1,11 +1,11 @@
 <map id="mpBarChart" name="mpBarChart">
-<area shape="rect" id="Node000001" title="Layer for bar chart." alt="" coords="5,299,105,324"/>
-<area shape="rect" id="Node000002" href="$classmp_chart.html" title="abstract Layer for chart (bar and pie)." alt="" coords="16,225,95,251"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="58,264,58,299,53,299,53,264"/>
-<area shape="rect" id="Node000003" href="$classmp_function.html" title="Plot layer implementing an abstract function plot class." alt="" coords="6,152,105,177"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="58,191,58,225,53,225,53,191"/>
-<area shape="rect" id="Node000004" href="$classmp_layer.html" title="Plot layer, abstract base class." alt="" coords="16,79,95,104"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="58,118,58,152,53,152,53,118"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="14,5,97,31"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="58,44,58,79,53,79,53,44"/>
+<area shape="rect" id="Node000001" title="Layer for bar chart." alt="" coords="5,308,105,336"/>
+<area shape="rect" id="Node000002" href="$classmp_chart.html" title="abstract Layer for chart (bar and pie)." alt="" coords="16,232,94,260"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="57,274,58,308,52,307,53,278"/>
+<area shape="rect" id="Node000003" href="$classmp_function.html" title="Plot layer implementing an abstract function plot class." alt="" coords="6,157,104,184"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="56,198,58,232,52,232,54,203"/>
+<area shape="rect" id="Node000004" href="$classmp_layer.html" title="Plot layer, abstract base class." alt="" coords="16,81,94,109"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="55,122,58,156,52,156,55,127"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="14,5,96,33"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="55,46,58,81,52,80,55,51"/>
 </map>

@@ -1,36 +1,36 @@
 <map id="mpFY" name="mpFY">
-<area shape="rect" id="Node000001" title="Abstract base class providing plot and labeling functionality for functions F:Y&#45;&gt;X." alt="" coords="5,93,64,119"/>
-<area shape="rect" id="Node000002" href="$classmp_function.html" title="Plot layer implementing an abstract function plot class." alt="" coords="96,5,195,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="121,41,51,95,48,91,118,37"/>
-<area shape="rect" id="Node000013" href="$classmp_info_legend.html" title="Implement the legend to be added to the plot This layer allows you to add a legend to describe the pl..." alt="" coords="88,93,203,119"/>
-<area shape="poly" id="edge18_Node000013_Node000002" title=" " alt="" coords="148,45,148,93,143,93,143,45"/>
-<area shape="rect" id="Node000003" href="$classmp_layer.html" title="Plot layer, abstract base class." alt="" coords="530,299,609,324"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="621,296,672,273,695,256,712,235,722,211,722,190,713,171,697,154,649,124,594,96,542,73,488,56,377,33,275,23,195,21,195,15,275,18,378,28,489,51,544,68,596,91,652,119,700,150,717,168,727,189,728,212,717,237,698,260,674,278,623,300"/>
-<area shape="rect" id="Node000008" href="$classmp_scale.html" title="Plot layer implementing an abstract scale ruler." alt="" coords="567,396,646,421"/>
-<area shape="poly" id="edge8_Node000008_Node000003" title=" " alt="" coords="581,336,605,395,600,397,577,338"/>
-<area shape="rect" id="Node000011" href="$classmp_info_layer.html" title="Base class to create small rectangular info boxes mpInfoLayer is the base class to create a small rec..." alt="" coords="203,396,307,421"/>
-<area shape="poly" id="edge13_Node000011_Node000003" title=" " alt="" coords="560,338,549,353,535,365,493,380,433,392,307,406,306,401,432,387,491,375,532,360,545,349,555,335"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="465,211,548,236"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="525,245,563,297,558,300,521,249"/>
-<area shape="rect" id="Node000005" href="$classmp_window.html" title="Canvas for plotting mpLayer implementations." alt="" coords="273,211,367,236"/>
-<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="382,235,454,258,481,272,539,296,536,301,479,277,452,262,380,240"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="344,93,437,119"/>
-<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="382,132,352,188,333,212,329,208,347,185,378,130"/>
-<area shape="rect" id="Node000007" href="$structmp_axis_data.html" title="Represents all the informations needed for plotting a layer in one direction (X or Y) This struct hol..." alt="" coords="555,493,658,519"/>
-<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="586,485,500,387,418,301,375,265,336,238,339,234,378,261,422,297,504,384,590,481"/>
-<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="609,435,609,493,604,493,604,435"/>
-<area shape="rect" id="Node000009" href="$structmp_range.html" title=" " alt="" coords="639,299,798,324"/>
-<area shape="poly" id="edge10_Node000007_Node000009" title=" " alt="" coords="728,338,727,363,706,406,678,443,648,474,624,495,620,491,645,470,674,440,701,403,721,362,723,337"/>
-<area shape="poly" id="edge9_Node000008_Node000009" title=" " alt="" coords="659,332,633,350,618,373,611,397,606,395,613,371,629,346,656,327"/>
-<area shape="rect" id="Node000010" href="$structmp_rect.html" title="A rectangle structure in several (integer) flavors." alt="" coords="511,93,583,119"/>
-<area shape="poly" id="edge20_Node000003_Node000010" title=" " alt="" coords="572,128,580,142,589,186,589,231,582,271,575,299,570,298,577,270,583,231,584,187,575,144,567,130"/>
-<area shape="poly" id="edge11_Node000005_Node000010" title=" " alt="" coords="498,115,456,126,415,145,404,155,398,165,392,176,382,189,346,213,343,208,378,185,388,173,394,162,400,151,412,140,454,121,497,110"/>
-<area shape="poly" id="edge12_Node000005_Node000011" title=" " alt="" coords="258,381,283,298,311,235,316,238,288,300,263,383"/>
-<area shape="rect" id="Node000012" href="$classmp_info_coords.html" title="Implements an overlay box which shows the mouse coordinates in plot units." alt="" coords="121,493,234,519"/>
-<area shape="poly" id="edge15_Node000012_Node000011" title=" " alt="" coords="239,434,189,495,185,491,234,431"/>
-<area shape="poly" id="edge17_Node000013_Node000011" title=" " alt="" coords="188,404,151,390,134,379,120,364,104,332,96,298,96,261,101,226,119,162,137,118,142,120,124,163,106,227,101,262,102,297,109,331,125,361,138,375,153,385,190,399"/>
-<area shape="poly" id="edge14_Node000005_Node000012" title=" " alt="" coords="166,481,158,453,152,419,153,382,163,347,190,308,225,276,261,251,293,234,296,238,264,256,228,280,194,311,168,349,158,383,158,418,163,452,171,480"/>
-<area shape="poly" id="edge16_Node000005_Node000013" title=" " alt="" coords="147,132,152,160,157,173,166,185,183,195,209,203,273,214,272,219,208,208,181,199,162,189,153,176,147,162,142,133"/>
-<area shape="rect" id="Node000014" href="$classmp_magnet.html" title="Class for drawing mouse magnetization Draw an horizontal and a vertical line at the mouse position." alt="" coords="227,93,319,119"/>
-<area shape="poly" id="edge19_Node000005_Node000014" title=" " alt="" coords="271,132,270,159,277,186,287,198,300,208,296,213,283,202,272,188,265,160,266,132"/>
+<area shape="rect" id="Node000001" title="Abstract base class providing plot and labeling functionality for functions F:Y&#45;&gt;X." alt="" coords="5,106,64,134"/>
+<area shape="rect" id="Node000002" href="$classmp_function.html" title="Plot layer implementing an abstract function plot class." alt="" coords="96,5,194,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="119,46,52,107,47,104,121,41"/>
+<area shape="rect" id="Node000013" href="$classmp_info_legend.html" title="Implement the legend to be added to the plot This layer allows you to add a legend to describe the pl..." alt="" coords="88,106,202,134"/>
+<area shape="poly" id="edge18_Node000013_Node000002" title=" " alt="" coords="146,46,148,106,143,105,145,51"/>
+<area shape="rect" id="Node000003" href="$classmp_layer.html" title="Plot layer, abstract base class." alt="" coords="541,352,619,380"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="633,348,661,336,688,321,713,302,732,278,744,249,744,224,734,201,716,181,691,161,662,143,599,108,547,84,492,64,435,49,379,38,275,26,196,22,193,18,276,21,380,33,437,44,493,59,549,79,601,104,665,139,695,157,720,177,738,198,749,223,749,250,737,280,717,306,691,326,663,341,635,353"/>
+<area shape="rect" id="Node000008" href="$classmp_scale.html" title="Plot layer implementing an abstract scale ruler." alt="" coords="580,474,657,501"/>
+<area shape="poly" id="edge8_Node000008_Node000003" title=" " alt="" coords="590,392,617,474,612,472,587,397"/>
+<area shape="rect" id="Node000011" href="$classmp_info_layer.html" title="Base class to create small rectangular info boxes mpInfoLayer is the base class to create a small rec..." alt="" coords="204,474,308,501"/>
+<area shape="poly" id="edge13_Node000011_Node000003" title=" " alt="" coords="572,392,561,414,545,431,502,449,439,464,308,484,307,478,438,459,501,444,542,426,557,411,568,396"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="479,251,561,279"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="537,290,545,302,575,352,570,351,540,304,535,295"/>
+<area shape="rect" id="Node000005" href="$classmp_window.html" title="Canvas for plotting mpLayer implementations." alt="" coords="278,251,372,279"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="387,274,426,284,463,301,476,313,488,326,514,340,543,353,538,353,512,345,485,330,472,317,460,305,424,289,388,279"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="343,106,435,134"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="385,147,375,188,358,229,340,253,336,249,354,226,370,186,382,151"/>
+<area shape="rect" id="Node000007" href="$structmp_axis_data.html" title="Represents all the informations needed for plotting a layer in one direction (X or Y) This struct hol..." alt="" coords="568,595,669,623"/>
+<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="598,582,512,463,426,354,382,313,343,282,343,277,385,309,430,350,516,460,603,583"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="620,515,621,596,616,593,617,518"/>
+<area shape="rect" id="Node000009" href="$structmp_range.html" title=" " alt="" coords="660,352,817,380"/>
+<area shape="poly" id="edge10_Node000007_Node000009" title=" " alt="" coords="742,393,740,429,726,473,710,506,661,573,636,597,634,592,656,570,705,504,721,471,735,428,739,397"/>
+<area shape="poly" id="edge9_Node000008_Node000009" title=" " alt="" coords="666,385,643,405,633,421,626,440,621,475,617,472,621,438,628,419,639,402,661,388"/>
+<area shape="rect" id="Node000010" href="$structmp_rect.html" title="A rectangle structure in several (integer) flavors." alt="" coords="516,106,588,134"/>
+<area shape="poly" id="edge20_Node000003_Node000010" title=" " alt="" coords="583,142,593,157,602,184,606,212,605,268,597,317,586,353,582,350,591,316,600,267,601,212,597,185,588,159,582,147"/>
+<area shape="poly" id="edge11_Node000005_Node000010" title=" " alt="" coords="499,126,459,138,439,147,421,160,409,175,405,192,401,210,390,229,358,253,354,249,386,226,396,208,400,191,404,173,418,156,437,143,458,133,503,124"/>
+<area shape="poly" id="edge12_Node000005_Node000011" title=" " alt="" coords="259,457,287,351,317,282,321,277,292,353,264,459"/>
+<area shape="rect" id="Node000012" href="$classmp_info_coords.html" title="Implements an overlay box which shows the mouse coordinates in plot units." alt="" coords="120,595,232,623"/>
+<area shape="poly" id="edge15_Node000012_Node000011" title=" " alt="" coords="241,513,186,597,183,593,236,515"/>
+<area shape="poly" id="edge17_Node000013_Node000011" title=" " alt="" coords="187,474,151,459,134,446,120,430,102,391,93,349,92,305,97,262,116,185,140,132,138,137,122,187,102,263,97,305,98,348,107,389,125,427,138,442,153,454,192,473"/>
+<area shape="poly" id="edge14_Node000005_Node000012" title=" " alt="" coords="164,580,155,545,149,499,150,450,163,403,191,360,227,325,265,297,301,278,297,281,268,301,230,329,195,363,168,405,156,451,155,499,161,544,169,581"/>
+<area shape="poly" id="edge16_Node000005_Node000013" title=" " alt="" coords="142,147,146,189,152,209,163,225,181,236,210,245,280,258,275,261,209,250,179,241,159,229,147,211,141,190,141,152"/>
+<area shape="rect" id="Node000014" href="$classmp_magnet.html" title="Class for drawing mouse magnetization Draw an horizontal and a vertical line at the mouse position." alt="" coords="228,106,319,134"/>
+<area shape="poly" id="edge19_Node000005_Node000014" title=" " alt="" coords="269,146,270,187,273,207,280,226,290,239,303,251,298,251,286,242,275,229,268,209,265,188,267,151"/>
 </map>

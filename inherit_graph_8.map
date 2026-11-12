@@ -1,3 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$structmp_rect.html" title="A rectangle structure in several (integer) flavors." alt="" coords="5,5,77,31"/>
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,5,88,33"/>
+<area shape="rect" id="Node000001" href="$classwx_index_colour.html" title="Create a wxColour id is the number of the colour : blue, red, green, ..." alt="" coords="136,5,254,33"/>
+<area shape="poly" id="edge1_Node000000_Node000001" title=" " alt="" coords="103,17,138,19,133,19,103,22"/>
 </map>
