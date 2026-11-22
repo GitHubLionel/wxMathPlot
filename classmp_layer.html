@@ -149,8 +149,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>UpdateContext</b> (wx
 <tr class="memdesc:a06309b34dcd6819baf75b487b7e9c74c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the context. <br /></td></tr>
 <tr class="memitem:aa257dccf832ad64b60d9f85db234f682" id="r_aa257dccf832ad64b60d9f85db234f682"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa257dccf832ad64b60d9f85db234f682">DoPlot</a> (wxDC &amp;dc, <a class="el" href="classmp_window.html">mpWindow</a> &amp;w)=0</td></tr>
 <tr class="memdesc:aa257dccf832ad64b60d9f85db234f682"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pure virtual method to plot the layer.  <br /></td></tr>
-<tr class="memitem:ac4aaa9dc0c6db40402757e8fc658dfb4" id="r_ac4aaa9dc0c6db40402757e8fc658dfb4"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac4aaa9dc0c6db40402757e8fc658dfb4">DoBeforePlot</a> ()</td></tr>
-<tr class="memdesc:ac4aaa9dc0c6db40402757e8fc658dfb4"><td class="mdescLeft">&#160;</td><td class="mdescRight">If we need to do something before plot like reinitialize some parameters ... Return true by default that mean that we can continue next operation.  <br /></td></tr>
+<tr class="memitem:ac4aaa9dc0c6db40402757e8fc658dfb4" id="r_ac4aaa9dc0c6db40402757e8fc658dfb4"><td class="memItemLeft" align="right" valign="top"><a id="ac4aaa9dc0c6db40402757e8fc658dfb4" name="ac4aaa9dc0c6db40402757e8fc658dfb4"></a>
+virtual bool&#160;</td><td class="memItemRight" valign="bottom"><b>DoBeforePlot</b> ()</td></tr>
+<tr class="memdesc:ac4aaa9dc0c6db40402757e8fc658dfb4"><td class="mdescLeft">&#160;</td><td class="mdescRight">If we need to do something before plot like reinitialize some parameters ... Return true by default that mean that we can continue next operation. <br /></td></tr>
 <tr class="memitem:aefdc0499d3f12bf9e4b668b84ffee367" id="r_aefdc0499d3f12bf9e4b668b84ffee367"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aefdc0499d3f12bf9e4b668b84ffee367">CheckLog</a> (double *x, double *y, int yAxisID)</td></tr>
 <tr class="memdesc:aefdc0499d3f12bf9e4b668b84ffee367"><td class="mdescLeft">&#160;</td><td class="mdescRight">Test if we are in log axis and if true return the log of the values.  <br /></td></tr>
 </table><table class="memberdecls">
@@ -278,35 +279,6 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>m_CanDelete</b></td><
   </table>
   </dd>
 </dl>
-
-</div>
-</div>
-<a id="ac4aaa9dc0c6db40402757e8fc658dfb4" name="ac4aaa9dc0c6db40402757e8fc658dfb4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac4aaa9dc0c6db40402757e8fc658dfb4">&#9670;&#160;</a></span>DoBeforePlot()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual bool mpLayer::DoBeforePlot </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel protected">protected</span><span class="mlabel virtual">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>If we need to do something before plot like reinitialize some parameters ... Return true by default that mean that we can continue next operation. </p>
-
-<p>Reimplemented in <a class="el" href="classmp_vertical_line.html#a51d170121450ad6eaf064df5af00ab3d">mpVerticalLine</a>.</p>
 
 </div>
 </div>
@@ -996,10 +968,10 @@ V ascending Y                               |
 <div class="line"> </div>
 <div class="line">layer_X = (dc_X / <a class="code hl_function" href="classmp_window.html#a7c504fb99a778caef5a85735ff8b640c">mpWindow::GetScaleX</a>()) + <a class="code hl_function" href="classmp_window.html#ae21ca01a75622446100f8a02aeccaf8c">mpWindow::GetPosX</a>() <span class="comment">// scale guaranteed to be not 0</span></div>
 <div class="line">layer_Y = <a class="code hl_function" href="classmp_window.html#a01b2f34f40c9a252ddf29503ad298aeb">mpWindow::GetPosY</a>() - (dc_Y / <a class="code hl_function" href="classmp_window.html#aa2b8693f695093c2609b8b4f9ab09499">mpWindow::GetScaleY</a>()) <span class="comment">// swapping Y-orientation</span></div>
-<div class="ttc" id="aclassmp_window_html_a01b2f34f40c9a252ddf29503ad298aeb"><div class="ttname"><a href="classmp_window.html#a01b2f34f40c9a252ddf29503ad298aeb">mpWindow::GetPosY</a></div><div class="ttdeci">double GetPosY(const int yAxisID)</div><div class="ttdoc">Get current view&#39;s Y position.</div><div class="ttdef"><b>Definition</b> mathplot.h:3864</div></div>
-<div class="ttc" id="aclassmp_window_html_a7c504fb99a778caef5a85735ff8b640c"><div class="ttname"><a href="classmp_window.html#a7c504fb99a778caef5a85735ff8b640c">mpWindow::GetScaleX</a></div><div class="ttdeci">double GetScaleX(void) const</div><div class="ttdoc">Get current view&#39;s X scale.</div><div class="ttdef"><b>Definition</b> mathplot.h:3713</div></div>
-<div class="ttc" id="aclassmp_window_html_aa2b8693f695093c2609b8b4f9ab09499"><div class="ttname"><a href="classmp_window.html#aa2b8693f695093c2609b8b4f9ab09499">mpWindow::GetScaleY</a></div><div class="ttdeci">double GetScaleY(const int yAxisID)</div><div class="ttdoc">Get current view&#39;s Y scale.</div><div class="ttdef"><b>Definition</b> mathplot.h:3738</div></div>
-<div class="ttc" id="aclassmp_window_html_ae21ca01a75622446100f8a02aeccaf8c"><div class="ttname"><a href="classmp_window.html#ae21ca01a75622446100f8a02aeccaf8c">mpWindow::GetPosX</a></div><div class="ttdeci">double GetPosX(void) const</div><div class="ttdoc">Get current view&#39;s X position.</div><div class="ttdef"><b>Definition</b> mathplot.h:3840</div></div>
+<div class="ttc" id="aclassmp_window_html_a01b2f34f40c9a252ddf29503ad298aeb"><div class="ttname"><a href="classmp_window.html#a01b2f34f40c9a252ddf29503ad298aeb">mpWindow::GetPosY</a></div><div class="ttdeci">double GetPosY(const int yAxisID)</div><div class="ttdoc">Get current view&#39;s Y position.</div><div class="ttdef"><b>Definition</b> mathplot.h:3855</div></div>
+<div class="ttc" id="aclassmp_window_html_a7c504fb99a778caef5a85735ff8b640c"><div class="ttname"><a href="classmp_window.html#a7c504fb99a778caef5a85735ff8b640c">mpWindow::GetScaleX</a></div><div class="ttdeci">double GetScaleX(void) const</div><div class="ttdoc">Get current view&#39;s X scale.</div><div class="ttdef"><b>Definition</b> mathplot.h:3704</div></div>
+<div class="ttc" id="aclassmp_window_html_aa2b8693f695093c2609b8b4f9ab09499"><div class="ttname"><a href="classmp_window.html#aa2b8693f695093c2609b8b4f9ab09499">mpWindow::GetScaleY</a></div><div class="ttdeci">double GetScaleY(const int yAxisID)</div><div class="ttdoc">Get current view&#39;s Y scale.</div><div class="ttdef"><b>Definition</b> mathplot.h:3729</div></div>
+<div class="ttc" id="aclassmp_window_html_ae21ca01a75622446100f8a02aeccaf8c"><div class="ttname"><a href="classmp_window.html#ae21ca01a75622446100f8a02aeccaf8c">mpWindow::GetPosX</a></div><div class="ttdeci">double GetPosX(void) const</div><div class="ttdoc">Get current view&#39;s X position.</div><div class="ttdef"><b>Definition</b> mathplot.h:3831</div></div>
 </div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">dc</td><td>Device context to plot to. </td></tr>

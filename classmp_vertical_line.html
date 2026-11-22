@@ -199,12 +199,13 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>SetWindow</b> (<a cla
 Protected Member Functions</h2></td></tr>
 <tr class="memitem:af304fb5ec224f2ccbc336c32e0ae78ec" id="r_af304fb5ec224f2ccbc336c32e0ae78ec"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af304fb5ec224f2ccbc336c32e0ae78ec">DoPlot</a> (wxDC &amp;dc, <a class="el" href="classmp_window.html">mpWindow</a> &amp;w) override</td></tr>
 <tr class="memdesc:af304fb5ec224f2ccbc336c32e0ae78ec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pure virtual method to plot the layer.  <br /></td></tr>
-<tr class="memitem:a51d170121450ad6eaf064df5af00ab3d" id="r_a51d170121450ad6eaf064df5af00ab3d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a51d170121450ad6eaf064df5af00ab3d">DoBeforePlot</a> () override</td></tr>
-<tr class="memdesc:a51d170121450ad6eaf064df5af00ab3d"><td class="mdescLeft">&#160;</td><td class="mdescRight">This is the only case where we don't need and Y axis So no need to test m_yAxisID.  <br /></td></tr>
 <tr class="inherit_header pro_methods_classmp_layer"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pro_methods_classmp_layer')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Protected Member Functions inherited from <a class="el" href="classmp_layer.html">mpLayer</a></td></tr>
 <tr class="memitem:a06309b34dcd6819baf75b487b7e9c74c inherit pro_methods_classmp_layer" id="r_a06309b34dcd6819baf75b487b7e9c74c"><td class="memItemLeft" align="right" valign="top">
 void&#160;</td><td class="memItemRight" valign="bottom"><b>UpdateContext</b> (wxDC &amp;dc) const</td></tr>
 <tr class="memdesc:a06309b34dcd6819baf75b487b7e9c74c inherit pro_methods_classmp_layer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the context. <br /></td></tr>
+<tr class="memitem:ac4aaa9dc0c6db40402757e8fc658dfb4 inherit pro_methods_classmp_layer" id="r_ac4aaa9dc0c6db40402757e8fc658dfb4"><td class="memItemLeft" align="right" valign="top">
+virtual bool&#160;</td><td class="memItemRight" valign="bottom"><b>DoBeforePlot</b> ()</td></tr>
+<tr class="memdesc:ac4aaa9dc0c6db40402757e8fc658dfb4 inherit pro_methods_classmp_layer"><td class="mdescLeft">&#160;</td><td class="mdescRight">If we need to do something before plot like reinitialize some parameters ... Return true by default that mean that we can continue next operation. <br /></td></tr>
 <tr class="memitem:aefdc0499d3f12bf9e4b668b84ffee367 inherit pro_methods_classmp_layer" id="r_aefdc0499d3f12bf9e4b668b84ffee367"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_layer.html#aefdc0499d3f12bf9e4b668b84ffee367">CheckLog</a> (double *x, double *y, int yAxisID)</td></tr>
 <tr class="memdesc:aefdc0499d3f12bf9e4b668b84ffee367 inherit pro_methods_classmp_layer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Test if we are in log axis and if true return the log of the values.  <br /></td></tr>
 </table><table class="memberdecls">
@@ -334,35 +335,6 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>m_CanDelete</b></td><
 </div>
 </div>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
-<a id="a51d170121450ad6eaf064df5af00ab3d" name="a51d170121450ad6eaf064df5af00ab3d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a51d170121450ad6eaf064df5af00ab3d">&#9670;&#160;</a></span>DoBeforePlot()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool mpVerticalLine::DoBeforePlot </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel override">override</span><span class="mlabel protected">protected</span><span class="mlabel virtual">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>This is the only case where we don't need and Y axis So no need to test m_yAxisID. </p>
-
-<p>Reimplemented from <a class="el" href="classmp_layer.html#ac4aaa9dc0c6db40402757e8fc658dfb4">mpLayer</a>.</p>
-
-</div>
-</div>
 <a id="af304fb5ec224f2ccbc336c32e0ae78ec" name="af304fb5ec224f2ccbc336c32e0ae78ec"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af304fb5ec224f2ccbc336c32e0ae78ec">&#9670;&#160;</a></span>DoPlot()</h2>
 

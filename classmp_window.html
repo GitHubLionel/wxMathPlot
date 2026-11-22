@@ -136,8 +136,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a01b2f34f40c9a252ddf29503ad298aeb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get current view's Y position.  <br /></td></tr>
 <tr class="memitem:a087d31080a5176abbf4e00be5ff57ee5" id="r_a087d31080a5176abbf4e00be5ff57ee5"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a087d31080a5176abbf4e00be5ff57ee5">GetNOfYAxis</a> (void) const</td></tr>
 <tr class="memdesc:a087d31080a5176abbf4e00be5ff57ee5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the number of Y axis.  <br /></td></tr>
-<tr class="memitem:a874718c952a7616334c4907aa6315d5a" id="r_a874718c952a7616334c4907aa6315d5a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="mathplot_8h.html#a0a64db71fd0e292bf546ecd389baf7ea">mpAxisList</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a874718c952a7616334c4907aa6315d5a">GetAxisDataYList</a> (void) const</td></tr>
-<tr class="memdesc:a874718c952a7616334c4907aa6315d5a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the Y-axis data map.  <br /></td></tr>
+<tr class="memitem:a204b5baa5bb77c200ec7edcaac5ce6e2" id="r_a204b5baa5bb77c200ec7edcaac5ce6e2"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="mathplot_8h.html#a0a64db71fd0e292bf546ecd389baf7ea">mpAxisList</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a204b5baa5bb77c200ec7edcaac5ce6e2">GetAxisDataYList</a> (void) const</td></tr>
+<tr class="memdesc:a204b5baa5bb77c200ec7edcaac5ce6e2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the Y-axis data map.  <br /></td></tr>
 <tr class="memitem:a6e2d1613b0b7887d3b6ead83b716306b" id="r_a6e2d1613b0b7887d3b6ead83b716306b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6e2d1613b0b7887d3b6ead83b716306b">SetScreen</a> (const int scrX, const int scrY)</td></tr>
 <tr class="memdesc:a6e2d1613b0b7887d3b6ead83b716306b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set current view's dimensions in device context units.  <br /></td></tr>
 <tr class="memitem:a3264e530cf6c0c3b883a4d4ea524157b" id="r_a3264e530cf6c0c3b883a4d4ea524157b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3264e530cf6c0c3b883a4d4ea524157b">GetScreenX</a> (void) const</td></tr>
@@ -372,9 +372,9 @@ Static Public Attributes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pro-methods" class="groupheader"><a id="pro-methods" name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
-<tr class="memitem:abd38a9016f3e01d67aa5e7dc03d73249" id="r_abd38a9016f3e01d67aa5e7dc03d73249"><td class="memItemLeft" align="right" valign="top"><a id="abd38a9016f3e01d67aa5e7dc03d73249" name="abd38a9016f3e01d67aa5e7dc03d73249"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>BindEvents</b> (void)</td></tr>
-<tr class="memdesc:abd38a9016f3e01d67aa5e7dc03d73249"><td class="mdescLeft">&#160;</td><td class="mdescRight">Connect all events. <br /></td></tr>
+<tr class="memitem:a0b2c2b95e9b62cba37c5ea633eee8078" id="r_a0b2c2b95e9b62cba37c5ea633eee8078"><td class="memItemLeft" align="right" valign="top"><a id="a0b2c2b95e9b62cba37c5ea633eee8078" name="a0b2c2b95e9b62cba37c5ea633eee8078"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>BindEvents</b> (void)</td></tr>
+<tr class="memdesc:a0b2c2b95e9b62cba37c5ea633eee8078"><td class="mdescLeft">&#160;</td><td class="mdescRight">Connect all events. <br /></td></tr>
 <tr class="memitem:a77db9cecc7e23bfc388c623eabfc3cb1" id="r_a77db9cecc7e23bfc388c623eabfc3cb1"><td class="memItemLeft" align="right" valign="top"><a id="a77db9cecc7e23bfc388c623eabfc3cb1" name="a77db9cecc7e23bfc388c623eabfc3cb1"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>OnPaint</b> (wxPaintEvent &amp;event)</td></tr>
 <tr class="memdesc:a77db9cecc7e23bfc388c623eabfc3cb1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Paint handler, will plot all attached layers. <br /></td></tr>
@@ -1363,8 +1363,8 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
 
 </div>
 </div>
-<a id="a874718c952a7616334c4907aa6315d5a" name="a874718c952a7616334c4907aa6315d5a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a874718c952a7616334c4907aa6315d5a">&#9670;&#160;</a></span>GetAxisDataYList()</h2>
+<a id="a204b5baa5bb77c200ec7edcaac5ce6e2" name="a204b5baa5bb77c200ec7edcaac5ce6e2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a204b5baa5bb77c200ec7edcaac5ce6e2">&#9670;&#160;</a></span>GetAxisDataYList()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1373,7 +1373,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="mathplot_8h.html#a0a64db71fd0e292bf546ecd389baf7ea">mpAxisList</a> mpWindow::GetAxisDataYList </td>
+          <td class="memname">const <a class="el" href="mathplot_8h.html#a0a64db71fd0e292bf546ecd389baf7ea">mpAxisList</a> &amp; mpWindow::GetAxisDataYList </td>
           <td>(</td>
           <td class="paramtype">void</td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td> const</td>
