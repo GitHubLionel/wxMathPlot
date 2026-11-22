@@ -1344,7 +1344,7 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLayer: public mpLayer
     }
 
   protected:
-    wxRect m_dim;           //!< The bounding rectangle of the mpInfoLayer box (may be resized dynamically by the Plot method).
+    wxRect m_dim = wxRect(0, 0, 1, 1);  //!< The bounding rectangle of the mpInfoLayer box (may be resized dynamically by the Plot method).
     wxBitmap* m_info_bmp;   //!< The bitmap that contain the info
     wxPoint m_reference;    //!< Holds the reference point for movements
     double m_relX;          //!< Box X position relative window, used to rescale the info box position when the window is resized.
@@ -1359,7 +1359,7 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLayer: public mpLayer
 
     /** Compute the dimensions and position of the mpInfoLayer rectangle
      */
-    void SetInfoRectangle(mpWindow &w, int width = 0, int height = 0);
+    void SetInfoRectangle(const mpWindow &w, int width = 0, int height = 0);
 
   private:
 
@@ -1407,7 +1407,7 @@ class WXDLLIMPEXP_MATHPLOT mpInfoCoords: public mpInfoLayer
     /** Just delete the bitmap of the info. Not used since background bitmap is no longer needed
      * Just keep to not break compatability with overridden functions*/
     [[deprecated("Use Show() instead")]]
-    void ErasePlot(wxDC&, mpWindow&) override {};
+    void ErasePlot(wxDC&, mpWindow&) override {}; // cppcheck-suppress uselessOverride
 
     /** Set if info coords shall be shown or hidden
     @param show Set if shall be shown */
@@ -1479,7 +1479,7 @@ class WXDLLIMPEXP_MATHPLOT mpInfoCoords: public mpInfoLayer
 
   protected:
     bool m_show;                          //!< Indicates if magnet shall be shown in plot
-    wxString m_content;                   //!< string holding the coordinates to be drawn.
+    wxString m_content = "";              //!< string holding the coordinates to be drawn.
     mpLabelType m_labelType;              //!< Label formatting mode used for the X coordinate display.
     unsigned int m_timeConv;              //!< Time conversion mode used when formatting date/time X values.
     wxCoord m_mouseX;                     //!< Last mouse X position in window pixel coordinates.
@@ -1650,7 +1650,7 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLegend: public mpInfoLayer
      *  @param dc the device context where to plot
      *  @param w Parent mpWindow from which to obtain information
      */
-    void DrawDraggedSeries(wxDC& dc, mpWindow &w) const;
+    void DrawDraggedSeries(wxDC& dc, const mpWindow &w) const;
 
     /** Draw the content of info legend to plot
      * @param dc the device context where to plot
@@ -1659,7 +1659,7 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLegend: public mpInfoLayer
 
     /** Clear the dragged series rectangle from the plot and restores axis hovering indication
      * @param w the window to plot */
-    static void RestoreAxisHighlighting(mpWindow &w);
+    static void RestoreAxisHighlighting(const mpWindow &w);
 
     /// Return codes for GetLegendHitRegion() if no series was hit
     enum HitCode : int
@@ -1743,7 +1743,7 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLegend: public mpInfoLayer
      *
      * @return Updated label width including the rendered series value text.
      */
-    int DrawSeriesValue(wxDC& dc, mpWindow& w, mpFunction& function, int posX, int posY, int labelHeight, int labelWidth, int maxLabelWidth);
+    int DrawSeriesValue(wxDC& dc, const mpWindow& w, mpFunction& function, int posX, int posY, int labelHeight, int labelWidth, int maxLabelWidth);
 
     /** Draws a vertical cursor line at the current mouse position or at a fixed position, depending on the vertical cursor mode.
      *  @param dc the device context where to plot
@@ -2025,15 +2025,6 @@ class WXDLLIMPEXP_MATHPLOT mpVerticalLine: public mpLine
 
     void DoPlot(wxDC &dc, mpWindow &w) override;
 
-    /**
-     * This is the only case where we don't need and Y axis
-     * So no need to test m_yAxisID
-     */
-    bool DoBeforePlot() override
-    {
-      return true;
-    }
-
   private:
     DECLARE_DYNAMIC_CLASS_MATHPLOT(mpVerticalLine);
 };
@@ -2311,7 +2302,7 @@ class WXDLLIMPEXP_MATHPLOT mpFXYVector: public mpFXY
      */
     ~mpFXYVector() override
     {
-      Clear();
+    	mpFXYVector::Clear();
     }
 
     /** Changes the internal data: the set of points to draw.
@@ -2663,7 +2654,7 @@ class WXDLLIMPEXP_MATHPLOT mpChart: public mpFunction
     /** Destructor */
     ~mpChart() override
     {
-      Clear();
+    	mpChart::Clear();
     }
 
     /** Set bar values.
@@ -3474,7 +3465,7 @@ class mpMagnet
     }
 
      /// Update the magnet cross to a new mouse position.
-    void DrawCross(wxDC &dc, mpWindow &w);
+    static void DrawCross(wxDC &dc, mpWindow &w);
 
     /// Check conditions if magnet shall be shown
     bool ShouldBeShown(const wxRect plotArea, const wxPoint mousePos) const
@@ -3878,7 +3869,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     /** Get the Y-axis data map
      @return The Y-axis data map
      */
-    mpAxisList GetAxisDataYList(void) const
+    const mpAxisList& GetAxisDataYList(void) const
     {
       return m_AxisDataYList;
     }
@@ -4672,7 +4663,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     }
 
   protected:
-    virtual void BindEvents(void);                                //!< Connect all events
+    void BindEvents(void);                                        //!< Connect all events
     virtual void OnPaint(wxPaintEvent &event);                    //!< Paint handler, will plot all attached layers
     virtual void OnSize(wxSizeEvent &event);                      //!< Size handler, will update scroll bar sizes
     virtual void OnShowPopupMenu(wxMouseEvent &event);            //!< Mouse handler, will show context menu
@@ -5246,7 +5237,7 @@ class WXDLLIMPEXP_MATHPLOT mpPolygon: public mpMovableObject
   public:
     /** Default constructor.
      */
-    mpPolygon(const wxString &layerName = _T("")) : mpMovableObject()
+    explicit mpPolygon(const wxString &layerName = _T("")) : mpMovableObject()
     {
       m_continuous = true;
       m_name = layerName;
