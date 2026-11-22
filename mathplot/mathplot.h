@@ -249,6 +249,14 @@ struct mpRect
         };
         wxCoord tab[4];  //!< Alternate array-style access to the rectangle coordinates.
     };
+
+    /// Default constructor
+    mpRect() : startPx(0), startPy(0), endPx(0), endPy(0) {}
+
+    /// Constructor with initialisation of the rectangle
+    mpRect(wxCoord x1, wxCoord y1, wxCoord x2, wxCoord y2)
+        : startPx(x1), startPy(y1), endPx(x2), endPy(y2) {}
+
     /**
      * Create standard wxWidgets rectangle defined by this object's start and end points
      * @return wxRect object
@@ -471,7 +479,7 @@ struct [[deprecated("Deprecated! No longer used as X and Y are now separated")]]
    * always matches the parent mpWindow y-size
    * @param w parent mpWindow from which to obtain informations
    */
-  mpFloatRect(mpWindow& w);
+  explicit mpFloatRect(mpWindow& w);
 
   /// Only allow constructor with mpWindow supplied
   mpFloatRect() = delete;
@@ -1184,7 +1192,7 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
   protected:
     const mpLayerType m_type;   //!< Layer type mpLAYER_*
     mpWindow* m_win;            //!< The wxWindow handle
-    int m_subtype;              //!< Layer sub type, set in constructors
+    int m_subtype = -1;         //!< Layer sub type, set in constructors
     wxFont m_font;              //!< Layer's font
     wxColour m_fontcolour;      //!< Layer's font foreground colour
     wxPen m_pen;                //!< Layer's pen. Default Colour = Black, width = 1, style = wxPENSTYLE_SOLID
@@ -1252,7 +1260,7 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLayer: public mpLayer
      @param pos Sets the initial position in percent of the rectangle of the layer.
      @param brush pointer to a fill brush. Default is transparent
      @param location to place in the margin or free */
-    mpInfoLayer(wxPoint pos, const wxBrush &brush = *wxTRANSPARENT_BRUSH, mpLocation location = mpMarginUser);
+    explicit mpInfoLayer(wxPoint pos, const wxBrush &brush = *wxTRANSPARENT_BRUSH, mpLocation location = mpMarginUser);
 
     /** Destructor */
     ~mpInfoLayer() override;
@@ -1369,13 +1377,13 @@ class WXDLLIMPEXP_MATHPLOT mpInfoCoords: public mpInfoLayer
     mpInfoCoords();
 
     /** Limited constructor */
-    mpInfoCoords(mpLocation location);
+    explicit mpInfoCoords(mpLocation location);
 
     /** Complete constructor, setting initial rectangle and background brush.
      @param pos The initial position in percent of the rectangle.
      @param brush The wxBrush to be used for box background: default is transparent
      @param location to place in the margin or free */
-    mpInfoCoords(wxPoint pos, const wxBrush &brush = *wxTRANSPARENT_BRUSH, mpLocation location = mpMarginUser);
+    explicit mpInfoCoords(wxPoint pos, const wxBrush &brush = *wxTRANSPARENT_BRUSH, mpLocation location = mpMarginUser);
 
     /** Default destructor */
     ~mpInfoCoords() override
@@ -1505,7 +1513,7 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLegend: public mpInfoLayer
      @param brush The wxBrush to be used for box background: default is transparent
      @param location to place in the margin or free
      @sa mpInfoLayer::mpInfoLayer */
-    mpInfoLegend(wxPoint pos, const wxBrush &brush = *wxWHITE_BRUSH, mpLocation location = mpMarginUser);
+    explicit mpInfoLegend(wxPoint pos, const wxBrush &brush = *wxWHITE_BRUSH, mpLocation location = mpMarginUser);
 
     /**  Default destructor */
     ~mpInfoLegend() override {}
@@ -1766,7 +1774,7 @@ class WXDLLIMPEXP_MATHPLOT mpFunction: public mpLayer
      @param name  Label of the function
      @param yAxisID ID of the y axis (default 0, the first y axis)
      */
-    mpFunction(mpLayerType layerType = mpLAYER_PLOT, const wxString &name = wxEmptyString, unsigned int yAxisID = 0);
+		explicit mpFunction(mpLayerType layerType = mpLAYER_PLOT, const wxString &name = wxEmptyString, unsigned int yAxisID = 0);
 
     /** Set the 'continuity' property of the layer. True: draws a continuous line. False: draws separate points (default).
      * @sa GetContinuity
@@ -1924,7 +1932,7 @@ class WXDLLIMPEXP_MATHPLOT mpLine: public mpFunction
      * @param value default value for the line
      * @param pen the pen object to draw the line (default a green pen)
      */
-    mpLine(double value, const wxPen &pen = *wxGREEN_PEN);
+		explicit mpLine(double value, const wxPen &pen = *wxGREEN_PEN);
 
     // We don't want to include line (horizontal or vertical) in BBox computation
     bool HasBBox() override
@@ -1975,7 +1983,7 @@ class WXDLLIMPEXP_MATHPLOT mpHorizontalLine: public mpLine
      * @param pen the pen object to draw the line (default a green pen)
      * @param yAxisID ID of the y axis (default 0, the first y axis)
      */
-    mpHorizontalLine(double yvalue, const wxPen &pen = *wxGREEN_PEN, unsigned int yAxisID = 0);
+		explicit mpHorizontalLine(double yvalue, const wxPen &pen = *wxGREEN_PEN, unsigned int yAxisID = 0);
 
     /** Set y
      @param yvalue
@@ -2003,7 +2011,7 @@ class WXDLLIMPEXP_MATHPLOT mpVerticalLine: public mpLine
      * @param xvalue the x-coordinate of the vertical line
      * @param pen the pen object to draw the line (default a green pen)
      */
-    mpVerticalLine(double xvalue, const wxPen &pen = *wxGREEN_PEN);
+		explicit mpVerticalLine(double xvalue, const wxPen &pen = *wxGREEN_PEN);
 
     /** Set x
      @param xvalue
@@ -2244,7 +2252,7 @@ class WXDLLIMPEXP_MATHPLOT mpFXY: public mpFunction
     double m_deltaX;    //!< Min delta between 2 consecutive coordinate on x direction
     double m_deltaY;    //!< Min delta between 2 consecutive coordinate on y direction
 
-    int m_BarWidth;  //!< Bar width in pixels when the XY series is drawn in bar mode.
+    int m_BarWidth = 1; //!< Bar width in pixels when the XY series is drawn in bar mode.
 
     bool m_ViewAsBar = false;  //!< True when the XY series should be rendered as bars instead of points/lines.
 
@@ -2297,7 +2305,7 @@ class WXDLLIMPEXP_MATHPLOT mpFXYVector: public mpFXY
      @param viewAsBar true if we plot the XY series as bar mode (default false)
      @param yAxisID ID of the y axis (default 0, the first y axis)
      */
-    mpFXYVector(const wxString &name = wxEmptyString, int flags = mpALIGN_SW, bool viewAsBar = false, unsigned int yAxisID = 0);
+		explicit mpFXYVector(const wxString &name = wxEmptyString, int flags = mpALIGN_SW, bool viewAsBar = false, unsigned int yAxisID = 0);
 
     /** destrutor
      */
@@ -2650,7 +2658,7 @@ class WXDLLIMPEXP_MATHPLOT mpChart: public mpFunction
 {
   public:
     /** Default constructor */
-    mpChart(const wxString &name = wxEmptyString);
+		explicit mpChart(const wxString &name = wxEmptyString);
 
     /** Destructor */
     ~mpChart() override
@@ -2709,7 +2717,7 @@ class WXDLLIMPEXP_MATHPLOT mpBarChart: public mpChart
 {
   public:
     /** Debault constructor */
-    mpBarChart(const wxString &name = wxEmptyString, double width = 0.5);
+		explicit mpBarChart(const wxString &name = wxEmptyString, double width = 0.5);
 
     /** Destructor */
     ~mpBarChart() override
@@ -2775,7 +2783,7 @@ class WXDLLIMPEXP_MATHPLOT mpPieChart: public mpChart
     /** Default constructor
      * @param name Label of the pie chart
      * @param radius the radius of the pie chart*/
-    mpPieChart(const wxString &name = wxEmptyString, double radius = 20);
+		explicit mpPieChart(const wxString &name = wxEmptyString, double radius = 20);
 
     /** Destructor */
     ~mpPieChart() override
@@ -3229,7 +3237,7 @@ class WXDLLIMPEXP_MATHPLOT mpScaleX: public mpScale
      @param flags Set the position of the scale with respect to the window.
      @param grids Show grid or not. Give false (default) for not drawing the grid.
      @param type mpLabel_AUTO for normal labels, mpLabel_TIME for time axis in hours, minutes, seconds. */
-    mpScaleX(const wxString &name = _T("X"), const int flags = mpALIGN_CENTERX, const bool grids = false, const mpLabelType type = mpLabel_AUTO) :
+		explicit mpScaleX(const wxString &name = _T("X"), const int flags = mpALIGN_CENTERX, const bool grids = false, const mpLabelType type = mpLabel_AUTO) :
         mpScale(name, flags, grids, type)
     {
       m_subtype = mpsScaleX;
@@ -3286,7 +3294,7 @@ class WXDLLIMPEXP_MATHPLOT mpScaleY: public mpScale
      @param yAxisID optional yAxisID (default 0)
      @param labelType optional type of the label (default mpLabel_AUTO) @sa mpLabelType
      */
-    mpScaleY(const wxString &name = _T("Y"), const int flags = mpALIGN_CENTERY, const bool grids = false, const mpOptional_uint yAxisID = std::nullopt, const mpLabelType labelType = mpLabel_AUTO) :
+		explicit mpScaleY(const wxString &name = _T("Y"), const int flags = mpALIGN_CENTERY, const bool grids = false, const mpOptional_uint yAxisID = std::nullopt, const mpLabelType labelType = mpLabel_AUTO) :
         mpScale(name, flags, grids, labelType, yAxisID)
     {
       m_subtype = mpsScaleY;
@@ -3527,7 +3535,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      * @param size Initial window size.
      * @param flags Additional wxWidgets window style flags.
      */
-    mpWindow(wxWindow *parent, wxWindowID id = wxID_ANY, const wxPoint &pos = wxDefaultPosition, const wxSize &size = wxDefaultSize,
+    explicit mpWindow(wxWindow *parent, wxWindowID id = wxID_ANY, const wxPoint &pos = wxDefaultPosition, const wxSize &size = wxDefaultSize,
         long flags = 0);
 
     ~mpWindow() override;
@@ -3783,7 +3791,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     mpRange<double> GetVisibleRangeY(const unsigned int yAxisID = 0)
     {
       assert(m_AxisDataYList.count(yAxisID) != 0);
-      mpAxisData& yData = m_AxisDataYList[yAxisID];
+      const mpAxisData& yData = m_AxisDataYList[yAxisID];
       return mpRange<double>(yData.pos - ((m_margin.top + GetPlotHeight()) / yData.scale), yData.pos - (m_margin.top / yData.scale));
     }
 
@@ -4008,7 +4016,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      pixel scales are computed accordingly. Also, in this case the passed borders are not saved
      as the "desired borders", since this use will be invoked only when printing.
      */
-    void Fit(const mpRange<double> &rangeX, std::unordered_map<int, mpRange<double>> rangeY, bool updateDesired = true, wxCoord *printSizeX = NULL, wxCoord *printSizeY = NULL);
+    void Fit(const mpRange<double> &rangeX, std::unordered_map<int, mpRange<double>> rangeY, bool updateDesired = true, wxCoord *printSizeX = nullptr, wxCoord *printSizeY = nullptr);
 
     /** Similar to Fit() but only fit in X. Intentionally don't call UpdateAll() since
      *  you might want to perform other actions before updating plot
@@ -4491,7 +4499,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     /** Remove the 'delete layer event' callback */
     void UnSetOnDeleteLayer()
     {
-      m_OnDeleteLayer = NULL;
+      m_OnDeleteLayer = nullptr;
     }
 
     /** On user mouse action event
@@ -4506,7 +4514,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     /** Remove the 'user mouse action event' callback */
     void UnSetOnUserMouseAction()
     {
-      m_OnUserMouseAction = NULL;
+      m_OnUserMouseAction = nullptr;
     }
 
     /**
@@ -4517,7 +4525,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     bool IsLogXaxis() const
     {
       if (m_AxisDataX.axis)
-        return ((mpScaleX *)m_AxisDataX.axis)->IsLogAxis();
+        return static_cast<mpScaleX*>(m_AxisDataX.axis)->IsLogAxis();
       else
         return false;
     }
@@ -4543,7 +4551,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     void SetLogXaxis(const bool log)
     {
       if (m_AxisDataX.axis)
-        ((mpScaleX *)m_AxisDataX.axis)->SetLogAxis(log);
+      	static_cast<mpScaleX*>(m_AxisDataX.axis)->SetLogAxis(log);
     }
 
     /**
@@ -4805,13 +4813,13 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     wxString m_DefaultDir;              //!< The default directory for wxFileDialog
 
 #if defined(MP_ENABLE_CONFIG) || defined(ENABLE_MP_CONFIG)
-    MathPlotConfigDialog* m_configWindow = NULL;  //!< For the config dialog
+    MathPlotConfigDialog* m_configWindow = nullptr;  //!< For the config dialog
 #endif // MP_ENABLE_CONFIG
     bool m_openConfigWindowPending = false;  //!< Only used with config window: indicate if user potentialy want to open the config window
     int m_infoLegendSelectedSeries;          //!< Only used with config window: the selected series in info legend
 
-    mpOnDeleteLayer m_OnDeleteLayer = NULL;          //!< Event when we delete a layer
-    mpOnUserMouseAction m_OnUserMouseAction = NULL;  //!< Event when we have a mouse click
+    mpOnDeleteLayer m_OnDeleteLayer = nullptr;          //!< Event when we delete a layer
+    mpOnUserMouseAction m_OnUserMouseAction = nullptr;  //!< Event when we have a mouse click
 
     /// To be notified of displayed bounds changes (after user zoom etc),
     /// override this callback in your derived class and look at the new value of m_desired.
@@ -4862,7 +4870,7 @@ class WXDLLIMPEXP_MATHPLOT mpText: public mpLayer
   public:
     /** Default constructor.
      */
-    mpText(const wxString &name = wxEmptyString) : mpLayer(mpLAYER_TEXT)
+		explicit mpText(const wxString &name = wxEmptyString) : mpLayer(mpLAYER_TEXT)
     {
       m_subtype = mptText;
       SetName(name);
@@ -4943,7 +4951,7 @@ class WXDLLIMPEXP_MATHPLOT mpTitle: public mpText
 
     /** @param name text to be drawn for the title of the plot
      */
-    mpTitle(const wxString &name) :
+    explicit mpTitle(const wxString &name) :
         mpText(name, mpMarginTopCenter)
     {
       m_subtype = mptTitle;
@@ -4968,7 +4976,7 @@ class WXDLLIMPEXP_MATHPLOT mpPrintout: public wxPrintout
   public:
     mpPrintout()
     {
-      plotWindow = NULL;
+      plotWindow = nullptr;
       drawn = false;
       stretch_factor = 2;
     }
@@ -4978,7 +4986,7 @@ class WXDLLIMPEXP_MATHPLOT mpPrintout: public wxPrintout
      * @param title Print job title.
      * @param factor Stretch factor used for printing.
      */
-    mpPrintout(mpWindow *drawWindow, const wxString &title = _T("wxMathPlot print output"), int factor = 2);
+    explicit mpPrintout(mpWindow *drawWindow, const wxString &title = _T("wxMathPlot print output"), int factor = 2);
     ~mpPrintout() override
     {
       ;
@@ -5146,7 +5154,7 @@ class WXDLLIMPEXP_MATHPLOT mpCovarianceEllipse: public mpMovableObject
     /** Default constructor.
      * Initializes to a unity diagonal covariance matrix, a 95% confidence interval (2 sigmas), 32 segments, and a continuous plot (m_continuous=true).
      */
-    mpCovarianceEllipse(const double cov_00 = 1, const double cov_11 = 1, const double cov_01 = 0, const double quantiles = 2, const int segments = 32,
+		explicit mpCovarianceEllipse(const double cov_00 = 1, const double cov_11 = 1, const double cov_01 = 0, const double quantiles = 2, const int segments = 32,
         const wxString &layerName = _T("")) : mpMovableObject(),
         m_cov_00(cov_00), m_cov_11(cov_11), m_cov_01(cov_01), m_quantiles(quantiles), m_segments(segments)
     {
@@ -5374,7 +5382,7 @@ class WXDLLIMPEXP_MATHPLOT wxIndexColour: public wxColour
      * Constructor
      * @param id the index in the mpColour list. @sa mpColour
      */
-    wxIndexColour(const unsigned int id)
+    explicit wxIndexColour(const unsigned int id)
     {
 #ifdef _WIN32
       auto GetRandomColor = []() {
