@@ -168,8 +168,8 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>EnableMousePanZoom</b
 <tr class="memdesc:a9189e0e467f28fb4d25372f554b67bbd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether the X/Y scale aspect is locked.  <br /></td></tr>
 <tr class="memitem:aeb6ddca87045fc5de1814361ba145591" id="r_aeb6ddca87045fc5de1814361ba145591"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aeb6ddca87045fc5de1814361ba145591">Fit</a> () override</td></tr>
 <tr class="memdesc:aeb6ddca87045fc5de1814361ba145591"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set view to fit global bounding box of all plot layers and refresh display with <a class="el" href="#a990707383217cdd98cdf6a635ccb63b7" title="Refresh display.">UpdateAll()</a>.  <br /></td></tr>
-<tr class="memitem:abfadffbb87c7ed1d9c7c0bd0126bfc83" id="r_abfadffbb87c7ed1d9c7c0bd0126bfc83"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abfadffbb87c7ed1d9c7c0bd0126bfc83">Fit</a> (const <a class="el" href="structmp_range.html">mpRange</a>&lt; double &gt; &amp;rangeX, std::unordered_map&lt; int, <a class="el" href="structmp_range.html">mpRange</a>&lt; double &gt; &gt; rangeY, bool updateDesired=true, wxCoord *printSizeX=NULL, wxCoord *printSizeY=NULL)</td></tr>
-<tr class="memdesc:abfadffbb87c7ed1d9c7c0bd0126bfc83"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set view to fit a given bounding box and refresh display with <a class="el" href="#a990707383217cdd98cdf6a635ccb63b7" title="Refresh display.">UpdateAll()</a>.  <br /></td></tr>
+<tr class="memitem:a88bf8816de8ae05ff099246bae929af5" id="r_a88bf8816de8ae05ff099246bae929af5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a88bf8816de8ae05ff099246bae929af5">Fit</a> (const <a class="el" href="structmp_range.html">mpRange</a>&lt; double &gt; &amp;rangeX, std::unordered_map&lt; int, <a class="el" href="structmp_range.html">mpRange</a>&lt; double &gt; &gt; rangeY, bool updateDesired=true, wxCoord *printSizeX=nullptr, wxCoord *printSizeY=nullptr)</td></tr>
+<tr class="memdesc:a88bf8816de8ae05ff099246bae929af5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set view to fit a given bounding box and refresh display with <a class="el" href="#a990707383217cdd98cdf6a635ccb63b7" title="Refresh display.">UpdateAll()</a>.  <br /></td></tr>
 <tr class="memitem:ae8ec61b47afcd3cafae291fa99322a7f" id="r_ae8ec61b47afcd3cafae291fa99322a7f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae8ec61b47afcd3cafae291fa99322a7f">FitX</a> (void)</td></tr>
 <tr class="memdesc:ae8ec61b47afcd3cafae291fa99322a7f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Similar to <a class="el" href="#aeb6ddca87045fc5de1814361ba145591" title="Set view to fit global bounding box of all plot layers and refresh display with UpdateAll().">Fit()</a> but only fit in X.  <br /></td></tr>
 <tr class="memitem:af3456a4acd3930373c85678da3c7fe09" id="r_af3456a4acd3930373c85678da3c7fe09"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af3456a4acd3930373c85678da3c7fe09">FitY</a> (int yAxisID)</td></tr>
@@ -629,10 +629,10 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>m_openConfigWindowPen
 int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSeries</b></td></tr>
 <tr class="memdesc:a11aafff8a330c1e78b1dfe3950968b5e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Only used with config window: the selected series in info legend. <br /></td></tr>
 <tr class="memitem:a874d79c4b1ab21a6157fc9bc2007af03" id="r_a874d79c4b1ab21a6157fc9bc2007af03"><td class="memItemLeft" align="right" valign="top"><a id="a874d79c4b1ab21a6157fc9bc2007af03" name="a874d79c4b1ab21a6157fc9bc2007af03"></a>
-<a class="el" href="mathplot_8h.html#a5737dd5d569201f509d295016d61b984">mpOnDeleteLayer</a>&#160;</td><td class="memItemRight" valign="bottom"><b>m_OnDeleteLayer</b> = NULL</td></tr>
+<a class="el" href="mathplot_8h.html#a5737dd5d569201f509d295016d61b984">mpOnDeleteLayer</a>&#160;</td><td class="memItemRight" valign="bottom"><b>m_OnDeleteLayer</b> = nullptr</td></tr>
 <tr class="memdesc:a874d79c4b1ab21a6157fc9bc2007af03"><td class="mdescLeft">&#160;</td><td class="mdescRight">Event when we delete a layer. <br /></td></tr>
 <tr class="memitem:a9f9ef60deeada24a62d9aee2b8323120" id="r_a9f9ef60deeada24a62d9aee2b8323120"><td class="memItemLeft" align="right" valign="top"><a id="a9f9ef60deeada24a62d9aee2b8323120" name="a9f9ef60deeada24a62d9aee2b8323120"></a>
-<a class="el" href="mathplot_8h.html#a94427f464b74069382cc5f4b9c56ecb8">mpOnUserMouseAction</a>&#160;</td><td class="memItemRight" valign="bottom"><b>m_OnUserMouseAction</b> = NULL</td></tr>
+<a class="el" href="mathplot_8h.html#a94427f464b74069382cc5f4b9c56ecb8">mpOnUserMouseAction</a>&#160;</td><td class="memItemRight" valign="bottom"><b>m_OnUserMouseAction</b> = nullptr</td></tr>
 <tr class="memdesc:a9f9ef60deeada24a62d9aee2b8323120"><td class="mdescLeft">&#160;</td><td class="mdescRight">Event when we have a mouse click. <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
@@ -656,6 +656,9 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">mpWindow::mpWindow </td>
@@ -683,6 +686,11 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
           <td class="paramtype">long</td>          <td class="paramname"><span class="paramname"><em>flags</em></span><span class="paramdefsep"> = </span><span class="paramdefval">0</span>&#160;)</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel explicit">explicit</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p>Construct a plotting window. </p>
@@ -1187,8 +1195,8 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
 
 </div>
 </div>
-<a id="abfadffbb87c7ed1d9c7c0bd0126bfc83" name="abfadffbb87c7ed1d9c7c0bd0126bfc83"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abfadffbb87c7ed1d9c7c0bd0126bfc83">&#9670;&#160;</a></span>Fit() <span class="overload">[2/2]</span></h2>
+<a id="a88bf8816de8ae05ff099246bae929af5" name="a88bf8816de8ae05ff099246bae929af5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a88bf8816de8ae05ff099246bae929af5">&#9670;&#160;</a></span>Fit() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1211,12 +1219,12 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>m_infoLegendSelectedSe
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">wxCoord *</td>          <td class="paramname"><span class="paramname"><em>printSizeX</em></span><span class="paramdefsep"> = </span><span class="paramdefval">NULL</span>, </td>
+          <td class="paramtype">wxCoord *</td>          <td class="paramname"><span class="paramname"><em>printSizeX</em></span><span class="paramdefsep"> = </span><span class="paramdefval">nullptr</span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">wxCoord *</td>          <td class="paramname"><span class="paramname"><em>printSizeY</em></span><span class="paramdefsep"> = </span><span class="paramdefval">NULL</span>&#160;)</td>
+          <td class="paramtype">wxCoord *</td>          <td class="paramname"><span class="paramname"><em>printSizeY</em></span><span class="paramdefsep"> = </span><span class="paramdefval">nullptr</span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
