@@ -5749,7 +5749,11 @@ void mpWindow::OpenConfigWindow(mpLayerType layerType, int param)
 void mpWindow::DeleteConfigWindow(void)
 {
 #if defined(MP_ENABLE_CONFIG) || defined(ENABLE_MP_CONFIG)
-  DeleteAndNull(m_configWindow);
+  if (m_configWindow)
+  {
+    m_configWindow->Destroy(); // For wxWidgets, Destroy() is better than 'delete' to secure event
+    m_configWindow = nullptr;
+  }
 #endif // MP_ENABLE_CONFIG
 }
 
