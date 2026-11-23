@@ -100,7 +100,7 @@ $(function() {
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>{</div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>  <span class="keyword">public</span>:</div>
 <div class="foldopen" id="foldopen00057" data-start="{" data-end="}">
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno"><a class="line" href="class_math_plot_config_settings.html#a01501f2a689f861cba0abb38955bb178">   57</a></span>    <a class="code hl_function" href="class_math_plot_config_settings.html#a01501f2a689f861cba0abb38955bb178">MathPlotConfigSettings</a>(<span class="keyword">const</span> wxString&amp; localFilename) :</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno"><a class="line" href="class_math_plot_config_settings.html#a01501f2a689f861cba0abb38955bb178">   57</a></span>    <span class="keyword">explicit</span> <a class="code hl_function" href="class_math_plot_config_settings.html#a01501f2a689f861cba0abb38955bb178">MathPlotConfigSettings</a>(<span class="keyword">const</span> wxString&amp; localFilename) :</div>
 <div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>        wxFileConfig(wxEmptyString, wxEmptyString, localFilename) {}</div>
 </div>
 <div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    <span class="keyword">virtual</span> <a class="code hl_class" href="class_math_plot_config_settings.html">~MathPlotConfigSettings</a>() {}</div>
@@ -159,7 +159,7 @@ $(function() {
 <div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>{</div>
 <div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>  <span class="keyword">public</span>:</div>
 <div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span></div>
-<div class="line"><a id="l00164" name="l00164"></a><span class="lineno"><a class="line" href="class_math_plot_config_dialog.html#a08879d0248cea948e818b05f092e31e3">  164</a></span>    <a class="code hl_function" href="class_math_plot_config_dialog.html#a08879d0248cea948e818b05f092e31e3">MathPlotConfigDialog</a>(wxWindow *parent, wxWindowID <span class="keywordtype">id</span> = -1);</div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno"><a class="line" href="class_math_plot_config_dialog.html#a08879d0248cea948e818b05f092e31e3">  164</a></span>    <span class="keyword">explicit</span> <a class="code hl_function" href="class_math_plot_config_dialog.html#a08879d0248cea948e818b05f092e31e3">MathPlotConfigDialog</a>(wxWindow *parent, wxWindowID <span class="keywordtype">id</span> = -1);</div>
 <div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>    <span class="keyword">virtual</span> <a class="code hl_function" href="class_math_plot_config_dialog.html#a08879d0248cea948e818b05f092e31e3">~MathPlotConfigDialog</a>();</div>
 <div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span></div>
 <div class="line"><a id="l00171" name="l00171"></a><span class="lineno"><a class="line" href="class_math_plot_config_dialog.html#a9c81666f868f90e16624b27454ccc346">  171</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_math_plot_config_dialog.html#a9c81666f868f90e16624b27454ccc346">Initialize</a>(mpConfigPageId <span class="keywordtype">id</span> = mpcpiNone);</div>
@@ -390,11 +390,11 @@ $(function() {
 <div class="line"><a id="l00414" name="l00414"></a><span class="lineno">  414</span> </div>
 <div class="line"><a id="l00415" name="l00415"></a><span class="lineno">  415</span>    <span class="keywordtype">void</span> DoButtonColour(wxButton* button, <span class="keyword">const</span> wxColour&amp; colour);</div>
 <div class="line"><a id="l00416" name="l00416"></a><span class="lineno">  416</span>    <span class="keywordtype">void</span> DoApplyColour(<span class="keyword">const</span> wxColour&amp; colour);</div>
-<div class="line"><a id="l00417" name="l00417"></a><span class="lineno">  417</span>    <span class="keywordtype">void</span> UpdateFont(<a class="code hl_class" href="classmp_layer.html">mpLayer</a>* layer, wxButton* button, <span class="keywordtype">bool</span> get_set);</div>
+<div class="line"><a id="l00417" name="l00417"></a><span class="lineno">  417</span>    <span class="keyword">static</span> <span class="keywordtype">void</span> UpdateFont(<a class="code hl_class" href="classmp_layer.html">mpLayer</a>* layer, wxButton* button, <span class="keywordtype">bool</span> get_set);</div>
 <div class="line"><a id="l00418" name="l00418"></a><span class="lineno">  418</span>    <span class="keywordtype">void</span> SetFontChildren(wxButton* p, <span class="keyword">const</span> wxFontData&amp; fontdata);</div>
 <div class="line"><a id="l00419" name="l00419"></a><span class="lineno">  419</span> </div>
-<div class="line"><a id="l00420" name="l00420"></a><span class="lineno">  420</span>    wxBrushStyle IdToBrushStyle(<span class="keywordtype">int</span> <span class="keywordtype">id</span>);</div>
-<div class="line"><a id="l00421" name="l00421"></a><span class="lineno">  421</span>    <span class="keywordtype">int</span> BrushStyleToId(wxBrushStyle style);</div>
+<div class="line"><a id="l00420" name="l00420"></a><span class="lineno">  420</span>    <span class="keyword">static</span> wxBrushStyle IdToBrushStyle(<span class="keywordtype">int</span> <span class="keywordtype">id</span>);</div>
+<div class="line"><a id="l00421" name="l00421"></a><span class="lineno">  421</span>    <span class="keyword">static</span> <span class="keywordtype">int</span> BrushStyleToId(wxBrushStyle style);</div>
 <div class="line"><a id="l00422" name="l00422"></a><span class="lineno">  422</span> </div>
 <div class="line"><a id="l00423" name="l00423"></a><span class="lineno">  423</span>  DECLARE_EVENT_TABLE()</div>
 <div class="line"><a id="l00424" name="l00424"></a><span class="lineno">  424</span>};</div>
