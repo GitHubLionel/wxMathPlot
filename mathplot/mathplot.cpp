@@ -237,23 +237,13 @@ IMPLEMENT_ABSTRACT_CLASS(mpLayer, wxObject)
 mpLayer::mpLayer(mpLayerType layerType) :
     m_type(layerType)
 {
-  // The wxWindow handle is not yet available
-  m_win = nullptr;
   // Default pen
   SetPen(*wxBLACK_PEN);
   // Default font
-  SetFont((const wxFont&)*wxNORMAL_FONT);
-  m_fontcolour = (const wxColour&)*wxBLACK;
+  SetFont(*wxNORMAL_FONT);
+  m_fontcolour = *wxBLACK;
   // Default brush
   SetBrush(*wxTRANSPARENT_BRUSH);
-  m_showName = false;  // Default
-  m_drawOutsideMargins = false;
-  m_visible = true;
-  m_tractable = false;
-  m_flags = mpALIGN_SE;
-  m_CanDelete = true;
-  m_busy = false;
-  m_ZIndex = mpZIndex_BACKGROUND;
 }
 
 void mpLayer::Plot(wxDC &dc, mpWindow &w)
@@ -4432,7 +4422,7 @@ bool mpWindow::DelLayer(mpLayer *layer, mpDeleteAction alsoDeleteObject, bool re
   int yAxisID = -1;
   int subType;
 
-  for (mpLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
+  for (mpLayerList::iterator it = m_layers.begin(); it != m_layers.end(); ++it)
   {
     // Search the good layer
     if (*it != layer)
@@ -4552,11 +4542,13 @@ void mpWindow::DelAllPlot(mpDeleteAction alsoDeleteObject, mpFunctionType func, 
   {
     if ((*it)->IsLayerType(mpLAYER_PLOT, &function) && ((func == mpfAllType) || (function == func)))
     {
-      DelLayer((mpLayer*)(*it), alsoDeleteObject, false, false); // may invalidate all extant m_layers iterators
+      DelLayer(static_cast<mpLayer*>(*it), alsoDeleteObject, false, false); // may invalidate all extant m_layers iterators
       it = m_layers.begin(); // ...so reset iterator to begin of m_layers vector
     }
     else
-      it++;
+    {
+      ++it;
+    }
   } while (it != m_layers.end());
 
   RefreshLegend();
@@ -4584,7 +4576,7 @@ void mpWindow::DelAllYAxisAfterID(mpDeleteAction alsoDeleteObject, int yAxisID, 
       it = m_AxisDataYList.begin(); // ...so reset iterator to begin of m_AxisDataYList list
     }
     else
-      it++;
+      ++it;
   } while (it != m_AxisDataYList.end());
 
   if (refreshDisplay)
@@ -4712,25 +4704,25 @@ void mpWindow::SetBound()
   if (HaveXAxis || HaveYAxis)
   {
     int function;
-    for (mpLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
+    for (mpLayer* layer : m_layers)
     {
-      if ((*it)->IsLayerType(mpLAYER_PLOT, &function))
+      if (layer->IsLayerType(mpLAYER_PLOT, &function))
       {
         if ((function == mpfFX) && HaveXAxis)
         {
-        	mpFX* functionFX = static_cast<mpFX*>(*it);
-        	m_AxisDataYList[0].bound.Assign(
-        			functionFX->GetY(m_AxisDataX.axis->GetMinScale()),
-							functionFX->GetY(m_AxisDataX.axis->GetMaxScale())
-        	);
+          mpFX* functionFX = static_cast<mpFX*>(layer);
+          m_AxisDataYList[0].bound.Assign(
+              functionFX->GetY(m_AxisDataX.axis->GetMinScale()),
+              functionFX->GetY(m_AxisDataX.axis->GetMaxScale())
+          );
         }
         else if ((function == mpfFY) && HaveYAxis)
         {
-        	mpFY* functionFY = static_cast<mpFY*>(*it);
-        	m_AxisDataX.bound.Assign(
-        			functionFY->GetX(m_AxisDataYList[0].axis->GetMinScale()),
-							functionFY->GetX(m_AxisDataYList[0].axis->GetMaxScale())
-        	);
+          mpFY* functionFY = static_cast<mpFY*>(layer);
+          m_AxisDataX.bound.Assign(
+              functionFY->GetX(m_AxisDataYList[0].axis->GetMinScale()),
+              functionFY->GetX(m_AxisDataYList[0].axis->GetMaxScale())
+          );
         }
       }
     }
@@ -5105,17 +5097,17 @@ mpLayer* mpWindow::GetLayer(int position)
   return m_layers[position];
 }
 
-int mpWindow::GetLayerPosition(mpLayer* layer)
+int mpWindow::GetLayerPosition(const mpLayer* layer)
 {
   if (layer == nullptr)
     return -1;
 
   int i = 0;
-  for (mpLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
+  for (const mpLayer* l : m_layers)
   {
-    if ((*it) == layer)
+    if (l == layer)
       return i;
-    i++;
+    ++i;
   }
   return -1;
 }
@@ -5127,12 +5119,13 @@ mpLayer* mpWindow::GetLayerPlot(int position, mpFunctionType func)
 
   int layerNo = -1;
   int function;
-  for (mpLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
+
+  for (mpLayer* layer : m_layers)
   {
-    if ((*it)->IsLayerType(mpLAYER_PLOT, &function) && ((func == mpfAllType) || (function == func)))
+    if (layer->IsLayerType(mpLAYER_PLOT, &function) && ((func == mpfAllType) || (function == func)))
     {
       if (++layerNo == position)
-        return *it;
+        return layer;
     }
   }
   return nullptr;
@@ -5145,12 +5138,13 @@ mpScale* mpWindow::GetLayerAxis(int position, mpScaleType scale)
 
   int layerNo = -1;
   int thescale;
-  for (mpLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
+
+  for (mpLayer* layer : m_layers)
   {
-    if ((*it)->IsLayerType(mpLAYER_AXIS, &thescale) && ((scale == mpsAllType) || (thescale == scale)))
+    if (layer->IsLayerType(mpLAYER_AXIS, &thescale) && ((scale == mpsAllType) || (thescale == scale)))
     {
       if (++layerNo == position)
-        return static_cast<mpScale*>(*it);
+        return static_cast<mpScale*>(layer);
     }
   }
   return nullptr;
@@ -5179,40 +5173,40 @@ std::optional<mpPlotHit> mpWindow::GetClosestPlot(wxCoord ix, wxCoord iy)
   double* xnear = &nearX;
   double* ynear = &nearY;
 
-  for (mpLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
+  for (mpLayer* layer : m_layers)
   {
-    if ((*it)->IsTractable() && (*it)->IsVisible() && (*it)->IsLayerType(mpLAYER_PLOT, &function))
+    if (layer->IsTractable() && layer->IsVisible() && layer->IsLayerType(mpLAYER_PLOT, &function))
     {
       switch (function)
       {
         case mpfFX:
         {
-          mpFX* fx = static_cast<mpFX*>(*it);
+          mpFX* fx = static_cast<mpFX*>(layer);
           const double fy = fx->DoGetY(this->p2x(ix));
           if (abs(this->y2p(fy, fx->GetYAxisID()) - iy) < NEAR_AREA)
           {
             *xnear = this->p2x(ix);
             *ynear = fy;
-            result = (*it);
+            result = layer;
           }
           break;
         }
         case mpfFY:
         {
-          mpFY* fy = static_cast<mpFY*>(*it);
+          mpFY* fy = static_cast<mpFY*>(layer);
           const double fx = fy->DoGetX(this->p2y(iy, fy->GetYAxisID()));
           if (abs(this->x2p(fx) - ix) < NEAR_AREA)
           {
             *xnear = fx;
             *ynear = this->p2y(iy, fy->GetYAxisID());
-            result = (*it);
+            result = layer;
           }
           break;
         }
         case mpfFXY:
         case mpfFXYVector:
         {
-          mpFXY* fxy = static_cast<mpFXY*>(*it);
+          mpFXY* fxy = static_cast<mpFXY*>(layer);
           double xx, yy;
           if (fxy->ViewAsBar())
           {
@@ -5229,7 +5223,7 @@ std::optional<mpPlotHit> mpWindow::GetClosestPlot(wxCoord ix, wxCoord iy)
                 {
                   *xnear = xx;
                   *ynear = yy;
-                  result = (*it);
+                  result = layer;
                   break;
                 }
               }
@@ -5244,7 +5238,7 @@ std::optional<mpPlotHit> mpWindow::GetClosestPlot(wxCoord ix, wxCoord iy)
               {
                 *xnear = xx;
                 *ynear = yy;
-                result = (*it);
+                result = layer;
                 break;
               }
             }
@@ -5266,19 +5260,21 @@ std::optional<mpPlotHit> mpWindow::GetClosestPlot(wxCoord ix, wxCoord iy)
 
 mpLayer* mpWindow::GetLayerByName(const wxString &name)
 {
-  for (mpLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
-    if ((*it)->GetName().IsSameAs(name))
-      return *it;
+  for (mpLayer* layer : m_layers)
+  {
+    if (layer->GetName().IsSameAs(name))
+      return layer;
+  }
   return nullptr;    // Not found
 }
 
 mpLayer* mpWindow::GetLayerByClassName(const wxString &name)
 {
-  for (mpLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
+  for (mpLayer* layer : m_layers)
   {
-    const wxString classname = (*it)->GetClassInfo()->GetClassName();
+    const wxString classname = layer->GetClassInfo()->GetClassName();
     if (classname.IsSameAs(name))
-      return *it;
+      return layer;
   }
   return nullptr;    // Not found
 }
@@ -5540,12 +5536,12 @@ wxBitmap* mpWindow::BitmapScreenshot(wxSize imageSize, bool fit)
   }
 
   // Draw all the layers in Z order
-  for (int i = mpZIndex_BACKGROUND; i < mpZIndex_END; i++)
+  for (int i = mpZIndex_BACKGROUND; i < mpZIndex_END; ++i)
   {
-    for (mpLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
+    for (mpLayer* layer : m_layers)
     {
-      if ((*it)->GetZIndex() == i)
-        (*it)->Plot(m_Screenshot_dc, *this);
+      if (layer->GetZIndex() == i)
+        layer->Plot(m_Screenshot_dc, *this);
     }
   }
   m_Screenshot_dc.SelectObject(wxNullBitmap);
@@ -5668,21 +5664,21 @@ void mpWindow::SetColourTheme(const wxColour &bgColour, const wxColour &drawColo
   m_fgColour = drawColour;
   m_axColour = axesColour;
 
-  // cycle between layers to set colours and properties to them
-  for (mpLayerList::iterator it = m_layers.begin(); it != m_layers.end(); it++)
+  for (mpLayer* layer : m_layers)
   {
-    const mpLayerType type = (*it)->GetLayerType();
-    wxPen pen = (*it)->GetPen(); // Get the old pen to modify only colour, not style or width
+    const mpLayerType type = layer->GetLayerType();
+    wxPen pen = layer->GetPen();
 
     if (type == mpLAYER_AXIS)
     {
       pen.SetColour(axesColour);
+      layer->SetPen(pen);
     }
     else if ((type == mpLAYER_INFO) || (type == mpLAYER_TEXT))
     {
       pen.SetColour(drawColour);
+      layer->SetPen(pen);
     }
-    (*it)->SetPen(pen);
   }
 }
 
@@ -5991,21 +5987,18 @@ void mpMovableObject::ShapeUpdated()
     double ccos, csin;
     SinCos(m_reference_phi, &csin, &ccos);
 
-    m_trans_shape_xs.resize(m_shape_xs.size());
-    m_trans_shape_ys.resize(m_shape_xs.size());
+    const size_t size = m_shape_xs.size();
+    m_trans_shape_xs.resize(size);
+    m_trans_shape_ys.resize(size);
 
-    std::vector<double>::iterator itXi, itXo;
-    std::vector<double>::iterator itYi, itYo;
-
-    // Update the bounding box
-    for (itXo = m_trans_shape_xs.begin(), itYo = m_trans_shape_ys.begin(), itXi = m_shape_xs.begin(), itYi = m_shape_ys.begin();
-        itXo != m_trans_shape_xs.end(); itXo++, itYo++, itXi++, itYi++)
+    // Update the bounding box en utilisant un index unique
+    for (size_t i = 0; i < size; ++i)
     {
-      *itXo = m_reference_x + ccos * (*itXi) - csin * (*itYi);
-      *itYo = m_reference_y + csin * (*itXi) + ccos * (*itYi);
+      m_trans_shape_xs[i] = m_reference_x + ccos * m_shape_xs[i] - csin * m_shape_ys[i];
+      m_trans_shape_ys[i] = m_reference_y + csin * m_shape_xs[i] + ccos * m_shape_ys[i];
 
-      m_bbox_x.Update(*itXo);
-      m_bbox_y.Update(*itYo);
+      m_bbox_x.Update(m_trans_shape_xs[i]);
+      m_bbox_y.Update(m_trans_shape_ys[i]);
     }
   }
 }

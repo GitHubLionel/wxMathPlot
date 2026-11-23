@@ -1191,21 +1191,21 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
 
   protected:
     const mpLayerType m_type;   //!< Layer type mpLAYER_*
-    mpWindow* m_win;            //!< The wxWindow handle
+    mpWindow* m_win = nullptr;  //!< The wxWindow handle not yet available
     int m_subtype = -1;         //!< Layer sub type, set in constructors
     wxFont m_font;              //!< Layer's font
     wxColour m_fontcolour;      //!< Layer's font foreground colour
     wxPen m_pen;                //!< Layer's pen. Default Colour = Black, width = 1, style = wxPENSTYLE_SOLID
     wxBrush m_brush;            //!< Layer's brush. Default wxTRANSPARENT_BRUSH
-    wxString m_name;            //!< Layer's name
-    bool m_showName;            //!< States whether the name of the layer must be shown. Default : false
-    bool m_drawOutsideMargins;  //!< Select if the layer should draw only inside margins or over all DC. Default : false
-    bool m_visible;             //!< Toggles layer visibility. Default : true
-    bool m_tractable;           //!< Is the layer tractable
-    int m_flags;                //!< Holds label alignment. Default : mpALIGN_SW for series and mpALIGN_CENTER for scale
-    mpRect m_plotBoundaries;    //!< The boundaries for plotting curve calculated by mpWindow
-    bool m_CanDelete;           //!< Is the layer can be deleted
-    mpLayerZOrder m_ZIndex;     //!< The index in Z-Order to draw the layer
+    wxString m_name = "";       //!< Layer's name
+    bool m_showName = false;            //!< States whether the name of the layer must be shown. Default : false
+    bool m_drawOutsideMargins = false;  //!< Select if the layer should draw only inside margins or over all DC. Default : false
+    bool m_visible = true;              //!< Toggles layer visibility. Default : true
+    bool m_tractable = false;           //!< Is the layer tractable. Default : false
+    int m_flags = mpALIGN_SE;           //!< Holds label alignment. Default : mpALIGN_SW for series and mpALIGN_CENTER for scale
+    mpRect m_plotBoundaries;            //!< The boundaries for plotting curve calculated by mpWindow
+    bool m_CanDelete = true;            //!< Is the layer can be deleted. Default : true
+    mpLayerZOrder m_ZIndex = mpZIndex_BACKGROUND;     //!< The index in Z-Order
 
     /** Initialize the context
      */
@@ -1235,7 +1235,7 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
     void CheckLog(double *x, double *y, int yAxisID);
 
   private:
-    bool m_busy;          //!< Test if we are busy (plot operation)
+    bool m_busy = false;  //!< Test if we are busy (plot operation)
     mpLayer() = delete;   // default ctor not implemented/permitted
 
   DECLARE_DYNAMIC_CLASS_MATHPLOT(mpLayer);
@@ -3598,7 +3598,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
      @param layer the layer to find
      @return the position of the layer or -1 if not found
      */
-    int GetLayerPosition(mpLayer* layer);
+    int GetLayerPosition(const mpLayer* layer);
 
     /*! Get the layer of a certain type in list position indicated.
      N.B. You <i>must</i> know the index of the layer inside the list!
