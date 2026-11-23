@@ -54,7 +54,7 @@ class MathPlotConfigSettings : public wxFileConfig
      * Manages the backup of configuration window data
      * @param localFilename the name of the file in which the data would be saved
      */
-    MathPlotConfigSettings(const wxString& localFilename) :
+    explicit MathPlotConfigSettings(const wxString& localFilename) :
         wxFileConfig(wxEmptyString, wxEmptyString, localFilename) {}
     virtual ~MathPlotConfigSettings() {}
 
@@ -161,7 +161,7 @@ class MathPlotConfigDialog: public wxDialog
      * @param parent the handle of the plot window
      * @param id an ID for the dialog window (default -1)
      */
-    MathPlotConfigDialog(wxWindow *parent, wxWindowID id = -1);
+    explicit MathPlotConfigDialog(wxWindow *parent, wxWindowID id = -1);
     virtual ~MathPlotConfigDialog();
 
     /**
@@ -414,11 +414,11 @@ class MathPlotConfigDialog: public wxDialog
 
     void DoButtonColour(wxButton* button, const wxColour& colour);
     void DoApplyColour(const wxColour& colour);
-    void UpdateFont(mpLayer* layer, wxButton* button, bool get_set);
+    static void UpdateFont(mpLayer* layer, wxButton* button, bool get_set);
     void SetFontChildren(wxButton* p, const wxFontData& fontdata);
 
-    wxBrushStyle IdToBrushStyle(int id);
-    int BrushStyleToId(wxBrushStyle style);
+    static wxBrushStyle IdToBrushStyle(int id);
+    static int BrushStyleToId(wxBrushStyle style);
 
   DECLARE_EVENT_TABLE()
 };

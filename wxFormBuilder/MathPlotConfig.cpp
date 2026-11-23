@@ -72,7 +72,7 @@ void MathPlotConfigSettings::DoRecursiveSearch(bool set, wxWindow* win, const wx
   // wxTextCtrl: edit widget
   if (win->IsKindOf(wxCLASSINFO(wxTextCtrl)))
   {
-    wxTextCtrl* text = (wxTextCtrl*)win;
+    wxTextCtrl* text = static_cast<wxTextCtrl*>(win);
     SetPath(path);
     wxString key = _T("Text") + wxString::Format(_T("%d"), level);
     if (set)
@@ -91,7 +91,7 @@ void MathPlotConfigSettings::DoRecursiveSearch(bool set, wxWindow* win, const wx
   // wxChoice: choice list widget
   if (win->IsKindOf(wxCLASSINFO(wxChoice)))
   {
-    wxChoice* choice = (wxChoice*)win;
+    wxChoice* choice = static_cast<wxChoice*>(win);
     SetPath(path);
     wxString key = _T("Choice") + wxString::Format(_T("%d"), level);
     if (set)
@@ -110,7 +110,7 @@ void MathPlotConfigSettings::DoRecursiveSearch(bool set, wxWindow* win, const wx
   // wxCheckBox: check box widget
   if (win->IsKindOf(wxCLASSINFO(wxCheckBox)))
   {
-    wxCheckBox* check = (wxCheckBox*)win;
+    wxCheckBox* check = static_cast<wxCheckBox*>(win);
     SetPath(path);
     wxString key = _T("Check") + wxString::Format(_T("%d"), level);
     if (set)
@@ -129,7 +129,7 @@ void MathPlotConfigSettings::DoRecursiveSearch(bool set, wxWindow* win, const wx
   // wxButton: button widget
   if (win->IsKindOf(wxCLASSINFO(wxButton)))
   {
-    wxButton* button = (wxButton*)win;
+    wxButton* button = static_cast<wxButton*>(win);
     SetPath(path);
     // It is a button for font configuration
     if ((button->GetLabel()).IsSameAs(_T("Font")))
@@ -168,7 +168,7 @@ void MathPlotConfigSettings::DoRecursiveSearch(bool set, wxWindow* win, const wx
     return;
   }
 
-  wxWindowList& children = win->GetChildren();
+  const wxWindowList& children = win->GetChildren();
   wxString winPath = path + _T("/") + win->GetName();
   if (level != 0)
     winPath += wxString::Format(_T("%d"), level);
@@ -434,7 +434,7 @@ void MathPlotConfigDialog::CompleteInitialization(void)
 void MathPlotConfigDialog::Initialize(mpConfigPageId id)
 {
   // ** General page **
-  CurrentTitle = (mpText*)m_plot->GetLayerByClassName(_T("mpTitle"));
+  CurrentTitle = static_cast<mpText*>(m_plot->GetLayerByClassName(_T("mpTitle")));
   if (CurrentTitle)
   {
     edTitle->SetValue(CurrentTitle->GetName());
@@ -458,7 +458,7 @@ void MathPlotConfigDialog::Initialize(mpConfigPageId id)
   cbMagnetize->SetValue(m_plot->GetMagnetize());
 
   // Mouse coordinates
-  CurrentCoords = (mpInfoCoords*)m_plot->GetLayerByClassName(_T("mpInfoCoords"));
+  CurrentCoords = static_cast<mpInfoCoords*>(m_plot->GetLayerByClassName(_T("mpInfoCoords")));
   if (CurrentCoords)
   {
     cbCoord->SetSelection(CurrentCoords->GetLocation());
@@ -474,7 +474,7 @@ void MathPlotConfigDialog::Initialize(mpConfigPageId id)
   ChoiceLeftMouseAction->SetSelection((int)m_plot->GetMouseLeftDownAction());
 
   // ** Legend page **
-  CurrentLegend = (mpInfoLegend*)m_plot->GetLayerByClassName(_T("mpInfoLegend"));
+  CurrentLegend = static_cast<mpInfoLegend*>(m_plot->GetLayerByClassName(_T("mpInfoLegend")));
   if (CurrentLegend)
   {
     cbLegendPosition->SetSelection(CurrentLegend->GetLocation());
@@ -521,7 +521,7 @@ void MathPlotConfigDialog::Initialize(mpConfigPageId id)
   ChoiceSeries->Clear();
   for (unsigned int i = 0; i < m_plot->CountLayersType(mpLAYER_PLOT); i++)
   {
-    ChoiceSeries->Append(((mpLayer*)m_plot->GetLayerPlot(i))->GetName());
+    ChoiceSeries->Append((static_cast<mpLayer*>(m_plot->GetLayerPlot(i)))->GetName());
   }
   bDelSeries->Enable(ChoiceSeries->GetCount() > 0);
 
@@ -541,7 +541,7 @@ void MathPlotConfigDialog::Initialize(mpConfigPageId id)
   ChoiceLines->Clear();
   for (unsigned int i = 0; i < m_plot->CountLayersType(mpLAYER_LINE); i++)
   {
-    ChoiceLines->Append(((mpLayer*)m_plot->GetLayersType(i, mpLAYER_LINE))->GetName());
+    ChoiceLines->Append((static_cast<mpLayer*>(m_plot->GetLayersType(i, mpLAYER_LINE)))->GetName());
   }
   bDelLines->Enable(ChoiceLines->GetCount() > 0);
 
@@ -555,7 +555,7 @@ void MathPlotConfigDialog::Initialize(mpConfigPageId id)
   }
   else
   {
-    CurrentLine = NULL;
+    CurrentLine = nullptr;
     pLines->Show(false);
   }
 
@@ -563,7 +563,7 @@ void MathPlotConfigDialog::Initialize(mpConfigPageId id)
   if (id != mpcpiNone)
     nbConfig->SetSelection(id);
 
-  CurrentChoice = NULL;
+  CurrentChoice = nullptr;
   switch (nbConfig->GetSelection())
   {
     case mpcpiAxis:
@@ -630,7 +630,7 @@ void MathPlotConfigDialog::OnQuit(wxCommandEvent& WXUNUSED(event))
 void MathPlotConfigDialog::OnbColorClick(wxCommandEvent& event)
 {
   // Get the sender
-  if ((colourButton = wxDynamicCast(event.GetEventObject(), wxButton)) != NULL)
+  if ((colourButton = wxDynamicCast(event.GetEventObject(), wxButton)) != nullptr)
   {
     wxColourData m_clrData;
     m_clrData.SetColour(colourButton->GetBackgroundColour());
@@ -739,7 +739,7 @@ void MathPlotConfigDialog::SetFontChildren(wxButton* p, const wxFontData& fontda
 void MathPlotConfigDialog::OnnbConfigPageChanged(wxNotebookEvent& event)
 {
   // I don't know why but I have an event over nbPenAxisGrid, so this workaround !
-  if (wxNotebook* const notebook = wxDynamicCast(event.GetEventObject(), wxNotebook))
+  if (const wxNotebook* const notebook = wxDynamicCast(event.GetEventObject(), wxNotebook))
   {
     if (notebook == nbPenAxisGrid)
     {
@@ -749,7 +749,7 @@ void MathPlotConfigDialog::OnnbConfigPageChanged(wxNotebookEvent& event)
   }
 
   const int idx = event.GetSelection();
-  CurrentChoice = NULL;
+  CurrentChoice = nullptr;
   switch (idx)
   {
     case mpcpiGeneral:
@@ -773,7 +773,7 @@ void MathPlotConfigDialog::UpdateAxis(void)
 {
   if (ChoiceAxis->GetSelection() == wxNOT_FOUND)
     return;
-  CurrentScale = (mpScale*)ChoiceAxis->GetClientData(ChoiceAxis->GetSelection());
+  CurrentScale = static_cast<mpScale*>(ChoiceAxis->GetClientData(ChoiceAxis->GetSelection()));
   if (!CurrentScale)
     return;
   wxString classname = CurrentScale->GetClassInfo()->GetClassName();
@@ -830,7 +830,7 @@ void MathPlotConfigDialog::UpdateAxis(void)
     }
     else if (classname.IsSameAs(_T("mpScaleY")))
     {
-      mpScaleY* yAxis = static_cast<mpScaleY*>(CurrentScale);
+      const mpScaleY* yAxis = static_cast<mpScaleY*>(CurrentScale);
       BoundScale = m_plot->GetBoundY(yAxis->GetAxisID());
       scale_min = BoundScale.min;
       scale_max = BoundScale.max;
@@ -846,19 +846,19 @@ void MathPlotConfigDialog::UpdateAxis(void)
 
 void MathPlotConfigDialog::OnbAddAxisClick(wxCommandEvent& event)
 {
-  if (wxButton* const bt = wxDynamicCast(event.GetEventObject(), wxButton))
+  if (const wxButton* const bt = wxDynamicCast(event.GetEventObject(), wxButton))
   {
-    mpScale* newScale = NULL;
+    mpScale* newScale = nullptr;
     if (bt == bAddXAxis)
-      newScale = (mpScale*)new mpScaleX(wxT("New X"), mpALIGN_BOTTOM, true, mpLabel_AUTO);
+      newScale = static_cast<mpScale*>(new mpScaleX(wxT("New X"), mpALIGN_BOTTOM, true, mpLabel_AUTO));
     else
-      newScale = (mpScale*)new mpScaleY(wxT("New Y"), mpALIGN_LEFT, true);
+      newScale = static_cast<mpScale*>(new mpScaleY(wxT("New Y"), mpALIGN_LEFT, true));
 
     if (newScale && (m_plot->AddLayer(newScale, false, false)))
     {
       // Search the first X or Y scale present to retreive its font
       // since we probably want the same font for all the axis.
-      mpScale* firstScale = NULL;
+      const mpScale* firstScale = nullptr;
       if (bt == bAddXAxis)
         firstScale = m_plot->GetLayerAxis(0, mpsScaleX);
       else
@@ -870,7 +870,7 @@ void MathPlotConfigDialog::OnbAddAxisClick(wxCommandEvent& event)
       // Find in the choice list the index of the new axis
       for (unsigned int i = 0; i < ChoiceAxis->GetCount(); i++)
       {
-        if ((mpScale*)ChoiceAxis->GetClientData(i) == newScale)
+        if (static_cast<mpScale*>(ChoiceAxis->GetClientData(i)) == newScale)
         {
           ChoiceAxis->SetSelection(i);
           break;
@@ -889,7 +889,7 @@ void MathPlotConfigDialog::OnbDelAxisClick(wxCommandEvent& WXUNUSED(event))
     {
       m_plot->DelLayer(CurrentScale, mpYesDelete, true, false); // Should we also delete the object ?
       m_plot->UpdateAll();
-      CurrentScale = NULL;
+      CurrentScale = nullptr;
       Initialize(mpcpiAxis);
     }
   }
@@ -934,7 +934,7 @@ int MathPlotConfigDialog::BrushStyleToId(wxBrushStyle style)
 
 void MathPlotConfigDialog::SelectChoiceSerie(unsigned int serie)
 {
-  CurrentSerie = NULL;
+  CurrentSerie = nullptr;
   if ((ChoiceSeries->GetCount() > 0) && (serie < ChoiceSeries->GetCount()))
   {
     ChoiceSeries->SetSelection(serie);
@@ -958,11 +958,11 @@ void MathPlotConfigDialog::SelectChoiceYAxis(int yAxisID)
 
 void MathPlotConfigDialog::UpdateSelectedSerie(void)
 {
-  CurrentSerie = (mpFunction*)m_plot->GetLayerPlot(ChoiceSeries->GetSelection());
+  CurrentSerie = static_cast<mpFunction*>(m_plot->GetLayerPlot(ChoiceSeries->GetSelection()));
 
   if (!CurrentSerie)
   {
-    CurrentChoice = NULL;
+    CurrentChoice = nullptr;
     return;
   }
 
@@ -973,7 +973,7 @@ void MathPlotConfigDialog::UpdateSelectedSerie(void)
   ChoiceSeriesYAxis->SetSelection(wxNOT_FOUND);
   for (unsigned int i = 0; i < ChoiceSeriesYAxis->GetCount(); i++)
   {
-    mpScaleY* yAxis = static_cast<mpScaleY*>(ChoiceSeriesYAxis->GetClientData(i));
+    const mpScaleY* yAxis = static_cast<mpScaleY*>(ChoiceSeriesYAxis->GetClientData(i));
     if (yAxis->GetAxisID() == CurrentSerie->GetYAxisID())
     {
       ChoiceSeriesYAxis->SetSelection(i);
@@ -1009,7 +1009,7 @@ void MathPlotConfigDialog::UpdateSelectedSerie(void)
   if (CheckBar)
   {
     cbBar->Enable();
-    cbBar->SetValue(((mpFXY*)CurrentSerie)->ViewAsBar());
+    cbBar->SetValue((static_cast<mpFXY*>(CurrentSerie)->ViewAsBar()));
   }
   else
   {
@@ -1038,7 +1038,7 @@ void MathPlotConfigDialog::OnbDelSeriesClick(wxCommandEvent& WXUNUSED(event))
       if (CurrentLegend)
         CurrentLegend->SetNeedUpdate();
       m_plot->UpdateAll();
-      CurrentSerie = NULL;
+      CurrentSerie = nullptr;
       edSeriesName->SetValue(_T(""));
       Initialize(mpcpiSeries);
     }
@@ -1075,11 +1075,11 @@ void MathPlotConfigDialog::UpdateSeriesStep(void)
 
 void MathPlotConfigDialog::UpdateSelectedLine(void)
 {
-  CurrentLine = (mpLine*)m_plot->GetLayersType(ChoiceLines->GetSelection(), mpLAYER_LINE);
+  CurrentLine = static_cast<mpLine*>(m_plot->GetLayersType(ChoiceLines->GetSelection(), mpLAYER_LINE));
 
   if (!CurrentLine)
   {
-    CurrentChoice = NULL;
+    CurrentChoice = nullptr;
     return;
   }
 
@@ -1092,7 +1092,7 @@ void MathPlotConfigDialog::UpdateSelectedLine(void)
   ChoiceLinesYAxis->SetSelection(wxNOT_FOUND);
   for (unsigned int i = 0; i < ChoiceSeriesYAxis->GetCount(); i++)
   {
-    mpScaleY* yAxis = static_cast<mpScaleY*>(ChoiceLinesYAxis->GetClientData(i));
+  	const mpScaleY* yAxis = static_cast<mpScaleY*>(ChoiceLinesYAxis->GetClientData(i));
     if (yAxis->GetAxisID() == CurrentLine->GetYAxisID())
     {
       ChoiceLinesYAxis->SetSelection(i);
@@ -1159,7 +1159,7 @@ void MathPlotConfigDialog::OnbAddLinesClick(wxCommandEvent& WXUNUSED(event))
   if (dialog.ShowModal() == wxID_CANCEL)
     return;
 
-  mpFunction* newLine = NULL;
+  mpFunction* newLine = nullptr;
   int selection = dialog.GetSelection();
   if (selection < 2)
   {
@@ -1169,9 +1169,9 @@ void MathPlotConfigDialog::OnbAddLinesClick(wxCommandEvent& WXUNUSED(event))
     if (dlg.ShowModal() == wxID_OK)
     {
       if (selection == 0)
-        newLine = (mpFunction*)new mpHorizontalLine(values[0]);
+        newLine = static_cast<mpFunction*>(new mpHorizontalLine(values[0]));
       else
-        newLine = (mpFunction*)new mpVerticalLine(values[0]);
+        newLine = static_cast<mpFunction*>(new mpVerticalLine(values[0]));
     }
 
     if (newLine && (m_plot->AddLayer(newLine, false, false)))
@@ -1194,9 +1194,9 @@ void MathPlotConfigDialog::OnbAddLinesClick(wxCommandEvent& WXUNUSED(event))
     if (dlg.ShowModal() == wxID_OK)
     {
       if (selection == 2)
-        newLine = (mpFunction*)new mpGaussian(values[0], values[1]);
+        newLine = static_cast<mpFunction*>(new mpGaussian(values[0], values[1]));
       else
-        newLine = (mpFunction*)new mpNormal(values[0], values[1]);
+        newLine = static_cast<mpFunction*>(new mpNormal(values[0], values[1]));
     }
 
     if (newLine && (m_plot->AddLayer(newLine, false, false)))
@@ -1216,7 +1216,7 @@ void MathPlotConfigDialog::OnbDelLinesClick(wxCommandEvent& WXUNUSED(event))
     {
       m_plot->DelLayer(CurrentLine, mpYesDelete, true, false);
       m_plot->UpdateAll();
-      CurrentLine = NULL;
+      CurrentLine = nullptr;
       edLinesName->SetValue(_T(""));
       Initialize(mpcpiLines);
     }
@@ -1309,7 +1309,7 @@ void MathPlotConfigDialog::Apply(int pageIndex, bool updateFont)
       break;
 
     case mpcpiAxis: // Axis page
-      if ((CurrentChoice == ChoiceAxis) && (CurrentScale != NULL))
+      if ((CurrentChoice == ChoiceAxis) && (CurrentScale != nullptr))
       {
         bool NameChanged = CurrentScale->GetName() != edAxisName->GetValue();
         if (NameChanged)
@@ -1342,7 +1342,7 @@ void MathPlotConfigDialog::Apply(int pageIndex, bool updateFont)
         }
         else if (classname.IsSameAs(_T("mpScaleY")))
         {
-          mpScaleY* yAxis = static_cast<mpScaleY*>(CurrentScale);
+        	const mpScaleY* yAxis = static_cast<mpScaleY*>(CurrentScale);
           newName.Printf(_T("Y%d axis - "), (int)yAxis->GetAxisID());
         }
         // Update name in choice list
@@ -1381,11 +1381,11 @@ void MathPlotConfigDialog::Apply(int pageIndex, bool updateFont)
           }
           else if (classname.IsSameAs(_T("mpScaleY")))
           {
-            mpScaleY* yAxis = static_cast<mpScaleY*>(CurrentScale);
+          	const mpScaleY* yAxis = static_cast<mpScaleY*>(CurrentScale);
             BoundScaleY[yAxis->GetAxisID()].Set(scale_min, scale_max);
 
             // Get bound of the other axis
-            mpScale* xAxis = (mpScale*)m_plot->GetLayerXAxis();
+            const mpScale* xAxis = static_cast<mpScale*>(m_plot->GetLayerXAxis());
             if (xAxis && (!xAxis->GetAuto()))
             {
               BoundScaleX = xAxis->GetScale();
@@ -1416,7 +1416,7 @@ void MathPlotConfigDialog::Apply(int pageIndex, bool updateFont)
       break;
 
     case mpcpiSeries: // Series page
-      if ((CurrentChoice == ChoiceSeries) && (CurrentSerie != NULL))
+      if ((CurrentChoice == ChoiceSeries) && (CurrentSerie != nullptr))
       {
         CurrentSerie->SetName(edSeriesName->GetValue());
         ChoiceSeries->SetString(ChoiceSeries->GetSelection(), edSeriesName->GetValue());
@@ -1444,7 +1444,7 @@ void MathPlotConfigDialog::Apply(int pageIndex, bool updateFont)
         bool yAxisChange = false;
         if (ChoiceSeriesYAxis->GetSelection() != wxNOT_FOUND)
         {
-          mpScaleY* yAxis = static_cast<mpScaleY*>(ChoiceSeriesYAxis->GetClientData(ChoiceSeriesYAxis->GetSelection()));
+        	const mpScaleY* yAxis = static_cast<mpScaleY*>(ChoiceSeriesYAxis->GetClientData(ChoiceSeriesYAxis->GetSelection()));
           yAxisChange = (CurrentSerie->GetYAxisID() != yAxis->GetAxisID());
           CurrentSerie->SetYAxisID(yAxis->GetAxisID());
         }
@@ -1462,7 +1462,7 @@ void MathPlotConfigDialog::Apply(int pageIndex, bool updateFont)
 
         if (CheckBar)
         {
-          ((mpFXYVector*)CurrentSerie)->SetViewMode(cbBar->GetValue());
+          (static_cast<mpFXYVector*>(CurrentSerie))->SetViewMode(cbBar->GetValue());
           if (cbBar->GetValue())
             cbSeriesContinuity->SetValue(false);
         }
@@ -1479,7 +1479,7 @@ void MathPlotConfigDialog::Apply(int pageIndex, bool updateFont)
       break;
 
     case mpcpiLines: // Line page
-      if ((CurrentChoice == ChoiceLines) && (CurrentLine != NULL))
+      if ((CurrentChoice == ChoiceLines) && (CurrentLine != nullptr))
       {
         CurrentLine->SetName(edLinesName->GetValue());
         ChoiceLines->SetString(ChoiceLines->GetSelection(), edLinesName->GetValue());
@@ -1487,7 +1487,7 @@ void MathPlotConfigDialog::Apply(int pageIndex, bool updateFont)
         CurrentLine->SetValue(line_value);
         if (ChoiceLinesYAxis->GetSelection() != wxNOT_FOUND)
         {
-          mpScaleY* yAxis = static_cast<mpScaleY*>(ChoiceLinesYAxis->GetClientData(ChoiceLinesYAxis->GetSelection()));
+        	const mpScaleY* yAxis = static_cast<mpScaleY*>(ChoiceLinesYAxis->GetClientData(ChoiceLinesYAxis->GetSelection()));
           CurrentLine->SetYAxisID(yAxis->GetAxisID());
         }
 
