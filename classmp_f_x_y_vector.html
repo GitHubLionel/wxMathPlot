@@ -69,9 +69,8 @@ Collaboration diagram for mpFXYVector:</div>
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a675c1ffb26f96d051bf30aa45364c12b" id="r_a675c1ffb26f96d051bf30aa45364c12b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a675c1ffb26f96d051bf30aa45364c12b">mpFXYVector</a> (const wxString &amp;name=wxEmptyString, int flags=<a class="el" href="mathplot_8h.html#ae52a128fe012488cde8e0c969ddce849aa30d7ba36a5130bb577aaf12a3721556">mpALIGN_SW</a>, bool viewAsBar=false, unsigned int yAxisID=0)</td></tr>
-<tr class="memitem:a4ba1b045053c4a7f4939d4d64159a39b" id="r_a4ba1b045053c4a7f4939d4d64159a39b"><td class="memItemLeft" align="right" valign="top"><a id="a4ba1b045053c4a7f4939d4d64159a39b" name="a4ba1b045053c4a7f4939d4d64159a39b"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>~mpFXYVector</b> () override</td></tr>
-<tr class="memdesc:a4ba1b045053c4a7f4939d4d64159a39b"><td class="mdescLeft">&#160;</td><td class="mdescRight">destrutor <br /></td></tr>
+<tr class="memitem:ac4eb1ffadfca048b12151b51c4b36399" id="r_ac4eb1ffadfca048b12151b51c4b36399"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac4eb1ffadfca048b12151b51c4b36399">~mpFXYVector</a> () override=default</td></tr>
+<tr class="memdesc:ac4eb1ffadfca048b12151b51c4b36399"><td class="mdescLeft">&#160;</td><td class="mdescRight">destrutor Note: Default destructor relies on RAII: std::vector destructors automatically release all allocated memory.  <br /></td></tr>
 <tr class="memitem:a760c8520a011747f27fe2980d787b78d" id="r_a760c8520a011747f27fe2980d787b78d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a760c8520a011747f27fe2980d787b78d">SetData</a> (const std::vector&lt; double &gt; &amp;xs, const std::vector&lt; double &gt; &amp;ys)</td></tr>
 <tr class="memdesc:a760c8520a011747f27fe2980d787b78d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Changes the internal data: the set of points to draw.  <br /></td></tr>
 <tr class="memitem:a4bb4e6ac8cfb9e229746669e61e799c9" id="r_a4bb4e6ac8cfb9e229746669e61e799c9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4bb4e6ac8cfb9e229746669e61e799c9">Clear</a> () override</td></tr>
@@ -418,6 +417,34 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>m_CanDelete</b> = tru
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="ac4eb1ffadfca048b12151b51c4b36399" name="ac4eb1ffadfca048b12151b51c4b36399"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac4eb1ffadfca048b12151b51c4b36399">&#9670;&#160;</a></span>~mpFXYVector()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">mpFXYVector::~mpFXYVector </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel override">override</span><span class="mlabel default">default</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>destrutor Note: Default destructor relies on RAII: std::vector destructors automatically release all allocated memory. </p>
+<p>So, no need to call <a class="el" href="#a4bb4e6ac8cfb9e229746669e61e799c9" title="Clears all the data, leaving the layer empty.">Clear()</a> </p>
 
 </div>
 </div>

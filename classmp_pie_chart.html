@@ -70,9 +70,8 @@ Collaboration diagram for mpPieChart:</div>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a94584e6b9fc4c4a785fbe4dc3c4f2b2d" id="r_a94584e6b9fc4c4a785fbe4dc3c4f2b2d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a94584e6b9fc4c4a785fbe4dc3c4f2b2d">mpPieChart</a> (const wxString &amp;name=wxEmptyString, double radius=20)</td></tr>
 <tr class="memdesc:a94584e6b9fc4c4a785fbe4dc3c4f2b2d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default constructor.  <br /></td></tr>
-<tr class="memitem:a7e38209abcec276a789a287591297be3" id="r_a7e38209abcec276a789a287591297be3"><td class="memItemLeft" align="right" valign="top"><a id="a7e38209abcec276a789a287591297be3" name="a7e38209abcec276a789a287591297be3"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>~mpPieChart</b> () override</td></tr>
-<tr class="memdesc:a7e38209abcec276a789a287591297be3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor. <br /></td></tr>
+<tr class="memitem:ab471b307774bca1f0786f41b37885ab5" id="r_ab471b307774bca1f0786f41b37885ab5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab471b307774bca1f0786f41b37885ab5">~mpPieChart</a> () override=default</td></tr>
+<tr class="memdesc:ab471b307774bca1f0786f41b37885ab5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor Note: Default destructor relies on RAII: std::vector destructors automatically release all allocated memory.  <br /></td></tr>
 <tr class="memitem:a1eaa43b0d9315bf101b0ddedd0fb0812" id="r_a1eaa43b0d9315bf101b0ddedd0fb0812"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1eaa43b0d9315bf101b0ddedd0fb0812">SetCenter</a> (const wxPoint center)</td></tr>
 <tr class="memdesc:a1eaa43b0d9315bf101b0ddedd0fb0812"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the center of the pie chart.  <br /></td></tr>
 <tr class="memitem:ad03ab95aa0f1e775007a30016ce4de59" id="r_ad03ab95aa0f1e775007a30016ce4de59"><td class="memItemLeft" align="right" valign="top">wxPoint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad03ab95aa0f1e775007a30016ce4de59">GetCenter</a> (void) const</td></tr>
@@ -91,9 +90,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a222093a0bbc1f395c165f260c7385aa3 inherit pub_methods_classmp_chart" id="r_a222093a0bbc1f395c165f260c7385aa3"><td class="memItemLeft" align="right" valign="top">
 &#160;</td><td class="memItemRight" valign="bottom"><b>mpChart</b> (const wxString &amp;name=wxEmptyString)</td></tr>
 <tr class="memdesc:a222093a0bbc1f395c165f260c7385aa3 inherit pub_methods_classmp_chart"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default constructor. <br /></td></tr>
-<tr class="memitem:aff1f46e427ef81328757f48c13f66991 inherit pub_methods_classmp_chart" id="r_aff1f46e427ef81328757f48c13f66991"><td class="memItemLeft" align="right" valign="top">
-&#160;</td><td class="memItemRight" valign="bottom"><b>~mpChart</b> () override</td></tr>
-<tr class="memdesc:aff1f46e427ef81328757f48c13f66991 inherit pub_methods_classmp_chart"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor. <br /></td></tr>
+<tr class="memitem:aa516fa9ee474e75d7d74d18da61b5f80 inherit pub_methods_classmp_chart" id="r_aa516fa9ee474e75d7d74d18da61b5f80"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_chart.html#aa516fa9ee474e75d7d74d18da61b5f80">~mpChart</a> () override=default</td></tr>
+<tr class="memdesc:aa516fa9ee474e75d7d74d18da61b5f80 inherit pub_methods_classmp_chart"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor Note: Default destructor relies on RAII: std::vector destructors automatically release all allocated memory.  <br /></td></tr>
 <tr class="memitem:a7259eb27b0919be73fa17a0516ea54b2 inherit pub_methods_classmp_chart" id="r_a7259eb27b0919be73fa17a0516ea54b2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_chart.html#a7259eb27b0919be73fa17a0516ea54b2">SetChartValues</a> (const std::vector&lt; double &gt; &amp;data)</td></tr>
 <tr class="memdesc:a7259eb27b0919be73fa17a0516ea54b2 inherit pub_methods_classmp_chart"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set bar values.  <br /></td></tr>
 <tr class="memitem:a26ad9fa34ddcf8a5cc5bd4332081b40c inherit pub_methods_classmp_chart" id="r_a26ad9fa34ddcf8a5cc5bd4332081b40c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmp_chart.html#a26ad9fa34ddcf8a5cc5bd4332081b40c">SetChartLabels</a> (const std::vector&lt; std::string &gt; &amp;labelArray)</td></tr>
@@ -364,6 +362,34 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>m_CanDelete</b> = tru
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="ab471b307774bca1f0786f41b37885ab5" name="ab471b307774bca1f0786f41b37885ab5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab471b307774bca1f0786f41b37885ab5">&#9670;&#160;</a></span>~mpPieChart()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">mpPieChart::~mpPieChart </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel override">override</span><span class="mlabel default">default</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Destructor Note: Default destructor relies on RAII: std::vector destructors automatically release all allocated memory. </p>
+<p>So, no need to call <a class="el" href="classmp_chart.html#ad39e86e6f447cdc2957e8b0e3bdd3f3b" title="Clears all the data, leaving the layer empty.">Clear()</a> </p>
 
 </div>
 </div>
