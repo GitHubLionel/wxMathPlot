@@ -3,7 +3,7 @@
  * Purpose:   Code for Application Frame
  * Author:    Lionel ()
  * Created:   2021-01-24
- * Last edit: 2026-07-01
+ * Last edit: 2026-11-24
  * Copyright: Lionel ()
  * License:
  **************************************************************/

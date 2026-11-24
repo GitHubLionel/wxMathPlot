@@ -6,7 +6,7 @@
 // Contributors:    Jose Luis Blanco, Val Greene, Lionel Reynaud, Dave Nadler, MortenMacFly,
 //                  Oskar Waldemarsson (for multi Y axis and corrections)
 // Created:         21/07/2003
-// Last edit:       11/07/2026
+// Last edit:       24/11/2026
 // Copyright:       (c) David Schalig, Davide Rondini
 // Licence:         wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -874,12 +874,9 @@ class WXDLLIMPEXP_MATHPLOT mpLayer: public wxObject
      * The base class of all layer objects
      * @param layerType the top level type of the layer. @sa mpLayerType
      */
-    mpLayer(mpLayerType layerType);
+    explicit mpLayer(mpLayerType layerType);
 
-    ~mpLayer() override
-    {
-      ;
-    }
+    ~mpLayer() override = default;
 
     /** Set the wxWindow handle
      */
@@ -1386,10 +1383,7 @@ class WXDLLIMPEXP_MATHPLOT mpInfoCoords: public mpInfoLayer
     explicit mpInfoCoords(wxPoint pos, const wxBrush &brush = *wxTRANSPARENT_BRUSH, mpLocation location = mpMarginUser);
 
     /** Default destructor */
-    ~mpInfoCoords() override
-    {
-      ;
-    }
+    ~mpInfoCoords() override = default;
 
     /** Type of info coordinates to be displayed (axis, closest series, or all series) */
     enum infoCoordType
@@ -1516,7 +1510,7 @@ class WXDLLIMPEXP_MATHPLOT mpInfoLegend: public mpInfoLayer
     explicit mpInfoLegend(wxPoint pos, const wxBrush &brush = *wxWHITE_BRUSH, mpLocation location = mpMarginUser);
 
     /**  Default destructor */
-    ~mpInfoLegend() override {}
+    ~mpInfoLegend() override = default;
 
     /** Set item mode (the element on the left of text representing the plot line may be line, square, or line with symbol).
      * @param mode Item draw mode: mpLegendLine, mpLegendSquare, or mpLegendSymbol. */
@@ -2299,11 +2293,10 @@ class WXDLLIMPEXP_MATHPLOT mpFXYVector: public mpFXY
 		explicit mpFXYVector(const wxString &name = wxEmptyString, int flags = mpALIGN_SW, bool viewAsBar = false, unsigned int yAxisID = 0);
 
     /** destrutor
+     * Note: Default destructor relies on RAII: std::vector destructors automatically release all allocated memory.
+     * So, no need to call Clear()
      */
-    ~mpFXYVector() override
-    {
-    	mpFXYVector::Clear();
-    }
+    ~mpFXYVector() override = default;
 
     /** Changes the internal data: the set of points to draw.
      Both vectors MUST be of the same length. This method DOES NOT refresh the mpWindow; do it manually.
@@ -2651,11 +2644,11 @@ class WXDLLIMPEXP_MATHPLOT mpChart: public mpFunction
     /** Default constructor */
 		explicit mpChart(const wxString &name = wxEmptyString);
 
-    /** Destructor */
-    ~mpChart() override
-    {
-    	mpChart::Clear();
-    }
+    /** Destructor
+     * Note: Default destructor relies on RAII: std::vector destructors automatically release all allocated memory.
+     * So, no need to call Clear()
+     */
+    ~mpChart() override = default;
 
     /** Set bar values.
      @param data Vector of double. */
@@ -2710,11 +2703,11 @@ class WXDLLIMPEXP_MATHPLOT mpBarChart: public mpChart
     /** Debault constructor */
 		explicit mpBarChart(const wxString &name = wxEmptyString, double width = 0.5);
 
-    /** Destructor */
-    ~mpBarChart() override
-    {
-      Clear();
-    }
+    /** Destructor
+     * Note: Default destructor relies on RAII: std::vector destructors automatically release all allocated memory.
+     * So, no need to call Clear()
+     */
+    ~mpBarChart() override = default;
 
     /// Set the colour used to fill the bars.
     void SetBarColour(const wxColour &colour);
@@ -2776,12 +2769,11 @@ class WXDLLIMPEXP_MATHPLOT mpPieChart: public mpChart
      * @param radius the radius of the pie chart*/
 		explicit mpPieChart(const wxString &name = wxEmptyString, double radius = 20);
 
-    /** Destructor */
-    ~mpPieChart() override
-    {
-      Clear();
-      colours.clear();
-    }
+    /** Destructor
+     * Note: Default destructor relies on RAII: std::vector destructors automatically release all allocated memory.
+     * So, no need to call Clear()
+     */
+    ~mpPieChart() override = default;
 
     /** Set the center of the pie chart
      * @param center the center of the pie chart
@@ -4965,12 +4957,7 @@ class WXDLLIMPEXP_MATHPLOT mpTitle: public mpText
 class WXDLLIMPEXP_MATHPLOT mpPrintout: public wxPrintout
 {
   public:
-    mpPrintout()
-    {
-      plotWindow = nullptr;
-      drawn = false;
-      stretch_factor = 2;
-    }
+    mpPrintout() = default;
 
      /** Construct a printout helper for a plot window.
      * @param drawWindow Window to print.
@@ -4978,10 +4965,7 @@ class WXDLLIMPEXP_MATHPLOT mpPrintout: public wxPrintout
      * @param factor Stretch factor used for printing.
      */
     explicit mpPrintout(mpWindow *drawWindow, const wxString &title = _T("wxMathPlot print output"), int factor = 2);
-    ~mpPrintout() override
-    {
-      ;
-    }
+    ~mpPrintout() override = default;
 
     /** Set whether the plot has already been drawn on the current printout.
      * @param drawState True if the plot has already been drawn on the current page.
@@ -5004,9 +4988,9 @@ class WXDLLIMPEXP_MATHPLOT mpPrintout: public wxPrintout
     }
 
   private:
-    bool drawn;
-    mpWindow* plotWindow;
-    int stretch_factor;  // To reduce the size of plot
+    bool drawn = false;
+    mpWindow* plotWindow = nullptr;
+    int stretch_factor = 2;  // To reduce the size of plot
 
   DECLARE_DYNAMIC_CLASS_MATHPLOT(mpPrintout);
 };
@@ -5033,7 +5017,7 @@ class WXDLLIMPEXP_MATHPLOT mpMovableObject: public mpFunction
       m_subtype = mpfMovable;
     }
 
-    ~mpMovableObject() override {}
+    ~mpMovableObject() override = default;
 
     /** Get the current coordinate transformation.
      */
@@ -5154,10 +5138,7 @@ class WXDLLIMPEXP_MATHPLOT mpCovarianceEllipse: public mpMovableObject
       RecalculateShape();
     }
 
-    ~mpCovarianceEllipse() override
-    {
-      ;
-    }
+    ~mpCovarianceEllipse() override = default;
 
     /** Get the confidence-interval multiplier used for the ellipse.
       * @return the quantile factor used to scale the covariance ellipse. */
@@ -5243,10 +5224,7 @@ class WXDLLIMPEXP_MATHPLOT mpPolygon: public mpMovableObject
       m_name = layerName;
     }
 
-    ~mpPolygon() override
-    {
-      ;
-    }
+    ~mpPolygon() override = default;
 
     /** Set the points in the polygon.
      * @param points_xs  The X coordinates of the points.
@@ -5278,10 +5256,7 @@ class WXDLLIMPEXP_MATHPLOT mpBitmapLayer: public mpLayer
       m_scaledBitmap_offset_x = m_scaledBitmap_offset_y = 0;
     }
 
-    ~mpBitmapLayer() override
-    {
-      ;
-    }
+    ~mpBitmapLayer() override = default;
 
     /** Returns a copy of the current bitmap assigned to the layer.
      */

@@ -6,7 +6,7 @@
 // Contributors:    Jose Luis Blanco, Val Greene, Lionel Reynaud, Dave Nadler, MortenMacFly,
 //                  Oskar Waldemarsson (for multi Y axis and corrections)
 // Created:         21/07/2003
-// Last edit:       01/07/2026
+// Last edit:       24/11/2026
 // Copyright:       (c) David Schalig, Davide Rondini
 // Licence:         wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -2275,6 +2275,7 @@ void mpChart::Clear()
   values.clear();
   labels.clear();
   m_max_value = 0;
+  // cppcheck-suppress missingReturn
   m_total_value = 0;
 }
 
@@ -3169,7 +3170,8 @@ mpWindow::mpWindow(wxWindow *parent, wxWindowID id, const wxPoint &pos, const wx
   // For unix screenshoot
 #ifndef _WIN32
 #ifndef USE_ICON
-  wxImage::AddHandler(new wxPNGHandler);
+  if (!wxImage::FindHandler(wxBITMAP_TYPE_PNG))
+    wxImage::AddHandler(new wxPNGHandler);
 #endif
 #endif
 
@@ -3178,7 +3180,8 @@ mpWindow::mpWindow(wxWindow *parent, wxWindowID id, const wxPoint &pos, const wx
     nbItem++;
 
 #ifdef USE_ICON
-  wxImage::AddHandler(new wxPNGHandler);
+  if (!wxImage::FindHandler(wxBITMAP_TYPE_PNG))
+    wxImage::AddHandler(new wxPNGHandler);
 
   const wxBitmap icon[] = {wxBITMAP_PNG_FROM_DATA(Fit_24x24), wxBITMAP_PNG_FROM_DATA(Zoom_in_24x24), wxBITMAP_PNG_FROM_DATA(Zoom_out_24x24),
       wxBITMAP_PNG_FROM_DATA(Center_24x24), wxNullBitmap, wxBITMAP_PNG_FROM_DATA(Grid_24x24), wxBITMAP_PNG_FROM_DATA(Coordinates_24x24),
@@ -5885,11 +5888,10 @@ mpTitle::mpTitle()
 wxIMPLEMENT_DYNAMIC_CLASS(mpPrintout, wxPrintout);
 
 mpPrintout::mpPrintout(mpWindow *drawWindow, const wxString &title, int factor) :
-    wxPrintout(title)
+    wxPrintout(title),
+    plotWindow(drawWindow),
+    stretch_factor(factor)
 {
-  drawn = false;
-  plotWindow = drawWindow;
-  stretch_factor = factor;
 }
 
 bool mpPrintout::OnPrintPage(int page)
