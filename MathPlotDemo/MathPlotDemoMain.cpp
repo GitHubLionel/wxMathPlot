@@ -674,7 +674,7 @@ void MathPlotDemoFrame::OnbMovingObjectClick(wxCommandEvent &WXUNUSED(event))
     mPlot->AddLayer(bmpLayer = new mpBitmapLayer(), false);
 
     wxImage bmp;
-    ::wxInitAllImageHandlers();
+//    ::wxInitAllImageHandlers(); // Already done in OnInit()
     bmp.LoadFile(wxT("./gridmap.png"), wxBITMAP_TYPE_PNG);
     bmp.SetMaskColour(0, 0, 0);
     bmpLayer->SetBitmap(bmp, -40, -40, 120, 120);
