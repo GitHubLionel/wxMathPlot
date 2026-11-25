@@ -708,7 +708,7 @@ void mpInfoCoords::DrawContent(wxDC &dc, mpWindow &w)
 
   // Draw background rectangle and text
   dc.SetBrush(m_brush);
-  dc.SetPen(*wxBLACK_PEN);
+  dc.SetPen(m_pen);
   dc.DrawRectangle(m_dim);
   dc.DrawText(m_content, m_dim.x + MARGIN_COORD + offset, m_dim.y + MARGIN_COORD);
 
@@ -932,7 +932,7 @@ void mpInfoLegend::UpdateBitmap(wxDC &dc, mpWindow &w)
   // Copy new bitmap to m_legend_bmp
   if ((width != 0) && (height != 0))
   {
-    buff_dc.SetPen(*wxBLACK_PEN);
+    buff_dc.SetPen(m_pen);
     buff_dc.SetBrush(*wxTRANSPARENT_BRUSH);
 
     // If necessary, truncate legend to fit in window
@@ -1053,7 +1053,7 @@ void mpInfoLegend::DrawVerticalCursor(wxDC &dc, mpWindow &w)
   wxCoord cursorX = GetVerticalCursorX();
   // Draw a vertical line to indicate location of the shown values (where the line cross a series)
   const mpRect bound = w.GetPlotBoundaries(true);
-  dc.SetPen(*wxBLACK_PEN);
+  dc.SetPen(m_pen);
   dc.DrawLine(cursorX, bound.top, cursorX, bound.bottom);
 
   if (m_indicateSeriesIntersection)
@@ -1074,7 +1074,7 @@ void mpInfoLegend::DrawVerticalCursor(wxDC &dc, mpWindow &w)
             const wxCoord yCoord = w.y2p(valueScaled, function.GetYAxisID());
             if(yCoord >= bound.top && yCoord <= bound.bottom)
             {
-              dc.SetPen(wxPen(*wxBLACK, 1));
+              dc.SetPen(m_pen);
               dc.SetBrush(wxBrush(function.GetPen().GetColour()));
               dc.DrawCircle(cursorX, w.y2p(valueScaled, function.GetYAxisID()), 4);
             }
@@ -3213,6 +3213,7 @@ mpWindow::mpWindow(wxWindow *parent, wxWindowID id, const wxPoint &pos, const wx
   m_layers.clear();
   SetBackgroundColour(*wxWHITE);
   m_bgColour = *wxWHITE;
+  m_marginColour = *wxWHITE;
   m_fgColour = *wxBLACK;
   m_drawBox = true;
 
@@ -4640,7 +4641,7 @@ void mpWindow::Paint(wxDC& dc)
       m_buff_dc.SetPen(*wxBLACK);
     else
       m_buff_dc.SetPen(*wxTRANSPARENT_PEN);
-    m_buff_dc.SetBrush(*wxWHITE_BRUSH);
+    m_buff_dc.SetBrush(m_marginColour);
     m_buff_dc.DrawRectangle(0, 0, m_scrX, m_scrY);
 
     // Draw background plot area
@@ -4857,7 +4858,7 @@ void mpWindow::DrawBoxZoom(wxDC& dc)
   if (newRect.width < 0) { newRect.x += newRect.width; newRect.width = abs(newRect.width); }
   if (newRect.height < 0) { newRect.y += newRect.height; newRect.height = abs(newRect.height); }
 
-  const wxPen pen(*wxBLACK, 1, wxPENSTYLE_DOT);
+  const wxPen pen(m_fgColour, 1, wxPENSTYLE_DOT);
   dc.SetPen(pen);
   dc.SetBrush(*wxTRANSPARENT_BRUSH);
   dc.DrawRectangle(newRect);
@@ -6435,7 +6436,8 @@ void mpBitmapLayer::DoPlot(wxDC &dc, mpWindow &w)
 void mpMagnet::DrawCross(wxDC &dc, mpWindow &w)
 {
   const mpRect bound = w.GetPlotBoundaries(true);
-  dc.SetPen(*wxBLACK_PEN);
+  const wxPen pen(w.GetfgColour(), 1, wxPENSTYLE_DOT);
+  dc.SetPen(pen);
   dc.DrawLine(w.GetMousePosition().x, bound.top, w.GetMousePosition().x, bound.bottom);
   dc.DrawLine(bound.left, w.GetMousePosition().y, bound.right, w.GetMousePosition().y);
 }
