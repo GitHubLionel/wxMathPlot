@@ -4469,6 +4469,24 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
       m_bgColour = colour;
     }
 
+    /// Set the margin background colour.
+    void SetMarginColour(const wxColour &colour)
+    {
+      m_marginColour = colour;
+    }
+
+    /// Get the plot foreground colour.
+    const wxColour& GetfgColour() const
+    {
+      return m_fgColour;
+    }
+
+    /// Set the plot foreground colour.
+    void SetfgColour(const wxColour &colour)
+    {
+      m_fgColour = colour;
+    }
+
     /** On delete layer event
      * Allows the user to perform certain actions before deleting the layer.
      * The user can abort the deletion.
@@ -4749,6 +4767,7 @@ class WXDLLIMPEXP_MATHPLOT mpWindow: public wxWindow
     wxMenu m_popmenu;       //!< Canvas' context menu
     bool m_lockaspect;      //!< Scale aspect is locked or not
     wxColour m_bgColour;    //!< Background Colour
+    wxColour m_marginColour; //!< Margin background Colour
     wxColour m_fgColour;    //!< Foreground Colour
     wxColour m_axColour;    //!< Axes Colour
     bool m_drawBox;         //!< Draw box of the plot bound. Default true
